@@ -1,0 +1,38 @@
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<network-config>
+    <transports>
+        <transport name="tcp" />
+        <transport name="tcp2" socket-read-buffer-size="8192" />
+        <transport name="tcp3" socket-write-buffer-size="8000" />
+        <transport name="tcp4" socket-write-buffer-size="5000" socket-read-buffer-size="6000" />
+    </transports>
+    <protocols>
+        <protocol name="http">
+            <http enable-comet-support="true"/>
+        </protocol>
+    </protocols>
+    <network-listeners>
+        <thread-pool name="defaultThreadPool"/>
+        <network-listener name="http-listener-1" port="38084" transport="tcp" protocol="http" thread-pool="defaultThreadPool"/>
+        <network-listener name="http-listener-2" port="38085" transport="tcp2" protocol="http" thread-pool="defaultThreadPool"/>
+        <network-listener name="http-listener-3" port="38086" transport="tcp3" protocol="http" thread-pool="defaultThreadPool"/>
+        <network-listener name="http-listener-4" port="38087" transport="tcp4" protocol="http" thread-pool="defaultThreadPool"/>
+    </network-listeners>
+</network-config>

@@ -1,0 +1,106 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- security/msgSecurity/msgSecurityEdit.jsf -->
+
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.msgProvider.EditPageTitle}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value="#{pageSession.configName}" default="server-config");
+        getRequestValue(key="name" value="#{pageSession.Name}");
+        getRequestValue(key="msgSecurityName" value="#{pageSession.msgSecurityName}");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        urlencode(value="#{pageSession.configName}" encoding="UTF-8" result="#{pageSession.encodedConfigName}");
+        urlencode(value="#{pageSession.msgSecurityName}" encoding="UTF-8" result="#{pageSession.encodedMsgSecurityName}");
+        setPageSessionAttribute(key="selfUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/security-service/message-security-config/#{pageSession.msgSecurityName}/provider-config/#{pageSession.Name}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.providerMap}");
+        createMap(result="#{pageSession.valueMap}");
+        mapPut(map="#{pageSession.valueMap}"  key="msgSecurityName" value="#{pageSession.msgSecurityName}");
+        mapPut(map="#{pageSession.valueMap}"  key="configName" value="#{pageSession.configName}");
+        mapPut(map="#{pageSession.valueMap}"  key="Name" value="#{pageSession.Name}");
+        mapPut(map="#{pageSession.valueMap}"  key="ProviderType" value="#{pageSession.providerMap['providerType']}");
+        mapPut(map="#{pageSession.valueMap}"  key="ClassName" value="#{pageSession.providerMap['className']}");
+        setPageSessionAttribute(key="requestPolicyUrl", value="#{pageSession.selfUrl}/request-policy");
+        gf.checkIfEndPointExist(endpoint="#{pageSession.requestPolicyUrl}" exists="#{pageSession.exist}");
+        if(#{exist}) {
+            gf.getEntityAttrs(endpoint="#{pageSession.requestPolicyUrl}.json", valueMap="#{pageSession.requestPolicyMap}");
+            mapPut(map="#{pageSession.valueMap}"  key="Request-AuthSource" value="#{pageSession.requestPolicyMap['authSource']}");
+            mapPut(map="#{pageSession.valueMap}"  key="Request-AuthRecipient" value="#{pageSession.requestPolicyMap['authRecipient']}");
+        }
+        setPageSessionAttribute(key="responsePolicyUrl", value="#{pageSession.selfUrl}/response-policy");
+        gf.checkIfEndPointExist(endpoint="#{pageSession.responsePolicyUrl}" exists="#{pageSession.exist}");
+        if(#{exist}) {
+            gf.getEntityAttrs(endpoint="#{pageSession.responsePolicyUrl}.json", valueMap="#{pageSession.responsePolicyMap}");
+            mapPut(map="#{pageSession.valueMap}"  key="Response-AuthSource" value="#{pageSession.responsePolicyMap['authSource']}");
+            mapPut(map="#{pageSession.valueMap}"  key="Response-AuthRecipient" value="#{pageSession.responsePolicyMap['authRecipient']}");
+        }
+
+        gf.getEntityAttrs(endpoint="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/security-service/message-security-config/#{pageSession.msgSecurityName}.json",
+                          valueMap="#{pageSession.msgSecurityMap}");
+        mapPut(map="#{pageSession.valueMap}"  key="defaultProvider" value="false");
+        mapPut(map="#{pageSession.valueMap}"  key="defaultClientProvider" value="#{pageSession.msgSecurityMap['defaultClientProvider']}");
+        mapPut(map="#{pageSession.valueMap}"  key="defaultServerProvider" value="#{pageSession.msgSecurityMap['defaultProvider']}");
+        if ("#{pageSession.msgSecurityMap['defaultClientProvider']}=#{pageSession.Name}"){
+            mapPut(map="#{pageSession.valueMap}"  key="defaultProvider" value="true");
+        }
+
+        if ("#{pageSession.msgSecurityMap['defaultProvider']}=#{pageSession.Name}"){
+            mapPut(map="#{pageSession.valueMap}"  key="defaultProvider" value="true");
+        }
+
+        gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json" method="GET" result="#{requestScope.propTable}");
+        setPageSessionAttribute(key="tableList" value="#{requestScope.propTable.data.extraProperties.properties}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/common/security/msgSecurity/providerEdit.jsf?name=#{pageSession.encodedName}&msgSecurityName=#{pageSession.encodedMsgSecurityName}&configName=#{pageSession.encodedConfigName}");
+        getRequestValue(key="cancelPage" value="#{requestScope.cPage}"
+                default="#{request.contextPath}/common/security/msgSecurity/providers.jsf?name=#{pageSession.encodedMsgSecurityName}")
+        setPageSessionAttribute(key="cancelPage" value="#{requestScope.cPage}&configName=#{pageSession.encodedConfigName}");
+        setPageSessionAttribute(key="edit" value="#{true}" );
+    />
+    </event>
+
+    <sun:form id="propertyForm">
+#include "/common/shared/alertMsg.inc"
+
+        <!-- Page Title -->
+        <sun:title id="propertyContentPage" title="$resource{i18nc.msgProvider.EditPageTitle}" helpText="$resource{i18nc.msgProvider.EditPageTitleHelp}">
+#include "providerButtons.inc"
+        </sun:title>
+        <sun:propertySheet id="propertySheet">
+#include "/common/shared/configNameSection.inc"
+
+#include "providerAttr.inc"
+#include "providerAttr_2.inc"
+         </sun:propertySheet>
+         "<br/><br/>
+#include "/common/shared/propertyDescTable.inc"
+        <sun:title id="bottom" >
+#include "providerButtons.inc"
+        </sun:title>
+	<sun:hidden id="helpKey" value="$resource{help_common.msgProviderEdit}" />
+    </sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+
+</define>
+</composition>

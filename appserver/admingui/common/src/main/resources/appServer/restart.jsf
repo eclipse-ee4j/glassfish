@@ -1,0 +1,55 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.common.admingui.Strings")
+/>
+<sun:page id="page">
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n.masthead.restartRequired}" >
+<!define name="content">
+<f:verbatim>
+        <style type="text/css">
+            .collapsed { background-image: url(#{request.contextPath}/theme/com/sun/webui/jsf/suntheme/images/table/grouprow_collapsed.gif); }
+            .expanded { background-image: url(#{request.contextPath}/theme/com/sun/webui/jsf/suntheme/images/table/grouprow_expanded.gif); }
+        </style>
+</f:verbatim>
+        <sun:form id="form">
+            <!-- Page Title -->
+#include "/common/shared/alertMsg_1.inc"                
+            <sun:title id="title" title="$resource{i18n.masthead.restartRequired}"  helpText="$resource{i18n.restart.RestartHelpText}" >
+                <!facet pageButtonsTop>
+                    <sun:panelGroup id="topButtons">
+                        <sun:button id="stopInstance" style="margin-left: 8pt"
+                            onClick="if (getConfirm(this, '$resource{i18n.msg.JS.confirmRestartInstance}')) {return submitAndDisable(this, '$resource{i18n.button.Processing}', target='_top');} else {return false;}"
+                            text="$resource{i18n.button.Restart}"
+                            toolTip="$resource{i18n.restart.tooltip}">
+                            <!command
+                                gf.redirect("#{facesContext.externalContext.requestContextPath}/common/appServer/restart-2.jsf");
+                            />
+                        </sun:button>
+                    </sun:panelGroup>
+                </facet>
+            </sun:title>
+            "<ul style="margin-left: 20px;">
+            <foreach key="reason" list="#{unprocessedChanges}">
+                "<li style="display: list-item; list-style: disc outside none">#{reason}</li>
+            </foreach>
+            "</ul>
+        </sun:form>
+ </define>
+</composition>

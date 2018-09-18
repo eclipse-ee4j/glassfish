@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+  <display-name>cmp-simple-ejb.jar</display-name>
+  <enterprise-beans>
+    <entity>
+      <display-name>BlobTestBean</display-name>
+      <ejb-name>BlobTestBean</ejb-name>
+      <home>com.sun.s1asdev.jdbc.cmpsimple.ejb.BlobTestHome</home>
+      <remote>com.sun.s1asdev.jdbc.cmpsimple.ejb.BlobTest</remote>
+      <ejb-class>com.sun.s1asdev.jdbc.cmpsimple.ejb.BlobTestBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.Integer</prim-key-class>
+      <reentrant>false</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name>BlobTestBean</abstract-schema-name>
+      <cmp-field>
+        <description>no description</description>
+        <field-name>name</field-name>
+      </cmp-field>
+      <cmp-field>
+        <description>no description</description>
+        <field-name>id</field-name>
+      </cmp-field>
+      <primkey-field>id</primkey-field>
+      <resource-ref>
+        <res-ref-name>DataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+      </resource-ref>
+      <security-identity>
+        <use-caller-identity/>
+      </security-identity>
+    </entity>
+  </enterprise-beans>
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>BlobTestBean</ejb-name>
+        <method-intf>Remote</method-intf>
+        <method-name>getName</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>BlobTestBean</ejb-name>
+        <method-intf>Remote</method-intf>
+        <method-name>remove</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+  </assembly-descriptor>
+</ejb-jar>

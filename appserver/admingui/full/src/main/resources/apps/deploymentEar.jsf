@@ -1,0 +1,36 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- deploymentEar.jsf -->
+
+<sun:propertySheet id="ear" visible="#{false}" >
+    <!beforeCreate
+        setAttribute(key="fieldMap" value="ear");
+        createMap(result="#{pageSession.ear}")
+        mapPut(map="#{pageSession.deployMap}", key="ear", value="#{pageSession.ear}");
+        mapPut(map="#{pageSession.ear}", key="convertToFalseList", value={"enabled", "precompilejsp" , "availabilityEnabled", "PROPERTY-implicitCdiEnabled", "verify", "force", "keepState", "PROPERTY-$constant{org.glassfish.deployment.client.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}", "PROPERTY-preserveAppScopedResources"} );
+        mapPut(map="#{pageSession.ear}", key="PROPERTY-$constant{org.glassfish.deployment.client.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}" , value="true" );
+        mapPut(map="#{pageSession.ear}", key="PROPERTY-implicitCdiEnabled", value="true");
+    />
+    <!afterCreate
+        getClientId(component="$this{component}" clientId=>$page{earId});
+    />
+    <sun:propertySheetSection id="psection" >
+#include "/full/apps/deploymentEarFields.jsf"
+    </sun:propertySheetSection>
+</sun:propertySheet>    

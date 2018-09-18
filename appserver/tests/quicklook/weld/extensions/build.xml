@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="extensions" default="default" basedir=".">
+    <property file="build.properties"/>
+    <property file="${ws.root}/gfproject/${deploy.platform}-config.properties"/>
+   
+    <description>Builds, tests, and runs the Weld extension tests</description>
+
+    <import file="${ws.root}/gfproject/build-impl.xml"/>
+    <import file="${ws.root}/gfproject/${deploy.platform}-targets.xml"/>
+
+    <target name="all" depends="build,deploy,runtest,undeploy" />
+    <target name="build-deploy" depends="build,deploy" />
+   
+    <target name="build" depends="compile-tests">
+        <antcall target="build-impl"/>
+    </target>
+    
+    <target name="deploy">
+        <antcall target="deploy-${deploy.platform}-impl"/>
+    </target>
+    
+    <target  name="runtest">
+        <antcall target="runtest-impl">
+            <param name="contextroot" value="extensions"/>
+            <param name="testng.test.name" value="${testng.test.name}"/>
+            <param name="testng.testclient" value="ExtensionsTestNG"/>
+        </antcall>
+    </target>
+    
+    <target name="undeploy">
+        <antcall target="undeploy-${deploy.platform}-impl"/>
+    </target>
+
+    <!--
+      - Overrides same target from build-impl.xml import above to add
+      - <lib dir="web/lib"> under <war>
+      -->
+    <target name="build-war" depends="archive-type" if="archive.war">
+        <echo message="Now creating a war file ${dist.dir}/${app.file.ext}"/>
+        <delete dir="${class.output}"/>
+        <delete dir="${dist.dir}"/>
+        <delete file="${app.file.ext}"/>
+        <mkdir dir="${class.output}"/>
+        <mkdir dir="${dist.dir}/lib"/>
+        <javac   debug="true"
+    source="1.5"
+    target="1.5"
+    classpathref="class.path"
+    srcdir="src/java"
+    failonerror="false"
+    destdir="${class.output}"/>
+        <mkdir dir="web/html"/>
+        <mkdir dir="${class.output}/META-INF"/>
+        <copy todir="${class.output}/META-INF">
+            <fileset dir="src/java/META-INF"/>
+        </copy>
+
+        <jar destFile="${dist.dir}/lib/extensions.jar"
+             basedir="${class.output}"
+             includes="jar/*.class">
+             <fileset dir="src/java/jar" excludes="*.java"/>
+         </jar>
+
+        <war destfile="${dist.dir}/${app.file.ext}" webxml="metadata/web.xml">
+            <fileset dir="web/html"/>
+            <fileset dir="web/jsp"/>
+            <lib dir="${dist.dir}/lib"/>
+            <classes dir="${class.output}">
+                <include name="**/*.class"/>
+                <include name="**/persistence.xml"/>
+                <include name="**/*.properties"/>
+                <include name="META-INF/services/*"/>
+                <exclude name="jar/*.class"/>
+            </classes>
+            <webinf dir="metadata">
+                <include name="**/*.xml"/>
+                <exclude name="**/persistence.xml"/>
+            </webinf>
+        </war>
+    </target>
+</project>

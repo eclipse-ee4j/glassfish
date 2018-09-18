@@ -1,0 +1,89 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- configuration/configurationNew.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.configurations.NewPageTitle}" >
+
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/common/configuration/configurations.jsf");
+        setPageSessionAttribute(key="selfUrl", value="#{sessionScope.REST_URL}/configs/copy-config");
+        setPageSessionAttribute(key="rest-api" value="true");
+    />
+    </event>
+<sun:form id="propertyForm">
+#include "/common/shared/alertMsg.inc"
+        <sun:title id="propertyContentPage" title="$resource{i18nc.configurations.NewPageTitle}">
+                <!facet pageButtonsTop>
+                <sun:panelGroup id="topButtons">
+                    <sun:button id="okButton" text="$resource{i18n.button.OK}"
+                        onClick="if (guiValidate('#{reqMsg}','#{reqInt}','#{reqPort}')) {submitAndDisable(this, '$resource{i18n.button.Processing}');}; return false;" >
+                        <!command
+                            createMap(result="#{pageSession.configMap}");
+                            createList(size="0" result="#{pageSession.configList}");
+                            listAdd(value="#{pageSession.selectedConfig}" list="#{pageSession.configList}");
+                            listAdd(value="#{name}" list="#{pageSession.configList}");
+                            mapPut(map="#{pageSession.configMap}", key="id", value="#{pageSession.configList}");
+                            gf.restRequest(endpoint="#{pageSession.selfUrl}", attrs="#{pageSession.configMap}", method="post");
+                            gf.redirect(page="#{pageSession.parentPage}");
+                        />
+                    </sun:button>
+                    <sun:button id="cancelButton" immediate="#{true}" primary="#{false}" rendered="#{pageSession.showCancelButton}" text="$resource{i18n.button.Cancel}" >
+                        <!command
+                            gf.redirect(page="#{parentPage}");
+                        />
+                    </sun:button>
+                </sun:panelGroup>
+                </facet>
+        </sun:title>
+        "<br><br>
+         <sun:propertySheet id="propertySheet">
+             <sun:propertySheetSection id="propertSectionTextField">
+                 <sun:property id="NameProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.common.Name}" >
+                     <sun:textField id="Name" styleClass="required" columns="$int{35}" text="#{name}" required="#{true}" />
+                 </sun:property>
+                 <sun:property id="ConfigProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.configuration.configFromLabel}" >
+                     <sun:dropDown id="Config" selected="#{pageSession.selectedConfig}" labels="$pageSession{newConfigsList}"  values="$pageSession{newConfigsList}" required="#{true}">
+                        <!beforeCreate
+                            gf.getChildrenNamesList(endpoint="#{sessionScope.REST_URL}/configs/config" result="#{pageSession.configsList}");
+                            createList(size="0" result="#{pageSession.newConfigsList}");
+                            foreach (var="configName" list="#{pageSession.configsList}") {
+                                if ("!(#{configName} = server-config)") {
+                                    listAdd(value="#{configName}" list="#{pageSession.newConfigsList}");
+                                }
+                            }
+                            />
+                        <!afterCreate
+                            getClientId(component="$this{component}" clientId=>$page{config});
+                        />
+                     </sun:dropDown>
+                 </sun:property>
+                 "<br /><br />
+             </sun:propertySheetSection>
+         </sun:propertySheet>
+
+         <sun:hidden id="helpKey" value="$resource{help_common.configurationsNew}" />
+</sun:form>
+</define>

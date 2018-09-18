@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "file:./../../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "file:./../../../../../config/common.xml">
+<!ENTITY eeCommonBuild SYSTEM "file:./../../../../../config/ee-common.xml">
+<!ENTITY testproperties SYSTEM "file:./build.properties">
+]>
+
+<project name="ee-synchronization-api" default="usage" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &eeCommonBuild;
+
+    <target name="all">
+        <antcall target="security">
+            <param name="security.target" value="all" />
+        </antcall>
+        <antcall target="client">
+            <param name="client.target" value="all" />
+        </antcall>
+        <antcall target="deployment">
+            <param name="deployment.target" value="all" />
+        </antcall>
+    </target>
+
+    <target name="security">
+        <record name="security.output" action="start"/>
+            <ant dir="security" target="${security.target}"/>
+        <record name="security.output" action="stop"/>
+    </target>
+    <target name="client">
+        <record name="client.output" action="start"/>
+            <ant dir="client" target="${client.target}"/>
+        <record name="client.output" action="stop"/>
+    </target>
+    <target name="deployment">
+        <record name="deployment.output" action="start"/>
+            <ant dir="deployment" target="${deployment.target}"/>
+        <record name="deployment.output" action="stop"/>
+    </target>
+
+    <target name="usage">
+        <antcall target="usage-common"/>
+    </target>
+
+</project>

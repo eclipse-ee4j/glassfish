@@ -1,0 +1,98 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- enableSecurityAdmin.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.security.secureAdmin}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setPageSessionAttribute(key="parentPage" value="/common/appServer/serverInstGeneralPe.jsf");
+        gf.getDefaultValues(endpoint="#{sessionScope.REST_URL}/enable-secure-admin", valueMap="#{pageSession.valueMap}");
+        setPageSessionAttribute(key="disableSecurityAdmin" value="#{false}");
+        setPageSessionAttribute(key="enableSecurityAdmin" value="#{false}");
+        if ("#{sessionScope.secureAdminEnabled}"){
+            setPageSessionAttribute(key="disableSecurityAdmin" value="#{true}");
+        }
+        if ("!(#{sessionScope.secureAdminEnabled})"){
+            setPageSessionAttribute(key="enableSecurityAdmin" value="#{true}");
+        }
+    />
+    </event>
+
+    <sun:form id="form">
+#include "/common/shared/alertMsg_1.inc"
+
+        <!-- Page Title -->
+        <sun:title id="propertyContentPage" title="$resource{i18nc.security.secureAdmin}" helpText="$resource{i18nc.security.secureAdmin.newPageTitleHelp}">
+            <!facet pageButtonsTop>
+                <sun:panelGroup id="topButtons">
+                    <sun:button id="enableSecureAdminButton" rendered="#{pageSession.enableSecurityAdmin}" text="$resource{i18nc.button.enableSecureAdmin}"
+                            onClick="if ( getConfirm(this, '$resource{i18nc.msg.JS.confirmRestartInstanceEnableSecureAdmin}') )
+                          { return submitAndDisable(this, '$resource{i18n.button.Processing}', target='_top');}
+                            else {return false;} " >
+                        <!command
+                            gf.restRequest(endpoint="#{sessionScope.REST_URL}/enable-secure-admin", attrs="#{pageSession.valueMap}", method="POST", result="#{pageSession.resultMap}", throwException="false");
+                            if ("#{pageSession.resultMap.data.exit_code}=FAILURE") {
+                                prepareAlertMsg(summary="#{pageSession.resultMap.data.message}", type="error");
+                                gf.redirect("#{facesContext.externalContext.requestContextPath}/common/appServer/securityAdmin.jsf?&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                            }
+                            gf.redirect("#{facesContext.externalContext.requestContextPath}/common/appServer/restart-2.jsf");
+                        />
+                    </sun:button>
+                    <sun:button id="disableSecureAdminButton" rendered="#{pageSession.disableSecurityAdmin}" text="$resource{i18nc.button.disableSecureAdmin}" primary="#{false}"
+                        onClick="if ( getConfirm(this, '$resource{i18nc.msg.JS.confirmRestartInstanceDisableSecureAdmin}') )
+                          { return submitAndDisable(this, '$resource{i18n.button.Processing}', target='_top');}
+                            else {return false;} ">
+                        <!command
+                            gf.restRequest(endpoint="#{sessionScope.REST_URL}/disable-secure-admin", method="POST");
+                            gf.redirect("#{facesContext.externalContext.requestContextPath}/common/appServer/restart-2.jsf");
+                        />
+                    </sun:button>
+                    <sun:button id="cancelButton" immediate="#{true}" primary="#{false}" rendered="#{pageSession.showCancelButton}" text="$resource{i18n.button.Cancel}" >
+                        <!command
+                            gf.redirect("#{sessionScope.secureCancelUrl}");
+                        />
+                    </sun:button>
+                </sun:panelGroup>
+            </facet>
+            
+        </sun:title>
+        "<br><br>
+        <sun:propertySheet id="propertySheet">
+            <!-- Text Field section -->
+            <sun:propertySheetSection id="propertSectionTextField">
+                <sun:property id="adminAliasProp"  rendered="#{pageSession.enableSecurityAdmin}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.security.secureAdmin.adminalias}" helpText="$resource{i18nc.security.secureAdmin.adminaliasHelp}" >
+                    <sun:textField id="adminalias" styleClass="required" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.lifecycleModule.classname']}" text="#{pageSession.valueMap['adminalias']}"  />
+                </sun:property>
+
+                <sun:property id="instanceAliasProp"  rendered="#{pageSession.enableSecurityAdmin}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}"  label="$resource{i18nc.security.secureAdmin.instancealias}" helpText="$resource{i18nc.security.secureAdmin.instancealiasHelp}" >
+                    <sun:textField id="instancealias" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.lifecycleModule.classPath']}" text="#{pageSession.valueMap['instancealias']}" />
+                </sun:property>
+
+            </sun:propertySheetSection>
+        </sun:propertySheet>
+        <sun:hidden id="helpKey" value="$resource{help_common.securityAdmin}" />
+    </sun:form>
+</define>
+</composition>
+

@@ -1,0 +1,97 @@
+/*
+ * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package test.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import test.beans.Preferred;
+import test.beans.RequiresNewTransactionInterceptor;
+import test.beans.ShoppingCart;
+import test.beans.TestBean;
+import test.beans.TransactionInterceptor;
+
+@WebServlet(name = "mytest", urlPatterns = { "/myurl" })
+public class InterceptorBindingsForStereotypesTestServlet extends HttpServlet {
+    @Inject
+    @Preferred
+    TestBean tb;
+    
+    @Inject
+    @Preferred
+    ShoppingCart sc;
+
+    public void service(HttpServletRequest req, HttpServletResponse res)
+            throws IOException, ServletException {
+
+        PrintWriter writer = res.getWriter();
+        writer.write("Hello from Servlet 3.0.");
+        String msg = "";
+
+        //TestBean uses normal interceptors placed on it
+        if (tb == null)
+            msg += "Injection of request scoped bean failed";
+
+        tb.m1();
+        if (!TransactionInterceptor.aroundInvokeCalled)
+            msg += "Business method interceptor aroundInvoke not called";
+        tb.m2();
+        if (TransactionInterceptor.aroundInvokeInvocationCount != 2)
+            msg += "Business method interceptor invocation on method-level "
+                    + "interceptor annotation count not expected. "
+                    + "expected =2, actual="
+                    + TransactionInterceptor.aroundInvokeInvocationCount;
+        if (!TransactionInterceptor.errorMessage.trim().equals(""))
+            msg += TransactionInterceptor.errorMessage;
+        
+        if (RequiresNewTransactionInterceptor.aroundInvokeCalled)
+            msg += "RequiresNew TransactionInterceptor called when " +
+            		"it shouldn't have been called";
+        
+        TransactionInterceptor.clear();
+        //invoke shopping cart bean. ShoppingCart bean uses a Stereotype to
+        //assign the requires new transaction interceptor
+        //This should result in an invocation on
+        //the RequiresNewTransactional
+        sc.addItem("Test Item");
+        if (!RequiresNewTransactionInterceptor.aroundInvokeCalled)
+            msg += "Business method interceptor aroundInvoke in requires new " +
+            		"transaction interceptor not called";
+        if (RequiresNewTransactionInterceptor.aroundInvokeInvocationCount != 1)
+            msg += "Business method requires new interceptor invocation on " +
+            		"method-level interceptor annotation count not expected. "
+                    + "expected =1, actual="
+                    + RequiresNewTransactionInterceptor.aroundInvokeInvocationCount;
+        if (!RequiresNewTransactionInterceptor.errorMessage.trim().equals(""))
+            msg += RequiresNewTransactionInterceptor.errorMessage;
+        
+        //TransactionInterceptor should not be called
+        if (TransactionInterceptor.aroundInvokeCalled)
+            msg += "TranscationInterceptor aroundInvoke called when a requiresnew" +
+            		"transaction interceptor should have been called";
+
+        writer.write(msg + "\n");
+    }
+
+}

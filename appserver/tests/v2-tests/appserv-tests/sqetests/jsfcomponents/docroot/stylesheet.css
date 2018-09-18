@@ -1,0 +1,124 @@
+/*
+ * Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+.form-background { 
+  background-color: #7171A5;
+  border: 5px outset #71A5A5;
+  border-collapse: collapse;
+  font-family: sans-serif;
+  font-size: 14pt;
+  padding: 10px;
+}
+
+.form-footer { 
+  color: #FFFFFF;
+  font-size: 75%;
+  text-align: center;
+}
+
+.form-header { 
+  background-color: #A5A5A5;
+  color: #FFFFFF;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form-prompt {
+  color: #FFFFFF;
+  margin: 3px 5px 3px 15px;
+  text-align: right;
+}
+
+.form-field {
+  text-align: left;
+}
+
+.form-row-even { 
+}
+
+.form-row-odd { 
+  background-color: #717171;
+}
+
+
+.list-background { 
+  background-color: #7171A5;
+  border: 5px outset #71A5A5;
+  border-collapse: collapse;
+  font-family: sans-serif;
+  font-size: 14pt;
+  padding: 10px;
+  width: 100%;
+}
+
+.list-column-center { 
+  text-align: center;
+  width: 15%;
+}
+
+.list-column-left {
+  text-align: left;
+  width: 70%;
+}
+
+.list-column-right {
+  text-align: right;
+  width: 15%;
+}
+
+.list-header { 
+  background-color: #A5A5A5;
+  color: #FFFFFF;
+  font-weight: bold;
+  text-align: center;
+}
+
+.list-row-even { 
+}
+
+.list-row-odd { 
+  background-color: #717171;
+}
+
+
+.tabbed-pane { 
+  background-color: #999999;
+  font-family: sans-serif;
+  font-size: 12pt;
+  padding: 5px;
+  width: 100%;
+}
+
+.tabbed-content { 
+  background-color: #CCCCCC;
+  color: #000000;
+}
+
+.tabbed-selected {
+  background-color: #CCCCCC;
+  border: 2px 5px 0px 5px;
+  color: #FFFFFF;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tabbed-unselected {
+  background-color: #9999CC;
+  border: 2px 5px 0px 5px;
+  color: #000000;
+  text-align: center;
+}
+

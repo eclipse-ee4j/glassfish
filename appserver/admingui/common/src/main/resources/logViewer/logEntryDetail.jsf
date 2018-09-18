@@ -1,0 +1,110 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- logViewer/logEntryDetail.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+/>
+
+<sun:page id="page1">
+    <event>
+	<!beforeCreate
+	    setPageSessionAttribute(key="instanceName" value="server");
+	    getRequestValue(key="instanceName" value=>$attribute{instanceName});
+	    getRequestValue(key="logFile" value=>$attribute{logFile});
+	    getRequestValue(key="logLevel" value=>$attribute{logLevel});
+	    getRequestValue(key="recNumber" value=>$attribute{recNumber});
+	    longAdd(Long1="#{recNumber}", Long2="1", LongResult=>$attribute{recNumberPlus});
+	    gf.getLogQueryAttributes(
+		InstanceName="#{instanceName}",
+		FromRecord="#{recNumberPlus}",
+		AfterRecord="false",
+		LogFileName="#{logFile}",
+		LogLevel="#{logLevel}",
+		NumToDisplay="1",
+		attributes=>$attribute{attrs});
+	    gf.restRequest(
+		endpoint="#{sessionScope.REST_URL}/view-log/details.json"
+		attrs="#{requestScope.attrs}"
+		method="GET"
+		result="#{requestScope.queryResult}");
+	    gf.processLogRecords(
+		logRecords="#{requestScope.queryResult.data.records}"
+		truncate="false"
+		truncateLength="-1"
+		result="#{pageSession.results}"
+		);
+	/>
+    </event>
+<sun:html id="html2">
+<sun:head id="propertyhead" title="$resource{i18nc.logDetail.PageTitle}" debug="false" parseOnLoad="false">
+    <sun:script url="/resource/common/js/adminjsf.js" />
+</sun:head>
+<sun:body id="body3">
+<sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+    <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18nc.logDetail.PageTitle}">
+
+    <!-- Buttons  -->
+    <!facet pageButtonsTop>
+	<sun:panelGroup id="topButtons">
+	    <sun:button id="closeButton" text="$resource{i18n.button.Close}" onClick="javascript: window.close();" />
+	</sun:panelGroup>
+    </facet>
+
+    <!-- PropertySheet .... -->
+    <sun:propertySheet id="propertySheet">
+	<!-- Text Field section -->
+	<sun:propertySheetSection id="propertSectionTextField">
+	    <sun:property id="timestampProp"  labelAlign="left" noWrap="true" overlapLabel="false" label="$resource{i18nc.logDetail.timeStampLabel}">
+	    <foreach key="item" list="#{results}">
+		<sun:staticText id="Timestamp" text="#{item.dateTime}" required="true"/>
+	    </foreach>
+	    </sun:property>
+	    <sun:property id="logLevelProp"  labelAlign="left" noWrap="true" overlapLabel="false" label="$resource{i18nc.logDetail.levelLabel}">
+		<sun:staticText id="LogLevel" text="#{requestScope.logLevel}"/>
+	    </sun:property>
+	    <sun:property id="loggerProp"  labelAlign="left" noWrap="true" overlapLabel="false" label="$resource{i18nc.logDetail.loggerLabel}">
+		<foreach key="item" list="#{results}"><sun:staticText id="Logger" text="#{item.loggerName}"/>  </foreach>
+	    </sun:property>
+	    <sun:property id="nvpProp"  labelAlign="left" noWrap="true" overlapLabel="false" label="$resource{i18nc.logDetail.nvpLabel}">
+		<foreach key="item" list="#{results}"><sun:staticText id="Nvp" text="#{item.nameValuePairs}"/></foreach>
+	    </sun:property>
+	    <sun:property id="numProp"  labelAlign="left" noWrap="true" overlapLabel="false" label="$resource{i18nc.logDetail.recordNumberLabel}">
+		<foreach key="item" list="#{results}"><sun:staticText id="Num" text="#{item.recordNumber}"/></foreach>
+	    </sun:property>
+	    <sun:property id="messageIdProp"  labelAlign="left" noWrap="true" overlapLabel="false" label="$resource{i18nc.logDetail.messageIDLabel}">
+		<foreach key="item" list="#{results}"><sun:staticText id="MessageId" text="#{item.messageID}"/> </foreach>
+	    </sun:property>
+	    <sun:property id="completeMessageProp"  labelAlign="left" noWrap="true" overlapLabel="false" label="$resource{i18nc.logDetail.messageLabel}">
+		<foreach key="item" list="#{results}"><sun:staticText id="CompleteMessage" text="#{item.Message}" style="white-space:pre;"/></foreach>
+	    </sun:property>
+	    "<br /><br />
+	</sun:propertySheetSection>
+    </sun:propertySheet>
+</sun:title>
+
+<sun:hidden id="helpKey" value="$resource{help_common.logEntryDetail}" />
+</sun:form>
+</sun:body>
+</sun:html>
+</sun:page>

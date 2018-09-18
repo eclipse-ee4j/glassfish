@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="scopes-test" default="usage" basedir=".">
+
+    <property name="scopes-target" value="all"/>
+
+    <target name="run-test">
+        <antcall target="scopes">
+        <param name="scopes-target" value="run-test"/>
+        </antcall>
+    </target>
+
+    <target name="all">
+        <antcall target="scopes">
+        <param name="scopes-target" value="all"/>
+        </antcall>
+    </target>
+
+    <target name="clean">
+        <antcall target="scopes">
+        <param name="scopes-target" value="clean"/>
+        </antcall>
+    </target>
+
+    <target name="build">
+        <antcall target="scopes">
+        <param name="scopes-target" value="build"/>
+        </antcall>
+    </target>
+
+    <target name="setup">
+        <antcall target="scopes">
+        <param name="scopes-target" value="setup"/>
+        </antcall>
+    </target>
+
+    <target name="deploy">
+        <antcall target="scopes">
+        <param name="scopes-target" value="deploy"/>
+        </antcall>
+    </target>
+
+    <target name="undeploy">
+        <antcall target="scopes">
+        <param name="scopes-target" value="undeploy"/>
+        </antcall>
+    </target>
+
+    <target name="unsetup">
+        <antcall target="scopes">
+        <param name="scopes-target" value="unsetup"/>
+        </antcall>
+    </target>
+
+    <target name="run">
+        <antcall target="scopes">
+        <param name="scopes-target" value="run"/>
+        </antcall>
+    </target>
+
+    <target name="scopes">
+        <record name="scopes.output" action="start" />
+            <ant dir="dependent-scope" target="${scopes-target}"/>
+            <ant dir="new-qualifier" target="${scopes-target}"/>
+        <!--
+        Not running until
+        https://issues.jboss.org/browse/WELD-1345 is fixed.
+        In 1.1.10.Final the test passes.
+        In 2.0 Beta it fails.
+        -->
+        <ant dir="request-and-application-scope-ejb-mdb" target="${scopes-target}"/>
+        <ant dir="singleton-scope" target="${scopes-target}"/>
+        <record name="scopes.output" action="stop" />
+    </target>
+
+    <target name="usage">
+	<echo> Usage:
+		ant all (Executes all the scopes tests)
+		ant clean (cleans all the scopes tests)
+		ant build (builds all the scopes tests)
+		ant setup (sets up all resources for scopes tests)
+		ant deploy (deploys all the scopes apps)
+		ant run (Executes all the scopes tests)
+		ant undeploy (undeploys all the  scopes apps)
+		ant unsetup (unsets all resources for scopes tests)
+	</echo>
+    </target>
+</project>

@@ -1,0 +1,95 @@
+/*
+ * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package org.glassfish.admin.rest.provider;
+
+import org.glassfish.admin.rest.results.GetResultList;
+import org.glassfish.admin.rest.utils.DomConfigurator;
+import org.jvnet.hk2.config.Dom;
+
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static org.glassfish.admin.rest.utils.Util.*;
+import static org.glassfish.admin.rest.provider.ProviderUtil.*;
+
+/**
+ * @author Rajeshwar Patil
+ * @author Ludovic Champenois ludo@dev.java.net
+ */
+@Provider
+@Produces(MediaType.TEXT_HTML)
+public class GetResultListHtmlProvider extends BaseProvider<GetResultList> {
+
+    public GetResultListHtmlProvider() {
+        super(GetResultList.class, MediaType.TEXT_HTML_TYPE);
+    }
+
+    @Override
+    public String getContent(GetResultList proxy) {
+        String result = getHtmlHeader(uriInfo.get().getBaseUri().toASCIIString());
+        final String typeKey = upperCaseFirstLetter((decode(getName(uriInfo.get().getPath(), '/'))));
+        result = result + "<h1>" + typeKey + "</h1>";
+
+        String postCommand = getHtmlRespresentationsForCommand(proxy.getMetaData().getMethodMetaData("POST"), "POST", "Create", uriInfo.get());
+        result = getHtmlForComponent(postCommand, "Create " + typeKey, result);
+
+        String childResourceLinks = getResourcesLinks(proxy.getDomList());
+        result = getHtmlForComponent(childResourceLinks, "Child Resources", result);
+
+        String commandLinks = getCommandLinks(proxy.getCommandResourcesPaths());
+        result = getHtmlForComponent(commandLinks, "Commands", result);
+
+        result = result + "</html></body>";
+        return result;
+    }
+
+    private String getResourcesLinks(List<Dom> proxyList) {
+        StringBuilder result = new StringBuilder("<div>");
+        Collections.sort(proxyList, new DomConfigurator());
+        for (Map.Entry<String, String> link : getResourceLinks(proxyList).entrySet()) {
+            result.append("<a href=\"")
+                    .append(link.getValue())
+                    .append("\">")
+                    .append(link.getKey())
+                    .append("</a><br>");
+        }
+
+        result.append("</div><br/>");
+        return result.toString();
+    }
+
+    private String getCommandLinks(String[][] commandResourcesPaths) {
+        StringBuilder result = new StringBuilder("<div>");
+        for (String[] commandResourcePath : commandResourcesPaths) {
+            try {
+                result.append("<a href=\"")
+                        .append(getElementLink(uriInfo.get(), commandResourcePath[0]))
+                        .append("\">")
+                        .append(commandResourcePath[0])
+                        .append("</a><br/>");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        result.append("</div><br/>");
+        return result.toString();
+    }
+}

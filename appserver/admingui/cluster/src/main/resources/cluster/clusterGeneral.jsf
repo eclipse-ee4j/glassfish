@@ -1,0 +1,178 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18ncs.cluster.GeneralTitle}">
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setSessionAttribute(key="clusterTabs" value="general");
+        getRequestValue(key="clusterName" value="#{pageSession.clusterName}");
+        urlencode(value="#{pageSession.clusterName}" encoding="UTF-8" result="#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/cluster/cluster/clusterGeneral.jsf?clusterName=#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/cluster/cluster/clusters.jsf");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/clusters");
+        setPageSessionAttribute(key="childType" value="cluster");
+        setPageSessionAttribute(key="resourceUrl", value="#{pageSession.parentUrl}/#{pageSession.childType}/#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="rest-api" value="true");
+
+        gf.getEntityAttrs(endpoint="#{pageSession.resourceUrl}.json", valueMap="#{pageSession.valueMap}");
+        gf.getChildrenNamesList(endpoint="#{pageSession.resourceUrl}/server-ref" id="ref" result="#{pageSession.instanceList}" );
+        gf.listInstances(optionKeys={"id"} optionValues={"$pageSession{clusterName}"}, statusMap="#{requestScope.statusMap}");
+        gf.getClusterStatusSummary(statusMap ="#{requestScope.statusMap}" ,
+            numRunning="#{pageSession.numRunning}"  numNotRunning="#{pageSession.numNotRunning}" numRequireRestart="#{pageSession.numRequireRestart}"
+            disableStart="#{pageSession.disableStart}"  disableStop="#{pageSession.disableStop}" disableEjb="#{pageSession.disableEjb}");
+        gf.isClusterName(clusterName="#{pageSession.clusterName}" );
+        setPageSessionAttribute(key="convertToFalseList" value={ "gmsEnabled"} );
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{true}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{false}" );
+    />
+    </event>
+            <sun:form id="propertyForm">
+                <!afterCreate
+                    getClientId(component="$this{component}" clientId=>$attribute{sheetId});
+                />
+
+#include "/cluster/cluster/clusterTabs.inc"
+#include "/common/shared/alertMsg_1.inc"
+
+    <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18ncs.cluster.GeneralTitle}" helpText="$resource{i18ncs.cluster.GeneralTitleHelp}">
+        <!facet pageButtonsTop>
+            <sun:panelGroup id="topButtons">
+                <sun:button id="saveButton" rendered="#{edit}" text="$resource{i18n.button.Save}"
+                        onClick="if (guiValidate('#{reqMsg}','#{reqInt}','#{reqPort}')) {submitAndDisable(this, '$resource{i18n.button.Processing}');}; return false;" >
+                    <!command
+                        gf.isClusterName(clusterName="#{pageSession.clusterName}" );
+                        gf.updateEntity(endpoint="#{pageSession.resourceUrl}" attrs="#{pageSession.valueMap}"  convertToFalse="#{pageSession.convertToFalseList}");
+                        prepareSuccessfulMsg();
+                        gf.redirect(page="#{pageSession.selfPage}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                    />
+                </sun:button>
+                <sun:button id="cancelButton" immediate="#{true}" primary="#{false}" rendered="#{pageSession.showCancelButton}" text="$resource{i18n.button.Cancel}" >
+                    <!command
+                        gf.redirect(page="#{pageSession.parentPage}");
+                    />
+                </sun:button>
+            </sun:panelGroup>
+        </facet>
+    </sun:title>
+
+    <sun:button id="startButton" text="$resource{i18ncs.button.startCluster}" disabled="#{disableStart}" primary="#{false}"
+        onClick="if ( getConfirm(this,'$resource{i18ncs.msg.JS.confirmStartClusters}') )
+                { return submitAndDisable(this, '$resource{i18n.button.Processing}');}  else {return false;} " >
+        <!command
+            println("Starting Cluster...");
+            println("#{sessionScope.REST_URL}/clusters/cluster/#{pageSession.encodedClusterName}/start-cluster");
+            gf.restRequest(endpoint="#{sessionScope.REST_URL}/clusters/cluster/#{pageSession.encodedClusterName}/start-cluster" method="POST");
+            gf.redirect(page="#{pageSession.selfPage}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+        />
+    </sun:button>
+
+    <sun:button id="stopButton" text="$resource{i18ncs.button.stopCluster}" disabled="#{disableStop}" primary="#{false}"
+        onClick="if ( getConfirm(this,'$resource{i18ncs.msg.JS.confirmStopClusters}') )
+                { return submitAndDisable(this, '$resource{i18n.button.Processing}');}  else {return false;} " >
+        <!command
+            println("Stopping Cluster...");
+            println("#{sessionScope.REST_URL}/clusters/cluster/#{pageSession.encodedClusterName}/stop-cluster");
+            gf.restRequest(endpoint="#{sessionScope.REST_URL}/clusters/cluster/#{pageSession.encodedClusterName}/stop-cluster" method="POST");
+            gf.redirect(page="#{pageSession.selfPage}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+        />
+    </sun:button>
+
+    <event>
+        <!afterCreate
+            getUIComponent(clientId="#{sheetId}"  component=>$attribute{component})
+            includeIntegrations(type="org.glassfish.admingui:ejbTimerButtons" root="#{component}");
+        />
+    </event>
+
+
+    <sun:button id="rotateLog" text="$resource{i18n.button.rotateLog}" primary="#{false}"
+        onClick="if ( getConfirm(this, '$resource{i18nc.msg.JS.confirmRotateLog}') )
+        { return submitAndDisable(this, '$resource{i18n.button.Processing}', target='_top');}
+            else {return false;} " >
+            <!command
+                createMap(result="#{requestScope.map}");
+                mapPut(map="#{requestScope.map}", key="target", value="#{pageSession.encodedClusterName}");
+                gf.restRequest(
+                    endpoint="#{sessionScope.REST_URL}/rotate-log"
+                    attrs="#{requestScope.map}"
+                    method="POST"
+                    result="#{pageSession.props}");
+            gf.redirect("#{pageSession.selfPage}");/>
+    </sun:button>
+
+    <sun:propertySheet id="propertySheet">
+                <!afterCreate
+                    getClientId(component="$this{component}" clientId=>$attribute{sheetId});
+                />
+
+        <!-- Text Field section -->
+        <sun:propertySheetSection id="propertSectionTextField">
+            <sun:property id="clusterNameProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.cluster.ClusterName}" >
+                <sun:staticText id="clusterName"text="#{pageSession.clusterName}" />
+            </sun:property>
+            <sun:property id="configNameProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.common.Configuration}" >
+                <sun:hyperlink id="configlink" text="#{pageSession.valueMap['configRef']}"
+                    url="#{request.contextPath}/common/configuration/configuration.jsf?configName=#{pageSession.valueMap['configRef']}" />
+            </sun:property>
+
+            <sun:property id="gmsEnabledProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.cluster.GMS}" helpText="$resource{i18ncs.cluster.GMSHelp}">
+                <sun:checkbox id="gmscb"  selected="#{pageSession.valueMap['gmsEnabled']}" selectedValue="true" />
+            </sun:property>
+
+           <sun:property id="gmsMulticastPort"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.cluster.gmsMulticastPort}" helpText="$resource{i18ncs.cluster.gmsMulticastPortHelp}">
+                <sun:textField id="gmsMulticastPort"  styleClass="port" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.cluster.gmsMulticastPort']}" text="#{pageSession.valueMap['gmsMulticastPort']}"/>
+            </sun:property>
+            <sun:property id="gmsMulticastAddress"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.cluster.gmsMulticastAddress}" helpText="$resource{i18ncs.cluster.gmsMulticastAddressHelp}">
+                <sun:textField id="gmsMulticastAddress"  columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.cluster.gmsMulticastAddress']}" text="#{pageSession.valueMap['gmsMulticastAddress']}"/>
+            </sun:property>
+
+            <sun:property id="GmsBindInterfaceAddress"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.cluster.gmsBindInterfaceAddress}" helpText="$resource{i18ncs.cluster.gmsBindInterfaceAddressHelp}">
+                <sun:textField id="GmsBindInterfaceAddress"  columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.cluster.gmsBindInterfaceAddress']}" text="#{pageSession.valueMap['gmsBindInterfaceAddress']}"/>
+            </sun:property>
+
+            <sun:property id="instanceStatusProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.common.status}" >
+                <if condition="#{pageSession.numNotRunning}">
+                    <sun:staticText id="instanceStatusStopped" text=" #{pageSession.numNotRunning}" />
+                    "<br />
+                </if>
+                <if condition="#{pageSession.numRequireRestart}">
+                    <sun:staticText id="instanceStatusRequireRestart" text="#{pageSession.numRequireRestart}" />
+                    "<br />
+                </if>
+                <sun:staticText id="instanceStatusRunning" text="#{pageSession.numRunning}" />
+                "<br />
+            </sun:property>
+        </sun:propertySheetSection>
+
+    </sun:propertySheet>
+
+	<sun:hidden id="helpKey" value="$resource{help_cluster.clusterGeneral}" />
+</sun:form>
+</define>
+</composition>

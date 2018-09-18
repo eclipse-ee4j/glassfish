@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <servlet>
+      <servlet-name>BVIntegrationTestServlet</servlet-name>
+      <servlet-class>integration_test_servlet.BVIntegrationTestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BVIntegrationTestServlet</servlet-name>
+        <url-pattern>/test/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+      <servlet-name>ValidatorFactoryInjectionTestServlet</servlet-name>
+      <servlet-class>integration_test_servlet.ValidatorFactoryInjectionTestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ValidatorFactoryInjectionTestServlet</servlet-name>
+        <url-pattern>/testInject/*</url-pattern>
+    </servlet-mapping>
+
+<!--
+  &lt;resource-env-ref&gt;
+    &lt;resource-env-ref-name&gt;java:comp/Validator&lt;/resource-env-ref-name&gt;
+    &lt;resource-env-ref-type&gt;javax.validation.Validator&lt;/resource-env-ref-type&gt;
+  &lt;/resource-env-ref&gt;
+  
+  &lt;resource-env-ref&gt;
+    &lt;resource-env-ref-name&gt;java:comp/ValidatorFactory&lt;/resource-env-ref-name&gt;
+    &lt;resource-env-ref-type&gt;javax.validation.ValidatorFactory&lt;/resource-env-ref-type&gt;
+  &lt;/resource-env-ref&gt;
+
+-->
+
+    
+</web-app>

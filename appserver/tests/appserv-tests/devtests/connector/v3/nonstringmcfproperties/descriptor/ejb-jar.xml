@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar PUBLIC '-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN' 'http://java.sun.com/dtd/ejb-jar_2_0.dtd'>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<ejb-jar>
+  <description>no description</description>
+  <display-name>CustomerJAR</display-name>
+  <enterprise-beans>
+    <entity>
+      <description>no description</description>
+      <display-name>CustomerSavingsEJB</display-name>
+      <ejb-name>CustomerSavingsEJB</ejb-name>
+      <local-home>samples.ejb.subclassing.ejb.CustomerSavingsHome</local-home>
+      <local>samples.ejb.subclassing.ejb.CustomerSavings</local>
+      <ejb-class>samples.ejb.subclassing.ejb.CustomerSavingsEJB</ejb-class>
+      <persistence-type>Bean</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+      <security-identity>
+        <description></description>
+        <use-caller-identity></use-caller-identity>
+      </security-identity>
+      <resource-ref>
+        <res-ref-name>jdbc/SimpleBank</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+      </resource-ref>
+    </entity>
+    <entity>
+      <description>no description</description>
+      <display-name>CustomerCheckingEJB</display-name>
+      <ejb-name>CustomerCheckingEJB</ejb-name>
+      <local-home>samples.ejb.subclassing.ejb.CustomerCheckingHome</local-home>
+      <local>samples.ejb.subclassing.ejb.CustomerChecking</local>
+      <ejb-class>samples.ejb.subclassing.ejb.CustomerCheckingEJB</ejb-class>
+      <persistence-type>Bean</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+      <security-identity>
+        <description></description>
+        <use-caller-identity></use-caller-identity>
+      </security-identity>
+      <resource-ref>
+        <res-ref-name>jdbc/SimpleBank</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+      </resource-ref>
+    </entity>
+  </enterprise-beans>
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>CustomerSavingsEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>NotSupported</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>CustomerCheckingEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>NotSupported</trans-attribute>
+    </container-transaction>
+  </assembly-descriptor>
+</ejb-jar>
+

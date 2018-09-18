@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/j2ee/dtds/web-app_2_3.dtd'>
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<web-app>
+  <display-name>installed-libraries-embedded</display-name>
+  <distributable></distributable>
+  <servlet>
+    <servlet-name>SimpleBankServlet</servlet-name>
+    <servlet-class>samples.ejb.installed_libraries_embedded.servlet.SimpleBankServlet</servlet-class>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SimpleBankServlet</servlet-name>
+    <url-pattern>/servlet/SimpleBankServlet</url-pattern>
+  </servlet-mapping>
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name></realm-name>
+    <form-login-config>
+      <form-login-page></form-login-page>
+      <form-error-page></form-error-page>
+    </form-login-config>
+  </login-config>
+  <ejb-local-ref>
+    <ejb-ref-name>ejb/customerSavings</ejb-ref-name>
+    <ejb-ref-type>Entity</ejb-ref-type>
+    <local-home>samples.ejb.installed_libraries_embedded.ejb.CustomerSavingsLocalHome</local-home>
+    <local>samples.ejb.installed_libraries_embedded.ejb.CustomerSavings</local>
+    <ejb-link>CustomerSavingsEJB</ejb-link>
+  </ejb-local-ref>
+  <ejb-local-ref>
+    <ejb-ref-name>ejb/customerChecking</ejb-ref-name>
+    <ejb-ref-type>Entity</ejb-ref-type>
+    <local-home>samples.ejb.installed_libraries_embedded.ejb.CustomerCheckingLocalHome</local-home>
+    <local>samples.ejb.installed_libraries_embedded.ejb.CustomerChecking</local>
+    <ejb-link>CustomerCheckingEJB</ejb-link>
+  </ejb-local-ref>
+</web-app>
+

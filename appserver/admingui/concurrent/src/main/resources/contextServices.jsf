@@ -1,0 +1,61 @@
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    setResourceBundle(key="i18ncon" bundle="org.glassfish.concurrent.admingui.Strings");
+    setResourceBundle(key="help_con" bundle="org.glassfish.concurrent.admingui.Helplinks")
+/>
+<!composition template="/templates/default.layout"
+    guiTitle="$resource{i18ncon.contextServices.pageTitle}"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:resources:concurrent:contextServices');
+    setTimeout('admingui.table.changeThreeTableButtons(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+>
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setPageSessionAttribute(key="childType" value="context-service");
+        setPageSessionAttribute(key="listCommand" value="list-context-services");
+        setPageSessionAttribute(key="logicalJndiMapKey" value="contextServices");
+
+        //REST related
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
+        setPageSessionAttribute(key="rest-api" value="true");
+
+        setPageSessionAttribute(key="hasThreadPriority" value="#{false}");
+        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18ncon.msg.JS.confirmDeleteContextService}");
+        setPageSessionAttribute(key="createLink" value="#{request.contextPath}/concurrent/contextServiceNew.jsf");
+        setPageSessionAttribute(key="listLink" value="#{request.contextPath}/concurrent/contextServices.jsf");
+        setPageSessionAttribute(key="editLink" value="#{request.contextPath}/concurrent/contextServiceEdit.jsf");
+        setPageSessionAttribute(key="tableTitle" value="$resource{i18ncon.resourcesTable.contextServices}");
+        setPageSessionAttribute(key="generalPage" value="#{request.contextPath}/concurrent/contextServiceEdit.jsf");
+        setPageSessionAttribute(key="targetPage" value="#{request.contextPath}/common/resourceNode/resourceEditTargets.jsf");
+        
+    />
+    </event>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:concurrent:contextServices");</script>
+        <sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+             <sun:title id="propertyContentPage" title="$resource{i18ncon.contextServices.pageTitle}"
+                 helpText="$resource{i18ncon.contextServices.pageTitleHelp}" />
+             "<br /> <br />
+#include "/concurrent/resourcesTable.inc"
+            <sun:hidden id="helpKey" value="$resource{help_con.contextServices}" />
+        </sun:form>
+</define>
+</composition>

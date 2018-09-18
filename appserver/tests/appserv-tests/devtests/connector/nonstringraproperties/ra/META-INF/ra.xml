@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+<!DOCTYPE connector PUBLIC '-//Sun Microsystems, Inc.//DTD Connector 1.5//EN' 'http://java.sun.com/dtd/connector_1_5.dtd'>
+-->
+<connector xmlns="http://java.sun.com/xml/ns/j2ee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+           http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
+           version="1.5">
+    <display-name>Simple Resource Adapter</display-name>
+    <vendor-name>Java Software</vendor-name>
+    <eis-type>Generic Type</eis-type>
+    <resourceadapter-version>1.0Alpha</resourceadapter-version>
+    <resourceadapter>
+        <resourceadapter-class>
+            connector.SimpleResourceAdapterImpl
+        </resourceadapter-class>
+
+        <config-property>
+            <config-property-name>
+                TestName
+            </config-property-name>
+            <config-property-type>
+                java.lang.String
+            </config-property-type>
+            <config-property-value>
+                ConfigPropertyForRA
+            </config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>
+                NonStringPropWithoutOverridedSetter
+            </config-property-name>
+            <config-property-type>
+                java.lang.Double
+            </config-property-type>
+            <config-property-value>
+                12.23
+            </config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>
+                NonStringPropWithOverridedSetter
+            </config-property-name>
+            <config-property-type>
+                java.lang.Double
+            </config-property-type>
+            <config-property-value>
+                12.23
+            </config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>
+                StringPropWithOverridedSetter
+            </config-property-name>
+            <config-property-type>
+                java.lang.String
+            </config-property-type>
+            <config-property-value>
+                ConfigPropertyForRA
+            </config-property-value>
+        </config-property>
+
+        <inbound-resourceadapter>
+            <messageadapter>          
+                <messagelistener>
+                    <messagelistener-type>
+                        connector.MyMessageListener
+                    </messagelistener-type>
+                    <activationspec>
+                        <activationspec-class>
+                            connector.SimpleActivationSpec
+                        </activationspec-class>
+                    </activationspec>
+                </messagelistener>
+            </messageadapter>          
+        </inbound-resourceadapter>
+        <adminobject>
+          <adminobject-interface>connector.MyAdminObject</adminobject-interface>
+          <adminobject-class>connector.MyAdminObject</adminobject-class>
+          <config-property>
+            <config-property-name>ResetControl</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value>NORESET</config-property-value>
+          </config-property>
+          <config-property>
+            <config-property-name>ExpectedResult</config-property-name>
+            <config-property-type>java.lang.Integer</config-property-type>
+            <config-property-value>88</config-property-value>
+          </config-property>
+        </adminobject>
+    </resourceadapter>
+</connector>

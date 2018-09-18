@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<probe-providers>
+    <probe-provider moduleProviderName="MyModuleProviderName"
+                moduleName="MyModuleName"
+                probeProviderName="MyStatefulProbeProviderName"
+                class="com.sun.enterprise.web.WebModule">
+                       
+        <!--  Stateful Probes -->
+        <probe name="StatefulProbeDefaultsStringParam" stateful="true" >
+            <method>MyProbeMethodName</method>
+            <probe-param type="String" name="MyStringParam" />
+        </probe>
+        <probe name="StatefulProbeStringParamsProfiles" profileNames="OFF,MyProfile">
+            <method>MySecondProbeMethodName</method>
+            <probe-param type="String" name="s1" />
+            <probe-param type="String" name="s2" />
+            <probe-param type="String" name="s3" />
+            <probe-param type="String" name="s4" />
+            <probe-param type="String" name="s5" />
+        </probe>
+        <probe name="StatefulProbeStringParamReturnException" stateful="true" statefulReturn="true" statefulException="true">
+            <method>MyProbeMethodName</method>
+            <probe-param type="String" name="s1" />
+        </probe>
+        <probe name="StatefulProbeStringParamNoreturnException" stateful="true" statefulReturn="false" statefulException="true">
+            <method>MyProbeMethodName</method>
+            <probe-param type="String" name="s1" />
+        </probe>
+        <probe name="StatefulProbeStringParamsNoreturnNoexception" stateful="true" statefulReturn="false" statefulException="false">
+            <method>MyProbeMethodName</method>
+            <probe-param type="String" name="s1" />
+        </probe>
+        <probe name="StatefulProbeDefaultsNoparams" stateful="true" >
+            <method>MyProbeMethodName</method>
+        </probe>
+
+    </probe-provider>
+</probe-providers>

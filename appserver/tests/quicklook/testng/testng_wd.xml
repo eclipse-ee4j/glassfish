@@ -1,0 +1,131 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+ 
+<suite name="QuickLookTests" verbose="2" >
+  <parameter name="admin.url" value="http://localhost:4848/__asadmin"/>
+  <parameter name="admin.user" value="admin"/>
+  <parameter name="admin.password" value=""/>
+  <parameter name="admin.console.url" value="http://localhost:4848/"/>
+  <parameter name="resources.xml.relative.path" value="admin/resources/resources.xml"/>
+  <test name="admincli_tests">
+        <classes>
+                <class name="test.admincli.RestartDomainTests"/>
+                <class name="test.admincli.ExistStatusTests"/>
+        </classes>
+  </test>
+
+<!-- AMX -->
+  <parameter name="amx.debug" value="true"/>
+<!-- AMX: port of the JMX RMI -->
+  <parameter name="amx.rmiport" value="8686"/>
+
+<!-- AMX -->
+  <test name="amx_tests">
+    <classes>
+      <class name="amxtest.AMXCoreTests"/>
+      <class name="amxtest.AMXProxyTests"/>
+      <class name="amxtest.AMXConfigProxyTests"/>
+      <class name="amxtest.AMXOtherTests"/>
+    </classes>
+  </test>
+  
+  <test name="adminconsole_tests">
+	<classes>
+		<class name="test.admin.AdminConsoleTests"/>
+	</classes>
+  </test>
+  <test name="rest_tests">
+    <classes>
+        <class name="test.admin.RestTests"/>
+    </classes>
+  </test>
+  <test name="deploy_upload_test">
+    <classes>
+       <class name="test.web.jsp.hello.HelloJSPTestNG" />
+    </classes>
+  </test>
+  <test name="jsf_hello_world">
+    <classes>
+       <class name="test.jsf.astrologer.JSFWebTestNG" />
+    </classes>
+  </test>
+  <test name="jsf_injection">
+    <classes>
+       <class name="test.web.jsfinjection.JSFInjectionTestNG" />
+    </classes>
+  </test>
+  <test name="jdbc_user_tx">
+    <classes>
+       <class name="test.jdbc.jdbcusertx.JdbcUserTxTestNG" />
+    </classes>
+  </test>
+  <test name="jpa_inject_emf">
+    <classes>
+       <class name="test.jpa.jpainjectemf.JpaInjectEMFTestNG" />
+    </classes>
+  </test>
+  <test name="jpa_validation">
+    <classes>
+       <class name="test.jpa.jpavalidation.JpaValidationTestNG" />
+    </classes>
+  </test>
+  <test name="security_hello_jsp">
+    <classes>
+       <class name="test.security.hellojsp.HelloSecurityTestNG" />
+    </classes>
+  </test>
+  <test name="security_hello_basicauth">
+    <classes>
+       <class name="test.security.basicauth.BasicAuthTestNG" />
+    </classes>
+  </test>
+  <test name="ejb_stateful_cmt_ni_war">
+    <classes>
+        <class name="test.ejb.slsbnicmt.SlsbnicmtTestNG" />
+        <class name="test.ejb.sfulnoi.SfulnoiTestNG" />
+    </classes>
+  </test>
+  <test name="bv_servlet_simple">
+    <classes>
+        <class name="test.bv.servlet.simple.SimpleBVServletTestNG" />
+    </classes>
+  </test>
+  <test name="weld_tests">
+    <classes>
+        <class name="test.web.numberguess.NumberGuessTestNG" />
+        <class name="test.weld.osgi.OsgiWeldTestNG" />
+	<class name="test.web.extensions.ExtensionsTestNG" />
+    </classes>
+  </test>
+  <test name="asadmin_tests">
+    <classes>
+      <class name="test.admin.JvmOptionTests"/>
+      <class name="test.admin.JdbcConnectionPoolTests"/>
+      <class name="test.admin.WebtierTests"/>
+      <class name="test.admin.OsgiAsadminTest"/> 
+    </classes>
+  </test>
+  <test name="osgi_test">
+    <classes>
+        <class name="test.osgi.hello.HelloOSGITestNG" />
+    </classes>
+  </test>
+</suite>
+

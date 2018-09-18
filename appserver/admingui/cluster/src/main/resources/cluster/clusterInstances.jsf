@@ -1,0 +1,79 @@
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- cluster/instances.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"
+    guiTitle="$resource{i18ncs.cluster.InstancesTitle}"
+>
+
+#include "/cluster/shared/instancesExtraButtons.inc"
+#include "/cluster/shared/handlers.inc"
+
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setSessionAttribute(key="clusterTabs" value="clusterInst");
+        getRequestValue(key="clusterName" value="#{pageSession.clusterName}");
+        urlencode(value="#{pageSession.clusterName}" encoding="UTF-8" result="#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18ncs.msg.JS.confirmDeleteInstances}");
+        setSessionAttribute(key="backPage" value="clusterInstances");
+        setPageSessionAttribute(key="listLink" value="#{request.contextPath}/cluster/cluster/clusterInstances.jsf?clusterName=#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="editLink" value="#{request.contextPath}/cluster/cluster/clusterInstanceEdit.jsf?clusterName=#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="tableTitle" value="$resource{i18ncs.cluster.instancesTableTitle}");
+        setPageSessionAttribute(key="createLink" value="#{request.contextPath}/cluster/cluster/clusterInstanceNew.jsf?clusterName=#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="clusterList" value="#{true}" )
+        setPageSessionAttribute(key="parentUrl" value="#{sessionScope.REST_URL}/servers");
+        setPageSessionAttribute(key="childType" value="server");
+        createMap(result="#{requestScope.listInstanceAttrMap}");
+        setPageSessionAttribute(key="clusterInstancesPage" value="#{true}" )
+        mapPut(map="#{requestScope.listInstanceAttrMap}" key="whichtarget" value="#{pageSession.encodedClusterName}")
+        gfr.getInstancesStatus();
+        gf.getMapKeys(Map="#{pageSession.instanceStatusMap}" Keys="#{pageSession.instancesName}");
+        gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", includeList="#{pageSession.instancesName}", result="#{requestScope.listOfRows}");
+        gf.isClusterName(clusterName="#{pageSession.clusterName}" );
+        />
+    
+    </event>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":clusterTreeNode");</script>
+<sun:form id="propertyForm">
+
+#include "/cluster/cluster/clusterTabs.inc"
+#include "/common/shared/alertMsg_1.inc"
+
+<sun:title id="propertyContentPage" title="$resource{i18ncs.cluster.InstancesTitle}"
+                 helpText="$resource{i18ncs.cluster.InstancesTitleHelp}" >
+
+#include "/cluster/shared/saveInstanceWtButton.inc"
+</sun:title>
+#include "/common/shared/nameSection.inc"
+#include "/cluster/shared/instancesTable.inc"
+
+<sun:hidden id="helpKey" value="$resource{help_cluster.clusterInstances}" />
+    </sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+
+</define>
+</composition>
+
+

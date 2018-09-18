@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.tests.embedded</groupId>
+        <artifactId>maven-plugin</artifactId>
+        <version>5.0.1-SNAPSHOT</version>
+    </parent>
+    <groupId>org.glassfish.tests.embedded.maven-plugin</groupId>
+    <artifactId>securewebapp</artifactId>
+    <packaging>war</packaging>
+    <name>Test https and other plugin configurations (maven-plugin/secureWebApp)</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.glassfish.embedded</groupId>
+                <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                <configuration>
+		    <bootstrapProperties>
+			<property>test_key=test_value</property>
+		    </bootstrapProperties>
+		    <bootstrapPropertiesFile>bootstrap.properties</bootstrapPropertiesFile>
+		    <glassfishProperties>
+			<property>embedded-glassfish-config.server.jms-service.jms-host.default_JMS_host.port=17676</property>
+		    </glassfishProperties>
+		    <glassfishPropertiesFile>glassfish.properties</glassfishPropertiesFile>
+		    <systemProperties>
+			<property>ANTLR_USE_DIRECT_CLASS_LOADING=true</property>
+		    </systemProperties>
+		    <systemPropertiesFile>system.properties</systemPropertiesFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>deploy</goal>
+                            <goal>undeploy</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.ejb</groupId>
+            <artifactId>javax.ejb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+

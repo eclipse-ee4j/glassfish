@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "file:./../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "file:./../../../config/common.xml">
+<!ENTITY testproperties SYSTEM "file:./build.properties">
+]>
+
+<project name="showArgsGUI" default="usage" basedir=".">
+
+
+    &commonSetup;
+    &commonBuild;
+    &testproperties;
+
+    <import file="../appclient.xml"/>
+
+    <target name="build.ear">
+        <echo>There is no EAR in this test.</echo>
+    </target>
+
+    <target name="deploy.ear"/>
+    <target name="undeploy.ear"/>
+
+    <target name="build" depends="compile">
+        <mkdir dir="${assemble.dir}"/>
+
+        <property name="appclient.jar.path" value="${assemble.dir}/${clientname}.jar"/>
+
+        <!-- Build the app client. -->
+        <antcall target="package-appclientjar-common">
+            <param name="appclientjar.files" value="${build.classes.dir}"/> 
+            <param name="appclientjar.classes" value="**/client/*.class **/reporter/*.class"/>
+            <param name="appclient.jar" value="${appclient.jar.path}"/>
+        </antcall>
+
+        <!-- add the images -->
+        <jar jarfile="${appclient.jar.path}" basedir="." 
+             update="true" includes="**/*.jpg **/*.gif"/>
+
+        <!-- Build the library jar. -->        
+        <jar jarfile="${lib.jar.file}" 
+            basedir="${build.classes.dir}" 
+            update="true" includes ="**/lib/*.class" 
+            />
+    </target> 
+    
+
+    
+    <target name="run" depends="init-common">
+        <echo>Testing stand-alone client...</echo>
+        <antcall target="test.standalone.client"/>
+    </target>
+
+    
+    <target name="usage">
+        <antcall target="usage-common"/>
+    </target>
+
+</project>

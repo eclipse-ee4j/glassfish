@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<antlib>
+    <taskdef name="glassfish-embedded-deploy" classname="org.glassfish.ant.embedded.tasks.DeployTask"/>
+    <taskdef name="glassfish-embedded-stop"   classname="org.glassfish.ant.embedded.tasks.StopServerTask"/>
+    <taskdef name="glassfish-embedded-start"  classname="org.glassfish.ant.embedded.tasks.StartServerTask"/>
+    <taskdef name="glassfish-embedded-admin"  classname="org.glassfish.ant.embedded.tasks.AdminTask"/>
+    <taskdef name="glassfish-embedded-undeploy"  classname="org.glassfish.ant.embedded.tasks.UndeployTask"/>
+
+    <taskdef name="glassfish-admin"    classname="org.glassfish.ant.tasks.AdminTask"/>
+    <taskdef name="glassfish-start"    classname="org.glassfish.ant.tasks.StartServerTask"/>
+    <taskdef name="glassfish-stop"     classname="org.glassfish.ant.tasks.StopServerTask"/>
+    <taskdef name="glassfish-deploy"   classname="org.glassfish.ant.tasks.DeployTask"/>
+    <taskdef name="glassfish-undeploy"  classname="org.glassfish.ant.tasks.UndeployTask"/>
+    <taskdef name="glassfish-redeploy"  classname="org.glassfish.ant.tasks.RedeployTask"/>
+    <taskdef name="glassfish-component"    classname="org.glassfish.ant.tasks.ComponentTask"/>
+
+    <taskdef name="sun-appserv-admin"    classname="org.glassfish.ant.tasks.AdminTask"/>
+    <taskdef name="sun-appserv-start"    classname="org.glassfish.ant.tasks.StartServerTask"/>
+    <taskdef name="sun-appserv-stop"     classname="org.glassfish.ant.tasks.StopServerTask"/>
+    <taskdef name="sun-appserv-deploy"   classname="org.glassfish.ant.tasks.DeployTask"/>
+    <taskdef name="sun-appserv-undeploy"  classname="org.glassfish.ant.tasks.UndeployTask"/>
+    <taskdef name="sun-appserv-redeploy"  classname="org.glassfish.ant.tasks.RedeployTask"/>
+    <taskdef name="sun-appserv-update"  classname="org.glassfish.ant.tasks.RedeployTask"/>
+    <taskdef name="sun-appserv-component"    classname="org.glassfish.ant.tasks.ComponentTask"/>
+
+</antlib>

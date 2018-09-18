@@ -1,0 +1,59 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun:html>
+<sun:head title="#{pageSession.gadget.gadgetModulePrefs.title}" debug="false" parseOnLoad="false">
+<f:verbatim>
+    <style type="text/css">
+.GlassFishGadget { border: 2px solid #3388DD; }
+.GlassFishGadget .menu { background-color: #55AAFF; }
+.GlassFishGadget .menu .controls { background-color: #99DDFF; float: right; border: 1px solid #114488;}
+    </style>
+</f:verbatim>
+    <sun:script url="/resource/common/js/gadget.js" />
+</sun:head>
+<sun:body>
+
+<f:verbatim>
+<div class="GlassFishGadget">
+<div class="menu">
+Title: #{pageSession.gadget.gadgetModulePrefs.title}
+<div class="controls">
+    <!-- FIXME: The close & properties buttons need to be defined here. -->
+</div>
+</div>
+
+<div class="content" style="width: 100%">
+</f:verbatim>
+
+<!--
+    FIXME: When I do <h:outputText value="#{fileContents}" /> it works
+    FIXME: correctly, but <staticText value="#{fileContents}" /> does not
+    FIXME: (which is a JSFT-template based component) - it is getting
+    FIXME: evaluated 2x.  I need to investigate this...
+-->
+<h:outputText id="tmp" escape="false" value="#{pageSession.gadget.text}">
+    <!afterCreate
+	<!-- It is safe to use #{param} in this handler -->
+	gf.getGadgetModule("#{param.gadget}" module="#{pageSession.gadget}");
+    />
+</h:outputText>
+
+"</div></div>
+</sun:body>
+</sun:html>

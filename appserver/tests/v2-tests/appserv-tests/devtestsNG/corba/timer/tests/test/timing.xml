@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE timing SYSTEM "./timing.dtd">
+
+<timing name="TimingPoints" package="com.sun.corba.ee.impl.orbutil.newtimer">
+    <timer name="hasNextNext" description="Call to contactInfoListIterator hasNext and next in CorbaClientDelegateImpl"/>
+    <timer name="connectionSetup" description="Setting up connection in CorbaClientRequestDispatcherImpl"/>
+    <timer name="clientEncoding" description="Client side request marshalling in CorbaClientRequestDispatcherImpl"/>
+    <timer name="clientTransportAndWait" description="Client side transport and wait for response in CorbaClientRequestDispatcherImpl"/>
+    <timer name="clientDecoding" description="Client side response unmarshalling in CorbaClientRequestDispatcherImpl"/>
+
+    <timer name="test1" description="A test timer"/>
+    <timer name="test2" description="A test timer"/>
+    <timer name="test3" description="A test timer"/>
+    <timer name="test4" description="A test timer"/>
+    <timer name="test5" description="A test timer"/>
+    <timer name="test6" description="A test timer"/>
+    <timer name="test7" description="A test timer"/>
+
+    <timerGroup name="tg1" description="A test timer group">
+	<contains name="test1"/>
+	<contains name="test2"/>
+	<contains name="test3"/>
+	<contains name="tg3"/>
+    </timerGroup>
+
+    <timerGroup name="tg2" description="A test timer group">
+	<contains name="test4"/>
+	<contains name="test5"/>
+	<contains name="tg1"/>
+    </timerGroup>
+
+    <timerGroup name="tg3" description="A test timer group">
+	<contains name="test6"/>
+	<contains name="test7"/>
+	<contains name="tg2"/>
+    </timerGroup>
+
+    <timerGroup name="transportClient" description="Major events in client side request cycle">
+	<contains name="hasNextNext"/>
+	<contains name="connectionSetup"/>
+	<contains name="clientEncoding"/>
+	<contains name="clientTransportAndWait"/>
+	<contains name="clientDecoding"/>
+    </timerGroup>
+
+    <timerGroup name="transport" description="All transport activity">
+	<contains name="transportClient"/>
+    </timerGroup>
+</timing>
+
+
+
+
+
+
+
+
+

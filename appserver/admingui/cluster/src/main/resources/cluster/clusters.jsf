@@ -1,0 +1,176 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"
+    guiTitle="$resource{i18ncs.clusters.PageTitle}"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:clusterTreeNode');admingui.nav.refreshTree('treeForm:tree:configurations');"
+>
+<!define name="listTableDeleteButton">
+    <sun:button id="button1" text="$resource{i18n.button.Delete}" disabled="#{true}" primary="#{false}"
+            onClick="if ( getConfirm(this,'$pageSession{confirmDeleteMsg}') )
+                { return submitAndDisable(this, '$resource{i18n.button.Processing}');}  else {return false;} " >
+        <!command
+            getUIComponent(clientId="$pageSession{tableRowGroupId}", component="#{requestScope.tableRowGroup}");
+            getSelectedSingleMapRows(TableRowGroup="${tableRowGroup}" selectedRows="#{requestScope.selectedRows}");
+            gf.clusterAction(rows="#{requestScope.selectedRows}", action="delete-cluster" extraInfo="#{pageSession.clusterInstanceMap}");
+            gf.redirect(page="#{pageSession.listLink}?alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+        />
+    </sun:button>
+</define>
+<!define name="extraButton2">
+   <sun:button id="button2" text="$resource{i18ncs.button.startCluster}" disabled="#{true}" primary="#{false}"
+        onClick="if ( getConfirm(this,'$resource{i18ncs.msg.JS.confirmStartClusters}') )
+                { return submitAndDisable(this, '$resource{i18n.button.Processing}');}  else {return false;} " >
+        <!command
+            getUIComponent(clientId="$pageSession{tableRowGroupId}", component="#{requestScope.tableRowGroup}");
+            getSelectedSingleMapRows(TableRowGroup="${tableRowGroup}" selectedRows="#{requestScope.selectedRows}");
+            println("Starting Cluster ....");
+            gf.clusterAction(rows="#{requestScope.selectedRows}", action="start-cluster");
+            gf.redirect(page="#{pageSession.listLink}?alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+        />
+    </sun:button>
+</define>
+
+<!define name="extraButton3">
+    <sun:button id="button3" text="$resource{i18ncs.button.stopCluster}" disabled="#{true}" primary="#{false}"
+            onClick="if ( getConfirm(this,'$resource{i18ncs.msg.JS.confirmStopClusters}') )
+                    { return submitAndDisable(this, '$resource{i18n.button.Processing}');} else {return false;} " >
+        <!command
+            getUIComponent(clientId="$pageSession{tableRowGroupId}", component="#{requestScope.tableRowGroup}");
+            getSelectedSingleMapRows(TableRowGroup="${tableRowGroup}" selectedRows="#{requestScope.selectedRows}");
+            println("Stopping Cluster ....");
+            gf.clusterAction(rows="#{requestScope.selectedRows}", action="stop-cluster");
+            gf.redirect(page="#{pageSession.listLink}?alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+         />
+    </sun:button>
+</define>
+
+
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setPageSessionAttribute(key="parentUrl" value="#{sessionScope.REST_URL}/clusters");
+        setPageSessionAttribute(key="childType" value="cluster");
+        setPageSessionAttribute(key="rest-api" value="true");
+        setSessionAttribute(key="backPage" value="clusters");
+        gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", result="#{requestScope.listOfRows}");
+        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18ncs.msg.JS.confirmDeleteClusters}");
+        setPageSessionAttribute(key="createLink" value="#{request.contextPath}/cluster/cluster/clusterNew.jsf");
+        setPageSessionAttribute(key="listLink" value="#{request.contextPath}/cluster/cluster/clusters.jsf");
+        setPageSessionAttribute(key="editLink" value="#{request.contextPath}/cluster/cluster/clusterGeneral.jsf");
+        setPageSessionAttribute(key="tableTitle" value="$resource{i18ncs.clusters.TableTitle}");
+        createMap(result="#{pageSession.statusAttrs}");
+        createMap(result="#{pageSession.clusterInstanceMap}");
+    />
+    </event>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":clusterTreeNode");</script>
+<sun:form id="propertyForm">
+#include "/common/shared/alertMsg.inc"
+     <sun:title id="propertyContentPage" title="$resource{i18ncs.clusters.PageTitle}"
+                 helpText="$resource{i18ncs.clusters.PageTitleHelp}" />
+	"<br /> <br />
+
+<sun:table id="clustersTable" title="#{tableTitle}"
+    deselectMultipleButton="$boolean{true}"
+    deselectMultipleButtonOnClick="setTimeout('admingui.table.changeThreeTableButtons(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+    selectMultipleButton="$boolean{true}"
+    selectMultipleButtonOnClick="setTimeout('admingui.table.changeThreeTableButtons(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)" >
+     <!afterCreate
+        getClientId(component="$this{component}" clientId=>$page{tableId});
+    />
+
+#include "/common/shared/listTableButtons.inc"
+
+<sun:tableRowGroup id="rowGroup1" selected="#{td.value.selected}" data={"$attribute{listOfRows}"} sourceVar="td">
+        <!afterCreate
+        getClientId(component="$this{component}" clientId=>$page{tableRowGroupId});
+       />
+
+    <sun:tableColumn headerText="$resource{i18n.common.SelectHeader}" selectId="select" rowHeader="$boolean{false}" valign="top"  id="col0">
+        <sun:checkbox id="select"
+            selected="#{td.value.selected}"
+            selectedValue="$boolean{true}"
+            onClick="setTimeout('admingui.table.changeThreeTableButtons(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\'); admingui.table.initAllRows(\\\\\'#{pageSession.tableId}\\\\\');', 0);"
+        />
+    </sun:tableColumn>
+
+    <sun:tableColumn headerText="$resource{i18n.common.name.header}" rowHeader="$boolean{true}" valign="top" id="col1">
+        <event>
+            <!beforeEncode
+                setPageSessionAttribute(key="clusterName" value="#{td.value.name}");
+            />
+        </event>
+        <sun:hyperlink id="link" text="#{td.value.name}"
+                   url="#{request.contextPath}/cluster/cluster/clusterGeneral.jsf?clusterName=#{td.value.name}" />
+    </sun:tableColumn>
+
+    <sun:tableColumn
+        headerText="$resource{i18n.common.Configuration}" rowHeader="$boolean{true}"
+        valign="top"
+        id="col2">
+        <sun:hyperlink id="configlink" text="#{td.value.configRef}"
+               url="#{request.contextPath}/common/configuration/configuration.jsf?configName=#{td.value.configRef}" />
+    </sun:tableColumn>
+
+     <sun:tableColumn
+        headerText="$resource{i18ncs.clusters.instanceCol}"
+        rowHeader="$boolean{true}" id="col3">
+        <event>
+            <!beforeEncode
+                gf.getChildrenNamesList(endpoint="#{sessionScope.REST_URL}/clusters/cluster/#{pageSession.clusterName}/server-ref",
+                    id="Ref" result="#{requestScope.listOfInstances}");
+                mapPut(map="#{pageSession.clusterInstanceMap}" key="#{pageSession.clusterName}" value="#{requestScope.listOfInstances}");
+            />
+        </event>
+        "<table border="1">
+        <foreach key="instance" list="#{requestScope.listOfInstances}">
+            <event>
+            <!beforeEncode
+                setAttribute(key="tmp" value="#{instance}");
+                gf.listInstances(optionKeys={"id"} optionValues={"$attribute{tmp}"}, statusMap="#{requestScope.statusMap}");
+                setAttribute(key="status" value="#{requestScope.statusMap['$attribute{tmp}']}");
+                setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}  &nbsp;  $resource{i18nc.status.$attribute{status}}");
+            />
+            </event>
+            "<tr>
+            "<td>
+            <sun:hyperlink id="iLink" url="#{request.contextPath}/cluster/cluster/clusterInstanceEdit.jsf?clusterName=#{pageSession.clusterName}&instanceName=#{instance}" text="#{instance}" />
+            "</td> <td>
+             <staticText id="colStopped" value="#{requestScope.statusString}" />
+            "</td>
+            "</tr>
+        </foreach>
+        "</table>
+    </sun:tableColumn>
+
+    </sun:tableRowGroup>
+
+</sun:table>
+
+<sun:hidden id="helpKey" value="$resource{help_cluster.clusters}" />
+    </sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+
+</define>
+</composition>
+

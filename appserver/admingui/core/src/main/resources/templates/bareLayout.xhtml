@@ -1,0 +1,99 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<ui:event type="initPage">
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    if(!$session{supportCluster}) {
+        if (!$pageSession{configName}) {
+            setPageSessionAttribute(key="configName" value="server-config");
+        }
+    }
+    getPluginIdFromViewId(viewId="#{facesContext.viewRoot.viewId}", pluginId="#{pluginId}");
+</ui:event>
+<event>
+    <!-- Before Create must be inside a component, cannot be at page-level -->
+    <ui:event type="beforeCreate">
+        setPartialRequest("false");
+    </ui:event>
+    <ui:event type="beforeEncode">
+        <!-- Set request-scoped restart flag to compare w/ session -->
+        if (!$session{supportCluster}) {
+            gf.restRequest(endpoint="#{sessionScope.REST_URL}/_get-restart-required", method="get", result="#{requestScope.result}");
+            setSessionAttribute(key="restartRequired", value="#{requestScope.result.data.extraProperties.entity.restartRequired}");
+            setSessionAttribute(key="unprocessedChanges", value="#{requestScope.result.data.extraProperties.entity.unprocessedChanges}");
+        }
+        if($session{supportCluster}) {
+            setSessionAttribute(key="restartRequired" value="$boolean{false}");
+        }
+
+        gf.restRequest(endpoint="#{request.scheme}://#{sessionScope.serverName}:#{sessionScope.serverPort}/management/domain/anonymous-user-enabled"
+            method="GET", result="#{requestScope.result}", quiet="true");
+        
+        setPageSessionAttribute(key="loginUser" value="#{requestScope.result.data.extraProperties.anonymousUserName}");
+        setPageSessionAttribute(key="anonymousUserEnabled", value="#{requestScope.result.data.extraProperties.anonymousUserEnabled}");
+        setSessionAttribute(key="showLogoutButton" value="#{pageSession.anonymousUserEnabled != 'true'}");
+        
+        if ("!(#{sessionScope.restartRequired})") {
+            if ("!(#{sessionScope.showLogoutButton})") {
+                setAttribute(key="reloadJS" value="if (document.getElementById('Masthead:statusPanel:restartLink') || document.getElementById('Masthead:logoutLink')) {reloadHeaderFrame();}");
+            }
+            if ("#{sessionScope.showLogoutButton}") {
+                setAttribute(key="reloadJS" value="if (document.getElementById('Masthead:statusPanel:restartLink') || !document.getElementById('Masthead:logoutLink')) {reloadHeaderFrame();}");
+            }
+        }
+        if ("#{sessionScope.restartRequired}") {
+            if ("!(#{sessionScope.showLogoutButton})") {
+                setAttribute(key="reloadJS" value="if (!document.getElementById('Masthead:statusPanel:restartLink') || document.getElementById('Masthead:logoutLink')) {reloadHeaderFrame();}");
+            }
+            if ("#{sessionScope.showLogoutButton}") {
+                setAttribute(key="reloadJS" value="if (!document.getElementById('Masthead:statusPanel:restartLink') || !document.getElementById('Masthead:logoutLink')) {reloadHeaderFrame();}");
+            }
+        }
+        if ("!(#{sessionScope._currentUpdateCountMsg}=#{sessionScope._updateCountMsg})"){
+            setAttribute(key="reloadJS" , value="reloadHeaderFrame();");
+            setSessionAttribute(key="_currentUpdateCountMsg", value="#{sessionScope._updateCountMsg}");
+        }
+
+    </ui:event>
+</event>
+
+// Need to write the title so it is updated in the browser.
+//******************************************************************************
+// Do not put a script as the first element on the page. IE will ignore it.
+//******************************************************************************
+"<div class="guiPageContent">
+    <!insert name="content">
+        Content Missing!
+    </insert>
+"</div>
+<f:verbatim>
+<script type="text/javascript">
+    var loc = top.window.location.href;
+    var index = loc.indexOf("bare=true");
+    if (index > -1) {
+        top.window.location = loc.substring(0, index);
+    }
+
+    admingui.help.pluginId = '#{pluginId}';
+    document.title = "#{guiTitle}";
+
+    #{guiTemplateOnLoad};
+    #{guiOnLoad};
+    #{requestScope.reloadJS}
+</script>
+</f:verbatim>

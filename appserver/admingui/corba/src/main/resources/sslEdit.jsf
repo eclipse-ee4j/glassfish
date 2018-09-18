@@ -1,0 +1,67 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- sslEdit.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18n_corba" bundle="org.glassfish.corba.admingui.Strings");
+	setResourceBundle(key="help_corba" bundle="org.glassfish.corba.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n_corba.sslPageTitle}" >
+<!define name="content">
+    <event>
+      <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        getRequestValue(key="name" value="#{pageSession.Name}");
+        setSessionAttribute(key="iiopTab" value="sslEdit");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        urlencode(value="#{pageSession.configName}" encoding="UTF-8" result="#{pageSession.encodedConfigName}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/corba/sslEdit.jsf?name=#{pageSession.encodedName}&configName=#{pageSession.encodedConfigName}");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/corba/iiopListeners.jsf");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/iiop-service/iiop-listener/#{pageSession.Name}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        setPageSessionAttribute(key="childType" value="ssl")
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/#{pageSession.childType}");
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" )
+        setPageSessionAttribute(key="createSslUrl", value="#{pageSession.parentUrl}/create-ssl");
+        createMap(result="#{pageSession.createMap}");
+        mapPut(map="#{pageSession.createMap}" key="target" value="#{pageSession.configName}");
+<!-- This is a workaround for issue 21716 and can be reverted once REST issue 22134 is fixed -->
+<!-- #include "/common/shared/sslPrepare.inc" -->
+#include "sslPrepare-copy.inc"
+      />
+  </event>
+
+            <sun:form id="propertyForm">
+#include "iiopTab.inc"
+#include "/common/shared/alertMsg.inc"
+
+        <!-- Page Title -->
+        <sun:title id="propertyContentPage" title="$resource{i18n_corba.sslPageTitle}" helpText="$resource{i18n_corba.sslPageTitleHelp}">
+#include "/common/shared/sslButtons.inc"
+        </sun:title>
+        "<br><br>
+#include "/common/shared/sslAttrs.inc"
+
+	<sun:hidden id="helpKey" value="$resource{help_corba.iiop.sslEdit}" />
+</sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+#include "/common/shared/sslValidationsJS.inc"
+</define>
+</composition>
+

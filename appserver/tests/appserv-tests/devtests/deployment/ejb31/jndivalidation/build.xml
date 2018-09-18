@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonBuild SYSTEM "./../../config/common.xml">
+]>
+
+<project name="jndivalidation" default="all" basedir=".">
+
+    &commonBuild;
+
+    <target name="private-all">
+        <ant dir="IncorrectEnvEntry" target="private-all">
+            <property name="build" value="${build}/IncorrectEnvEntry"/>
+        </ant>
+        <ant dir="CorrectEnvEntry" target="private-all">
+            <property name="build" value="${build}/CorrectEnvEntry"/>
+        </ant>
+        <ant dir="ConflictedEJBRef" target="private-all">
+            <property name="build" value="${build}/ConflictedEJBRef"/>
+        </ant>
+        <ant dir="ConflictedEnvEntry" target="private-all">
+            <property name="build" value="${build}/ConflictedEnvEntry"/>
+        </ant>
+        <ant dir="ConflitedResourceEnvRef" target="private-all">
+            <property name="build" value="${build}/ConflitedResourceEnvRef"/>
+        </ant>
+        <ant dir="ConflitedResourceRef" target="private-all">
+            <property name="build" value="${build}/ConflitedResourceRef"/>
+        </ant>
+        <ant dir="ResourceRef" target="private-all">
+            <property name="build" value="${build}/ResourceRef"/>
+        </ant>
+        <ant dir="AppScopedResources" target="private-all">
+            <property name="build" value="${build}/AppScopedResources"/>
+        </ant>
+        <ant dir="EJBRef" target="private-all">
+            <property name="build" value="${build}/EJBRef"/>
+        </ant>
+    </target>
+</project>

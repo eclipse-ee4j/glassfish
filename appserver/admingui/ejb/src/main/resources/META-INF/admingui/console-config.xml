@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<console-config id="ejb">
+     <!-- Adding Tabs to the EJB Container page for MDB and EJB Timer -->
+        <integration-point
+                id="ejbtabs"
+                type="org.glassfish.ejb.admingui:ejbContainerTabs"
+                priority="20"
+                parentId="ejbContainerTabs"
+                content="configuration/mdbEjbTimerTabs.inc"
+        />
+        <!-- Add links under the Configuration Page  -->
+        <integration-point
+                id="ejbavailabilitytabs"
+                type="org.glassfish.admingui:availabilityTabs"
+                priority="40"
+                parentId="availabilityTabs"
+                content="configuration/ejbAvailabilityTabs.inc"
+        />
+     <!-- add the timer links -->
+        <integration-point
+                id="ejbTimers"
+                type="org.glassfish.admingui:ejbTimerButtons"
+                priority="200"
+                parentId=""
+                content="ejbTimerButtons.jsf"
+        />
+
+</console-config>

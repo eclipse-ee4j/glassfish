@@ -1,0 +1,92 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18njms" bundle="org.glassfish.jms.admingui.Strings");
+    setResourceBundle(key="helpjms" bundle="org.glassfish.jms.admingui.Helplinks")
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18njms.jmsPhysDestinations.statsPageTitle}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setPageSessionAttribute(key="pageTitle" value="$resource{i18njms.jmsPhysDestinations.statsPageTitle}");
+        setPageSessionAttribute(key="edit" value="#{true}");
+        getRequestValue(key="name" value=>$page{destName});
+        getRequestValue(key="type" value=>$page{destType});
+        getRequestValue(key="target" value=>$page{target});
+        getRequestValue(key="parentPage" value=>$page{parentPage});
+        getPhysicalDestinationStats(name="#{pageSession.destName}", type="#{pageSession.destType}", target="#{pageSession.target}", statsData="#{statsData}");
+    />
+    </event>
+#include "/common/shared/alertMsg.inc"
+    <sun:form id="jmsPhysDestForm">
+        <sun:title title="#{pageTitle}">
+            <!facet pageButtonsTop>
+                <sun:panelGroup id="topButtons">
+                    <sun:button id="topOK" text="$resource{i18n.button.Back}">
+                        <!command
+                            gf.redirect(page="#{request.contextPath}/#{pageSession.parentPage}");
+                        />
+                    </sun:button>
+                </sun:panelGroup>
+            </facet>
+        </sun:title>
+        <f:verbatim>
+        <style type="text/css">
+            td { vertical-align:top; }
+            .evenRow { background-color: #ececec; }
+        </style>
+        </f:verbatim>
+        <h:dataTable value="#{statsData}" var="row" rowClasses=",evenRow">
+                <h:column>
+                    <!facet header>
+                        $resource{i18n.common.PropertyName}
+                    </facet>
+                    <h:outputText value="#{row['label']}" style="font-weight: bold;"/>
+                </h:column>
+                <h:column>
+                    <h:outputText value="&#160;" escape="false"/>
+                </h:column>
+                <h:column>
+                    <!facet header>
+                        $resource{i18n.common.type.header}
+                    </facet>
+                    <h:outputText value="#{row['value']}" />
+                    "<br />
+                    <h:outputText value="#{row['help']}" style="font-style: italic;"/>
+                </h:column>
+        </h:dataTable>
+        <sun:title>
+            <!facet pageButtonsBottom>
+                <sun:panelGroup id="bottomButtons">
+                    <sun:button id="bottomOK" text="$resource{i18n.button.Back}">
+                        <!command
+                            gf.redirect(page="#{request.contextPath}/#{pageSession.parentPage}");
+                        />
+                    </sun:button>
+                </sun:panelGroup>
+            </facet>
+        </sun:title>
+
+   <sun:hidden id="helpKey" value="$resource{helpjms.jmsPhysicalDestinationStats}" />
+
+    </sun:form>
+    "<br/><br/>
+</define>
+</composition>

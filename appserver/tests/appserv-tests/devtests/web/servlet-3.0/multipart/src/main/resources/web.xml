@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+  <servlet>
+      <servlet-name>MTest</servlet-name>
+      <jsp-file>fu.jsp</jsp-file>
+      <multipart-config>
+        <file-size-threshold>0</file-size-threshold>
+      </multipart-config>
+  </servlet>
+    <servlet-mapping>
+        <servlet-name>MTest</servlet-name>
+        <url-pattern>/mtest</url-pattern>
+    </servlet-mapping>
+
+  <servlet>
+    <servlet-name>errorTest</servlet-name>
+    <servlet-class>test.ErrorTest</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>errorTest</servlet-name>
+    <url-pattern>/errorTest</url-pattern>
+  </servlet-mapping>
+
+  <error-page>
+      <exception-type>java.lang.NoClassDefFoundError</exception-type>
+      <location>/noclass.jsp</location>
+  </error-page>
+<!--
+    <error-page>
+      <exception-type>java.lang.Exception</exception-type>
+      <location>/catchall.jsp</location>
+  </error-page>
+-->
+
+<!--
+  <jsp-config>
+    <jsp-property-group>
+      <url-pattern>/utf16/*</url-pattern>
+      <url-pattern>/foo/utf16.jsp</url-pattern>
+      <page-encoding>UTF-16</page-encoding>
+    </jsp-property-group>
+    <jsp-property-group>
+      <url-pattern>*.jjj</url-pattern>
+      <url-pattern>/foo/one.abc</url-pattern>
+    </jsp-property-group>
+    <jsp-property-group>
+      <url-pattern>/sudhir/JSPConfScrInclude.jsp</url-pattern>
+      <el-ignored>true</el-ignored>
+      <scripting-invalid>false</scripting-invalid>
+    </jsp-property-group>
+    <jsp-property-group>
+      <url-pattern>/sudhir/JSPConfELInclScrPos.jsp</url-pattern>
+      <el-ignored>false</el-ignored>
+      <scripting-invalid>true</scripting-invalid>
+    </jsp-property-group>
+  </jsp-config>
+-->
+
+</web-app>

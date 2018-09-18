@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE project [
+<!ENTITY commonSetup SYSTEM "./../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
+<!ENTITY commonRun SYSTEM "./../../../config/run.xml">
+<!ENTITY reporting SYSTEM "./../../../config/report.xml">
+<!ENTITY eeCommon SYSTEM "file:./ee.xml">
+]>
+
+<project name="transaction.ee" default="usage" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &commonRun;
+    &eeCommon;
+    &reporting;
+
+    <target name="all">
+        <antcall target="clean-results"/>
+        <antcall target="start"/>
+
+        <record name="transaction.ee.output" action="start" />
+
+        <ant dir="selfrecovery" target="test"/>
+        <ant dir="autorecovery" target="test"/>
+        <ant dir="cli" target="test"/>
+        <ant dir="mdb" target="test"/>
+        <ant dir="resendautorecovery" target="test"/>
+        <ant dir="timer_with_autorecovery" target="test"/>
+        <ant dir="dblogs" target="test"/>
+
+        <antcall target="stop"/>
+
+        <record name="transaction.ee.output" action="stop" />
+        <antcall target="dev-report"/>
+
+    </target>
+
+     <target name="transaction-ee-1">
+        <antcall target="clean-results"/>
+        <antcall target="start"/>
+        <record name="transaction.ee.output" action="start" />
+        <ant dir="selfrecovery" target="test"/>
+        <ant dir="autorecovery" target="test"/>
+        <ant dir="cli" target="test"/>
+        <antcall target="stop"/>
+        <record name="transaction.ee.output" action="stop" />
+        <antcall target="dev-report"/>
+    </target>
+
+    <target name="transaction-ee-2">
+        <antcall target="clean-results"/>
+        <antcall target="start"/>
+        <record name="transaction.ee.output" action="start" />
+        <ant dir="mdb" target="test"/>
+        <ant dir="resendautorecovery" target="test"/>
+        <antcall target="stop"/>
+        <record name="transaction.ee.output" action="stop" />
+        <antcall target="dev-report"/>
+    </target>
+
+       <target name="transaction-ee-3">
+        <antcall target="clean-results"/>
+        <antcall target="start"/>
+        <record name="transaction.ee.output" action="start" />
+        <ant dir="timer_with_autorecovery" target="test"/>
+        <antcall target="stop"/>
+        <record name="transaction.ee.output" action="stop" />
+        <antcall target="dev-report"/>
+    </target>
+
+    <target name="transaction-ee-4">
+        <antcall target="clean-results"/>
+        <antcall target="start"/>
+        <record name="transaction.ee.output" action="start" />
+        <ant dir="dblogs" target="test"/>
+        <antcall target="stop"/>
+        <record name="transaction.ee.output" action="stop" />
+        <antcall target="dev-report"/>
+    </target>
+
+
+
+
+    <target name="start">
+        <antcall target="start-derby"/>
+        <antcall target="start-domain"/>
+    </target>
+
+    <target name="stop">
+        <antcall target="stop-domain"/>
+        <antcall target="stop-derby"/>
+    </target>
+
+</project>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../../config/common.xml">
+<!ENTITY reporting SYSTEM "../../report.xml">
+]>
+
+
+<project name="timer" default="usage" basedir=".">
+    &commonSetup;
+    &commonBuild;
+    &reporting;
+
+    <target name="all">
+        <antcall target="nonpersistenttimer"/>
+        <antcall target="schedule_exp"/>
+        <antcall target="schedule_ann"/>
+        <antcall target="schedule_on_ejb_timeout"/>
+        <antcall target="aroundtimeout"/>
+        <antcall target="mdb"/>
+        <antcall target="keepstate"/>
+        <antcall target="methodintf"/>
+
+    </target>
+
+    <target name="nonpersistenttimer">
+        <record name="nonpersistenttimer.output" action="start" />
+            <ant dir="nonpersistenttimer" target="all"/>
+        <record name="nonpersistenttimer.output" action="stop" />
+    </target>
+
+    <target name="schedule_exp">
+        <record name="schedule_exp.output" action="start" />
+            <ant dir="schedule_exp" target="all"/>
+        <record name="schedule_exp.output" action="stop" />
+    </target>
+
+    <target name="schedule_ann">
+        <record name="schedule_ann.output" action="start" />
+            <ant dir="schedule_ann" target="all"/>
+        <record name="schedule_ann.output" action="stop" />
+    </target>
+
+    <target name="schedule_on_ejb_timeout">
+        <record name="schedule_on_ejb_timeout.output" action="start" />
+            <ant dir="schedule_on_ejb_timeout" target="all"/>
+        <record name="schedule_on_ejb_timeout.output" action="stop" />
+    </target>
+
+    <target name="aroundtimeout">
+        <record name="aroundtimeout.output" action="start" />
+            <ant dir="aroundtimeout" target="all"/>
+        <record name="aroundtimeout.output" action="stop" />
+    </target>
+
+    <target name="mdb">
+        <record name="mdb.output" action="start" />
+            <ant dir="mdb" target="all"/>
+        <record name="mdb.output" action="stop" />
+    </target>
+
+    <target name="keepstate">
+        <record name="keepstate.output" action="start" />
+            <ant dir="keepstate" target="all"/>
+        <record name="keepstate.output" action="stop" />
+    </target>
+
+    <target name="methodintf">
+        <record name="methodintf.output" action="start" />
+            <ant dir="methodintf" target="all"/>
+        <record name="methodintf.output" action="stop" />
+    </target>
+
+    <target name="usage">
+	<echo>
+		Usage:
+			ant all (Executes all the ejb-timer tests)
+
+			ant nonpersistenttimer (Executes the non-persistent ejb-timer test)
+			ant schedule_exp (Executes the schedule_exp ejb-timer test)
+			ant schedule_ann (Executes the schedule_ann ejb-timer test)
+			ant schedule_on_ejb_timeout (Executes the schedule_on_ejb_timeout ejb-timer test)
+			ant aroundtimeout (Executes the aroundtimeout ejb-timer test)
+			ant mdb (Executes the mdb ejb-timer test)
+
+	</echo>
+    </target>
+</project>

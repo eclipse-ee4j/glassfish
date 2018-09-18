@@ -1,0 +1,56 @@
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<service-config>
+    <config-bundle location="domain/configs/config[$CURRENT_INSTANCE_CONFIG_NAME]" replace-if-exist="true">
+        <customization-tokens>
+
+            <customization-token
+                    title="$iiop.service.portNumber.title" name="IIOP_LISTENER_PORT"
+                    default-value="3700"
+                    description="$iiop.service.portNumber.description"/>
+
+            <customization-token
+                    title="$iiop.service.ssl.portNumber.title" name="IIOP_SSL_LISTENER_PORT"
+                    default-value="3820"
+                    description="$iiop.service.ssl.portNumber.description"/>
+
+
+            <customization-token
+                    title="$iiop.service.mutual.auth.portNumber.title" name="IIOP_SSL_MUTUALAUTH_PORT"
+                    default-value="3920"
+                    description="$iiop.service.mutual.auth.portNumber.description"/>
+        </customization-tokens>
+
+        <configuration-element config-bean-class-name="org.glassfish.orb.admin.config.IiopService">
+            <![CDATA[
+                  <iiop-service>
+                    <orb use-thread-pool-ids="thread-pool-1"></orb>
+                    <iiop-listener port="${IIOP_LISTENER_PORT}" id="orb-listener-1" address="0.0.0.0"></iiop-listener>
+                    <iiop-listener port="${IIOP_SSL_LISTENER_PORT}" id="SSL" address="0.0.0.0" security-enabled="true">
+                      <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as"></ssl>
+                    </iiop-listener>
+                    <iiop-listener port="${IIOP_SSL_MUTUALAUTH_PORT}" id="SSL_MUTUALAUTH" address="0.0.0.0" security-enabled="true">
+                      <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true"></ssl>
+                    </iiop-listener>
+                  </iiop-service>
+
+            ]]>
+        </configuration-element>
+    </config-bundle>
+</service-config>

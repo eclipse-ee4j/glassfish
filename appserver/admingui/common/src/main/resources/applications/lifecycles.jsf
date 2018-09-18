@@ -1,0 +1,57 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- applications/lifecycles.jsf -->
+
+//<sun:page id="page1">
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout" 
+    guiTitle="$resource{i18nc.lifecycleModules.title}"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:lifecycles');">
+<!define name="content">
+    <event>
+        <!beforeCreate
+            createMap(result="#{requestScope.attrsMap}");
+            mapPut(map="#{requestScope.attrsMap}"  key="target" value="domain");
+            gf.restRequest(endpoint="#{sessionScope.REST_URL}/list-lifecycle-modules" attrs="#{requestScope.attrsMap}" method="get" result="#{requestScope.resp}");
+            gf.getLifecyclesInfo(children="#{requestScope.resp.data.children}", result=>$attribute{listOfRows} );
+            gf.onlyDASExist(onlyDAS="#{pageSession.onlyDASExist}");
+            setPageSessionAttribute(key="tableTitle" value="$resource{i18n.deployTable.lifeCycle}");
+            setPageSessionAttribute(key="editLink" value="#{request.contextPath}/common/applications/lifecycleEdit.jsf");
+            setPageSessionAttribute(key="listPageLink" value="#{request.contextPath}/common/applications/lifecycles.jsf");
+            setPageSessionAttribute(key="nextPageLink" value="#{request.contextPath}/common/applications/lifecycleNew.jsf");
+            setPageSessionAttribute(key="targetLink" value="/common/applications/lifecycleTargetListing.jsf");
+            setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18nc.msg.JS.confirmDeleteLifecycle}");
+        />
+    </event>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":lifecycles");</script>
+            <sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+                <!-- Page Title -->
+                 <sun:title id="propertyContentPage" title="$resource{i18nc.lifecycleModules.title}" helpText="$resource{i18nc.lifecycleModules.titleHelp}"/>
+                 "<br />
+#include "/common/applications/lifecyclesTable.inc"
+
+	<sun:hidden id="helpKey" value="$resource{help_common.lifecycles}" />
+    </sun:form>
+</define>
+</composition>

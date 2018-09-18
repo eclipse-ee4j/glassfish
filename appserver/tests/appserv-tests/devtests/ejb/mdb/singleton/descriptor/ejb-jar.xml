@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  version="3.1" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
+  <enterprise-beans>
+    <message-driven>
+      <ejb-name>MessageBean</ejb-name>
+      <ejb-class>com.sun.s1asdev.ejb.mdb.singleton.MessageBean</ejb-class>
+      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <transaction-type>Container</transaction-type>
+      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-link>MsgBeanInQueue</message-destination-link>
+    </message-driven>
+  </enterprise-beans>
+  <assembly-descriptor>
+    <message-destination>
+      <description>description 1</description>
+      <display-name>msg destination display name</display-name>
+      <message-destination-name>MsgBeanInQueue</message-destination-name>
+    </message-destination>
+    <message-destination>
+      <description>description 1</description>
+      <display-name>msg destination display name</display-name>
+      <message-destination-name>MsgBeanOutQueue</message-destination-name>
+    </message-destination>
+  </assembly-descriptor>
+</ejb-jar>

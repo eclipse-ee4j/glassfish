@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+        <!ENTITY testproperties SYSTEM "./build.properties">
+        <!ENTITY common SYSTEM "../../../../../config/common.xml">
+        <!ENTITY testcommon SYSTEM "../../../../../config/properties.xml">
+        ]>
+
+
+<project name="Blackbox" default="all" basedir=".">
+
+
+    &testproperties;
+    <!--
+    &eeSetup;
+    &eeProperties;
+    -->
+    &common;
+    &testcommon;
+
+    <target name="prepare" depends="init-common"
+            description="Prepare build directory">
+        <mkdir dir="classes"/>
+        <mkdir dir="classes/lib"/>
+
+    </target>
+
+    <target name="build" depends="prepare">
+        <javac srcdir="src"
+               destdir="classes"
+               debug="true"
+               optimize="${compile.optimize}"
+               classpath="${s1as.classpath}"/>
+
+        <copy file="descriptor/blackbox-notx.xml"
+              tofile="src/tmp-notx/ra.xml"/>
+
+        <jar jarfile="classes/blackbox.jar"
+             basedir="classes"
+             includes="com/**"/>
+
+        <jar jarfile="blackbox-notx.rar"
+             basedir="classes"
+             includes="blackbox.jar">
+            <metainf dir="src/tmp-notx"
+                     includes="ra.xml"/>
+        </jar>
+
+        <!-- blackbox-tx.rar -->
+        <copy file="descriptor/blackbox-tx.xml"
+              tofile="src/tmp-tx/ra.xml"/>
+        <jar jarfile="blackbox-tx.rar"
+             basedir="classes"
+             includes="blackbox.jar">
+            <metainf dir="src/tmp-tx"
+                     includes="ra.xml"/>
+        </jar>
+
+        <!-- blackbox-notx.rar -->
+        <copy file="descriptor/blackbox-notx.xml"
+              tofile="src/tmp-tx/ra.xml"/>
+        <jar jarfile="blackbox-notx.rar"
+             basedir="classes"
+             includes="blackbox.jar">
+            <metainf dir="src/tmp-tx"
+                     includes="ra.xml"/>
+        </jar>
+
+        <!-- blackbox-xa.rar -->
+        <copy file="descriptor/blackbox-xa.xml"
+              tofile="src/tmp-xa/ra.xml"/>
+        <jar jarfile="blackbox-xa.rar"
+             basedir="classes"
+             includes="blackbox.jar">
+            <metainf dir="src/tmp-xa"
+                     includes="ra.xml"/>
+        </jar>
+
+
+    </target>
+    <target name="clean"
+            description="Clean build and distribution directories">
+        <delete dir="classes"/>
+        <delete dir="src/tmp-notx"/>
+        <delete dir="src/tmp-tx"/>
+        <delete dir="src/tmp-xa"/>
+        <delete file="classes/blackbox.jar"/>
+        <delete file="blackbox-tx.rar"/>
+        <delete file="blackbox-notx.rar"/>
+        <delete file="blackbox-xa.rar"/>
+    </target>
+
+</project>

@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License v. 2.0, which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# This Source Code may also be made available under the following Secondary
+# Licenses when the conditions for such availability set forth in the
+# Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+# version 2 with the GNU Classpath Exception, which is available at
+# https://www.gnu.org/software/classpath/license.html.
+#
+# SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+#
+
+# Linux Platform Services for GlassFish
+# See this blog for more details:
+# http://blogs.sun.com/foo/entry/run_glassfish_v3_as_a
+# Remove the GF_USER setting to have the System account run GlassFish
+#
+#    Created on : %%%DATE_CREATED%%%
+#     Server Type:  %%%TYPE%%%
+
+ASADMIN="%%%AS_ADMIN_PATH%%%"
+
+case "$1" in
+start)
+    %%%SERVICEUSER_START%%%$ASADMIN %%%START_COMMAND%%% %%%CREDENTIALS%%% %%%LOCATION_ARGS_START%%% %%%ENTITY_NAME%%% &%%%SERVICEUSER_STOP%%%
+    ;;
+stop)
+    %%%SERVICEUSER_START%%%$ASADMIN %%%STOP_COMMAND%%%  %%%LOCATION_ARGS_STOP%%% %%%ENTITY_NAME%%% &%%%SERVICEUSER_STOP%%%
+    ;;
+restart)
+    %%%SERVICEUSER_START%%%$ASADMIN %%%RESTART_COMMAND%%%  %%%LOCATION_ARGS_RESTART%%% %%%ENTITY_NAME%%% &%%%SERVICEUSER_STOP%%%
+    ;;
+*)
+    echo "usage: $0 (start|stop|restart|help)"
+esac
+
+#
+# Example commands that demonstrate how to run GlassFish on the "special" ports < 1024
+#
+# iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080
+# iptables -t nat -A PREROUTING -p udp -m udp --dport 80 -j REDIRECT --to-ports 8080

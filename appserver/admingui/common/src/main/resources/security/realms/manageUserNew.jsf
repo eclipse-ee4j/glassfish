@@ -1,0 +1,114 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+	setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.manageUsers.NewPageTitle}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value="#{pageSession.configName}" default="server-config");
+        getRequestValue(key="name" value="#{pageSession.Name}");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        urlencode(value="#{pageSession.configName}" encoding="UTF-8" result="#{pageSession.encodedConfigName}");
+        gf.restRequest(endpoint="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/admin-service/jmx-connector/system.json", method="get", result="#{requestScope.result}");
+        setPageSessionAttribute(key="AuthRealmName" value="#{requestScope.result.data.extraProperties.entity.authRealmName}");
+        setPageSessionAttribute(key="isAdminRealm", value="false")
+        if ("#{pageSession.Name}=#{pageSession.AuthRealmName}"){
+            if ("#{pageSession.configName}=server-config"){
+                setPageSessionAttribute(key="isAdminRealm", value="true")
+                setPageSessionAttribute(key="groupList", value="asadmin")
+            }
+        }
+        setPageSessionAttribute(key="emptyPswdMsg", value="$resource{i18n.msg.JS.manageUser.setEmptyPassword}")
+    />
+     </event>
+            <sun:form id="propertyForm" autoComplete="off">
+#include "/common/shared/alertMsg.inc"                
+                <!-- Page Title -->
+                <sun:title id="propertyContentPage" title="$resource{i18nc.manageUsers.NewPageTitle}" 
+                helpText="$resource{i18nc.manageUsers.NewPageTitleHelp}">
+                    <!-- Buttons  -->                    
+                    <!facet pageButtonsTop>
+                    <sun:panelGroup id="topButtons">
+                        <sun:button id="newButton" text="$resource{i18n.button.OK}" 
+                            onClick="if (guiValidate('#{reqMsg}','#{reqInt}','#{reqPort}') && checkPSW() ) {submitAndDisable(this, '$resource{i18n.button.Processing}');}; return false;" >
+                           <!command
+                                saveUser(
+                                    Realm="#{pageSession.Name}"
+                                    configName="#{pageSession.configName}"
+                                    UserId="#{pageSession.userId}"
+                                    GroupList="#{pageSession.groupList}"
+                                    Password="#{password}"
+                                    CreateNew="true"
+                                );
+                                gf.redirect(page="#{request.contextPath}/common/security/realms/manageUsers.jsf?name=#{pageSession.encodedName}&configName=#{pageSession.encodedConfigName}")
+                            />                        
+                        </sun:button>
+                        <sun:button id="cancelButton" text="$resource{i18n.button.Cancel}" immediate="$boolean{true}" primary="#{false}">
+                           <!command
+                                gf.redirect(page="#{request.contextPath}/common/security/realms/manageUsers.jsf?name=#{pageSession.encodedName}&configName=#{pageSession.encodedConfigName}")
+                            />                        
+                        </sun:button>
+                    </sun:panelGroup>
+                    </facet>                     
+                </sun:title>
+                    <!-- PropertySheet .... -->
+                    <sun:propertySheet id="propertySheet" requiredFields="true">
+#include "/common/shared/configNameSection.inc"
+                        <!-- Text Field section -->               
+                        <sun:propertySheetSection id="propertSectionTextField">
+                            <sun:property id="NameProp"  rendered="#{edit}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.realm.realmName}" >
+                                <sun:staticText id="NameStatic" text="#{pageSession.Name}"/>
+                            </sun:property>
+                            <sun:property id="userIdProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.manageUsers.UserID}" helpText="$resource{i18nc.manageUsers.UserIDHelp}">
+                                <sun:textField id="UserId" styleClass="required" text="#{pageSession.userId}" columns="$int{55}" maxLength="#{sessionScope.fieldLengths['maxLength.manageUsers.UserID']}" required="#{true}"/>
+                            </sun:property>                       
+                            <sun:property id="groupListProp2"  rendered="#{isAdminRealm}"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.manageUsers.GroupList}" >
+                                <sun:staticText id="GroupList2" text="#{pageSession.groupList}" rendered="#{isAdminRealm}"/>
+                            </sun:property>
+
+                            <sun:property id="groupListProp" rendered="#{!isAdminRealm}"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.manageUsers.GroupList}" helpText="$resource{i18nc.manageUsers.GroupListHelp}">
+                                <sun:textField id="GroupList" text="#{pageSession.groupList}" rendered="#{!isAdminRealm}" columns="$int{55}" maxLength="#{sessionScope.fieldLengths['maxLength.manageUsers.GroupList']}"/>
+                            </sun:property>
+
+                            <sun:property id="newPasswordProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.manageUsers.NewPassword}">
+                                <sun:passwordField id="NewPassword"  name="password" columns="$int{25}" text="#{requestScope.password}"  >
+                                    <!afterCreate
+                                        getClientId(component="$this{component}" clientId=>$page{ps1});
+                                    />
+                                </sun:passwordField>
+                            </sun:property>  
+                            <sun:property id="confirmPasswordProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.manageUsers.ConfirmNewPassword}">
+                                <sun:passwordField id="ConfirmPassword"  columns="$int{25}" text="#{requestScope.confirmPassword}" >
+                                    <!afterCreate
+                                        getClientId(component="$this{component}" clientId=>$page{ps2});
+                                    />
+                                </sun:passwordField>     
+                            </sun:property>                                              
+                        "<br /><br />
+                        </sun:propertySheetSection>
+
+                    </sun:propertySheet>    
+                        <sun:hidden id="helpKey" value="$resource{help_common.manageUserNew}" />
+            </sun:form>
+#include "checkpswd.inc"
+</define>
+</composition>

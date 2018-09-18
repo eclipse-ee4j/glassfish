@@ -1,0 +1,434 @@
+/*
+ * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package com.sun.s1asdev.aod;
+
+import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
+import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
+import com.sun.enterprise.loader.ASURLClassLoader;
+import junit.framework.TestCase;
+import org.glassfish.deployment.common.JavaEEResourceType;
+import org.glassfish.ejb.deployment.archivist.EjbArchivist;
+import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.glassfish.web.deployment.archivist.WebArchivist;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+public class ArchiveTest extends TestCase {
+    String archiveDir = null;
+    private static SimpleReporterAdapter stat =  new SimpleReporterAdapter("appserv-tests");
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        TestUtil.setupHK2();
+        archiveDir = System.getProperty("ArchiveDir");
+    }
+
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
+    public void testApplicationArchive() throws Exception{
+        String tcName = "administered-object-definition-application-archive-test";
+
+        try{
+            doTestApplicationArchive();
+            stat.addStatus(tcName, stat.PASS);
+        }catch(Exception e){
+            stat.addStatus(tcName, stat.FAIL);
+            throw e;
+        }
+    }
+    private void doTestApplicationArchive() throws Exception{
+        String appArchiveName = "administered-object-definitionApp-UT";
+        File archive = new File(archiveDir, appArchiveName);
+        assertTrue("Do not fing the archive "+archive.getAbsolutePath(), archive.exists());
+
+        ApplicationArchivist reader = (ApplicationArchivist) TestUtil.getByType(ApplicationArchivist.class);
+        reader.setAnnotationProcessingRequested(true);
+        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        classLoader.addURL(archive.toURL());
+        reader.setClassLoader(classLoader);
+        
+        Application applicationDesc = reader.open(archive);
+//        System.out.println("--------Administered object in application.xml----------");
+//        for( AdministeredObjectDefinitionDescriptor aodd: applicationDesc.getAdministeredObjectDefinitionDescriptors()){
+//            System.out.println(aodd.getDescription());
+//            System.out.println(aodd.getName());
+//            System.out.println("");
+//        }
+        
+        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = 
+                new HashMap<String,AdministeredObjectDefinitionDescriptor>();
+        AdministeredObjectDefinitionDescriptor desc;
+
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("global-scope resource defined in application DD");
+        desc.setName("java:global/env/AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("application-scope resource defined in application DD");
+        desc.setName("java:app/env/AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+
+        TestUtil.compareAODD(expectedAODDs, applicationDesc.getResourceDescriptors(JavaEEResourceType.AODD));
+
+    }
+
+    public void testWebArchive() throws Exception{
+        String tcName = "administered-object-definition-web-archive-test";
+
+        try{
+            doTestWebArchive();
+            stat.addStatus(tcName, stat.PASS);
+        }catch(Exception e){
+            stat.addStatus(tcName, stat.FAIL);
+            throw e;
+        }
+    }
+
+    private void doTestWebArchive() throws Exception{
+        String appArchiveName = "administered-object-definition-web";
+        File archive = new File(archiveDir, appArchiveName);
+        assertTrue("Do not fing the archive "+archive.getAbsolutePath(), archive.exists());
+
+        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        classLoader.addURL(archive.toURL());
+
+        WebArchivist reader = (WebArchivist) TestUtil.getByType(WebArchivist.class);
+        reader.setAnnotationProcessingRequested(true);
+        reader.setClassLoader(classLoader);
+        assertTrue("Archivist should handle annotations.", reader.isAnnotationProcessingRequested());
+        
+        WebBundleDescriptor webDesc = reader.open(archive);
+//        for(AdministeredObjectDefinitionDescriptor aodd : webDesc.getAdministeredObjectDefinitionDescriptors()){
+//            System.out.println("Description = "+aodd.getDescription());
+//            System.out.println("Name = "+aodd.getName());
+//            System.out.println("ClassName = "+aodd.getClassName());
+//            System.out.println();
+//        }
+
+        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = 
+                new HashMap<String,AdministeredObjectDefinitionDescriptor>();
+        AdministeredObjectDefinitionDescriptor desc;
+
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("global-scope resource to be modified by DD");
+        desc.setName("java:global/env/Servlet_ModByDD_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("global-scope resource defined by @AdministeredObjectDefinition");
+        desc.setName("java:global/env/Servlet_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+        
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("application-scope resource defined by @AdministeredObjectDefinition");
+        desc.setName("java:app/env/Servlet_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+        
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("module-scope resource defined by @AdministeredObjectDefinition");
+        desc.setName("java:module/env/Servlet_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+        
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("component-scope resource defined by @AdministeredObjectDefinition");
+        desc.setName("java:comp/env/Servlet_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+        
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("global-scope resource defined in Web DD");
+        desc.setName("java:global/env/Web_DD_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+        
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("application-scope resource defined in Web DD");
+        desc.setName("java:app/env/Web_DD_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+        
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("module-scope resource defined in Web DD");
+        desc.setName("java:module/env/Web_DD_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+
+        TestUtil.compareAODD(expectedAODDs, webDesc.getResourceDescriptors(JavaEEResourceType.AODD));
+    }
+
+    public void testEJBArchive() throws Exception{
+        String tcName = "administered-object-definition-EJB-archive-test";
+
+        try{
+            doTestEJBArchive();
+            stat.addStatus(tcName, stat.PASS);
+        }catch(Exception e){
+            stat.addStatus(tcName, stat.FAIL);
+            throw e;
+        }
+    }
+    private void doTestEJBArchive() throws Exception{
+        String appArchiveName = "administered-object-definition-ejb";
+        File archive = new File(archiveDir, appArchiveName);
+        assertTrue("Do not fing the archive "+archive.getAbsolutePath(), archive.exists());
+
+        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        classLoader.addURL(archive.toURL());
+               
+        EjbArchivist reader = (EjbArchivist) TestUtil.getByType(EjbArchivist.class);
+        reader.setClassLoader(classLoader);
+        reader.setAnnotationProcessingRequested(true);
+        assertTrue("Archivist should handle annotations.", reader.isAnnotationProcessingRequested());
+
+        EjbBundleDescriptorImpl ejbBundleDesc = reader.open(archive);
+        Set<ResourceDescriptor> acturalAODDs = new HashSet<ResourceDescriptor>();
+        for( EjbDescriptor ejbDesc: ejbBundleDesc.getEjbs()){
+            acturalAODDs.addAll(ejbDesc.getResourceDescriptors(JavaEEResourceType.AODD));
+//            for( AdministeredObjectDefinitionDescriptor aodd: ejbDesc.getAdministeredObjectDefinitionDescriptors()){
+//                System.out.println(aodd.getDescription());
+//                System.out.println(aodd.getName());
+//                System.out.println("------------------");
+//            }
+        }
+        
+        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = 
+                new HashMap<String,AdministeredObjectDefinitionDescriptor>();
+        AdministeredObjectDefinitionDescriptor desc;
+
+        desc = new AdministeredObjectDefinitionDescriptor();
+        desc.setDescription("global-scope resource to be modified by DD");
+        desc.setName("java:global/env/HelloStatefulEJB_ModByDD_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+
+        desc.setDescription("global-scope resource to be modified by DD");
+        desc.setName("java:global/env/HelloEJB_ModByDD_AdminObject");
+        desc.setInterfaceName("javax.jms.Destination");
+        desc.setClassName("connector.MyAdminObject");
+        desc.setResourceAdapter("aod-ra");
+        desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+        expectedAODDs.put(desc.getName(), desc);
+
+        // administered-object in DD for stateful EJB
+        {
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("global-scope resource defined in EJB DD");
+            desc.setName("java:global/env/HelloStatefulEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("application-scope resource defined in EJB DD");
+            desc.setName("java:app/env/HelloStatefulEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("module-scope resource defined in EJB DD");
+            desc.setName("java:module/env/HelloStatefulEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("component-scope resource defined in EJB DD");
+            desc.setName("java:comp/env/HelloStatefulEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+        }
+        // administered-object in DD for stateless EJB
+        {
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("global-scope resource defined in EJB DD");
+            desc.setName("java:global/env/HelloEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("application-scope resource defined in EJB DD");
+            desc.setName("java:app/env/HelloEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("module-scope resource defined in EJB DD");
+            desc.setName("java:module/env/HelloEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("component-scope resource defined in EJB DD");
+            desc.setName("java:comp/env/HelloEJB_DD_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+        }
+        
+        // administered-object in annotation for stateful EJB
+        {
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("global-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:global/env/HelloStatefulEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+            
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("application-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:app/env/HelloStatefulEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("module-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:module/env/HelloStatefulEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("component-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:comp/env/HelloStatefulEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+        }
+
+        // administered-object in annotation for stateless EJB
+        {
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("global-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:global/env/HelloEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+            
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("application-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:app/env/HelloEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+            
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("module-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:module/env/HelloEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+            
+            desc = new AdministeredObjectDefinitionDescriptor();
+            desc.setDescription("component-scope resource defined by @AdministeredObjectDefinition");
+            desc.setName("java:comp/env/HelloEJB_Annotation_AdminObject");
+            desc.setInterfaceName("javax.jms.Destination");
+            desc.setClassName("connector.MyAdminObject");
+            desc.setResourceAdapter("aod-ra");
+            desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
+            expectedAODDs.put(desc.getName(), desc);
+        }
+        
+        TestUtil.compareAODD(expectedAODDs, acturalAODDs);
+    }
+    
+}

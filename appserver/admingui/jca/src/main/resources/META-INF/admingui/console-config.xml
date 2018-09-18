@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<console-config id="jca">
+    <integration-point
+            id="jcaNodes"
+            type="org.glassfish.admingui:navNode"
+            priority="200"
+            parentId="resources"
+            content="jcaTreeNode.jsf"
+    />
+    <integration-point
+            id="raconfigNode"
+            type="org.glassfish.admingui:navNode"
+            priority="700"
+            parentId="resources"
+            content="raconfigTreeNode.jsf"
+    />
+
+    <integration-point
+            id="jca_connectorService"
+            type="org.glassfish.admingui:navNode"
+            priority="200"
+            parentId="#{configNameId}"
+            content="pluginTreeNodeConnectorService.jsf"
+    />
+
+    <integration-point
+            id="jca_connectorServiceLink"
+            type="org.glassfish.admingui:configuration"
+            priority="200"
+            parentId="propSheetSection"
+            content="connectorServiceConfigLink.jsf"
+    />
+
+    <integration-point
+                id="jcaResourceLink"
+                parentId="propSheetSection"
+                type="org.glassfish.admingui:resources"
+                priority="200"
+                content="jcaResourceLink.jsf"
+    />
+        <!-- add the property sheet for deployment page, specific for app client app -->
+    <integration-point
+        id="jca_deploy"
+        type="org.glassfish.admingui:uploadPropertySheet"
+        priority="100"
+        parentId="form"
+        content="apps/deploymentRar.jsf"
+    />
+    <integration-point
+        id="jca_edit_app"
+        type="org.glassfish.admingui:editAppPage"
+        content="rar:jca/apps/editRar.jsf"
+    />
+
+    <!-- add the dropdown option for selecting the type of app to deploy
+         in the form of  label:value
+     -->
+    <integration-point
+        id="jca_deploy_type"
+        type="org.glassfish.admingui:appTypeDropdown"
+        priority="300"
+        parentId="form"
+        content="rar|org.glassfish.admingui.core.Strings|deploy.type.rar"
+    />
+
+    <!-- add dropdown option for the resource dropdown of cluster/standalone instance resource table. -->
+    <integration-point
+            id="jcaResourceDropDown"
+            type="org.glassfish.admingui:resourceTypeDropdown"
+            priority="200"
+            content="jca/connectorResourceNew.jsf|org.glassfish.admingui.core.Strings|tree.connectorResources"
+    />
+    <integration-point
+            id="adminObjResourceDropDown"
+            type="org.glassfish.admingui:resourceTypeDropdown"
+            priority="100"
+            content="jca/adminObjectNew.jsf|org.glassfish.admingui.core.Strings|tree.adminObjectResources"
+    />
+    <integration-point
+            id="jcaResourceFilter"
+            type="org.glassfish.admingui:resFilterDropdown"
+            priority="200"
+            content="connector-resource|org.glassfish.admingui.core.Strings|tree.connectorResources"
+    />
+    <integration-point
+            id="adminObjResourceFilter"
+            type="org.glassfish.admingui:resFilterDropdown"
+            priority="100"
+            content="admin-object-resource|org.glassfish.admingui.core.Strings|tree.adminObjectResources"
+    />
+
+</console-config>

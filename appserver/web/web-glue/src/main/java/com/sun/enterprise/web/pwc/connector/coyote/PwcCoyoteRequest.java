@@ -1,0 +1,341 @@
+/*
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package com.sun.enterprise.web.pwc.connector.coyote;
+
+import com.sun.enterprise.web.pwc.PwcWebModule;
+import com.sun.enterprise.web.session.WebSessionCookieConfig;
+import com.sun.enterprise.web.session.WebSessionCookieConfig.CookieSecureType;
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.connector.Response;
+import org.glassfish.web.LogFacade;
+
+import javax.servlet.http.Cookie;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.String;
+import java.nio.charset.Charset;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Customized version of the Tomcat 5 CoyoteRequest
+ * This is required for supporting Web Programmatic Login and setting the
+ * request encoding (charset).
+ *
+ * @author Jeanfrancois Arcand
+ * @author Jan Luehe
+ */
+public class PwcCoyoteRequest extends Request {
+
+    private static final Logger logger = LogFacade.getLogger();
+
+    private static final ResourceBundle rb = logger.getResourceBundle();
+
+    // Have we already determined request encoding from sun-web.xml?
+    private boolean sunWebXmlChecked = false;
+
+    // START SJSAS 6346738
+    private byte[] formData = null;
+    private int formDataLen = 0;
+    // END SJSAS 6346738
+
+    @Override
+    public void setContext(Context ctx) {
+        if (ctx == null) {
+            // Invalid request. Response will be handled by
+            // the StandardEngineValve
+            return;
+        }
+        
+        super.setContext(ctx);
+        Response response = (Response) getResponse();
+        // Assert response!=null
+        if ((response != null) && (ctx instanceof PwcWebModule)) {
+            String[] cacheControls = ((PwcWebModule) ctx).getCacheControls();
+            for (int i=0; cacheControls!=null && i<cacheControls.length; i++) {
+                response.addHeader("Cache-Control", cacheControls[i]);
+            }
+        }
+
+        sunWebXmlChecked = false;
+    }
+
+    @Override
+    public BufferedReader getReader() throws IOException {
+        if (super.getCharacterEncoding() == null) {
+            setRequestEncodingFromSunWebXml();
+        }
+        return super.getReader();
+    }
+
+
+    /**
+     * Return the character encoding for this Request.
+     *
+     * If there is no request charset specified in the request, determines and
+     * sets the request charset using the locale-charset-info,
+     * locale-charset-map, and parameter-encoding elements provided in the
+     * sun-web.xml.
+     */
+    @Override
+    public String getCharacterEncoding() {
+        String enc = super.getCharacterEncoding();
+        if (enc != null) {
+            return enc;
+        }
+    
+        boolean encodingFound = setRequestEncodingFromSunWebXml();
+        if (encodingFound) {
+            return super.getCharacterEncoding();
+        } else {
+            return null;
+        }
+    }
+
+
+    /*
+     * Configures the given JSESSIONID cookie with the cookie-properties from
+     * sun-web.xml.
+     *
+     * @param cookie The JSESSIONID cookie to be configured
+     */
+    @Override
+    public void configureSessionCookie(Cookie cookie) {
+
+        super.configureSessionCookie(cookie);
+
+        PwcWebModule wm = (PwcWebModule) getContext();
+        WebSessionCookieConfig cookieConfig = (WebSessionCookieConfig)wm.getSessionCookieConfig();
+        CookieSecureType type = cookieConfig.getSecure();
+        if (CookieSecureType.TRUE == type) {
+            cookie.setSecure(true);
+        } else if (CookieSecureType.FALSE == type) {
+            cookie.setSecure(false);
+        } else {
+            cookie.setSecure(isSecure());
+        }
+    }
+    
+
+    // START SJSAS 6346738
+    @Override
+    public void recycle() {
+        super.recycle();
+        formDataLen = 0;
+        sunWebXmlChecked = false;
+    }
+    // END SJSAS 6346738
+            
+
+    /**
+     * Determines and sets the request charset using the request-encoding in
+     * the web.xml or
+     * the locale-charset-info,locale-charset-map, and parameter-encoding elements
+     * provided in the sun-web.xml.
+     *
+     * @return true if a request encoding has been determined and set,
+     * false otherwise
+     */
+    private boolean setRequestEncodingFromSunWebXml() {
+
+        if (sunWebXmlChecked) {
+            return false;
+        }
+
+        sunWebXmlChecked = true;
+
+        PwcWebModule wm = (PwcWebModule) getContext();
+
+        String encoding = getFormHintFieldEncoding(wm);
+        if (encoding == null) {
+            encoding = wm.getRequestCharacterEncoding();
+            if (encoding == null && wm.hasLocaleToCharsetMapping()) {
+                encoding = wm.mapLocalesToCharset(getLocales());
+            }
+        }
+
+        if (encoding != null) {
+            try {
+                setCharacterEncoding(encoding);
+            } catch (UnsupportedEncodingException uee) {
+                String msg = MessageFormat.format(rb.getString(LogFacade.UNABLE_TO_SET_ENCODING) , encoding, wm.getID());
+                logger.log(Level.WARNING, msg, uee);
+            }
+        }
+
+        return (encoding != null);
+    }
+
+
+    /*
+     * Returns the value of the query parameter whose name
+     * corresponds to the value of the form-hint-field attribute of the
+     * <parameter-encoding> element in sun-web.xml.
+     *
+     * @return The value of the query parameter whose name corresponds to the
+     * value of the form-hint-field attribute in sun-web.xml, or null if the
+     * request does not have any query string, or the query string does not
+     * contain a query parameter with that name
+     */
+    private String getFormHintFieldEncoding(PwcWebModule wm) {
+
+        String encoding = null;
+
+        String formHintField = wm.getFormHintField();
+        if (formHintField == null){
+            return null;
+        }
+
+        if ("POST".equalsIgnoreCase(getMethod())) {
+            // POST
+            encoding = getPostDataEncoding(formHintField);
+        } else {
+            String query = getQueryString();
+            if (query != null) {
+                encoding = parseFormHintField(query, formHintField);
+            }
+        }
+
+        return encoding;
+    }
+        
+    
+    private String getPostDataEncoding(String formHintField) {
+
+        if (!getMethod().equalsIgnoreCase("POST")) {
+            return null;
+        }
+
+        String contentType = getContentType();
+        if (contentType == null)
+            contentType = "";
+        int semicolon = contentType.indexOf(';');
+        if (semicolon >= 0) {
+            contentType = contentType.substring(0, semicolon).trim();
+        } else {
+            contentType = contentType.trim();
+        }
+        if (!("application/x-www-form-urlencoded".equals(contentType))) {
+            return null;
+        }
+
+        int len = getContentLength();
+        if (len <= 0) {
+            return null;
+        }
+        int maxPostSize = ((Connector) connector).getMaxPostSize();
+        if ((maxPostSize > 0) && (len > maxPostSize)) {
+            throw new IllegalStateException(rb.getString(LogFacade.POST_TOO_LARGE));
+        }
+
+        String encoding = null;
+
+        try {
+            formData = null;
+            if (len < CACHED_POST_LEN) {
+                if (postData == null)
+                    postData = new byte[CACHED_POST_LEN];
+                formData = postData;
+            } else {
+                formData = new byte[len];
+            }
+            int actualLen = readPostBody(formData, len);
+            if (actualLen == len) {
+                // START SJSAS 6346738
+                formDataLen = actualLen;
+                // END SJSAS 6346738
+                String formDataString = new String(formData, Charset.defaultCharset()).substring(0, len);
+                encoding = parseFormHintField(formDataString, formHintField);
+            }
+        } catch (Throwable t) {
+            ; // Ignore
+        }
+
+        return encoding;
+    }
+
+
+    /*
+     * Parses the value of the specified form-hint-field from the given
+     * parameter string.
+     *
+     * @param paramsString Parameter string
+     * @param formHintField From-hint-field
+     *
+     * @return Value of form-hint-field, or null if not found
+     */
+    private String parseFormHintField(String paramsString,
+                                      String formHintField) {
+
+        String encoding = null;
+
+        formHintField += "=";            
+        int index = paramsString.indexOf(formHintField);
+        if (index != -1) {
+            int endIndex = paramsString.indexOf('&', index);
+            if (endIndex != -1) {
+                encoding = paramsString.substring(
+                    index + formHintField.length(), endIndex);
+            } else {
+                encoding = paramsString.substring(
+                    index + formHintField.length());
+            }
+        }
+
+        return encoding;
+    }
+
+
+    // START SJSAS 6346738
+    /**
+     * Gets the POST body of this request.
+     *
+     * @return The POST body of this request
+     */
+    @Override
+    protected byte[] getPostBody() throws IOException {
+
+        if (formDataLen > 0) {
+            // POST body already read
+            return formData;
+        } else {
+            return super.getPostBody();
+        } 
+    }
+    // END SJSAS 6346738
+
+
+    // START GlassFish 898
+    @Override
+    protected Cookie makeCookie(org.glassfish.grizzly.http.Cookie scookie) {
+
+        PwcWebModule wm = (PwcWebModule) getContext();
+        boolean encodeCookies = false;
+        if (wm != null && wm.getEncodeCookies()) {
+            encodeCookies = true;
+        }
+
+        return makeCookie(scookie, encodeCookies);
+    }
+    // END GlassFish 898
+
+}

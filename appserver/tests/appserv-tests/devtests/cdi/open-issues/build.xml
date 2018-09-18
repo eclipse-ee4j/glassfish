@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="openissues-test" default="usage" basedir=".">
+
+    <property name="openissues-target" value="all"/>
+
+    <target name="run-test">
+        <antcall target="openissues">
+        <param name="openissues-target" value="run-test"/>
+        </antcall>
+    </target>
+
+    <target name="all">
+        <antcall target="openissues">
+        <param name="openissues-target" value="all"/>
+        </antcall>
+    </target>
+
+    <target name="clean">
+        <antcall target="openissues">
+        <param name="openissues-target" value="clean"/>
+        </antcall>
+    </target>
+
+    <target name="build">
+        <antcall target="openissues">
+        <param name="openissues-target" value="build"/>
+        </antcall>
+    </target>
+
+    <target name="setup">
+        <antcall target="openissues">
+        <param name="openissues-target" value="setup"/>
+        </antcall>
+    </target>
+
+    <target name="deploy">
+        <antcall target="openissues">
+        <param name="openissues-target" value="deploy"/>
+        </antcall>
+    </target>
+
+    <target name="undeploy">
+        <antcall target="openissues">
+        <param name="openissues-target" value="undeploy"/>
+        </antcall>
+    </target>
+
+    <target name="unsetup">
+        <antcall target="openissues">
+        <param name="openissues-target" value="unsetup"/>
+        </antcall>
+    </target>
+
+    <target name="run">
+        <antcall target="openissues">
+        <param name="openissues-target" value="run"/>
+        </antcall>
+    </target>
+
+    <target name="openissues">
+        <record name="openissues.output" action="start" />
+        <ant dir="../smoke-tests/simple-managed-bean-interceptor" target="${openissues-target}"/> <!-- WELD 728 -->
+        <ant dir="../managed-beans/managed-bean-via-resource-injection" target="${openissues-target}"/> <!-- IT 11528 -->
+        <ant dir="../javaee-component-resources/em-resource-injection-extended-transaction-context" target="${openissues-targer"/> <!--IT 11805 -->
+        <ant dir="../smoke-tests/singleton-startup/hello" target="${openissues-target}"/> <!-- IT 13072 -->
+        <record name="openissues.output" action="stop" />
+    </target>
+
+    <target name="usage">
+	<echo> Usage:
+		ant all (Executes all the openissues tests)
+		ant clean (cleans all the openissues tests)
+		ant build (builds all the openissues tests)
+		ant setup (sets up all resources for openissues tests)
+		ant deploy (deploys all the openissues apps)
+		ant run (Executes all the openissues tests)
+		ant undeploy (undeploys all the  openissues apps)
+		ant unsetup (unsets all resources for openissues tests)
+	</echo>
+    </target>
+</project>

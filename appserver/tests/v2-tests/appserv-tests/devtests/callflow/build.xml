@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "file:./../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "file:./../../config/common.xml">
+<!ENTITY reporting   SYSTEM "file:./report.xml">
+]>
+
+<project name="callflow" default="all" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &reporting;
+    <target name="all">
+        <delete>
+           <fileset dir="${env.APS_HOME}" includes="test_results*"/>
+        </delete>
+        <delete>
+           <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="callflow.output" action="start" />
+        <antcall target="setup"/>
+        <ant dir="simpleServlet" target="all"/>  
+        <ant dir="simpleJsp" target="all"/>  
+	<antcall target="report"/> 
+        <antcall target="unsetup"/>
+    </target>
+
+    <target name="simpleServlet">
+        <record name="callflow-simple-servlet.output" action="start" />
+            <ant dir="simpleServlet" target="all"/>
+        <record name="callflow-simple-servlet.output" action="stop" />
+    </target>
+
+    <target name="simpleJSP">
+        <record name="callflow-simple-jsp.output" action="start" />
+            <ant dir="simpleJsp" target="all"/>
+        <record name="callflow-simple-jsp.output" action="stop" />
+    </target>
+
+   <target name="setup">
+        <record name="callflow-setup-dbreader.output" action="start" />
+            <ant dir="dbreader" target="build"/>
+            <ant dir="dbreader" target="deploy"/>
+        <record name="callflow-setup-dbreader.output" action="stop" />
+    </target>
+   <target name="unsetup">
+      <ant dir="simpleJsp" target="clean-db" />
+      <ant dir="dbreader" target="undeploy"/>
+    </target>
+
+    <target name="usage">
+	<echo>
+		Usage:
+			ant all (Executes all the callflow tests)
+	</echo>
+    </target>
+</project>

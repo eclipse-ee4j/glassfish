@@ -1,0 +1,52 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="i18njms" bundle="org.glassfish.jms.admingui.Strings");
+    setResourceBundle(key="helpjms" bundle="org.glassfish.jms.admingui.Helplinks")
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            getRequestValue(key="target" value="#{pageSession.instanceName}");
+            urlencode(value="#{pageSession.instanceName}" encoding="UTF-8" result="#{pageSession.encodedInstanceName}");
+            setPageSessionAttribute(key="target" value="#{pageSession.instanceName}")
+            setPageSessionAttribute(key="selfPage" value="jms/physdest/standaloneInstPhysDest.jsf?target=#{pageSession.instanceName}");
+            setSessionAttribute(key="standaloneInstanceTabs" value="jmsPhysDest");
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/servers/server");
+            setPageSessionAttribute(key="resourceUrl", value="#{pageSession.parentUrl}/#{pageSession.encodedInstanceName}");
+            setPageSessionAttribute(key="rest-api" value="true");
+            gf.restRequest(endpoint="#{pageSession.resourceUrl}/list-jmsdest", method="get", result="#{requestScope.result}");
+            setPageSessionAttribute(key="destList", value="#{requestScope.result.data.extraProperties.destinations}");
+        />
+    </event>
+
+    <sun:form id="propertyForm">
+#include "/cluster/standalone/standaloneInstanceTabs.inc"
+#include "/common/shared/alertMsg.inc"
+        <sun:title id="propertyContentPage" title="$resource{i18njms.jmsPhysDestinations.pageTitle}" helpText="$resource{i18njms.jmsPhysDestinations.pageHelp}"/>
+#include "/common/shared/nameSection.inc"
+#include "physDestTable.jsf
+        <sun:hidden id="helpKey" value="$resource{helpjms.jmsPhysicalDestinations}" />
+    </sun:form>
+</define>
+</composition>

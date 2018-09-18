@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd">
+  <display-name>ejb-ejb30-hello-session3App</display-name>
+  <module>
+    <ejb>ejb-ejb31-full-ear-ejb.jar</ejb>
+  </module>
+  <module>
+    <web>
+      <web-uri>ejb-ejb31-full-ear-web.war</web-uri>
+      <context-root>ejb-ejb31-full-ear</context-root>
+    </web>
+  </module>
+  <env-entry>
+     <env-entry-name>java:app/env/value1</env-entry-name>
+     <env-entry-type>java.lang.Integer</env-entry-type>
+     <env-entry-value>18338</env-entry-value>
+  </env-entry>
+  <env-entry>
+    <env-entry-name>java:app/env/myString</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>myString</env-entry-value>
+  </env-entry>
+</application>

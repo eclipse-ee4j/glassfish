@@ -1,0 +1,94 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- applications/manageVirtualServers.jsf -->
+
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout" guiTitle="$resource{i18n.manageVS.PageTitle}" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            getRequestValue(key="highLight" value="#{pageSession.highLight}");
+            getRequestValue(key="appName" value="#{pageSession.appName}");
+            urlencode(value="#{pageSession.appName}" encoding="UTF-8" result="#{pageSession.encodedAppName}");
+            getRequestValue(key="targetName" value="#{pageSession.targetName}");
+            getRequestValue(key="targetPageLink" value="#{pageSession.targetPageLink}");
+
+            gf.getTargetEndpoint(target="#{pageSession.targetName}" endpoint="#{pageSession.targetEndpoint}")
+            gf.restRequest(endpoint="#{pageSession.targetEndpoint}"  method="GET" result="#{requestScope.resp}");
+            setPageSessionAttribute(key="targetConfig" value="#{requestScope.resp.data.extraProperties.entity.configRef}");
+
+            getVsForDeployment(targetConfig="#{pageSession.targetConfig}" result="#{pageSession.vsList}");
+            gf.convertListToOptionArray(list="#{pageSession.vsList}", optionArray="#{pageSession.availableTargets}");
+            
+            gf.restRequest(endpoint="#{pageSession.targetEndpoint}/application-ref/#{pageSession.encodedAppName}" method="GET"  result="#{requestScope.ref}");
+            convertStringtoList(str="#{requestScope.ref.data.extraProperties.entity.virtualServers}"  result="#{requestScope.selectedVsList}");
+            convertListToArray(list="#{requestScope.selectedVsList}" array="#{pageSession.selectedTargets}");
+        />
+    </event>
+    <sun:form id="form">
+        <!afterCreate
+            getClientId(component="$this{component}" clientId=>$attribute{formId})
+        />
+
+#include "/common/shared/alertMsg_1.inc"
+ <sun:title id="propertyContentPage" title="$resource{i18n.manageVS.PageTitle}" helpText="$resource{i18n.manageVS.PageTitleHelp}">
+ <!facet pageButtonsTop>
+        <sun:panelGroup id="topButtons">
+            <sun:button id="saveButton"  text="$resource{i18n.button.Save}" 
+                    onClick="submitAndDisable(this, '$resource{i18n.button.Processing}'); return false;" >
+                <!command
+                    convertArrayToCommaString(array="#{pageSession.selectedTargets}", commaString="#{requestScope.vsString}");
+                    createMap(result="#{requestScope.attrsMap}")
+                    mapPut(map="#{requestScope.attrsMap}" key="virtualServers" value="#{requestScope.vsString}");
+                    gf.restRequest(endpoint="#{pageSession.targetEndpoint}/application-ref/#{pageSession.encodedAppName}"
+                            attrs="#{requestScope.attrsMap}"  method="POST" result="#{requestScope.ref}");
+                    prepareSuccessfulMsg();
+                    gf.redirect(page="#{pageSession.targetPageLink}?appName=#{pageSession.encodedAppName}&listPageLink=#{pageSession.listPageLink}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                />
+            </sun:button>
+            <sun:button id="cancelButton" immediate="#{true}" primary="#{false}" rendered="#{pageSession.showCancelButton}" text="$resource{i18n.button.Cancel}" >
+                <!command
+
+                    gf.redirect(page="#{pageSession.targetPageLink}?appName=#{pageSession.encodedAppName}&listPageLink=#{pageSession.listPageLink}");
+                />
+            </sun:button>
+        </sun:panelGroup>
+    </facet>
+</sun:title>
+<sun:propertySheet id="targetSection">
+    <sun:propertySheetSection id="vsSectionId"   >
+        <sun:property id="addRemoveProp" noWrap="#{true}" overlapLabel="#{false}">
+#include "/common/shared/commonAddRemove.inc"
+        </sun:property>
+        <!afterCreate
+            getClientId(component="$this{component}" clientId="#{pageSession.targetSectionId}");
+        />
+    </sun:propertySheetSection>
+</sun:propertySheet>
+
+<sun:hidden id="helpKey" value="$resource{help_common.manageVirtualServers}" />
+    </sun:form>
+
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>

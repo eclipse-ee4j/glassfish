@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE project [
+<!ENTITY commonSetup SYSTEM "../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../config/common.xml">
+<!ENTITY commonRun SYSTEM "../../../config/run.xml">
+<!ENTITY commonSecurity SYSTEM "../common.xml">
+]>
+
+
+<project name="wss" default="usage" basedir=".">
+    &commonSetup;
+    &commonBuild;
+    &commonSecurity;
+    &commonRun;
+
+    <target name="all">
+        <record name="security-wss.output" action="start" />
+
+	<ant dir="encThenSign-default-conf" target="all"/>
+        <ant dir="permethod" target="all"/>
+
+        <!-- JWS 2.0 -->
+        <ant dir="gartner" target="all"/>
+<!--        <ant dir="roles" target="all"/> --> <!-- AppClient environment: not authorized for invocation -->
+<!--        <ant dir="roles2" target="all"/> -->
+<!--        <ant dir="ssl" target="all"/>-->
+<!--        <ant dir="sslclientcert" target="all"/>-->
+
+        <record name="security-wss.output" action="stop" />    
+    </target>
+</project>

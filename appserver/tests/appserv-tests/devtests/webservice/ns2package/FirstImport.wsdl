@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<definitions
+        name="NamespaceToPackageTest"
+	targetNamespace="http://ns2package.org/firstimport/FirstImport.wsdl"
+	xmlns:tns="http://ns2package.org/firstimport/FirstImport.wsdl"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ns1="http://ns2package.org/secondimport/types">
+
+  <types>
+    <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://ns2package.org/secondimport/types" schemaLocation="SecondImport.xsd"/>
+    </xs:schema>
+  </types>
+
+  <message name="Test1Request">
+    <part name="params" element="ns1:Test1Request"/>
+  </message>
+  
+  <message name="Test1Response">
+    <part name="result" element="ns1:Test1Response"/>
+  </message>  
+  
+  <portType name="Test">
+    <operation name="test1">
+      <input message="tns:Test1Request"/>
+      <output message="tns:Test1Response"/>
+    </operation>  
+  </portType>
+  
+  <binding name="TestBinding" type="tns:Test">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="test1">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>      
+  </binding>
+
+</definitions>

@@ -1,0 +1,102 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- appServer/jvmReport.jsf -->
+
+<sun:page id="page1">
+    <!beforeCreate
+        setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+        setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+        setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
+        getRequestValue(key="instanceName" value="#{pageSession.instanceName}");
+        getRequestValue(key="clusterName" value="#{pageSession.clusterName}");
+        urlencode(value="#{pageSession.instanceName}" encoding="UTF-8" result="#{pageSession.encodedInstanceName}");
+        getRequestValue(key="reportType" value="#{pageSession.reportType}" default="summary");
+        urlencode(value="#{pageSession.reportType}" encoding="UTF-8" result="#{pageSession.encodedReportType}");
+
+        getRequestValue(key="config" value="#{pageSession.config}");
+        setPageSessionAttribute(key="ep", value="/servers/server/#{pageSession.encodedInstanceName}/generate-jvm-report.json");
+    />
+    <sun:html id="html2"> 
+        <sun:head id="propertyhead" title="JVM Report" >
+        </sun:head>
+        <sun:body id="body3">
+            <sun:form id="propertyForm">
+                <!-- Page Title -->
+                <sun:title id="propertyContentPage" title=" #{instanceName}" >
+                    <!-- Buttons  -->                    
+                    <!facet pageButtonsTop>
+                    <sun:panelGroup id="topButtons">
+                        <sun:button id="closeButton" text="$resource{i18n.button.Close}"
+                            onClick="javascript: window.close(); return false;" >
+                        </sun:button>
+                    </sun:panelGroup>
+                    </facet>
+                    <!facet pageButtonsBottom>
+                    <sun:panelGroup id="bottomButtons">
+                        <sun:button id="closeButton" text="$resource{i18n.button.Close}"
+                            onClick="javascript: window.close(); return false;" >
+                        </sun:button>
+                    </sun:panelGroup>
+                    </facet>
+                    <!-- PropertySheet .... -->
+                    <sun:propertySheet id="propertySheet">
+                        <event>
+                            <!beforeCreate
+                                gf.createAttributeMap(keys={"type"}
+                                    values={"$pageSession{encodedReportType}"},
+                                    map="#{requestScope.attrs}");
+                                    gf.restRequest(endpoint="#{sessionScope.REST_URL}#{ep}?type=#{pageSession.reportType}&__remove_empty_entries__=true",
+                                    method="get",
+                                    result="#{pageSession.report}");
+                            />
+                        </event>
+
+                        <sun:propertySheetSection id="viewPropertySection">
+                            <sun:property id="ViewProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.jvmReport.viewLabel}" >
+                                <sun:dropDown id="View" selected="#{pageSession.reportType}" submitForm="#{true}" immediate="{true}"
+                                        labels={ "$resource{i18nc.jvmReport.Summary}","$resource{i18nc.jvmReport.Memory}", "$resource{i18nc.jvmReport.ClLoading}","$resource{i18nc.jvmReport.ThDump}"}
+                                        values={"summary", "memory", "class", "thread"}>
+                                    <!command                                                                                
+
+                                        gf.createAttributeMap(keys={"type"}
+                                            values={"$pageSession{encodedReportType}"},
+                                            map="#{requestScope.attrs}");
+
+                                        gf.restRequest(endpoint="#{sessionScope.REST_URL}#{ep}?type=#{pageSession.reportType}&__remove_empty_entries__=true",
+                                        method="get",
+                                        result="#{pageSession.report}");
+                                    />
+                                </sun:dropDown>
+                            </sun:property>                          
+                        </sun:propertySheetSection>
+                        <sun:propertySheetSection id="reportPropertySection">
+                            <sun:property id="ReportProp"  labelAlign="left" noWrap="#{false}" overlapLabel="#{false}" readOnly="#{true)" >
+                             "<pre><font size="3" /> 
+                                <sun:staticText id="Report" text="#{pageSession.report.data.message}"/>
+                                <sun:staticText id="Report1" text="#{pageSession.report.data.subReports[0].properties.message}"/>
+                            "</pre>
+                            </sun:property>                  
+                        </sun:propertySheetSection>
+                    </sun:propertySheet>
+                </sun:title>
+        <sun:hidden id="helpKey" value="$resource{help_common.jvmReport}" />
+            </sun:form>
+        </sun:body>
+    </sun:html>
+</sun:page>

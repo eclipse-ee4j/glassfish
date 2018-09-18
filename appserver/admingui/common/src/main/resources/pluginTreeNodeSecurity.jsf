@@ -1,0 +1,100 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- pluginTreeNodeJVM.jsf -->
+
+<sun:treeNode id="security"
+    text="$resource{i18n.tree.security}"
+    url="#{request.contextPath}/common/security/security.jsf?configName=${configName}"
+    >
+    <!facet image>
+	<sun:imageHyperlink imageURL="/resource/common/security/images/security.gif" url="#{request.contextPath}/common/security/security.jsf?configName=${configName}" 
+	    alt="$resource{i18n.tree.security}" border="0" immediate="true" />
+    </facet>
+
+    <dynamicTreeNode id="realms"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+	    childImageURL="/resource/common/security/images/security.gif"
+	    childExpanded="false"
+	    childURL="#{request.contextPath}/common/security/realms/realmEdit.jsf?name=#{$this{valueBinding}.text}&configName=${configName}"
+	    text="$resource{i18n.tree.realms}"
+	    url="#{request.contextPath}/common/security/realms/realms.jsf?configName=${configName}">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/configs/config/${configName}/security-service/auth-realm.json" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="#{request.contextPath}/common/security/realms/realms.jsf?configName=${configName}" 
+		alt="$resource{i18n.tree.realms}" border="0" immediate="true" />
+	</facet>
+    </dynamicTreeNode>
+
+    <dynamicTreeNode id="auditModules"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+	    childImageURL="/resource/common/security/images/security.gif"
+	    childExpanded="false"
+	    childURL="#{request.contextPath}/common/security/auditModules/auditModuleEdit.jsf?name=#{$this{valueBinding}.text}&configName=${configName}"
+	    text="$resource{i18n.tree.auditModules}"
+	    url="#{request.contextPath}/common/security/auditModules/auditModules.jsf?configName=${configName}"
+	>
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/configs/config/${configName}/security-service/audit-module.json" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="#{request.contextPath}/common/security/auditModules/auditModules.jsf?configName=${configName}" 
+		alt="$resource{i18n.tree.auditModules}" border="0" immediate="true" />
+	</facet>
+    </dynamicTreeNode>
+
+    <dynamicTreeNode id="jaccProviders"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+	    childImageURL="/resource/common/security/images/security.gif"
+	    childExpanded="false"
+	    childURL="#{request.contextPath}/common/security/jacc/jaccProviderEdit.jsf?name=#{$this{valueBinding}.text}&configName=${configName}"
+	    text="$resource{i18n.tree.jaccProviders}"
+	    url="#{request.contextPath}/common/security/jacc/jaccProviders.jsf?configName=${configName}">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/configs/config/${configName}/security-service/jacc-provider.json" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="#{request.contextPath}/common/security/jacc/jaccProviders.jsf?configName=${configName}" alt="$resource{i18n.tree.jaccProviders}" border="0" immediate="true" />
+	</facet>
+    </dynamicTreeNode>
+
+    <dynamicTreeNode id="messageSecurity"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+	    childImageURL="/resource/common/security/images/jms.gif"
+	    childExpanded="false"
+	    childURL="#{request.contextPath}/common/security/msgSecurity/msgSecurityEdit.jsf?name=#{$this{valueBinding}.text}&configName=${configName}"
+	    text="$resource{i18n.tree.msgSecurityConfigs}"
+	    url="#{request.contextPath}/common/security/msgSecurity/msgSecurity.jsf?configName=${configName}">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/configs/config/${configName}/security-service/message-security-config.json" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="#{request.contextPath}/common/security/msgSecurity/msgSecurity.jsf?configName=${configName}" alt="$resource{i18n.tree.msgSecurityConfigs}" border="0" immediate="true" />
+	</facet>
+    </dynamicTreeNode>
+</sun:treeNode>

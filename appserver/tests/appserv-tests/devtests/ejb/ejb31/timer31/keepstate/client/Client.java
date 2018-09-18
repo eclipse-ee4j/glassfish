@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package com.sun.s1asdev.timer31.keepstate.client;
+
+import javax.ejb.*;
+import com.sun.s1asdev.ejb31.timer.keepstate.KeepStateIF;
+import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
+
+public class Client {
+
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
+
+    @EJB private static KeepStateIF bean;
+
+    public static void main(String args[]) { 
+        boolean keepState = Boolean.valueOf(args[0]);
+        String testName = "ejb31-timer-keepstate-" + keepState;
+        stat.addDescription(testName);
+        try {
+            testKeepState(keepState);
+            stat.addStatus("testKeepState " + keepState + ": ", stat.PASS );
+        } catch(Exception e) {
+            stat.addStatus("testKeepState " + keepState + ": ", stat.FAIL );
+            e.printStackTrace();
+        }
+        stat.printSummary(testName);
+    }
+
+    public static void testKeepState(boolean keepState) throws Exception {
+        String result = bean.verifyTimers(keepState);        
+        System.out.println("testKeepStateTrue result: " + result);
+    }
+
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+   Please remember to customize this file for your environment. The defaults for 
+   following fields may not be appropriate.  
+   - target-server name, address and port
+   - Property security.config in message-security-config
+-->
+
+<!DOCTYPE client-container PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Application Client Container//EN" "http://glassfish.org/dtds/glassfish-application-client-container_1_3.dtd">
+
+<client-container>
+  <target-server name="%%%SERVER_NAME%%%" address="localhost" port="%%%ORB_LISTENER1_PORT%%%"/>
+  <log-service file="" level="WARNING"/>
+  <message-security-config auth-layer="SOAP">
+    <!-- turned off by default -->
+    <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="XWS_ClientProvider" provider-type="client"> 
+      <request-policy auth-source="content"/>
+      <response-policy auth-source="content"/>
+      <property name="encryption.key.alias" value="s1as"/>
+      <property name="signature.key.alias" value="s1as"/>
+      <property name="dynamic.username.password" value="false"/>
+      <property name="debug" value="false"/>
+    </provider-config>
+    <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="ClientProvider" provider-type="client"> 
+      <request-policy auth-source="content"/>
+      <response-policy auth-source="content"/>
+      <property name="encryption.key.alias" value="s1as"/>
+      <property name="signature.key.alias" value="s1as"/>
+      <property name="dynamic.username.password" value="false"/>
+      <property name="debug" value="false"/>
+      <property name="security.config" value="${com.sun.aas.installRoot}/lib/appclient/wss-client-config-1.0.xml"/>
+    </provider-config>
+  </message-security-config>
+</client-container>

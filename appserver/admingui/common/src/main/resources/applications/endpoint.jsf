@@ -1,0 +1,114 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- common/applications/endpoint.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.endpoint.PageTitle}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="appName" value="#{pageSession.appName}");
+        urlencode(value="#{pageSession.appName}" encoding="UTF-8" result="#{pageSession.encodedAppName}");
+        getRequestValue(key="moduleName" value="#{pageSession.moduleName}");
+        urlencode(value="#{pageSession.moduleName}" encoding="UTF-8" result="#{pageSession.encodedModuleName}");
+        getRequestValue(key="compName" value="#{pageSession.compName}");
+        urlencode(value="#{pageSession.compName}" encoding="UTF-8" result="#{pageSession.encodedCompName}");
+        gf.createAttributeMap(keys={ "modulename" ,"endpointname"}, values={"$pageSession{encodedModuleName}" , "$pageSession{encodedCompName}"}, map="#{requestScope.attrsMap}")
+        gf.restRequest(endpoint="#{sessionScope.REST_URL}/applications/application/#{pageSession.encodedAppName}/list-webservices", attrs="#{requestScope.attrsMap}" method="get", result="#{requestScope.result}");
+        mapGet(Map="#{requestScope.result.data.extraProperties}", Key="#{pageSession.appName}" Value="#{requestScope.aMap}");
+        mapGet(Map="#{requestScope.aMap}", Key="#{pageSession.moduleName}" Value="#{requestScope.mMap}");
+        mapGet(Map="#{requestScope.mMap}", Key="#{pageSession.compName}" Value="#{pageSession.valueMap}");
+        urlencode(value="#{pageSession.valueMap.tester}" encoding="UTF-8" result="#{pageSession.encodedTester}");
+        urlencode(value="#{pageSession.valueMap.wsdl}" encoding="UTF-8" result="#{pageSession.encodedWsdl}");
+        />
+    </event>
+
+    <sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+    <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18nc.endpoint.PageTitle}" helpText="$resource{i18nc.endpoint.PageTitleHelp}">
+
+        <!facet pageButtonsTop>
+            <sun:panelGroup id="topButtons">
+                <sun:button id="backButton" immediate="#{true}" text="$resource{i18n.button.Back}" primary="#{true}">
+                    <!command
+                    gf.redirect(page="#{request.contextPath}/common/applications/applicationEdit.jsf?appName=#{pageSession.encodedAppName}");
+                    />
+                </sun:button>
+            </sun:panelGroup>
+        </facet>
+    </sun:title>
+    <sun:propertySheet id="propertySheet">
+        <sun:propertySheetSection id="propertSectionTextField">
+            <sun:property id="appName"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.appName}" >
+                <sun:hyperlink id="appName" text="#{pageSession.valueMap['appName']}"
+                        url="#{request.contextPath}/common/applications/applicationEdit.jsf?appName=#{pageSession.encodedAppName}"/>
+            </sun:property>
+
+            <sun:property id="tester"   labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.tester}" >
+                <sun:hyperlink id="link" text="#{pageSession.valueMap['tester']}"
+                onClick="var twn='__#{pageSession.encodedAppName}_tester';  twn=twn.replace(/[^a-zA-Z0-9_]+/g, '');  var win=window.open('#{request.contextPath}/common/applications/webServiceTester.jsf?appName=#{pageSession.encodedAppName}&tester=#{pageSession.encodedTester}', twn ,'width='+.75*screen.width+',height='+.75*screen.height+',top='+.1*screen.height+',left='+.1*screen.width+',toolbar=yes,status=yes,menubar=yes,scrollbars=yes,resizable=yes,directories=yes,location=yes');win.focus(); return false;" />
+            </sun:property>
+
+            <sun:property id="wsdl"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.wsdl}" >
+               <sun:hyperlink id="wsdllink" text="#{pageSession.valueMap['wsdl']}"
+                onClick="var wsdlwn='__#{pageSession.encodedAppName}_wsdl';  wsdlwn=wsdlwn.replace(/[^a-zA-Z0-9_]+/g, '');  var win=window.open('#{request.contextPath}/common/applications/webServiceWsdl.jsf?appName=#{pageSession.encodedAppName}&wsdl=#{pageSession.encodedWsdl}', wsdlwn ,'width='+.75*screen.width+',height='+.75*screen.height+',top='+.1*screen.height+',left='+.1*screen.width+',toolbar=yes,status=yes,menubar=yes,scrollbars=yes,resizable=yes,directories=yes,location=yes');win.focus(); return false;" />
+            </sun:property>
+
+            <sun:property id="endpointName"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.endpointName}" >
+                <sun:staticText id="endpointName" text="#{pageSession.valueMap['endpointName']}"/>
+            </sun:property>
+            <sun:property id="serviceName"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.serviceName}" >
+                <sun:staticText id="serviceName" text="#{pageSession.valueMap['serviceName']}"/>
+            </sun:property>
+            <sun:property id="portName"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.portName}" >
+                <sun:staticText id="portName" text="#{pageSession.valueMap['portName']}"/>
+            </sun:property>
+            <sun:property id="deploymentType"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.deploymentType}" >
+                <sun:staticText id="deploymentType" text="#{pageSession.valueMap['deploymentType']}"/>
+            </sun:property>
+            <sun:property id="implType"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.implType}" >
+                <sun:staticText id="implType" text="#{pageSession.valueMap['implType']}"/>
+            </sun:property>
+            <sun:property id="implClass"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.implClass}" >
+                <sun:staticText id="implClass" text="#{pageSession.valueMap['implClass']}"/>
+            </sun:property>
+
+            <sun:property id="address"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.address}" >
+                <sun:staticText id="address" text="#{pageSession.valueMap['address']}"/>
+            </sun:property>
+
+            <sun:property id="namespace"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.namespace}" >
+                <sun:staticText id="namespace" text="#{pageSession.valueMap['namespace']}"/>
+            </sun:property>
+            <!--
+            <sun:property id="description"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.endpoint.description}" >
+                <sun:staticText id="description" text="#{pageSession.valueMap['description']}"/>
+            </sun:property>
+            -->
+
+        </sun:propertySheetSection>
+    </sun:propertySheet>
+	<sun:hidden id="helpKey" value="$resource{help_common.endpoint}" />
+</sun:form>
+</define>
+</composition>

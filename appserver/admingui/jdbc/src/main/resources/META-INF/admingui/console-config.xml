@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<console-config id="jdbc">
+        <integration-point 
+                id="jdbcNodes" 
+                type="org.glassfish.admingui:navNode" 
+                priority="300"
+                parentId="resources" 
+                content="jdbcTreeNode.jsf" 
+        />
+        <integration-point 
+                id="jdbcCommonTask" 
+                type="org.glassfish.admingui:commonTask" 
+                priority="500"
+                parentId="commonTasksSection"
+                content="jdbcCommonTask.jsf"
+        />
+        <integration-point 
+                id="jdbcResourceLink"
+                parentId="propSheetSection"
+                type="org.glassfish.admingui:resources" 
+                priority="100" 
+                content="jdbcResourceLink.jsf"
+        />
+
+        <!-- add dropdown option for the resource dropdown of cluster/standalone instance resource table. -->
+        <integration-point
+                id="jdbcResourceDropDown"
+                type="org.glassfish.admingui:resourceTypeDropdown"
+                priority="450"
+                content="jdbc/jdbcResourceNew.jsf|org.glassfish.admingui.core.Strings|tree.jdbcResources"
+        />
+        
+        <integration-point
+                id="jdbcResourceFilter"
+                type="org.glassfish.admingui:resFilterDropdown"
+                priority="450"
+                content="jdbc-resource|org.glassfish.admingui.core.Strings|tree.jdbcResources"
+        />
+
+</console-config>

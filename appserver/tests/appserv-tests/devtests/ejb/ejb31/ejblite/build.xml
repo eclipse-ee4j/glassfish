@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../../config/common.xml">
+<!ENTITY reporting   SYSTEM "../../report.xml">
+]>
+
+<project name="ejblite" default="usage" basedir=".">
+    &commonSetup;
+    &commonBuild;
+    &reporting;
+
+    <target name="all">
+        <antcall target="javamodule"/>
+
+        <antcall target="managedbean"/>
+
+        <antcall target="sinitcallejb"/>
+
+        <antcall target="jaxrs"/>
+        <antcall target="generics"/>
+    </target>
+
+    <target name="javamodule">
+        <record name="javamodule.output" action="start" />
+            <ant dir="javamodule" target="all"/>
+        <record name="javamodule.output" action="stop" />
+    </target>
+
+    <target name="managedbean">
+        <record name="managedbean.output" action="start" />
+            <ant dir="managedbean" target="all"/>
+        <record name="managedbean.output" action="stop" />
+    </target>
+
+    <target name="sinitcallejb">
+        <record name="sinitcallejb.output" action="start" />
+            <ant dir="sinitcallejb" target="all"/>
+        <record name="sinitcallejb.output" action="stop" />
+    </target>
+
+    <target name="jaxrs">
+        <record name="jaxrs.output" action="start" />
+            <ant dir="jaxrs" target="all"/>
+        <record name="jaxrs.output" action="stop" />
+    </target>
+
+    <target name="generics">
+        <record name="generics.output" action="start" />
+            <ant dir="generics" target="all"/>
+        <record name="generics.output" action="stop" />
+    </target>
+
+    <target name="usage">
+	<echo>
+		Usage:
+			ant all (Executes all the ejb-ejb31-ejblite tests)
+	</echo>
+    </target>
+</project>

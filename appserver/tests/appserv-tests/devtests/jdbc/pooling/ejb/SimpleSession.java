@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package com.sun.s1asdev.jdbc.pooling.ejb;
+
+import javax.ejb.*;
+import java.rmi.*;
+import javax.sql.DataSource;
+
+public interface SimpleSession extends EJBObject {
+    public boolean test1(boolean isXa, boolean rollback) throws RemoteException;
+    public boolean test2(boolean isXa, boolean rollback) throws RemoteException;
+    public boolean test3(boolean rollback) throws RemoteException;
+    public boolean openMaxConnections(int count) throws RemoteException;
+    public boolean openAndCloseConnection(int count) throws RemoteException;
+}

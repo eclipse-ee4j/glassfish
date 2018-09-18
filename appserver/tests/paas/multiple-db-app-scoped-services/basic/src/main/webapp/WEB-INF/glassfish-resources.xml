@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+
+<resources>
+    <jdbc-connection-pool datasource-classname="org.apache.derby.jdbc.ClientXADataSource" res-type="javax.sql.DataSource" name="java:app/jdbc/hr_pool">
+        <property name="service-name" value="hr-service"/>
+    </jdbc-connection-pool>
+
+    <jdbc-resource pool-name="java:app/jdbc/hr_pool" jndi-name="java:app/jdbc/HrRes"></jdbc-resource>
+
+    <jdbc-connection-pool datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource" res-type="javax.sql.DataSource" name="java:app/jdbc/salary_pool">
+        <property name="service-name" value="salary-service"/>
+    </jdbc-connection-pool>
+    <jdbc-resource pool-name="java:app/jdbc/salary_pool" jndi-name="java:app/jdbc/SalaryRes"></jdbc-resource>
+</resources>
+

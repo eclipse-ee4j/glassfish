@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE project [
+<!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+<!ENTITY run SYSTEM "./../../../../config/run.xml">
+<!ENTITY testproperties SYSTEM "./build.properties">
+]>
+
+<project name="webcontainer_unittest" default="all" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &testproperties;
+    &run;
+
+    <target name="all" depends="build,create-resources,deploy,run,undeploy,delete-resources"/>
+
+    <target name="clean" depends="init-common">
+        <antcall target="clean-common"/>
+        <delete>
+            <fileset dir="." includes="*.class"/>
+        </delete>
+        <delete file="lib/bean-lib.jar"/>
+    </target>
+       
+    <target name="compile" depends="clean">
+        <!-- create WEB-INF/lib/bean-lib.jar -->
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.classes.dir}/META-INF"/>
+        <javac srcdir="servlet" includes="TestBean.java" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="1.6"/>
+        <javac srcdir="util" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="1.6"/>
+        <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml"/>
+        <delete file="${build.classes.dir}/TestBean.class" /> <!-- This is included in the WAR below -->
+
+        <jar destfile="lib/bean-lib.jar">
+            <fileset dir="${build.classes.dir}"/>
+        </jar>
+        <delete dir="${build.classes.dir}"/>
+   
+        <!-- compile test servlet -->     
+        <mkdir dir="${build.classes.dir}"/>
+        <echo message="common.xml: Compiling test source files" level="verbose"/>
+        <mkdir dir="servlet"/>
+        <javac srcdir="servlet" destdir="${build.classes.dir}" classpath="${s1astest.classpath}:lib/bean-lib.jar" debug="on" failonerror="true"/>
+    </target>
+
+    <target name="build" depends="compile">
+       <property name="hasWebclient" value="yes"/> 
+        <antcall target="webclient-war-common">
+            <param name="hasWebclient" value="yes"/>
+            <param name="webclient.war.classes" value="**/*.class"/> 
+        </antcall>
+
+        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+               includes="WebTest.java"/>
+
+    </target> 
+
+    <target name="build-publish-war" depends="build, publish-war-common" />
+    
+    <target name="deploy" depends="init-common">
+        <antcall target="deploy-war-common"/>
+    </target>
+    
+    <target name="create-resources" depends="init-common">
+        <antcall target="create-jdbc-connpool-common">
+            <param name="jdbc.connpool.name" value="jdbc-dev-test-pool" />
+        </antcall>
+        <antcall target="create-jdbc-resource-common">
+            <param name="jdbc.connpool.name" value="jdbc-dev-test-pool" />
+            <param name="jdbc.resource.name" value="jdbc/jdbc-dev-test-resource" />
+        </antcall>
+    </target>
+	
+    <target name="run" depends="init-common">
+        <java classname="WebTest">
+          <arg value="${http.host}"/>
+          <arg value="${http.port}"/>
+          <arg value="${contextroot}"/>
+          <classpath>
+           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="."/>
+         </classpath>
+        </java>
+    </target>
+ 
+    <target name="undeploy" depends="init-common">
+        <antcall target="undeploy-war-common"/>
+    </target>
+	
+    <target name="delete-resources" depends="init-common">
+        <antcall target="delete-jdbc-resource-common">
+            <param name="jdbc.resource.name" value="jdbc/jdbc-dev-test-resource" />
+        </antcall>
+
+        <antcall target="delete-jdbc-connpool-common">
+            <param name="jdbc.connpool.name" value="jdbc-dev-test-pool" />
+        </antcall>
+    </target>
+
+    <target name="usage">
+        <antcall target="usage-common"/>
+    </target>
+</project>

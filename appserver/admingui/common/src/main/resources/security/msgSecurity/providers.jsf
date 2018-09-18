@@ -1,0 +1,137 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.msgSecProvider.TableTitle}" >
+<!define name="extraButton2" >
+    <sun:button id="button1" text="$resource{i18n.button.Delete}" disabled="#{true}" primary="#{false}"
+        onClick="if (getConfirm(this,'$pageSession{confirmDeleteMsg}')) {submitAndDisable(this, '$resource{i18n.button.Processing}');}; return false;" >
+        <!command
+            getUIComponent(clientId="$pageSession{tableRowGroupId}", component=>$attribute{tableRowGroup});
+            createMap(result="#{pageSession.attrsMap}");
+            mapPut(map="#{pageSession.attrsMap}" key="target" value="#{pageSession.encodedConfigName}" );
+            mapPut(map="#{pageSession.attrsMap}" key="layer" value="#{pageSession.encodedName}" );
+            getSelectedSingleMapRows(TableRowGroup="${tableRowGroup}" selectedRows=>$attribute{selectedRows});
+            foreach (var="row" list="${selectedRows}") {
+                urlencode(value="#{row['name']}" encoding="UTF-8" result="#{pageSession.encodedProviderName}");
+                setPageSessionAttribute(key="deleteUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.encodedConfigName}/security-service/message-security-config/#{pageSession.encodedName}/provider-config/#{pageSession.encodedProviderName}");
+                gf.restRequest(endpoint="#{pageSession.deleteUrl}", attrs="#{pageSession.attrsMap}" method="DELETE");
+            }
+            gf.redirect(page="#{pageSession.listLink}");
+        />
+    </sun:button>
+</define>
+
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        getRequestValue(key="name" value="#{pageSession.Name}");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        urlencode(value="#{pageSession.configName}" encoding="UTF-8" result="#{pageSession.encodedConfigName}");
+        setSessionAttribute(key="msgSecurityTabs" value="providers");
+
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/security-service/message-security-config/#{pageSession.Name}");
+        setPageSessionAttribute(key="childType" value="provider-config");
+
+        setPageSessionAttribute(key="rest-api" value="true");
+        
+        gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", id="providerId", result="#{requestScope.listOfRows}");
+
+        addDefaultProviderInfo(providerList="#{requestScope.listOfRows}", configName="#{pageSession.configName}", msgSecurityName="#{pageSession.Name}");
+
+        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18nc.msg.JS.confirmDeleteMsgProviders}");
+        setPageSessionAttribute(key="createLink" value="#{request.contextPath}/common/security/msgSecurity/providerNew.jsf?msgSecurityName=#{pageSession.encodedName}&configName=#{pageSession.encodedConfigName}");
+        setPageSessionAttribute(key="listLink" value="#{request.contextPath}/common/security/msgSecurity/providers.jsf?name=#{pageSession.encodedName}&configName=#{pageSession.encodedConfigName}");
+        setPageSessionAttribute(key="editLink" value="#{request.contextPath}/common/security/msgSecurity/providerEdit.jsf");
+        setPageSessionAttribute(key="tableTitle" value="$resource{i18nc.msgSecProvider.TableTitle}");
+        setPageSessionAttribute(key="deleteKey" value="providerId");
+        setPageSessionAttribute(key="disableNewButton" value="#{false}");
+
+    />
+    </event>
+
+<sun:form id="propertyForm">
+#include "/common/shared/alertMsg.inc"
+#include "msgSecurityTabs.inc"
+     <sun:title id="propertyContentPage" title="$resource{i18nc.msgSecProvider.TableTitle}"
+                 helpText="$resource{i18nc.msgSecProvider.ListPageHelp}" />
+		 
+ <sun:propertySheet id="propertySheet">
+#include "/common/shared/configNameSection.inc"
+
+     <sun:propertySheetSection id="propertySheetSection">
+         <sun:property id="AuthLayerProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.msgSecurity.authLayerLabel}" >
+             <sun:staticText escape="true" id="AuthLayer" text="#{pageSession.Name}" />
+         </sun:property>
+     </sun:propertySheetSection>
+ </sun:propertySheet>
+ "<br /> <br />
+<sun:table id="configs" title="#{tableTitle}"
+    deselectMultipleButton="$boolean{true}"
+    deselectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+    selectMultipleButton="$boolean{true}"
+    selectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)" >
+    <!afterCreate
+        getClientId(component="$this{component}" clientId=>$page{tableId});
+    />
+
+#include "providerTableButtons.inc"
+
+   <sun:tableRowGroup id="rowGroup1" selected="#{td.value.selected}" data={"$attribute{listOfRows}"} sourceVar="td">
+     <!afterCreate
+         getClientId(component="$this{component}" clientId=>$page{tableRowGroupId});
+        />
+    <sun:tableColumn headerText="$resource{i18n.common.SelectHeader}" selectId="select" rowHeader="$boolean{false}" id="col0">
+            <sun:checkbox id="select"
+                selected="#{td.value.selected}"
+                selectedValue="$boolean{true}"
+                onClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\'); admingui.table.initAllRows(\\\\\'#{pageSession.tableId}\\\\\');', 0);"
+            />
+    </sun:tableColumn>
+
+    <sun:tableColumn headerText="$resource{i18nc.msgSecProvider.colProvId}" sort="name" rowHeader="$boolean{true}" id="col1">
+        <sun:hyperlink id="authlayer" text="#{td.value.name}"
+            url="#{editLink}?name=#{td.value.name}&msgSecurityName=#{pageSession.Name}&configName=#{configName}" />
+    </sun:tableColumn>
+
+    <sun:tableColumn headerText="$resource{i18nc.msgSecProvider.colProvType}" sort="providerType" rowHeader="$boolean{true}" id="col2">
+        <sun:staticText escape="true" id="provType" value="#{td.value.providerType}" />
+    </sun:tableColumn>
+
+    <sun:tableColumn headerText="$resource{i18nc.msgSecProvider.defaultProviderCol}" sort="default" rowHeader="$boolean{true}" id="col3">
+        <sun:staticText escape="true" id="default" value="#{td.value.default}" />
+    </sun:tableColumn>
+
+    <sun:tableColumn headerText="$resource{i18nc.msgSecProvider.colClassName}" sort="className" rowHeader="$boolean{true}" id="col4">
+        <sun:staticText escape="true" id="defaultclientprov" value="#{td.value.className}" />
+    </sun:tableColumn>
+
+  </sun:tableRowGroup>
+</sun:table>
+
+	<sun:hidden id="helpKey" value="$resource{help_common.msgProviders}" />
+            </sun:form>
+//#include "/common/shared/changeButtonsJS.inc"
+
+</define>
+</composition>
+

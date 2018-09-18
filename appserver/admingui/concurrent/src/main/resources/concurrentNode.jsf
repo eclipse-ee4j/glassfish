@@ -1,0 +1,94 @@
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun:treeNode id="concurrent"
+        text="$resource{i18ncon.tree.concurrentResources}"
+        url="/concurrent/concurrentResources.jsf"
+        imageURL="/resource/jdbc/images/JDBC.gif">
+    
+    <dynamicTreeNode id="contextServices"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+            childImageURL="/resource/jdbc/images/JDBC.gif"
+            childExpanded="false"
+            childURL="/concurrent/contextServiceEdit.jsf?name=#{$this{valueBinding}.text}"
+            text="$resource{i18ncon.tree.ContextServices}"
+            url="/concurrent/contextServices.jsf">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/context-service" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="/concurrent/contextServices.jsf"  border="0" immediate="true" alt="$resource{i18ncon.tree.ContextServices}"/>
+	</facet>
+    </dynamicTreeNode>
+        
+    <dynamicTreeNode id="managedThreadFactories"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+            childImageURL="/resource/jdbc/images/JDBC.gif"
+            childExpanded="false"
+            childURL="/concurrent/managedThreadFactoryEdit.jsf?name=#{$this{valueBinding}.text}"
+            text="$resource{i18ncon.tree.ManagedThreadFactories}"
+            url="/concurrent/managedThreadFactories.jsf">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/managed-thread-factory" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="/concurrent/managedThreadFactories.jsf"  border="0" immediate="true" alt="$resource{i18ncon.tree.ManagedThreadFactories}"/>
+	</facet>
+    </dynamicTreeNode>
+        
+    <dynamicTreeNode id="managedExecutorServices"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+	    childImageURL="/resource/jdbc/images/JDBC.gif"
+	    childExpanded="false"
+	    childURL="/concurrent/managedExecutorServiceEdit.jsf?name=#{$this{valueBinding}.text}"
+	    text="$resource{i18ncon.tree.ManagedExecutorServices}"
+	    url="/concurrent/managedExecutorServices.jsf">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/managed-executor-service" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+        <!facet image>
+            <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="/concurrent/managedExecutorServices.jsf"  border="0" immediate="true" alt="$resource{i18ncon.tree.ManagedExecutorServices}"/>
+        </facet>
+    </dynamicTreeNode>
+        
+    <dynamicTreeNode id="managedScheduledExecutorServices"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+            childImageURL="/resource/jdbc/images/JDBC.gif"
+            childExpanded="false"
+            childURL="/concurrent/managedScheduledExecutorServiceEdit.jsf?name=#{$this{valueBinding}.text}"
+            text="$resource{i18ncon.tree.ManagedScheduledExecutorServices}"
+            url="/concurrent/managedScheduledExecutorServices.jsf">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/managed-scheduled-executor-service" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="/concurrent/managedScheduledExecutorServices.jsf"  border="0" immediate="true" alt="$resource{i18ncon.tree.ManagedScheduledExecutorServices}"/>
+	</facet>
+    </dynamicTreeNode>
+    <!beforeCreate
+        setResourceBundle(key="i18ncon" bundle="org.glassfish.concurrent.admingui.Strings");
+    />
+</sun:treeNode>

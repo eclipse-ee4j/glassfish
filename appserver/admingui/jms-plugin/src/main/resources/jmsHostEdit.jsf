@@ -1,0 +1,62 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18njms" bundle="org.glassfish.jms.admingui.Strings");
+    setResourceBundle(key="helpjms" bundle="org.glassfish.jms.admingui.Helplinks")
+    getRequestValue(key="name" value="#{pageSession.name}");
+    setAttribute(key="edit" value="#{true}" )
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18njms.edJmsHost.EditJmsHost}" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            setPageSessionAttribute(key="pageTitle" value="$resource{i18njms.edJmsHost.EditJmsHost}");
+            setPageSessionAttribute(key="pageTitleHelp" value="$resource{i18njms.edJmsHost.edJmsHostInfo}");
+            getRequestValue(key="configName" value=>$page{configName});
+
+            setPageSessionAttribute(key="childType" value="jms-host");
+
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/jms-service");
+            setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/#{pageSession.childType}/#{pageSession.name}");
+            setPageSessionAttribute(key="rest-api" value="true");
+            gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.valueMap}");
+        />
+    </event>
+    <sun:form id="propertyForm" autoComplete="off">
+#include "/jms/jmsHost.inc"
+        <sun:hidden id="helpKey" value="$resource{helpjms.jmsHostEdit}" />
+    </sun:form>
+
+<f:verbatim>
+    <script type="text/javascript">
+    function checkPSW() {
+    var ps1 = getTextElement('#{ps1}').value;
+    var ps2 = getTextElement('#{ps2}').value;
+    if (ps1 != ps2){
+        return showAlert('$resource{i18njms.msg.JS.edJmsHost.passwordNotMatch}');
+        }
+    return true;
+    }
+     </script>
+</f:verbatim>
+
+
+</define>
+</composition>

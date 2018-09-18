@@ -1,0 +1,57 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- jca/workSecurityMapNew.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18njca" bundle="org.glassfish.jca.admingui.Strings");
+    setResourceBundle(key="help_jca" bundle="org.glassfish.jca.admingui.Helplinks")
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18njca.workSecurityMap.newPageTitle}" guiOnLoad="enableWorkSecurityMapFields('#{usersOptionG}'); " >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setAttribute(key="usersOptionG" value="users" );
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jca/workSecurityMapNew.jsf");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/jca/workSecurityMaps.jsf");
+        setPageSessionAttribute(key="childType" value="work-security-map");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
+        gf.getDefaultValues(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}", valueMap="#{pageSession.valueMap}");
+
+        createMap(result="#{pageSession.valueMap2}");
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{false}" );
+        setPageSessionAttribute(key="disablePrincipals" value="#{false}" );
+        setPageSessionAttribute(key="disableGroups" value="#{false}" );
+    />
+    </event>
+            <sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+
+                <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18njca.workSecurityMap.newPageTitle}" helpText="$resource{i18njca.workSecurityMap.newPageTitleHelp}">
+#include "/jca/workSecurityMapButtons.inc"
+    </sun:title>
+
+#include "/jca/workSecurityMapAttr.inc"
+	<sun:hidden id="helpKey" value="$resource{help_jca.workSecurityMapNew}" />
+            </sun:form>
+    "<br/><br/>
+#include "/jca/securityMapjs.inc"
+</define>
+</composition>

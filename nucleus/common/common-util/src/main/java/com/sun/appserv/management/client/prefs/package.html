@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<!--
+
+    Copyright (c) 1998, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+  <title>com.sun.appserv.management.client.prefs</title>
+</head>
+<body bgcolor="white">
+<p>Contains classes and interfaces to edit information about login to a particular domain (especially admin user
+name and password)</p>
+
+Following is the way to use the classes and interfaces in this package:
+<pre>
+final LoginInfoStore lis = LoginInfoStoreFactory.getDefaultStore();
+final LoginInfo li       = new LoginInfo("localhost", 4848, "admin", "admin123");
+
+lis.store(li, true); //overwrites the login information for "localhost" and 4848
+</pre>
+<P>
+The default store for login information in the file ".asadminpass" in the user's home
+directory. The format of the file is as follows:
+<ul>
+<li> A line terminated by line termination character contains login information for one domain.</li>
+<li> The Login Information is stored like uri-encoding-of-host-port-admin-user-name encoded-admin-password</li>
+</ul>
+An example of stored login information would be:
+<P>
+asadmin://joe%20bloe@localhost:4848 TW9oYW1tYWQgQXNpZiB0byBLaGFu
+</P>
+This file is not supposed to be modified by hand.
+</body>
+</html>
+

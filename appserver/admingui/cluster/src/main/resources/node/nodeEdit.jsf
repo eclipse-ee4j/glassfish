@@ -1,0 +1,113 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18ncs.node.EditPageTitle}"
+    guiOnLoad="showSection('#{pageSession.valueMap['type']}', '#{pageSession.sshConnectorSectionId}', '#{pageSession.installdirSshId}', '#{pageSession.installdirConfigId}',
+                            '#{pageSession.installProp}', '#{pageSession.archProp}');
+               showSshPswdSection('#{pageSession.psSelected}', '#{pageSession.ps1PropId}',  '#{pageSession.pswdAliasPropId}');
+               showPswdSection('#{pageSession.winPsSelected}', '#{pageSession.winPs1PropId}',  '#{pageSession.winPswdAliasPropId}'); " >
+<!define name="content">
+<event>
+    <!beforeCreate
+        getRequestValue(key="nodeName" value="#{pageSession.nodeName}");
+        urlencode(value="#{pageSession.nodeName}" encoding="UTF-8" result="#{pageSession.encodedNodeName}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/node/nodeEdit.jsf?nodeName=#{pageSession.encodedNodeName}");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/node/nodes.jsf");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/nodes");
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/node/#{pageSession.encodedNodeName}");
+        setPageSessionAttribute(key="childType" value="node");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.attrMap}");
+
+        createMap(result="#{pageSession.valueMap}")
+        mapPut(map="#{pageSession.valueMap}"  key="nodehost"  value="#{pageSession.attrMap['nodeHost']}");
+        mapPut(map="#{pageSession.valueMap}"  key="nodedir"  value="#{pageSession.attrMap['nodeDir']}");
+        mapPut(map="#{pageSession.valueMap}"  key="type",  value="#{pageSession.attrMap['type']}");
+        mapPut(map="#{pageSession.valueMap}"  key="windowsdomain",  value="#{pageSession.attrMap['windowsDomain']}");
+        setPageSessionAttribute(key="winPsSelected" value="2");
+        if ("(#{pageSession.attrMap['type']}=SSH)"){
+            mapPut(map="#{pageSession.valueMap}"  key="installdir",  value="#{pageSession.attrMap['installDir']}");
+            //for edit, we don't want to clear install dir when switching from ssh to config node. GLASSFISH-15605
+            mapPut(map="#{pageSession.valueMap}"  key="installdirConfig",  value="#{pageSession.attrMap['installDir']}");
+            setPageSessionAttribute(key="showInstalldirSSH" value="#{true}");
+            setPageSessionAttribute(key="showInstalldirConfig" value="#{false}");
+        }
+        if ("#{pageSession.attrMap['type']}=CONFIG"){
+            //for CONFIG Node convert to SSH node case,  if there is already installdir specified, keep the value specified instead of changing that to default. (GLASSFISH-15374)
+            mapPut(map="#{pageSession.valueMap}"  key="installdir",  value="\\${com.sun.aas.productRoot}");
+            if("#{pageSession.attrMap['installDir']}"){
+                mapPut(map="#{pageSession.valueMap}"  key="installdir",  value="#{pageSession.attrMap['installDir']}");
+            }
+            mapPut(map="#{pageSession.valueMap}"  key="installdirConfig",  value="#{pageSession.attrMap['installDir']}");
+            setPageSessionAttribute(key="showInstalldirSSH" value="#{false}");
+            setPageSessionAttribute(key="showInstalldirConfig" value="#{true}");
+        }
+        setPageSessionAttribute(key="psSelected" value="1");
+        setPageSessionAttribute(key="winPsSelected" value="2");
+
+        gf.checkIfEndPointExist(endpoint="#{pageSession.selfUrl}/ssh-connector" exists="#{requestScope.sshConnectorExist}");
+        if (#{requestScope.sshConnectorExist}){
+            gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}/ssh-connector.json", currentMap="#{pageSession.attrMap}"  valueMap="#{pageSession.attrMap}");
+            if ("#{pageSession.attrMap['type']}=SSH"){
+                mapPut(map="#{pageSession.valueMap}"  key="sshport",  value="#{pageSession.attrMap['sshPort']}");
+            }
+            
+            
+            gf.checkIfEndPointExist(endpoint="#{pageSession.selfUrl}/ssh-connector/ssh-auth" exists="#{requestScope.sshConnectorExist}");
+            if (#{requestScope.sshConnectorExist}){
+                gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}/ssh-connector/ssh-auth.json", currentMap="#{pageSession.attrMap}"  valueMap="#{pageSession.attrMap}");
+                mapPut(map="#{pageSession.valueMap}"  key="sshuser",  value="#{pageSession.attrMap['userName']}");
+                mapPut(map="#{pageSession.valueMap}"  key="sshkeyfile",  value="#{pageSession.attrMap['keyfile']}");
+                if ("#{pageSession.attrMap['type']}=SSH"){
+                    gf.convertNodePswd(pswd="#{pageSession.attrMap['password']}" pswdText="#{pageSession.pswdText}" pswdAlias="#{pageSession.pswdAlias}" psSelected="#{pageSession.psSelected}");
+                }
+            }
+        }
+        //fill in default for CONFIG to SSH case.
+        if (! #{requestScope.sshConnectorExist}){
+            mapPut(map="#{pageSession.valueMap}"  key="sshport", value="22");
+            mapPut(map="#{pageSession.valueMap}"  key="winPort",  value="135");
+            mapPut(map="#{pageSession.valueMap}"  key="sshuser", value="\\${user.name}");
+            mapPut(map="#{pageSession.valueMap}"  key="winUser", value="\\${user.name}");
+        }
+
+        setPageSessionAttribute(key="edit" value="#{true}");
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{false}" );
+        setPageSessionAttribute(key="title" value="$resource{i18ncs.node.EditPageTitle}");
+        setPageSessionAttribute(key="titleHelp" value="$resource{i18ncs.node.EditPageTitleHelp}");
+        />
+    </event>
+            <sun:form id="propertyForm" autoComplete="off">
+#include "/common/shared/alertMsg.inc"
+#include "/cluster/node/nodeAttr.inc"
+
+"<br /><br />
+	<sun:hidden id="helpKey" value="$resource{help_cluster.nodeEdit}" />
+</sun:form>
+
+
+#include "/cluster/node/nodeJS.inc"
+
+</define>
+</composition>

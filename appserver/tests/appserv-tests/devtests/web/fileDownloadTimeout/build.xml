@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE project [
+        <!ENTITY commonSetup SYSTEM "./../../../config/properties.xml">
+        <!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
+        <!ENTITY run SYSTEM "./../../../config/run.xml">
+        <!ENTITY testproperties SYSTEM "./build.properties">
+        ]>
+
+<project name="webcontainer_unittest" default="all" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &testproperties;
+    &run;
+
+    <path id="class.path">
+        <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+        <pathelement location="build"/>
+        <fileset dir="${env.S1AS_HOME}/modules"/>
+    </path>
+    <pathconvert refid="class.path" property="test"/>
+
+    <target name="clean" depends="init-common">
+        <antcall target="clean-common"/>
+        <delete dir="build"/>
+    </target>
+
+    <target name="build">
+        <mkdir dir="build/webapp"/>
+		  <copy file="${env.S1AS_HOME}/modules/webservices-osgi.jar" todir="build/webapp"/>
+        <javac srcdir="src/main/java" destdir="build" debug="true"
+               classpath="${test}"
+               includes="**/*.java"/>
+
+			<zip file="${assemble.dir}/${appname}-web.war">
+				<fileset dir="build/webapp"/>
+				<fileset dir="src/main/webapp"/>
+			</zip>
+    </target>
+
+	 <target name="deploy">
+		<property name="force" value="true"/>
+		<antcall target="deploy-war-common"/>
+	 </target>
+
+	 <target name="undeploy">
+		<property name="force" value="true"/>
+		<antcall target="undeploy-war-common"/>
+	 </target>
+
+    <target name="all" depends="init-common, build, run, deploy, undeploy"/>
+    
+    <target name="run" depends="init-common, build, deploy">
+		<java classname="org.glassfish.devtests.web.filedownload.WebTest" classpath="${test}"/>
+    </target>
+
+    <target name="usage">
+        <antcall target="usage-common"/>
+    </target>
+</project>

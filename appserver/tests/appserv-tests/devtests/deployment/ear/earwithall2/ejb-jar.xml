@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<ejb-jar xmlns="http://java.sun.com/xml/ns/j2ee" version="2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+<display-name>justbean.jar</display-name>
+<enterprise-beans>
+<session>
+<ejb-name>JustSessionBean</ejb-name>
+<home>justbean.JustBeanHome</home>
+<remote>justbean.JustBean</remote>
+<ejb-class>justbean.JustSessionBean</ejb-class>
+<session-type>Stateless</session-type>
+<transaction-type>Bean</transaction-type>
+<security-identity>
+<use-caller-identity/>
+</security-identity>
+</session>
+</enterprise-beans>
+<assembly-descriptor>
+<method-permission>
+<unchecked/>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Home</method-intf>
+<method-name>remove</method-name>
+<method-params>
+<method-param>java.lang.Object</method-param>
+</method-params>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Home</method-intf>
+<method-name>getHomeHandle</method-name>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Remote</method-intf>
+<method-name>isIdentical</method-name>
+<method-params>
+<method-param>javax.ejb.EJBObject</method-param>
+</method-params>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Home</method-intf>
+<method-name>create</method-name>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Home</method-intf>
+<method-name>remove</method-name>
+<method-params>
+<method-param>javax.ejb.Handle</method-param>
+</method-params>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Remote</method-intf>
+<method-name>log</method-name>
+<method-params>
+<method-param>java.lang.String</method-param>
+</method-params>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Remote</method-intf>
+<method-name>getHandle</method-name>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Remote</method-intf>
+<method-name>findAllMarbles</method-name>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Home</method-intf>
+<method-name>getEJBMetaData</method-name>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Remote</method-intf>
+<method-name>getPrimaryKey</method-name>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Remote</method-intf>
+<method-name>remove</method-name>
+</method>
+<method>
+<ejb-name>JustSessionBean</ejb-name>
+<method-intf>Remote</method-intf>
+<method-name>getEJBHome</method-name>
+</method>
+</method-permission>
+</assembly-descriptor>
+</ejb-jar>

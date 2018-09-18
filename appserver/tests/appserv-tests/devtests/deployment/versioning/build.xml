@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonBuild SYSTEM "./../config/common.xml">
+]>
+
+<project name="versioning" default="all" basedir=".">
+
+    &commonBuild;
+
+    <target name="private-all">
+      <!-- play some versioning devtests scenarios with simple-version-servlet -->
+      <ant dir="simple-versioned-servlet" target="private-all">
+          <property name="build" value="${build}/simple-versioned-servlet"/>
+      </ant>
+
+      <!-- play some versioning devtests scenarios with simple-versioned-appclient -->
+      <ant dir="simple-versioned-appclient" target="private-all">
+          <property name="build" value="${build}/simple-versioned-appclient"/>
+      </ant>
+      
+      <!-- play some versioning devtests scenarios with simple-versioned-ejb -->
+      <ant dir="simple-versioned-ejb" target="private-all">
+        <property name="build" value="${build}/simple-versioned-ejb"/>
+      </ant>
+
+      <!-- play some versioning devtests scenarios with simple-versioned-ear -->
+      <ant dir="simple-versioned-ear" target="private-all">
+        <property name="build" value="${build}/simple-versioned-ear"/>
+      </ant>
+    </target>
+    <target name="rolling-upgrade">
+      <ant antfile="rolling-upgrade.xml" target="all-ee"/>
+    </target>
+</project>

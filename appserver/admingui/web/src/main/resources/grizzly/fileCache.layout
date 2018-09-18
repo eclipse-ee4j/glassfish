@@ -1,0 +1,81 @@
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- grizzly/fileCache.layout -->
+
+
+<!initPage
+    setResourceBundle(key="i18n_web" bundle="org.glassfish.web.admingui.Strings");
+	setResourceBundle(key="help_web" bundle="org.glassfish.web.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n_web.grizzly.fileCachePageTitle}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        getRequestValue(key="name" value="#{pageSession.Name}");
+        getRequestValue(key="listenerName" value="#{pageSession.listenerName}"  default="");
+        setPageSessionAttribute(key="protocolName" value="#{pageSession.Name}");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        setPageSessionAttribute(key="encodedProtocolName" value="#{pageSession.encodedName}");
+        urlencode(value="#{pageSession.listenerName}" encoding="UTF-8" result="#{pageSession.encodedListenerName}");
+        getRequestValue(key="cancelTo" value="#{pageSession.cancelTo}");
+        setPageSessionAttribute(key="parentPage", value="#{request.contextPath}/#{pageSession.cancelTo}")
+        setPageSessionAttribute(key="childType" value="file-cache");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/network-config/protocols/protocol/#{pageSession.Name}/http");
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/#{pageSession.childType}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.checkIfEndPointExist(endpoint="#{pageSession.selfUrl}" exists="#{requestScope.exist}");
+        if (#{requestScope.exist}){
+            gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.fileMap}");
+            setPageSessionAttribute(key="edit" value="#{true}" );
+        }
+        if (! #{requestScope.exist}){
+            setPageSessionAttribute(key="edit" value="#{false}" )
+            setPageSessionAttribute(key="showSuccessfulMsg" value="#{true}" )
+            gf.getDefaultValues(endpoint="#{pageSession.selfUrl}", valueMap="#{pageSession.fileMap}");
+        }
+        setPageSessionAttribute(key="valueMap" value="#{pageSession.fileMap}");
+        setPageSessionAttribute(key="convertToFalseList" value={"enabled"});
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="showDefaultButton" value="#{true}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{false}" );
+        />
+    </event>
+            <sun:form id="propertyForm">
+
+<!insert name="protocolTabs" />
+
+#include "/common/shared/alertMsg.inc"
+                <!-- Page Title -->
+                <sun:title id="propertyContentPage" title="$resource{i18n_web.grizzly.fileCachePageTitle}" helpText="$resource{i18n_web.grizzly.fileCachePageTitleHelp}">
+#include "/common/shared/editPageButtons.inc"
+                </sun:title>
+
+                <!-- PropertySheet .... -->
+<sun:propertySheet id="propertySheet">
+#include "/common/shared/configNameSection.inc"
+#include "/web/grizzly/fileCacheAttrs.inc"
+                    </sun:propertySheet>
+
+	<sun:hidden id="helpKey" value="$resource{help_web.fileCache}" />
+            </sun:form>
+</define>
+</composition>

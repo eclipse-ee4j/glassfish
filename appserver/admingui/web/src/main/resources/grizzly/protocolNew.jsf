@@ -1,0 +1,81 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- grizzly/protocolNew.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18n_web" bundle="org.glassfish.web.admingui.Strings");
+	setResourceBundle(key="help_web" bundle="org.glassfish.web.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n_web.grizzly.protocolNewPageTitle}" >
+<!define name="content">
+
+       <event>
+    <!beforeCreate
+        setPageSessionAttribute(key="edit" value="#{false}" );
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/web/grizzly/protocols.jsf");
+
+
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/network-config/protocols");
+        setPageSessionAttribute(key="childType" value="protocol");
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/#{pageSession.childType}");
+        
+        gf.getDefaultValues(endpoint="#{pageSession.selfUrl}", valueMap="#{pageSession.valueMap}");
+        mapPut(map="#{pageSession.valueMap}" key="target" value="#{pageSession.configName}");
+        gf.getChildrenNamesList(endpoint="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/http-service/virtual-server" result="#{pageSession.vsList}");
+        setPageSessionAttribute(key="childType2" value="http");
+        setPageSessionAttribute(key="parentUrl2", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/network-config/protocols/protocol/admin-listener");
+        setPageSessionAttribute(key="selfUrl2", value="#{pageSession.parentUrl2}/#{pageSession.childType2}");
+        gf.getDefaultValues(endpoint="#{pageSession.selfUrl2}", valueMap="#{pageSession.httpMap}");
+        mapPut(map="#{pageSession.httpMap}" key="DefaultVirtualServer"  value="server")
+        setPageSessionAttribute(key="httpSectionTitle" value="$resource{i18n_web.grizzly.protocolNew.httpSectionTitle}");
+
+        setPageSessionAttribute(key="fileCacheSectionTitle" value="$resource{i18n_web.grizzly.protocolNew.fileCacheSectionTitle}");
+        setPageSessionAttribute(key="childType3" value="file-cache");
+        setPageSessionAttribute(key="parentUrl3", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/network-config/protocols/protocol/admin-listener/http");
+        setPageSessionAttribute(key="selfUrl3", value="#{pageSession.parentUrl3}/#{pageSession.childType3}");
+        gf.getDefaultValues(endpoint="#{pageSession.selfUrl3}", valueMap="#{pageSession.fileMap}");
+        />
+    </event>
+            <sun:form id="propertyForm">
+#include "/common/shared/alertMsg.inc"
+
+                <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18n_web.grizzly.protocolNewPageTitle}" helpText="$resource{i18n_web.grizzly.protocolNewPageTitleHelp}">
+#include "protocolNewButtons.inc"
+    </sun:title>
+    <sun:propertySheet id="propertySheet">
+#include "/common/shared/configNameSection.inc"
+#include "/web/grizzly/protocolAttr.inc"
+#include "/web/grizzly/fileCacheAttrs.inc"
+#include "/web/grizzly/httpAttr.inc"
+    </sun:propertySheet>
+
+"<br><br>
+        <sun:title id="bottom" >
+#include "protocolNewButtons.inc"
+    </sun:title>
+    <sun:hidden id="helpKey" value="$resource{help_web.protocolNew}" />
+            </sun:form>
+
+</define>
+</composition>
+
+
+

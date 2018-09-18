@@ -1,0 +1,49 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<network-config>
+    <transports>
+        <transport name="tcp"/>
+    </transports>
+    <protocols>
+        <protocol name="pu-protocol">
+            <port-unification>
+                <protocol-finder name="http-finder-1" classname="org.glassfish.grizzly.config.portunif.HttpProtocolFinder" protocol="http"/>
+                <protocol-finder name="http-finder-2" classname="org.glassfish.grizzly.config.portunif.HttpProtocolFinder" protocol="https"/>
+            </port-unification>
+        </protocol>
+
+        <protocol name="http">
+            <http enable-comet-support="true"/>
+        </protocol>
+
+        <protocol name="https" security-enabled="true">
+            <http/>
+            <ssl ssl3-enabled="false"
+                 trust-store="target/test-classes/cacerts.jks"
+                 trust-store-password="changeit"
+                 key-store="target/test-classes/keystore.jks"
+                 key-store-password="changeit"/>
+        </protocol>
+
+    </protocols>
+    <network-listeners>
+        <thread-pool name="defaultThreadPool"/>
+        <network-listener name="http-listener" port="38082" transport="tcp" protocol="pu-protocol" thread-pool="defaultThreadPool"/>
+    </network-listeners>
+</network-config>

@@ -1,0 +1,95 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<ui:event type="initPage">
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    initProductInfoAttributes();
+</ui:event>
+<event>
+<ui:event type="beforeCreate">
+    // See if we should auto-login...
+    // NOTE: REST_URL is not yet initialized, and can't be easily b/c the
+    // NOTE: initialization method assumes authentication has completed.
+    // NOTE: So instead, I construct the REST_URL from the pieces
+    // NOTE: below. -Ken
+    gf.restRequest(endpoint="#{request.scheme}://#{sessionScope.serverName}:#{sessionScope.serverPort}/management/domain/anonymous-user-enabled"
+        method="GET", result="#{requestScope.result}", quiet="true");
+    setPageSessionAttribute(key="loginUser" value="#{requestScope.result.data.extraProperties.anonymousUserName}");
+    setPageSessionAttribute(key="byPassLogin" value="false");
+    if ("$pageSession{loginUser}") {
+        setPageSessionAttribute(key="byPassLogin" value="true");
+    }
+    setSessionAttribute(key="showLogoutButton" value="#{! pageSession.byPassLogin}")
+    getThemeFromIntegrationPoints(themeContext=>$application{com.sun.webui.theme.THEME_CONTEXT});
+</ui:event>
+<event>
+<!-- WE MAY HAVE TO LOCALIZE THE PRODUCT IMAGE. CHECKING IN FOR NOW UNTIL LOGIN COMPONENT IS READY -->
+<f:verbatim>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>$resource{i18n.loginPageTitle}</title>
+<script type="text/javascript">
+<!-- FIXME: add code to ensure we're the top-most frame -->
+    if (document.getElementById('layout-doc') != null) {
+        // Just refresh the page... login will take over
+        window.location = window.location;
+    }
+</script>
+    <style type="text/css">
+        /* clickjacking defense */
+        body { display : none; }
+    </style>
+</f:verbatim>
+    <sun:themeLinks/>
+    <sun:link url="/resource/css/css_ns6up.css" />
+<f:verbatim>
+</head>
+
+<body id="body3" class="LogBdy" focus="loginform.j_username" style="background-color: #FFFFFF;">
+    <div id="header"class="LogTopBnd" style="background: url('#{themeImages.LOGIN_GRADIENT_TOP}') repeat-x; height: 30px;"></div>
+    <div class="middle" style="background-image: url(#{themeImages.LOGIN_GRADIENT_SIDES});background-repeat:repeat-x;background-position:left top; background-color: #D4DCE1;">
+        <div class="plugincontent" style="width1: 1px; visibility: #{byPassLogin ? 'hidden' : 'visible'};">
+</f:verbatim>
+            <event>
+                <!afterCreate
+                    getClientId(component="$this{component}" clientId=>$attribute{loginId})
+                    getUIComponent(clientId="#{loginId}"  component=>$attribute{component})
+                    includeFirstIntegrationPoint(type="org.glassfish.admingui:loginform" root="#{component}");
+                />
+            </event>
+<f:verbatim>
+            <script type="text/javascript">
+                if (#{byPassLogin}) {
+                    //submitAndDisable(document.getElementById('loginButton'), '$resource{i18n.loginPageTitle}');
+                    document.getElementById('loginButton').form.submit();
+                    //document.getElementById('loginButton').form.autocomplete="off";
+                }
+            </script>
+        </div>
+    </div>
+    <div class="footer"
+        style="background-image: url(#{themeImages.LOGIN_GRADIENT_BOTTOM});background-repeat:repeat-x;background-position:left top; color: #FFFFFF; background-color: #4A5C68">
+        <div id="copyright" style="width: 720px; margin-left: auto; margin-right: auto; padding: 5px;">
+            <span>$resource{i18n.copyright.shortMessage}</span>
+        </div>
+    </div>
+    <script src="#{request.contextPath}/resource/js/cj.js"></script>
+</body>
+</html>
+</f:verbatim>

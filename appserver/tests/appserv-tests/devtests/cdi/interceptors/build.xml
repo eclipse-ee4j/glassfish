@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="interceptors-test" default="usage" basedir=".">
+
+    <property name="interceptors-target" value="all"/>
+
+    <target name="run-test">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="run-test"/>
+        </antcall>
+    </target>
+
+    <target name="all">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="all"/>
+        </antcall>
+    </target>
+
+    <target name="clean">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="clean"/>
+        </antcall>
+    </target>
+
+    <target name="build">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="build"/>
+        </antcall>
+    </target>
+
+    <target name="setup">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="setup"/>
+        </antcall>
+    </target>
+
+    <target name="deploy">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="deploy"/>
+        </antcall>
+    </target>
+
+    <target name="undeploy">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="undeploy"/>
+        </antcall>
+    </target>
+
+    <target name="unsetup">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="unsetup"/>
+        </antcall>
+    </target>
+
+    <target name="run">
+        <antcall target="interceptors">
+        <param name="interceptors-target" value="run"/>
+        </antcall>
+    </target>
+
+    <target name="interceptors">
+        <record name="interceptors.output" action="start" />
+            <ant dir="interceptors-bean-validation" target="${interceptors-target}"/>
+            <ant dir="interceptors-binding-type-inheritance" target="${interceptors-target}"/>
+            <ant dir="interceptors-binding-type-with-members" target="${interceptors-target}"/>
+            <ant dir="interceptors-business-method-interception" target="${interceptors-target}"/>
+            <ant dir="interceptors-invalid-interceptor-specified-at-beans-xml" target="${interceptors-target}"/>
+            <ant dir="interceptors-multiple-interceptor-binding-annotations" target="${interceptors-target}"/>
+            <ant dir="interceptors-multiple-interceptors-for-a-binding-type" target="${interceptors-target}"/>
+            <ant dir="interceptors-use-of-at-interceptors" target="${interceptors-target}"/>
+            <ant dir="interceptors-use-of-interceptors-in-ejbs-through-at-interceptors" target="${interceptors-target}"/>
+            <ant dir="interceptors-use-of-interceptors-in-ejbs-through-interceptor-bindings" target="${interceptors-target}"/>
+        <record name="interceptors.output" action="stop" />
+    </target>
+
+    <target name="usage">
+	<echo> Usage:
+		ant all (Executes all the interceptors tests)
+		ant clean (cleans all the interceptors tests)
+		ant build (builds all the interceptors tests)
+		ant setup (sets up all resources for interceptors tests)
+		ant deploy (deploys all the interceptors apps)
+		ant run (Executes all the interceptors tests)
+		ant undeploy (undeploys all the  interceptors apps)
+		ant unsetup (unsets all resources for interceptors tests)
+	</echo>
+    </target>
+</project>

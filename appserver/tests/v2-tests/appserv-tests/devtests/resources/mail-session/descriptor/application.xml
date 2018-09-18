@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<application xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+      	http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd"
+      version="7">
+    <display-name>mail-sessionApp</display-name>
+    <module>
+        <java>mail-session-client.jar</java>
+    </module>
+    <module>
+        <ejb>mail-session-ejb.jar</ejb>
+    </module>
+    <module>
+        <web>
+            <web-uri>mail-session-web.war</web-uri>
+            <context-root>mail-session</context-root>
+        </web>
+    </module>
+	<mail-session>
+		<description>Sample Mail Session definition application1</description>
+		<name>java:global/mail/Application_Level_MailSession</name>
+		<store-protocol>IMAP</store-protocol>
+		<transport-protocol>SMTP</transport-protocol>
+		<host>somewhere.myco.com</host>
+		<user>linda</user>
+		<password>secret</password>
+		<from>some.body@myco.com</from>
+		<property>
+			<name>Property1</name>
+			<value>10</value>
+		</property>
+		<property>
+			<name>Property2</name>
+			<value>20</value>
+		</property>
+	</mail-session>
+	<mail-session>
+		<description>Sample Mail Session definition application2</description>
+		<name>java:app/mail/Application_Level_MailSession</name>
+		<store-protocol>IMAP</store-protocol>
+		<transport-protocol>SMTP</transport-protocol>
+		<host>somewhere.myco.com</host>
+		<user>linda</user>
+		<password>secret</password>
+		<from>some.body@myco.com</from>
+		<property>
+			<name>Property1</name>
+			<value>10</value>
+		</property>
+		<property>
+			<name>Property2</name>
+			<value>20</value>
+		</property>
+	</mail-session>	  
+</application>

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright 2004 The Apache Software Foundation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<mbeans-descriptors>
+
+  <mbean         name="WebappLoader"
+          description="Classloader implementation which is specialized for
+                       handling web applications"
+               domain="Catalina"
+                group="Loader"
+                 type="org.apache.catalina.loader.WebappLoader">
+                 
+    <attribute   name="className"
+          description="Fully qualified class name of the managed object"
+                 type="java.lang.String"
+            writeable="false"/>
+
+    <attribute   name="debug"
+          description="The debugging detail level for this component"
+                 type="int"/>
+
+    <attribute   name="delegate"
+          description="The 'follow standard delegation model' flag that will be
+                       used to configure our ClassLoader"
+                 type="boolean"/>
+
+    <attribute   name="reloadable"
+          description="The reloadable flag for this Loader"
+                 type="boolean"/>
+
+    <attribute   name="repositories"
+          description="Extra repositories managed by this loader"
+                 type="[Ljava.lang.String;"/>
+
+    <attribute   name="repositoriesString"
+          description="Extra repositories managed by this loader"
+             writeable="false" 
+                 type="java.lang.String"/>
+
+    <attribute   name="loaderRepositories"
+          description="Repositories set in the real loader"
+                 type="[Ljava.lang.String;"
+            writeable="false" />
+
+    <attribute   name="loaderRepositoriesString"
+          description="Repositories set in the real loader"
+                 type="java.lang.String"
+             writeable="false" />
+
+    <operation   name="toString"
+          description="Info about the loader"
+               impact="INFO"
+           returnType="String">
+    </operation>
+  </mbean>
+
+
+</mbeans-descriptors>

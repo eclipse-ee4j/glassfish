@@ -1,0 +1,110 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- common/configuration/adminService.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n.headings.EditJmxConnector}" >
+<!define name="content">
+<event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        setSessionAttribute(key="jmxConnectorTab" value="jmxConnectorEdit");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/admin-service");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.parentUrl}.json", valueMap="#{pageSession.adminServiceMap}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/common/configuration/jmxConnectorEdit.jsf?name=#{pageSession.Name}&configName=#{pageSession.configName}");
+
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/jmx-connector/#{pageSession.adminServiceMap['systemJmxConnectorName']}");
+        gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json", method="GET" result="#{requestScope.propTable}");
+        setPageSessionAttribute(key="tableList" value="#{requestScope.propTable.data.extraProperties.properties}");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.valueMap}");
+        setPageSessionAttribute(key="convertToFalseList" value={"securityEnabled"});
+
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{false}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{false}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+        setPageSessionAttribute(key="has2Objects" value="#{false}" );
+
+    />
+    </event>
+
+
+            <sun:form id="form1">
+#include "jmxConnectorTab.inc"
+#include "/common/shared/alertMsg.inc"
+<sun:title id="propertyContentPage" title="$resource{i18n.headings.EditJmxConnector}" helpText="$resource{i18n.edJmxConnector.EditJmxConnectorInfo}" >
+#include "/common/shared/editPageButtons.inc"
+</sun:title>
+
+<sun:propertySheet id="propertySheet" >
+#include "/common/shared/configNameSection.inc"
+    <sun:propertySheetSection id="propertySheetSection">
+            <sun:property id="JmxNameProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.jmxNameLabel}" >
+                <sun:staticText id="JmxName" text="#{pageSession.valueMap['name']}" />
+            </sun:property>
+            <sun:property id="JmxProtocolProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.jmxProtocolLabel}" >
+                <sun:staticText id="JmxProtocol" text="#{pageSession.valueMap['protocol']}" />
+            </sun:property>
+            <sun:property id="JmxServUrlProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.jmxServUrlLabel}" >
+                <sun:staticText id="JmxServUrl" text="#{pageSession.jmxURL}" />
+                <!beforeCreate
+                    gf.restRequest(endpoint="#{sessionScope.REST_URL}/jmx-urls.json", method="get", result="#{requestScope.result}");
+                    setPageSessionAttribute(key="jmxURL" value="#{requestScope.result.data.extraProperties['jmxServiceUrls'][0]}");
+                />
+            </sun:property>
+            <sun:property id="SecurityProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.securityLabel}" >
+                <sun:checkbox id="Security"  selected="#{pageSession.valueMap['securityEnabled']}" selectedValue="true" />
+            </sun:property>
+            <sun:property id="AddressProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.addressLabel}" helpText="$resource{i18n.edJmxConnector.addressHelp}" >
+                <sun:textField id="Address" styleClass="required" columns="$int{40}" maxLength="#{sessionScope.fieldLengths['maxLength.edJmxConnector.address']}" text="#{pageSession.valueMap['address']}" required="#{true}" />
+            </sun:property>
+            <sun:property id="PortProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.portLabel}" helpText="$resource{i18n.edJmxConnector.portHelp}" >
+                <sun:textField id="Port" styleClass="required port" columns="$int{40}" maxLength="#{sessionScope.fieldLengths['maxLength.edJmxConnector.port']}" text="#{pageSession.valueMap['port']}" required="#{true}" />
+            </sun:property>
+            <sun:property id="RealmNameProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.realmNameLabel}" helpText="$resource{i18n.edJmxConnector.realmNameHelp}" >
+                <sun:textField id="RealmName" styleClass="required" columns="$int{40}" maxLength="#{sessionScope.fieldLengths['maxLength.edJmxConnector.realmName']}" text="#{pageSession.valueMap['authRealmName']}" required="#{true}" />
+            </sun:property>
+
+
+            <!-- For Cluster profile only
+            //<sun:property id="AcceptProp" rendered="#{isNodeAgent}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.nodeAgent.acceptLabel}" helpText="$resource{i18n.nodeAgent.acceptHelp}" >
+                //<sun:checkbox label="$resource{i18n.desc.Enabled}" selected="#{requestScope.accept}" />
+            //</sun:property>
+            //<sun:property id="clientHostname" rendered="#{supportCluster}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.edJmxConnector.clientHostLabel}" helpText="$resource{i18n.edJmxConnector.clientHostLabelHelp}" >
+               //<sun:textField id="clientHostname" styleClass="required" columns="$int{40}" text="#{requestScope.clientHostname}" required="#{true}" />
+            //</sun:property>
+            -->
+    </sun:propertySheetSection>
+    </sun:propertySheet>
+
+#include "/common/shared/propertyDescTable.inc"
+
+<sun:hidden id="helpKey" value="$resource{help_common.jmxConnectorEdit}" />
+
+    </sun:form>
+    "<br/>
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>

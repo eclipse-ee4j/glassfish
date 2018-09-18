@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="glassfish v3, embedded shell fix-up" default="fixup.library" basedir=".">
+    <property name="derby.jar.classpath.additions" value="../../../javadb/lib/derby.jar ../../../javadb/lib/derbyclient.jar ../../../javadb/lib/derbynet.jar ../../../javadb/lib/derbytools.jar ../../../javadb/lib/derbyrun.jar"/>
+    <property name="endorsed.jar.classpath.additions" value="../../modules/endorsed/javax.annotation-api.jar ../../modules/endorsed/jaxb-api.jar ../../modules/endorsed/webservices-api-osgi.jar"/>
+    <property name="classpath.additions" value="${derby.jar.classpath.additions} ${endorsed.jar.classpath.additions}"/>
+    <target name="fixup.library">
+        <unzip src="${output.dir}/${output.file}" dest="${stage.dir}">
+            <patternset>
+                <include name="META-INF/MANIFEST.MF"/>
+            </patternset>
+        </unzip>
+
+        <!-- replace the colons used as path separators with blanks -->
+        <replace file="${classpath.file}" token=":" value=" "/>
+
+        <!-- define the classpath property -->
+        <property file="${classpath.file}"/>
+
+        <!--
+            Entries in zip (and JAR) files have two-second timestamp resolution.  The
+            next sleep makes sure that the time stamp on the updated manifest
+            file will later than the original manifest's time + two seconds;
+            this make sure the zip task will actually replacde the manifest
+            in the JAR file.
+
+            Also, the manifest task seems not to update the timestamp on the
+            manifest file, so we need to explicitly touch it after updating
+            the manifest.
+        -->
+        <sleep seconds="3"/>
+        <manifest mode="update" file="${stage.dir}/META-INF/MANIFEST.MF">
+            <attribute name="Class-Path" value="${classpath} ${classpath.additions}"/>
+	    <attribute name="Bundle-SymbolicName" value="${bundlename}"/>
+        </manifest>
+        <touch file="${stage.dir}/META-INF/MANIFEST.MF"/>
+
+        <!-- Update the JAR file with the revised manifest -->
+        <zip destfile="${output.dir}/${output.file}" basedir="${stage.dir}" update="true" includes="META-INF/MANIFEST.MF"/>
+        <echo>Manifest Class-Path updated</echo>
+   </target>
+</project>

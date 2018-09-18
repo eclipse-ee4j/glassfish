@@ -1,0 +1,64 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks")
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.pswdAliasNew.title}" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            createMap(result="#{pageSession.valueMap}");
+            setPageSessionAttribute(key="edit" value="#{false}" );
+        />
+    </event>
+<sun:form id="propertyForm" autoComplete="off">
+#include "/common/shared/alertMsg_1.inc"
+    <sun:title id="propertyContentPage"  title="$resource{i18nc.pswdAliasNew.title}"  helpText="$resource{i18nc.pswdAliasNew.titleHelp}" >
+        <!facet pageButtonsTop>
+        <sun:panelGroup id="topButtons">
+            <sun:button id="newButton" text="$resource{i18n.button.OK}"
+                onClick="if (guiValidate('#{reqMsg}','#{reqInt}','#{reqPort}')){
+                        if ( checkPSW('#{ps1}', '#{ps2}' , '$resource{i18n.msg.JS.manageUser.passwordNotMatch}','$resource{i18nc.msg.JS.confirmEmptyPswdForPswdAlias}') )
+                        { return submitAndDisable(this, '$resource{i18n.button.Processing}'); }} return false; " >
+               <!command
+                    gf.restRequest(
+                        endpoint="#{sessionScope.REST_URL}/create-password-alias"
+                        method="POST"
+                        attrs="#{pageSession.valueMap}"
+                        result="#{pageSession.createResult}");
+                    gf.redirect(page="#{request.contextPath}/common/appServer/pswdAliases.jsf");
+                />
+            </sun:button>
+            <sun:button id="cancelButton" immediate="#{true}" primary="#{false}"  text="$resource{i18n.button.Cancel}" >
+                <!command
+                    gf.redirect(page="#{request.contextPath}/common/appServer/pswdAliases.jsf");
+                />
+            </sun:button>
+        </sun:panelGroup>
+        </facet>
+    </sun:title>
+#include "/common/appServer/pswdAliasAttr.inc"
+<sun:hidden id="helpKey" value="$resource{help_common.pswdAliasNew}" />
+</sun:form>
+
+</define>
+</composition>
+

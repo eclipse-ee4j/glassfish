@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE project [
+<!ENTITY commonSetup SYSTEM "./../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "./../../config/common.xml">
+<!ENTITY reporting   SYSTEM "./report.xml">
+<!ENTITY run SYSTEM "./../../config/run.xml">
+]>
+
+<project name="security" default="usage" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &reporting;
+    &run;
+
+<property file="build.properties" />
+
+    <target name="all">
+        <delete>
+           <fileset dir="${env.APS_HOME}" includes="test_results*, security-gtest-results.xml"/>
+        </delete>
+        <delete>
+           <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="security.output" action="start" />
+        <ant dir="jaccmr8" target="all"/>
+        <ant dir="uncovered-http-methods" target="all"/>
+<!--    <ant dir="simple-perf" target="all"/>-->                <!-- DISABLED: Not listed -->
+        <ant dir="authConf" target="all"/>
+        <ant dir="negativeRealmPerApp" target="all"/>
+        <ant dir="realmPerApp" target="all"/>
+        <ant dir="soteria" target="all"/>
+<!--    <ant dir="weblogic-dd" target="all"/>-->                <!-- DISABLED: Failures -->
+        <ant dir="sful" target="all"/>
+        <ant dir="userWithAtSymbol" target="all"/>
+        <ant dir="anyone" target="all"/>
+        <ant dir="ejb-oneway-ssl" target="all"/>
+        <ant dir="ejb-mutual-ssl" target="all"/>
+<!--    <ant dir="web-mutual-ssl" target="all"/>-->             <!-- DISABLED -->
+<!--    <ant dir="cplogin" target="all"/>-->                    <!-- DISABLED -->
+<!--    <ant dir="plogin" target="all"/>-->                     <!-- DISABLED -->
+        <ant dir="jsp2sful" target="all"/>
+        <ant dir="httpMethod" target="all"/>
+        <ant dir="defaultp2r" target="all"/>
+        <ant dir="sameEjbName" target="all"/>
+<!--    <ant dir="mdb" target="all"/>-->                        <!-- DISABLED: Does not run -->
+<!--    <ant dir="timerStandalone" target="all"/>-->            <!-- DISABLED: Failure -->
+        <ant dir="container-auth" target="all"/>
+        <ant dir="jmac" target="all"/>
+        <ant dir="wss" target="all"/>
+        <ant dir="ciphertest" target="all"/>
+        <ant dir="standalone" target="all"/>
+        <ant dir="simpleMultiRoleMapping" target="all"/>
+        <ant dir="multiRoleMapping" target="all"/>
+        <ant dir="jdbcrealm" target="all"/>
+<!--    <ant dir="pamrealm" target="all"/>-->                      <!-- DISABLED: Needs additional setup -->
+<!--    <ant dir="cert-realm-custom-loginmodule" target="all"/>--> <!-- DISABLED: Failure  -->
+<!--    DISABLED: Needs a running LDAP server
+        <ant dir="ldap/simpleweb" target="all" />
+        <ant dir="ldapRealmPerApp" target="all"/>
+-->
+<!--    <ant dir="solarisRealm" target="all"/>-->                  <!-- DISABLED -->
+        <ant dir="jaccApi" target="all"/>
+        <record name="security.output" action="stop" />
+        <antcall target="report"/>
+    </target>
+
+    <target name="ejb">
+        <ant dir="negativeRealmPerApp" target="all"/>
+        <ant dir="realmPerApp" target="all"/>  
+        <ant dir="sful" target="all"/>  
+    </target>
+    <target name="soteria">
+      <delete>
+         <fileset dir="${env.APS_HOME}" includes="test_results*, security-gtest-results.xml"/>
+      </delete>
+      <record name="soteria.output" action="start" />
+      <ant dir="soteria" target="all"/>
+      <record name="soteria.output" action="stop" />
+      <antcall target="report"/>
+    </target>
+                                                                                                                            
+   <target name="usage">
+	<echo>
+		Usage:
+			ant all (Executes all security tests)
+                        ant ejb (Executes all ejb-related security tests
+			ant web (Executes the web tests TBD)
+	</echo>
+    </target>
+</project>

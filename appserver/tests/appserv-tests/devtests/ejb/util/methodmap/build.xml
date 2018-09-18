@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../../config/common.xml">
+<!ENTITY testproperties SYSTEM "build.properties">
+]>
+
+<project name="ejb-util-methodmap-App" default="usage" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &testproperties;
+
+    <target name="all" depends="build, runclient"/>
+
+    <target name="clean" depends="init-common">
+      <antcall  target="clean-common"/>
+    </target>
+ 
+    <target name="build" depends="init-common">
+       <mkdir dir="${build.classes.dir}"/>
+       <echo message="common.xml: Compiling test source files" level="verbose"/>
+       <javac srcdir="client"
+              destdir="${build.classes.dir}"
+              classpath="${s1astest.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              debug="on"
+              failonerror="true"/>        
+    </target>
+ 
+    <target name="runclient" depends="init-common">
+       <java  fork="on" 
+              failonerror="true"
+              classpath="${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+           classname="${simple.client}">
+        </java>
+    </target>       
+
+
+    <target name="perf" depends="init-common">
+       <java  fork="on" 
+              failonerror="true"
+              classpath="${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+           classname="${perf.client}">
+           <arg value="javax.xml.rpc.Service"/>
+           <arg value="100000"/>
+        </java>
+    </target>  
+
+    <target name="usage">
+        <antcall target="usage-common"/>
+    </target>
+</project>

@@ -1,0 +1,109 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- jca/workSecurityMapEdit.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18njca" bundle="org.glassfish.jca.admingui.Strings");
+    setResourceBundle(key="help_jca" bundle="org.glassfish.jca.admingui.Helplinks")
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18njca.workSecurityMap.editPageTitle}" guiOnLoad="enableWorkSecurityMapFields('#{usersOptionP}'); " >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="mapName" value="#{pageSession.Name}");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        getRequestValue(key="isAppScopedRes" value="#{pageSession.isAppScopedRes}");
+        if(#{pageSession.isAppScopedRes}){
+            getRequestValue(key="appName" value="#{pageSession.encodedAppName}");
+            getRequestValue(key="moduleName" value="#{pageSession.moduleName}");
+            if(#{pageSession.moduleName}) {
+                urlencode(value="#{pageSession.moduleName}" encoding="UTF-8" result="#{pageSession.encodedModuleName}");
+                setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jca/workSecurityMapEdit.jsf?mapName=#{pageSession.encodedName}&isAppScopedRes=$boolean{true}&appName=#{pageSession.encodedAppName}&moduleName=#{pageSession.encodedModuleName}");
+                setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/applications/application/#{pageSession.encodedAppName}/module/#{pageSession.encodedModuleName}/resources");
+            }
+            if(!#{pageSession.moduleName}) {
+                setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jca/workSecurityMapEdit.jsf?mapName=#{pageSession.encodedName}&isAppScopedRes=$boolean{true}&appName=#{pageSession.encodedAppName}");
+                setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/applications/application/#{pageSession.encodedAppName}/resources");
+            }
+            setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/common/applications/resources/appScopedResources.jsf?appName=#{pageSession.encodedAppName}&listPageLink=/common/applications/applications.jsf");
+        }
+        if(!#{pageSession.isAppScopedRes}){
+            setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jca/workSecurityMapEdit.jsf?mapName=#{pageSession.encodedName}");
+            setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/jca/workSecurityMaps.jsf");
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
+        }
+        setPageSessionAttribute(key="childType", value="work-security-map");
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/#{pageSession.childType}/#{pageSession.encodedName}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}", valueMap="#{pageSession.valueMap}");
+
+        setPageSessionAttribute(key="skipAttrsList", value={"raname" "enabled"});
+        mapPut(map="#{pageSession.valueMap}" key="raname" value="#{pageSession.valueMap['resourceAdapterName']}");
+        createMap(result="#{pageSession.valueMap2}");
+        gf.getChildList(parentEndpoint="#{pageSession.selfUrl}", childType="group-map", result="#{requestScope.groupsInfo}", id="eisGroup");
+        setAttribute(key="usersOptionG" value="users");
+        foreach(var="rowGroup" list="#{requestScope.groupsInfo}") {
+            if(#{groupsStr}) {
+            setAttribute(key="groupsStr" value="#{groupsStr},#{rowGroup.eisGroup}=#{rowGroup.mappedGroup}");
+            }
+            if(!#{groupsStr}) {
+            setAttribute(key="groupsStr" value="#{rowGroup.eisGroup}=#{rowGroup.mappedGroup}");
+            }
+        }
+        mapPut(map="#{pageSession.valueMap2}" key="groupMapping" value="#{groupsStr}");
+        
+        if('!(#{groupsStr})') {
+            gf.getChildList(parentEndpoint="#{pageSession.selfUrl}", childType="principal-map", result="#{requestScope.principalsInfo}", id="eisPrincipal");
+            setAttribute(key="usersOptionP" value="principals");
+            setAttribute(key="usersOptionG" value="");
+            foreach(var="rowGroup" list="#{requestScope.principalsInfo}") {
+                if(#{principalsStr}) {
+                setAttribute(key="principalsStr" value="#{principalsStr},#{rowGroup.eisPrincipal}=#{rowGroup.mappedPrincipal}");
+                }
+                if(!#{principalsStr}) {
+                setAttribute(key="principalsStr" value="#{rowGroup.eisPrincipal}=#{rowGroup.mappedPrincipal}");
+                }
+            }
+            mapPut(map="#{pageSession.valueMap2}" key="principalMapping" value="#{principalsStr}");            
+        }
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        if ('#{groupsStr}') {
+            setPageSessionAttribute(key="disablePrincipals" value="#{true}" );
+            setPageSessionAttribute(key="disableGroups" value="#{false}" );
+        }
+        if ('#{principalsStr}') {
+            setPageSessionAttribute(key="disablePrincipals" value="#{false}" );
+            setPageSessionAttribute(key="disableGroups" value="#{true}" );
+        }
+    />
+    </event>
+            <sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+
+                <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18njca.workSecurityMap.editPageTitle}" helpText="$resource{i18njca.workSecurityMap.editPageTitleHelp}">
+#include "/jca/workSecurityMapButtons.inc"
+    </sun:title>
+#include "/jca/workSecurityMapAttr.inc"
+	<sun:hidden id="helpKey" value="$resource{help_jca.workSecurityMapEdit}" />
+</sun:form>
+            "<br/><br/>
+#include "/jca/securityMapjs.inc"
+</define>
+</composition>

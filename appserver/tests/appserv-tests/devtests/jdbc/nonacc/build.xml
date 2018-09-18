@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE project[
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+    <!ENTITY commonSetup SYSTEM "./../../../config/common.xml">
+    <!ENTITY commonBuild SYSTEM "./../../../config/properties.xml">
+    <!ENTITY testProperties SYSTEM "./build.properties">
+]>
+
+<project name="nonacc" basedir="." default="usage">
+    
+    &commonSetup;
+    &commonBuild;
+    &testProperties;
+
+    <target name="all" depends="build, deploy, run, undeploy"/>
+
+    <target name="clean" depends="init-common">
+        <delete dir="${build.classes.dir}"/>
+        <delete dir="${assemble.dir}"/>
+    </target>
+
+    <target name="build" depends="clean">
+      <antcall target="compile-common">
+        <param name="src" value="client"/>
+      </antcall>
+    </target>
+
+    <target name="deploy" depends="init-common">
+      <antcall target="deploy-jdbc-common">
+        <param name="jdbc.connpool.name" value="jdbc-nonacc-pool"/>
+        <param name="jdbc.resource.name" value="jdbc/nonacc"/>
+      </antcall>
+    </target>
+
+    <target name="undeploy" depends="init-common">
+      <antcall target="undeploy-jdbc-common">
+        <param name="jdbc.connpool.name" value="jdbc-nonacc-pool"/>
+        <param name="jdbc.resource.name" value="jdbc/nonacc"/>
+      </antcall>
+    </target>
+
+    <target name="run" depends="init-common">
+      <antcall target="setup-sql"/>
+      <java classname="com.sun.s1asdev.jdbc.nonacc.SimpleJdbcClient" fork="true">
+        <arg value="jdbc/nonacc"/>
+      
+        <sysproperty key="org.omg.CORBA.ORBInitialHost" value="localhost"/>
+        <sysproperty key="org.omg.CORBA.ORBInitialPort" value="3700"/>
+        
+        <classpath>
+          <pathelement location="${build.classes.dir}"/>
+<!--          <pathelement path="${s1astest.classpath}"/>-->
+<!--	  <pathelement location="${env.S1AS_HOME}/lib/install/applications/jmsra/imqjmsra.jar"/>-->
+	  <pathelement location="${env.S1AS_HOME}/lib/gf-client.jar"/>
+          <pathelement location="${assemble.dir}"/>
+          <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+        </classpath>
+      </java>
+    </target>
+    
+    <target name="usage">
+    </target>
+    
+    <target name="setup-sql" depends="init-common">
+      <antcall target="execute-sql-common">
+        <param name="sql.file" value="sql/create.sql"/>
+      </antcall>
+    </target>
+</project>

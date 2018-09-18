@@ -1,0 +1,58 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun:treeNode id="JDBC"
+        text="$resource{i18njdbc.tree.jdbc}"
+        url="/jdbc/jdbc.jsf"
+        imageURL="/resource/jdbc/images/JDBC.gif">
+    <dynamicTreeNode id="jdbcResources"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+	    childImageURL="/resource/jdbc/images/JDBC.gif"
+	    childExpanded="false"
+	    childURL="/jdbc/jdbcResourceEdit.jsf?name=#{$this{valueBinding}.text}"
+	    text="$resource{i18njdbc.tree.jdbcResources}"
+	    url="/jdbc/jdbcResources.jsf">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/jdbc-resource.json" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+        <!facet image>
+            <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="/jdbc/jdbcResources.jsf"  border="0" immediate="true" alt="$resource{i18njdbc.tree.jdbcResources}"/>
+        </facet>
+    </dynamicTreeNode>
+    <dynamicTreeNode id="connectionPoolResources"
+	    treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+	    children="#{requestScope.children}"
+            childImageURL="/resource/jdbc/images/JDBC.gif"
+            childExpanded="false"
+            childURL="/jdbc/jdbcConnectionPoolEdit.jsf?name=#{$this{valueBinding}.text}"
+            text="$resource{i18njdbc.tree.connectionPools}"
+            url="/jdbc/jdbcConnectionPools.jsf">
+	<ui:event type="beforeCreate">
+	    gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/jdbc-connection-pool.json" method="get" result="#{requestScope.resp}");
+	    setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+	</ui:event>
+	<!facet image>
+	    <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="/jdbc/jdbcConnectionPools.jsf"  border="0" immediate="true" alt="$resource{i18njdbc.tree.connectionPools}"/>
+	</facet>
+    </dynamicTreeNode>
+    <!beforeCreate
+        setResourceBundle(key="i18njdbc" bundle="org.glassfish.jdbc.admingui.Strings");
+    />
+</sun:treeNode>

@@ -1,0 +1,69 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- standalone/standaloneInstanceProperties.jsf -->
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+<!-- i18n -->
+<!composition template="/templates/default.layout"  guiTitle="Standalone Instance #{pageSession.instanceName} $resource{i18ncs.PropertiesTitle}" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            getRequestValue(key="instanceName" value="#{pageSession.instanceName}");
+            urlencode(value="#{pageSession.instanceName}" encoding="UTF-8" result="#{pageSession.encodedInstanceName}");
+            setSessionAttribute(key="clusterTabs" value="clusterInstanceProps");
+            setSessionAttribute(key="standaloneInstanceTabs" value="instanceProps");
+
+            setPageSessionAttribute(key="parentPage", value="#{request.contextPath}/cluster/standalone/standaloneInstanceGeneral.jsf?instanceName=#{pageSession.encodedInstanceName}");
+            setPageSessionAttribute(key="selfPage", value="#{request.contextPath}/cluster/standalone/standaloneInstanceProperties.jsf?instanceName=#{pageSession.encodedInstanceName}");
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/servers/server/#{pageSession.encodedInstanceName}");
+            setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}");
+
+            setPageSessionAttribute(key="rest-api" value="true");
+            setPageSessionAttribute(key="edit" value="#{true}" );
+            setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+            setPageSessionAttribute(key="showDefaultButton" value="#{false}" );
+
+            gf.restRequest(endpoint="#{pageSession.selfUrl}/property", method="GET", result="#{requestScope.propTable}");
+            gf.isInstanceName(instanceName="#{pageSession.instanceName}");
+            setPageSessionAttribute(key="tableList", value="#{requestScope.propTable.data.extraProperties.properties}");
+        />
+    </event>
+    <sun:form id="propertyForm">
+#include "/cluster/standalone/standaloneInstanceTabs.inc"
+        <sun:title id="propertyContentPage" title="$resource{i18ncs.PropertiesTitle}" >
+#include "/cluster/shared/instancePropertiesButtons.jsf"
+        </sun:title>
+#include "/common/shared/alertMsg_1.inc"
+#include "/common/shared/nameSection.inc"
+
+#include "/common/shared/propertyDescTable.inc"
+
+        <sun:title id="bottomTitle">
+#include "/cluster/shared/instancePropertiesButtons.jsf"
+        </sun:title>
+
+        <sun:hidden id="helpKey" value="$resource{help_cluster.standaloneInstanceProperties}" />
+
+    </sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>

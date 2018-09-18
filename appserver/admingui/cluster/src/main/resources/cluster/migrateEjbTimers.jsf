@@ -1,0 +1,104 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18ncs.cluster.migrateEjbTimers}"  >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        setSessionAttribute(key="clusterTabs" value="general");
+        getRequestValue(key="clusterName" value="#{pageSession.clusterName}");
+        urlencode(value="#{pageSession.clusterName}" encoding="UTF-8" result="#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/cluster/migrateEjbTimers.jsf?clusterName=#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/cluster/cluster/clusterGeneral.jsf?clusterName=#{pageSession.encodedClusterName}");
+
+        setPageSessionAttribute(key="resourceUrl", value="#{sessionScope.REST_URL}/clusters/cluster/#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="rest-api" value="true");
+
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{false}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+
+        gf.restRequest(endpoint="#{pageSession.resourceUrl}/list-instances", method="get", result="#{requestScope.results}");
+        setPageSessionAttribute(key="clusterInstances", value="#{requestScope.results.data.extraProperties.instanceList}");
+        createList(result="#{pageSession.runningInstances}", size="0");
+        createList(result="#{pageSession.notRunningInstances}", size="0");
+        foreach (var="instance", list="#{pageSession.clusterInstances}") {
+            if ('#{instance.status} = NOT_RUNNING') {
+                listAdd(list="#{pageSession.notRunningInstances}", value="#{instance.name}");
+            }
+            if ('!(#{instance.status} = NOT_RUNNING)') {
+                listAdd(list="#{pageSession.runningInstances}", value="#{instance.name}");
+            }
+        }
+        gf.isClusterName(clusterName="#{pageSession.clusterName}" );
+    />
+    </event>
+    <sun:form id="propertyForm">
+#include "/cluster/cluster/clusterTabs.inc"
+#include "/common/shared/alertMsg_1.inc"
+<!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18ncs.cluster.migrateEjbTimers}" helpText="$resource{i18ncs.cluster.migrateEjbTimersHelp}">
+        <!facet pageButtonsTop>
+            <sun:panelGroup id="topButtons">
+                <sun:button id="saveButton" text="$resource{i18n.button.OK}" disabled="#{empty runningInstances}">
+                    <!command
+                        createMap(result="#{requestScope.attrs}");
+                        mapPut(map="#{requestScope.attrs}", key="target", value="#{pageSession.destInstance}");
+                        mapPut(map="#{requestScope.attrs}", key="id", value="#{pageSession.sourceInstance}");
+                        gf.restRequest(endpoint="#{pageSession.resourceUrl}/migrate-timers.json", attrs="#{requestScope.attrs}", method="post", result="#{requestScope.results}");
+                        prepareAlertMsg(type="success", summary="#{requestScope.results.data.subReports[0].message}");
+                        gf.redirect(page="#{selfPage}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                    />
+                </sun:button>
+                <sun:button id="cancelButton" immediate="#{true}" primary="#{false}" rendered="#{pageSession.showCancelButton}" text="$resource{i18n.button.Cancel}" >
+                    <!command
+                        gf.redirect(page="#{parentPage}");
+                    />
+                </sun:button>
+            </sun:panelGroup>
+        </facet>
+    </sun:title>
+
+    <h:panelGroup rendered="#{!empty runningInstances}">
+        <sun:propertySheet id="propertySheet">
+            <!-- Text Field section -->
+            <sun:propertySheetSection id="propertSectionTextField">
+                <sun:property id="clusterSourceProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.cluster.sourceCluster}" >
+                    <sun:dropDown id="source" selected="#{pageSession.sourceInstance}"labels="#{pageSession.notRunningInstances}"/>
+                </sun:property>
+                <sun:property id="clusterDestProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.cluster.destCluster}" >
+                    <sun:dropDown id="dest" selected="#{pageSession.destInstance}" labels="#{pageSession.runningInstances}"/>
+                </sun:property>
+            </sun:propertySheetSection>
+        </sun:propertySheet>
+    </h:panelGroup>
+    <h:panelGroup rendered="#{empty runningInstances}">
+        "<br /> <br />
+        "<em>$resource{i18ncs.cluster.migrateEjbTimersNoRunningInstance}</em>
+    </h:panelGroup>
+
+    <sun:hidden id="helpKey" value="$resource{help_cluster.clusterMigrateEjbTimers}" />
+</sun:form>
+</define>
+</composition>

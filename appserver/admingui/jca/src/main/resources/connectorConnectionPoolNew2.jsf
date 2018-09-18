@@ -1,0 +1,74 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- jca/jcaResourceNew.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings")
+    setResourceBundle(key="i18njca" bundle="org.glassfish.jca.admingui.Strings");
+    setResourceBundle(key="help_jca" bundle="org.glassfish.jca.admingui.Helplinks")
+    setAttribute(key="edit" value="#{false}");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18njca.connectorConnectionPool.step2PageTitle}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+       
+        setPageSessionAttribute(key="step2" value="#{true}" );
+        setPageSessionAttribute(key="step1Page" value="connectorConnectionPoolNew1.jsf" );
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jca/connectorConnectionPoolNew2.jsf");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/jca/connectorConnectionPools.jsf");
+        setPageSessionAttribute(key="childType" value="connector-connection-pool");
+
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
+        setPageSessionAttribute(key="childType" value="connector-connection-pool");
+        gf.restRequest(method="get", endpoint="#{pageSession.parentUrl}/#{pageSession.childType}", result="#{pageSession.foo}");
+        gf.getDefaultValues(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}", valueMap="#{sessionScope.wizardMap}");
+
+        
+        setPageSessionAttribute(key="tableList" value="#{wizardPoolProperties}");
+        setPageSessionAttribute(key="hasConfidential" value="#{hasConfidential}");
+        
+        setPageSessionAttribute(key="convertToFalseList" value={"ping" "failAllConnections" "isConnectionValidationRequired" });
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{false}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{true}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
+    />
+    </event>
+            <sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+
+                <!-- Page Title -->
+                <sun:title id="propertyContentPage" title="$resource{i18njca.connectorConnectionPool.step2PageTitle}" helpText="$resource{i18njca.connectorConnectionPool.step2PageTitleHelp}">
+#include "/jca/editPageWizardButtons.inc"
+                    </sun:title>
+#include "/jca/connectorConnectionPoolAttr.inc"
+#include "/common/resourceNode/confidentialPropsTable.inc"
+
+
+	<sun:hidden id="helpKey" value="$resource{help_jca.connectorConnectionPoolNew2}" />
+            </sun:form>
+                        "<br/>
+#include "/common/shared/changeButtonsJS.inc" 
+</define>
+</composition>

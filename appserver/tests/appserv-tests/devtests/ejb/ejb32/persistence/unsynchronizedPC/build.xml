@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "../../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../../../config/common.xml">
+<!ENTITY reporting   SYSTEM "../../../report.xml">
+]>
+
+<project name="unsynchronizedPC" default="usage" basedir=".">
+    &commonSetup;
+    &commonBuild;
+    &reporting;
+
+    <target name="all">
+        <antcall target="txscope_synctype_mismatch"/>
+        <antcall target="extendedscope_cross_sfsb"/>
+        <antcall target="unsynchpc_flush"/>
+        <antcall target="disallowed_methods"/>
+        <antcall target="use_nonjtadatasource"/>
+        <antcall target="rollback_notclear_unsynchPC"/>
+    </target>
+
+    <target name="txscope_synctype_mismatch">
+        <record name="txscope_synctype_mismatch.output" action="start" />
+            <ant dir="txscope_synctype_mismatch" target="all"/>
+        <record name="txscope_synctype_mismatch.output" action="stop" />
+    </target>
+
+    <target name="extendedscope_cross_sfsb">
+        <record name="extendedscope_cross_sfsb.output" action="start" />
+            <ant dir="extendedscope_cross_sfsb" target="all"/>
+        <record name="extendedscope_cross_sfsb.output" action="stop" />
+    </target>
+
+    <target name="unsynchpc_flush">
+        <record name="unsynchpc_flush.output" action="start" />
+            <ant dir="unsynchpc_flush" target="all"/>
+        <record name="unsynchpc_flush.output" action="stop" />
+    </target>
+
+    <target name="use_nonjtadatasource">
+        <record name="use_nonjtadatasource.output" action="start" />
+            <ant dir="use_nonjtadatasource" target="all"/>
+        <record name="use_nonjtadatasource.output" action="stop" />
+    </target>
+
+    <target name="disallowed_methods">
+        <record name="disallowed_methods.output" action="start" />
+            <ant dir="disallowed_methods" target="all"/>
+        <record name="disallowed_methods.output" action="stop" />
+    </target>
+
+    <target name="rollback_notclear_unsynchPC">
+        <record name="rollback_notclear_unsynchPC.output" action="start" />
+            <ant dir="rollback_notclear_unsynchPC" target="all"/>
+        <record name="rollback_notclear_unsynchPC.output" action="stop" />
+    </target>
+
+    <target name="usage">
+	<echo>
+		Usage:
+			ant all (Executes set of ejb-ejb32-persistence-unsynchronizedPC tests)
+	</echo>
+    </target>
+</project>

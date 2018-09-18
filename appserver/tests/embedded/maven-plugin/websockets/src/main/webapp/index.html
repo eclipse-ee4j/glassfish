@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Glassfish Chat</title>
+        <link rel="stylesheet" href="stylesheets/default.css" type="text/css" />
+        <script type="text/javascript" src="javascripts/prototype.js"></script>
+        <script type="text/javascript" src="javascripts/moo.fx.js"></script>
+        <script type="text/javascript" src="javascripts/moo.fx.pack.js"></script>
+        <script type="text/javascript" src="javascripts/application.js"></script>
+    </head>
+    <body>
+        <div id="container">
+            <div id="container-inner">
+                <div id="header">
+                    <h1>Glassfish Chat</h1>
+                </div>
+                <div id="main">
+                    <div id="display">
+                    </div>
+                    <div id="form">
+                        <div id="system-message">Please input your name:</div>
+                        <div id="login-form">
+                            <input id="login-name" type="text" />
+                            <br />
+                            <input id="login-button" type="button" value="Login" />
+                            <br/>
+                            <div id="missing-sockets">Your browser does not support websockets.</div>
+                        </div>
+                        <div id="message-form" style="display: none;">
+                            <div>
+                                <textarea id="message" name="message" rows="2" cols="40"></textarea>
+                                <br />
+                                <input id="post-button" type="button" value="Post Message" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <iframe id="websockets-frame" style="display: none;"></iframe>
+    </body>
+</html>

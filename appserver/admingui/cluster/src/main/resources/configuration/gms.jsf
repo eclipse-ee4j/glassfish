@@ -1,0 +1,87 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- cluster/gms.jsf -->
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18ncs.gms.TitlePage}" >
+
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        setPageSessionAttribute(key="childType" value="group-management-service");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}");
+        setPageSessionAttribute(key="selfUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/#{pageSession.childType}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.valueMap}");
+        setPageSessionAttribute(key="parentUrl2", value="#{pageSession.selfUrl}");
+        setPageSessionAttribute(key="childType2" value="failure-detection");
+        setPageSessionAttribute(key="selfUrl2", value="#{pageSession.parentUrl2}/#{pageSession.childType2}");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl2}.json", valueMap="#{pageSession.valueMap2}");
+        gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json" method="GET" result="#{requestScope.propTable}");
+        setPageSessionAttribute(key="tableList" value="#{requestScope.propTable.data.extraProperties.properties}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/cluster/configuration/gms.jsf?configName=#{pageSession.configName}");
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{true}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{false}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+        setPageSessionAttribute(key="has2Objects" value="#{true}" );
+    />
+    </event>
+    <sun:form id="propertyForm">
+#include "/common/shared/alertMsg.inc"
+    <sun:title id="propertyContentPage" title="$resource{i18ncs.gms.TitlePage}" helpText="$resource{i18ncs.gms.TitlePageHelp}">
+#include "/common/shared/editPageButtons.inc"
+    </sun:title>
+        <sun:propertySheet id="propertySheet">
+#include "/common/shared/configNameSection.inc"
+            <sun:propertySheetSection id="propertSectionTextField">
+                <sun:property id="fdMax"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.gms.fdMax}" helpText="$resource{i18ncs.gms.fdMaxHelp}">
+                    <sun:textField id="fdMax" styleClass="integer" columns="$int{10}" maxLength="#{sessionScope.fieldLengths['maxLength.gms.protocolMaxTries']}" text="#{pageSession.valueMap2['maxMissedHeartbeats']}" />
+                </sun:property>
+                <sun:property id="fdTimeout"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.gms.fdTimeout}" helpText="$resource{i18ncs.gms.fdTimeoutHelp}">
+                    <sun:textField id="fdTimeout" styleClass="integer" columns="$int{10}" maxLength="#{sessionScope.fieldLengths['maxLength.gms.protocolTimeoutMillis']}" text="#{pageSession.valueMap2['heartbeatFrequencyInMillis']}" />
+                    <sun:staticText id="secs" style="padding: 8pt" text="$resource{i18ncs.gms.Milliseconds}"/>
+                </sun:property>
+                <sun:property id="pingTimeout"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.gms.pingTimeout}" helpText="$resource{i18ncs.gms.pingTimeoutHelp}">
+                    <sun:textField id="pingTimeout" styleClass="integer" columns="$int{10}" maxLength="#{sessionScope.fieldLengths['maxLength.gms.pingTimeoutMillis']}" text="#{pageSession.valueMap['groupDiscoveryTimeoutInMillis']}" />
+                    <sun:staticText id="secs" style="padding: 8pt" text="$resource{i18ncs.gms.Milliseconds}"/>
+                </sun:property>
+                <sun:property id="vsTimeout"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.gms.vsTimeout}" helpText="$resource{i18ncs.gms.vsTimeoutHelp}">
+                    <sun:textField id="vsTimeout" styleClass="integer" columns="$int{10}" maxLength="#{sessionScope.fieldLengths['maxLength.gms.vsProtocolTimeoutMillis']}" text="#{pageSession.valueMap2['verifyFailureWaittimeInMillis']}" />
+                    <sun:staticText id="secs" style="padding: 8pt" text="$resource{i18ncs.gms.Milliseconds}"/>
+                </sun:property>
+                "<br /><br />
+            </sun:propertySheetSection>
+        </sun:propertySheet>
+#include "/common/shared/propertyDescTable.inc"
+    <sun:title id="propertyContentPage2">
+#include "/common/shared/editPageButtons_2.inc"
+    </sun:title>
+        <sun:hidden id="helpKey" value="$resource{help_cluster.gms}" />
+        </sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>

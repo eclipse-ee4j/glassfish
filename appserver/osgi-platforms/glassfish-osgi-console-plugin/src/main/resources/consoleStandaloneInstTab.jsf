@@ -1,0 +1,27 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun:tab id="consoleStandaloneInst" immediate="true" text="$resource{i18nc.osgi.console}" toolTip="$resource{i18nc.osgi.console}">
+    <!beforeCreate
+        setResourceBundle(key="i18nc" bundle="org.glassfish.osgi.admingui.Strings");
+    />
+    <!command
+	setSessionAttribute(key="standaloneInstTabs" value="consoleStandaloneInst");
+	gf.redirect(page="#{request.contextPath}/osgi-console/consoleStandaloneInst.jsf?instanceName=#{pageSession.encodedInstanceName}");
+    />
+</sun:tab>

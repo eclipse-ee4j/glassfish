@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main</groupId>
+        <artifactId>glassfish-parent</artifactId>
+        <version>5.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <groupId>org.glassfish.main.admingui</groupId>
+    <artifactId>war</artifactId>
+    <packaging>war</packaging>
+    <name>Admin Console WAR</name>
+
+    <developers>
+        <!-- See parent POM -->
+    </developers>
+
+    <build>
+        <finalName>admingui</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.0.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <archive>
+                                <manifestEntries>
+                                    <Glassfish-require-services>org.glassfish.api.admingui.ConsoleProvider</Glassfish-require-services>
+                                    <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, org.glassfish.main.deployment.deployment-client, javax.servlet-api, javax.servlet.jsp-api, com.sun.el.javax.el, com.sun.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <unzip src="target/admingui.war" dest="target/temp" >
+                                  <patternset>
+                                    <exclude name="**/.gitkeep_empty_dir"/>
+                                  </patternset>
+                                </unzip>
+                                <delete file="target/admingui.war" />
+                                <mkdir dir="target/temp/WEB-INF/extra" />
+                                <move todir="target/temp/WEB-INF/extra">
+                                    <fileset dir="target/admingui/WEB-INF/lib" includes="**/*.jar" excludes="console-core*.jar" />
+                                </move>
+                                <delete>
+                                    <fileset dir="target/temp/WEB-INF/lib" includes="**/*.jar" excludes="console-core*.jar" />
+                                </delete>
+                               <jar jarfile="target/admingui.war" basedir="target/temp">
+                                    <manifest>
+                                      <attribute name="Glassfish-require-services" value="org.glassfish.api.admingui.ConsoleProvider" />
+                                      <attribute name="HK2-Import-Bundles" value="org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, org.glassfish.main.deployment.deployment-client, javax.servlet-api, javax.servlet.jsp-api, com.sun.el.javax.el, com.sun.jsftemplating, org.glassfish.main.admingui.dataprovider" />
+                                    </manifest>
+                                </jar>
+                                <delete dir="target/temp" />
+
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>console-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+</project>

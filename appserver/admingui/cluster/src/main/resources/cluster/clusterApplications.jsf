@@ -1,0 +1,87 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- cluster/instances.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_cluster" bundle="org.glassfish.cluster.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"
+    guiTitle="$resource{i18ncs.cluster.ApplicationsTitle}"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:applications');"
+    guiOnLoad="admingui.nav.selectTreeNodeWithURL('#{request.contextPath}/cluster/cluster/clusterGeneral.jsf?clusterName=#{pageSession.encodedClusterName}');"
+>
+
+<!define name="content">
+    <event>
+    <!beforeCreate
+
+        setSessionAttribute(key="clusterTabs" value="clusterApp");
+        getRequestValue(key="clusterName" value="#{pageSession.clusterName}");
+        urlencode(value="#{pageSession.clusterName}" encoding="UTF-8" result="#{pageSession.encodedClusterName}");
+        getRequestValue(key="filterValue" value=>$page{filterValue});
+        setSessionAttribute(key="onlyDASExist" value="#{true}");
+        createMap(result="#{pageSession.attrs}")
+        mapPut(map="#{pageSession.attrs}"  key="target"  value="#{pageSession.clusterName}")
+        gf.restRequest( endpoint="#{sessionScope.REST_URL}/list-components.json" , method="GET"  attrs="#{pageSession.attrs}" result="#{requestScope.result}");
+        setPageSessionAttribute(key="appRefEndpoint" value="/clusters/cluster/#{pageSession.encodedClusterName}/application-ref/");
+        gf.getSingleTargetAppsInfo(appPropsMap="#{requestScope.result.data.properties}" appRefEndpoint="#{pageSession.appRefEndpoint}" target="#{pageSession.clusterName}"  filterValue="#{pageSession.filterValue}", filters="#{requestScope.filters}" result="#{requestScope.listOfRows}" );
+        gf.isClusterName(clusterName="#{pageSession.clusterName}" );
+        setPageSessionAttribute(key="editLink" value="/common/applications/applicationEdit.jsf");
+        setPageSessionAttribute(key="listPageLink" value="/cluster/cluster/clusterApplications.jsf");
+        setPageSessionAttribute(key="extraArgs" value="clusterName=#{pageSession.encodedClusterName}");
+        setPageSessionAttribute(key="nextPageLink" value="/common/applications/upload.jsf?listPageLink=#{listPageLink}&extraListArgs=#{pageSession.extraArgs}&selectedTarget=#{pageSession.clusterName}");
+        setPageSessionAttribute(key="targetLink" value="/common/applications/targetListing.jsf");
+        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18n.msg.JS.confirmUndeploy}");
+        setPageSessionAttribute(key="tableTitle" value="$resource{i18ncs.clusterApplications.TableTitle}");
+        setPageSessionAttribute(key="clusterList" value="#{true}" )
+
+        setSessionAttribute(key="gf_application_list_page" value="#{pageSession.listPageLink}");
+        setSessionAttribute(key="gf_application_cancel_page" value="#{pageSession.listPageLink}");
+        setSessionAttribute(key="gf_application_extra_args" value="#{pageSession.extraArgs}");
+        setSessionAttribute(key="gf_application_predefine_target" value="#{pageSession.clusterName}");
+    />
+    
+ </event>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":clusterTreeNode");</script>
+            <sun:form id="propertyForm">
+#include "/cluster/cluster/clusterTabs.inc"
+
+#include "/common/shared/alertMsg_1.inc"
+                <!-- Page Title -->
+
+<sun:title id="propertyContentPage" title="$resource{i18ncs.cluster.ApplicationsTitle}"
+                 helpText="$resource{i18ncs.cluster.ApplicationsTitleHelp}" />
+
+#include "/common/shared/nameSection.inc"
+
+#include "/cluster/shared/appSingleTargetTable.inc"
+<sun:hidden id="helpKey" value="$resource{help_cluster.clusterApplications}" />
+
+            </sun:form>
+<f:verbatim>
+    <script type="text/javascript">
+
+    </script>
+</f:verbatim>
+</define>
+</composition>
+
+

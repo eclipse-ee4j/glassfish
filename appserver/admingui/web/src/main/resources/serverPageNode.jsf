@@ -1,0 +1,40 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- serverPageNode.jsf -->
+
+
+<!-- add all network listenering's port number -->
+
+
+<sun:property id="web-networkPorts"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.serverPage.httpPorts}" >
+    <sun:staticText id="ports" text="#{pageSession.httpPorts}"/>
+    <!beforeCreate
+        setResourceBundle(key="i18n_web" bundle="org.glassfish.web.admingui.Strings")
+        gf.getEntityAttrs(endpoint="#{sessionScope.REST_URL}/servers/server/#{pageSession.instanceName}", valueMap="#{pageSession.vMap}");
+        setPageSessionAttribute(key="httpListenerUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.vMap['configRef']}/network-config/network-listeners/network-listener");
+        gf.getChildrenNamesList(endpoint="#{pageSession.httpListenerUrl}" result="#{pageSession.httpList}");
+        createList(size="0" result="#{pageSession.httpPortsList}");
+        foreach (var="row" list="#{pageSession.httpList}") {
+            gf.restRequest(endpoint="#{pageSession.httpListenerUrl}/#{row}.json", method="get", result="#{pageSession.httpListenerAttrs}");
+            listAdd(value="#{pageSession.httpListenerAttrs.data.extraProperties.entity['port']}" list="#{pageSession.httpPortsList}");
+        }
+        gf.resolveTokens(tokens="#{pageSession.httpPortsList}" endPoint="#{sessionScope.REST_URL}/servers/server/#{pageSession.instanceName}" resolvedTokens="#{pageSession.httpResolvedPortsList}");
+        convertListToCommaString(list="#{pageSession.httpResolvedPortsList}" commaString="#{pageSession.httpPorts}");
+    />
+</sun:property> 

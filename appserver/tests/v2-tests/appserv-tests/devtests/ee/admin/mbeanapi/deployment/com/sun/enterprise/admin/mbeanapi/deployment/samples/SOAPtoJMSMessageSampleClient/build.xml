@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+
+    Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE project [ <!ENTITY include SYSTEM "../../../../common-ant.xml"> ]>
+
+  <!-- ======================================================= -->
+  <!--   Application Server Sample Application build xml -->
+  <!-- ======================================================= -->
+
+<project name="soaptojmsmessage" default="core" basedir=".">
+  <property name="sample.home" value="../../../../"/>
+
+  <!-- ======================================================= -->
+  <!-- App name-dependent settings.			       -->
+  <!-- ======================================================= -->
+
+  <property name="binary.name" value="SOAPtoJMSMessageSample"/>
+  
+  <!-- ======================================================= -->
+  <!-- Package directory structures of interest.	       -->
+  <!-- ======================================================= -->
+  <property name="app.pkg" value="samples/jms/soaptojms"/> 
+  
+  <!-- ======================================================= -->
+  <!-- Java Doc properties.				       -->
+  <!-- ======================================================= -->  
+  <property name="sample.name" value="simple"/>
+  <property name="javadoc.pkgnames" value="samples.jms.soaptojms.*" />
+
+  <!-- ======================================================= -->
+  <!-- Include common.xml				       -->
+  <!-- ======================================================= -->
+ 
+  &include;
+  
+  <!-- ======================================================= -->
+  <!-- Used by copy_binary target in common-ant.xml				       -->
+  <!-- ======================================================= -->    
+  <property name="specificjar.dir" value="${sample.name}${appclient-dir-suffix}/${assemble.clientjar}/"/>
+  <property name="specificjar.name" value="${clientjar}"/>
+ 
+  <!-- ============================================================== -->
+  <!--           Resource specific properties.                        -->
+  <!-- ============================================================== -->
+  <property name="queue.factory.type" value="javax.jms.TopicConnectionFactory" />
+  <property name="queue.factory.jndi.name" value="jms/TopicConnectionFactory" />   
+  <property name="queue.type" value="javax.jms.Topic" />
+  <property name="queue.jndi.name" value="jms/TestTopic" />
+  <property name="queue.property.name" value="imqDestinationName" />
+  <property name="queue.property.value" value="TestTopic" />
+ 
+ 
+  
+  <!-- ======================================================= -->
+  <!-- Tagets to run sample application                        -->
+  <!-- ======================================================= -->
+  <target name="clean" depends="clean_all_common"/>  
+  <target name="init" depends="init_common"/> 
+  <target name="compile" depends="compile_common" />     
+  
+  <target name="clientjar" depends="core_all_common"/>
+  
+  
+  <target name="setup" depends=" init, deploy-jms-resource_common"/>  
+  <target name="unsetup" depends="init, undeploy-jms-resource_common"/> 
+  
+  <target name="javadocs" depends="javadocs_all_common"/>         
+    
+  <target name="deploy" depends="setup"/>
+  <target name="all" depends="core,javadocs"/>
+  <target name="undeploy" depends="unsetup"/>
+        
+  <target name="core" depends="clientjar" />
+  
+  <target name="verify" depends="verify_noop_common"/>   
+ 
+</project>

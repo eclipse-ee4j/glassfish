@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License v. 2.0, which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# This Source Code may also be made available under the following Secondary
+# Licenses when the conditions for such availability set forth in the
+# Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+# version 2 with the GNU Classpath Exception, which is available at
+# https://www.gnu.org/software/classpath/license.html.
+#
+# SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+#
+
+#--- Extract environment properties ---
+
+for x in `cat $APS_HOME/config.properties`
+do
+    varval=`echo $x |cut -d'=' -f1`
+
+    if [ $varval = "admin.user" ];
+    then
+        AS_ADMIN_USER=`echo $x |cut -d'=' -f2`
+    fi
+
+    if [ $varval = "admin.port" ];
+    then
+        AS_ADMIN_PORT=`echo $x |cut -d'=' -f2`
+    fi
+
+    if [ $varval = "admin.password" ];
+    then
+        AS_ADMIN_PASSWORD=`echo $x |cut -d'=' -f2`
+    fi
+
+done
+
+export AS_ADMIN_USER
+export AS_ADMIN_PASSWORD
+export AS_ADMIN_PORT
+
+echo "Stopping server instance....."
+${S1AS_HOME}/bin/asadmin stop-instance --host localhost --port  ${AS_ADMIN_PORT} --user ${AS_ADMIN_USER} --password ${AS_ADMIN_PASSWORD} C1S1
+
+${S1AS_HOME}/bin/asadmin stop-instance --host localhost --port  ${AS_ADMIN_PORT} --user ${AS_ADMIN_USER} --password ${AS_ADMIN_PASSWORD} C1S2
+
+${S1AS_HOME}/bin/asadmin stop-instance --host localhost --port  ${AS_ADMIN_PORT} --user ${AS_ADMIN_USER} --password ${AS_ADMIN_PASSWORD} C1S3
+
+echo "Deleting server instance......"
+${S1AS_HOME}/bin/asadmin delete-instance  --host localhost --port  ${AS_ADMIN_PORT} --user ${AS_ADMIN_USER} --password ${AS_ADMIN_PASSWORD} C1S1
+${S1AS_HOME}/bin/asadmin delete-instance  --host localhost --port  ${AS_ADMIN_PORT} --user ${AS_ADMIN_USER} --password ${AS_ADMIN_PASSWORD} C1S2
+${S1AS_HOME}/bin/asadmin delete-instance  --host localhost --port  ${AS_ADMIN_PORT} --user ${AS_ADMIN_USER} --password ${AS_ADMIN_PASSWORD} C1S3
+
+sleep 15
+
+echo "stoppping nodeagent....."
+${S1AS_HOME}/bin/asadmin stop-node-agent NA1
+
+echo "Deleting nodeagent....."
+${S1AS_HOME}/bin/asadmin delete-node-agent NA1
+
+echo "Deleting nodeagent config....."
+${S1AS_HOME}/bin/asadmin delete-node-agent-config --host localhost --port  ${AS_ADMIN_PORT} --user ${AS_ADMIN_USER} --password ${AS_ADMIN_PASSWORD} NA1
+rm -rf ${S1AS_HOME}/nodeagents/NA1
+
+echo "stopping domain...."
+${S1AS_HOME}/bin/asadmin stop-domain domain1
+
+${S1AS_HOME}/bin/asadmin delete-domain domain1
+rm -rf ${S1AS_HOME}/domains/domain1
+
+echo "EE domain,server instance and nodeagent has been deleted"

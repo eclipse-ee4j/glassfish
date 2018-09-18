@@ -1,0 +1,83 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- configuration/webContainerManager.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18n_web" bundle="org.glassfish.web.admingui.Strings");
+    setResourceBundle(key="help_web" bundle="org.glassfish.web.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n_web.webContainer.managerProp}" >
+<!define name="content">
+<event>
+    <!beforeCreate
+        setSessionAttribute(key="webContainerTabs" value="managerTab");
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        setPageSessionAttribute(key="childType" value="manager-properties");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/web-container/session-config/session-manager");
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/manager-properties");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.valueMap}");
+        gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json" method="GET" result="#{requestScope.propTable}");
+        setPageSessionAttribute(key="tableList" value="#{requestScope.propTable.data.extraProperties.properties}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/web/configuration/webContainerManager.jsf?configName=#{pageSession.configName}");
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{true}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{false}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+
+    />
+    </event>
+
+            <sun:form id="form1">
+#include "webContainerTabs.inc"
+#include "/common/shared/alertMsg.inc"
+<sun:title id="propertyContentPage" title="$resource{i18n_web.webContainer.managerProp}">
+#include "/common/shared/editPageButtons.inc"
+</sun:title>
+
+    <sun:propertySheet id="managerPropSheet" requiredFields="#{hasRequiredFields}">
+#include "/common/shared/configNameSection.inc"
+    <sun:propertySheetSection id="managerPropSheetSection">
+        <sun:property id="ReapIntervalProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.webManager.reapIntervalLabel}" helpText="$resource{i18n_web.webManager.reapIntervalHelp}" >
+            <sun:textField id="ReapInterval" styleClass="integer" columns="$int{20}" maxLength="#{sessionScope.fieldLengths['maxLength.webManager.reapInterval']}" text="#{pageSession.valueMap['reapIntervalInSeconds']}" />
+            <sun:staticText id="sec" style="padding: 8pt" text="$resource{i18n.common.Seconds}"/>
+        </sun:property>
+        <sun:property id="MaxSessionsProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.webManager.maxSessionsLabel}" >
+            <sun:textField id="MaxSessions" styleClass="intAllowMinusOne" columns="$int{20}" maxLength="#{sessionScope.fieldLengths['maxLength.webManager.maxSessions']}" text="#{pageSession.valueMap['maxSessions']}" />
+        </sun:property>
+        <sun:property id="SessFileNameProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.webManager.sessFileNameLabel}" helpText="$resource{i18n_web.webManager.sessFileNameHelp}" >
+            <sun:textField id="SessFileName" columns="$int{50}" maxLength="#{sessionScope.fieldLengths['maxLength.webManager.sessFileName']}" text="#{pageSession.valueMap['sessionFileName']}" />
+        </sun:property>
+        <sun:property id="SessionIdGenProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.webManager.sessionIdGenLabel}" helpText="$resource{i18n_web.webManager.sessionIdGenHelp}" >
+            <sun:textField id="SessionIdGen" columns="$int{50}" text="#{pageSession.valueMap['sessionIdGeneratorClassname']}" />
+        </sun:property>
+    </sun:propertySheetSection>
+    </sun:propertySheet>    
+
+#include "/common/shared/propertyDescTable.inc"
+
+<sun:hidden id="helpKey" value="$resource{help_web.webContainerManager}" />
+
+    </sun:form>
+    "<br/>
+#include "/common/shared/changeButtonsJS.inc" 
+</define>
+</composition>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-cmp-mappings PUBLIC "-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 CMP 1.0//EN" "http://www.sun.com/software/sunone/appserver/dtds/sun-cmp-mapping_1_0.dtd">
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun-cmp-mappings>
+   <sun-cmp-mapping>
+	<schema>sec_bankadmin_schema</schema>
+	<entity-mapping>
+            <ejb-name>CustomerBean</ejb-name>
+            <table-name>SEC_BANKADMIN_CUSTOMEREJB</table-name>
+            <cmp-field-mapping>
+                <field-name>customerID</field-name>
+                <column-name>CUSTOMERID</column-name>
+                <is-key/>
+            </cmp-field-mapping>
+            <cmp-field-mapping>
+                <field-name>customerName</field-name>
+                <column-name>CUSTOMERNAME</column-name>
+            </cmp-field-mapping>
+            <cmr-field-mapping>
+                <cmr-field-name>accounts</cmr-field-name>
+                 <column-pair>
+                    <column-name>CUSTOMERID</column-name>
+                    <column-name>SEC_BANKADMIN_ACCOUNTEJB.FK_CUSTOMEREJB</column-name>
+                </column-pair>
+            </cmr-field-mapping>
+        </entity-mapping>
+	<entity-mapping>
+            <ejb-name>AccountBean</ejb-name>
+            <table-name>SEC_BANKADMIN_ACCOUNTEJB</table-name>
+            <cmp-field-mapping>
+                <field-name>accountID</field-name>
+                <column-name>ACCOUNTID</column-name>
+                <is-key/>
+            </cmp-field-mapping>
+            <cmp-field-mapping>
+                <field-name>amount</field-name>
+                <column-name>AMOUNT</column-name>
+            </cmp-field-mapping>
+            <cmp-field-mapping>
+                <field-name>privileges</field-name>
+                <column-name>PRV</column-name>
+            </cmp-field-mapping>
+        </entity-mapping>
+    </sun-cmp-mapping>
+</sun-cmp-mappings>

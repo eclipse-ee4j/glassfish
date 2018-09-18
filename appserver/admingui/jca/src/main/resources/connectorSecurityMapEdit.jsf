@@ -1,0 +1,90 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- jca/jcaResourceNew.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18njca" bundle="org.glassfish.jca.admingui.Strings");
+    setResourceBundle(key="help_jca" bundle="org.glassfish.jca.admingui.Helplinks")
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18njca.connectorSecurityMap.editPageTitle}" guiOnLoad="enableSecurityMapFields('#{usersOptionP}'); " >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        getRequestValue(key="name" value="#{pageSession.Name}");
+        getRequestValue(key="mapName" value="#{pageSession.mapName}");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        urlencode(value="#{pageSession.mapName}" encoding="UTF-8" result="#{pageSession.encodedMapName}");
+        setSessionAttribute(key="connectorPoolTabs" value="securityMapTab");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jca/connectorSecurityMapEdit.jsf?name=#{pageSession.encodedName}&mapName=#{pageSession.encodedMapName}");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/jca/connectorSecurityMaps.jsf?name=#{pageSession.encodedName}");
+        setPageSessionAttribute(key="childType" value="security-map");
+        //REST related
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources/connector-connection-pool/#{pageSession.encodedName}");
+        setPageSessionAttribute(key="selfUrl" value="#{pageSession.parentUrl}/#{pageSession.childType}/#{pageSession.encodedMapName}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}", valueMap="#{pageSession.valueMap}");
+
+        gf.restRequest(endpoint="#{pageSession.selfUrl}/user-group" method="GET" result="#{requestScope.userGroupsMap}");
+        gf.restRequest(endpoint="#{pageSession.selfUrl}/principal" method="GET" result="#{requestScope.principalsMap}");
+        convertListToCommaString(list="#{requestScope.userGroupsMap.data.extraProperties.leafList}"  commaString="#{pageSession.valueMap['userGroupCommaStr']}");
+        convertListToCommaString(list="#{requestScope.principalsMap.data.extraProperties.leafList}"  commaString="#{pageSession.valueMap['principalCommaStr']}");
+        
+        setPageSessionAttribute(key="has2Objects" value="#{true}" );  //for editPageButtons.inc
+        setPageSessionAttribute(key="selfUrl2" value="#{pageSession.selfUrl}/backend-principal");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl2}" valueMap="#{pageSession.valueMap2}");
+        mapPut(map="#{pageSession.valueMap}" key="mappedUserName" value="#{pageSession.valueMap2.userName}");
+        mapPut(map="#{pageSession.valueMap}" key="mappedPassword" value="#{pageSession.valueMap2.password}");
+        
+       if(#{pageSession.valueMap['principalCommaStr']}) {
+           setAttribute(key="usersOptionP" value="principals" );
+           setPageSessionAttribute(key="myOption" value="principals");
+
+        }
+        if(#{pageSession.valueMap['userGroupCommaStr']}) {
+            setAttribute(key="usersOptionU" value="users" );
+            setPageSessionAttribute(key="myOption" value="users");
+        }
+        setPageSessionAttribute(key="skipAttrsList", value={"userGroupCommaStr" , "principalCommaStr"});
+
+         //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{false}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{false}" );
+
+    />
+    </event>
+            <sun:form id="propertyForm" autoComplete="off">
+#include "/jca/connectorConnectionPoolTabs.inc"
+#include "/common/shared/alertMsg_1.inc"
+
+                <!-- Page Title -->
+            <sun:title id="propertyContentPage" title="$resource{i18njca.connectorSecurityMap.editPageTitle}" helpText="$resource{i18njca.connectorSecurityMap.editPageTitleHelp}">
+#include "/jca/securityMapButtons.inc"
+            </sun:title>
+#include "/jca/connectorSecurityMapAttr.inc"
+
+	<sun:hidden id="helpKey" value="$resource{help_jca.connectorSecurityMapEdit}" />
+            </sun:form>
+    "<br/><br/>
+#include "/jca/securityMapjs.inc"
+</define>
+</composition>

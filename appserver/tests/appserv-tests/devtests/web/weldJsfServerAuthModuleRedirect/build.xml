@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE project [
+<!ENTITY commonSetup SYSTEM "./../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
+<!ENTITY testproperties SYSTEM "./build.properties">
+]>
+
+<project name="webcontainer_unittest" default="all" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &testproperties;
+
+    <target name="all" depends="build,setup,deploy,run,undeploy,restore"/>
+
+    <target name="clean" depends="init-common">
+      <antcall target="clean-common"/>
+      <delete file="WebTest.class" failonerror="false"/>
+      <delete file="RepRunConf.txt" failonerror="false"/>
+    </target>
+       
+    <target name="compile" depends="clean">
+        <antcall target="compile-common">
+            <param name="src" value="src"/>
+        </antcall>
+    </target>
+
+    <target name="setup" depends="init-common">
+        <copy file="${appserver.instance.dir}/lib/test-${appname}-provider.jar"
+            todir="${env.S1AS_HOME}/lib"/>
+
+        <antcall target="asadmin-common">
+            <param name="admin.command" value="create-message-security-provider"/>
+            <param name="as.props" value="${as.props} --classname test.provider.TestHttpServletServerAuthModule --layer HttpServlet --providertype server --requestauthsource sender"/>
+            <param name="operand.props" value="testHttpSAM"/>
+        </antcall>
+
+        <antcall target="restart-server"/>
+    </target>
+
+    <target name="build" depends="compile">
+        <mkdir dir="${assemble.dir}"/>
+        <jar jarfile="${appserver.instance.dir}/lib/test-${appname}-provider.jar"
+            basedir="${build.classes.dir}" includes="test/provider/**"/>
+        <delete dir="${build.classes.dir}/test/provider"/>
+
+        <antcall target="webclient-war-common">
+            <param name="hasWebclient" value="yes"/>
+        </antcall>
+
+        <javac
+            srcdir="."
+            classpath="${env.APS_HOME}/lib/reportbuilder.jar:${env.S1AS_HOME}/lib/appserv-rt.jar"
+            includes="WebTest.java"/>
+    </target> 
+
+    <target name="build-publish-war" depends="build, publish-war-common" />
+    
+    <target name="deploy" depends="init-common">
+        <antcall target="deploy-war-common"/>
+    </target>
+    
+    <target name="run" depends="init-common">
+        <java classname="WebTest">
+          <arg value="${http.host}"/>
+          <arg value="${http.port}"/>
+          <arg value="${contextroot}"/>
+          <arg value="${testuser}"/>
+          <arg value="${testpassword}"/>
+          <classpath>
+           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="."/>
+         </classpath>
+        </java>
+    </target>
+
+    <target name="undeploy" depends="init-common">
+        <antcall target="undeploy-war-common"/>
+    </target>   
+
+    <target name="restore" depends="init-common">
+        <antcall target="asadmin-common">
+            <param name="admin.command" value="delete-message-security-provider"/>
+            <param name="as.props" value="${as.props} --layer HttpServlet"/>
+            <param name="operand.props" value="testHttpSAM"/>
+        </antcall>
+
+        <antcall target="stop-server"/>
+        <sleep seconds="5"/>
+        <delete file="${appserver.instance.dir}/lib/test-${appname}-provider.jar" failonerror="false"/>
+        <antcall target="start-server"/>
+    </target>
+
+    <target name="usage">
+        <antcall target="usage-common"/>
+    </target>
+</project>

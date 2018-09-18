@@ -1,0 +1,97 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"
+    guiTitle="$resource{i18nc.auditModule.PageTitle}"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:configurations:#{pageSession.encodedConfigName}:security:auditModules');"
+>
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} );
+        urlencode(value="#{pageSession.configName}" encoding="UTF-8" result="#{pageSession.encodedConfigName}");
+        setPageSessionAttribute(key="childType" value="audit-module");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/security-service");
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/audit-module");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", result="#{requestScope.listOfRows}");
+        createMap(result="#{pageSession.valueMap}");
+        mapPut(map="#{pageSession.valueMap}" key="target" value="#{pageSession.configName}");
+        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18nc.msg.JS.confirmDeleteAuditModules}");
+        setPageSessionAttribute(key="createLink" value="#{request.contextPath}/common/security/auditModules/auditModuleNew.jsf?configName=#{pageSession.configName}");
+        setPageSessionAttribute(key="listLink" value="#{request.contextPath}/common/security/auditModules/auditModules.jsf?configName=#{pageSession.configName}");
+        setPageSessionAttribute(key="editLink" value="#{request.contextPath}/common/security/auditModules/auditModuleEdit.jsf?configName=#{pageSession.configName}");
+        setPageSessionAttribute(key="tableTitle" value="$resource{i18nc.auditModule.TableTitle}");
+    />
+    </event>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":configurations:#{pageSession.encodedConfigName}:security:auditModules");</script>
+
+<sun:form id="propertyForm">
+#include "/common/shared/alertMsg.inc"
+     <sun:title id="propertyContentPage" title="$resource{i18nc.auditModule.PageTitle}"
+                 helpText="$resource{i18nc.auditModule.PageHelp}" />
+		 "<br /> <br />
+#include "/common/shared/configNameSection.inc"
+
+<sun:table id="configs" title="#{tableTitle}"
+    deselectMultipleButton="$boolean{true}"
+    deselectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+    selectMultipleButton="$boolean{true}"
+    selectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)" >
+    <!afterCreate
+        getClientId(component="$this{component}" clientId=>$page{tableId});
+    />
+
+#include "/common/shared/listTableConfigButtons.inc"
+
+   <sun:tableRowGroup id="rowGroup1" selected="#{td.value.selected}" data={"$attribute{listOfRows}"} sourceVar="td">
+     <!afterCreate
+         getClientId(component="$this{component}" clientId=>$page{tableRowGroupId});
+        />
+    <sun:tableColumn headerText="$resource{i18n.common.SelectHeader}" selectId="select" rowHeader="$boolean{false}" id="col0">
+            <sun:checkbox id="select"
+                toolTip="$resource{i18n.common.select}"
+                selected="#{td.value.selected}"
+                selectedValue="$boolean{true}"
+                onClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\'); admingui.table.initAllRows(\\\\\'#{pageSession.tableId}\\\\\');', 0);"
+            />
+    </sun:tableColumn>
+
+    <sun:tableColumn headerText="$resource{i18nc.jacc.table.nameCol}"  sort="name" rowHeader="$boolean{true}" id="col1">
+        <sun:hyperlink id="link" text="#{td.value.name}"
+            url="#{pageSession.editLink}&name=#{td.value.name}" />
+    </sun:tableColumn>
+
+    <sun:tableColumn headerText="$resource{i18nc.realm.colClassname}"   sort="classname" rowHeader="$boolean{false}" id="col2">
+        <sun:staticText escape="true" id="classnameCol" value="#{td.value.classname}" />
+    </sun:tableColumn>
+
+  </sun:tableRowGroup>
+</sun:table>
+
+	<sun:hidden id="helpKey" value="$resource{help_common.auditModules}" />
+            </sun:form>
+//#include "/common/shared/changeButtonsJS.inc"
+
+</define>
+</composition>
+

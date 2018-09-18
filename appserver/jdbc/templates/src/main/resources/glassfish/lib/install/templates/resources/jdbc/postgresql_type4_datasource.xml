@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE resources PUBLIC "-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN" "*<install directory>/lib/dtds/sun-resources_1_3.dtd*">
+
+<!--
+    PostgreSQL JDBC Driver
+
+    The JAR file for the PostgreSQL driver is postgresql-version.jdbc3.jar, 
+    for example, postgresql-8.1-405.jdbc3.jar
+    For more information, see http://jdbc.postgresql.org
+
+    To learn more on JDBC resources, pl. refer to JDBC resources chapter of admin guide.
+    Administration Guide >> JDBC Resources  >> Configurations for Specific JDBC Drivers
+    http://docs.sun.com/app/docs/doc/819-3658/6n5s5nklk?a=view
+
+    For detailed explanation of attributes and elements of this resources xml
+    pl. refer to sun-resources_1_3.dtd
+
+    =====================================================================================
+    |  res-type                             datasource-classname                        |
+    =====================================================================================
+    |  javax.sql.DataSource                 org.postgresql.ds.PGSimpleDataSource        |
+    |  javax.sql.ConnectionPoolDataSource   org.postgresql.ds.PGConnectionPoolDataSource|
+    |  javax.sql.XADataSource               org.postgresql.xa.PGXADataSource            |
+    =====================================================================================
+-->
+
+<resources>
+    <jdbc-connection-pool 
+        name="postgresql_type4_pool" 
+        datasource-classname="org.postgresql.ds.PGSimpleDataSource"
+        res-type="javax.sql.DataSource">
+        <property name="user" value="DB_USER"/>
+        <property name="password" value="DB_PASSWORD"/>
+        <property name="url" value="jdbc:postgresql://DB_HOSTNAME/DATABASE_NAME:5432"/>
+    </jdbc-connection-pool>
+
+    <jdbc-resource 
+        enabled="true" 
+        jndi-name="jdbc/postgresql_type4" 
+        object-type="user" 
+        pool-name="postgresql_type4_pool"/>
+</resources> 

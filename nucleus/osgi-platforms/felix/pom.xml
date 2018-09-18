@@ -1,0 +1,106 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+  This module is meant to create a distribution fragement that contains
+  Apache Felix and associated configuration files and bundles.
+  The layout relative to glassfish root looks like this:
+  osgi/
+    felix/
+       bin/
+          felix.jar
+       conf/
+          osgi.properties
+  modules/
+       [org.apache.felix.*]
+       autostart/
+          [org.apache.felix.scr.jar]
+
+   This is more or less how the layout would look if one downloads the Felix
+   distribution from Felix project and installs. The only difference being we keep
+   the bundles in glassfish/modules dir as opposed to bundle dir in felix.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+      <groupId>org.glassfish.main.osgi-platforms</groupId>
+      <artifactId>osgi-platforms</artifactId>
+      <version>5.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>felix</artifactId>
+    <name>Apache Felix, associated bundles and conf files</name>
+    <!-- This is a distribution fragement.
+         It is distributed as part of nucleus-base. 
+    -->
+    <packaging>distribution-fragment</packaging>
+    <properties>
+        <felix.outdir>${project.build.OutputDirectory}/osgi/felix/</felix.outdir>
+        <glassfish.modulesdir>${project.build.OutputDirectory}/modules/</glassfish.modulesdir>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                           <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <stripVersion>true</stripVersion>
+                            <artifactItems>
+                             <artifactItem>
+                               <groupId>org.apache.felix</groupId>
+                               <artifactId>org.apache.felix.main</artifactId>
+                               <outputDirectory>${felix.outdir}/bin</outputDirectory>
+                               <destFileName>felix.jar</destFileName>
+                             </artifactItem>
+                             <artifactItem>
+                               <groupId>org.apache.felix</groupId>
+                               <artifactId>org.apache.felix.bundlerepository</artifactId>
+                               <type>jar</type>
+                               <outputDirectory>${glassfish.modulesdir}</outputDirectory>
+                             </artifactItem>
+                           </artifactItems>
+                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
+                <artifactId>maven-antrun-extended-plugin</artifactId>
+                <configuration>
+                    <tasks>
+                        <ant dir="." antfile="build.xml" target="create.bundle" />
+                    </tasks>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+
+<resources>
+ <jdbc-connection-pool pool-resize-quantity="1" datasource-classname="org.apache.derby.jdbc.EmbeddedDataSource" max-pool-size="5" res-type="javax.sql.DataSource" steady-pool-size="0" statement-timeout-in-seconds="30" name="java:app/jdbc/cdi_ejb_jpa_pool">
+      <property name="User" value="APP"></property>
+      <property name="Password" value="APP"></property>
+      <property name="driverType" value="4"></property>
+      <property name="portNumber" value="1527"></property>
+      <property name="dataBaseName" value="sun-appserv-samples"></property>
+      <property name="create" value="true"></property>
+      <property name="serverName" value="localhost"></property>
+      <property name="connectionAttributes" value=";create=true"></property>
+    </jdbc-connection-pool>
+
+    <jdbc-resource pool-name="java:app/jdbc/cdi_ejb_jpa_pool" jndi-name="java:app/jdbc/DB1"></jdbc-resource>
+
+</resources>
+

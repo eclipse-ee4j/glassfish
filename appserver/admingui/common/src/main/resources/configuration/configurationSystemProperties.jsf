@@ -1,0 +1,191 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.configurations.SystemPropertiesTitle} - #{pageSession.configName}" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            getRequestValue(key="configName" value="#{pageSession.configName}");
+
+            setPageSessionAttribute(key="parentPage", value="#{request.contextPath}/common/configuration/configuration.jsf?configName=#{pageSession.configName}");
+            setPageSessionAttribute(key="selfPage", value="#{request.contextPath}/common/configuration/configurationSystemProperties.jsf?configName=#{pageSession.configName}");
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}");
+            setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/system-properties");
+
+            setPageSessionAttribute(key="rest-api" value="true");
+            setPageSessionAttribute(key="edit" value="#{true}" );
+            setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+            setPageSessionAttribute(key="showDefaultButton" value="#{false}" );
+
+            if ("(server-config=$pageSession{configName})") {
+                setPageSessionAttribute(key="isServerConfig" value="$boolean{true}");
+            }
+
+            // Get config attributes
+            gf.restRequest(endpoint="#{pageSession.parentUrl}", method="get", result="#{requestScope.result}");
+            setPageSessionAttribute(key="dynaReconfig", value="#{requestScope.result.data.extraProperties.entity.dynamicReconfigurationEnabled}");
+
+            // get config sys props
+            gf.restRequest(endpoint="#{pageSession.selfUrl}", method="GET", result="#{requestScope.propTable}");
+            setPageSessionAttribute(key="tableList", value="#{requestScope.propTable.data.extraProperties.systemProperties}");
+
+            // find clusters/instances using this config
+            createList(result="#{pageSession.configUsageList}" size="0");
+            //if (!"$pageSession{isServerConfig}") {
+                gf.restRequest(endpoint="#{sessionScope.REST_URL}/servers/server", method="get", result="#{requestScope.result}");
+                gf.getMapKeys(Map="#{requestScope.result.data.extraProperties.childResources}", Keys="#{requestScope.instances}");
+                foreach (var="instance", list="#{requestScope.instances}") {
+                    gf.restRequest(endpoint="#{sessionScope.REST_URL}/servers/server/#{instance}", method="get", result="#{requestScope.instanceResults}");
+                    if ("#{requestScope.instanceResults.data.extraProperties.entity.configRef}=#{pageSession.configName}") {
+                        listAdd(list="#{pageSession.configUsageList}", value="#{instance}");
+                    }
+                }
+            //}
+			gf.isConfigName(configName="#{pageSession.configName}" );
+        />
+    </event>
+    <sun:form id="propertyForm">
+        <sun:title id="propertyContentPage" title="$resource{i18n.systemProps.systemProps}" >
+            <!facet pageButtonsTop>
+                <sun:panelGroup id="topButtons">
+#include "configSystemPropertiesButtons.jsf"
+                </sun:panelGroup>
+            </facet>
+        </sun:title>
+#include "/common/shared/alertMsg.inc"
+        <sun:propertySheet id="propertySheet1" >
+#include "/common/shared/configNameSection.inc"
+            <sun:propertySheetSection id="reconfigSheet">
+                <sun:property id="dynaReconfigProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.systemProps.dynamicReconfigLabel}" >
+                    <sun:checkbox id="dynaReconfig" value="#{pageSession.dynaReconfig}" selectedValue="true"/>
+                </sun:property>
+            </sun:propertySheetSection>
+        </sun:propertySheet>
+
+        <sun:table id="basicTable"  style="padding: 10pt" title="$resource{i18n.common.AdditionalProperties}"
+                    deselectMultipleButton="$boolean{true}"
+                    deselectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+                    selectMultipleButton="$boolean{true}"
+                    selectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)" >
+                    <!afterCreate
+                        getClientId(component="$this{component}" clientId=>$page{tableId});
+                    />
+            <!facet actionsTop>
+                <sun:panelGroup id="topActionsGroup1">
+                    <!afterCreate
+                        getClientId(component="$this{component}" clientId=>$page{topActionGroup});
+                    />
+                    <sun:button id="addSharedTableButton" disabled="#{false}" text="$resource{i18n.button.AddProperty}" >
+                        <!command
+                            getUIComponent(clientId="$pageSession{propertyTableRowGroupId}", component=>$attribute{tableRowGroup});
+                            addRowToTable(TableRowGroup="$attribute{tableRowGroup}", NameList={"name", "value", "description"});
+                        />
+                    </sun:button>
+                    <sun:button id="button1" text="$resource{i18n.button.DeleteProperties}" disabled="#{true}" primary="#{false}">
+                        <!command
+                            getUIComponent(clientId="$pageSession{propertyTableRowGroupId}", component=>$attribute{trg});
+                            getSelectedTableRowKeys(tableRowGroup="${trg}" rowKeys=>$attribute{rowKeys});
+                            deleteTableRows(tableRowGroup="${trg}" rowKeys="${rowKeys}");
+                            commitTableRowGroup(tableRowGroup="${trg}");
+                        />
+                    </sun:button>
+                </sun:panelGroup>
+            </facet>
+            <sun:tableRowGroup id="rowGroup1" selected="#{td.value.selected}" data={"$pageSession{tableList}", "$pageSession{tableList2}"}  sourceVar="td">
+                <ui:event type="beforeCreate">
+                    // Ensure all required fields exist
+                    if ("#{pageSession.tableList[0].name}") {
+                        if ("!#{pageSession.tableList[0].value}") {
+                            mapPut(map="#{pageSession.tableList[0]}" key="value" value="");
+                        }
+                        if ("!#{pageSession.tableList[0].description}") {
+                            mapPut(map="#{pageSession.tableList[0]}" key="description" value="");
+                        }
+                    }
+
+                    // Add extra table properties...
+                    createList(size="0", result="#{pageSession.tableList2}");
+                    foreach(var="row" list="#{pageSession.tableList}") {
+                        selectiveEncode(value="#{row.name}" result="#{requestScope.tlEncName}");
+                        gf.createAttributeMap(
+                            keys={"selected", "encodedName", "description"},
+                            values={"$boolean{false}", "$attribute{tlEncName}", ""},
+                            map="#{requestScope.tlMap}");
+                        listAdd(list="#{pageSession.tableList2}", value="#{requestScope.tlMap}");
+                    }
+                </ui:event>
+                <ui:event type="afterCreate">
+                    getClientId(component="$this{component}" clientId=>$page{propertyTableRowGroupId});
+                </ui:event>
+                <sun:tableColumn headerText="$resource{i18n.common.SelectHeader}" selectId="select" rowHeader="$boolean{false}" id="col1">
+                    <sun:checkbox id="select"
+                        selected="#{td.value.selected}"
+                        selectedValue="$boolean{true}"
+                        onClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\'); admingui.table.initAllRows(\\\\\'#{pageSession.tableId}\\\\\');', 0);"
+                    />
+                </sun:tableColumn>
+                <sun:tableColumn headerText="$resource{i18n.systemProps.colInstanceName}" sort="name" rowHeader="$boolean{false}" id="col2">
+                    <sun:textField columns="$int{40}" maxLength="#{sessionScope.fieldLengths['maxLength.common.PropertyName']}" id="col1St" value="#{td.value.name}" />
+                </sun:tableColumn>
+                <sun:tableColumn headerText="$resource{i18n.systemProps.colDefaultValue}" sort="value" rowHeader="$boolean{false}" id="col3">
+                    <sun:textField columns="$int{40}" maxLength="#{sessionScope.fieldLengths['maxLength.common.PropertyValue']}" id="col1St" value="#{td.value.value}" />
+                </sun:tableColumn>
+                <sun:tableColumn headerText="$resource{i18n.systemProps.colInstanceValues}" sort="value" rowHeader="$boolean{false}" id="col4" rendered="#{!pageSession.isServerConfig}">
+                    <sun:hyperlink id="instanceLink" text="$resource{i18n.systemProps.colInstanceValues}" 
+                                   rendered="#{!empty td.value.name}"
+                                   url="/common/configuration/sysInstanceValues.jsf?propName=#{td.value.name}&configName=#{pageSession.configName}"/>
+                </sun:tableColumn>
+                "<br/>
+            </sun:tableRowGroup>
+        </sun:table>
+        <sun:propertySheet id="propertySheet2" rendered="#{!pageSession.isServerConfig}">
+            <sun:propertySheetSection id="usingThisConfigSheet">
+                <sun:property id="usingThisConfigProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.systemProps.instClustLabel}" >
+                    <foreach key="entry" list="#{pageSession.configUsageList}">
+                        <event>
+                            <!beforeEncode
+                                setAttribute(key="tmp" value="#{entry}");
+                                gf.listInstances(optionKeys={"id"} optionValues={"$attribute{tmp}"}, statusMap="#{requestScope.statusMap}");
+                                setAttribute(key="status" value="#{requestScope.statusMap['$attribute{tmp}']}");
+                                setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}");
+                            />
+                        </event>
+                        <h:outputText id="colStopped" value="#{requestScope.statusString}&#160;#{entry}" escape="false"/>
+                        "<br/>
+                    </foreach>
+                </sun:property>
+            </sun:propertySheetSection>
+        </sun:propertySheet>
+        <sun:title id="title2">
+            <!facet pageButtonsTop>
+                <sun:panelGroup id="topButtons">
+#include "configSystemPropertiesButtons.jsf"
+                </sun:panelGroup>
+            </facet>
+        </sun:title>
+    <sun:hidden id="helpKey" value="$resource{help_common.configurationSystemProperties}" />
+    </sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>

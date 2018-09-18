@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN" "http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-1.dtd">
+
+<sun-web-app>
+  <resource-ref>
+    <res-ref-name>jdbc/DS</res-ref-name>
+    <jndi-name>eis/MyPool</jndi-name>
+  </resource-ref>
+  <security-role-mapping>
+    <role-name>contractor</role-name>
+    <principal-name>foo3</principal-name>
+    <principal-name>bar2</principal-name>
+    <principal-name>foofoo</principal-name>
+    <principal-name>barbar</principal-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>employee</role-name>
+    <principal-name>foo1</principal-name>
+    <principal-name>foo2</principal-name>
+    <principal-name>bar1</principal-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>management</role-name>
+    <group-name>manager</group-name>
+    <group-name>hr</group-name>
+  </security-role-mapping>
+</sun-web-app>

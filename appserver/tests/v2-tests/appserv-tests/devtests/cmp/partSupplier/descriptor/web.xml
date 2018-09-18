@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <display-name>partsupplier</display-name>
+  <description>cascade_delete</description>
+  <servlet>
+    <servlet-name>Servlet_client.Servlet</servlet-name>
+    <display-name>Servlet client.Servlet</display-name>
+    <description>Default configuration created for servlet.</description>
+    <servlet-class>client.Servlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Servlet_client.Servlet</servlet-name>
+    <url-pattern>/servlet/client.Servlet</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>
+            30
+        </session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>
+            index.jsp
+        </welcome-file>
+    <welcome-file>
+            index.html
+        </welcome-file>
+    <welcome-file>
+            index.htm
+        </welcome-file>
+  </welcome-file-list>
+  <ejb-ref>
+    <ejb-ref-name>ejb/SPSession</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <home>Data.SPSessionHome</home>
+    <remote>Data.SPSession</remote>
+    <ejb-link>SPSession</ejb-link>
+  </ejb-ref>
+</web-app>

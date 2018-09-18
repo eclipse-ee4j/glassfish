@@ -1,0 +1,45 @@
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.resourcesMonitor}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="instanceName" value="#{pageSession.instanceName}");
+        urlencode(value="#{instanceName}" encoding="UTF-8" result="#{pageSession.encodedInstanceName}");
+        gf.getConfigName(target="#{instanceName}" configName=>$pageSession{configName});
+        setSessionAttribute(key="standaloneInstanceTabs" value="monitorResources");
+        gf.getInstanceMonitorURL(instanceName="#{pageSession.encodedInstanceName}"  monitorURL="#{pageSession.monitorURL}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/common/monitor/standaloneInstanceMonitoringResourcePage.jsf");
+        />
+    </event>
+            <sun:form id="propertyForm">
+
+#include "/cluster/standalone/standaloneInstanceTabs.inc"
+#include "/shared/alertMsg.inc"
+#include "monitoringResourcesStatsPage.inc"
+    <sun:hidden id="helpKey" value="$resource{help_common.monitorResources}" />
+            </sun:form>
+#include "/shared/changeButtonsJS.inc" 
+</define>
+</composition>

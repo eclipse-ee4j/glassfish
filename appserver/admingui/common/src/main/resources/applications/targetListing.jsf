@@ -1,0 +1,145 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- applications/targetListing.jsf -->
+
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks")
+/>
+<!composition template="/templates/default.layout"
+    guiTitle="$resource{i18n.applicationTargetListing.PageTitle}"
+    guiOnLoad="admingui.nav.selectTreeNodeWithURL('#{request.contextPath}/common/applications/applicationEdit.jsf?appName=#{pageSession.encodedAppName}');"
+>
+<!define name="content">
+    <event>
+        <!beforeCreate
+            setSessionAttribute(key="appGeneralTabs" value="targetTab");
+            getRequestValue(key="appName" value="#{pageSession.appName}");
+            urlencode(value="#{pageSession.appName}" encoding="UTF-8" result="#{pageSession.encodedAppName}");
+            getRequestValue(key="listPageLink" value="#{pageSession.listPageLink}"  default="/common/applications/applications.jsf");
+            gf.appScopedResourcesExist(appName="#{pageSession.appName}" appScopedResExists="#{pageSession.appScopedResExists}");
+            gf.getTargetListInfo(appName="#{pageSession.appName}" result=>$attribute{listOfRows} );
+            setPageSessionAttribute(key="targetPageLink" value="#{request.contextPath}/common/applications/targetListing.jsf");
+        />
+    </event>
+            <sun:form id="propertyForm">
+
+#include "/common/applications/appGeneralTabs.inc"
+
+#include "/common/shared/alertMsg_1.inc"
+ <sun:title id="propertyContentPage" title="$resource{i18n.applicationTargetListing.PageTitle}" helpText="$resource{i18n.applicationTargetListing.PageTitleHelp}"/>
+ "<br />
+
+<sun:table id="targetTable" title="$resource{i18n.common.TargetTableTitle}" sortPanelToggleButton="#{false}"
+       deselectMultipleButton="$boolean{true}"
+        deselectMultipleButtonOnClick="setTimeout('admingui.table.changeButtonAndDropDown(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+        selectMultipleButton="$boolean{true}"
+        selectMultipleButtonOnClick="setTimeout('admingui.table.changeButtonAndDropDown(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)" >
+         <!afterCreate
+            getClientId(component="$this{component}" clientId=>$page{tableId});
+        />
+
+    <!facet actionsTop>
+         <sun:panelGroup id="topActionsGroup1">
+            <!afterCreate
+                getClientId(component="$this{component}" clientId=>$page{topActionGroup});
+            />
+            <sun:button id="manageTargetButton" text="$resource{i18n.button.ManageTarget}" >
+                <!command
+                        setAttribute(key="name" value="#{name}");
+                        setAttribute(key="targetPage" value="#{targetPage}");
+                        setAttribute(key="targetPageHelp" value="#{targetPageHelp}");
+//println("-------------#{request.contextPath}/common/applications/manageTargets.jsf?appName=#{pageSession.encodedAppName}&listPageLink=#{pageSession.listPageLink}&targetPageLink=#{pageSession.targetPageLink}");
+                        gf.redirect(page="#{request.contextPath}/common/applications/manageTargets.jsf?forApp=true&appName=#{pageSession.encodedAppName}&listPageLink=#{pageSession.listPageLink}&targetPageLink=#{pageSession.targetPageLink}&highLight=applications");
+                />
+            </sun:button>
+
+            <sun:dropDown id="dropdown1" submitForm="#{true}"  disabled="#{false}"
+                labels={ "$resource{i18n.common.moreActionDropDown}"
+                        "$resource{i18n.button.Enable}"  "$resource{i18n.button.Disable}"
+                        "$resource{i18n.targetListing.table.lbEnable}"  "$resource{i18n.targetListing.table.lbDisable}"
+                     }
+                values={"" "enable" "disable" "lb-enable" "lb-disable" } >
+
+                <!command
+                    getUIComponent(clientId="#{targetTableRowGroupId}", component=>$attribute{tableRowGroup});
+                    getSelectedSingleMapRows(TableRowGroup="$attribute{tableRowGroup}" selectedRows=>$attribute{selectedRows});
+                    setAttribute(key="click" value="$this{component}");
+                    setAttribute(key="actionValue" value="#{click.selected}")
+                    if( ${actionValue}=enable){
+                        gf.changeTargetStatus(selectedRows="${selectedRows}"  Enabled="#{true}" forLB="$boolean{false}")
+                        prepareAlertMsg(summary="$resource{i18n.msg.enableOnTargetsSuccessful}", type="success");
+                        gf.redirect(page="#{request.contextPath}/common/applications/targetListing.jsf?appName=#{pageSession.encodedAppName}&listPageLink=#{pageSession.listPageLink}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                    }
+                    if( ${actionValue}=disable){
+                        gf.changeTargetStatus(selectedRows="${selectedRows}"  Enabled="#{false}" forLB="$boolean{false}")
+                        prepareAlertMsg(summary="$resource{i18n.msg.disableOnTargetsSuccessful}", type="success");
+                        gf.redirect(page="#{request.contextPath}/common/applications/targetListing.jsf?appName=#{pageSession.encodedAppName}&listPageLink=#{pageSession.listPageLink}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                    }
+                    if( ${actionValue}=lb-enable){
+                        gf.changeTargetStatus(selectedRows="${selectedRows}" Enabled="#{true}" forLB="$boolean{true}")
+                    }
+                    if( ${actionValue}=lb-disable){
+                        gf.changeTargetStatus(selectedRows="${selectedRows}"  Enabled="#{false}" forLB="$boolean{true}")
+                    }
+                    gf.redirect(page="#{request.contextPath}/common/applications/targetListing.jsf?appName=#{pageSession.encodedAppName}&listPageLink=#{pageSession.listPageLink}");
+                />
+            </sun:dropDown>
+         </sun:panelGroup>
+     </facet>
+
+    <sun:tableRowGroup id="rowGroup1" selected="#{td.value.selected}"  data={"$attribute{listOfRows}"} sourceVar="td">
+        <!afterCreate
+            getClientId(component="$this{component}" clientId=>$page{targetTableRowGroupId});
+        />
+
+        <sun:tableColumn headerText="$resource{i18n.common.SelectHeader}" selectId="select" rowHeader="$boolean{false}" id="col0">
+            <sun:checkbox id="select"
+                selected="#{td.value.selected}"
+                selectedValue="$boolean{true}"
+                onClick="admingui.table.v('#{pageSession.topActionGroup}', '#{pageSession.tableId}'); admingui.table.initAllRows('#{pageSession.tableId}');"
+            />
+        </sun:tableColumn>
+
+        <sun:tableColumn headerText="$resource{i18n.targetTable.colTargetName}" sort="targetName" rowHeader="$boolean{true}" id="col1">
+            <staticText id="nameCol" value="#{td.value.targetName}" />
+        </sun:tableColumn>
+
+        <sun:tableColumn headerText="$resource{i18n.deployTable.colEnabled}" sort="enabled" rowHeader="$boolean{true}" id="col2">
+            <staticText id="typeCol" value="#{td.value.enabled}" />
+        </sun:tableColumn>
+
+         <sun:tableColumn headerText="$resource{i18n.targetListing.LBEnabled}"  sort="lbEnabled" rowHeader="$boolean{true}" id="lbEabled">
+            <staticText id="enabled" value="#{td.value.lbEnabled}" />
+        </sun:tableColumn>
+        <sun:tableColumn headerText="$resource{i18n.TargetTable.colVirtualServer}" rendered="#{hasActionColumn}" rowHeader="$boolean{true}" id="col3">
+            <sun:hyperlink id="link" text="$resource{i18n.TargetTable.virtualServerLink}"
+                url="/common/applications/manageVirtualServers.jsf?appName=#{pageSession.encodedAppName}&targetName=#{td.value.targetName}&targetPageLink=#{targetPageLink}&highLight=applications" />
+        </sun:tableColumn>
+
+    </sun:tableRowGroup>
+ </sun:table>
+
+	<sun:hidden id="helpKey" value="$resource{help_common.applicationTargetListing}" />
+            </sun:form>
+
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>

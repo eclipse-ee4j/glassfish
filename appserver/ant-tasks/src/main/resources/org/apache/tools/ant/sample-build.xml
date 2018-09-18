@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project >
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="sample" >
+
+
+    <target name="regular" description="Non-embedded tasks"> 
+        <glassfish-stop installdir = "/ws/v3/publish/glassfish5/" domain = "domain1" />
+        <glassfish-start installdir = "/ws/v3/publish/glassfish5/" domain = "domain1" />
+        <glassfish-stop installdir = "/ws/v3/publish/glassfish5/" domain = "domain1" />
+        <glassfish-admin installdir = "/ws/v3/publish/glassfish5/" command = "start-domain domain1" />
+	<glassfish-admin installdir = "/ws/v3/publish/glassfish5/" command = "create-http-listener --defaultvs=server --listenerport=9889 --listeneraddress=127.0.0. --listener_id=reg-listener"/>
+        <glassfish-undeploy installdir = "/ws/v3/publish/glassfish5/" name="test"/>
+   </target>
+
+   <target name="embedded" description="embedded tasks"> 
+	<glassfish-embedded-start/>
+
+	<glassfish-embedded-admin commandLine="create-http-listener --defaultvs=server --listenerport=9889 --listeneraddress=127.0.0 emb-listener"/>
+<!--
+	<glassfish-embedded-admin command = "create-http-listener" >
+		<CommandProperty name="defaultvs" value="deff"/>
+		<CommandProperty name="listenerport" value="8989"/>
+		<CommandProperty name="listener_id" value="embedded-listener"/>
+		<CommandProperty name="listeneraddress" value="127.0.0.0"/>
+        </glassfish-embedded-admin>
+
+
+        <glassfish-embedded-deploy app="/ws/test.war" force="false" name="test" contextRoot="test"/>
+-->
+        <glassfish-embedded-stop />
+    </target>
+
+</project>

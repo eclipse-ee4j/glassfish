@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE sun-ejb-jar PUBLIC '-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 EJB 2.0//EN' 'http://www.sun.com/software/sunone/appserver/dtds/sun-ejb-jar_2_0-0.dtd'>
+
+<sun-ejb-jar>
+  <enterprise-beans>
+    <name>ejb-bmp-handle-mix-ejb.jar</name>
+    <unique-id>234</unique-id>
+    <ejb>
+      <ejb-name>HandleEnrollerBean</ejb-name>
+      <jndi-name>ejb/MyHandleEnroller</jndi-name>
+      <ejb-ref>
+        <ejb-ref-name>ejb/Student</ejb-ref-name>
+        <jndi-name>ejb/MyHandleStudent</jndi-name>
+      </ejb-ref>
+      <resource-ref>
+        <res-ref-name>jdbc/bmp-handle-mixDB</res-ref-name>
+        <jndi-name>jdbc/__default</jndi-name>
+      </resource-ref>
+    </ejb>
+    <ejb>
+      <ejb-name>HandleCourseBean</ejb-name>
+      <jndi-name>ejb/MyHandleCourse</jndi-name>
+      <ejb-ref>
+        <ejb-ref-name>ejb/Enroller</ejb-ref-name>
+        <jndi-name>ejb/MyHandleEnroller</jndi-name>
+      </ejb-ref>
+      <resource-ref>
+        <res-ref-name>jdbc/bmp-handle-mixDB</res-ref-name>
+        <jndi-name>jdbc/__default</jndi-name>
+      </resource-ref>
+    </ejb>
+    <ejb>
+      <ejb-name>HandleStudentBean</ejb-name>
+      <jndi-name>ejb/MyHandleStudent</jndi-name>
+      <ejb-ref>
+        <ejb-ref-name>ejb/Enroller</ejb-ref-name>
+        <jndi-name>ejb/MyHandleEnroller</jndi-name>
+      </ejb-ref>
+      <resource-ref>
+        <res-ref-name>jdbc/bmp-handle-mixDB</res-ref-name>
+        <jndi-name>jdbc/__default</jndi-name>
+      </resource-ref>
+    </ejb>
+  </enterprise-beans>
+</sun-ejb-jar>

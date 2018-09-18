@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!DOCTYPE resources PUBLIC "-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN" "*<install directory>/lib/dtds/sun-resources_1_3.dtd*">
+
+<!--
+    Sun bundled DataDirect driver for Oracle Databases. (Available in SJSAS EE builds)
+    JAR files for the driver are smdb2.jar, smbase.jar, smutil.jar
+
+    To learn more on JDBC resources, pl. refer to JDBC resources chapter of admin guide.
+    Administration Guide >> JDBC Resources  >> Configurations for Specific JDBC Drivers
+    http://docs.sun.com/app/docs/doc/819-3658/6n5s5nklk?a=view
+
+    For detailed explanation of attributes and elements of this resources xml
+    pl. refer to sun-resources_1_3.dtd
+-->
+
+<resources>
+    <jdbc-connection-pool
+        name="db2_dd_pool"
+        datasource-classname="com.sun.sql.jdbcx.db2.DB2DataSource"
+        res-type="javax.sql.DataSource">
+        <property name="user" value="DB_USER"/>
+        <property name="password" value="DB_PASSWORD"/>
+        <property name="serverName" value="DB_HOSTNAME"/>
+        <property name="url" value="jdbc:sun:db2://DB_HOSTNAME:50000;databaseName=DATABASE_NAME"/>
+        <property name="portNumber" value="50000"/>
+        <property name="databaseName" value="DATABASE_NAME"/>
+    </jdbc-connection-pool>
+
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/db2_dd_resource"
+        object-type="user"
+        pool-name="db2_dd_pool"/>
+</resources>

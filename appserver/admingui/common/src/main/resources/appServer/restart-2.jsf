@@ -1,0 +1,136 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- restart-2.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+/>
+
+<sun:page id="page1">
+
+<sun:html id="html1">
+<sun:head title="$resource{i18n.restart.pageTitle}" parseOnLoad="false">
+    <sun:link url="/resource/css/css_ns6up.css" />
+    <h:outputScript name="jsf.js" library="javax.faces" target="body" />
+    <sun:script>
+	<f:verbatim>
+	    function triggerRestart() {
+		var button=document.getElementById('form:restartInstance');
+		var options = {
+		    execute:button.id,
+		    render: '@none'
+		};
+		options[button.id] = button.id;
+		jsf.ajax.request(button, null, options);
+	    }
+	</f:verbatim>
+    </sun:script>
+</sun:head>
+
+
+<sun:body id="body3" focus="loginform.j_username" onLoad="triggerRestart();">
+    <sun:form id="form">
+    <sun:button id="restartInstance" visible="false">
+        <!command
+            gf.restRequest(endpoint="#{sessionScope.REST_URL}/restart-domain" method="POST");
+        />
+    </sun:button>
+<f:verbatim>
+  <table border="0" cellpadding="0" cellspacing="0" align="center" title="">
+    <tr>
+      <td width="50%"><img src="/resource/images/dot.gif" width="1" height="1" alt="" /></td>
+      <td><img src="/resource/images/dot.gif" width="728" height="1" alt="" /></td>
+      <td width="50%"><img src="/resource/images/dot.gif" width="1" height="1" alt="" /></td>
+    </tr>
+    <tr class="LogTopBnd" style="background-image: url(/resource/images/gradlogtop.jpg); background-repeat: repeat-x; background-position: left top;">
+      <td><img src="/resource/images/dot.gif" width="1" height="30" alt="" /></td>
+      <td nowrap="nowrap" valign="middle"></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="LogMidBnd" style="background-image: url(/resource/images/gradlogsides.jpg);background-repeat:repeat-x;background-position:left top;">&nbsp;</td>
+      <td class="LogCntTd" style="background-image: url(/resource/images/backimage.jpg);background-repeat:no-repeat;background-position:left top;" height="435" align="center" valign="middle">
+        <table border="0" background="/resource/images/dot.gif" cellpadding="0" cellspacing="0" width="100%" title="">
+          <tr>
+            <td width="260"><img src="/resource/images/dot.gif" width="260" height="245" alt="" /></td>
+            <td width="415" bgcolor="#FFFFFF" valign="top" align="left">&nbsp;
+
+              <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td><div class="logLbl"><span class="LblLev2Txt">
+</f:verbatim>
+                       <sun:staticText text="$resource{i18n.restart.RestartHeading}  "  />
+<f:verbatim>
+                    </span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="logLblLst"><span class="LblLev2Txt">
+                </span></div></td>
+                </tr>
+                <tr>
+
+                    <td><div class="logLbl"><span class="LblLev2Txt">
+</f:verbatim>
+                    <sun:staticText text="#{pageSession.url2}" >
+                        <!beforeCreate
+                            //we have to get the scheme and port number from domain.xml instead of from #{request} because user may have changed this.
+                            gf.getEntityAttrs(endpoint="#{sessionScope.REST_URL}/configs/config/server-config/network-config/network-listeners/network-listener/admin-listener", valueMap="#{requestScope.portMap}");
+                            gf.restRequest(endpoint="#{sessionScope.REST_URL}/configs/config/server-config/network-config/network-listeners/network-listener/admin-listener/find-http-protocol"
+                                   method="GET"
+                                   result="#{requestScope.output}" );
+                            gf.getEntityAttrs(endpoint="#{sessionScope.REST_URL}/configs/config/server-config/network-config/protocols/protocol/#{requestScope.output.data.properties.protocol}", valueMap="#{requestScope.schemeMap}");
+                            setAttribute(key="scheme" value="http");
+                            if(#{requestScope.schemeMap.securityEnabled}){
+                                setAttribute(key="scheme", value="https");
+                            }
+                            setAttribute(key="url" value="#{requestScope.scheme}://#{request.serverName}:#{requestScope.portMap.port}");
+                            setPageSessionAttribute(key="url2", value="$resource{i18n.restart.RestartContinue, #{requestScope.url}}")
+                        />
+                    </sun:staticText>
+<f:verbatim>
+                    </span></div></td>
+                </tr>
+              </table>
+            </td>
+          <td>&nbsp;</td>
+          </tr>
+        </table>
+      </td>
+      <td class="LogMidBnd"
+          style="background-image: url(/resource/images/gradlogsides.jpg);background-repeat:repeat-x;background-position:left top;">&nbsp;</td>
+    </tr>
+    <tr class="LogBotBnd" style="background-image: url(/resource/images/gradlogbot.jpg);background-repeat:repeat-x;background-position:left top;">
+      <td>&nbsp;</td>
+      <td><div class="logCpy"><span class="logTxtCpy">
+</f:verbatim>
+        <sun:staticText  text="$resource{i18n.copyright.shortMessage}" />
+<f:verbatim>
+      </span></div>
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</f:verbatim>
+</sun:form>
+</sun:body>
+</sun:html>
+</sun:page>

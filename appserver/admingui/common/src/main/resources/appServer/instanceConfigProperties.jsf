@@ -1,0 +1,74 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- standalone/standaloneInstanceConfigProperties.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+
+/>
+<!composition template="/templates/default.layout"  guiTitle="#{pageSession.instanceName} $resource{i18nc.instanceProperties.SystemPropertiesTitle}" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+
+            getRequestValue(key="instanceName" value="#{pageSession.instanceName}");
+            urlencode(value="#{pageSession.instanceName}" encoding="UTF-8" result="#{pageSession.encodedInstanceName}");
+            setSessionAttribute(key="serverInstTabs" value="configProps");
+            setPageSessionAttribute(key="listLink" value="#{request.contextPath}/common/appServer/instanceProperties.jsf?instanceName=${instanceName}");
+
+
+
+            setPageSessionAttribute(key="parentPage", value="#{request.contextPath}/common/appServer/serverInstGeneralPe.jsf?instanceName=#{pageSession.encodedInstanceName}");
+            setPageSessionAttribute(key="selfPage", value="#{request.contextPath}/common/appServer/instanceConfigProperties.jsf?instanceName=#{pageSession.encodedInstanceName}");
+        
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/servers/server/#{pageSession.encodedInstanceName}");
+            setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/system-properties");
+        />
+    </event>
+    <sun:form id="propertyForm">
+#include "/common/appServer/serverInstTabs.inc"
+
+        <sun:title id="SysPropsPage" title="$resource{i18nc.instanceProperties.SystemPropertiesTitle}" >
+            <!facet pageButtonsTop>
+                <sun:panelGroup id="topButtons">
+#include "/common/configuration/systemPropertiesButtons.jsf"
+                </sun:panelGroup>
+            </facet>
+        </sun:title>
+#include "/common/shared/nameSection.inc"
+#include "/common/shared/alertMsg.inc"
+#include "/common/configuration/systemProperties.jsf"
+
+        <sun:title>
+            <!facet pageButtonsTop>
+                <sun:panelGroup id="bottomButtons">
+#include "/common/configuration/systemPropertiesButtons.jsf"
+                </sun:panelGroup>
+            </facet>
+        </sun:title>
+
+<sun:hidden id="helpKey" value="$resource{help_common.instanceConfigProperties}" />
+
+    </sun:form>
+
+
+</define>
+</composition>

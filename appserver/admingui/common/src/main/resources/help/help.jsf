@@ -1,0 +1,73 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- /common/help/help.jsf -->
+
+<ui:event type="initPage">
+    if ("!#{pageSession.newVR}") {
+	createDefaultViewRoot(viewRoot="#{requestScope.newVR}");
+	gf.navigate("#{requestScope.newVR}");
+    }
+    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    getRequestValue(key="contextRef" value="#{pageSession.tempContextRef}" );
+    urlencode(value="#{pageSession.tempContextRef}" encoding="UTF-8" result="#{pageSession.contextRef}");
+</ui:event>
+<sun:page>
+<sun:html>
+    <sun:head title="$resource{i18n.helpWindowTitle}" debug="false" parseOnLoad="false">
+	<sun:link url="/resource/common/help/help.css" />
+	<sun:script url="/resource/common/js/adminjsf.js" />
+	<h:outputScript name="jsf.js" library="javax.faces" target="head" />
+    </sun:head>
+    <sun:body id="bodyTag" style="display:none;" onLoad="admingui.help.fixTreeOnclick(document.getElementById('tocTree')); admingui.help.fixTreeOnclick(document.getElementById('indexTree')); admingui.help.loadHelpPageFromContextRef('#{pageSession.contextRef}', 'helpContent'); document.getElementById('bodyTag').style.display='block';">
+	"<div id="menuContent" class="helpMenuBox">
+	    <sun:form id="tabForm">
+
+	    <sun:tabSet id="helpTabs">
+		<sun:tab id="tableOfContents" text="$resource{i18n.helpWindowTOC}" onClick="admingui.help.switchTab(this, 'tocTree', 'indexTree'); return false;" url="#{null}" />
+		<sun:tab id="idx" text="$resource{i18n.helpWindowIndex}" onClick="admingui.help.switchTab(this, 'indexTree', 'tocTree'); return false;" url="#{null}" />
+	    </sun:tabSet>
+	    </sun:form>
+	    <dynamicTreeNode id="tocTree" 
+		treeAdaptorClass="org.glassfish.admingui.common.help.HelpTreeAdaptor"
+		toc="$attribute{toc}">
+		    <ui:event type="beforeCreate">
+                        setPageSessionAttribute(key="newVR" value="set");
+			getHelpTOC("#{view.locale}" toc="#{requestScope.toc}");
+		    </ui:event>
+	    </dynamicTreeNode>
+
+	    <dynamicTreeNode id="indexTree" style="display: none"
+		treeAdaptorClass="org.glassfish.admingui.common.help.HelpTreeIndexAdaptor"
+		index="$attribute{index}">
+		    <ui:event type="beforeCreate">
+                        setPageSessionAttribute(key="newVR" value="set");
+			getHelpIndex("#{view.locale}" index="#{requestScope.index}");
+		    </ui:event>
+	    </dynamicTreeNode>
+
+<f:verbatim>
+	</div>
+    <div id="outer" class="helpContentBox">
+	<div id="helpContent">
+	</div>
+    </div>
+</f:verbatim>
+    </sun:body>
+</sun:html>
+</sun:page>

@@ -1,0 +1,36 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- deploymentOther.jsf -->
+<!-- This is the default property sheet that has ALL the possible arguments that can be passed to DF.deploy -->
+
+<sun:propertySheet id="other" visible="#{false}" >
+    <!beforeCreate
+        setAttribute(key="fieldMap" value="other");
+        createMap(result="#{pageSession.other}")
+        mapPut(map="#{pageSession.deployMap}", key="other", value="#{pageSession.other}");
+        mapPut(map="#{pageSession.other}", key="convertToFalseList", value={"enabled", "precompilejsp" , "availabilityEnabled" "verify", "force", "keepState", "PROPERTY-implicitCdiEnabled" } );
+        mapPut(map="#{pageSession.other}", key="PROPERTY-implicitCdiEnabled", value="true");
+     />
+    <!afterCreate
+        getClientId(component="$this{component}" clientId=>$page{otherId});
+    />
+    <sun:propertySheetSection id="psection" >
+#include "/common/applications/deploymentOtherFields.jsf"
+    </sun:propertySheetSection>
+</sun:propertySheet>    

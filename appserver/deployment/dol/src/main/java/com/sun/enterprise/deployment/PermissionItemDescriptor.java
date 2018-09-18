@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package com.sun.enterprise.deployment;
+
+import org.glassfish.deployment.common.Descriptor;
+
+
+public class PermissionItemDescriptor extends Descriptor {
+    
+    private String permClassName;
+    private String targetName;
+    private String actions;
+    
+    private boolean statingPermIetmRead;
+
+    private PermissionsDescriptor parent;
+    
+    
+    public PermissionItemDescriptor() {
+        
+    }
+    
+    public PermissionsDescriptor getParent() {
+        return parent;
+    }
+
+    protected void setParent(PermissionsDescriptor parent) {
+        assert(this.parent==null);
+        this.parent = parent;
+    }
+
+    
+    public String getPermissionClassName () {
+        return permClassName;
+    }
+    
+    public void setPermissionClassName (String permClassName) {
+        this.permClassName = permClassName;
+    }
+    
+    
+    public String getTargetName() {
+        return targetName;
+    }
+    
+    public void setTargetName(String targetName) {
+        
+        this.targetName = targetName;
+    }
+
+    
+    public String getActions() {
+        return this.actions;
+    }
+    
+    public void setActions(String actions) {
+        this.actions = actions;
+    }
+}

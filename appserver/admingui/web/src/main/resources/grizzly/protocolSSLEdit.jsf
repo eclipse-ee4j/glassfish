@@ -1,0 +1,35 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- protocolSSLEdit.jsf -->
+
+
+
+<!initPage
+    setResourceBundle(key="i18n_web" bundle="org.glassfish.web.admingui.Strings");
+	setResourceBundle(key="help_web" bundle="org.glassfish.web.admingui.Helplinks");
+    setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/web/grizzly/protocolSSLEdit.jsf?name=#{pageSession.encodedName}&cancelTo=#{pageSession.cancelTo}&configName=#{pageSession.configName}");
+    setSessionAttribute(key="protocolTabs" value="sslTab");
+    setPageSessionAttribute(key="protocol" value="true");
+/>
+
+<!composition template="/web/grizzly/ssl.layout"  guiTitle="$resource{i18n_web.grizzly.sslPageTitle}" >
+<!define name="protocolTabs">
+#include "/web/grizzly/protocolTabs.inc"
+</define>
+</composition>

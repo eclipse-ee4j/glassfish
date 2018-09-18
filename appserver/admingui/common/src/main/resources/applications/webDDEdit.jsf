@@ -1,0 +1,106 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.web.admingui.Strings");
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!-- applications/webDDEdit.jsf -->
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n.enterpriseApplications.descriptorPageTitle}"
+    guiOnLoad="admingui.nav.selectTreeNodeWithURL('#{request.contextPath}/common/applications/applicationEdit.jsf?appName=#{pageSession.encodedAppName}');"
+>
+<!define name="content">
+#include "/common/applications/applicationHandlers.inc"
+    <event>
+        <!beforeCreate
+            setSessionAttribute(key="appGeneralTabs" value="descriptorTab");
+            getRequestValue(key="appName" value="#{pageSession.appName}");
+            urlencode(value="#{pageSession.appName}" encoding="UTF-8" result="#{pageSession.encodedAppName}");
+            getRequestValue(key="listPageLink" value="#{pageSession.listPageLink}"  default="/common/applications/applications.jsf");
+            gf.restRequest(
+                    endpoint="#{sessionScope.REST_URL}/applications/application/#{pageSession.encodedAppName}/_get-deployment-configurations"
+                    method="GET",
+                    result="#{requestScope.result}");
+            gf.getDeploymentDescriptorList( data="#{requestScope.result.data.children}" descriptors="#{requestScope.descriptors}");
+            gf.onlyDASExist(onlyDAS="#{pageSession.onlyDASExist}");
+            gf.appScopedResourcesExist(appName="#{pageSession.appName}" appScopedResExists="#{pageSession.appScopedResExists}");
+
+        />
+    </event>
+    <sun:form id="propertyForm">
+#include "/common/applications/appGeneralTabs.inc"
+#include "/common/shared/alertMsg_1.inc"                
+    <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="$resource{i18n.enterpriseApplications.descriptorPageTitle}" helpText="$resource{i18n.enterpriseApplications.descriptorPageTitleHelp}" />
+        "<br />
+        "<br />
+#include "/common/applications/descriptorsTable.inc"
+        <sun:hidden id="helpKey" value="$resource{help_common.editDD}" />
+        </sun:form>
+//
+//            "<div id="panels"/>
+//            <sc:panel id="webDDPanel" header="View Web Deployment Descriptor" fixedCenter="true" visible="false" modal="true" width="800px" height="600px" closable="true">
+//                "<div id="ddContent" style="height: 550px; overflow: auto;">
+//                    "Default content
+//                "</div>
+//            </sc:panel>
+//    <f:verbatim>
+//        <script type="text/javascript">
+//            function showDD(appName, descriptorPath) {
+//                var callback = {
+//                    success : function (o) {
+//                        scalesPanels['webDDPanel'].setHeader('View Web Deployment Descriptor: ' + appName + descriptorPath);
+//                        YAHOO.util.Dom.get('ddContent').innerHTML = o.responseText;
+//                        showPanel('webDDPanel');
+//                    },
+//                    failure : function (o) {
+//                        alert (o.statusText);
+//                    },
+//                    timeout: 5000
+//                };
+//                YAHOO.util.Connect.asyncRequest('GET', 'viewDD.jsf?appName='+appName+'&descriptorName='+descriptorPath, callback, null);
+//            }
+//
+//            function dynamicWindow(appName, path) {
+//                var callback = {
+//                    success : function (o) {
+//                        var panel = new YAHOO.widget.Panel(null, {
+//                            width : screen.width*0.75,
+//                            height:screen.width*0.75,
+//                            closable:true,
+//                            draggable: true,
+//                            modal: true,
+//                            visible: false,
+//                            fixedcenter:true});
+//                        panel.render(document);
+//                        panel.setHeader('View Web Deployment Descriptor: ' + appName + path);
+//                        panel.setBody(o.responseText);
+//                        //panel.hideEvent = function() { this.destroy; };
+//                        panel.show();
+//                    },
+//                    failure : function (o) {
+//                        alert (o.statusText);
+//                    },
+//                    timeout: 5000
+//                };
+//                YAHOO.util.Connect.asyncRequest('GET', 'viewDD.jsf?appName='+appName+'&descriptorName='+path, callback, null);
+//            }
+//        </script>
+//    </f:verbatim>
+</define>
+</composition>

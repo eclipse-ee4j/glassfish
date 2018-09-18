@@ -1,0 +1,62 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- jdbc/jdbcConnectionPools.jsf -->
+
+<!initPage
+	setResourceBundle(key="i18njdbc" bundle="org.glassfish.jdbc.admingui.Strings");
+    setResourceBundle(key="help_jdbc" bundle="org.glassfish.jdbc.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"
+    guiTitle="$resource{i18njdbc.jdbcConnectionPools.pageTitle}"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:resources:JDBC');
+        setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+>
+<!define name="content">
+    <event>
+        <!beforeCreate
+            setPageSessionAttribute(key="editLink" value="#{request.contextPath}/jdbc/jdbcConnectionPoolEdit.jsf");
+            setPageSessionAttribute(key="createLink" value="#{request.contextPath}/jdbc/jdbcConnectionPoolNew1.jsf");
+            setPageSessionAttribute(key="listLink" value="#{request.contextPath}/jdbc/jdbcConnectionPools.jsf");
+            setPageSessionAttribute(key="resourceType" value="jdbcConnectionPool");
+            setPageSessionAttribute(key="jdbcpool" value="#{true}" );
+            setPageSessionAttribute(key="childType" value="jdbc-connection-pool");
+            setPageSessionAttribute(key="dependentType" value="jdbc-resource");
+
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
+            setPageSessionAttribute(key="rest-api" value="true");
+            gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", result="#{requestScope.listOfRows}");
+            gf.addClassNameColumn(poolsData="#{requestScope.listOfRows}" result="#{requestScope.listOfRows}");
+            setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18n.msg.JS.confirmDeletePools}");
+            setPageSessionAttribute(key="tableTitle" value="$resource{i18njdbc.resourcesTable.Pools}");
+            setPageSessionAttribute(key="resHeader" value="$resource{i18njdbc.resourcesTable.colResType}");
+        />
+    </event>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:JDBC:connectionPoolResources");</script>
+            <sun:form id="propertyForm">
+#include "/common/shared/alertMsg_1.inc"
+                 <sun:title id="propertyContentPage" title="$resource{i18njdbc.jdbcConnectionPools.pageTitle}"
+                 helpText="$resource{i18njdbc.jdbcConnectionPools.pageTitleHelp}"/>
+		 "<br /><br />
+                  
+#include "/jdbc/poolTable.inc"
+	<sun:hidden id="helpKey" value="$resource{help_jdbc.jdbcConnectionPools}" />
+            </sun:form>
+#include "/common/shared/changeButtonsJS.inc"        
+</define>
+</composition>

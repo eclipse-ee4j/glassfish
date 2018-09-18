@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License v. 2.0, which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# This Source Code may also be made available under the following Secondary
+# Licenses when the conditions for such availability set forth in the
+# Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+# version 2 with the GNU Classpath Exception, which is available at
+# https://www.gnu.org/software/classpath/license.html.
+#
+# SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+#
+
+# 
+
+# set -x
+
+chooseJava() {
+#
+# Looks for Java at AS_JAVA, JAVA_HOME or in the path.
+# Sets javaSearchType to tell which was used to look for java,
+# javaSearchTarget to the location (or path), and
+# JAVA to the found java executable.
+#
+# If the user specifies AS_JAVA or JAVA_HOME record that setting
+# to be passed as a property to the bootstrap program.
+#
+    # Depends upon Java from ../config/asenv.conf
+    if [ "${AS_JAVA}" != "" ]; then
+        javaSearchType=AS_JAVA
+        javaSearchTarget="$AS_JAVA"
+        JAVA="${AS_JAVA}/bin/java"
+    elif [ "${JAVA_HOME}" != "" ]; then
+        javaSearchType=JAVA_HOME
+        javaSearchTarget="$JAVA_HOME"
+        JAVA="${JAVA_HOME}/bin/java"
+    else
+        # Look in the PATH.
+        seekJavaOnPath
+        javaSearchType=PATH
+        javaSearchTarget=$PATH
+    fi
+#
+# Make sure java really exists where we were told to look.  If not
+# display how we tried to find it and then try to run it, letting the shell
+# issue the error so we don't have to do i18n of our own message from the script.
+
+    if [ ! -x "${JAVA}" ]; then
+        echo
+        echo $javaSearchType=$javaSearchTarget
+        echo
+        ${JAVA}
+        exit
+    fi
+ACCJava="${JAVA}"
+export ACCJava
+}
+
+seekJavaOnPath() {
+        JAVA=`which java`
+}
+
+
+_AS_INSTALL=`dirname "$0"`/..
+export _AS_INSTALL
+case "`uname`" in
+  CYGWIN*) _AS_INSTALL=`cygpath --windows $_AS_INSTALL`
+           cygwinProp=-Dorg.glassfish.isCygwin=true
+esac
+. "${_AS_INSTALL}/config/asenv.conf"
+
+chooseJava
+
+eval `"${ACCJava}" -Dorg.glassfish.appclient.shell $cygwinProp -classpath "${_AS_INSTALL}/lib/gf-client.jar" org.glassfish.appclient.client.CLIBootstrap "$@"`

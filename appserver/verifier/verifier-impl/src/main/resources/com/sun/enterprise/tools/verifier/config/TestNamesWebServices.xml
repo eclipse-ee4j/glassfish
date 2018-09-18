@@ -1,0 +1,152 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<tests>
+	<description>
+		Web Services tests
+	</description>
+<!-- This test is not required. see bugid 6332142 
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.WSXMLLocCheck
+	</test-class>
+    </test>
+-->
+    <test>
+        <test-class>
+          com.sun.enterprise.tools.verifier.tests.webservices.WSSchemaLocation
+        </test-class>
+    </test>
+
+<!-- This test is not required. See bugid: 6336047
+    <test>
+        <test-class>
+          com.sun.enterprise.tools.verifier.tests.webservices.WSWsdlPort
+        </test-class>
+    </test>
+-->
+<!-- This test is not required. See bugid: 6336203 
+    <test>
+        <test-class>
+          com.sun.enterprise.tools.verifier.tests.webservices.WSWsdlPortComponentName
+        </test-class>
+    </test>
+-->
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.SEIClassNameCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.SEIExtendsRemoteCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.MappingFileCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.WSDLFileCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.ServiceImplBeanLinkCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.ServletImplClassCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.JAXRPCEndpointIsServletClassCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.EJBEndpointIsSLSBCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.EJBServiceImplBeanChk
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.JAXRPCServiceImplBeanChk
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.SEIEJBTxAttrChk
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.EJBLinkedToOnePortCompCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.ServletLinkedToOnePortCompCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.ServletUrlPatternExactCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.OnlyOneServletMappingCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.HandlerClassCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.HandlerPortNameCheck
+	</test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.EjbRemoveMethodNameExistInSLSB
+	</test-class>
+        <maximum-version>1.1</maximum-version>
+    </test>
+    <test>
+        <test-class>
+          com.sun.enterprise.tools.verifier.tests.IconImageTypeTest
+        </test-class>
+    </test>
+    <test>
+	<test-class>
+	  com.sun.enterprise.tools.verifier.tests.webservices.HandlerChainClassCheck
+	</test-class>
+        <minimum-version>1.2</minimum-version>
+    </test>
+</tests>

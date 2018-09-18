@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package com.sun.s1asdev.security.jmac.soapdefault.client;
+
+import java.util.Map;
+
+import javax.xml.ws.WebServiceRef;
+
+import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
+
+import com.sun.s1asdev.security.jmac.soapdefault.ejbws.HelloEjb;
+import com.sun.s1asdev.security.jmac.soapdefault.ejbws.JmacSoapDefaultEjbService;
+import com.sun.s1asdev.security.jmac.soapdefault.servletws.HelloServlet;
+import com.sun.s1asdev.security.jmac.soapdefault.servletws.JmacSoapDefaultServletService;
+
+public class Client {
+    private static SimpleReporterAdapter stat =
+            new SimpleReporterAdapter("appserv-tests");
+    private static String testSuite = "Sec::Jmac SOAPDefault test ";
+
+    @WebServiceRef(wsdlLocation="http://@HOST@:@PORT@/JmacSoapDefaultEjbService/HelloEjb?WSDL")
+    private static JmacSoapDefaultEjbService ejbService;
+
+    @WebServiceRef(wsdlLocation="http://@HOST@:@PORT@/security-jmac-soapdefault-web/webservice/JmacSoapDefaultServletService/HelloServlet?WSDL")
+    private static JmacSoapDefaultServletService servletService;
+
+
+    public static void main(String[] args) {
+        stat.addDescription("security-jmac-soapdefault");
+        String description = null;
+        try {
+            HelloEjb ejbPort = ejbService.getHelloEjbPort();
+
+            description = testSuite + " ejbws: hello";
+            String ejbMsg = ejbPort.hello("Sun");
+            System.out.println(ejbMsg);
+            if ("ValResp SecResp HelloEjb ValReq SecReq Sun".equals(ejbMsg)) {
+                stat.addStatus(description, stat.PASS);  
+            } else {
+                stat.addStatus(description, stat.FAIL);  
+            }
+
+            HelloServlet servletPort = servletService.getHelloServletPort();
+            description = testSuite + " serlvetws: hello";
+            String servletMsg = servletPort.hello("Sun");
+            System.out.println(servletMsg);
+            if ("ValResp SecResp HelloServlet ValReq SecReq Sun".equals(servletMsg)) {
+                stat.addStatus(description, stat.PASS);  
+            } else {
+                stat.addStatus(description, stat.FAIL);  
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            stat.addStatus(description, stat.FAIL);
+        }
+
+        stat.printSummary("security-jmac-soapdefault");
+    }
+}

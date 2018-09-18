@@ -1,0 +1,57 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<!--
+
+    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<body>
+Provides public interfaces and classes for compatibility with Web Logic 
+<code>weblogic.workarea</code>. The preferred programming model is to use the 
+APIs in <code>org.glassfish.contextpropagation</code>.
+
+<h3> Interfaces </h3>
+<ul>
+ <li> PrimitiveContext
+ <li> PropagationMode </li>
+ <li> Context 
+ <li> ContextMap
+</ul>
+
+<h3> Removed Interfaces </h3>
+The following interfaces are not needed nor supported in BG. They have been removed. 
+<ul>
+  <li> ContextInput
+  <li> ContextOutput
+</ul>
+
+<h3> Classes </h3>
+<ul>
+ <li> AsciiContext
+ <li> LongContext
+ <li> StringContext
+ <li> SerializableContext
+ <li> PrimitiveContextFactory
+</ul>
+
+<h3> Exceptions </h3>
+<ul>
+  <li> NoContextException
+  <li> PropertyReadOnlyException
+</ul>  
+
+</body>
+</html>

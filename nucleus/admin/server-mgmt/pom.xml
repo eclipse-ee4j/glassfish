@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.glassfish.main.admin</groupId>
+        <artifactId>nucleus-admin</artifactId>
+        <version>5.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>server-mgmt</artifactId>
+    <packaging>glassfish-jar</packaging>
+    
+    <name>admin-server-management</name>
+    <description>Server Management</description>
+
+    <properties>
+        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.template</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.exe</include>
+                    <include>**/*.xsd</include>
+                </includes>
+            </resource>
+        </resources>        
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>templateinfo</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <schemaDirectory>src/main/resources/xsd/schema</schemaDirectory>
+                            <schemaFiles>template-info.xsd</schemaFiles>
+                            <packageName>com.sun.enterprise.admin.servermgmt.xml.templateinfo</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                            <staleFile>${project.build.directory}/generated-sources/.jaxb-staleFlag-config</staleFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>domaininfo</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <schemaDirectory>src/main/resources/xsd/schema</schemaDirectory>
+                            <schemaFiles>domain-info.xsd</schemaFiles>
+                            <extension>true</extension>
+                            <packageName>com.sun.enterprise.admin.servermgmt.xml.domaininfo</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                            <staleFile>${project.build.directory}/generated-sources/.jaxb-staleFlag-app</staleFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stringsubs</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <extension>true</extension>
+                            <schemaDirectory>src/main/resources/xsd/schema</schemaDirectory>
+                            <schemaFiles>stringsubs.xsd</schemaFiles>
+                            <extension>true</extension>
+                            <packageName>com.sun.enterprise.admin.servermgmt.xml.stringsubs</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>common-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.admin</groupId>
+            <artifactId>admin-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.admin</groupId>
+            <artifactId>admin-cli</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.annotations</groupId>
+            <artifactId>logging-annotation-processor</artifactId>
+        </dependency>
+    </dependencies>
+</project>

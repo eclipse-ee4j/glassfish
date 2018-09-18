@@ -1,0 +1,58 @@
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18ncs" bundle="org.glassfish.cluster.admingui.Strings")
+    setResourceBundle(key="i18njms" bundle="org.glassfish.jms.admingui.Strings");
+    setResourceBundle(key="helpjms" bundle="org.glassfish.jms.admingui.Helplinks")
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            getRequestValue(key="target" value="#{pageSession.clusterName}");
+            urlencode(value="#{pageSession.clusterName}"  encoding="UTF-8" result="#{pageSession.encodedClusterName}");
+            setPageSessionAttribute(key="target" value="#{pageSession.encodedClusterName}")
+            setPageSessionAttribute(key="selfPage" value="jms/physdest/clusterPhysDest.jsf?target=#{pageSession.encodedClusterName}");
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/clusters/cluster");
+            setPageSessionAttribute(key="resourceUrl", value="#{pageSession.parentUrl}/#{pageSession.encodedClusterName}");
+            setPageSessionAttribute(key="rest-api" value="true");
+            gf.restRequest(endpoint="#{pageSession.resourceUrl}/list-jmsdest", method="get", result="#{requestScope.result}");
+            setPageSessionAttribute(key="destList", value="#{requestScope.result.data.extraProperties.destinations}");
+        />
+    </event>
+
+    <sun:form id="propertyForm">
+#include "/cluster/cluster/clusterTabs.inc"
+#include "/common/shared/alertMsg.inc"
+        <sun:title id="propertyContentPage" title="$resource{i18njms.jmsPhysDestinations.pageTitle}" helpText="$resource{i18njms.jmsPhysDestinations.pageHelp}"/>
+#include "/common/shared/nameSection.inc"
+#include "physDestTable.jsf
+        <sun:hidden id="helpKey" value="$resource{helpjms.clusterPhysDest}" />
+    </sun:form>
+    
+    <event>
+    <!afterCreate
+        gf.isClusterName(clusterName="#{pageSession.clusterName}" );
+    />
+    </event>
+    
+</define>
+</composition>

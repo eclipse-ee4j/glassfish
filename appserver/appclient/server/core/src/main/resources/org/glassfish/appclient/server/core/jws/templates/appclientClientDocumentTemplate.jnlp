@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<jnlp
+    spec="1.0+"
+    codebase="${request.scheme}://${request.host}:${request.port}${app.codebase.path}"
+    href="${client.jnlp.path}">
+
+    <!--
+        This document describes the client JAR.  We do this separately from
+        the main JNLP document because the client JAR might be unsigned, or
+        signed by a different cert from the one used for the facade JAR.
+        Java Web Start/JNLP requires JARs signed by different certs to be
+        referenced from different JNLP documents.
+    -->
+
+    <information>
+        <title>${appclient.client.information.title}</title>
+        <vendor>${appclient.vendor}</vendor>
+        <homepage href="${appclient.information.homepage.filepath}"/>
+        <description kind="one-line">${appclient.client.information.description.one-line}</description>
+        <description kind="short">${appclient.client.information.description.short}</description>
+    <offline-allowed/>
+    </information>
+
+    <security>
+        ${client.security}
+    </security>
+
+    <resources>
+        <jar href="${client.jar.path}"/>
+    </resources>
+
+    <component-desc/>
+
+</jnlp>

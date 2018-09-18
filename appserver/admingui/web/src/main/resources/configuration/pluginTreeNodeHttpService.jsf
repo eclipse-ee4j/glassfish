@@ -1,0 +1,44 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun:treeNode
+    id="httpService"
+    text="$resource{i18n_web.tree.httpService}"
+    url="/web/configuration/accessLog.jsf?configName=${configName}"
+    imageURL="/resource/web/images/httpservice.gif"
+    >
+    <!beforeCreate
+        setResourceBundle(key="i18n_web" bundle="org.glassfish.web.admingui.Strings");
+    />
+    <dynamicTreeNode id="httpListeners"
+        treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
+        children="#{requestScope.children}"
+        childImageURL="/resource/web/images/http.gif"
+        childExpanded="false"
+        childURL="/web/configuration/httpListenerEdit.jsf?name=#{$this{valueBinding}.text}&configName=${configName}"
+        text="$resource{i18n_web.tree.configuration.httpListeners}"
+        url="/web/configuration/httpListeners.jsf?configName=${configName}">
+        <ui:event type="beforeCreate">
+            gf.restRequest(endpoint="#{sessionScope.REST_URL}/configs/config/${configName}/network-config/network-listeners/network-listener" method="get" result="#{requestScope.resp}");
+            setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");
+        </ui:event>
+        <!facet image>
+            <sun:iconHyperlink id="treeIcon" icon="TREE_FOLDER" url="/web/configuration/httpListeners.jsf?configName=${configName}" border="0" immediate="true" alt="$resource{i18n_web.tree.grizzly.networkListeners}"/>
+        </facet>
+    </dynamicTreeNode>
+</sun:treeNode>

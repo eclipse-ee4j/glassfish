@@ -1,0 +1,66 @@
+#
+# Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License v. 2.0, which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# This Source Code may also be made available under the following Secondary
+# Licenses when the conditions for such availability set forth in the
+# Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+# version 2 with the GNU Classpath Exception, which is available at
+# https://www.gnu.org/software/classpath/license.html.
+#
+# SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+#
+
+# not for logging to server log
+audit.denied
+audit.ok
+audit.methodname
+audit.session
+
+# logged with level FINE in security module
+acc.secmgron
+acc.secmgroff
+
+# logged with level FINE in persistence module
+database.DBVendorTypeHelper.inputVendorName
+database.DBVendorTypeHelper.detectedVendorType
+database.DBVendorTypeHelper.couldNotLoadResource
+database.DBVendorTypeHelper.regExprDbType
+database.DBVendorTypeHelper.patternSyntaxException
+database.DBVendorTypeHelper.traceVendorNameToTypeProperty
+database.DBVendorTypeHelper.errorParsingVendorNameToTypeProperty
+
+# logged with level FINE in jdbc module
+jdbc.invalid_connection
+jdbc.duplicate_close_connection
+jdbc.duplicateTxCompleted
+jdbc.executing_init_sql
+jdbc.exc_init_sql_error_stmt_close
+jdbc.execute_init_sql_start
+jdbc.execute_init_sql_end
+CCP.ValidateAtmostEveryIdleSecs.Set
+connection_sharing_start
+connection_sharing_end
+connection_sharing_reset_association
+pool.get_validation_table_names_mc_destroy
+
+# logged with level FINE in appclient module
+enterprise.deployment.appclient.jws.clientJNLPConfigLoad
+enterprise.deployment.appclient.jws.clientJNLPConfigChangeFile
+
+# http://java.net/jira/browse/GLASSFISH-16541
+console.adapter.missingDeployDir
+console.adapter.cannotBackup
+console.adapter.NoUpdateCenterInfo
+console.adapter.CannotCreateUC
+console.adapter.cannotUndeploy
+console.adapter.errorStopping
+
+# http://java.net/jira/browse/GLASSFISH-16535
+ajra.config_not_created_yet
+
+# http://java.net/jira/browse/GLASSFISH-16542
+JPAJava2DBProcessor.nondefaultprovider

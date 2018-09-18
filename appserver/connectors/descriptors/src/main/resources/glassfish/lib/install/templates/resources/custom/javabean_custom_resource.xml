@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN" "*<install directory>/lib/dtds/sun-resources_1_3.dtd*">
+<!--
+
+    Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+
+    Template file to create JavaBean custom resources.
+    By specifying the "factory-class-name" for creating java-bean
+    and the values for the bean-properties using "properties" of the
+    custom-resource, applications can lookup java-bean via JNDI.
+
+    To learn more on custom resources,refer :
+
+    http://docs.sun.com/app/docs/doc/819-2554/ablld?l=en&a=view
+    
+    http://docs.sun.com/app/docs/doc/820-4332/create-custom-resource-1?a=view
+
+    http://docs.sun.com/app/docs/doc/820-4332/delete-custom-resource-1?a=view
+
+    http://docs.sun.com/app/docs/doc/820-4332/list-custom-resources-1?a=view 
+
+    For detailed explanation of attributes and elements of this resources xml
+    pl. refer to sun-resources_1_3.dtd
+
+
+    =========================================SAMPLE============================================
+
+
+    In the sample configuration below, 
+    JavaBean org.glassfish.resource.custom.test.Customer
+    has attributes (along with getters and setters)
+
+    To initialize the JavaBean with values, set the property name and the value.
+    Applications can do  :
+
+    (CustomResourceJavaBean)initialContext.lookup("custom/my-java-bean")
+
+    to get the bean instance that is populated with customerId, customerLocation, customerSince attributes
+
+    Following command will create a resource using this template :
+
+    GLASSFISH_INSTALL_DIR/bin/asadmin add-resources <ABSOLUTE_PATH_TO_TEMPLATE_FILE>
+
+
+    <resources>
+        <custom-resource res-type="org.glassfish.resource.custom.test.Customer" jndi-name="custom/my-java-bean" 
+         factory-class="org.glassfish.resources.custom.factory.JavaBeanFactory">
+          <property name="customerId" value="cu-101" />
+          <property name="customerLocation" value="San Francisco" />
+          <property name="customerSince" value="1990" />
+        </custom-resource>
+    </resources> 
+
+
+=========================================SAMPLE============================================
+
+-->
+
+<resources>
+    <custom-resource res-type="<FULLY_QUALIFIED_CLASS_NAME_OF_JAVABEAN>" jndi-name="<RESOURCE_NAME>" 
+      factory-class="org.glassfish.resources.custom.factory.JavaBeanFactory">
+      <property name="ATTRIBUTE_1" value="VALUE_1" />
+      <property name="ATTRIBUTE_2" value="VALUE_2" />
+    </custom-resource>
+</resources>
+
+
+

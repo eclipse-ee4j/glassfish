@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "file:./../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "file:./../../config/common.xml">
+<!ENTITY reporting   SYSTEM "file:./report.xml">
+]>
+
+<project name="ejb" default="usage" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &reporting;
+
+    <target name="all">
+        <antcall target="startDerby"/>
+        <delete>
+           <fileset dir="${env.APS_HOME}" includes="test_results*"/>
+        </delete>
+        <delete>
+           <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="lazyinit.output" action="start" />
+        <ant dir="converter" target="all"/>
+        <ant dir="ejbjar" target="all"/>  
+        <!--
+        <ant dir="ejbws" target="all"/>  
+        -->
+        <ant dir="jms1/simple" target="all"/>  
+        <ant dir="jms2/simple" target="all"/>  
+        <ant dir="jms3/simple" target="all"/>  
+        <ant dir="jmsweb" target="all"/>  
+        <ant dir="mbeans1" target="all"/>  
+        <ant dir="onlygetconnectionservlet" target="all"/>  
+        <ant dir="standalonewar" target="all"/> 
+        <ant dir="timer" target="all"/>
+        <ant dir="webear" target="all"/>
+        <ant dir="jms-txlookup" target="all"/>
+        <record name="lazyinit.output" action="stop" />
+        <antcall target="report"/>
+    </target>
+
+    <target name="usage">
+	<echo>
+		Usage:
+			ant all (Executes all the lazyInit tests)
+	</echo>
+    </target>
+</project>

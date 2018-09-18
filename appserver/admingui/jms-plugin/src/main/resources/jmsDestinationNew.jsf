@@ -1,0 +1,85 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    setResourceBundle(key="i18njms" bundle="org.glassfish.jms.admingui.Strings");
+    setResourceBundle(key="helpjms" bundle="org.glassfish.jms.admingui.Helplinks")
+/>
+
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18njms.jmsDestination.newPageTitle}" >
+<!define name="content">
+    <event>
+        <!beforeCreate
+            getRequestValue(key="target" value="#{pageSession.targetValue}");
+            setPageSessionAttribute(key="pageTitle" value="$resource{i18njms.jmsDestination.newPageTitle}")
+            setPageSessionAttribute(key="pageTitleHelp" value="$resource{i18njms.jmsDestination.newPageTitleHelp}")
+
+            setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jms/jmsDestinationNew.jsf");
+            setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/jms/jmsDestinations.jsf");
+            setPageSessionAttribute(key="childType" value="admin-object-resource");
+            setPageSessionAttribute(key="convertToFalseList" value={"enabled"});
+
+            setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
+            gf.getDefaultValues(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}", valueMap="#{pageSession.valueMap}");
+            gf.getDefaultValues(endpoint="#{sessionScope.REST_URL}/servers/server/server/resource-ref", valueMap="#{pageSession.valueMap2}");
+            mapPut(map="#{pageSession.valueMap}" key="enabled" value="true");
+            mapPut(map="#{pageSession.valueMap}", key="resAdapter", value="jmsra");
+
+            //set the following for including buttons.inc
+            setPageSessionAttribute(key="edit" value="#{false}" );
+            setPageSessionAttribute(key="showDefaultButton" value="#{false}" );
+            setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+            setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+            setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+            
+            setPageSessionAttribute(key="useString" value="#{false}");
+        />
+    </event>
+    "    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:jmsResources:jmsDestinationResources");</script>
+
+    <sun:form id="form">
+#include "/common/shared/alertMsg_1.inc"
+    <!-- Page Title -->
+    <sun:title id="propertyContentPage" title="#{pageTitle}" helpText="#{pageTitleHelp}">
+        <!-- Buttons  -->
+        <!facet pageButtonsTop>
+            <sun:panelGroup id="topButtons">
+#include "/jms/jmsDestinationButtons.inc"
+            </sun:panelGroup>
+        </facet>
+<!-- PropertySheet .... -->
+"<br><br>
+#include "/jms/jmsDestinationSheet.inc"
+#include "/common/shared/propertyDescTable.inc"
+<event>
+<!afterCreate
+    setPageSessionAttribute(key="setDefaultTarget" value="true");
+    includeIntegrations(type="org.glassfish.admingui:TargetSectionForResource" );
+/>
+</event>
+        <!facet pageButtonsBottom>
+            <sun:panelGroup id="bottomButtons">
+#include "/jms/jmsDestinationButtons.inc"
+            </sun:panelGroup>
+        </facet>
+    </sun:title>
+    <sun:hidden id="helpKey" value="$resource{helpjms.jmsDestinationNew}" />
+</sun:form>
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="portable-extensions-test" default="usage" basedir=".">
+
+    <property name="portable-extensions-target" value="all"/>
+
+    <target name="run-test">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="run-test"/>
+        </antcall>
+    </target>
+
+    <target name="all">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="all"/>
+        </antcall>
+    </target>
+
+    <target name="clean">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="clean"/>
+        </antcall>
+    </target>
+
+    <target name="build">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="build"/>
+        </antcall>
+    </target>
+
+    <target name="setup">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="setup"/>
+        </antcall>
+    </target>
+
+    <target name="deploy">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="deploy"/>
+        </antcall>
+    </target>
+
+    <target name="undeploy">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="undeploy"/>
+        </antcall>
+    </target>
+
+    <target name="unsetup">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="unsetup"/>
+        </antcall>
+    </target>
+
+    <target name="run">
+        <antcall target="portable-extensions">
+        <param name="portable-extensions-target" value="run"/>
+        </antcall>
+    </target>
+
+    <target name="portable-extensions">
+        <record name="portable-extensions.output" action="start" />
+            <ant dir="simple-portable-extension" target="${portable-extensions-target}"/>
+            <ant dir="bean-interface" target="${portable-extensions-target}"/>
+            <ant dir="bean-manager" target="${portable-extensions-target}"/>
+            <ant dir="injection-target" target="${portable-extensions-target}"/>
+            <ant dir="new-bean-registration" target="${portable-extensions-target}"/>
+            <ant dir="new-bean-registration-extension-in-lib" target="${portable-extensions-target}"/>
+            <ant dir="package-private-extension-constructor" target="${portable-extensions-target}"/>
+        <record name="portable-extensions.output" action="stop" />
+    </target>
+
+    <target name="usage">
+	<echo> Usage:
+		ant all (Executes all the portable-extensions tests)
+		ant clean (cleans all the portable-extensions tests)
+		ant build (builds all the portable-extensions tests)
+		ant setup (sets up all resources for portable-extensions tests)
+		ant deploy (deploys all the portable-extensions apps)
+		ant run (Executes all the portable-extensions tests)
+		ant undeploy (undeploys all the  portable-extensions apps)
+		ant unsetup (unsets all resources for portable-extensions tests)
+	</echo>
+    </target>
+</project>

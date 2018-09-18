@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="v3-targets" default="all" basedir=".">
+    
+    <property name="db.root" value="${glassfish.home}/javadb"/>
+    <property name="db.classpath" value="${db.root}/lib"/>
+    <property name="dist.dir" value="${ws.root}/dist/${testsuite.name}"/>
+    <!--<property name="db.classpath" value="${db.root}/lib/derby.jar:${db.root}/lib/derbyclient.jar:${db.root}/lib/derbynet.jar"/>-->
+
+
+<target name="setOSConditions">
+  <condition property="isUnix">
+    <os family="unix"/>
+  </condition>
+  <condition property="isWindows">
+    <os family="windows" />
+  </condition>
+</target>
+
+<target name="asenv-unix" if="isUnix">
+    <property name="asenv_conf" value="${glassfish.home}/config/asenv.conf"/>
+    <property name="ASADMIN" value="${glassfish.home}/bin/asadmin"/>
+    <property name="APPCLIENT" value="${glassfish.home}/bin/appclient"/>
+</target>
+
+<target name="asenv-windows" if="isWindows">
+    <property name="asenv_conf" value="${glassfish.home}/config/asenv.bat"/>
+    <property name="ASADMIN" value="${glassfish.home}\bin\asadmin.bat"/>
+    <property name="APPCLIENT" value="${glassfish.home}\bin\appclient.bat"/>
+</target>
+
+<!-- target name="restart-server" depends="setOSConditions,asenv-unix,asenv-windows">
+    <exec executable="${ASADMIN}" outputproperty="message1">
+        <arg value="restart-domain"/>
+        <arg value="domain1"/>
+    </exec>
+    <echo message="${message1}"/>
+</target -->
+
+<target name="restart-server" depends="setOSConditions">
+    <antcall target="restart-server-unix"/>
+    <antcall target="restart-server-windows"/>
+</target>
+
+<target name="restart-server-unix" if="isUnix">
+    <exec executable="${glassfish.home}/bin/asadmin" outputproperty="message1">
+        <arg value="restart-domain"/>
+        <arg value="domain1"/>
+    </exec>
+    <echo message="${message1}"/>
+</target>
+
+<target name="restart-server-windows" if="isWindows">
+    <exec executable="cmd" outputproperty="message1">
+	<env key="GlassFish_Platform" value="Felix"/>
+        <arg value="/c"/>
+        <arg value="${glassfish.home}\bin\asadmin.bat"/>
+        <arg value="restart-domain"/>
+        <arg value="domain1"/>
+    </exec>
+    <echo message="${message1}"/>
+</target>
+
+<target name="create-jdbc-connection-pool" depends="setOSConditions,asenv-unix,asenv-windows">
+    <exec executable="${ASADMIN}" outputproperty="message">
+	<arg line="create-jdbc-connection-pool --datasourceclassname=org.apache.derby.jdbc.ClientDataSource --property DatabaseName=sun-appserv-samples:PortNumber=1527:serverName=localhost:connectionAttributes=\;create\=true:Password=APP:User=APP QLJdbcPool"/>
+    </exec>
+    <echo message="${message}"/>
+</target>
+
+<target name="ping-connection-pool" depends="setOSConditions,asenv-unix,asenv-windows">
+    <exec executable="${ASADMIN}" outputproperty="message1">
+        <arg line="ping-connection-pool QLJdbcPool"/>
+    </exec>
+    <echo message="${message1}"/>
+</target>
+
+<target name="delete-jdbc-connection-pool" depends="setOSConditions,asenv-unix,asenv-windows">
+    <exec executable="${ASADMIN}" outputproperty="message1">
+	<arg line="delete-jdbc-connection-pool QLJdbcPool"/>
+    </exec>
+    <echo message="${message1}"/>
+</target>
+
+<target name="start-server" depends="setOSConditions">
+
+    <echo>+-----------------------------+</echo>
+    <echo>|                             |</echo>
+    <echo>| S T A R T I N G   GLASSFISH |</echo>
+    <echo>|       in Felix mode         |</echo>
+    <echo>|                             |</echo>
+    <echo>+-----------------------------+</echo>
+
+    <antcall target="start-server-unix"/>
+    <antcall target="start-server-windows"/>
+</target>
+
+<target name="start-server-unix" if="isUnix">
+    <exec executable="${glassfish.home}/bin/asadmin">
+    <env key="GlassFish_Platform" value="Felix"/>
+        <arg value="start-domain"/>
+    </exec>
+</target>
+
+<target name="start-server-windows" if="isWindows">
+    <exec executable="cmd" spawn="true">
+	<env key="GlassFish_Platform" value="Felix"/>
+        <arg value="/c"/>
+        <arg value="${glassfish.home}\bin\asadmin.bat"/>
+        <arg value="start-domain"/>
+    </exec>
+    <!-- JRuby deplyment needs GF start server to be fully done. 
+         Introduce a delay for now and will investigate futher.  -->
+    <sleep seconds="10"/>
+</target>
+
+<target name="stop-server" depends="setOSConditions">
+    <antcall target="stop-server-unix"/>
+    <antcall target="stop-server-windows"/>
+</target>
+
+<target name="stop-server-unix" if="isUnix">
+    <echo message="stopping server on unix ..."/>
+    <exec executable="${glassfish.home}/bin/asadmin">        
+        <arg value="stop-domain"/>
+    </exec>
+</target>
+
+<target name="stop-server-windows" if="isWindows">
+    <echo message="Stopping server on windows ..."/>
+   <exec executable="cmd">
+    <arg value="/c"/>
+    <arg value="${glassfish.home}\bin\asadmin.bat"/>
+        <arg value="stop-domain"/>
+    </exec>
+</target>
+    
+      
+<target name="deploy-v3-impl" depends="setOSConditions">
+    <echo message="deploying ${app.file.ext}"/>
+    <antcall target="deploy-v3-impl-unix"/>
+    <antcall target="deploy-v3-impl-windows"/>
+</target>
+
+<target name="deploy-v3-impl-windows" if="isWindows">
+   <exec executable="cmd" failonerror="true">
+    <arg value="/c"/>
+    <arg value="${glassfish.home}\bin\asadmin.bat"/>
+    <arg value="deploy"/>
+    <arg line="${dist.dir}/${app.file.ext}"/>   
+   </exec>  
+</target>
+  
+<target name="deploy-v3-impl-unix" if="isUnix">
+  <exec executable="${glassfish.home}/bin/asadmin" failonerror="false">
+    <arg value="deploy"/>
+    <arg line="${dist.dir}/${app.file.ext}"/>
+  </exec>
+</target>
+
+<target name="deploy-upload-v3-impl" depends="setOSConditions">
+    <echo message="deploying ${app.file.ext} with --upload"/>
+    <antcall target="deploy-upload-v3-impl-unix"/>
+    <antcall target="deploy-upload-v3-impl-windows"/>
+</target>
+
+<target name="deploy-upload-v3-impl-windows" if="isWindows">
+   <exec executable="cmd" failonerror="true">
+    <arg value="/c"/>
+    <arg value="${glassfish.home}\bin\asadmin.bat"/>
+    <arg value="deploy"/>
+    <arg value="--upload"/>
+    <arg line="${dist.dir}/${app.file.ext}"/>   
+   </exec>  
+</target>
+  
+<target name="deploy-upload-v3-impl-unix" if="isUnix">
+  <exec executable="${glassfish.home}/bin/asadmin" failonerror="false">
+    <arg value="deploy"/>
+    <arg value="--upload"/>
+    <arg line="${dist.dir}/${app.file.ext}"/>
+  </exec>
+</target>
+
+<target name="re-deploy-v3" depends="setOSConditions">
+    <echo message="deploying ${app.file.ext}"/>
+    <antcall target="re-deploy-v3-unix"/>
+    <antcall target="re-deploy-v3-windows"/>
+</target>
+
+<target name="re-deploy-v3-windows" if="isWindows">
+   <exec executable="cmd" failonerror="true">
+    <arg value="/c"/>
+    <arg value="${glassfish.home}\bin\asadmin.bat"/>
+    <arg value="deploy"/>
+    <arg value="--force=true"/>
+    <arg line="${dist.dir}/${app.file.ext}"/>
+   </exec> 
+</target>
+ 
+<target name="re-deploy-v3-unix" if="isUnix">
+  <exec executable="${glassfish.home}/bin/asadmin" failonerror="false">
+    <arg value="deploy"/>
+    <arg value="--force=true"/>
+    <arg line="${dist.dir}/${app.file.ext}"/>
+  </exec>
+</target>
+
+<target name="undeploy-v3-impl" depends="setOSConditions">
+    <echo message="${app.file}"/>
+    
+    <antcall target="undeploy-v3-impl-unix"/>
+    <antcall target="undeploy-v3-impl-windows"/>
+</target>
+
+<target name="undeploy-v3-impl-windows" if="isWindows">
+    <exec executable="cmd">
+    <arg value="/c"/>
+    <arg value="${glassfish.home}\bin\asadmin.bat"/>
+    <arg value="undeploy"/>    
+    <arg value="${app.file}"/>
+  </exec>  
+</target>
+  
+<target name="undeploy-v3-impl-unix" if="isUnix">
+  <exec executable="${glassfish.home}/bin/asadmin">
+    <arg value="undeploy"/>
+    <arg line="--target server"/>
+    <arg value="${app.file}"/>
+  </exec>      
+</target>
+
+
+<target name="create-user-common-v3-impl" depends="setOSConditions">
+    <antcall target="create-user-common-v3-impl-unix"/>
+    <antcall target="create-user-common-v3-impl-windows"/>    
+</target>
+
+<!-- ================================================================ -->
+<!-- Target to create the user in file realm the AppServ  -->
+<!-- ================================================================ -->
+<target name="create-user-common-v3-impl-unix" if="isUnix">    
+    <property name="user.password.file" value="asadminuserpassword.txt"/>
+    <echo file="${user.password.file}" append="false">
+        AS_ADMIN_USERPASSWORD=${password}
+        AS_ADMIN_PASSWORD=${admin.password}
+        AS_ADMIN_ADMINPASSWORD=${admin.password}
+        AS_ADMIN_MASTERPASSWORD=${master.password}
+    </echo>
+    <exec executable="${glassfish.home}/bin/asadmin">
+        <arg line="create-file-user"/>
+        <arg line="--user ${admin.user} --passwordfile ${user.password.file} --host ${admin.host} --port ${admin.port} --echo=true --terse=true"/>
+        <arg line="--groups ${groups}"/>
+        <arg line="--authrealmname ${authrealmname}"/>
+        <arg line="${user}"/>
+    </exec>
+    <delete file="${user.password.file}" failonerror="false"/>    
+</target>
+
+<target name="create-user-common-v3-impl-windows" if="isWindows">   
+    <property name="user.password.file" value="asadminuserpassword.txt"/>
+    <echo file="${user.password.file}" append="false">
+        AS_ADMIN_USERPASSWORD=${password}
+        AS_ADMIN_PASSWORD=${admin.password}
+        AS_ADMIN_ADMINPASSWORD=${admin.password}
+        AS_ADMIN_MASTERPASSWORD=${master.password}
+    </echo>
+    <exec executable="cmd">
+        <arg value="/c"/>
+        <arg value="${glassfish.home}\bin\asadmin.bat"/>
+        <arg line="create-file-user"/>
+        <arg line="--user ${admin.user} --passwordfile ${user.password.file} --host ${admin.host} --port ${admin.port} --echo=true --terse=true"/>
+        <arg line="--groups ${groups}"/>
+        <arg line="--authrealmname ${authrealmname}"/>
+        <arg line="${user}"/>
+    </exec>
+    <delete file="${user.password.file}" failonerror="false"/>        
+</target>
+
+<target name="delete-user-common-v3-impl" depends="setOSConditions">
+    <antcall target="delete-user-common-v3-impl-unix"/>
+    <antcall target="delete-user-common-v3-impl-windows"/>    
+</target>
+
+<target name="delete-user-common-v3-impl-unix" if="isUnix">    
+    <exec executable="${glassfish.home}/bin/asadmin">
+        <arg line="delete-file-user"/>
+        <arg line="--user ${admin.user} --host ${admin.host} --port ${admin.port} --echo=true --terse=true"/>
+        <arg line="--authrealmname ${authrealmname}"/>
+        <arg line="${user}"/>
+    </exec>    
+</target>
+
+<target name="delete-user-common-v3-impl-windows" if="isWindows">    
+    <exec executable="${glassfish.home}\bin\asadmin.bat">
+        <arg line="delete-file-user"/>
+        <arg line="--user ${admin.user} --host ${admin.host} --port ${admin.port} --echo=true --terse=true"/>
+        <arg line="--authrealmname ${authrealmname}"/>
+        <arg line="${user}"/>
+    </exec>    
+</target>
+
+</project>
+

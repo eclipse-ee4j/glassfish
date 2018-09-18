@@ -1,0 +1,78 @@
+<!--
+
+    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- security/msgSecurity/msgSecurityEdit.jsf -->
+
+
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18nc.msgSecurity.EditMsgSecurity}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+        getRequestValue(key="name" value="#{pageSession.Name}");
+        urlencode(value="#{pageSession.Name}" encoding="UTF-8" result="#{pageSession.encodedName}");
+        urlencode(value="#{pageSession.configName}" encoding="UTF-8" result="#{pageSession.encodedConfigName}");
+        setSessionAttribute(key="msgSecurityTabs" value="msgSecurityEdit");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/common/security/msgSecurity/msgSecurityEdit.jsf?name=#{pageSession.encodedName}&configName=#{pageSession.encodedConfigName}");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/common/security/msgSecurity/msgSecurity.jsf");
+        setPageSessionAttribute(key="childType" value="message-security-config");
+        setPageSessionAttribute(key="selfUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/security-service/message-security-config/#{pageSession.Name}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.valueMap}");
+        getProvidersByType(msgSecurityName="#{pageSession.Name}"  configName="#{pageSession.configName}" type={"server", "client-server"}  result="#{pageSession.serverTypeProviderList}")
+        getProvidersByType(msgSecurityName="#{pageSession.Name}"  configName="#{pageSession.configName}" type={"client", "client-server"}  result="#{pageSession.clientTypeProviderList}")
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{false}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{false}" );
+    />
+    </event>
+
+    <sun:form id="propertyForm">
+#include "msgSecurityTabs.inc"
+#include "/common/shared/alertMsg.inc"
+
+        <!-- Page Title -->
+        <sun:title id="propertyContentPage" title="$resource{i18nc.msgSecurity.EditMsgSecurity}" helpText="$resource{i18nc.msgSecurity.EditMsgSecurityInfo}">
+#include "/common/shared/editPageButtons.inc"
+        </sun:title>
+        <sun:propertySheet id="propertySheet">
+#include "/common/shared/configNameSection.inc"
+
+             <sun:propertySheetSection id="propertySheetSection">
+                 <sun:property id="AuthLayerProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.msgSecurity.authLayerLabel}" >
+                     <sun:staticText escape="true" id="AuthLayer" text="#{pageSession.Name}" />
+                 </sun:property>
+                 <sun:property id="DefaultProviderProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.msgSecurity.defaultProviderLabel}" helpText="$resource{i18nc.msgSecurity.defaultProviderHelp}">
+                     <sun:dropDown id="DefaultProvider" selected="#{pageSession.valueMap['defaultProvider']}" labels="$pageSession{serverTypeProviderList}" />
+                 </sun:property>
+                 <sun:property id="DefaultClProviderProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.msgSecurity.defaultClProviderLabel}" helpText="$resource{i18nc.msgSecurity.defaultClProviderHelp}">
+                     <sun:dropDown id="DefaultClProvider" selected="#{pageSession.valueMap['defaultClientProvider']}" labels="$pageSession{clientTypeProviderList}" />
+                 </sun:property>
+             </sun:propertySheetSection>
+         </sun:propertySheet>
+	<sun:hidden id="helpKey" value="$resource{help_common.msgSecurityConfigEdit}" />
+    </sun:form>
+</define>
+</composition>

@@ -1,0 +1,124 @@
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!-- configuration/accessLog.jsf -->
+
+<!initPage
+    setResourceBundle(key="i18n_web" bundle="org.glassfish.web.admingui.Strings");
+    setResourceBundle(key="help_web" bundle="org.glassfish.web.admingui.Helplinks");
+/>
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n_web.httpService.pageTitle}" >
+<!define name="content">
+    <event>
+    <!beforeCreate
+        getRequestValue(key="configName" value=>$page{configName} default="server-config");
+
+        setPageSessionAttribute(key="childType" value="http-service");
+        setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}");
+        setPageSessionAttribute(key="parentUrl2", value="#{sessionScope.REST_URL}/configs/config/#{pageSession.configName}/#{pageSession.childType}");
+        setPageSessionAttribute(key="selfUrl", value="#{pageSession.parentUrl}/#{pageSession.childType}");
+        setPageSessionAttribute(key="rest-api" value="true");
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}.json", valueMap="#{pageSession.valueMap}");
+        gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json" method="GET" result="#{requestScope.propTable}");
+        setPageSessionAttribute(key="tableList" value="#{requestScope.propTable.data.extraProperties.properties}");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/web/configuration/accessLog.jsf?configName=#{pageSession.configName}");
+        setPageSessionAttribute(key="convertToFalseList" value={"ssoEnabled", "accessLoggingEnabled" });
+
+        setPageSessionAttribute(key="has2Objects" value="#{true}" );  //for editPageButtons.inc
+        setPageSessionAttribute(key="childType2" value="access-log");
+        setPageSessionAttribute(key="selfUrl2", value="#{pageSession.selfUrl}/#{pageSession.childType2}");
+        setPageSessionAttribute(key="convertToFalseList2" value={"rotationEnabled"});
+        gf.getEntityAttrs(endpoint="#{pageSession.selfUrl2}.json", valueMap="#{pageSession.valueMap2}");
+
+        //set the following for including buttons.inc
+        setPageSessionAttribute(key="edit" value="#{true}" );
+        setPageSessionAttribute(key="has2Objects" value="#{true}" );
+        setPageSessionAttribute(key="showDefaultButton" value="#{true}" );
+        setPageSessionAttribute(key="showCancelButton" value="#{false}" );
+        setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
+        setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
+    />
+    </event>
+
+            <sun:form id="form1">
+#include "/common/shared/alertMsg.inc"
+<sun:title id="propertyContentPage" title="$resource{i18n_web.httpService.pageTitle}" helpText="$resource{i18n_web.httpService.pageTitleHelp}" >
+#include "/common/shared/editPageButtons.inc"
+</sun:title>
+    <sun:propertySheet id="propertySheet">
+#include "/common/shared/configNameSection.inc"
+
+        <sun:propertySheetSection id="http" >
+            <sun:property id="acLog" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.SsoEnbaled}">
+                <sun:checkbox id="ssoEnabled"   selected="#{pageSession.valueMap['ssoEnabled']}" selectedValue="true"/>
+            </sun:property>
+        </sun:propertySheetSection>
+    
+        <sun:propertySheetSection id="accessLog" label="$resource{i18n_web.access.SectionTitle}">
+
+        <sun:property id="acLog" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.vs.accessLogging}">
+            <sun:checkbox id="accessLoggingEnabled"   selected="#{pageSession.valueMap['accessLoggingEnabled']}" selectedValue="true"/>
+        </sun:property>
+
+        <sun:property id="rotationProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.Rotation}" helpText="$resource{i18n_web.access.RotationHelp}">
+            <sun:checkbox  selected="#{pageSession.valueMap2['rotationEnabled']}" selectedValue="true" >
+           </sun:checkbox>
+        </sun:property>
+        <sun:property id="rotationPolicyProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.RotationPolicy}" helpText="$resource{i18n_web.access.RotationPolicyHelp}">
+           <sun:dropDown id="RotationPolicy"  selected="#{pageSession.valueMap2['rotationPolicy']}" labels={"time"} >
+            </sun:dropDown>
+         </sun:property>
+       <sun:property id="intervalProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.RotationInterval}" helpText="$resource{i18n_web.access.RotationIntervalHelp}">
+            <sun:textField id="Interval" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.access.RotationInterval']}" text="#{pageSession.valueMap2['rotationIntervalInMinutes']}" />
+            <sun:staticText id="sec" style="padding: 8pt" text="$resource{i18n.common.Minutes}"/>
+        </sun:property>
+        <sun:property id="suffixProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.RotationSuffix}" helpText="$resource{i18n_web.access.RotationSuffixHelp}">
+            <sun:textField id="Suffix" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.access.RotationSuffix']}" text="#{pageSession.valueMap2['rotationSuffix']}" />
+        </sun:property>
+
+        <sun:property id="MaxHistoryFiles"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.MaxHistoryFiles}" helpText="$resource{i18n_web.access.MaxHistoryFilesHelp}">
+            <sun:textField id="MaxHistoryFiles" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.access.MaxHistoryFiles']}" text="#{pageSession.valueMap2['maxHistoryFiles']}" />
+        </sun:property>
+
+        <sun:property id="accessLogBufferSize"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.accessLogBufferSize}" helpText="$resource{i18n_web.access.accessLogBufferSizeHelp}">
+        <sun:textField id="accessLogBufferSize" styleClass="intAllowMinus" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.access.accessLogBufferSize']}"  text="#{pageSession.valueMap2['bufferSizeBytes']}" />
+        <sun:staticText id="sec" style="padding: 8pt" text="$resource{i18n.common.Bytes}"/>
+        </sun:property>
+
+        <sun:property id="accessLogWriteInterval"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.accessLogWriteInterval}" helpText="$resource{i18n_web.access.accessLogWriteIntervalHelp}">
+            <sun:textField id="accessLogWriteInterval" styleClass="intAllowMinus" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.access.accessLogWriteInterval']}"  text="#{pageSession.valueMap2['writeIntervalSeconds']}" />
+            <sun:staticText id="sec" style="padding: 8pt" text="$resource{i18n.common.Seconds}"/>
+        </sun:property>
+
+        <sun:property id="formatProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n_web.access.Format}" helpText="$resource{i18n_web.access.FormatHelp}">
+            <sun:textField id="Format" columns="$int{90}" maxLength="#{sessionScope.fieldLengths['maxLength.access.Format']}"  text="#{pageSession.valueMap2['format']}"/>
+        </sun:property>
+        </sun:propertySheetSection>
+    </sun:propertySheet>
+    "<br/>
+#include "/common/shared/propertyDescTable.inc"
+
+<sun:hidden id="helpKey" value="$resource{help_web.accessLog}" />
+
+    </sun:form>
+    "<br/>
+#include "/common/shared/changeButtonsJS.inc"
+</define>
+</composition>
+
+

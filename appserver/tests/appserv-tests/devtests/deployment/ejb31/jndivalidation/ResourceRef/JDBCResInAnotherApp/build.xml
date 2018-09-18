@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+]>
+
+<project name="deployment-ejb31-jndivalidation-resourceref-JDBCResInAnotherApp" default="all" basedir=".">
+
+    &commonBuild;
+
+    <property name="testName" value="deployment-ejb31-jndivalidation-resourceref-JDBCResInAnotherApp"/>
+    <property name="archivedir" value="${build}/archives"/>
+
+    <target name="prepare" depends="init">
+        <mkdir dir="${build}/app1"/>
+        <mkdir dir="${build}/app2"/>
+        <mkdir dir="${archivedir}"/>
+        <property name="app1.war" value="${archivedir}/${testName}-app1-web.war"/>
+        <property name="app2.war" value="${archivedir}/${testName}-app2-web.war"/>
+    </target>
+
+    <target name="compile-app1" depends="prepare">
+        <javac srcdir="app1/src" destdir="${build}/app1" debug="on" failonerror="true">
+         <classpath refid="gfv3.classpath"/>
+         </javac>
+    </target>
+
+    <target name="compile-app2" depends="prepare">
+        <javac srcdir="app2/src" destdir="${build}/app2" debug="on" failonerror="true">
+         <classpath refid="gfv3.classpath"/>
+         </javac>
+    </target>
+
+    <target name="assemble-app1" depends="compile-app1">
+        <war destfile="${app1.war}" needxmlfile="false">
+            <classes dir="${build}/app1" excludes="**/*.war"/>
+        </war>
+    </target>
+
+    <target name="assemble-app2" depends="compile-app2">
+        <war destfile="${app2.war}" needxmlfile="false">
+            <classes dir="${build}/app2" excludes="**/*.war"/>
+        </war>
+    </target>
+
+    <target name="deploy-app1" depends="assemble-app1">
+        <property name="arg.list" value="deploy ${ASADMIN-ARGS} --retrieve ${archivedir} --name ${testName}-app1-web ${app1.war}"/>
+        <echo message="${ASADMIN} ${arg.list}"/>
+        <exec executable="${ASADMIN}" resultproperty="return.code" failonerror="false">
+           <arg line="${arg.list}"/>
+        </exec>
+    </target>
+
+    <target name="deploy-app2" depends="assemble-app2">
+        <property name="arg.list" value="deploy ${ASADMIN-ARGS} --retrieve ${archivedir} --name ${testName}-app2-web ${app2.war}"/>
+        <echo message="${ASADMIN} ${arg.list}"/>
+        <exec executable="${ASADMIN}" resultproperty="return.code" failonerror="false">
+           <arg line="${arg.list}"/>
+        </exec>
+        <condition property="deploy.failed" value="0">
+            <equals arg1="0" arg2="${return.code}" />
+        </condition>
+        <condition property="deploy.failed" value="1">
+            <not>
+                <equals arg1="0" arg2="${return.code}" />
+            </not>
+        </condition>
+        <antcall target="processResult">
+            <param name="result" value="${deploy.failed}"/>
+        </antcall>
+    </target>
+
+    <target name="undeploy.asadmin" depends="prepare">
+        <antcall target="common.undeploy.asadmin">
+            <param name="arg.list" value="${testName}-app1-web"/>
+            <param name="testName" value="${testName}-app1-web"/>
+        </antcall>
+        <antcall target="common.undeploy.asadmin">
+            <param name="arg.list" value="${testName}-app2-web"/>
+            <param name="testName" value="${testName}-app2-web"/>
+        </antcall>
+    </target>
+
+    <target name="private-all">
+        <antcall target="declare-test">
+            <param name="description" value="ejb31/jndivalidation/resourceref/CorrectJDBCResource Test asadmin deploy"/>
+        </antcall>
+        <antcall target="deploy-app1"/>
+        <antcall target="deploy-app2"/>
+        <antcall target="undeploy.asadmin"/>
+    </target>
+
+</project>

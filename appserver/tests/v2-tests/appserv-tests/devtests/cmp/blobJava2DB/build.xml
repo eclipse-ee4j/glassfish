@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project [
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!ENTITY commonSetup SYSTEM "../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../config/common.xml">
+<!ENTITY testproperties SYSTEM "build.properties">
+]>
+
+<project name="blobJ2DB" default="usage" basedir=".">
+
+    &commonSetup;
+    &commonBuild;
+    &testproperties;
+
+    <target name="all" depends="test1-all"/>
+
+    <target name="test1-all" depends="clean,build,create-resources,deploy,run,undeploy,delete-resources,clean"/>
+
+    <target name="clean" depends="init-common">
+      <antcall  target="clean-common"/>
+    </target>
+ 
+    <target name="compile" depends="clean">
+        <antcall target="compile-common">
+            <param name="src" value="ejb"/>
+        </antcall>
+        <antcall target="compile-common">
+            <param name="src" value="client"/>
+        </antcall>
+    </target>
+
+    <target name="build" depends="compile">
+        <antcall target="build-ear-common">
+            <param name="ejbjar.classes" 
+              value="**/*Blob*.class" />
+            <param name="appclientjar.classes" 
+              value="**/BlobTestHome.class,**/BlobTest.class,**/*Client*.class" />
+        </antcall>
+    </target> 
+    
+   <target name="create-resources" depends="init-common">
+        <antcall target="asadmin-batch-common">
+          <param name="asadmin.file" value="${basedir}/../common/create_resources.asadmin"/>
+        </antcall>
+    </target>
+
+    <target name="delete-resources" depends="init-common">
+        <antcall target="asadmin-batch-common">
+          <param name="asadmin.file" value="${basedir}/../common/delete_resources.asadmin"/>
+        </antcall>
+    </target>
+ 
+    <target name="deploy"
+            depends="init-common">
+	 <antcall target="execute-ejb-sql-common">
+            <param name="sql.file" value="sql/drop_blob_derby.sql"/>
+        </antcall>
+        <antcall target="deploy-common">
+	<param name="extra-params"
+              value="--uniquetablenames=true --dropandcreatetables=true"/>
+	</antcall>
+    </target>
+
+    <target name="run" depends="init-common">
+        <antcall target="runclient-common">
+		<param name="appclient.application.args"
+              value="Java2DBTest"/>
+	</antcall>
+    </target>
+
+    <target name="undeploy" depends="init-common">
+        <antcall target="undeploy-common"/>
+    </target>
+
+    <target name="usage">
+        <antcall target="usage-common"/>
+        <echo>         
+          ant all
+        </echo>
+    </target>
+</project>

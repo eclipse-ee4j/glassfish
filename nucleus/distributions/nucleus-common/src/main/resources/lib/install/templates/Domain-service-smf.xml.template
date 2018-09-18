@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+    Document   : domain-service.xml
+    Created on : %%%DATE_CREATED%%%
+    Author     : User and SJSAS Administration Team
+    Description: The SMF Service Manifest file for domain %%%NAME%%% in %%%LOCATION%%%
+    Server Type:  %%%TYPE%%%
+
+-->
+
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+<service_bundle type="manifest"
+                name="SUNWasu appserver services">
+  <service name="%%%NAME%%%"
+           version="1"
+           type="service">
+    <single_instance/>
+    <exec_method type="method"
+                 name="start"
+                 exec="%%%AS_ADMIN_PATH%%% %%%START_COMMAND%%% %%%CREDENTIALS%%% %%%LOCATION_ARGS_START%%% %%%ENTITY_NAME%%%"
+                 timeout_seconds="%%%TIMEOUT_SECONDS%%%">
+      <method_context working_directory=":default">
+        <method_credential user="%%%OS_USER%%%"
+                           group=":default"/>
+                           <!-- privileges="%%%PRIVILEGES%%%" -->
+      </method_context>
+    </exec_method>
+    <exec_method type="method"
+                 name="stop"
+                 exec="%%%AS_ADMIN_PATH%%% %%%STOP_COMMAND%%%  %%%LOCATION_ARGS_STOP%%% %%%ENTITY_NAME%%%"
+                 timeout_seconds="%%%TIMEOUT_SECONDS%%%">
+      <method_context working_directory=":default">
+        <method_credential user="%%%OS_USER%%%"
+                           group=":default"/>
+      </method_context>
+      <stability value="Evolving"/>
+    </exec_method>
+    <property_group name='startd'  type='framework'>
+      <!-- sub-process core dumps shouldn't restart session -->
+      <propval name='ignore_error' type='astring' value='core,signal' />
+    </property_group>
+    <instance name="default" enabled="false">
+        <dependency
+                name='network'
+                grouping='require_all'
+                restart_on='none'
+                type='service'>
+                <service_fmri value='svc:/milestone/network:default' />
+        </dependency>
+        <!-- for ZFS, we need this to state this dependency -->
+        <dependency
+                name='filesystem-local'
+                grouping='require_all'
+                restart_on='none'
+                type='service'>
+                <service_fmri value='svc:/system/filesystem/local:default' />
+        </dependency>
+    </instance>
+    <stability value="Evolving"/>
+    <template>
+      <common_name>
+        <loctext xml:lang="C"> Appserver Domain Administration Server </loctext>
+      </common_name>
+      <documentation>
+        <manpage title="Appserver" section="1" manpath="/opt/SUNWappserver/appserver/man"/>
+      </documentation>
+    </template>
+  </service>
+</service_bundle>

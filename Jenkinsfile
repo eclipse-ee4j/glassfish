@@ -92,7 +92,7 @@ def generateStage(job) {
                         # run the test!
                         ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
                       """
-                      archiveArtifacts artifacts: "${job}-results.tar.gz"
+                      archiveArtifacts artifacts: "${job}-results.tar.gz", onlyIfSuccessful: false
                       junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true
                     }
                 }

@@ -149,9 +149,6 @@ public class WebTest {
         }
 
         String redirectTo = redirectLine.substring(index);
-        if (redirectTo.indexOf(".") != -1){
-            redirectTo = redirectTo.replace("localhost.localdomain","localhost");
-        }   
         System.out.println("Redirect to: " + redirectTo);
         URL url = new URL(redirectTo);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -57,11 +57,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+ 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/junk.jsp HTTP/1.0\n";
@@ -81,23 +81,28 @@ public class WebTest {
             }
         }
 
-        if (line != null
-                && ((line = bis.readLine()) != null)
-                && line.equals("404")
-                && ((line = bis.readLine()) != null)
-                && line.equals(contextRoot + "/404handler.jsp")
-                && ((line = bis.readLine()) != null)
-                && (
-                    line.equals("http://" + host + ":" + port
-                               + contextRoot + "/404handler.jsp") ||
-                    line.equals("http://" + 
-                                InetAddress.getLocalHost().getHostName() + 
-                                ":" + port + contextRoot + "/404handler.jsp") 
-                               )) {
-            stat.addStatus(TEST_NAME, stat.PASS);
-        } else {
-            stat.addStatus(TEST_NAME, stat.FAIL);
-        }
-    }
+        if(line != null){
+            String status = bis.readLine();
+            System.out.println("status: " + status);
+            if(status != null && "404".equals(status)){
 
+                String requestURI = bis.readLine();
+                System.out.println("requestURI: " + requestURI);
+
+                if(requestURI != null
+                    && requestURI.equals(contextRoot + "/404handler.jsp")){
+
+                    String requestURL = bis.readLine();
+                    System.out.println("requestURL: " + requestURL);
+
+                    if(requestURL.equals("http://" + host + ":" + port + contextRoot + "/404handler.jsp")
+                        || requestURL.equals("http://" +  InetAddress.getLocalHost().getHostName() +  ":" + port + contextRoot + "/404handler.jsp")){
+                        stat.addStatus(TEST_NAME, stat.PASS);
+                        return;
+                    }
+                }
+            }
+        }
+        stat.addStatus(TEST_NAME, stat.FAIL);
+    }
 }

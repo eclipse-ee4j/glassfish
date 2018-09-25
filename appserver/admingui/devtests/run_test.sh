@@ -20,8 +20,8 @@ list_test_ids(){
 }
 
 merge_junit_xmls(){
-  JUD_DIR=$1
-  JUD=$WORKSPACE/results/junitreports/test_results_junit.xml
+  JUD_DIR=${1}
+  JUD=${WORKSPACE}/results/junitreports/test_results_junit.xml
   rm -f ${JUD} || true
   echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> ${JUD}
   echo "<testsuites>" >> ${JUD}
@@ -31,57 +31,51 @@ merge_junit_xmls(){
 
 test_run(){
   export PWD=$(date | md5sum | cut -d' ' -f 1)
-  touch $APS_HOME/password.txt 
-  chmod 600 $APS_HOME/password.txt
-  echo "AS_ADMIN_PASSWORD=" > $APS_HOME/password.txt
-  echo "AS_ADMIN_NEWPASSWORD=$PWD" >> $APS_HOME/password.txt
-  LOCKFILE=$S1AS_HOME/domains/domain1/imq/instances/imqbroker/lockv
-  if [ -f $LOCKFILE ];then
-    rm $LOCKFILE
+  touch ${APS_HOME}/password.txt
+  chmod 600 ${APS_HOME}/password.txt
+  echo "AS_ADMIN_PASSWORD=" > ${APS_HOME}/password.txt
+  echo "AS_ADMIN_NEWPASSWORD=${PWD}" >> ${APS_HOME}/password.txt
+  LOCKFILE=${S1AS_HOME}/domains/domain1/imq/instances/imqbroker/lockv
+  if [ -f ${LOCKFILE} ];then
+    rm ${LOCKFILE}
   fi
-  $S1AS_HOME/bin/asadmin --user admin --passwordfile $APS_HOME/password.txt change-admin-password
-  $S1AS_HOME/bin/asadmin start-domain
-  echo "AS_ADMIN_PASSWORD=$PWD" > $APS_HOME/password.txt
-  $S1AS_HOME/bin/asadmin --passwordfile $APS_HOME/password.txt enable-secure-admin
-  $S1AS_HOME/bin/asadmin restart-domain
-  cd $APS_HOME/../../admingui/devtests/
+  ${S1AS_HOME}/bin/asadmin --user admin --passwordfile ${APS_HOME}/password.txt change-admin-password
+  ${S1AS_HOME}/bin/asadmin start-domain
+  echo "AS_ADMIN_PASSWORD=${PWD}" > ${APS_HOME}/password.txt
+  ${S1AS_HOME}/bin/asadmin --passwordfile ${APS_HOME}/password.txt enable-secure-admin
+  ${S1AS_HOME}/bin/asadmin restart-domain
+  cd ${APS_HOME}/../../admingui/devtests/
   export DISPLAY=127.0.0.1:1	
-  mvn -Dmaven.repo.local=$WORKSPACE/repository -DsecureAdmin=true -Dpasswordfile=$APS_HOME/password.txt test | tee $TEST_RUN_LOG
-  $S1AS_HOME/bin/asadmin stop-domain
-  rm -rf $APS_HOME/password.txt
+  mvn -DsecureAdmin=true -Dpasswordfile=${APS_HOME}/password.txt test | tee ${TEST_RUN_LOG}
+  ${S1AS_HOME}/bin/asadmin stop-domain
+  rm -rf ${APS_HOME}/password.txt
 }
 
 run_test_id(){
-  #a common util script located at main/appserver/tests/common_test.sh
-  source `dirname $0`/../../tests/common_test.sh
+  source `dirname ${0}`/../../tests/common_test.sh
   kill_process
   delete_gf
-  export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=384m"
-  download_test_resources glassfish.zip tests-maven-repo.zip version-info.txt
-  unzip_test_resources $WORKSPACE/bundles/glassfish.zip "$WORKSPACE/bundles/tests-maven-repo.zip -d $WORKSPACE/repository"
-  cd `dirname $0`
+  unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip "${WORKSPACE}/bundles/tests-maven-repo.zip -d ${WORKSPACE}/repository"
+  cd `dirname ${0}`
   test_init
-  #run the actual test function
   test_run
-  merge_junit_xmls $WORKSPACE/main/appserver/admingui/devtests/target/surefire-reports
+  merge_junit_xmls ${WORKSPACE}/appserver/admingui/devtests/target/surefire-reports
   change_junit_report_class_names
 }
 
 post_test_run(){
-  cp $WORKSPACE/bundles/version-info.txt $WORKSPACE/results/ || true
-  cp $TEST_RUN_LOG $WORKSPACE/results/ || true
-  cp $WORKSPACE/glassfish5/glassfish/domains/domain1/logs/server.log* $WORKSPACE/results/ || true
-  cp $WORKSPACE/main/appserver/admingui/devtests/target/surefire-reports/*.png $WORKSPACE/results/ || true
-  upload_test_results
+  cp $TEST_RUN_LOG ${WORKSPACE}/results/ || true
+  cp ${WORKSPACE}/glassfish5/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
+  cp ${WORKSPACE}/appserver/admingui/devtests/target/surefire-reports/*.png ${WORKSPACE}/results/ || true
   delete_bundle
 }
 
-OPT=$1
+OPT=${1}
 TEST_ID=$2
-case $OPT in
+case ${OPT} in
   list_test_ids )
     list_test_ids;;
   run_test_id )
     trap post_test_run SIGTERM SIGABRT EXIT
-    run_test_id $TEST_ID ;;
+    run_test_id ${TEST_ID} ;;
 esac

@@ -16,97 +16,71 @@
 #
 
 findbugs_run(){
-	M2_HOME=/net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/apache-maven-3.3.3
-	MAVEN_OPTS="-Xmx512m -Xms256m -XX:MaxPermSize=1024m"; export MAVEN_OPTS
-	MAVEN_REPO=$WORKSPACE/repository
-	MAVEN_SETTINGS=/net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/apache-maven-3.0.3/settings-nexus.xml
-
-	CLASSPATH=$WORKSPACE/findbugstotext; export CLASSPATH
-	PATH=$M2_HOME/bin:$JAVA_HOME/bin:$PATH; export PATH
-	mvn -version
-	echo $WORKSPACE
-
-	# Run findbugs on open source ws.
-	echo "Running findbugs on ws"
-	cd $WORKSPACE/main
-	mvn -e -s $MAVEN_SETTINGS -Dmaven.repo.local=$WORKSPACE/repository -Pfindbugs clean install
-	mvn -e -s $MAVEN_SETTINGS -Dmaven.repo.local=$WORKSPACE/repository -Pfindbugs findbugs:findbugs
+  CLASSPATH=${WORKSPACE}/findbugstotext; export CLASSPATH
+  cd ${WORKSPACE}
+  mvn -e -Pfindbugs clean install
+  mvn -e -Pfindbugs findbugs:findbugs
 
 }
 
 findbugs_low_priority_all_run(){
-  M2_HOME=/net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/apache-maven-3.3.3
-  MAVEN_OPTS="-Xmx512m -Xms256m -XX:MaxPermSize=1024m"; export MAVEN_OPTS
-  MAVEN_REPO=$WORKSPACE/repository
-  MAVEN_SETTINGS=/net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/apache-maven-3.0.3/settings-nexus.xml
-
-  CLASSPATH=$WORKSPACE/findbugstotext; export CLASSPATH
-  PATH=$M2_HOME/bin:$JAVA_HOME/bin:$PATH; export PATH
-  mvn -version
-  echo $WORKSPACE
-
-  # Run findbugs on open source ws.
-  echo "Running findbugs on ws"
-  cd $WORKSPACE/main
-  mvn -e -s $MAVEN_SETTINGS -Dmaven.repo.local=$WORKSPACE/repository -Pfindbugs clean install
-  mvn -e -s $MAVEN_SETTINGS -Dmaven.repo.local=$WORKSPACE/repository -B -Pfindbugs -Dfindbugs.threshold=Low findbugs:findbugs
-
+  cd ${WORKSPACE}
+  mvn -e -Pfindbugs clean install
+  mvn -e -B -Pfindbugs -Dfindbugs.threshold=Low findbugs:findbugs
 }
 
 generate_findbugs_result(){
-	rm -rf $WORKSPACE/results
-	mkdir -p $WORKSPACE/results/findbugs_results
-
-	# check findbbugs
-	set +e
-	cd /net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/findbugs-tool-latest; ./findbugscheck $WORKSPACE/main
-	if [ $? -ne 0 ]
-	then
-	   echo "FAILED" > $WORKSPACE/results/findbugs_results/findbugscheck.log
-	else
-	   echo "SUCCESS" > $WORKSPACE/results/findbugs_results/findbugscheck.log
-	fi
-	set -e
-	# archive the findbugs results
-	for i in `find $WORKSPACE/main -name findbugsXml.xml`
-	do
-	   cp $i $WORKSPACE/results/findbugs_results/`echo $i | sed s@"$WORKSPACE"@@g | sed s@"/"@"_"@g`
-	done
-}
-
-generate_findbugs_low_priority_all_result(){
-  rm -rf $WORKSPACE/results
-  mkdir -p $WORKSPACE/results/findbugs_low_priority_all_results
+  rm -rf ${WORKSPACE}/results
+  mkdir -p ${WORKSPACE}/results/findbugs_results
 
   # check findbbugs
   set +e
-  cd /net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/findbugs-tool-latest; ./fbcheck $WORKSPACE/main
-  if [ $? -ne 0 ]
+  cd /net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/findbugs-tool-latest; ./findbugscheck ${WORKSPACE}
+  if [ ${?} -ne 0 ]
   then
-     echo "FAILED" > $WORKSPACE/results/findbugs_low_priority_all_results/findbugscheck.log
+     echo "FAILED" > ${WORKSPACE}/results/findbugs_results/findbugscheck.log
   else
-     echo "SUCCESS" > $WORKSPACE/results/findbugs_low_priority_all_results/findbugscheck.log
+     echo "SUCCESS" > ${WORKSPACE}/results/findbugs_results/findbugscheck.log
   fi
   set -e
-  cp /net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/findbugs-tool-latest/fbstatsdetails.log $WORKSPACE/results/findbugs_low_priority_all_results/fbstatsdetails.log | true
   # archive the findbugs results
-  for i in `find $WORKSPACE/main -name findbugsXml.xml`
+  for i in `find ${WORKSPACE} -name findbugsXml.xml`
   do
-     cp $i $WORKSPACE/results/findbugs_low_priority_all_results/`echo $i | sed s@"$WORKSPACE"@@g | sed s@"/"@"_"@g`
+     cp ${i} ${WORKSPACE}/results/findbugs_results/`echo $i | sed s@"${WORKSPACE}"@@g | sed s@"/"@"_"@g`
   done
+  tar -cvf ${WORKSPACE}/${TEST_ID}-results.tar.gz ${WORKSPACE}/results
+}
+
+generate_findbugs_low_priority_all_result(){
+  rm -rf ${WORKSPACE}/results
+  mkdir -p ${WORKSPACE}/results/findbugs_low_priority_all_results
+
+  # check findbbugs
+  set +e
+  cd /net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/findbugs-tool-latest; ./fbcheck ${WORKSPACE}
+  if [ $? -ne 0 ]
+  then
+     echo "FAILED" > ${WORKSPACE}/results/findbugs_low_priority_all_results/findbugscheck.log
+  else
+     echo "SUCCESS" > ${WORKSPACE}/results/findbugs_low_priority_all_results/findbugscheck.log
+  fi
+  set -e
+  cp /net/gf-hudson/scratch/gf-hudson/export2/hudson/tools/findbugs-tool-latest/fbstatsdetails.log ${WORKSPACE}/results/findbugs_low_priority_all_results/fbstatsdetails.log | true
+  # archive the findbugs results
+  for i in `find ${WORKSPACE} -name findbugsXml.xml`
+  do
+     cp ${i} ${WORKSPACE}/results/findbugs_low_priority_all_results/`echo $i | sed s@"${WORKSPACE}"@@g | sed s@"/"@"_"@g`
+  done
+  tar -cvf ${WORKSPACE}/${TEST_ID}-results.tar.gz ${WORKSPACE}/results
 }
 
 run_test_id(){
-	source `dirname $0`/../common_test.sh
-	kill_process
-	rm main.zip rm version-info.txt || true
-	download_test_resources main.zip version-info.txt
-	rm -rf main || true
-	unzip_test_resources "$WORKSPACE/bundles/main.zip -d main/"
+  source `dirname ${0}`/../common_test.sh
+  kill_process
   case ${TEST_ID} in
     findbugs_all)
-   	  findbugs_run
-     	generate_findbugs_result;;
+      findbugs_run
+      generate_findbugs_result;;
     findbugs_low_priority_all)
       findbugs_low_priority_all_run
       generate_findbugs_low_priority_all_result;;
@@ -114,31 +88,29 @@ run_test_id(){
 }
 
 post_test_run(){
-    if [[ $? -ne 0 ]]; then
-    	if [[ $TEST_ID = "findbugs_all" ]]; then
-	  		generate_findbugs_result || true
-	  	fi
-	  	if [[ $TEST_ID = "findbugs_low_priority_all" ]]; then
-	  		generate_findbugs_low_priority_all_result || true
-	  	fi
-	fi
-    upload_test_results
-    delete_bundle
+  if [[ ${?} -ne 0 ]]; then
+    if [[ ${TEST_ID} = "findbugs_all" ]]; then
+      generate_findbugs_result || true
+    fi
+    if [[ ${TEST_ID} = "findbugs_low_priority_all" ]]; then
+      generate_findbugs_low_priority_all_result || true
+    fi
+  fi
+  delete_bundle
 }
 
-
 list_test_ids(){
-	echo findbugs_all
+  echo findbugs_all
   echo findbugs_low_priority_all
 }
 
-OPT=$1
-TEST_ID=$2
+OPT=${1}
+TEST_ID=${2}
 
-case $OPT in
-	list_test_ids )
-		list_test_ids;;
-	run_test_id )
-        trap post_test_run EXIT
-		run_test_id $TEST_ID ;;
+case ${OPT} in
+  list_test_ids )
+    list_test_ids;;
+  run_test_id )
+    trap post_test_run EXIT
+    run_test_id ${TEST_ID} ;;
 esac

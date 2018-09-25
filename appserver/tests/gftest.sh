@@ -15,77 +15,44 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-unzip_test_sources(){
-	unzip -d main/  $WORKSPACE/bundles/tests-workspace.zip > /dev/null
-}
-delete_test_sources(){
-	rm -rf $WORKSPACE/main
-	rm -rf $WORKSPACE/bundles
-} 
-download_test_zip(){
-	mkdir bundles
-	scp -o "StrictHostKeyChecking no" ${PARENT_NODE}:${PARENT_WS_PATH}/bundles/tests-workspace.zip bundles
-}
-	
-###########################
-#Start Script
-###########################
-
 run_test(){
-	TEST_ID=$1
-	delete_test_sources
-	download_test_zip
-	unzip_test_sources
-	found=false
+	local testid=${1}
+	local found=false
 	for runtest in `find . -name run_test\.sh`; do
-		for testid in `$runtest list_test_ids`; do
-			if [[ "$testid" = "$TEST_ID" ]]; then
+		for id in `${runtest} list_test_ids`; do
+			if [[ "${id}" = "${testid}" ]]; then
 				found=true
 				break
 			fi
 		done
-		if [[ "$found" = true ]]; then
-			$runtest run_test_id $TEST_ID
+		if [[ "${found}" = true ]]; then
+			${runtest} run_test_id ${testid}
 			break
 		fi
 	done
-	if [[ "$found" = false ]]; then
+	if [[ "${found}" = false ]]; then
 		echo Invalid Test Id.
 		exit 1
 	fi
-
 }
 
-generate_platform(){
-	uname -nsp > /tmp/platform
-	scp -o "StrictHostKeyChecking no" -r /tmp/platform ${PARENT_NODE}:${PARENT_WS_PATH}/test-results/$TEST_ID
-}
+if [ ! -z "${JENKINS_HOME}" ] ; then
 
-list_test_ids(){
-	for runtest in `find . -name run_test\.sh`; do
-		echo `$runtest list_test_ids`
-	done
-}
+  # inject internal environment
+  readonly GF_INTERNAL_ENV_SH=$(mktemp -t XXXgf-internal-env)
+  if [ ! -z "${GF_INTERNAL_ENV}" ] ; then
+    echo "${GF_INTERNAL_ENV}" | base64 -d > ${GF_INTERNAL_ENV_SH}
+    . ${GF_INTERNAL_ENV_SH}
+    export ANT_HOME=/usr/share/ant
+    export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=/root/.m2/repository"
+  fi
 
-list_group_test_ids(){
-	test_groups=`find . -type d -name test_groups` 
-	test_id_arr+=(`cat  $test_groups/$1 |tr "\n" " "`)
-	echo ${test_id_arr[*]}
-}
+  apt-get update
+  apt-get install -y apt-utils ant unzip tar wget zip sendmail
 
-OPT=$1
-TEST_ID=$2
+  # only needed by some of the tests (cts-smoke*)
+  echo "starting sendmail..."
+  /usr/sbin/sendmail -bd -q1h
+fi
 
-case $OPT in
-	list_test_ids )
-		if [[ -z $2 ]]; then
-			list_test_ids
-		else
-			list_group_test_ids $2
-		fi;;
-		
-	run_test )
-		trap generate_platform EXIT
-		run_test $TEST_ID ;;
-esac
- 
+"$@"

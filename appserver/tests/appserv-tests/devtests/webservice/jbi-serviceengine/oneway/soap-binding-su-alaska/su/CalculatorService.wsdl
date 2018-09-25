@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://example.web.service/OneWay" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://example.web.service/OneWay" name="OneWayService">
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
@@ -17,6 +17,7 @@
 
 -->
 
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://example.web.service/OneWay" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://example.web.service/OneWay" name="OneWayService">
   <types>
     <xsd:schema>
       <xsd:import namespace="http://example.web.service/OneWay" schemaLocation="OneWayService_schema1.xsd" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/>
@@ -41,7 +42,7 @@
   </binding>
   <service name="OneWayService">
     <port name="OneWayPort" binding="tns:OneWayPortBinding">
-      <soap:address location="http://localhost.localdomain:8080/calc-web-client/webservice/OneWayService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/>
+      <soap:address location="http://localhost:8080/calc-web-client/webservice/OneWayService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/>
     </port>
   </service>
 </definitions>

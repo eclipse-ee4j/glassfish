@@ -65,8 +65,8 @@ public class WebTest {
         
         String expectedRedirectLocation = "Location: http://" + host + ":"
             + port + contextRoot + "/?" + QUERY_STRING;
-        String expectedRedirectLocation2 = "Location: http://" + InetAddress.getLocalHost().getHostName() + ":"
-            + port + contextRoot + "/?" + QUERY_STRING;
+
+        System.out.println("serverRedirectWithQueryString - expectedRedirectLocation=" + expectedRedirectLocation);
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
@@ -83,7 +83,7 @@ public class WebTest {
             bis = new BufferedReader(new InputStreamReader(is));
             while ((line = bis.readLine()) != null) {
                 System.out.println("Line : " + line);
-                if (expectedRedirectLocation.equals(line) || expectedRedirectLocation2.equals(line)) {
+                if (expectedRedirectLocation.equals(line)) {
                     break;
                 }
             }

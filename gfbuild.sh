@@ -88,6 +88,15 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=/root/.m2/repository"
   fi
 
+  # troubleshoot - REMOVE ME
+  echo "ls -l /usr" ; ls -l /usr
+  echo "ls -l /usr/share" ; ls -l /usr/share
+  echo "ls -l /usr/share/maven" ; ls -l /usr/share/maven
+  echo "ls -l /usr/share/maven/lib" ; ls -l /usr/share/maven/lib
+  echo "ls -l /usr/share/maven/lib/ext" ; ls -l /usr/share/maven/lib/ext
+  echo "df" ; df -h
+  echo "mount" ; mount
+
   # install takari extensions for
   # process/thread safe access to the local repository
   curl -O http://repo1.maven.org/maven2/io/takari/aether/takari-local-repository/0.11.2/takari-local-repository-0.11.2.jar

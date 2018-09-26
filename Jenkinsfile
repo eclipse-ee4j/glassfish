@@ -114,6 +114,9 @@ apiVersion: v1
 kind: Pod
 metadata:
 spec:
+spec:
+  securityContext:
+    runAsUser: 501
   volumes:
     - name: maven-repo-shared-storage
       # required PVC

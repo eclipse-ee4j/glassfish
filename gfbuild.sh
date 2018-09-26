@@ -96,6 +96,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   echo "ls -l /usr/share/maven/lib/ext" ; ls -l /usr/share/maven/lib/ext
   echo "df" ; df -h
   echo "mount" ; mount
+  echo "id" ; id
 
   # install takari extensions for
   # process/thread safe access to the local repository

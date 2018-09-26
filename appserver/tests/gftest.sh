@@ -48,6 +48,13 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     export WSIMPORT_OPTS="${ANT_OPTS}"
   fi
 
+  # install takari extensions for
+  # process/thread safe access to the local repository
+  curl -O http://repo1.maven.org/maven2/io/takari/aether/takari-local-repository/0.11.2/takari-local-repository-0.11.2.jar
+  mv takari-local-repository-0.11.2.jar ${MAVEN_HOME}/lib/ext/
+  curl -O http://repo1.maven.org/maven2/io/takari/takari-filemanager/0.8.3/takari-filemanager-0.8.3.jar
+  mv takari-filemanager-0.8.3.jar ${MAVEN_HOME}/lib/ext/
+
   apt-get update
   apt-get install -y apt-utils ant unzip tar wget zip sendmail
 

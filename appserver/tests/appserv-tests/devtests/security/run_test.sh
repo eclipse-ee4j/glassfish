@@ -70,7 +70,7 @@ merge_result_files(){
 run_test_id(){
   # setup opendj (fork of opends)
   curl -L -k https://github.com/OpenIdentityPlatform/OpenDJ/releases/download/4.1.10/opendj-4.1.10.zip > opendj-4.1.10.zip
-  unzip opendj-4.1.10.zip
+  unzip -o opendj-4.1.10.zip
   export OPENDS_HOME=${PWD}/opendj
 
 	unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip

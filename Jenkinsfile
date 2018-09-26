@@ -86,7 +86,11 @@ def generateStage(job) {
                       checkout scm
                       unstash 'build-bundles'
                       try {
-                        sh "./appserver/tests/gftest.sh run_test ${job}"
+                        timeout(time: 3, unit: 'HOURS') {
+                            retry(3) {
+                                sh "./appserver/tests/gftest.sh run_test ${job}"
+                            }
+                        }
                       } finally {
                         archiveArtifacts artifacts: "${job}-results.tar.gz"
                         junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true

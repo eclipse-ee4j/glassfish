@@ -53,6 +53,10 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   # only needed by some of the tests (cts-smoke*)
   echo "starting sendmail..."
   /usr/sbin/sendmail -bd -q1h
+
+  # setup the local repository
+  # with the archived chunk from the pipeline build stage
+  cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -C /root/.m2/repository
 fi
 
 "$@"

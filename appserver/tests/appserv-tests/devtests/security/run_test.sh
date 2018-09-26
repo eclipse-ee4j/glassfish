@@ -17,7 +17,7 @@
 
 test_run(){
 
-	cp -f ${APS_HOME}/devtests/security/ldap/opends/X500Signer.jar ${OPENDS_HOME}/lib
+	#cp -f ${APS_HOME}/devtests/security/ldap/opends/X500Signer.jar ${OPENDS_HOME}/lib
 
 	# Configure and start OpenDS using the default ports
 	${OPENDS_HOME}/setup \
@@ -69,7 +69,7 @@ merge_result_files(){
 
 run_test_id(){
   # setup opendj (fork of opends)
-  wget https://github.com/OpenIdentityPlatform/OpenDJ/releases/download/4.1.10/opendj-4.1.10.zip
+  curl -L -k https://github.com/OpenIdentityPlatform/OpenDJ/releases/download/4.1.10/opendj-4.1.10.zip > opendj-4.1.10.zip
   unzip opendj-4.1.10.zip
   export OPENDS_HOME=${PWD}/opendj
 

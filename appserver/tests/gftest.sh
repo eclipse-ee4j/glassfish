@@ -45,6 +45,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     . ${GF_INTERNAL_ENV_SH}
     export ANT_HOME=/usr/share/ant
     export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=/root/.m2/repository"
+    export WSIMPORT_OPTS="${ANT_OPTS}"
   fi
 
   apt-get update

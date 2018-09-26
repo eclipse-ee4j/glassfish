@@ -88,23 +88,9 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=/root/.m2/repository"
   fi
 
-  # troubleshoot - REMOVE ME
-  echo "ls -l /usr" ; ls -l /usr
-  echo "ls -l /usr/share" ; ls -l /usr/share
-  echo "ls -l /usr/share/maven" ; ls -l /usr/share/maven
-  echo "ls -l /usr/share/maven/lib" ; ls -l /usr/share/maven/lib
-  echo "ls -l /usr/share/maven/lib/ext" ; ls -l /usr/share/maven/lib/ext
-  echo "df" ; df -h
-  echo "mount" ; mount
-  echo "id" ; id
-  echo "touch /ok0" ; touch /ok0
-  echo "touch /usr/ok1" ; touch /usr/ok1
-  echo "touch /usr/share/ok2" ; touch /usr/share/ok2
-  echo "touch /usr/share/maven/ok3" ; touch /usr/share/maven/ok3
-  echo "touch /usr/share/maven/lib/ok4" ; touch /usr/share/maven/lib/ok4
-  echo "chmod ugo+w -R /usr/share/maven" ; chmod ugo+w -R /usr/share/maven
-
-
+  # move Maven to a writable location
+  cp -rf ${MAVEN_HOME} ${PWD}/maven
+  export MAVEN_HOME=${PWD}/maven
 
   # install takari extensions for
   # process/thread safe access to the local repository

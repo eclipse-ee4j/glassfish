@@ -48,6 +48,10 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     export WSIMPORT_OPTS="${ANT_OPTS}"
   fi
 
+  # move Maven to a writable location
+  cp -rf ${MAVEN_HOME} ${PWD}/maven
+  export MAVEN_HOME=${PWD}/maven
+
   # install takari extensions for
   # process/thread safe access to the local repository
   curl -O http://repo1.maven.org/maven2/io/takari/aether/takari-local-repository/0.11.2/takari-local-repository-0.11.2.jar

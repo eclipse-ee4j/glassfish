@@ -97,11 +97,12 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   echo "df" ; df -h
   echo "mount" ; mount
   echo "id" ; id
-  echo "chmod ugo+w -R /usr/share/maven" ; chmod ugo+w -R /usr/share/maven
+  echo "touch /ok0" ; touch /ok0
   echo "touch /usr/ok1" ; touch /usr/ok1
   echo "touch /usr/share/ok2" ; touch /usr/share/ok2
   echo "touch /usr/share/maven/ok3" ; touch /usr/share/maven/ok3
   echo "touch /usr/share/maven/lib/ok4" ; touch /usr/share/maven/lib/ok4
+  echo "chmod ugo+w -R /usr/share/maven" ; chmod ugo+w -R /usr/share/maven
 
 
 

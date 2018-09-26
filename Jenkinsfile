@@ -85,15 +85,15 @@ def generateStage(job) {
                     container('glassfish-ci') {
                       checkout scm
                       unstash 'build-bundles'
-                      sh """
-                        # re-create the local repository from archived chunks
-                        cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -C /root/.m2/repository
-
-                        # run the test!
-                        ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
-                      """
-                      archiveArtifacts artifacts: "${job}-results.tar.gz", onlyIfSuccessful: false
-                      junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true
+                      try {
+                        sh """
+                          cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -C /root/.m2/repository
+                          ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
+                        """
+                      } finally {
+                        archiveArtifacts artifacts: "${job}-results.tar.gz"
+                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true
+                      }
                     }
                 }
             }
@@ -169,11 +169,7 @@ spec:
       steps {
         container('glassfish-ci') {
           sh """
-            # do the build!
             ${WORKSPACE}/gfbuild.sh build_re_dev
-
-            # archive the org/glassfish fragment of the local maven repository
-            # split it in chunks of 1M to reduce stress on jenkins master
             tar -cz -f - -C /root/.m2/repository org/glassfish | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
           """
           archiveArtifacts artifacts: 'bundles/*.zip'

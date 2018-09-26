@@ -114,11 +114,6 @@ apiVersion: v1
 kind: Pod
 metadata:
 spec:
-  securityContext:
-    # need to be either uid 0 or 501
-    # 501 is the userid that owns /usr/share/maven
-    # in the maven:3.5 image
-    runAsUser: 501
   volumes:
     - name: maven-repo-shared-storage
       # required PVC

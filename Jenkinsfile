@@ -143,10 +143,10 @@ spec:
     env:
       - name: M2_HOME
         value: /usr/share/maven
-#    resources:
-#      limits:
-#        memory: "8Gi"
-#        cpu: "1.75"
+    resources:
+      limits:
+        memory: "8Gi"
+        cpu: "1.75"
 """
     }
   }

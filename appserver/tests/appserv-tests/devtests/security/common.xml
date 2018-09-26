@@ -24,7 +24,7 @@
 <property name="mykeystore.db.file" value="${env.APS_HOME}/build/__keystore.jks"/>
 <property name="mytruststore.db.file" value="${env.APS_HOME}/build/__cacerts.jks"/>
 <property name="appserver.config.name" value="server-config"/>
-<property name="wsimport.VMARGS" value=""/>
+<property name="wsimport.VMARGS" value="${env.WSIMPORT_OPTS}"/>
 
 <target name="init-security-util" depends="gethostname">
 <!--    <ant dir="${env.APS_HOME}/devtests/security/util" target="all"/>

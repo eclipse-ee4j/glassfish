@@ -87,20 +87,6 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     . ${GF_INTERNAL_ENV_SH}
     export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=/root/.m2/repository"
   fi
-
-  # move Maven to a writable location
-  cp -rf ${MAVEN_HOME} ${PWD}/maven
-  export MAVEN_HOME=${PWD}/maven
-
-  # install takari extensions for
-  # process/thread safe access to the local repository
-  curl -O http://repo1.maven.org/maven2/io/takari/aether/takari-local-repository/0.11.2/takari-local-repository-0.11.2.jar
-  mv takari-local-repository-0.11.2.jar ${MAVEN_HOME}/lib/ext/
-  curl -O http://repo1.maven.org/maven2/io/takari/takari-filemanager/0.8.3/takari-filemanager-0.8.3.jar
-  mv takari-filemanager-0.8.3.jar ${MAVEN_HOME}/lib/ext/
-
-  apt-get update
-  apt-get install -y tar
 fi
 
 "$@"

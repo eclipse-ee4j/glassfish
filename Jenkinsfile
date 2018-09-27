@@ -124,7 +124,7 @@ spec:
       emptyDir: {}
   containers:
   - name: glassfish-ci
-    image: maven:3.5-jdk-8
+    image: ee4jglassfish/ci:jdk-8.181
     args:
     - cat
     tty: true

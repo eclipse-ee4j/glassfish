@@ -28,7 +28,7 @@
     <artifactId>glassfish-parent</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish Appserver Parent Project</name>
-    
+
     <description>Glassfish Appserver Parent Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
@@ -166,7 +166,7 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
-                <version>1.3</version>
+                <version>1.5</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
                     <excludes>javax.inject.jar,javax.servlet.jsp.jstl.jar,javax.servlet.jsp.jar,javax.enterprise.concurrent.jar, javax.persistence.jar</excludes>

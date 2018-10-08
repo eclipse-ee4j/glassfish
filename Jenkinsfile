@@ -122,6 +122,9 @@ spec:
        claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
+    - name: maven-settings
+      configMap:
+        name: maven-settings.xml
   containers:
   - name: glassfish-ci
     image: ee4jglassfish/ci:jdk-8.181
@@ -130,6 +133,8 @@ spec:
     tty: true
     imagePullPolicy: Always
     volumeMounts:
+      - mountPath: "/root/.m2"
+        name: maven-settings
       # local repository is shared with all pipelines
       # this is pointing at the PVC
       - mountPath: "/root/.m2/repository"

@@ -79,7 +79,7 @@ build_re_dev(){
 }
 
 
-ls -l ~/.m2/
+ls -l $HOME/.m2/
 exit 0
 
 if [ ! -z "${JENKINS_HOME}" ] ; then

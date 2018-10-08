@@ -78,7 +78,7 @@ build_re_dev(){
   merge_junits
 }
 
-
+env
 ls -l /root/.m2/
 exit 0
 

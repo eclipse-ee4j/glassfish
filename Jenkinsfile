@@ -137,6 +137,7 @@ spec:
     tty: true
     imagePullPolicy: Always
     volumeMounts:
+      # maven settings mounted from the config map volume
       - mountPath: "/home/jenkins/.m2/settings.xml"
         subPath: maven-settings.xml
         name: maven-settings

@@ -50,7 +50,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
 
   # setup the local repository
   # with the archived chunk from the pipeline build stage
-  cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -C ${HOME}/.m2/repository
+  cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -p -C ${HOME}/.m2/repository
 fi
 
 "$@"

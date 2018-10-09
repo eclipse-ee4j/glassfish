@@ -10,7 +10,7 @@ RUN apt-get update && \
     mv takari-filemanager-0.8.3.jar ${MAVEN_HOME}/lib/ext/ && \
     # custom user
     useradd -l -r -d /home/jenkins -u 1000100000 -g root -s /bin/bash jenkins && \
-    mkdir -p /home/jenkins && \
+    mkdir -p /home/jenkins/.m2/repository/org/glassfish/main && \
     chown -R jenkins:root /home/jenkins
 
 COPY ./entrypoint.sh /etc/entrypoint.sh

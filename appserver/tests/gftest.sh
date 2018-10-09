@@ -44,13 +44,13 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     echo "${GF_INTERNAL_ENV}" | base64 -d > ${GF_INTERNAL_ENV_SH}
     . ${GF_INTERNAL_ENV_SH}
     export ANT_HOME=/usr/share/ant
-    export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=/root/.m2/repository"
+    export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=${HOME}/.m2/repository"
     export WSIMPORT_OPTS="${ANT_OPTS}"
   fi
 
   # setup the local repository
   # with the archived chunk from the pipeline build stage
-  cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -C /root/.m2/repository
+  cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -C ${HOME}/.m2/repository
 fi
 
 "$@"

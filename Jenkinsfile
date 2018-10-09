@@ -133,15 +133,15 @@ spec:
     tty: true
     imagePullPolicy: Always
     volumeMounts:
-      - mountPath: "/root/.m2"
+      - mountPath: "/home/jenkins/.m2"
         name: maven-settings
       # local repository is shared with all pipelines
       # this is pointing at the PVC
-      - mountPath: "/root/.m2/repository"
+      - mountPath: "/home/jenkins/.m2/repository"
         name: maven-repo-shared-storage
       # local repository fragment that is scoped to the pod
       # i.e this is not shared with all pipelines
-      - mountPath: "/root/.m2/repository/org/glassfish/main"
+      - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
         name: maven-repo-local-storage
     env:
       - name: M2_HOME

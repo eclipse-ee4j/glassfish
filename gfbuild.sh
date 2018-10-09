@@ -80,7 +80,7 @@ build_re_dev(){
 
 id
 env
-ls -l /root/.m2/
+ls -l ${HOME}/.m2/
 exit 0
 
 if [ ! -z "${JENKINS_HOME}" ] ; then
@@ -90,7 +90,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   if [ ! -z "${GF_INTERNAL_ENV}" ] ; then
     echo "${GF_INTERNAL_ENV}" | base64 -d > ${GF_INTERNAL_ENV_SH}
     . ${GF_INTERNAL_ENV_SH}
-    export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=/root/.m2/repository"
+    export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=${HOME}/.m2/repository"
   fi
 fi
 
@@ -99,5 +99,5 @@ fi
 if [ ! -z "${JENKINS_HOME}" ] ; then
   # archive the local repository org.glassfish
   # split in chunks of 1MB
-  tar -cz -f - -C /root/.m2/repository org/glassfish | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
+  tar -cz -f - -C ${HOME}/.m2/repository org/glassfish | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
 fi

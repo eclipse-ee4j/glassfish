@@ -124,6 +124,8 @@ spec:
        claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
+      # required configmap
+      # this needs to be setup on the k8s cluster
     - name: maven-settings
       configMap:
         name: maven-settings.xml

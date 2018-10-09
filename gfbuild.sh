@@ -90,12 +90,8 @@ ls -l ${HOME}/
 printf "\n\n ls -l ${HOME}/.m2"
 ls -l ${HOME}/.m2
 
-
 printf "\n\n ls -l ${HOME}/.m2/repository"
 ls -l ${HOME}/.m2/repository
-
-printf "\n\n xxx \n"
-cat /home/jenkins/.m2/settings.xml
 
 printf "\n\n find /home/jenkins/.m2/repository/"
 find /home/jenkins/.m2/repository/ || true

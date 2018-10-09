@@ -78,6 +78,24 @@ build_re_dev(){
   merge_junits
 }
 
+printf "\n\nmount\n"
+mount
+
+printf "\n\ndf -h\n"
+df -h
+
+printf "\n\n ls -l ${HOME}/"
+ls -l ${HOME}/
+
+printf "\n\n ls -l ${HOME}/.m2"
+ls -l ${HOME}/.m2
+
+
+printf "\n\n ls -l ${HOME}/.m2/repository"
+ls -l ${HOME}/.m2/repository
+
+exit 0
+
 if [ ! -z "${JENKINS_HOME}" ] ; then
 
   # inject internal environment

@@ -78,11 +78,6 @@ build_re_dev(){
   merge_junits
 }
 
-id
-env
-ls -l ${HOME}/.m2/
-exit 0
-
 if [ ! -z "${JENKINS_HOME}" ] ; then
 
   # inject internal environment

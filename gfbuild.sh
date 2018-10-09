@@ -94,6 +94,5 @@ fi
 if [ ! -z "${JENKINS_HOME}" ] ; then
   # archive the local repository org.glassfish.main
   # the output is a tar archive split into 1MB chunks.
-  chmod 777 -R ${HOME}/.m2/repository/org/glassfish/main
   tar -cz -f - -C ${HOME}/.m2/repository org/glassfish/main | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
 fi

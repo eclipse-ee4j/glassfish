@@ -136,6 +136,7 @@ spec:
     imagePullPolicy: Always
     volumeMounts:
       - mountPath: "/home/jenkins/.m2/settings.xml"
+        subPath: maven-settings.xml
         name: maven-settings
       # local repository is shared with all pipelines
       # this is pointing at the PVC

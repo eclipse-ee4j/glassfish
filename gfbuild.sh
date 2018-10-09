@@ -78,30 +78,6 @@ build_re_dev(){
   merge_junits
 }
 
-printf "\n\nmount\n"
-mount
-
-printf "\n\ndf -h\n"
-df -h
-
-printf "\n\n ls -l ${HOME}/"
-ls -l ${HOME}/
-
-printf "\n\n ls -l ${HOME}/.m2"
-ls -l ${HOME}/.m2
-
-printf "\n\n ls -l ${HOME}/.m2/repository"
-ls -l ${HOME}/.m2/repository
-
-printf "\n\n find /home/jenkins/.m2/repository/"
-find /home/jenkins/.m2/repository/ || true
-
-printf "\n\nTest create artifact in local maven repo\n"
-mkdir -p /home/jenkins/.m2/repository/org/glassfish/hk2/glassfish-nucleus-hk2/5.0.1-SNAPSHOT/
-touch /home/jenkins/.m2/repository/org/glassfish/hk2/glassfish-nucleus-hk2/5.0.1-SNAPSHOT/glassfish-nucleus-hk2-5.0.1-SNAPSHOT.pom
-
-exit 0
-
 if [ ! -z "${JENKINS_HOME}" ] ; then
 
   # inject internal environment

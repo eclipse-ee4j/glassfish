@@ -138,9 +138,9 @@ spec:
       - name: JAVA_TOOL_OPTIONS
         value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
       - name: JENKINS_SECRET
-        value: \$(JENKINS_SECRET)
+        value: ${JENKINS_SECRET}
       - name: JENKINS_NAME
-        value: \$(JENKINS_NAME)
+        value: ${JENKINS_NAME}
     resources:
       limits:
         memory: "512Mi"
@@ -170,7 +170,7 @@ spec:
     resources:
       limits:
         memory: "6Gi"
-        cpu: "1.75"
+        cpu: "1.25"
 """
     }
   }

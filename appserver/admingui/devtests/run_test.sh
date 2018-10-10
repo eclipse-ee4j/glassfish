@@ -54,8 +54,7 @@ test_run(){
 run_test_id(){
   source `dirname ${0}`/../../tests/common_test.sh
   kill_process
-  delete_gf
-  unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip "${WORKSPACE}/bundles/tests-maven-repo.zip -d ${WORKSPACE}/repository"
+  unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
   cd `dirname ${0}`
   test_init
   test_run

@@ -30,7 +30,6 @@ copy_ql_results(){
 }
 
 run_test_id(){
-	mkdir ${WORKSPACE}/repository
 	if [[ ${1} = "ql_gf_full_profile_all" ]]; then
 		unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
 		cd ${WORKSPACE}/appserver/tests/quicklook/

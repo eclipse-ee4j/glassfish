@@ -163,16 +163,3 @@ check_successful_run(){
     exit 1
   fi
 }
-
-delete_gf(){
-  printf "\n%s \n\n" "===== DELETE GLASSFISH, MAVEN LOCAL_REPO, NUCLEUS ====="
-  rm -rf \
-    ${WORKSPACE}/glassfish5 \
-    ${WORKSPACE}/repository \
-    ${WORKSPACE}/nucleus
-} 
-
-delete_bundle(){
-  printf "\n%s \n\n" "===== DELETE BUNDLES ====="
-  rm -rf ${WORKSPACE}/bundles
-}

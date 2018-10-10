@@ -19,8 +19,10 @@ RUN chmod +x /etc/entrypoint.sh
 
 ENV M2_HOME /usr/share/maven
 ENV ANT_HOME /usr/share/ant
-ENV HOME /home/jenkins
+ENV JAVA_TOOL_OPTIONS "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx2Gm "
 
+ENV HOME /home/jenkins
+WORKDIR /home/jenkins
 USER jenkins
 
 ENTRYPOINT [ "/etc/entrypoint.sh" ]

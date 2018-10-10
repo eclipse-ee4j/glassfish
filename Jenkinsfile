@@ -91,7 +91,7 @@ def generateStage(job) {
                           }
                       } finally {
                         archiveArtifacts artifacts: "${job}-results.tar.gz"
-                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true
+                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
                       }
                     }
                 }
@@ -156,8 +156,8 @@ spec:
         value: -Xmx2G
     resources:
       limits:
-        memory: "6Gi"
-        cpu: "1.25"
+        memory: "7.5Gi"
+        cpu: "3.5"
 """
     }
   }

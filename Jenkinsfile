@@ -129,7 +129,27 @@ spec:
     - name: maven-settings
       configMap:
         name: maven-settings.xml
+    - name: workspace-volume
+      emptyDir:
+        sizeLimit: "0"
   containers:
+  - name: jnlp
+    image: jenkins/jnlp-slave:alpine
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - mountPath: /home/jenkins
+      name: workspace-volume
+    env:
+      - name: JAVA_TOOL_OPTIONS
+        value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+      - name: JENKINS_SECRET
+        value: \$(JENKINS_SECRET)
+      - name: JENKINS_NAME
+        value: \$(JENKINS_NAME)
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "0.5"
   - name: glassfish-ci
     image: ee4jglassfish/ci:jdk-8.181
     args:
@@ -154,7 +174,7 @@ spec:
         value: /usr/share/maven
     resources:
       limits:
-        memory: "8Gi"
+        memory: "6Gi"
         cpu: "1.75"
 """
     }

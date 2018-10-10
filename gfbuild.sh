@@ -85,7 +85,8 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   if [ ! -z "${GF_INTERNAL_ENV}" ] ; then
     echo "${GF_INTERNAL_ENV}" | base64 -d > ${GF_INTERNAL_ENV_SH}
     . ${GF_INTERNAL_ENV_SH}
-    export ANT_OPTS="${ANT_OPTS} -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+    export JAVA_TOOL_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true"
+    export ANT_OPTS="${ANT_OPTS}"
     export MAVEN_OPTS="${ANT_OPTS} -Dmaven.repo.local=${HOME}/.m2/repository"
   fi
 fi

@@ -88,8 +88,6 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     export ANT_OPTS="${ANT_OPTS}"
     export MAVEN_OPTS="${ANT_OPTS}"
   fi
-
-  export JAVA_TOOL_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx2G"
 fi
 
 "$@"

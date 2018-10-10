@@ -118,14 +118,10 @@ spec:
     runAsUser: 1000100000
   volumes:
     - name: maven-repo-shared-storage
-      # required PVC
-      # this needs to be setup on the k8s cluster
       persistentVolumeClaim:
        claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
-      # required configmap
-      # this needs to be setup on the k8s cluster
     - name: maven-settings
       configMap:
         name: maven-settings.xml
@@ -136,7 +132,7 @@ spec:
     volumeMounts:
     env:
       - name: JAVA_TOOL_OPTIONS
-        value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+        value: -Xmx512M
     resources:
       limits:
         memory: "512Mi"
@@ -148,21 +144,16 @@ spec:
     tty: true
     imagePullPolicy: Always
     volumeMounts:
-      # maven settings mounted from the config map volume
       - mountPath: "/home/jenkins/.m2/settings.xml"
         subPath: maven-settings.xml
         name: maven-settings
-      # local repository is shared with all pipelines
-      # this is pointing at the PVC
       - mountPath: "/home/jenkins/.m2/repository"
         name: maven-repo-shared-storage
-      # local repository fragment that is scoped to the pod
-      # i.e this is not shared with all pipelines
       - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
         name: maven-repo-local-storage
     env:
-      - name: M2_HOME
-        value: /usr/share/maven
+      - name: JAVA_TOOL_OPTIONS
+        value: -Xmx2G
     resources:
       limits:
         memory: "6Gi"
@@ -174,10 +165,6 @@ spec:
     S1AS_HOME = "${WORKSPACE}/glassfish5/glassfish"
     APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
     TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
-    // required credential (secret text)
-    // needs to be manually created on Jenkins
-    // base64 encoded script used to inject internal environment
-    // create an empty one if not needed
     GF_INTERNAL_ENV = credentials('gf-internal-env')
   }
   stages {

@@ -42,7 +42,6 @@ run_test_id(){
 
 post_test_run(){
   copy_test_artifacts ${TEST_ID}
-  delete_bundle
   cd -
 }
 

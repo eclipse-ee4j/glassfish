@@ -67,7 +67,6 @@ post_test_run(){
   cp $TEST_RUN_LOG ${WORKSPACE}/results/ || true
   cp ${WORKSPACE}/glassfish5/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
   cp ${WORKSPACE}/appserver/admingui/devtests/target/surefire-reports/*.png ${WORKSPACE}/results/ || true
-  delete_bundle
 }
 
 OPT=${1}

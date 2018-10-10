@@ -223,8 +223,6 @@ run_test_id(){
 }
 
 post_test_run(){
-  delete_bundle
-  cd -
 }
 
 list_test_ids(){

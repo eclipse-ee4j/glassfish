@@ -96,7 +96,6 @@ post_test_run(){
       generate_findbugs_low_priority_all_result || true
     fi
   fi
-  delete_bundle
 }
 
 list_test_ids(){

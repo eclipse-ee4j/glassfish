@@ -159,8 +159,6 @@ post_test_run(){
   if [[ $? -ne 0 ]]; then
     archive_artifacts
   fi
-  delete_bundle
-  cd -
 }
 
 OPT=${1}

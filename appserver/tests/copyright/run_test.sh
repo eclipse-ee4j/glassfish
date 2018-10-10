@@ -54,7 +54,6 @@ post_test_run(){
   if [[ ${?} -ne 0 ]]; then
     generate_copyright_results
   fi
-  delete_bundle
 }
 
 list_test_ids(){

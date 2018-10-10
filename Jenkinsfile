@@ -129,16 +129,11 @@ spec:
     - name: maven-settings
       configMap:
         name: maven-settings.xml
-    - name: workspace-volume
-      emptyDir:
-        sizeLimit: "0"
   containers:
   - name: jnlp
     image: jenkins/jnlp-slave:alpine
     imagePullPolicy: IfNotPresent
     volumeMounts:
-    - mountPath: /home/jenkins
-      name: workspace-volume
     env:
       - name: JAVA_TOOL_OPTIONS
         value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
@@ -200,7 +195,7 @@ spec:
         container('glassfish-ci') {
           sh "./gfbuild.sh build_re_dev"
           archiveArtifacts artifacts: 'bundles/*.zip'
-          junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
+          //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: 'bundles/*', name: 'build-bundles'
         }
       }

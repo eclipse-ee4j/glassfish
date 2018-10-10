@@ -69,7 +69,7 @@ archive_bundles(){
 
 dev_build(){
   printf "\n%s \n\n" "===== DO THE BUILD! ====="
-  mvn -U clean install -Dmaven.test.failure.ignore=true
+  mvn -U clean install -Dmaven.test.failure.ignore=true -DskipTests
 }
 
 build_re_dev(){

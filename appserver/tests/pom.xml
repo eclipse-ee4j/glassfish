@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>5.1.0-RC1-SNAPSHOT</version>
+        <version>5.1.0-RC1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>org.glassfish.main.tests</groupId>
@@ -65,7 +65,7 @@
             <configuration>
                 <scm>git</scm>
                 <scmOnly>true</scmOnly>
-                <exclude  combine.children="append">
+                <exclude combine.children="append">
                     <pattern>/build.properties</pattern>
                     <pattern>.token</pattern>
                     <pattern>/REAEME</pattern>

@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.glassfish.main.diagnostics</groupId>
     <artifactId>nucleus-diagnostics</artifactId>
-    <version>5.1.0-RC1-SNAPSHOT</version>
+    <version>5.1.0-RC1</version>
   </parent>
   <artifactId>diagnostics-context</artifactId>
     <packaging>glassfish-jar</packaging>

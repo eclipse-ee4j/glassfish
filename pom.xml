@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-main-aggregator</artifactId>
-    <version>5.1.0-RC1-SNAPSHOT</version>
+    <version>5.1.0-RC1</version>
     <packaging>pom</packaging>
     
     <name>GlassFish Project</name>
@@ -33,7 +33,8 @@
       <connection>scm:git:git://github.com/eclipse-ee4j/glassfish</connection>
       <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish</developerConnection>
       <url>https://github.com/eclipse-ee4j/glassfish</url>
-    </scm>
+      <tag>glassfish-main-aggregator-5.1.0-RC1</tag>
+  </scm>
     
     <profiles>
         <profile>

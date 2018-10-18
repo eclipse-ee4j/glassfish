@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-RC1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>glassfish-embedded-nucleus</artifactId>

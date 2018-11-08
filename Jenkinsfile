@@ -181,7 +181,7 @@ spec:
       }
       steps {
         script {
-          env.each { name, value -> println "Name: $name -> Value $value" }
+          env.getEnvironment().each{ println it }
         }
         container('glassfish-ci') {
           //sh "./gfbuild.sh build_re_dev"

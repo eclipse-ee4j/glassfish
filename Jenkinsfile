@@ -180,13 +180,8 @@ spec:
         }
       }
       steps {
-        script {
-          env.getEnvironment().each{ println it }
-        }
         container('glassfish-ci') {
-          //sh "./gfbuild.sh build_re_dev"
-          println env
-          sh "echo ${GIT_COMMIT}"
+          sh "env"
           archiveArtifacts artifacts: 'bundles/*.zip'
           //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: 'bundles/*', name: 'build-bundles'

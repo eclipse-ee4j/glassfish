@@ -104,6 +104,9 @@ pipeline {
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
     preserveStashes()
+    skipDefaultCheckout()
+    skipStagesAfterUnstable()
+    timestamps()
   }
   agent {
     kubernetes {

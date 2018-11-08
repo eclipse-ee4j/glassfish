@@ -87,6 +87,10 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     . ${GF_INTERNAL_ENV_SH}
     export MAVEN_OPTS="${MAVEN_OPTS} ${ANT_OPTS}"
   fi
+
+  # TODO git clone
+  env
+  exit 1
 fi
 
 "$@"

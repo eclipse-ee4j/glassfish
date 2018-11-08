@@ -187,7 +187,7 @@ spec:
           sh '''
             cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
           '''
-          archiveArtifacts artifacts: 'bundles/*.zip'
+          //archiveArtifacts artifacts: 'bundles/*.zip'
           //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: '.git-commit-id', name: 'git-commit-id'
           //stash includes: 'bundles/*', name: 'build-bundles'

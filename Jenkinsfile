@@ -170,6 +170,7 @@ spec:
     APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
     TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
     GF_INTERNAL_ENV = credentials('gf-internal-env')
+    GIT_COMMIT = "${env.GIT_COMMIT}"
   }
   stages {
     stage('build') {
@@ -181,8 +182,7 @@ spec:
       steps {
         container('glassfish-ci') {
           //sh "./gfbuild.sh build_re_dev"
-          println scm
-          sh "echo ${env.GIT_BRANCH} ; ${env.GIT_COMMIT}"
+          sh "echo ${GIT_COMMIT} ; ${GIT_BRANCH}"
           archiveArtifacts artifacts: 'bundles/*.zip'
           //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: 'bundles/*', name: 'build-bundles'

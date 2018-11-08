@@ -42,7 +42,8 @@ def jobs = [
   "ql_gf_full_profile_all",
   "ql_gf_nucleus_all",
   "ql_gf_web_profile_all",
-  "ql_gf_embedded_profile_all",
+  // TODO fix this test suite (fails because of no test descriptor)
+  //"ql_gf_embedded_profile_all",
   "nucleus_admin_all",
   //"cts_smoke_group-1",
   //"cts_smoke_group-2",

@@ -182,7 +182,7 @@ spec:
       steps {
         container('glassfish-ci') {
           //sh "./gfbuild.sh build_re_dev"
-          echo(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
+          env.each{ println it }
           println env
           sh "echo ${GIT_COMMIT}"
           archiveArtifacts artifacts: 'bundles/*.zip'

@@ -190,7 +190,7 @@ spec:
           archiveArtifacts artifacts: 'bundles/*.zip'
           //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: '.git-commit-id', name: 'git-commit-id'
-          stash includes: 'bundles/*', name: 'build-bundles'
+          //stash includes: 'bundles/*', name: 'build-bundles'
         }
       }
     }

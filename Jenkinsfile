@@ -182,7 +182,7 @@ spec:
       steps {
         container('glassfish-ci') {
           //sh "./gfbuild.sh build_re_dev"
-          println ${env}
+          println "${env}"
           sh "echo ${GIT_COMMIT}"
           archiveArtifacts artifacts: 'bundles/*.zip'
           //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'

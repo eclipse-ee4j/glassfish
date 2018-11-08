@@ -180,9 +180,11 @@ spec:
         }
       }
       steps {
+        script {
+          env.each{ println it }
+        }
         container('glassfish-ci') {
           //sh "./gfbuild.sh build_re_dev"
-          env.each{ println it }
           println env
           sh "echo ${GIT_COMMIT}"
           archiveArtifacts artifacts: 'bundles/*.zip'

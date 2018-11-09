@@ -17,34 +17,34 @@
 // list of test ids
 def jobs = [
   "web_jsp",
-  ////"web_servlet",
-  ////"web_web-container",
-  ////"web_group-1",
+  "web_servlet",
+  "web_web-container",
+  "web_group-1",
   //"sqe_smoke_all",
-  ////"security_all",
-  ////"admin-cli-group-1",
-  ////"admin-cli-group-2",
-  ////"admin-cli-group-3",
-  ////"admin-cli-group-4",
-  ////"admin-cli-group-5",
-  ////"deployment_all",
-  ////"deployment_cluster_all",
-  ////"ejb_group_1",
-  ////"ejb_group_2",
-  ////"ejb_group_3",
-  ////"ejb_timer_cluster_all",
-  ////"ejb_web_all",
-  ////"transaction-ee-1",
-  ////"transaction-ee-2",
-  ////"transaction-ee-3",
-  ////"transaction-ee-4",
-  ////"cdi_all",
-  ////"ql_gf_full_profile_all",
-  ////"ql_gf_nucleus_all",
-  ////"ql_gf_web_profile_all",
+  "security_all",
+  "admin-cli-group-1",
+  "admin-cli-group-2",
+  "admin-cli-group-3",
+  "admin-cli-group-4",
+  "admin-cli-group-5",
+  "deployment_all",
+  "deployment_cluster_all",
+  "ejb_group_1",
+  "ejb_group_2",
+  "ejb_group_3",
+  "ejb_timer_cluster_all",
+  "ejb_web_all",
+  "transaction-ee-1",
+  "transaction-ee-2",
+  "transaction-ee-3",
+  "transaction-ee-4",
+  "cdi_all",
+  "ql_gf_full_profile_all",
+  "ql_gf_nucleus_all",
+  "ql_gf_web_profile_all",
   // TODO fix this test suite (fails because of no test descriptor)
   //"ql_gf_embedded_profile_all",
-  ////"nucleus_admin_all",
+  "nucleus_admin_all",
   //"cts_smoke_group-1",
   //"cts_smoke_group-2",
   //"cts_smoke_group-3",
@@ -57,17 +57,17 @@ def jobs = [
   //"servlet_tck_servlet-spec",
   //"findbugs_all",
   //"findbugs_low_priority_all",
-  ////"jdbc_all",
-  ////"jms_all",
+  "jdbc_all",
+  "jms_all",
   //"copyright",
-  ////"batch_all",
-  ////"naming_all",
-  ////"persistence_all",
-  ////"webservice_all",
-  ////"connector_group_1",
-  ////"connector_group_2",
-  ////"connector_group_3",
-  ////"conn////ector_group_4"
+  "batch_all",
+  "naming_all",
+  "persistence_all",
+  "webservice_all",
+  "connector_group_1",
+  "connector_group_2",
+  "connector_group_3",
+  "connector_group_4"
 ]
 
 // the label is unique and identifies the pod descriptor and its resulting pods
@@ -84,6 +84,7 @@ def generateStage(job) {
             node(label) {
                 stage("${job}") {
                     container('glassfish-ci') {
+                      // do the checkout manually
                       unstash 'scm'
                       sh '''
                         rm -rf .git && git init .
@@ -93,18 +94,16 @@ def generateStage(job) {
                           $(git config remote.origin.url) \
                           +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
                         git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
-
-                        ls -la
                       '''
-                      // unstash 'build-bundles'
-                      // try {
-                      //     retry(3) {
-                      //         sh "./appserver/tests/gftest.sh run_test ${job}"
-                      //     }
-                      // } finally {
-                      //   archiveArtifacts artifacts: "${job}-results.tar.gz"
-                      //   junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
-                      // }
+                      unstash 'build-bundles'
+                      try {
+                          retry(3) {
+                              sh "./appserver/tests/gftest.sh run_test ${job}"
+                          }
+                      } finally {
+                        archiveArtifacts artifacts: "${job}-results.tar.gz"
+                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
+                      }
                     }
                 }
             }
@@ -193,13 +192,17 @@ spec:
         container('glassfish-ci') {
           checkout scm
           sh '''
+            // save git info to do manually checkout on later stages
             cp .git/config .GIT_CONFIG
             cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
+
+            // do the build
+            ./gfbuild.sh build_re_dev
           '''
-          //archiveArtifacts artifacts: 'bundles/*.zip'
-          //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
+          archiveArtifacts artifacts: 'bundles/*.zip'
+          junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: '.GIT_*', name: 'scm'
-          //stash includes: 'bundles/*', name: 'build-bundles'
+          stash includes: 'bundles/*', name: 'build-bundles'
         }
       }
     }

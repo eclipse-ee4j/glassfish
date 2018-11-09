@@ -84,8 +84,9 @@ def generateStage(job) {
             node(label) {
                 stage("${job}") {
                     container('glassfish-ci') {
-                      unstash 'git-commit-id'
+                      unstash 'scm'
                       sh '''
+                        cat .GIT_CONFIG
                         cat .GIT_COMMIT
                       '''
                       // unstash 'build-bundles'
@@ -185,11 +186,12 @@ spec:
         container('glassfish-ci') {
           checkout scm
           sh '''
-            cat .git/$(cat .git/HEAD | awk '{print $2}') > .GIT_COMMIT
+            cp .git/config .GIT_CONFIG
+            cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
           '''
           //archiveArtifacts artifacts: 'bundles/*.zip'
           //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
-          stash includes: '.GIT_COMMIT', name: 'git-commit-id'
+          stash includes: '.GIT_*', name: 'scm'
           //stash includes: 'bundles/*', name: 'build-bundles'
         }
       }

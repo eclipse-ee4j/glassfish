@@ -86,8 +86,13 @@ def generateStage(job) {
                     container('glassfish-ci') {
                       unstash 'scm'
                       sh '''
-                        cat .GIT_CONFIG
-                        cat .GIT_COMMIT
+                        rm -rf .git && git init .
+                        cp .GIT_CONFIG .git/config
+                        GIT_COMMIT=$(cat .GIT_COMMIT)
+                        git fetch +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
+                        git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
+
+                        ls -la
                       '''
                       // unstash 'build-bundles'
                       // try {

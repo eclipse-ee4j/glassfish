@@ -197,6 +197,7 @@ spec:
             cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
 
             // do the build
+            ls -la
             ./gfbuild.sh build_re_dev
           '''
           archiveArtifacts artifacts: 'bundles/*.zip'

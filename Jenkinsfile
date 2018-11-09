@@ -185,7 +185,10 @@ spec:
         container('glassfish-ci') {
           checkout scm
           sh '''
-            cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
+            cat .git/HEAD | awk '{print $2}'
+            HEAD_REF_PATH=$(cat .git/HEAD | awk '{print $2}')
+            cat .git/${HEAD_REF_PATH}
+            cat .git/${HEAD_REF_PATH} > .GIT_COMMIT
           '''
           //archiveArtifacts artifacts: 'bundles/*.zip'
           //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'

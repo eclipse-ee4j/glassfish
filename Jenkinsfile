@@ -92,6 +92,7 @@ def generateStage(job) {
                         git fetch --no-tags --progress \
                           $(git config remote.origin.url) \
                           +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
+                        git checkout -f ${GIT_COMMIT}
                         git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
 
                         ls -la

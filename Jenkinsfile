@@ -197,10 +197,10 @@ spec:
             cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
 
             # do the build
-            ./gfbuild.sh build_re_dev
+            bash -x ./gfbuild.sh build_re_dev
           '''
           archiveArtifacts artifacts: 'bundles/*.zip'
-          junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
+          //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: '.GIT_*', name: 'scm'
           stash includes: 'bundles/*', name: 'build-bundles'
         }

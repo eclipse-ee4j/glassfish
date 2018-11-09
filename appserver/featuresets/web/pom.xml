@@ -671,8 +671,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
+            <groupId>jakarta.transaction</groupId>
+            <artifactId>jakarta.transaction-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

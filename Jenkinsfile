@@ -89,7 +89,7 @@ def generateStage(job) {
                         rm -rf .git && git init .
                         cp .GIT_CONFIG .git/config
                         GIT_COMMIT=$(cat .GIT_COMMIT)
-                        git fetch +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
+                        git fetch refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
                         git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
 
                         ls -la

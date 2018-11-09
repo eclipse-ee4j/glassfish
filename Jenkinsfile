@@ -198,6 +198,7 @@ spec:
 
             // do the build
             ls -la
+            exit 1
             ./gfbuild.sh build_re_dev
           '''
           archiveArtifacts artifacts: 'bundles/*.zip'

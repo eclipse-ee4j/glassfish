@@ -193,11 +193,11 @@ spec:
           checkout scm
           sh '''
             ls -la
-            // save git info to do manually checkout on later stages
+            # save git info to do manually checkout on later stages
             cp .git/config .GIT_CONFIG
             cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
 
-            // do the build
+            # do the build
             ls -la
             exit 1
             ./gfbuild.sh build_re_dev

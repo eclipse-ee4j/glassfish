@@ -86,21 +86,25 @@ def generateStage(job) {
                     container('glassfish-ci') {
                       // do the checkout manually
                       unstash 'scm'
-                      sh '''
-                        rm -rf .git && git init .
-                        cp .GIT_CONFIG .git/config
-                        GIT_COMMIT=$(cat .GIT_COMMIT)
-                        git fetch --no-tags --progress \
-                          $(git config remote.origin.url) \
-                          +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
-                        git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
-                      '''
+                      sleep 60
+                      retry(3) {
+                        sh '''
+                          rm -rf .git && git init .
+                          cp .GIT_CONFIG .git/config
+                          GIT_COMMIT=$(cat .GIT_COMMIT)
+                          git fetch --no-tags --progress \
+                            $(git config remote.origin.url) \
+                            +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
+                          git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
+                        '''
+                      }
                       unstash 'build-bundles'
                       try {
                           retry(3) {
                               sh "./appserver/tests/gftest.sh run_test ${job}"
                           }
                       } finally {
+                        // archive what we can...
                         archiveArtifacts artifacts: "${job}-results.tar.gz"
                         junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
                       }

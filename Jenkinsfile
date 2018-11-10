@@ -150,10 +150,10 @@ spec:
     volumeMounts:
     env:
       - name: JAVA_TOOL_OPTIONS
-        value: -Xmx512M
+        value: -Xmx1G
     resources:
       limits:
-        memory: "512Mi"
+        memory: "1Gi"
         cpu: "0.5"
   - name: glassfish-ci
     image: ee4jglassfish/ci:jdk-8.181
@@ -174,7 +174,7 @@ spec:
         value: -Xmx2G
     resources:
       limits:
-        memory: "7.5Gi"
+        memory: "7Gi"
         cpu: "3.5"
 """
     }

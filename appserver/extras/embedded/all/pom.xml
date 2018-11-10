@@ -395,7 +395,7 @@
      </dependency>
      <dependency>
          <groupId>com.sun.mail</groupId>
-         <artifactId>javax.mail</artifactId>
+         <artifactId>jakarta.mail</artifactId>
          <optional>true</optional>
      </dependency>
      <dependency>
@@ -419,8 +419,8 @@
          <optional>true</optional>
      </dependency>
      <dependency>
-         <groupId>javax.transaction</groupId>
-         <artifactId>javax.transaction-api</artifactId>
+         <groupId>jakarta.transaction</groupId>
+         <artifactId>jakarta.transaction-api</artifactId>
          <optional>true</optional>
      </dependency>
         <!-- glassfish-common-full -->

@@ -99,13 +99,13 @@
             <optional>true</optional>
         </dependency>
         <!--
-            using com.sun.mail.java.mail instead of javax.mail:javax.mail-api
+            using com.sun.mail:jakarta.mail instead of jakarta.mail:jakarta.mail-api
             because javax.mail has a dependency to com.sun.mail classes,
             but the pom does not bring the dependency.
         -->
         <dependency>
             <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
+            <artifactId>jakarta.mail</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.resource</groupId>

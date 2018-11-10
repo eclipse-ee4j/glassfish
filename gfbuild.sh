@@ -39,37 +39,31 @@
 # holder.
 #
 
-if [ -z "${WORKSPACE}" ] ; then
-  export WORKSPACE=`dirname ${0}`
-fi
-
 merge_junits(){
-  TEST_ID="build-unit-tests"
-  rm -rf ${WORKSPACE}/test-results
-  mkdir -p ${WORKSPACE}/test-results/${TEST_ID}/results/junitreports
-  JUD="${WORKSPACE}/test-results/${TEST_ID}/results/junitreports/test_results_junit.xml"
-  echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${JUD}
-  echo "<testsuites>" >> ${JUD}
+  local test_id="build-unit-tests"
+  rm -rf ${WORKSPACE}/test-results && \
+  mkdir -p ${WORKSPACE}/test-results/${test_id}/results/junitreports
+  local jud="${WORKSPACE}/test-results/${test_id}/results/junitreports/test_results_junit.xml"
+  echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${jud}
+  echo "<testsuites>" >> ${jud}
   for i in `find . -type d -name "surefire-reports"`
   do    
-    ls -d -1 ${i}/*.xml | xargs cat | sed 's/<?xml version=\"1.0\" encoding=\"UTF-8\" *?>//g' >> ${JUD}
+    ls -d -1 ${i}/*.xml | xargs cat | sed 's/<?xml version=\"1.0\" encoding=\"UTF-8\" *?>//g' >> ${jud}
   done
-  echo "</testsuites>" >> ${JUD}
-  sed -i 's/\([a-zA-Z-]\w*\)\./\1-/g' ${JUD}
-  sed -i "s/\bclassname=\"/classname=\"${TEST_ID}./g" ${JUD}
+  echo "</testsuites>" >> ${jud}
+  sed -i 's/\([a-zA-Z-]\w*\)\./\1-/g' ${jud}
+  sed -i "s/\bclassname=\"/classname=\"${test_id}./g" ${jud}
 }
 
 archive_bundles(){
-  printf "\n%s \n\n" "===== ARCHIVE BUNDLES ====="
-  mkdir ${WORKSPACE}/bundles
+  mkdir -p ${WORKSPACE}/bundles
   cp appserver/distributions/glassfish/target/*.zip ${WORKSPACE}/bundles
   cp appserver/distributions/web/target/*.zip ${WORKSPACE}/bundles
   cp nucleus/distributions/nucleus/target/*.zip ${WORKSPACE}/bundles
 }
 
 dev_build(){
-  printf "\n%s \n\n" "===== DO THE BUILD! ====="
-  mvn -U clean install -Dmaven.test.failure.ignore=true -DskipTests
+  mvn -U clean install -Dmaven.test.failure.ignore=true
 }
 
 build_re_dev(){
@@ -77,6 +71,10 @@ build_re_dev(){
   archive_bundles
   merge_junits
 }
+
+if [ -z "${WORKSPACE}" ] ; then
+  export WORKSPACE=`dirname ${0}`
+fi
 
 if [ ! -z "${JENKINS_HOME}" ] ; then
 

@@ -202,7 +202,7 @@ spec:
             bash -x ./gfbuild.sh build_re_dev
           '''
           archiveArtifacts artifacts: 'bundles/*.zip'
-          //junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
+          junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
           stash includes: '.GIT_*', name: 'scm'
           stash includes: 'bundles/*', name: 'build-bundles'
         }

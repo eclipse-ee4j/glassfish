@@ -87,17 +87,15 @@ def generateStage(job) {
                       // do the checkout manually
                       unstash 'scm'
                       sleep 60
-                      retry(3) {
-                        sh '''
-                          rm -rf .git && git init .
-                          cp .GIT_CONFIG .git/config
-                          GIT_COMMIT=$(cat .GIT_COMMIT)
-                          git fetch --no-tags --progress \
-                            $(git config remote.origin.url) \
-                            +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
-                          git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
-                        '''
-                      }
+                      sh '''
+                        rm -rf .git && git init .
+                        cp .GIT_CONFIG .git/config
+                        GIT_COMMIT=$(cat .GIT_COMMIT)
+                        git fetch --no-tags --progress \
+                          $(git config remote.origin.url) \
+                          +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
+                        git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
+                      '''
                       unstash 'build-bundles'
                       try {
                           retry(3) {

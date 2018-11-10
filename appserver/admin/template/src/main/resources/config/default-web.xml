@@ -309,7 +309,7 @@
         javax.mail.jar
         javax.management.j2ee-api.jar
         javax.persistence.jar
-        javax.resource-api.jar
+        jakarta.resource-api.jar
         javax.security.auth.message.jar
         javax.security.jacc.jar
         jakarta.transaction-api.jar

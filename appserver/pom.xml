@@ -54,7 +54,7 @@
         <javax.faces-api.version>2.3</javax.faces-api.version>
         <cdi-api.version>2.0</cdi-api.version>
         <javax.inject.version>1</javax.inject.version>
-        <javax.resource-api.version>1.7.1</javax.resource-api.version>
+        <jakarta.resource-api.version>1.7.2</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7</javax.enterprise.deploy-api.version>
         <javax.security.jacc-api.version>1.6</javax.security.jacc-api.version>
         <javax.security.auth.message-api.version>1.1.1</javax.security.auth.message-api.version>
@@ -108,7 +108,6 @@
         <javax.management.j2ee-api.version>1.1.2</javax.management.j2ee-api.version>
 	    <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
         <easymock.version>3.5</easymock.version>
-	<javax.resource-api.version>1.7.1</javax.resource-api.version>
 	<javax.xml.registry-api.version>1.0.8</javax.xml.registry-api.version>
 	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
 
@@ -380,14 +379,14 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.resource</groupId>
-                                <artifactId>javax.resource-api</artifactId>
-                                <version>${javax.resource-api.version}</version>
+                                <groupId>jakarta.resource</groupId>
+                                <artifactId>jakarta.resource-api</artifactId>
+                                <version>${jakarta.resource-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${javax.resource-api.version}</specVersion>
-			    <specImplVersion>${javax.resource-api.version}</specImplVersion>
+                            <specVersion>${jakarta.resource-api.version}</specVersion>
+			    <specImplVersion>${jakarta.resource-api.version}</specImplVersion>
                             <apiPackage>javax.resource</apiPackage>
                         </spec>
                         <spec>
@@ -550,9 +549,9 @@
                 <version>${javax.inject.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.resource</groupId>
-                <artifactId>javax.resource-api</artifactId>
-                <version>${javax.resource-api.version}</version>
+                <groupId>jakarta.resource</groupId>
+                <artifactId>jakarta.resource-api</artifactId>
+                <version>${jakarta.resource-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.enterprise.deploy</groupId>

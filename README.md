@@ -23,6 +23,12 @@ Locate staged distributions:
 - appserver/distributions/glassfish/target/stage
 - appserver/distributions/web/target/stage
 
+Testing
+--------
+Running GlassFish QuickLook tests:
+
+`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=appserver/distributions/glassfish/target/stage/glassfish5/glassfish`
+
 Starting GlassFish
 ------------------
 

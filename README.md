@@ -29,6 +29,8 @@ Running GlassFish QuickLook tests:
 
 `mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=appserver/distributions/glassfish/target/stage/glassfish5/glassfish`
 
+For more details, see [QuickLook_Test_Instructions](https://github.com/eclipse-ee4j/glassfish/blob/master/appserver/tests/quicklook/QuickLook_Test_Instructions.html)
+
 Starting GlassFish
 ------------------
 

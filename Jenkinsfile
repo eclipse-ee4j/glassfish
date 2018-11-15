@@ -157,8 +157,6 @@ spec:
   - name: jnlp
     image: jenkins/jnlp-slave:alpine
     imagePullPolicy: IfNotPresent
-    command: ["/bin/sh"]
-    args: ["-c", "env ; exit 1"]
     volumeMounts:
     env:
       - name: JAVA_TOOL_OPTIONS
@@ -206,6 +204,7 @@ spec:
       }
       steps {
         container('glassfish-ci') {
+          sh 'env ; exit 1'
           checkout scm
           // save git info to do manual checkout on later stages
           sh '''

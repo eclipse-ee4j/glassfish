@@ -86,7 +86,7 @@ def generateStage(job) {
                     container('glassfish-ci') {
                       // do the checkout manually
                       unstash 'scm'
-                      retry(3) {
+                      retry(10) {
                         sleep 60
                         sh '''
                           rm -rf .git && git init .
@@ -118,11 +118,18 @@ def generateStage(job) {
 
 pipeline {
   options {
+    // keep at most 50 builds
     buildDiscarder(logRotator(numToKeepStr: '50'))
+    // preserve the stashes to allow re-running a test stage
     preserveStashes()
+    // issue related to default 'implicit' checkout, disable it
     skipDefaultCheckout()
+    // abort pipeline if previous stage is unstable
     skipStagesAfterUnstable()
+    // show timestamps in logs
     timestamps()
+    // on failure, retry the whole pipeline 3times
+    retry(3)
   }
   agent {
     kubernetes {

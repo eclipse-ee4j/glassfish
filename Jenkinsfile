@@ -162,7 +162,7 @@ spec:
     resources:
       limits:
         memory: "1Gi"
-        cpu: "0.5"
+        cpu: "1"
   - name: glassfish-ci
     image: ee4jglassfish/ci:jdk-8.181
     args:
@@ -183,7 +183,7 @@ spec:
     resources:
       limits:
         memory: "7Gi"
-        cpu: "3.5"
+        cpu: "3"
 """
     }
   }

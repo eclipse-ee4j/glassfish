@@ -62,9 +62,9 @@ unzip_test_resources(){
   printf "\n%s \n\n" "===== UNZIP TEST RESOURCES ====="
   for i in "${@}"; do
     if [[ ${i} == *.zip* ]]; then
-      unzip ${i}
+      unzip -o ${i}
     else
-      tar -xf ${i}
+      tar --overwrite -xf ${i}
     fi
   done
 }

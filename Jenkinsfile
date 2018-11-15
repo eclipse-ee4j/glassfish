@@ -86,8 +86,8 @@ def generateStage(job) {
                     container('glassfish-ci') {
                       // do the checkout manually
                       unstash 'scm'
-                      sleep 60
                       retry(3) {
+                        sleep 60
                         sh '''
                           rm -rf .git && git init .
                           cp .GIT_CONFIG .git/config
@@ -98,6 +98,7 @@ def generateStage(job) {
                           git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
                         '''
                       }
+                      // run the test
                       unstash 'build-bundles'
                       try {
                           retry(3) {
@@ -195,17 +196,18 @@ spec:
       steps {
         container('glassfish-ci') {
           checkout scm
+          // save git info to do manual checkout on later stages
           sh '''
-            # save git info to do manually checkout on later stages
             cp .git/config .GIT_CONFIG
             cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
-
-            # do the build
+          '''
+          stash includes: '.GIT_*', name: 'scm'
+          // do the build
+          sh '''
             bash -x ./gfbuild.sh build_re_dev
           '''
           archiveArtifacts artifacts: 'bundles/*.zip'
           junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
-          stash includes: '.GIT_*', name: 'scm'
           stash includes: 'bundles/*', name: 'build-bundles'
         }
       }

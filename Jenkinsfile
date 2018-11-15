@@ -130,6 +130,8 @@ pipeline {
     timestamps()
     // on failure, retry the whole pipeline 3times
     retry(3)
+    // global timeout, abort after 6 hours
+    timeout(time: 6, unit: 'HOURS')
   }
   agent {
     kubernetes {

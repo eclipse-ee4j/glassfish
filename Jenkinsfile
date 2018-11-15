@@ -157,6 +157,8 @@ spec:
   - name: jnlp
     image: jenkins/jnlp-slave:alpine
     imagePullPolicy: IfNotPresent
+    command: ["/bin/sh"]
+    args: ["-c", "env ; exit 1"]
     volumeMounts:
     env:
       - name: JAVA_TOOL_OPTIONS

@@ -150,6 +150,8 @@ spec:
        claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
+    - name: workspace-volume
+      emptyDir: {}
     - name: maven-settings
       configMap:
         name: maven-settings.xml
@@ -179,6 +181,8 @@ spec:
         name: maven-repo-shared-storage
       - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
         name: maven-repo-local-storage
+      - mountPath: "/home/jenkins/workspace"
+        name: workspace-volume
     env:
       - name: JAVA_TOOL_OPTIONS
         value: -Xmx2G
@@ -186,6 +190,19 @@ spec:
       limits:
         memory: "7Gi"
         cpu: "3"
+    readinessProbe:
+      exec:
+        command:
+        - /etc/ready.sh
+        - --mounts
+        - /home/jenkins/workspace
+        - /home/jenkins/.m2/settings.xml
+        - /home/jenkins/.m2/repository
+        - /home/jenkins/.m2/repository/org/glassfish/main
+        initialDelaySeconds: 60
+        periodSeconds: 60
+        timeoutSeconds: 120
+        failureThreshold: 10
 """
     }
   }
@@ -204,7 +221,6 @@ spec:
       }
       steps {
         container('glassfish-ci') {
-          sh 'env ; exit 1'
           checkout scm
           // save git info to do manual checkout on later stages
           sh '''

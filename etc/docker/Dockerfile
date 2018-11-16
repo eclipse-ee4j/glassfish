@@ -17,6 +17,9 @@ RUN apt-get update && \
 COPY ./entrypoint.sh /etc/entrypoint.sh
 RUN chmod +x /etc/entrypoint.sh
 
+COPY ./ready.sh /etc/ready.sh
+RUN chmod +x /etc/entrypoint.sh
+
 ENV M2_HOME /usr/share/maven
 ENV ANT_HOME /usr/share/ant
 ENV JAVA_TOOL_OPTIONS "-Xmx2G"

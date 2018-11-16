@@ -50,10 +50,3 @@ do
     sleep 10
   done
 done
-
-# make sure the custom workspace directory exists
-if [ ! -z "${CUSTOM_WORKSPACE}" ] && [ ! -z "${PIPELINE_NAME}" ] ; then
-  WORKSPACE=${CUSTOM_WORKSPACE}/${PIPELINE_NAME}_${HOSTNAME}
-  mkdir -p ${WORKSPACE}
-  chmod -R ugo+rwx ${WORKSPACE}
-fi

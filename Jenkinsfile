@@ -188,10 +188,6 @@ spec:
         value: -Xmx2G
       - name: JENKINS_URL
         value: ${JENKINS_URL}
-      - name: CUSTOM_WORKSPACE
-        value: /home/jenkins/workspace
-      - name: PIPELINE_NAME
-        value: ee4j-glassfish
     resources:
       limits:
         memory: "7Gi"

@@ -52,6 +52,8 @@ do
 done
 
 # make sure the custom workspace directory exists
-if [ !-z "${CUSTOM_WORKSPACE}" ] && [ !-z "${PIPELINE_NAME}" ] ; then
-  mkdir -p ${CUSTOM_WORKSPACE}/${PIPELINE_NAME}_${HOSTNAME}
+if [ ! -z "${CUSTOM_WORKSPACE}" ] && [ ! -z "${PIPELINE_NAME}" ] ; then
+  WORKSPACE=${CUSTOM_WORKSPACE}/${PIPELINE_NAME}_${HOSTNAME}
+  mkdir -p ${WORKSPACE}
+  chmod -R ugo+rwx ${WORKSPACE}
 fi

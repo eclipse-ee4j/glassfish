@@ -150,8 +150,6 @@ spec:
        claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
-    - name: custom-workspace-volume
-      emptyDir: {}
     - name: maven-settings
       configMap:
         name: maven-settings.xml
@@ -181,8 +179,6 @@ spec:
         name: maven-repo-shared-storage
       - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
         name: maven-repo-local-storage
-      - mountPath: "/home/jenkins/workspace"
-        name: custom-workspace-volume
     env:
       - name: JAVA_TOOL_OPTIONS
         value: -Xmx2G
@@ -197,7 +193,6 @@ spec:
         command:
         - /etc/ready.sh
         - --mounts
-        - /home/jenkins/workspace
         - /home/jenkins/.m2/settings.xml
         - /home/jenkins/.m2/repository
         - /home/jenkins/.m2/repository/org/glassfish/main

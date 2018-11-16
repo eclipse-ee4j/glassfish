@@ -188,6 +188,8 @@ spec:
         value: -Xmx2G
       - name: JENKINS_URL
         value: ${JENKINS_URL}
+      - name: WORKSPACE
+        value: ${WORKSPACE}
     resources:
       limits:
         memory: "7Gi"

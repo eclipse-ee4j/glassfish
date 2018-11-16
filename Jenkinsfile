@@ -137,7 +137,6 @@ pipeline {
     kubernetes {
       label "${env.label}"
       defaultContainer 'glassfish-ci'
-      customWorkspace '/home/jenkins/workspace'
       yaml """
 apiVersion: v1
 kind: Pod
@@ -150,6 +149,8 @@ spec:
       persistentVolumeClaim:
        claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
+      emptyDir: {}
+    - name: custom-workspace-volume
       emptyDir: {}
     - name: maven-settings
       configMap:
@@ -180,6 +181,8 @@ spec:
         name: maven-repo-shared-storage
       - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
         name: maven-repo-local-storage
+      - mountPath: "/home/jenkins/workspace"
+        name: custom-workspace-volume
     env:
       - name: JAVA_TOOL_OPTIONS
         value: -Xmx2G

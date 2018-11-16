@@ -136,7 +136,8 @@ pipeline {
   agent {
     kubernetes {
       label "${env.label}"
-      defaultContainer 'jnlp'
+      defaultContainer 'glassfish-ci'
+      customWorkspace '/home/jenkins/workspace'
       yaml """
 apiVersion: v1
 kind: Pod
@@ -149,8 +150,6 @@ spec:
       persistentVolumeClaim:
        claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
-      emptyDir: {}
-    - name: workspace-volume
       emptyDir: {}
     - name: maven-settings
       configMap:
@@ -181,8 +180,6 @@ spec:
         name: maven-repo-shared-storage
       - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
         name: maven-repo-local-storage
-      - mountPath: "/home/jenkins/workspace"
-        name: workspace-volume
     env:
       - name: JAVA_TOOL_OPTIONS
         value: -Xmx2G
@@ -221,20 +218,22 @@ spec:
       }
       steps {
         container('glassfish-ci') {
-          checkout scm
-          // save git info to do manual checkout on later stages
-          sh '''
-            cp .git/config .GIT_CONFIG
-            cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
-          '''
-          stash includes: '.GIT_*', name: 'scm'
-          // do the build
-          sh '''
-            bash -x ./gfbuild.sh build_re_dev
-          '''
-          archiveArtifacts artifacts: 'bundles/*.zip'
-          junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
-          stash includes: 'bundles/*', name: 'build-bundles'
+          timeout(time: 1, unit: 'HOURS') {
+            checkout scm
+            // save git info to do manual checkout on later stages
+            sh '''
+              cp .git/config .GIT_CONFIG
+              cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
+            '''
+            stash includes: '.GIT_*', name: 'scm'
+            // do the build
+            sh '''
+              bash -x ./gfbuild.sh build_re_dev
+            '''
+            archiveArtifacts artifacts: 'bundles/*.zip'
+            junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
+            stash includes: 'bundles/*', name: 'build-bundles'
+          }
         }
       }
     }

@@ -188,18 +188,6 @@ spec:
       limits:
         memory: "7Gi"
         cpu: "3"
-    readinessProbe:
-      exec:
-        command:
-        - /etc/ready.sh
-        - --mounts
-        - /home/jenkins/.m2/settings.xml
-        - /home/jenkins/.m2/repository
-        - /home/jenkins/.m2/repository/org/glassfish/main
-        initialDelaySeconds: 60
-        periodSeconds: 60
-        timeoutSeconds: 120
-        failureThreshold: 10
 """
     }
   }

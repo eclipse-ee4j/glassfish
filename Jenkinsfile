@@ -63,7 +63,7 @@ def jobs = [
   "batch_all",
   //"naming_all",
   "persistence_all",
-  "webservice_all",
+  //"webservice_all",
   "connector_group_1",
   "connector_group_2",
   "connector_group_3",

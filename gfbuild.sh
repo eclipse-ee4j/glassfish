@@ -63,7 +63,7 @@ archive_bundles(){
 }
 
 dev_build(){
-  mvn -U clean install -Dmaven.test.failure.ignore=true
+  mvn -U clean install -Dmaven.test.failure.ignore=true -Pstaging
 }
 
 build_re_dev(){

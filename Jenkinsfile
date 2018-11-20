@@ -216,7 +216,7 @@ spec:
             stash includes: '.GIT_*', name: 'scm'
             // do the build
             sh '''
-              bash -x ./gfbuild.sh build_re_dev
+              bash -xe ./gfbuild.sh build_re_dev
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'
             junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'

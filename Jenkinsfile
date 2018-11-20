@@ -58,7 +58,7 @@ def jobs = [
   //"findbugs_all",
   //"findbugs_low_priority_all",
   "jdbc_all",
-  "jms_all",
+  //"jms_all",
   //"copyright",
   "batch_all",
   //"naming_all",

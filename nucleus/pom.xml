@@ -66,7 +66,7 @@
           <unsubscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</unsubscribe>
           <archive>https://dev.eclipse.org/mhonarc/lists/glassfish-dev</archive>
         </mailingList>
-    </mailingLists> 
+    </mailingLists>
 
     <modules>
         <module>parent</module>

@@ -671,8 +671,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>javax.resource</groupId>
-        <artifactId>javax.resource-api</artifactId>
+        <groupId>jakarta.resource</groupId>
+        <artifactId>jakarta.resource-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -698,7 +698,7 @@
     </dependency>
     <dependency>
         <groupId>com.sun.mail</groupId>
-        <artifactId>javax.mail</artifactId>
+        <artifactId>jakarta.mail</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -722,8 +722,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>javax.transaction</groupId>
-        <artifactId>javax.transaction-api</artifactId>
+        <groupId>jakarta.transaction</groupId>
+        <artifactId>jakarta.transaction-api</artifactId>
         <optional>true</optional>
     </dependency>
     <!-- glassfish-jca -->
@@ -1335,6 +1335,11 @@
     <dependency>
         <groupId>org.glassfish</groupId>
         <artifactId>javax.json</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>javax.json</groupId>
+        <artifactId>javax.json-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>

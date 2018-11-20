@@ -11,9 +11,11 @@ Prerequisites:
 * JDK8+
 * Maven 3.0.3+
 
+Currently in the EE4J_8 branch artifacts are being pulled from OSSRH staging.
+
 Run the full build:
 
-`mvn install`
+`mvn -Pstaging install`
 
 Locate the Zip distributions:
 - appserver/distributions/glassfish/target/glassfish.zip

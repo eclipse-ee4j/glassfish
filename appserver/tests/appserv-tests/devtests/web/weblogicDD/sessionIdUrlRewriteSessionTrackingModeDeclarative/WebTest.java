@@ -102,9 +102,6 @@ public class WebTest {
         if (redirectTo.indexOf("MYJSESSIONID=") == -1) {
             throw new Exception("Missing MYJSESSIONID in the Location response header");
         }
-        if (redirectTo.indexOf(".") != -1){
-            redirectTo = redirectTo.replace("localhost.localdomain","localhost");
-        }
         System.out.println("Redirect to: " + redirectTo);
         URL url = new URL(redirectTo);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -45,6 +45,9 @@
     </target>
 
     <target name="deploy" depends="init-common">
+      <get
+        src="http://repo1.maven.org/maven2/com/sun/faces/extensions/jsf-cardemo/0.2/jsf-cardemo-0.2.war"
+        dest="jsf-cardemo.war"/>
       <antcall target="deploy-war-name"/>
     </target>
     

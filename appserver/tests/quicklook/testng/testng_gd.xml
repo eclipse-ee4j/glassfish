@@ -157,7 +157,7 @@
         <class name="test.osgi.hello.HelloOSGITestNG" />
     </classes>
   </test>
-  <test name="cluster_setup">
+<!--  <test name="cluster_setup">
     <classes>
         <class name="test.clustersetup.ClusterSetupTest"/>
     </classes>
@@ -171,7 +171,7 @@
     <classes>
         <class name="test.clusterteardown.ClusterTeardownTest"/>
     </classes>
-  </test>
+  </test>-->
   <test name="jms_injection_jmsContext">
     <classes>
 	    <class name="test.jms.injection.ClientTestNG"/>

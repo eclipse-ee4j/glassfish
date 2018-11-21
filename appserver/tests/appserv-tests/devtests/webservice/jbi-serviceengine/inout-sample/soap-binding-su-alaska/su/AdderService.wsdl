@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://example.web.service/Calculator" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://example.web.service/Calculator" name="CalculatorService">
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 201, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 
 -->
 
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://example.web.service/Calculator" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://example.web.service/Calculator" name="CalculatorService">
   <types>
     <xsd:schema>
       <xsd:import namespace="http://example.web.service/Calculator" schemaLocation="CalculatorService_schema1.xsd" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/>
@@ -41,7 +42,7 @@
   </binding>
   <service name="CalculatorService">
     <port name="CalculatorPort" binding="tns:CalculatorPortBinding">
-      <soap:address location="http://localhost.localdomain:8080/calc-web-client/webservice/CalculatorService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/>
+      <soap:address location="http://localhost:8080/calc-web-client/webservice/CalculatorService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/>
     </port>
   </service>
 </definitions>

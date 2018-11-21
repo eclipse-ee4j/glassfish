@@ -23,6 +23,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0</version>
+        <relativePath/>
     </parent>
     <groupId>org.glassfish.quicklook</groupId>
     <artifactId>quicklook</artifactId>

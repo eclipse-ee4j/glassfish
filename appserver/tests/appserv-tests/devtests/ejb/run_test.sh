@@ -17,11 +17,10 @@
 
 test_run_ejb(){
 
-	rm -rf $S1AS_HOME/domains/domain1
-	cd $APS_HOME
+	rm -rf ${S1AS_HOME}/domains/domain1
+	cd ${APS_HOME}
 	echo "AS_ADMIN_PASSWORD=" > temppwd
-	cat $APS_HOME/temppwd
-
+	cat ${APS_HOME}/temppwd
 
 	ADMIN_PORT=45707
 	JMS_PORT=45708
@@ -35,9 +34,16 @@ test_run_ejb(){
 	DB_PORT=45716
 	DB_PORT_2=45717
 
-	$S1AS_HOME/bin/asadmin --user anonymous --passwordfile $APS_HOME/temppwd create-domain --adminport ${ADMIN_PORT} --domainproperties jms.port=${JMS_PORT}:domain.jmxPort=${JMX_PORT}:orb.listener.port=${ORB_PORT}:http.ssl.port=${SSL_PORT}:orb.ssl.port=${ORB_SSL_PORT}:orb.mutualauth.port=${ORB_SSL_MUTUALAUTH_PORT} --instanceport ${INSTANCE_PORT} domain1
+	${S1AS_HOME}/bin/asadmin \
+		--user anonymous \
+		--passwordfile ${APS_HOME}/temppwd \
+		create-domain \
+			--adminport ${ADMIN_PORT} \
+			--domainproperties jms.port=${JMS_PORT}:domain.jmxPort=${JMX_PORT}:orb.listener.port=${ORB_PORT}:http.ssl.port=${SSL_PORT}:orb.ssl.port=${ORB_SSL_PORT}:orb.mutualauth.port=${ORB_SSL_MUTUALAUTH_PORT} \
+			--instanceport ${INSTANCE_PORT} \
+			domain1
 
-	#Create 
+	# Create
 	echo "admin.domain=domain1
 	admin.domain.dir=\${env.S1AS_HOME}/domains
 	admin.port=${ADMIN_PORT}
@@ -66,54 +72,58 @@ test_run_ejb(){
 
 	(jps |grep Main |cut -f1 -d" " | xargs kill -9  > /dev/null 2>&1) || true
 
-	cd $S1AS_HOME/domains/domain1/config/
+	cd ${S1AS_HOME}/domains/domain1/config/
 	sed "s/1527/${DB_PORT}/g" domain.xml > domain.xml.replaced
 	mv domain.xml.replaced domain.xml
 	grep PortNumber domain.xml
 
-	cd $APS_HOME/config
+	cd ${APS_HOME}/config
 	(rm derby.properties.replaced  > /dev/null 2>&1) || true
 	sed "s/1527/${DB_PORT}/g" derby.properties > derby.properties.replaced
 	rm derby.properties
 	sed "s/1528/${DB_PORT_2}/g" derby.properties.replaced > derby.properties
 	cat derby.properties
-	rm -rf $APS_HOME/test_results*
-	cd $APS_HOME/devtests/ejb
+	rm -rf ${APS_HOME}/test_results*
+	cd ${APS_HOME}/devtests/ejb
 	rm count.txt || true
 
-	ant $TARGET report-result -Ddb.port=${DB_PORT} -Ddb.port.2=${DB_PORT_2} |tee $TEST_RUN_LOG
-
+	ant ${TARGET} report-result -Ddb.port=${DB_PORT} -Ddb.port.2=${DB_PORT_2} |tee $TEST_RUN_LOG
 }
 
 test_run_ejb_web(){
 
 	rm -rf $S1AS_HOME/domains/domain1
 
-	ADMIN_PORT=45707
-	JMS_PORT=45708
-	JMX_PORT=45709
-	ORB_PORT=45710
-	SSL_PORT=45711
-	INSTANCE_PORT=45712
-	INSTANCE_HTTPS_PORT=45718
-	INSTANCE_PORT_2=45719
-	INSTANCE_PORT_3=45720
-	ALTERNATE_PORT=45713
-	ORB_SSL_PORT=45714
-	ORB_SSL_MUTUALAUTH_PORT=45715
-	DB_PORT=45716
-	DB_PORT_2=45717
-
-	export ADMIN_PORT JMS_PORT JMX_PORT ORB_PORT SSL_PORT INSTANCE_PORT INSTANCE_HTTPS_PORT INSTANCE_PORT_2 INSTANCE_PORT_3 ALTERNATE_PORT ORB_SSL_PORT ORB_SSL_MUTUALAUTH_PORT DB_PORT DB_PORT_2
+	export ADMIN_PORT=45707 \
+				 JMS_PORT=45708 \
+				 JMX_PORT=45709 \
+				 ORB_PORT=45710 \
+				 SSL_PORT=45711 \
+				 INSTANCE_PORT=45712 \
+				 INSTANCE_HTTPS_PORT=45718 \
+				 INSTANCE_PORT_2=45719 \
+				 INSTANCE_PORT_3=45720 \
+				 ALTERNATE_PORT=45713 \
+				 ORB_SSL_PORT=45714 \
+				 ORB_SSL_MUTUALAUTH_PORT=45715 \
+				 DB_PORT=45716 \
+				 DB_PORT_2=45717
 	env
 
-	cd $APS_HOME
+	cd ${APS_HOME}
 
 	echo "AS_ADMIN_PASSWORD=" > temppwd
-	cat $APS_HOME/temppwd
-	$S1AS_HOME/bin/asadmin --user anonymous --passwordfile $APS_HOME/temppwd create-domain --adminport ${ADMIN_PORT} --domainproperties jms.port=${JMS_PORT}:domain.jmxPort=${JMX_PORT}:orb.listener.port=${ORB_PORT}:http.ssl.port=${SSL_PORT}:orb.ssl.port=${ORB_SSL_PORT}:orb.mutualauth.port=${ORB_SSL_MUTUALAUTH_PORT} --instanceport ${INSTANCE_PORT} domain1
+	cat ${APS_HOME}/temppwd
+	${S1AS_HOME}/bin/asadmin \
+		--user anonymous \
+		--passwordfile ${APS_HOME}/temppwd \
+		create-domain \
+			--adminport ${ADMIN_PORT} \
+			--domainproperties jms.port=${JMS_PORT}:domain.jmxPort=${JMX_PORT}:orb.listener.port=${ORB_PORT}:http.ssl.port=${SSL_PORT}:orb.ssl.port=${ORB_SSL_PORT}:orb.mutualauth.port=${ORB_SSL_MUTUALAUTH_PORT} \
+			--instanceport ${INSTANCE_PORT} \
+			domain1
 
-	#Create 
+	# Create
 	echo "admin.domain=domain1
 	admin.domain.dir=\${env.S1AS_HOME}/domains
 	admin.port=${ADMIN_PORT}
@@ -142,57 +152,60 @@ test_run_ejb_web(){
 
 	(jps |grep Main |cut -f1 -d" " | xargs kill -9  > /dev/null 2>&1) || true
 
-	cd $S1AS_HOME/domains/domain1/config/
+	cd ${S1AS_HOME}/domains/domain1/config/
 	sed "s/1527/${DB_PORT}/g" domain.xml > domain.xml.replaced
 	mv domain.xml.replaced domain.xml
 	grep PortNumber domain.xml
 
-	cd $APS_HOME/config
+	cd ${APS_HOME}/config
 	(rm derby.properties.replaced  > /dev/null 2>&1) || true
 	sed "s/1527/${DB_PORT}/g" derby.properties > derby.properties.replaced
 	rm derby.properties
 	sed "s/1528/${DB_PORT_2}/g" derby.properties.replaced > derby.properties
 	cat derby.properties
-	cd $APS_HOME/devtests/ejb
+	cd ${APS_HOME}/devtests/ejb
 	rm count.txt || true
-	ant $TARGET report-result -Ddb.port=${DB_PORT} -Ddb.port.2=${DB_PORT_2} |tee $TEST_RUN_LOG
-	cat $S1AS_HOME/databases/derby.log
-	egrep 'FAILED= *0' count.txt
-	egrep 'DID NOT RUN= *0' count.txt
-
+	ant ${TARGET} report-result -Ddb.port=${DB_PORT} -Ddb.port.2=${DB_PORT_2} |tee $TEST_RUN_LOG
+	cat ${S1AS_HOME}/databases/derby.log
+	egrep 'DID NOT RUN= *0' count.txt || true
 }
 
 
 test_run_ejb_timer_cluster(){
 
-	rm -rf $S1AS_HOME/domains/domain1
+	rm -rf ${S1AS_HOME}/domains/domain1
 
-	ADMIN_PORT=45707
-	JMS_PORT=45708
-	JMX_PORT=45709
-	ORB_PORT=45710
-	SSL_PORT=45711
-	INSTANCE_PORT=45712
-	INSTANCE_HTTP_PORT=45721
-	INSTANCE_HTTPS_PORT=45718
-	INSTANCE_PORT_2=45719
-	INSTANCE_PORT_3=45720
-	ALTERNATE_PORT=45713
-	ORB_SSL_PORT=45714
-	ORB_SSL_MUTUALAUTH_PORT=45715
-	DB_PORT=45716
-	DB_PORT_2=45717
-
-	export ADMIN_PORT JMS_PORT JMX_PORT ORB_PORT SSL_PORT INSTANCE_PORT INSTANCE_HTTP_PORT INSTANCE_HTTPS_PORT INSTANCE_PORT_2 INSTANCE_PORT_3 ALTERNATE_PORT ORB_SSL_PORT ORB_SSL_MUTUALAUTH_PORT DB_PORT DB_PORT_2
+	export ADMIN_PORT=45707 \
+				 JMS_PORT=45708 \
+				 JMX_PORT=45709 \
+				 ORB_PORT=45710 \
+				 SSL_PORT=45711 \
+				 INSTANCE_PORT=45712 \
+				 INSTANCE_HTTP_PORT=45721 \
+				 INSTANCE_HTTPS_PORT=45718 \
+				 INSTANCE_PORT_2=45719 \
+				 INSTANCE_PORT_3=45720 \
+				 ALTERNATE_PORT=45713 \
+				 ORB_SSL_PORT=45714 \
+				 ORB_SSL_MUTUALAUTH_PORT=45715 \
+				 DB_PORT=45716 \
+				 DB_PORT_2=45717
 	env
 
-	cd $APS_HOME
+	cd ${APS_HOME}
 
 	echo "AS_ADMIN_PASSWORD=" > temppwd
-	cat $APS_HOME/temppwd
-	$S1AS_HOME/bin/asadmin --user anonymous --passwordfile $APS_HOME/temppwd create-domain --adminport ${ADMIN_PORT} --domainproperties jms.port=${JMS_PORT}:domain.jmxPort=${JMX_PORT}:orb.listener.port=${ORB_PORT}:http.ssl.port=${SSL_PORT}:orb.ssl.port=${ORB_SSL_PORT}:orb.mutualauth.port=${ORB_SSL_MUTUALAUTH_PORT} --instanceport ${INSTANCE_PORT} domain1
+	cat ${APS_HOME}/temppwd
+	${S1AS_HOME}/bin/asadmin \
+		--user anonymous \
+		--passwordfile ${APS_HOME}/temppwd \
+		create-domain \
+			--adminport ${ADMIN_PORT} \
+			--domainproperties jms.port=${JMS_PORT}:domain.jmxPort=${JMX_PORT}:orb.listener.port=${ORB_PORT}:http.ssl.port=${SSL_PORT}:orb.ssl.port=${ORB_SSL_PORT}:orb.mutualauth.port=${ORB_SSL_MUTUALAUTH_PORT} \
+			--instanceport ${INSTANCE_PORT} \
+			domain1
 
-	#Create 
+	# Create
 	echo "admin.domain=domain1
 	admin.domain.dir=\${env.S1AS_HOME}/domains
 	admin.port=${ADMIN_PORT}
@@ -223,28 +236,24 @@ test_run_ejb_timer_cluster(){
 
 	(jps |grep Main |cut -f1 -d" " | xargs kill -9  > /dev/null 2>&1) || true
 
-	cd $S1AS_HOME/domains/domain1/config/
+	cd ${S1AS_HOME}/domains/domain1/config/
 	sed "s/1527/${DB_PORT}/g" domain.xml > domain.xml.replaced
 	mv domain.xml.replaced domain.xml
 	grep PortNumber domain.xml
 
-	cd $APS_HOME/config
+	cd ${APS_HOME}/config
 	(rm derby.properties.replaced  > /dev/null 2>&1) || true
 	sed "s/1527/${DB_PORT}/g" derby.properties > derby.properties.replaced
 	rm derby.properties
 	sed "s/1528/${DB_PORT_2}/g" derby.properties.replaced > derby.properties
 	cat derby.properties
 
-	pushd $APS_HOME/devtests/ejb/ee/timer
+	pushd ${APS_HOME}/devtests/ejb/ee/timer
 
-	ant $TARGET |tee $TEST_RUN_LOG
-	antStatus=$?
-
+	ant ${TARGET} |tee ${TEST_RUN_LOG}
+	antStatus=${?}
 	ant dev-report
-
 }
-
-
 
 get_test_target(){
 	case $1 in
@@ -252,63 +261,50 @@ get_test_target(){
 			TARGET=all ;;
 		ejb_web_all)
 			TARGET=lite ;;
-                 * )
-                       TARGET=$1 ;;
+    * )
+      TARGET=$1 ;;
 	esac
 	export TARGET
-
 }
 
 
 run_test_id(){
-	source `dirname $0`/../../../common_test.sh
-	kill_process
-	delete_gf
-	if [[ $1 = "ejb_web_all" ]]; then
-		download_test_resources web.zip version-info.txt
-		unzip_test_resources $WORKSPACE/bundles/web.zip
+	if [[ ${1} = "ejb_web_all" ]]; then
+		unzip_test_resources ${WORKSPACE}/bundles/web.zip
 	else
-		download_test_resources glassfish.zip version-info.txt
-		unzip_test_resources $WORKSPACE/bundles/glassfish.zip
+		unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
 	fi
 	dname=`pwd`
-	cd `dirname $0`
+	cd `dirname ${0}`
 	test_init
-	get_test_target $1
-	if [[ $1 = "ejb_all" || $1 = "ejb_group"* ]]; then
+	get_test_target ${1}
+	if [[ ${1} = "ejb_all" || ${1} = "ejb_group"* ]]; then
 		test_run_ejb
-	elif [[ $1 = "ejb_timer_cluster_all" ]]; then
+	elif [[ ${1} = "ejb_timer_cluster_all" ]]; then
 		test_run_ejb_timer_cluster
-	elif [[ $1 = "ejb_web_all" ]]; then
+	elif [[ ${1} = "ejb_web_all" ]]; then
 		test_run_ejb_web
 	else
 		echo "Invalid Test ID"
 		exit 1
 	fi
 	check_successful_run
-    generate_junit_report $1    
-    change_junit_report_class_names
+  generate_junit_report ${1}
+  change_junit_report_class_names
 }
-
-post_test_run(){
-    copy_test_artifects
-    upload_test_results
-    delete_bundle
-    cd ${dname}
-}
-
 
 list_test_ids(){
 	echo ejb_all ejb_timer_cluster_all ejb_web_all ejb_group_1 ejb_group_2 ejb_group_3
 }
 
-OPT=$1
-TEST_ID=$2
+OPT=${1}
+TEST_ID=${2}
+source `dirname ${0}`/../../../common_test.sh
 
-case $OPT in
+case ${OPT} in
 	list_test_ids )
 		list_test_ids;;
 	run_test_id )
-		trap post_test_run EXIT
-		run_test_id $TEST_ID ;;
+		trap "copy_test_artifacts ${TEST_ID}" EXIT
+		run_test_id ${TEST_ID} ;;
 esac

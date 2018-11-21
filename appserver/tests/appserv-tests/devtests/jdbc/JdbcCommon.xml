@@ -385,7 +385,7 @@
               <jvmarg value="-Dderby.system.home=${env.S1AS_HOME}/databases"/>
           </java>
       </parallel>
-      <sleep seconds="5"/>
+      <sleep seconds="15"/>
    </target>
 
    <target name="stop-derby" depends="init-common">

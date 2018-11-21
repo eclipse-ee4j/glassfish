@@ -63,6 +63,7 @@ archive_bundles(){
 }
 
 dev_build(){
+  rm -rf ${HOME}/.m2/repository/com/sun/mail
   mvn -U clean install -Dmaven.test.failure.ignore=true -Pstaging
 }
 

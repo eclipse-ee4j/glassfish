@@ -84,19 +84,10 @@ def generateStage(job) {
             node(label) {
                 stage("${job}") {
                     container('glassfish-ci') {
-                      // do the checkout manually
-                      unstash 'scm'
+                      // do the scm checkout
                       retry(10) {
                         sleep 60
-                        sh '''
-                          rm -rf .git && git init .
-                          cp .GIT_CONFIG .git/config
-                          GIT_COMMIT=$(cat .GIT_COMMIT)
-                          git fetch --no-tags --progress \
-                            $(git config remote.origin.url) \
-                            +refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}
-                          git checkout -b ${BRANCH_NAME} ${GIT_COMMIT}
-                        '''
+                        checkout scm
                       }
                       // run the test
                       unstash 'build-bundles'
@@ -208,12 +199,6 @@ spec:
         container('glassfish-ci') {
           timeout(time: 1, unit: 'HOURS') {
             checkout scm
-            // save git info to do manual checkout on later stages
-            sh '''
-              cp .git/config .GIT_CONFIG
-              cp .git/$(cat .git/HEAD | awk '{print $2}') .GIT_COMMIT
-            '''
-            stash includes: '.GIT_*', name: 'scm'
             // do the build
             sh '''
               bash -xe ./gfbuild.sh build_re_dev

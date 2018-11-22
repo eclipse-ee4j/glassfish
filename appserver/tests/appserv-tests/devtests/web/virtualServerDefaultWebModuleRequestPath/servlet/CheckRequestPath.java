@@ -47,6 +47,10 @@ public class CheckRequestPath extends HttpServlet {
             throw new ServletException();
         }
 
+        System.out.println("CheckRequestPath: "
+            + String.format("host=%s, port=%d, expectedRequestURI=%s, expectedRequestURL=%s, expectedCtxtRoot=%s, req.getContextPath=%s, req.getRequestURL=%s, req.getRequestURI=%s",
+                host, port, expectedRequestURI, expectedRequestURL, expectedCtxtRoot, req.getContextPath(), req.getRequestURL().toString(), req.getRequestURI()));
+
         if (!expectedCtxtRoot.equals(req.getContextPath()) ||
                 !expectedRequestURL.equals(req.getRequestURL().toString()) ||
                 !expectedRequestURI.equals(req.getRequestURI())) {

@@ -72,7 +72,7 @@ public class WebTest {
     }
 
     public void doTest() throws Exception {
-     
+
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/junk HTTP/1.0\n";

@@ -55,7 +55,7 @@
         <cdi-api.version>2.0</cdi-api.version>
         <javax.inject.version>1</javax.inject.version>
         <jakarta.resource-api.version>1.7.2</jakarta.resource-api.version>
-        <javax.enterprise.deploy-api.version>1.7</javax.enterprise.deploy-api.version>
+        <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
         <javax.security.jacc-api.version>1.6</javax.security.jacc-api.version>
         <javax.security.auth.message-api.version>1.1.1</javax.security.auth.message-api.version>
         <!-- Ensure that nucleus/pom.xml's javax.validation property is of same value as the one below -->
@@ -415,8 +415,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.enterprise.deploy</groupId>
-                                <artifactId>javax.enterprise.deploy-api</artifactId>
+                                <groupId>jakarta.enterprise.deploy</groupId>
+                                <artifactId>jakarta.enterprise.deploy-api</artifactId>
                                 <version>${javax.enterprise.deploy-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -554,8 +554,8 @@
                 <version>${jakarta.resource-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.enterprise.deploy</groupId>
-                <artifactId>javax.enterprise.deploy-api</artifactId>
+                <groupId>jakarta.enterprise.deploy</groupId>
+                <artifactId>jakarta.enterprise.deploy-api</artifactId>
                 <version>${javax.enterprise.deploy-api.version}</version>
             </dependency>
             <dependency>

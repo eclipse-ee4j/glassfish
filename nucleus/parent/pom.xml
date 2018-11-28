@@ -1091,17 +1091,4 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-          <id>jvnet-nexus-release</id>
-          <name>Java.net Release Repository</name>
-          <url>https://maven.java.net/content/repositories/releases</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-    </repositories>
 </project>

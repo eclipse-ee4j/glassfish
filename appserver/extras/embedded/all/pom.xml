@@ -1350,8 +1350,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
+            <groupId>jakarta.websocket</groupId>
+            <artifactId>jakarta.websocket-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

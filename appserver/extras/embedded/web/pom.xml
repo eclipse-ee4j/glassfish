@@ -421,8 +421,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>javax.enterprise.deploy</groupId>
-        <artifactId>javax.enterprise.deploy-api</artifactId>
+        <groupId>jakarta.enterprise.deploy</groupId>
+        <artifactId>jakarta.enterprise.deploy-api</artifactId>
         <optional>true</optional>
     </dependency>
     <!-- nucleus-cluster -->
@@ -676,8 +676,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>javax.management.j2ee</groupId>
-        <artifactId>javax.management.j2ee-api</artifactId>
+        <groupId>jakarta.management.j2ee</groupId>
+        <artifactId>jakarta.management.j2ee-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -1348,8 +1348,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>javax.json.bind</groupId>
-        <artifactId>javax.json.bind-api</artifactId>
+        <groupId>jakarta.json.bind</groupId>
+        <artifactId>jakarta.json.bind-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>

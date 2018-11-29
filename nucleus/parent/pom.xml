@@ -364,7 +364,7 @@
                                 <include>javax.enterprise.concurrent</include>
                                 <include>javax.ws.rs</include>
                                 <include>javax.xml.registry</include>
-                                <include>javax.websocket</include>
+                                <include>jakarta.websocket</include>
                                 <include>org.glassfish.jersey</include>
                             </includes>
                         </configuration>

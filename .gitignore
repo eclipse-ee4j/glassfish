@@ -8,6 +8,7 @@
 target/
 .idea
 nbactions.xml
+nb-configuration.xml
 .classpath
 .DS_Store
 .project

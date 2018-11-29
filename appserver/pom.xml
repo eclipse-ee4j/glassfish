@@ -307,15 +307,15 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.servlet</groupId>
-                                <artifactId>javax.servlet-api</artifactId>
+                                <groupId>jakarta.servlet</groupId>
+                                <artifactId>jakarta.servlet-api</artifactId>
                                 <version>${servlet-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
                             <specVersion>3.1</specVersion>
                             <specImplVersion>${servlet-api.version}</specImplVersion>
-                            <apiPackage>javax.servlet</apiPackage>
+                            <apiPackage>jakarta.servlet</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -562,6 +562,12 @@
                 <groupId>javax.security.jacc</groupId>
                 <artifactId>javax.security.jacc-api</artifactId>
                 <version>${javax.security.jacc-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>javax.servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>javax.security.auth.message</groupId>
@@ -730,6 +736,13 @@
                 <groupId>com.sun.jsftemplating</groupId>
                 <artifactId>jsftemplating</artifactId>
                 <version>${jsftemplating.version}</version>
+
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>javax.servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.sun.jsftemplating</groupId>

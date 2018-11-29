@@ -76,20 +76,14 @@ if [ -z "${WORKSPACE}" ] ; then
   export WORKSPACE=`dirname ${0}`
 fi
 
-if [ ! -z "${JENKINS_HOME}" ] ; then
-
-  # inject internal environment
-  readonly GF_INTERNAL_ENV_SH=$(mktemp -t XXXgf-internal-env)
-  if [ ! -z "${GF_INTERNAL_ENV}" ] ; then
-    echo "${GF_INTERNAL_ENV}" | base64 -d > ${GF_INTERNAL_ENV_SH}
-    . ${GF_INTERNAL_ENV_SH}
-    export MAVEN_OPTS="${MAVEN_OPTS} ${ANT_OPTS}"
-  fi
-fi
-
 "$@"
 
 if [ ! -z "${JENKINS_HOME}" ] ; then
+  # archive the local repository org.glassfish.main
+  # the output is a tar archive split into 1MB chunks.
+  tar -cz -f - -C ${HOME}/.m2/repository org/glassfish/main | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
+fi
+ then
   # archive the local repository org.glassfish.main
   # the output is a tar archive split into 1MB chunks.
   tar -cz -f - -C ${HOME}/.m2/repository org/glassfish/main | split -b 1m - ${WORKSPACE}/bundles/_maven-repo

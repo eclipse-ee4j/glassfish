@@ -123,8 +123,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise.concurrent</groupId>
-            <artifactId>javax.enterprise.concurrent-api</artifactId>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
             <optional>true</optional>
         </dependency>
        <dependency>
@@ -135,8 +135,8 @@
         
         <!-- optional -->
         <dependency>
-            <groupId>javax.enterprise.deploy</groupId>
-            <artifactId>javax.enterprise.deploy-api</artifactId>
+            <groupId>jakarta.enterprise.deploy</groupId>
+            <artifactId>jakarta.enterprise.deploy-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

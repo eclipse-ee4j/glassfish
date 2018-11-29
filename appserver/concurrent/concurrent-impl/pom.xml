@@ -80,12 +80,12 @@
             <optional>true</optional>
         </dependency>
        <dependency>
-            <groupId>javax.enterprise.concurrent</groupId>
-            <artifactId>javax.enterprise.concurrent-api</artifactId>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
         </dependency>
        <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.enterprise.concurrent</artifactId>
+            <artifactId>jakarta.enterprise.concurrent</artifactId>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>

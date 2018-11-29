@@ -100,8 +100,8 @@
         <jsonp-jaxrs.version>1.1.3</jsonp-jaxrs.version>
         <json.bind-api.version>1.0.1</json.bind-api.version>
         <yasson.version>1.0.3</yasson.version>
-        <concurrent-api.version>1.1</concurrent-api.version>
-        <concurrent.version>1.1</concurrent.version>
+        <concurrent-api.version>1.1.1</concurrent-api.version>
+        <concurrent.version>1.1.1</concurrent.version>
         <javax.batch-api.version>1.0.1</javax.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
@@ -168,7 +168,7 @@
                 <version>1.5</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
-                    <excludes>javax.inject.jar,javax.servlet.jsp.jstl.jar,javax.servlet.jsp.jar,javax.enterprise.concurrent.jar, javax.persistence.jar</excludes>
+                    <excludes>javax.inject.jar,javax.servlet.jsp.jstl.jar,javax.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, javax.persistence.jar</excludes>
                     <specs>
                         <spec>
                             <artifact>
@@ -295,8 +295,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.enterprise.concurrent</groupId>
-                                <artifactId>javax.enterprise.concurrent-api</artifactId>
+                                <groupId>jakarta.enterprise.concurrent</groupId>
+                                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
                                 <version>${concurrent-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -887,13 +887,13 @@
                 <version>${websocket-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.enterprise.concurrent</groupId>
-                <artifactId>javax.enterprise.concurrent-api</artifactId>
+                <groupId>jakarta.enterprise.concurrent</groupId>
+                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
                 <version>${concurrent-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.enterprise.concurrent</artifactId>
+                <artifactId>jakarta.enterprise.concurrent</artifactId>
                 <version>${concurrent.version}</version>
             </dependency>
             <dependency>

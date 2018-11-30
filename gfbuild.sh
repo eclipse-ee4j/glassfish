@@ -83,8 +83,3 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   # the output is a tar archive split into 1MB chunks.
   tar -cz -f - -C ${HOME}/.m2/repository org/glassfish/main | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
 fi
- then
-  # archive the local repository org.glassfish.main
-  # the output is a tar archive split into 1MB chunks.
-  tar -cz -f - -C ${HOME}/.m2/repository org/glassfish/main | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
-fi

@@ -91,7 +91,7 @@
 
         <!-- nucleus-shoal -->
         <dependency>
-            <groupId>org.shoal</groupId>
+            <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-gms-api</artifactId>
             <exclusions>
                 <exclusion>
@@ -101,7 +101,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.shoal</groupId>
+            <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-gms-impl</artifactId>
             <exclusions>
                 <exclusion>

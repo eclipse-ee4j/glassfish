@@ -61,11 +61,11 @@
         </dependency>
 
         <dependency>
-            <groupId>org.shoal</groupId>
+            <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-gms-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.shoal</groupId>
+            <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-gms-impl</artifactId>
         </dependency>
         <dependency>

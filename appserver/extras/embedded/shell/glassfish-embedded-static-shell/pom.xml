@@ -216,7 +216,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.shoal</groupId>
+            <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-gms-api</artifactId>
             <optional>true</optional>
         </dependency>

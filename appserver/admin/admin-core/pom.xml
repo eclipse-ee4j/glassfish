@@ -30,6 +30,18 @@
     <name>admin-core</name>
     <description>Admin Core</description>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>always</forkMode>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>

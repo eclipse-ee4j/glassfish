@@ -293,7 +293,7 @@
         /lib/
         \lib\
         javax.el.jar
-        javax.servlet-api.jar
+        jakarta.servlet-api.jar
         javax.servlet.jsp-api.jar
         javax.servlet.jsp.jstl-api.jar
         javax.servlet.jsp.jstl.jar

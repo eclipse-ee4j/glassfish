@@ -47,7 +47,7 @@
         <mojarra.version>2.3.3.102</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.15</woodstock.version>
-        <javax.ejb-api.version>3.2.2</javax.ejb-api.version>
+        <javax.ejb-api.version>3.2.3</javax.ejb-api.version>
         <javax.interceptor-api.version>1.2.2</javax.interceptor-api.version>
         <javax.xml.rpc-api.version>1.1.2</javax.xml.rpc-api.version>
         <javax.transaction-api.version>1.3.1</javax.transaction-api.version>
@@ -355,8 +355,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.ejb</groupId>
-                                <artifactId>javax.ejb-api</artifactId>
+                                <groupId>jakarta.ejb</groupId>
+                                <artifactId>jakarta.ejb-api</artifactId>
                                 <version>${javax.ejb-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -509,8 +509,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>javax.ejb</groupId>
-                <artifactId>javax.ejb-api</artifactId>
+                <groupId>jakarta.ejb</groupId>
+                <artifactId>jakarta.ejb-api</artifactId>
                 <version>${javax.ejb-api.version}</version>
             </dependency>
             <dependency>

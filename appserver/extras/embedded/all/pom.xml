@@ -1554,12 +1554,7 @@
         <!-- glassfish-json -->
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
+            <artifactId>jakarta.json</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

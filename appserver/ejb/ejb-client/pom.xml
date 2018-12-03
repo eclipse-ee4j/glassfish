@@ -66,8 +66,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
         </dependency>
         <!-- these 2 dependencies are for compilation only  -->
 <!--

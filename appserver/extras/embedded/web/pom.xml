@@ -950,7 +950,7 @@
     <!-- glassfish-jsf -->
     <dependency>
         <groupId>org.glassfish</groupId>
-        <artifactId>jakarta.faces</artifactId>
+        <artifactId>javax.faces</artifactId>
         <optional>true</optional>
     </dependency>
     <!-- glassfish-web -->

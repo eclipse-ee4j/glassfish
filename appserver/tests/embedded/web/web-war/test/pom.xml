@@ -154,8 +154,8 @@
 
         <dependency>
           <groupId>org.glassfish</groupId>
-          <artifactId>jakarta.faces</artifactId>
-          <version>2.3.9</version>
+          <artifactId>javax.faces</artifactId>
+          <version>2.1.6</version>
             <scope>test</scope>
         </dependency>
 

@@ -118,12 +118,12 @@
         <!-- work around for GLASSFISH-19861  -->
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.faces</artifactId>
+            <artifactId>javax.faces</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.faces</groupId>
-            <artifactId>jakarta.faces-api</artifactId>
+            <groupId>javax.faces</groupId>
+            <artifactId>javax.faces-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

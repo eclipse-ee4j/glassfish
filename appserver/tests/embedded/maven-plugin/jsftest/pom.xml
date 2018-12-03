@@ -65,8 +65,8 @@
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.faces</groupId>
-            <artifactId>jakarta.faces-api</artifactId>
+            <groupId>javax.faces</groupId>
+            <artifactId>javax.faces-api</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

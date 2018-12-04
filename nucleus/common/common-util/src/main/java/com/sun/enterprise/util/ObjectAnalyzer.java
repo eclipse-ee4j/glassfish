@@ -265,7 +265,7 @@ public class ObjectAnalyzer {
 
     ////////////////////////////////////////////////////////////////////////////
     private static void setupSetAccessibleMethod() {
-        // whoa!  what's this reflection crap doing here?
+        // whoa!  what's this reflection stuff doing here?
         // AccessibleObject is a JDK 1.2 class that lets you peek at
         // private variable values.  Since we need to support JDK 1.1
         // for the VCafe plug-in -- it is now called via 100% reflection

@@ -31,9 +31,9 @@
 	<name>EJB static simple test</name>
     <dependencies>
         <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
-            <version>3.2-b01</version>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>3.2.3</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

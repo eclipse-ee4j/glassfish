@@ -26,6 +26,10 @@
 	<import file="${basedir}/gfproject/utils.xml"/>
     
     <description>Builds, tests, and runs the project V3 Quicklook</description>
+    
+    <presetdef name="javac">
+        <javac includeantruntime="false" />
+    </presetdef>
 
     <target name="all_cluster">
         <record name="${basedir}/allrun.output" action="start"/>

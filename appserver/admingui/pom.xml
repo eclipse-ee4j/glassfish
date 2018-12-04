@@ -149,7 +149,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.faces</artifactId>
+            <artifactId>javax.faces</artifactId>
 	    <scope>provided</scope>
         </dependency>
         <dependency>

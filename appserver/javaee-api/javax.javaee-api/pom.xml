@@ -88,7 +88,7 @@
         <!-- work around for GLASSFISH-19861  -->
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.faces</artifactId>
+            <artifactId>javax.faces</artifactId>
             <optional>true</optional>
         </dependency>        
         
@@ -118,8 +118,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.security.jacc</groupId>
-            <artifactId>javax.security.jacc-api</artifactId>
+            <groupId>jakarta.security.jacc</groupId>
+            <artifactId>jakarta.security.jacc-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -140,13 +140,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.xml.registry</groupId>
-            <artifactId>javax.xml.registry-api</artifactId>
+            <groupId>jakarta.xml.registry</groupId>
+            <artifactId>jakarta.xml.registry-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.xml.rpc</groupId>
-            <artifactId>javax.xml.rpc-api</artifactId>
+            <groupId>jakarta.xml.rpc</groupId>
+            <artifactId>jakarta.xml.rpc-api</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

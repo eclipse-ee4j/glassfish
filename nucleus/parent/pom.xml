@@ -106,7 +106,7 @@
         <jersey.version>2.27</jersey.version>
         <jackson.version>2.9.4</jackson.version>
         <jettison.version>1.3.7</jettison.version>
-        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <jaxb-api.version>2.3.2</jaxb-api.version>
         <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>2.1</jax-rs-api.impl.version>
         <mimepull.version>1.9.10</mimepull.version>
@@ -119,7 +119,7 @@
         <command-security-plugin.version>1.0.9</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
         <mail.version>1.6.3</mail.version>
-        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+        <jakarta.annotation-api.version>1.3.4</jakarta.annotation-api.version>
         <copyright-plugin.version>1.50</copyright-plugin.version>
         <testng.version>6.11</testng.version>
         <jdk.version>1.7.0-09</jdk.version>
@@ -693,9 +693,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>${javax.annotation-api.version}</version>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>${jakarta.annotation-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.el</groupId>

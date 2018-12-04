@@ -590,8 +590,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.security.auth.message</groupId>
-            <artifactId>javax.security.auth.message-api</artifactId>
+            <groupId>jakarta.security.auth.message</groupId>
+            <artifactId>jakarta.security.auth.message-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -600,8 +600,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.security.jacc</groupId>
-            <artifactId>javax.security.jacc-api</artifactId>
+            <groupId>jakarta.security.jacc</groupId>
+            <artifactId>jakarta.security.jacc-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1177,7 +1177,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
-            <artifactId>javax.security.enterprise</artifactId>
+            <artifactId>jakarta.security.enterprise</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1186,8 +1186,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.security.enterprise</groupId>
-            <artifactId>javax.security.enterprise-api</artifactId>
+            <groupId>jakarta.security.enterprise</groupId>
+            <artifactId>jakarta.security.enterprise-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

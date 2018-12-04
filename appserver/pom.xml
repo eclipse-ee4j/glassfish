@@ -56,12 +56,12 @@
         <javax.inject.version>1</javax.inject.version>
         <jakarta.resource-api.version>1.7.2</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
-        <javax.security.jacc-api.version>1.6</javax.security.jacc-api.version>
-        <javax.security.auth.message-api.version>1.1.1</javax.security.auth.message-api.version>
+        <jakarta.security.jacc-api.version>1.6.1</jakarta.security.jacc-api.version>
+        <jakarta.security.auth.message-api.version>1.1.2</jakarta.security.auth.message-api.version>
         <!-- Ensure that nucleus/pom.xml's javax.validation property is of same value as the one below -->
         <javax.validation-api.version>2.0.0.Final</javax.validation-api.version>
-        <javax.security.enterprise-api.version>1.0</javax.security.enterprise-api.version>
-        <javax.security.enterprise.version>1.0</javax.security.enterprise.version>
+        <jakarta.security.enterprise-api.version>1.0.1</jakarta.security.enterprise-api.version>
+        <jakarta.security.enterprise.version>1.0.1</jakarta.security.enterprise.version>
 
         <product.name>GlassFish Server Open Source Edition</product.name>
         <brief_product_name>GlassFish Server</brief_product_name>
@@ -222,27 +222,27 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.security.jacc</groupId>
-                                <artifactId>javax.security.jacc-api</artifactId>
-                                <version>${javax.security.jacc-api.version}</version>
+                                <groupId>jakarta.security.jacc</groupId>
+                                <artifactId>jakarta.security.jacc-api</artifactId>
+                                <version>${jakarta.security.jacc-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${javax.security.jacc-api.version}</specVersion>
-                            <specImplVersion>${javax.security.jacc-api.version}</specImplVersion>
-                            <apiPackage>javax.security.jacc</apiPackage>
+                            <specVersion>${jakarta.security.jacc-api.version}</specVersion>
+                            <specImplVersion>${jakarta.security.jacc-api.version}</specImplVersion>
+                            <apiPackage>jakarta.security.jacc</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.security.auth.message</groupId>
-                                <artifactId>javax.security.auth.message-api</artifactId>
-                                <version>${javax.security.auth.message-api.version}</version>
+                                <groupId>jakarta.security.auth.message</groupId>
+                                <artifactId>jakarta.security.auth.message-api</artifactId>
+                                <version>${jakarta.security.auth.message-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${javax.security.auth.message-api.version}</specVersion>
-                            <specImplVersion>${javax.security.auth.message-api.version}</specImplVersion>
-                            <apiPackage>javax.security.auth.message</apiPackage>
+                            <specVersion>${jakarta.security.auth.message-api.version}</specVersion>
+                            <specImplVersion>${jakarta.security.auth.message-api.version}</specImplVersion>
+                            <apiPackage>jakarta.security.auth.message</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -462,14 +462,14 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.security.enterprise</groupId>
-                                <artifactId>javax.security.enterprise-api</artifactId>
-                                <version>${javax.security.enterprise-api.version}</version>
+                                <groupId>jakarta.security.enterprise</groupId>
+                                <artifactId>jakarta.security.enterprise-api</artifactId>
+                                <version>${jakarta.security.enterprise-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${javax.security.enterprise-api.version}</specVersion>
-                            <specImplVersion>${javax.security.enterprise.version}</specImplVersion>
+                            <specVersion>${jakarta.security.enterprise-api.version}</specVersion>
+                            <specImplVersion>${jakarta.security.enterprise.version}</specImplVersion>
                             <apiPackage>javax.security.enterprise</apiPackage>
                             <implNamespace>org.glassfish.soteria</implNamespace>
                         </spec>
@@ -558,9 +558,9 @@
                 <version>${javax.enterprise.deploy-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.security.jacc</groupId>
-                <artifactId>javax.security.jacc-api</artifactId>
-                <version>${javax.security.jacc-api.version}</version>
+                <groupId>jakarta.security.jacc</groupId>
+                <artifactId>jakarta.security.jacc-api</artifactId>
+                <version>${jakarta.security.jacc-api.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>javax.servlet</groupId>
@@ -569,9 +569,9 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>javax.security.auth.message</groupId>
-                <artifactId>javax.security.auth.message-api</artifactId>
-                <version>${javax.security.auth.message-api.version}</version>
+                <groupId>jakarta.security.auth.message</groupId>
+                <artifactId>jakarta.security.auth.message-api</artifactId>
+                <version>${jakarta.security.auth.message-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
@@ -961,13 +961,13 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
-                <artifactId>javax.security.enterprise</artifactId>
-                <version>${javax.security.enterprise.version}</version>
+                <artifactId>jakarta.security.enterprise</artifactId>
+                <version>${jakarta.security.enterprise.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.security.enterprise</groupId>
-                <artifactId>javax.security.enterprise-api</artifactId>
-                <version>${javax.security.enterprise-api.version}</version>
+                <groupId>jakarta.security.enterprise</groupId>
+                <artifactId>jakarta.security.enterprise-api</artifactId>
+                <version>${jakarta.security.enterprise-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>

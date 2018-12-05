@@ -360,8 +360,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.xml.rpc</groupId>
-            <artifactId>javax.xml.rpc-api</artifactId>
+            <groupId>jakarta.xml.rpc</groupId>
+            <artifactId>jakarta.xml.rpc-api</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-corba -->
@@ -844,7 +844,7 @@
         <!-- glassfish-jsf -->
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.faces</artifactId>
+            <artifactId>jakarta.faces</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-jta -->
@@ -1052,8 +1052,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-web -->
@@ -1158,8 +1158,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.servlet.jsp.jstl</groupId>
-            <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1225,12 +1225,12 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
-            <artifactId>javax.security.enterprise</artifactId>
+            <artifactId>jakarta.security.enterprise</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.security.enterprise</groupId>
-            <artifactId>javax.security.enterprise-api</artifactId>
+            <groupId>jakarta.security.enterprise</groupId>
+            <artifactId>jakarta.security.enterprise-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1410,8 +1410,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1450,8 +1450,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.xml.registry</groupId>
-            <artifactId>javax.xml.registry-api</artifactId>
+            <groupId>jakarta.xml.registry</groupId>
+            <artifactId>jakarta.xml.registry-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

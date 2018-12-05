@@ -338,16 +338,16 @@
 
      <!-- explicit dependencies for endorsed JARs the ACC needs -->
 
-     <!-- endorsed: javax.annotation-api.jar -->
+     <!-- endorsed: jakarta.annotation-api.jar -->
      <dependency>
-         <groupId>javax.annotation</groupId>
-         <artifactId>javax.annotation-api</artifactId>
+         <groupId>jakarta.annotation</groupId>
+         <artifactId>jakarta.annotation-api</artifactId>
      </dependency>
 
-     <!-- endorsed: jaxb-api.jar -->
+     <!-- endorsed: jakarta.xml.bind-api.jar -->
      <dependency>
-         <groupId>javax.xml.bind</groupId>
-         <artifactId>jaxb-api</artifactId>
+         <groupId>jakarta.xml.bind</groupId>
+         <artifactId>jakarta.xml.bind-api</artifactId>
      </dependency>
 
      <dependency>
@@ -365,8 +365,8 @@
 
      <!-- JAXR -JSR-93 Support-->
      <dependency>
-         <groupId>javax.xml.registry</groupId>
-         <artifactId>javax.xml.registry-api</artifactId>
+         <groupId>jakarta.xml.registry</groupId>
+         <artifactId>jakarta.xml.registry-api</artifactId>
      </dependency>
 
         <!--

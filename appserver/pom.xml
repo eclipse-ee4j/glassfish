@@ -43,7 +43,7 @@
         <jsp-api.version>2.3.4</jsp-api.version>
         <jsp-impl.version>2.3.4</jsp-impl.version>
         <jstl-impl.version>1.2.5</jstl-impl.version>
-        <jstl-api.version>1.2.2</jstl-api.version>
+        <jstl-api.version>1.2.3</jstl-api.version>
         <mojarra.version>2.3.9</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.15</woodstock.version>
@@ -246,8 +246,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.servlet.jsp.jstl</groupId>
-                                <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+                                <groupId>jakarta.servlet.jsp.jstl</groupId>
+                                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
                                 <version>${jstl-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -794,8 +794,8 @@
                 <version>${jsp-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet.jsp.jstl</groupId>
-                <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+                <groupId>jakarta.servlet.jsp.jstl</groupId>
+                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
                 <version>${jstl-api.version}</version>
             </dependency>
             <dependency>

@@ -111,8 +111,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.servlet.jsp.jstl</groupId>
-            <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- work around for GLASSFISH-19861  -->

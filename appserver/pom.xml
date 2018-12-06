@@ -43,15 +43,15 @@
         <jsp-api.version>2.3.4</jsp-api.version>
         <jsp-impl.version>2.3.4</jsp-impl.version>
         <jstl-impl.version>1.2.5</jstl-impl.version>
-        <jstl-api.version>1.2.2</jstl-api.version>
-        <mojarra.version>2.3.3.102</mojarra.version>
+        <jstl-api.version>1.2.3</jstl-api.version>
+        <mojarra.version>2.3.9</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.15</woodstock.version>
         <javax.ejb-api.version>3.2.3</javax.ejb-api.version>
         <jakarta.interceptor-api.version>1.2.3</jakarta.interceptor-api.version>
         <jakarta.xml.rpc-api.version>1.1.3</jakarta.xml.rpc-api.version>
         <javax.transaction-api.version>1.3.1</javax.transaction-api.version>
-        <javax.faces-api.version>2.3</javax.faces-api.version>
+        <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
         <cdi-api.version>2.0</cdi-api.version>
         <javax.inject.version>1</javax.inject.version>
         <jakarta.resource-api.version>1.7.2</jakarta.resource-api.version>
@@ -89,15 +89,15 @@
         <javax-persistence-api.version>2.2.0</javax-persistence-api.version>
         <dbschema.version>6.6</dbschema.version>
         <schema2beans.version>6.6</schema2beans.version>
-        <mq.version>5.1.2-b01</mq.version>
+        <mq.version>5.1.3</mq.version>
         <derby.version>10.13.1.1</derby.version>
         <weld.version>3.0.0.Final</weld.version>
         <wsdl4j.version>1.6.2</wsdl4j.version>
         <websocket-api.version>1.1.1</websocket-api.version>
         <tyrus.version>1.15</tyrus.version>
-        <jsonp-api.version>1.1.3</jsonp-api.version>
-        <jsonp-ri.version>1.1.3</jsonp-ri.version>
-        <jsonp-jaxrs.version>1.1.3</jsonp-jaxrs.version>
+        <jsonp-api.version>1.1.5</jsonp-api.version>
+        <jsonp-ri.version>1.1.5</jsonp-ri.version>
+        <jsonp-jaxrs.version>1.1.5</jsonp-jaxrs.version>
         <json.bind-api.version>1.0.1</json.bind-api.version>
         <yasson.version>1.0.3</yasson.version>
         <concurrent-api.version>1.1.1</concurrent-api.version>
@@ -183,12 +183,12 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.json</groupId>
-                                <artifactId>javax.json-api</artifactId>
-                                <version>${jsonp-api.version}</version>
+                                <groupId>org.glassfish</groupId>
+                                <artifactId>jakarta.json</artifactId>
+                                <version>${jsonp-ri.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
+                            <jarType>impl</jarType>
                             <specVersion>1.1</specVersion>
                             <implVersion>${jsonp-ri.version}</implVersion>
                             <apiPackage>javax.json</apiPackage>
@@ -210,7 +210,7 @@
                         <spec>
                             <artifact>
                                 <groupId>org.glassfish</groupId>
-                                <artifactId>javax.faces</artifactId>
+                                <artifactId>jakarta.faces</artifactId>
                                 <version>${mojarra.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -246,8 +246,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.servlet.jsp.jstl</groupId>
-                                <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+                                <groupId>jakarta.servlet.jsp.jstl</groupId>
+                                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
                                 <version>${jstl-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -533,9 +533,9 @@
                 <version>${jakarta.xml.rpc-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.faces</groupId>
-                <artifactId>javax.faces-api</artifactId>
-                <version>${javax.faces-api.version}</version>
+                <groupId>jakarta.faces</groupId>
+                <artifactId>jakarta.faces-api</artifactId>
+                <version>${jakarta.faces-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.enterprise</groupId>
@@ -575,7 +575,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.faces</artifactId>
+                <artifactId>jakarta.faces</artifactId>
                 <version>${mojarra.version}</version>
             </dependency>
             <dependency>
@@ -794,8 +794,8 @@
                 <version>${jsp-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet.jsp.jstl</groupId>
-                <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+                <groupId>jakarta.servlet.jsp.jstl</groupId>
+                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
                 <version>${jstl-api.version}</version>
             </dependency>
             <dependency>
@@ -805,7 +805,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.json</artifactId>
+                <artifactId>jakarta.json</artifactId>
                 <version>${jsonp-ri.version}</version>
             </dependency>
             <dependency>
@@ -814,8 +814,8 @@
                 <version>${jsonp-jaxrs.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.json</groupId>
-                <artifactId>javax.json-api</artifactId>
+                <groupId>jakarta.json</groupId>
+                <artifactId>jakarta.json-api</artifactId>
                 <version>${jsonp-api.version}</version>
             </dependency>
             <dependency>
@@ -841,52 +841,52 @@
             <dependency>
                 <groupId>org.glassfish.fighterfish</groupId>
                 <artifactId>osgi-javaee-base</artifactId>
-                <version>1.0.8</version>
+                <version>1.0.9</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.fighterfish</groupId>
                 <artifactId>osgi-web-container</artifactId>
-                <version>2.0.1</version>
+                <version>2.0.2</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.fighterfish</groupId>
                 <artifactId>osgi-ejb-container</artifactId>
-                <version>1.0.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-jpa</artifactId>
-                <version>1.0.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-jpa-extension</artifactId>
-                <version>1.0.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-http</artifactId>
-                <version>1.0.7</version>
-            </dependency>
-	        <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-cdi</artifactId>
                 <version>1.0.5</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.fighterfish</groupId>
+                <artifactId>osgi-jpa</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.fighterfish</groupId>
+                <artifactId>osgi-jpa-extension</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.fighterfish</groupId>
+                <artifactId>osgi-http</artifactId>
+                <version>1.0.8</version>
+            </dependency>
+	        <dependency>
+                <groupId>org.glassfish.fighterfish</groupId>
+                <artifactId>osgi-cdi</artifactId>
+                <version>1.0.6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.fighterfish</groupId>
                 <artifactId>osgi-jta</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.fighterfish</groupId>
                 <artifactId>osgi-jdbc</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.fighterfish</groupId>
                 <artifactId>osgi-ee-resources</artifactId>
-                <version>2.0.1</version>
+                <version>2.0.2</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.ha</groupId>

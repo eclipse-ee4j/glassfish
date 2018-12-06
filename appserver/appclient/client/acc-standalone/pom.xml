@@ -93,6 +93,7 @@
                           <fileSeparator>/</fileSeparator>
                           <prefix>../modules</prefix>
                           <stripVersion>true</stripVersion>
+                          <excludeArtifactIds>javax.json</excludeArtifactIds>
                       </configuration>
                   </execution>
               </executions>

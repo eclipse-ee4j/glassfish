@@ -64,7 +64,7 @@
                           <fileSeparator>/</fileSeparator>
                           <prefix>../../modules</prefix>
                           <stripVersion>true</stripVersion>
-                          <excludeArtifactIds>jsftemplating</excludeArtifactIds>
+                          <excludeArtifactIds>jsftemplating, javax.json, jakarta.json-api</excludeArtifactIds>
                       </configuration>
                   </execution>
               </executions>
@@ -844,7 +844,7 @@
         <!-- glassfish-jsf -->
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.faces</artifactId>
+            <artifactId>jakarta.faces</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-jta -->
@@ -1158,8 +1158,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.servlet.jsp.jstl</groupId>
-            <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1233,7 +1233,12 @@
             <artifactId>jakarta.security.enterprise-api</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jersey -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <optional>true</optional>
+        </dependency>
+       <!-- glassfish-jersey -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>

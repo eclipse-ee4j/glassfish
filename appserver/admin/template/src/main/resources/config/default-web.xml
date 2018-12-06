@@ -292,7 +292,7 @@
       <param-value>
         /lib/
         \lib\
-        javax.el.jar
+        jakarta.el.jar
         jakarta.servlet-api.jar
         jakarta.servlet.jsp-api.jar
         jakarta.servlet.jsp.jstl-api.jar

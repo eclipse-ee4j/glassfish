@@ -451,8 +451,8 @@
                         <spec>
                             <artifact>
                                 <groupId>org.glassfish</groupId>
-                                <artifactId>javax.el</artifactId>
-                                <version>${javax.el.version}</version>
+                                <artifactId>jakarta.el</artifactId>
+                                <version>${jakarta.el.version}</version>
                             </artifact>
                             <jarType>impl</jarType>
                             <specVersion>3.0</specVersion>
@@ -707,8 +707,8 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>${javax.el.version}</version>
+                <artifactId>jakarta.el</artifactId>
+                <version>${jakarta.el.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.faces.extensions</groupId>

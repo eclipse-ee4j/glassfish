@@ -74,8 +74,8 @@
             <artifactId>hk2-core</artifactId>
         </dependency>
             <dependency>
-                <groupId>javax.el</groupId>
-                <artifactId>javax.el-api</artifactId>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
             </dependency>
        <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -130,7 +130,7 @@
        </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
+            <artifactId>jakarta.el</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

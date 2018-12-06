@@ -400,13 +400,7 @@
       <dependency>
         <scope>runtime</scope>
         <groupId>org.glassfish</groupId>
-        <artifactId>javax.json</artifactId>
-      </dependency>
-
-      <dependency>
-        <scope>runtime</scope>
-        <groupId>javax.json</groupId>
-        <artifactId>javax.json-api</artifactId>
+        <artifactId>jakarta.json</artifactId>
       </dependency>
 
       <dependency>

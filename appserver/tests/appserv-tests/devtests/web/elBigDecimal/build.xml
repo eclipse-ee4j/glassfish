@@ -36,7 +36,7 @@
     <target name="compile">
         <javac
             srcdir="."
-            classpath="${env.APS_HOME}/lib/reportbuilder.jar;${env.S1AS_HOME}/modules/javax.el.jar"
+            classpath="${env.APS_HOME}/lib/reportbuilder.jar;${env.S1AS_HOME}/modules/jakarta.el.jar"
             includes="WebTest.java"/>
 
     </target> 
@@ -45,7 +45,7 @@
         <java classname="WebTest">
           <classpath>
            <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-           <pathelement location="${env.S1AS_HOME}/modules/javax.el.jar"/>
+           <pathelement location="${env.S1AS_HOME}/modules/jakarta.el.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

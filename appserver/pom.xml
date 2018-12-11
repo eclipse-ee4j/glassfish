@@ -79,7 +79,7 @@
         <javaee.version_qualifier>-b${build.id}</javaee.version_qualifier>
         <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
 
-        <jsftemplating.version>2.1.3</jsftemplating.version>
+        <jsftemplating.version>2.1.4</jsftemplating.version>
         <webservices.version>2.4.3</webservices.version>
         <woodstox.version>5.1.0</woodstox.version>
         <jaxb.version>2.3.2</jaxb.version>

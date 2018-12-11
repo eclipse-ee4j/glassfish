@@ -57,7 +57,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.shoal</groupId>
+            <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-cache</artifactId>
             <version>${shoal.version}</version>
         </dependency>

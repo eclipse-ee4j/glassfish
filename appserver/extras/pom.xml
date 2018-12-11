@@ -35,7 +35,6 @@
         <module>appserv-rt</module>
     </modules>
 
-    <!--
     <profiles>
         <profile>
             <id>embedded</id>
@@ -51,5 +50,4 @@
             </modules>
         </profile>
     </profiles>
--->
 </project>

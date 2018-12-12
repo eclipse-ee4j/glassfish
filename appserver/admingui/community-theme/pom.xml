@@ -116,7 +116,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.woodstock</groupId>
+            <groupId>org.glassfish.woodstock</groupId>
             <artifactId>webui-jsf-suntheme</artifactId>
             <scope>provided</scope>
         </dependency>

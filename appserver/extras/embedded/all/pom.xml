@@ -290,6 +290,7 @@
      <dependency>
          <groupId>org.shoal</groupId>
          <artifactId>shoal-cache</artifactId>
+         <version>{shoal.version}</version>
          <optional>true</optional>
      </dependency>
      <dependency>
@@ -598,11 +599,13 @@
         <dependency>
             <groupId>org.shoal</groupId>
             <artifactId>shoal-gms-api</artifactId>
+            <version>{shoal.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.shoal</groupId>
             <artifactId>shoal-gms-impl</artifactId>
+            <version>{shoal.version}</version>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-jmx -->
@@ -735,6 +738,7 @@
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
             <artifactId>javax.inject</artifactId>
+            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>

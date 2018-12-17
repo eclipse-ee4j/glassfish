@@ -69,6 +69,12 @@
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>web-glue</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.glassfish.main.common</groupId>
+                <artifactId>container-common</artifactId>
+              </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -76,9 +82,15 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>container-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.ha</groupId>
             <artifactId>ha-api</artifactId>
-        </dependency>        
+            <version>${ha-api.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.cluster</groupId>
             <artifactId>gms-bootstrap</artifactId>

@@ -63,7 +63,6 @@
             <artifactId>nucleus-grizzly-all</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>management-api</artifactId>

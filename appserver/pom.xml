@@ -549,11 +549,6 @@
               </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.hk2.external</groupId>
-                <artifactId>jakarta.inject</artifactId>
-                <version>${hk2.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.resource</groupId>
                 <artifactId>jakarta.resource-api</artifactId>
                 <version>${jakarta.resource-api.version}</version>

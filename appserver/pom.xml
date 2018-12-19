@@ -541,11 +541,17 @@
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
                 <version>${cdi-api.version}</version>
+                <exclusions>
+                  <exclusion>
+                      <groupId>javax.inject</groupId>
+                      <artifactId>javax.inject</artifactId>
+                  </exclusion>
+              </exclusions>
             </dependency>
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
+                <groupId>org.glassfish.hk2.external</groupId>
+                <artifactId>jakarta.inject</artifactId>
+                <version>${hk2.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.resource</groupId>

@@ -671,12 +671,6 @@
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
             <optional>true</optional>
-            <exclusions>
-              <exclusion>
-                  <groupId>javax.inject</groupId>
-                  <artifactId>javax.inject</artifactId>
-              </exclusion>
-          </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>

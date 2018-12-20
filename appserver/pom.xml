@@ -39,7 +39,7 @@
     </scm>
 
     <properties>
-        <jms-api.version>2.0.1</jms-api.version>
+        <jms-api.version>2.0.2</jms-api.version>
         <jsp-api.version>2.3.4</jsp-api.version>
         <jsp-impl.version>2.3.4</jsp-impl.version>
         <jstl-impl.version>1.2.5</jstl-impl.version>
@@ -282,8 +282,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.jms</groupId>
-                                <artifactId>javax.jms-api</artifactId>
+                                <groupId>jakarta.jms</groupId>
+                                <artifactId>jakarta.jms-api</artifactId>
                                 <version>${jms-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -784,8 +784,8 @@
                 <version>${mq.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>javax.jms-api</artifactId>
+                <groupId>jakarta.jms</groupId>
+                <artifactId>jakarta.jms-api</artifactId>
                 <version>${jms-api.version}</version>
             </dependency>
             <dependency>

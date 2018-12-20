@@ -541,11 +541,12 @@
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
                 <version>${cdi-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
+                <exclusions>
+                  <exclusion>
+                      <groupId>javax.inject</groupId>
+                      <artifactId>javax.inject</artifactId>
+                  </exclusion>
+              </exclusions>
             </dependency>
             <dependency>
                 <groupId>jakarta.resource</groupId>

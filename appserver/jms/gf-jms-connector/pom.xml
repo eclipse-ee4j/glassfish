@@ -48,6 +48,11 @@
             <artifactId>internal-api</artifactId>
             <version>5.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <resources>

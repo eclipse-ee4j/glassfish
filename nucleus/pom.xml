@@ -31,7 +31,7 @@
     <version>5.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>GlassFish Nucleus Project</name>
-    
+
     <description>Glassfish Nucleus Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
@@ -93,7 +93,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
+                    <groupId>org.glassfish.main.hk2</groupId>
                     <artifactId>config-generator</artifactId>
                     <version>${project.version}</version>
                 </plugin>

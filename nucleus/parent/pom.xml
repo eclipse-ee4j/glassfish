@@ -660,20 +660,6 @@
                 <groupId>org.glassfish.jersey.containers.glassfish</groupId>
                 <artifactId>jersey-gf-ejb</artifactId>
                 <version>${jersey.version}</version>
-                <exclusions>
-                  <exclusion>
-                    <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>hk2-config</artifactId>
-                  </exclusion>
-                  <exclusion>
-                    <groupId>org.glassfish.main.common</groupId>
-                    <artifactId>container-common</artifactId>
-                  </exclusion>
-                  <exclusion>
-                    <groupId>org.glassfish.main.ejb</groupId>
-                    <artifactId>ejb-container</artifactId>
-                  </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.ext</groupId>

@@ -297,7 +297,7 @@
         jakarta.servlet.jsp-api.jar
         jakarta.servlet.jsp.jstl-api.jar
         javax.servlet.jsp.jstl.jar
-        javax.jms-api.jar
+        jakarta.jms-api.jar
         jakarta.faces.jar
         javax.servlet.jsp.jar
         jspcaching-connector.jar
@@ -308,7 +308,7 @@
         javax.jms-api.jar
         javax.mail.jar
         javax.management.j2ee-api.jar
-        javax.persistence.jar
+        jakarta.persistence.jar
         jakarta.resource-api.jar
         javax.security.auth.message.jar
         javax.security.jacc.jar

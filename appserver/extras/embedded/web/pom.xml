@@ -708,7 +708,7 @@
     </dependency>
     <dependency>
         <groupId>org.eclipse.persistence</groupId>
-        <artifactId>javax.persistence</artifactId>
+        <artifactId>jakarta.persistence</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>

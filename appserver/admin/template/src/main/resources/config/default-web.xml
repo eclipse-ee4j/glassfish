@@ -303,11 +303,12 @@
         jspcaching-connector.jar
         web-glue.jar
         bean-validator.jar
-        jakarta.ejb-api.jar
+        jakarta.ejb.jar
         jakarta.enterprise.deploy-api.jar
+        jakarta.jms-api.jar
         jakarta.mail.jar
         jakarta.management.j2ee-api.jar
-        javax.persistence.jar
+        jakarta.persistence.jar
         jakarta.resource-api.jar
         jakarta.security.auth.message-api.jar
         jakarta.security.jacc-api.jar

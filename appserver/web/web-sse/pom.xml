@@ -57,5 +57,10 @@
             <artifactId>weld-osgi-bundle</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>jakarta.inject</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

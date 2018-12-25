@@ -39,7 +39,7 @@
     </scm>
 
     <properties>
-        <jms-api.version>2.0.1</jms-api.version>
+        <jms-api.version>2.0.2</jms-api.version>
         <jsp-api.version>2.3.4</jsp-api.version>
         <jsp-impl.version>2.3.4</jsp-impl.version>
         <jstl-impl.version>1.2.5</jstl-impl.version>
@@ -85,8 +85,8 @@
         <jaxb.version>2.3.2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
         <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
-        <eclipselink.version>2.7.0</eclipselink.version>
-        <javax-persistence-api.version>2.2.0</javax-persistence-api.version>
+        <eclipselink.version>2.7.4-RC1</eclipselink.version>
+        <jakarta-persistence-api.version>2.2.2</jakarta-persistence-api.version>
         <dbschema.version>6.6</dbschema.version>
         <schema2beans.version>6.6</schema2beans.version>
         <mq.version>5.1.3</mq.version>
@@ -167,7 +167,7 @@
                 <version>1.6</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
-                    <excludes>javax.inject.jar,javax.servlet.jsp.jstl.jar,javax.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, javax.persistence.jar</excludes>
+                    <excludes>javax.inject.jar,javax.servlet.jsp.jstl.jar,javax.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, jakarta.persistence.jar</excludes>
                     <specs>
                         <spec>
                             <artifact>
@@ -282,8 +282,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.jms</groupId>
-                                <artifactId>javax.jms-api</artifactId>
+                                <groupId>jakarta.jms</groupId>
+                                <artifactId>jakarta.jms-api</artifactId>
                                 <version>${jms-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -541,11 +541,12 @@
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
                 <version>${cdi-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
+                <exclusions>
+                  <exclusion>
+                      <groupId>javax.inject</groupId>
+                      <artifactId>javax.inject</artifactId>
+                  </exclusion>
+              </exclusions>
             </dependency>
             <dependency>
                 <groupId>jakarta.resource</groupId>
@@ -580,8 +581,8 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
-                <artifactId>javax.persistence</artifactId>
-                <version>${javax-persistence-api.version}</version>
+                <artifactId>jakarta.persistence</artifactId>
+                <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
@@ -784,8 +785,8 @@
                 <version>${mq.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>javax.jms-api</artifactId>
+                <groupId>jakarta.jms</groupId>
+                <artifactId>jakarta.jms-api</artifactId>
                 <version>${jms-api.version}</version>
             </dependency>
             <dependency>

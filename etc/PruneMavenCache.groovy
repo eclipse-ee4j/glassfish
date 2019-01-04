@@ -51,7 +51,13 @@ spec:
   node (label) {
     container('glassfish-ci') {
       sh '''
-        # purge local repo
+        # wipe-out the local repo
+        if [ "${CLEAN_ALL}" = "true" ] ; then
+          rm -rf ${HOME}/.m2/repository/*
+          exit 0
+        fi
+
+        # purge local repo for specific GAVs
         mvn \
           org.apache.maven.plugins:maven-dependency-plugin:3.1.1:purge-local-repository \
           -DmanualInclude="${INCLUDES}" \

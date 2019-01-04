@@ -40,8 +40,6 @@ spec:
         name: maven-settings
       - mountPath: "/home/jenkins/.m2/repository"
         name: maven-repo-shared-storage
-      - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
-        name: maven-repo-local-storage
     resources:
       limits:
         memory: "7Gi"

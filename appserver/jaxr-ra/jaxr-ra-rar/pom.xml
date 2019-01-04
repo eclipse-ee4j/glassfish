@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.glassfish.main.jaxr-ra</groupId>
         <artifactId>jaxr-ra-pom</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jaxr-ra-rar</artifactId>
     <packaging>rar</packaging>
-    <version>5.0.1-SNAPSHOT</version>
+    <version>5.1.0-SNAPSHOT</version>
     <name>JAXR-RA RAR package</name>
 
     <dependencies>

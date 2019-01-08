@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>cmp-support-sqlstore</artifactId>

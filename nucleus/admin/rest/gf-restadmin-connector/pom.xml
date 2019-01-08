@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>rest-service-parent</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gf-restadmin-connector</artifactId>

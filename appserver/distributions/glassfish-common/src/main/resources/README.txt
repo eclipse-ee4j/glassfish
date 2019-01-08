@@ -6,7 +6,7 @@ Here are a few short steps to get you started...
 0. Prerequisite
 ===============
 
-GlassFish 5.1 requires Oracle JDK 8 Update 144.
+GlassFish 5.1 requires Oracle JDK 8 Update 191.
 Check http://www.oracle.com/technetwork/java/javase/downloads/index.html to download the JDK.
 
 

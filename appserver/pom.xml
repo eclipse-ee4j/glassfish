@@ -71,8 +71,8 @@
         <version_prefix />
         <version_suffix />
         <major_version>5</major_version>
-        <minor_version>0</minor_version>
-        <update_version>1</update_version>
+        <minor_version>1</minor_version>
+        <update_version>0</update_version>
         <install.dir.name>glassfish5</install.dir.name>
 
         <javaee.major_version>8</javaee.major_version>

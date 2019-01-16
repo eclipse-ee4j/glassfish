@@ -85,7 +85,7 @@
         <jaxb.version>2.3.2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
         <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
-        <eclipselink.version>2.7.4-RC1</eclipselink.version>
+        <eclipselink.version>2.7.4-RC2</eclipselink.version>
         <jakarta-persistence-api.version>2.2.2</jakarta-persistence-api.version>
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>

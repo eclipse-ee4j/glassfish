@@ -54,7 +54,7 @@
         <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
         <cdi-api.version>2.0</cdi-api.version>
         <javax.inject.version>1</javax.inject.version>
-        <jakarta.resource-api.version>1.7.2</jakarta.resource-api.version>
+        <jakarta.resource-api.version>1.7.3</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
         <jakarta.security.jacc-api.version>1.6.1</jakarta.security.jacc-api.version>
         <jakarta.security.auth.message-api.version>1.1.2</jakarta.security.auth.message-api.version>

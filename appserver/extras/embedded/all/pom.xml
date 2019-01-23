@@ -1331,7 +1331,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.web</groupId>
-            <artifactId>javax.servlet.jsp</artifactId>
+            <artifactId>jakarta.servlet.jsp</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1341,7 +1341,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.web</groupId>
-            <artifactId>javax.servlet.jsp.jstl</artifactId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

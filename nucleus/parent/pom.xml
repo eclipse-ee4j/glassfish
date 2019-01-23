@@ -70,7 +70,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <legal.doc.source>${maven.multiModuleProjectDirectory}</legal.doc.source>
         <!-- on Hudson and RE, this gets replaced by real build ID -->
         <build.id>${user.name}-private</build.id>
         <findbugs.skip>false</findbugs.skip>
@@ -378,6 +377,16 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <executions>
+                    <execution>
+                        <id>find-root</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>rootlocation</goal>
+                        </goals>
+                        <configuration>
+                            <rootLocationProperty>legal.doc.source</rootLocationProperty>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>add-resource</id>
                         <phase>generate-resources</phase>

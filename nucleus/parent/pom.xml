@@ -70,6 +70,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <legal.doc.source>${maven.multiModuleProjectDirectory}</legal.doc.source>
         <!-- on Hudson and RE, this gets replaced by real build ID -->
         <build.id>${user.name}-private</build.id>
         <findbugs.skip>false</findbugs.skip>
@@ -387,6 +388,25 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/manpages</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-legal-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${legal.doc.source}</directory>
+                                    <includes>
+                                        <include>NOTICE.md</include>
+                                        <include>LICENSE.md</include>
+                                    </includes>
+                                    <targetPath>META-INF</targetPath>
                                 </resource>
                             </resources>
                         </configuration>

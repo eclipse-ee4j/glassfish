@@ -40,10 +40,10 @@
 
     <properties>
         <jms-api.version>2.0.2</jms-api.version>
-        <jsp-api.version>2.3.4</jsp-api.version>
-        <jsp-impl.version>2.3.4</jsp-impl.version>
+        <jsp-api.version>2.3.5</jsp-api.version>
+        <jsp-impl.version>2.3.5</jsp-impl.version>
         <jstl-impl.version>1.2.6</jstl-impl.version>
-        <jstl-api.version>1.2.3</jstl-api.version>
+        <jstl-api.version>1.2.4</jstl-api.version>
         <mojarra.version>2.3.9</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.16</woodstock.version>
@@ -167,7 +167,7 @@
                 <version>1.6</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
-                    <excludes>javax.inject.jar,javax.servlet.jsp.jstl.jar,javax.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, jakarta.persistence.jar</excludes>
+                    <excludes>jakarta.inject.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, jakarta.persistence.jar</excludes>
                     <specs>
                         <spec>
                             <artifact>
@@ -390,8 +390,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.xml.registry</groupId>
-                                <artifactId>javax.xml.registry-api</artifactId>
+                                <groupId>jakarta.xml.registry</groupId>
+                                <artifactId>jakarta.xml.registry-api</artifactId>
                                 <version>${jakarta.xml.registry-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -703,7 +703,7 @@
 
             <dependency>
                 <groupId>org.glassfish.web</groupId>
-                <artifactId>javax.servlet.jsp</artifactId>
+                <artifactId>jakarta.servlet.jsp</artifactId>
                 <version>${jsp-impl.version}</version>
             </dependency>
             <dependency>
@@ -801,7 +801,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.web</groupId>
-                <artifactId>javax.servlet.jsp.jstl</artifactId>
+                <artifactId>jakarta.servlet.jsp.jstl</artifactId>
                 <version>${jstl-impl.version}</version>
             </dependency>
             <dependency>

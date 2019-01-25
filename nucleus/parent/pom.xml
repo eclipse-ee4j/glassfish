@@ -378,6 +378,16 @@
                 <version>3.0.0</version>
                 <executions>
                     <execution>
+                        <id>find-root</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>rootlocation</goal>
+                        </goals>
+                        <configuration>
+                            <rootLocationProperty>legal.doc.source</rootLocationProperty>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>add-resource</id>
                         <phase>generate-resources</phase>
                         <goals>
@@ -387,6 +397,25 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/manpages</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-legal-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${legal.doc.source}</directory>
+                                    <includes>
+                                        <include>NOTICE.md</include>
+                                        <include>LICENSE.md</include>
+                                    </includes>
+                                    <targetPath>META-INF</targetPath>
                                 </resource>
                             </resources>
                         </configuration>

@@ -1,0 +1,15 @@
+remote_theme: jakartaee/jekyll-theme-jakarta-ee
+
+title: [Eclipse GlassFish]
+description: [The Open Source Jakarta EE Platform Implementation]
+
+# sidebar links url
+links:
+  download: download
+  source: https://github.com/eclipse-ee4j/glassfish
+  mailinglist: https://accounts.eclipse.org/mailing-list/glassfish-dev
+  #javadocs:
+  docs: documentation
+  #faq:
+  #hide_issuetracker: true #set explicitly to 'true' if you don't want to have the issue tracker link displayed
+

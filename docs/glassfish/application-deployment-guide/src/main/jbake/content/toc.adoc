@@ -1,0 +1,1465 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Application Deployment Guide, Release 5.1
+next=loe.html
+~~~~~~
+Eclipse GlassFish Server Application Deployment Guide, Release 5.1
+==================================================================
+
+[[contents]]
+Contents
+--------
+
+[[list-of-examples]]
+link:loe.html[List of Examples]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[list-of-figures]]
+link:lof.html[List of Figures]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[list-of-tables]]
+link:lot.html[List of Tables]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[title-and-copyright-information]]
+link:title.html[Title and Copyright Information]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[preface]]
+link:preface.html#sthref2[Preface]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:preface.html#ghpbz[GlassFish Server Documentation Set]
+* link:preface.html#giprl[Related Documentation]
+* link:preface.html#fwbkx[Typographic Conventions]
+* link:preface.html#fquvc[Symbol Conventions]
+* link:preface.html#ghpfg[Default Paths and File Names]
+
+[[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
+link:overview.html#gihxo[1 Overview of Eclipse GlassFish Server 5.0 Application Deployment]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:overview.html#gihzx[About Application Deployment]
+
+** link:overview.html#giptw[General Deployment Functionality]
+
+** link:overview.html#gihzc[Deployment Descriptors and Annotations]
+
+** link:overview.html#gikhs[Modules and Applications]
+*** link:overview.html#beacv[Types of Modules]
+*** link:overview.html#beacu[Module-Based Deployment]
+*** link:overview.html#beacw[Application-Based Deployment]
+
+** link:overview.html#gijla[Access to Shared Framework Classes]
+
+** link:overview.html#gihzk[Naming Standards]
+*** link:overview.html#gjjfg[Portable Naming]
+*** link:overview.html#giidg[JNDI Naming]
+*** link:overview.html#beada[Directory Structure]
+*** link:overview.html#giiel[JSR 88 Naming]
+
+** link:overview.html#gkhhv[Module and Application Versions]
+*** link:overview.html#gkhmg[Version Identifiers and Expressions]
+*** link:overview.html#gkhmm[Choosing the Enabled Version]
+*** link:overview.html#gkhob[Versioning Restrictions and Limitations]
+* link:overview.html#giphm[About Assembly and Deployment Events]
+* link:overview.html#giifh[About Deployment Tools]
+
+** link:overview.html#giijz[Administration Console]
+
+** link:overview.html#giijf[The `asadmin` Utility]
+
+** link:overview.html#giijq[NetBeans IDE]
+
+** link:overview.html#gikwq[Eclipse IDE]
+
+** link:overview.html#beaee[JSR 88 Client]
+* link:overview.html#gipud[Additional Information on Application
+Deployment]
+
+[[deploying-applications]]
+link:deploying-applications.html#beact[2 Deploying Applications]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:deploying-applications.html#gilfm[Deploying Applications and
+Modules]
+
+** link:deploying-applications.html#gijmq[To Deploy an Application or
+Module]
+
+** link:deploying-applications.html#gijrc[To Change Targets for a
+Deployed Application or Module]
+
+** link:deploying-applications.html#giulr[To List Deployed Applications
+or Modules]
+
+** link:deploying-applications.html#gijmb[To Redeploy an Application or
+Module]
+
+** link:deploying-applications.html#fvyje[To Disable an Application or
+Module]
+
+** link:deploying-applications.html#gijjy[To Enable an Application or
+Module]
+
+** link:deploying-applications.html#gijkl[To Undeploy an Application or
+Module]
+
+** link:deploying-applications.html#fwakh[To Reload Changes to
+Applications or Modules Dynamically]
+
+** link:deploying-applications.html#fvxze[To Deploy an Application or
+Module Automatically]
+
+** link:deploying-applications.html#gijyb[To Deploy an Application or
+Module by Using a Deployment Plan]
+
+** link:deploying-applications.html#gilcn[To Deploy an Application or
+Module in a Directory Format]
+* link:deploying-applications.html#gjiwk[Modifying the Configuration of a
+Web Application or Module]
+
+** link:deploying-applications.html#giyce[To Set a Web Context Parameter]
+
+** link:deploying-applications.html#giycy[To Unset a Web Context
+Parameter]
+
+** link:deploying-applications.html#giybo[To List Web Context Parameters]
+
+** link:deploying-applications.html#giyhc[To Set a Web Environment Entry]
+
+** link:deploying-applications.html#giyjr[To Unset a Web Environment
+Entry]
+
+** link:deploying-applications.html#giyip[To List Web Environment
+Entries]
+* link:deploying-applications.html#beaej[Web Module Deployment
+Guidelines]
+* link:deploying-applications.html#beaek[EJB Module Deployment
+Guidelines]
+* link:deploying-applications.html#gilxc[Deploying a Connector Module]
+
+** link:deploying-applications.html#fvynl[To Deploy and Configure a
+Stand-Alone Connector Module]
+
+** link:deploying-applications.html#bealp[Redeploying a Stand-Alone
+Connector Module]
+
+** link:deploying-applications.html#bealq[Deploying and Configuring an
+Embedded Resource Adapter]
+* link:deploying-applications.html#beaem[Assembling and Deploying an
+Application Client Module]
+
+** link:deploying-applications.html#fvyal[To Assemble and Deploy an
+Application Client]
+
+** link:deploying-applications.html#fwahd[To Prepare Another Machine for
+Running an Application Client]
+
+** link:deploying-applications.html#gavpv[To Undeploy an Application
+Client]
+* link:deploying-applications.html#beael[Lifecycle Module Deployment
+Guidelines]
+* link:deploying-applications.html#gbiye[Web Service Deployment
+Guidelines]
+* link:deploying-applications.html#gkkmb[OSGi Bundle Deployment
+Guidelines]
+* link:deploying-applications.html#gkoif[Transparent JDBC Connection Pool
+Reconfiguration]
+* link:deploying-applications.html#giydj[Application-Scoped Resources]
+
+[[a-the-asadmin-deployment-subcommands]]
+link:asadmin-deployment-subcommands.html#gihzw[A The `asadmin` Deployment Subcommands]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[b-glassfish-server-deployment-descriptor-files]]
+link:dd-files.html#giida[B GlassFish Server Deployment Descriptor Files]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:dd-files.html#giiie[About the GlassFish Server Deployment
+Descriptors]
+* link:dd-files.html#beaqk[The glassfish-application.xml File]
+* link:dd-files.html#beaql[The glassfish-web.xml File]
+* link:dd-files.html#beaqm[The glassfish-ejb-jar.xml File]
+* link:dd-files.html#beaqn[The sun-cmp-mappings.xml File]
+* link:dd-files.html#beaqo[The glassfish-application-client.xml file]
+* link:dd-files.html#beaqp[The sun-acc.xml File]
+* link:dd-files.html#giyhh[The glassfish-resources.xml File]
+* link:dd-files.html#gkiot[WebLogic Server Deployment Descriptor Support
+in GlassFish Server]
+
+[[c-elements-of-the-glassfish-server-deployment-descriptors]]
+link:dd-elements.html#beaqi[C Elements of the GlassFish Server Deployment Descriptors]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:dd-elements.html#beaqs[`activation-config`]
+
+** link:dd-elements.html#fvyoe[Superelements]
+
+** link:dd-elements.html#fvynj[Subelements]
+* link:dd-elements.html#beaqt[`activation-config-property`]
+
+** link:dd-elements.html#fvyne[Superelements]
+
+** link:dd-elements.html#fvyns[Subelements]
+* link:dd-elements.html#beaqu[`activation-config-property-name`]
+
+** link:dd-elements.html#fvynm[Superelements]
+
+** link:dd-elements.html#fvyok[Subelements]
+* link:dd-elements.html#beaqv[`activation-config-property-value`]
+
+** link:dd-elements.html#fvyou[Superelements]
+
+** link:dd-elements.html#fvyoz[Subelements]
+* link:dd-elements.html#giyhw[`admin-object-resource`]
+
+** link:dd-elements.html#sthref11[Superelements]
+
+** link:dd-elements.html#sthref12[Subelements]
+
+** link:dd-elements.html#sthref15[Attributes]
+
+** link:dd-elements.html#sthref18[Properties]
+* link:dd-elements.html#beaqw[`as-context`]
+
+** link:dd-elements.html#fvyos[Superelements]
+
+** link:dd-elements.html#fvyom[Subelements]
+* link:dd-elements.html#gjizj[`archive-name`]
+
+** link:dd-elements.html#gjizb[Superelements]
+
+** link:dd-elements.html#gjizg[Subelements]
+* link:dd-elements.html#beaqx[`auth-method`]
+
+** link:dd-elements.html#fvyow[Superelements]
+
+** link:dd-elements.html#fvyop[Subelements]
+* link:dd-elements.html#beaqy[`auth-realm`]
+
+** link:dd-elements.html#fvyot[Superelements]
+
+** link:dd-elements.html#fvyor[Subelements]
+
+** link:dd-elements.html#fvyoy[`Attributes`]
+
+** link:dd-elements.html#fvyox[Example]
+* link:dd-elements.html#giyjv[`backend-principal`]
+
+** link:dd-elements.html#sthref22[Superelements]
+
+** link:dd-elements.html#sthref23[Subelements]
+
+** link:dd-elements.html#sthref24[Attributes]
+* link:dd-elements.html#beara[`bean-cache`]
+
+** link:dd-elements.html#fvyoq[Superelements]
+
+** link:dd-elements.html#fvyon[Subelements]
+
+** link:dd-elements.html#fvyoo[Example]
+* link:dd-elements.html#bearb[`bean-pool`]
+
+** link:dd-elements.html#fvypc[Superelements]
+
+** link:dd-elements.html#fvypd[Subelements]
+
+** link:dd-elements.html#fvypf[Example]
+* link:dd-elements.html#beard[`cache`]
+
+** link:dd-elements.html#fvype[Superelements]
+
+** link:dd-elements.html#fvypl[Subelements]
+
+** link:dd-elements.html#fvypj[Attributes]
+
+** link:dd-elements.html#fvypx[Properties]
+
+** link:dd-elements.html#fvyrn[Cache Class Names]
+* link:dd-elements.html#beare[`cache-helper`]
+
+** link:dd-elements.html#fvyqy[Superelements]
+
+** link:dd-elements.html#fvyru[Subelements]
+
+** link:dd-elements.html#fvyqu[Attributes]
+* link:dd-elements.html#bearf[`cache-helper-ref`]
+
+** link:dd-elements.html#fvypq[Superelements]
+
+** link:dd-elements.html#fvyqs[Subelements]
+* link:dd-elements.html#bearg[`cache-idle-timeout-in-seconds`]
+
+** link:dd-elements.html#fvyqc[Superelements]
+
+** link:dd-elements.html#fvyqo[Subelements]
+* link:dd-elements.html#bearh[`cache-mapping`]
+
+** link:dd-elements.html#fvyqi[Superelements]
+
+** link:dd-elements.html#fvyqn[Subelements]
+* link:dd-elements.html#beari[`call-property`]
+
+** link:dd-elements.html#fvyri[Superelements]
+
+** link:dd-elements.html#fvyqp[Subelements]
+* link:dd-elements.html#bearj[`caller-propagation`]
+
+** link:dd-elements.html#fvyqj[Superelements]
+
+** link:dd-elements.html#fvyrb[Subelements]
+* link:dd-elements.html#beark[`cert-db`]
+
+** link:dd-elements.html#fvyqa[Superelements]
+
+** link:dd-elements.html#fvyre[Subelements]
+
+** link:dd-elements.html#fvyrr[Attributes]
+* link:dd-elements.html#bearl[`check-all-at-commit`]
+
+** link:dd-elements.html#fvyrj[Superelements]
+* link:dd-elements.html#bearm[`check-modified-at-commit`]
+
+** link:dd-elements.html#fvyqf[Superelements]
+
+** link:dd-elements.html#fvyqz[Subelements]
+* link:dd-elements.html#bearn[`check-version-of-accessed-instances`]
+
+** link:dd-elements.html#fvyqt[Superelements]
+
+** link:dd-elements.html#fvypp[Subelements]
+* link:dd-elements.html#bearo[`checkpoint-at-end-of-method`]
+
+** link:dd-elements.html#fvypr[Superelements]
+
+** link:dd-elements.html#fvyqe[Subelements]
+* link:dd-elements.html#bearp[`checkpointed-methods`]
+
+** link:dd-elements.html#fvyrk[Superelements]
+* link:dd-elements.html#bearq[`class-loader`]
+
+** link:dd-elements.html#fvyrv[Superelements]
+
+** link:dd-elements.html#fvyrh[Subelements]
+
+** link:dd-elements.html#fvyrl[Attributes]
+
+** link:dd-elements.html#gcfko[Properties]
+* link:dd-elements.html#bearr[`client-container`]
+
+** link:dd-elements.html#fvypv[Superelements]
+
+** link:dd-elements.html#fvypk[Subelements]
+
+** link:dd-elements.html#fvyqq[Attributes]
+
+** link:dd-elements.html#fvyrm[Properties]
+* link:dd-elements.html#bears[`client-credential`]
+
+** link:dd-elements.html#fvyqk[Superelements]
+
+** link:dd-elements.html#fvyqd[Subelements]
+
+** link:dd-elements.html#fvyqv[Attributes]
+* link:dd-elements.html#beart[`cmp`]
+
+** link:dd-elements.html#fvyrg[Superelements]
+
+** link:dd-elements.html#fvyqw[Subelements]
+* link:dd-elements.html#bearu[`cmp-field-mapping`]
+
+** link:dd-elements.html#fvypy[Superelements]
+
+** link:dd-elements.html#fvyra[Subelements]
+* link:dd-elements.html#bearv[`cmp-resource`]
+
+** link:dd-elements.html#fvypz[Superelements]
+
+** link:dd-elements.html#fvyrf[Subelements]
+* link:dd-elements.html#bearw[`cmr-field-mapping`]
+
+** link:dd-elements.html#fvyrc[Superelements]
+
+** link:dd-elements.html#fvypu[Subelements]
+* link:dd-elements.html#bearx[`cmr-field-name`]
+
+** link:dd-elements.html#fvyrx[Superelements]
+
+** link:dd-elements.html#fvyry[Subelements]
+* link:dd-elements.html#beary[`cmt-timeout-in-seconds`]
+
+** link:dd-elements.html#fvysf[Superelements]
+
+** link:dd-elements.html#fvysc[Subelements]
+* link:dd-elements.html#bearz[`column-name`]
+
+** link:dd-elements.html#fvyse[Superelements]
+
+** link:dd-elements.html#fvysb[Subelements]
+* link:dd-elements.html#beasa[`column-pair`]
+
+** link:dd-elements.html#fvysa[Superelements]
+
+** link:dd-elements.html#fvysg[Subelements]
+* link:dd-elements.html#beasb[`commit-option`]
+
+** link:dd-elements.html#fvyrz[Superelements]
+
+** link:dd-elements.html#fvysd[Subelements]
+* link:dd-elements.html#gjjak[`compatibility`]
+
+** link:dd-elements.html#gjjaf[Superelements]
+
+** link:dd-elements.html#gjjag[Subelements]
+* link:dd-elements.html#beasc[`confidentiality`]
+
+** link:dd-elements.html#fvysi[Superelements]
+
+** link:dd-elements.html#fvysk[Subelements]
+* link:dd-elements.html#giygu[`connector-connection-pool`]
+
+** link:dd-elements.html#sthref53[Superelements]
+
+** link:dd-elements.html#sthref54[Subelements]
+
+** link:dd-elements.html#sthref57[Attributes]
+
+** link:dd-elements.html#sthref60[Properties]
+* link:dd-elements.html#giyhv[`connector-resource`]
+
+** link:dd-elements.html#sthref63[Superelements]
+
+** link:dd-elements.html#sthref64[Subelements]
+
+** link:dd-elements.html#sthref67[Attributes]
+* link:dd-elements.html#beasd[`consistency`]
+
+** link:dd-elements.html#fvysj[Superelements]
+
+** link:dd-elements.html#fvysl[Subelements]
+* link:dd-elements.html#bease[`constraint-field`]
+
+** link:dd-elements.html#fvysm[Superelements]
+
+** link:dd-elements.html#fvyso[Subelements]
+
+** link:dd-elements.html#fvysq[Attributes]
+* link:dd-elements.html#beasf[`constraint-field-value`]
+
+** link:dd-elements.html#fvyss[Superelements]
+
+** link:dd-elements.html#fvyst[Subelements]
+
+** link:dd-elements.html#fvysu[Attributes]
+* link:dd-elements.html#beasg[`context-root`]
+
+** link:dd-elements.html#fvysx[Superelements]
+
+** link:dd-elements.html#fvysw[Subelements]
+* link:dd-elements.html#beash[`cookie-properties`]
+
+** link:dd-elements.html#fvysy[Superelements]
+
+** link:dd-elements.html#fvysz[Subelements]
+
+** link:dd-elements.html#fvyta[Properties]
+* link:dd-elements.html#beasi[`create-tables-at-deploy`]
+
+** link:dd-elements.html#fvytc[Superelements]
+
+** link:dd-elements.html#fvytd[Subelements]
+* link:dd-elements.html#giyhr[`custom-resource`]
+
+** link:dd-elements.html#sthref76[Superelements]
+
+** link:dd-elements.html#sthref77[Subelements]
+
+** link:dd-elements.html#sthref80[Attributes]
+* link:dd-elements.html#beask[`database-vendor-name`]
+
+** link:dd-elements.html#fvytf[Superelements]
+
+** link:dd-elements.html#fvyti[Subelements]
+* link:dd-elements.html#gaubj[`debugging-enabled`]
+
+** link:dd-elements.html#gaubf[Superelements]
+
+** link:dd-elements.html#gaube[Subelements]
+* link:dd-elements.html#beasl[`default`]
+
+** link:dd-elements.html#fvytg[Superelements]
+
+** link:dd-elements.html#fvyth[Subelements]
+* link:dd-elements.html#beasm[`default-helper`]
+
+** link:dd-elements.html#fvytj[Superelements]
+
+** link:dd-elements.html#fvytk[Subelements]
+
+** link:dd-elements.html#fvytp[Properties]
+* link:dd-elements.html#beasn[`default-resource-principal`]
+
+** link:dd-elements.html#fvytl[Superelements]
+
+** link:dd-elements.html#fvytn[Subelements]
+* link:dd-elements.html#beaso[`description`]
+
+** link:dd-elements.html#fvytq[Superelements]
+
+** link:dd-elements.html#fvyts[Subelements]
+* link:dd-elements.html#gkhtw[`disable-nonportable-jndi-names`]
+
+** link:dd-elements.html#gkhum[Superelements]
+
+** link:dd-elements.html#gkhug[Subelements]
+* link:dd-elements.html#beasp[`dispatcher`]
+
+** link:dd-elements.html#fvytt[Superelements]
+
+** link:dd-elements.html#fvytv[Subelements]
+* link:dd-elements.html#beasq[`drop-tables-at-undeploy`]
+
+** link:dd-elements.html#fvytu[Superelements]
+
+** link:dd-elements.html#fvytx[Subelements]
+* link:dd-elements.html#beass[`ejb`]
+
+** link:dd-elements.html#fvyty[Superelements]
+
+** link:dd-elements.html#fvytw[Subelements]
+
+** link:dd-elements.html#fvyuf[Attributes]
+
+** link:dd-elements.html#fvytz[Example]
+* link:dd-elements.html#beast[`ejb-name`]
+
+** link:dd-elements.html#fvyug[Superelements]
+
+** link:dd-elements.html#fvyue[Subelements]
+* link:dd-elements.html#beasu[`ejb-ref`]
+
+** link:dd-elements.html#fvyub[Superelements]
+
+** link:dd-elements.html#fvyua[Subelements]
+* link:dd-elements.html#beasv[`ejb-ref-name`]
+
+** link:dd-elements.html#fvyuh[Superelements]
+
+** link:dd-elements.html#fvyuj[Subelements]
+* link:dd-elements.html#gaubh[`eligible`]
+
+** link:dd-elements.html#gaubg[Superelements]
+
+** link:dd-elements.html#gauaz[Subelements]
+* link:dd-elements.html#beasw[`endpoint-address-uri`]
+
+** link:dd-elements.html#fvyul[Superelements]
+
+** link:dd-elements.html#fvyum[Subelements]
+
+** link:dd-elements.html#fvyuk[Example]
+* link:dd-elements.html#beasx[`enterprise-beans`]
+
+** link:dd-elements.html#fvyun[Superelements]
+
+** link:dd-elements.html#fvyuo[Subelements]
+
+** link:dd-elements.html#fvyux[Example]
+* link:dd-elements.html#beasy[`entity-mapping`]
+
+** link:dd-elements.html#fvyus[Superelements]
+
+** link:dd-elements.html#fvyur[Subelements]
+* link:dd-elements.html#beasz[`establish-trust-in-client`]
+
+** link:dd-elements.html#fvyuq[Superelements]
+
+** link:dd-elements.html#fvyuy[Subelements]
+* link:dd-elements.html#beata[`establish-trust-in-target`]
+
+** link:dd-elements.html#fvyuu[Superelements]
+
+** link:dd-elements.html#fvyuv[Subelements]
+* link:dd-elements.html#giyin[`external-jndi-resource`]
+
+** link:dd-elements.html#sthref91[Superelements]
+
+** link:dd-elements.html#sthref92[Subelements]
+
+** link:dd-elements.html#sthref95[Attributes]
+* link:dd-elements.html#beatc[`fetched-with`]
+
+** link:dd-elements.html#fvyuw[Superelements]
+
+** link:dd-elements.html#fvyup[Subelements]
+* link:dd-elements.html#beatd[`field-name`]
+
+** link:dd-elements.html#fvzcm[Superelements]
+
+** link:dd-elements.html#fvyxs[Subelements]
+* link:dd-elements.html#beate[`finder`]
+
+** link:dd-elements.html#fvzao[Superelements]
+
+** link:dd-elements.html#fvzdc[Subelements]
+* link:dd-elements.html#beatf[`flush-at-end-of-method`]
+
+** link:dd-elements.html#fvzcw[Superelements]
+
+** link:dd-elements.html#fvyza[Subelements]
+* link:dd-elements.html#beath[`gen-classes`]
+
+** link:dd-elements.html#fvyyh[Superelements]
+
+** link:dd-elements.html#fvzee[Subelements]
+* link:dd-elements.html#beaxw[`glassfish-application`]
+
+** link:dd-elements.html#fvzhn[Superelements]
+
+** link:dd-elements.html#fvzgn[Subelements]
+* link:dd-elements.html#beaxx[`glassfish-application-client`]
+
+** link:dd-elements.html#fvzgq[Superelements]
+
+** link:dd-elements.html#fvzja[Subelements]
+* link:dd-elements.html#beaya[`glassfish-ejb-jar`]
+
+** link:dd-elements.html#fvzhw[Superelements]
+
+** link:dd-elements.html#fvzfv[Subelements]
+* link:dd-elements.html#beayb[`glassfish-web-app`]
+
+** link:dd-elements.html#fvzgj[Superelements]
+
+** link:dd-elements.html#fvzhr[Subelements]
+
+** link:dd-elements.html#fvzia[Attributes]
+
+** link:dd-elements.html#fvzgt[Properties]
+* link:dd-elements.html#giygy[`group-map`]
+
+** link:dd-elements.html#sthref108[Superelements]
+
+** link:dd-elements.html#giyid[Subelements]
+
+** link:dd-elements.html#sthref109[Attributes]
+* link:dd-elements.html#beati[`group-name`]
+
+** link:dd-elements.html#fvzak[Superelements]
+
+** link:dd-elements.html#fvywm[Subelements]
+
+** link:dd-elements.html#beatk[`http-method`]
+*** link:dd-elements.html#fvzbq[Superelements]
+*** link:dd-elements.html#fvyyj[Subelements]
+* link:dd-elements.html#beatm[`idempotent-url-pattern`]
+
+** link:dd-elements.html#fvzaj[Superelements]
+
+** link:dd-elements.html#fvzea[Subelements]
+
+** link:dd-elements.html#fvyxx[Attributes]
+
+** link:dd-elements.html#fvyxy[Example]
+* link:dd-elements.html#beatn[`integrity`]
+
+** link:dd-elements.html#fvzdj[Superelements]
+
+** link:dd-elements.html#fvzdv[Subelements]
+* link:dd-elements.html#beato[`ior-security-config`]
+
+** link:dd-elements.html#fvzbe[Superelements]
+
+** link:dd-elements.html#fvzbv[Subelements]
+* link:dd-elements.html#beatp[`is-cache-overflow-allowed`]
+
+** link:dd-elements.html#fvzcu[Superelements]
+* link:dd-elements.html#beatq[`is-one-one-cmp`]
+
+** link:dd-elements.html#fvyww[Superelements]
+* link:dd-elements.html#beatr[`is-read-only-bean`]
+
+** link:dd-elements.html#fvzan[Superelements]
+
+** link:dd-elements.html#fvyvx[Subelements]
+* link:dd-elements.html#beatt[`java-method`]
+
+** link:dd-elements.html#fvyyw[Superelements]
+
+** link:dd-elements.html#fvyvo[Subelements]
+* link:dd-elements.html#gauax[`java-web-start-access`]
+
+** link:dd-elements.html#gauba[Superelements]
+
+** link:dd-elements.html#gauav[Subelements]
+* link:dd-elements.html#giyil[`jdbc-connection-pool`]
+
+** link:dd-elements.html#sthref116[Superelements]
+
+** link:dd-elements.html#sthref117[Subelements]
+
+** link:dd-elements.html#sthref120[Attributes]
+
+** link:dd-elements.html#sthref123[GlassFish Server Properties]
+
+** link:dd-elements.html#sthref126[Database Properties]
+* link:dd-elements.html#giyhm[`jdbc-resource`]
+
+** link:dd-elements.html#sthref129[Superelements]
+
+** link:dd-elements.html#sthref130[Subelements]
+
+** link:dd-elements.html#sthref133[Attributes]
+* link:dd-elements.html#beatu[`jms-durable-subscription-name`]
+
+** link:dd-elements.html#fvzdb[Superelements]
+
+** link:dd-elements.html#fvzdp[Subelements]
+* link:dd-elements.html#beatv[`jms-max-messages-load`]
+
+** link:dd-elements.html#fvyzx[Superelements]
+
+** link:dd-elements.html#fvyxq[Subelements]
+* link:dd-elements.html#beatw[`jndi-name`]
+
+** link:dd-elements.html#fvyyy[Superelements]
+
+** link:dd-elements.html#fvywz[Subelements]
+* link:dd-elements.html#gkhun[`jnlp-doc`]
+
+** link:dd-elements.html#gkhuj[Superelements]
+
+** link:dd-elements.html#gkhtm[Subelements]
+* link:dd-elements.html#beatx[`jsp-config`]
+
+** link:dd-elements.html#fvywi[Superelements]
+
+** link:dd-elements.html#fvzcs[Subelements]
+
+** link:dd-elements.html#fvyzf[Properties]
+* link:dd-elements.html#gkhtr[`keep-state`]
+
+** link:dd-elements.html#gkhto[Superelements]
+
+** link:dd-elements.html#gkhuk[Subelements]
+* link:dd-elements.html#beatz[`key-field`]
+
+** link:dd-elements.html#fvyvb[Superelements]
+
+** link:dd-elements.html#fvzal[Subelements]
+
+** link:dd-elements.html#fvzdn[Attributes]
+* link:dd-elements.html#beaub[`level`]
+
+** link:dd-elements.html#fvyvf[Superelements]
+
+** link:dd-elements.html#fvywq[Subelements]
+* link:dd-elements.html#beauc[`local-home-impl`]
+
+** link:dd-elements.html#fvyzo[Superelements]
+
+** link:dd-elements.html#fvzah[Subelements]
+* link:dd-elements.html#beaud[`local-impl`]
+
+** link:dd-elements.html#fvzcr[Superelements]
+
+** link:dd-elements.html#fvzai[Subelements]
+* link:dd-elements.html#beaue[`locale-charset-info`]
+
+** link:dd-elements.html#fvyvm[Superelements]
+
+** link:dd-elements.html#fvzbi[Subelements]
+
+** link:dd-elements.html#fvywh[Attributes]
+* link:dd-elements.html#beauf[`locale-charset-map`]
+
+** link:dd-elements.html#fvzbg[Superelements]
+
+** link:dd-elements.html#fvywg[Subelements]
+
+** link:dd-elements.html#fvyzn[Attributes]
+
+** link:dd-elements.html#fvzct[Example Agents]
+* link:dd-elements.html#beaug[`localpart`]
+
+** link:dd-elements.html#fvzad[Superelements]
+
+** link:dd-elements.html#fvyzb[Subelements]
+* link:dd-elements.html#beauh[`lock-when-loaded`]
+
+** link:dd-elements.html#fvyze[Superelements]
+
+** link:dd-elements.html#fvyyl[Subelements]
+* link:dd-elements.html#beaui[`lock-when-modified`]
+
+** link:dd-elements.html#fvyyc[Superelements]
+* link:dd-elements.html#beauj[`log-service`]
+
+** link:dd-elements.html#fvyyv[Superelements]
+
+** link:dd-elements.html#fvywo[Subelements]
+
+** link:dd-elements.html#fvyzl[Attributes]
+* link:dd-elements.html#beauk[`login-config`]
+
+** link:dd-elements.html#fvywb[Superelements]
+
+** link:dd-elements.html#fvyxg[Subelements]
+* link:dd-elements.html#giyik[`mail-resource`]
+
+** link:dd-elements.html#sthref147[Superelements]
+
+** link:dd-elements.html#sthref148[Subelements]
+
+** link:dd-elements.html#sthref151[Attributes]
+
+** link:dd-elements.html#sthref154[Properties]
+* link:dd-elements.html#beaum[`manager-properties`]
+
+** link:dd-elements.html#fvyyu[Superelements]
+
+** link:dd-elements.html#fvzcq[Subelements]
+
+** link:dd-elements.html#fvzdg[Properties]
+* link:dd-elements.html#beaun[`mapping-properties`]
+
+** link:dd-elements.html#fvywv[Superelements]
+* link:dd-elements.html#beauo[`max-cache-size`]
+
+** link:dd-elements.html#fvyyo[Superelements]
+
+** link:dd-elements.html#fvzbx[Subelements]
+* link:dd-elements.html#beaup[`max-pool-size`]
+
+** link:dd-elements.html#fvzdw[Superelements]
+
+** link:dd-elements.html#fvyxa[Subelements]
+* link:dd-elements.html#beauq[`max-wait-time-in-millis`]
+
+** link:dd-elements.html#fvyzg[Superelements]
+* link:dd-elements.html#beaur[`mdb-connection-factory`]
+
+** link:dd-elements.html#fvyzj[Superelements]
+
+** link:dd-elements.html#fvyxt[Subelements]
+* link:dd-elements.html#beaus[`mdb-resource-adapter`]
+
+** link:dd-elements.html#fvzdd[Superelements]
+
+** link:dd-elements.html#fvyyx[Subelements]
+* link:dd-elements.html#beaut[`message`]
+
+** link:dd-elements.html#fvzci[Superelements]
+
+** link:dd-elements.html#fvyxc[Subelements]
+* link:dd-elements.html#beauu[`message-destination`]
+
+** link:dd-elements.html#fvzaz[Superelements]
+
+** link:dd-elements.html#fvyxn[Subelements]
+* link:dd-elements.html#beauv[`message-destination-name`]
+
+** link:dd-elements.html#fvzcj[Superelements]
+
+** link:dd-elements.html#fvzbo[Subelements]
+* link:dd-elements.html#gauao[`message-destination-ref`]
+
+** link:dd-elements.html#gauam[Superelements]
+
+** link:dd-elements.html#gaual[Subelements]
+* link:dd-elements.html#gauat[`message-destination-ref-name`]
+
+** link:dd-elements.html#gauaj[Superelements]
+
+** link:dd-elements.html#gauas[Subelements]
+* link:dd-elements.html#beauw[`message-security`]
+
+** link:dd-elements.html#fvzac[Superelements]
+
+** link:dd-elements.html#fvyve[Subelements]
+* link:dd-elements.html#beaux[`message-security-binding`]
+
+** link:dd-elements.html#fvzbc[Superelements]
+
+** link:dd-elements.html#fvyxv[Subelements]
+
+** link:dd-elements.html#fvzbj[Attributes]
+* link:dd-elements.html#beauy[`message-security-config`]
+
+** link:dd-elements.html#fvyya[Superelements]
+
+** link:dd-elements.html#fvzck[Subelements]
+
+** link:dd-elements.html#fvyvw[Attributes]
+* link:dd-elements.html#beauz[`method`]
+
+** link:dd-elements.html#fvzae[Superelements]
+
+** link:dd-elements.html#fvzay[Subelements]
+* link:dd-elements.html#beava[`method-intf`]
+
+** link:dd-elements.html#fvywj[Superelements]
+
+** link:dd-elements.html#fvyyz[Subelements]
+* link:dd-elements.html#beavb[`method-name`]
+
+** link:dd-elements.html#fvyvp[Superelements]
+
+** link:dd-elements.html#fvzcp[Subelements]
+
+** link:dd-elements.html#fvzdr[Examples]
+* link:dd-elements.html#beavc[`method-param`]
+
+** link:dd-elements.html#fvzdl[Superelements]
+
+** link:dd-elements.html#fvyvj[Subelements]
+* link:dd-elements.html#beavd[`method-params`]
+
+** link:dd-elements.html#fvzdt[Superelements]
+
+** link:dd-elements.html#fvyzw[Subelements]
+* link:dd-elements.html#beavf[`name`]
+
+** link:dd-elements.html#fvyyf[Superelements]
+
+** link:dd-elements.html#fvyxe[Subelements]
+* link:dd-elements.html#beavg[`named-group`]
+
+** link:dd-elements.html#fvzds[Superelements]
+
+** link:dd-elements.html#fvyxr[Subelements]
+* link:dd-elements.html#beavh[`namespaceURI`]
+
+** link:dd-elements.html#fvywa[Superelements]
+
+** link:dd-elements.html#fvyzc[Subelements]
+* link:dd-elements.html#beavi[`none`]
+
+** link:dd-elements.html#fvyvv[Superelements]
+
+** link:dd-elements.html#fvzaw[Subelements]
+* link:dd-elements.html#beavk[`one-one-finders`]
+
+** link:dd-elements.html#fvyvg[Superelements]
+
+** link:dd-elements.html#fvywp[Subelements]
+* link:dd-elements.html#beavl[`operation-name`]
+
+** link:dd-elements.html#fvzas[Superelements]
+
+** link:dd-elements.html#fvyvt[Subelements]
+* link:dd-elements.html#beavn[`parameter-encoding`]
+
+** link:dd-elements.html#fvyzr[Superelements]
+
+** link:dd-elements.html#fvzbf[Subelements]
+
+** link:dd-elements.html#fvyxk[Attributes]
+* link:dd-elements.html#beavo[`pass-by-reference`]
+
+** link:dd-elements.html#fvzec[Superelements]
+
+** link:dd-elements.html#fvywx[Subelements]
+* link:dd-elements.html#beavp[`password`]
+
+** link:dd-elements.html#fvyvn[Superelements]
+
+** link:dd-elements.html#fvyvs[Subelements]
+* link:dd-elements.html#gkkia[`per-request-load-balancing`]
+
+** link:dd-elements.html#gkklx[Superelements]
+
+** link:dd-elements.html#gkkmq[Subelements]
+* link:dd-elements.html#beavq[`pm-descriptors`]
+
+** link:dd-elements.html#fvzbh[Superelements]
+* link:dd-elements.html#beavr[`pool-idle-timeout-in-seconds`]
+
+** link:dd-elements.html#fvzbm[Superelements]
+
+** link:dd-elements.html#fvzbs[Subelements]
+* link:dd-elements.html#beavs[`port-component-name`]
+
+** link:dd-elements.html#fvzbl[Superelements]
+
+** link:dd-elements.html#fvyys[Subelements]
+* link:dd-elements.html#beavt[`port-info`]
+
+** link:dd-elements.html#fvzdh[Superelements]
+
+** link:dd-elements.html#fvyva[Subelements]
+* link:dd-elements.html#beavu[`prefetch-disabled`]
+
+** link:dd-elements.html#fvyxl[Superelements]
+
+** link:dd-elements.html#fvyyb[Subelements]
+* link:dd-elements.html#beavv[`principal`]
+
+** link:dd-elements.html#fvyvy[Superelements]
+
+** link:dd-elements.html#fvzbt[Subelements]
+* link:dd-elements.html#giyif[`principal-map`]
+
+** link:dd-elements.html#sthref174[Superelements]
+
+** link:dd-elements.html#giyjg[Subelements]
+
+** link:dd-elements.html#sthref175[Attributes]
+* link:dd-elements.html#beavw[`principal-name`]
+
+** link:dd-elements.html#fvyws[Superelements]
+
+** link:dd-elements.html#fvyxp[Subelements]
+
+** link:dd-elements.html#gatzl[Attributes]
+* link:dd-elements.html#beavx[`property` (with attributes)]
+
+** link:dd-elements.html#fvzeb[Superelements]
+
+** link:dd-elements.html#fvyzv[Subelements]
+
+** link:dd-elements.html#fvyvi[Attributes]
+
+** link:dd-elements.html#fvzab[Example]
+* link:dd-elements.html#beavy[`property` (with subelements)]
+
+** link:dd-elements.html#fvzcl[Superelements]
+
+** link:dd-elements.html#fvzaf[Subelements]
+
+** link:dd-elements.html#fvyxz[Example]
+* link:dd-elements.html#beavz[`provider-config`]
+
+** link:dd-elements.html#fvzcy[Superelements]
+
+** link:dd-elements.html#fvyzt[Subelements]
+
+** link:dd-elements.html#fvywu[Attributes]
+* link:dd-elements.html#beawb[`query-filter`]
+
+** link:dd-elements.html#fvzdm[Superelements]
+
+** link:dd-elements.html#fvzco[Subelements]
+* link:dd-elements.html#beawc[`query-method`]
+
+** link:dd-elements.html#fvyxo[Superelements]
+
+** link:dd-elements.html#fvyzm[Subelements]
+* link:dd-elements.html#beawd[`query-ordering`]
+
+** link:dd-elements.html#fvzef[Superelements]
+
+** link:dd-elements.html#fvywd[Subelements]
+* link:dd-elements.html#beawe[`query-params`]
+
+** link:dd-elements.html#fvyvu[Superelements]
+
+** link:dd-elements.html#fvzax[Subelements]
+* link:dd-elements.html#beawf[`query-variables`]
+
+** link:dd-elements.html#fvyyg[Superelements]
+
+** link:dd-elements.html#fvzce[Subelements]
+* link:dd-elements.html#beawh[`read-only`]
+
+** link:dd-elements.html#fvyzs[Superelements]
+
+** link:dd-elements.html#fvzav[Subelements]
+* link:dd-elements.html#beawi[`realm`]
+
+** link:dd-elements.html#fvzaa[Superelements]
+
+** link:dd-elements.html#fvzdq[Subelements]
+* link:dd-elements.html#beawj[`refresh-field`]
+
+** link:dd-elements.html#fvywt[Superelements]
+
+** link:dd-elements.html#fvzbw[Subelements]
+
+** link:dd-elements.html#fvzbp[Attributes]
+* link:dd-elements.html#beawk[`refresh-period-in-seconds`]
+
+** link:dd-elements.html#fvzcn[Superelements]
+
+** link:dd-elements.html#fvyxh[Subelements]
+* link:dd-elements.html#beawl[`removal-timeout-in-seconds`]
+
+** link:dd-elements.html#fvzat[Superelements]
+
+** link:dd-elements.html#fvzeg[Subelements]
+* link:dd-elements.html#beawm[`remote-home-impl`]
+
+** link:dd-elements.html#fvywr[Superelements]
+
+** link:dd-elements.html#fvyyt[Subelements]
+* link:dd-elements.html#beawn[`remote-impl`]
+
+** link:dd-elements.html#fvyzi[Superelements]
+
+** link:dd-elements.html#fvzag[Subelements]
+* link:dd-elements.html#beawo[`request-policy`]
+
+** link:dd-elements.html#fvyxw[Superelements]
+
+** link:dd-elements.html#fvzdz[Subelements]
+
+** link:dd-elements.html#fvyvq[Attributes]
+* link:dd-elements.html#beawp[`request-protection`]
+
+** link:dd-elements.html#fvzcv[Superelements]
+
+** link:dd-elements.html#fvzby[Subelements]
+
+** link:dd-elements.html#fvzar[Attributes]
+* link:dd-elements.html#beawq[`required`]
+
+** link:dd-elements.html#fvyvc[Superelements]
+
+** link:dd-elements.html#fvywc[Subelements]
+* link:dd-elements.html#beawr[`res-ref-name`]
+
+** link:dd-elements.html#fvyvk[Superelements]
+
+** link:dd-elements.html#fvyyp[Subelements]
+* link:dd-elements.html#beaws[`resize-quantity`]
+
+** link:dd-elements.html#fvyxb[Superelements]
+
+** link:dd-elements.html#fvzcf[Subelements]
+* link:dd-elements.html#giyit[`resource-adapter-config`]
+
+** link:dd-elements.html#sthref188[Superelements]
+
+** link:dd-elements.html#sthref189[Subelements]
+
+** link:dd-elements.html#sthref192[Attributes]
+
+** link:dd-elements.html#sthref195[Properties]
+* link:dd-elements.html#beawt[`resource-adapter-mid`]
+
+** link:dd-elements.html#fvyvd[Superelements]
+
+** link:dd-elements.html#fvzed[Subelements]
+* link:dd-elements.html#beawu[`resource-env-ref`]
+
+** link:dd-elements.html#fvyvr[Superelements]
+
+** link:dd-elements.html#fvywe[Subelements]
+
+** link:dd-elements.html#fvzdf[Example]
+* link:dd-elements.html#beawv[`resource-env-ref-name`]
+
+** link:dd-elements.html#fvzau[Superelements]
+
+** link:dd-elements.html#fvyxj[Subelements]
+* link:dd-elements.html#beaww[`resource-ref`]
+
+** link:dd-elements.html#fvywf[Superelements]
+
+** link:dd-elements.html#fvyzz[Subelements]
+
+** link:dd-elements.html#fvyzk[Example]
+* link:dd-elements.html#giyiy[`resources`]
+
+** link:dd-elements.html#sthref198[Superelements]
+
+** link:dd-elements.html#sthref199[Subelements]
+* link:dd-elements.html#beawx[`response-policy`]
+
+** link:dd-elements.html#fvzcg[Superelements]
+
+** link:dd-elements.html#fvyxm[Subelements]
+
+** link:dd-elements.html#fvyxf[Attributes]
+* link:dd-elements.html#beawy[`response-protection`]
+
+** link:dd-elements.html#fvzdk[Superelements]
+
+** link:dd-elements.html#fvyxd[Subelements]
+
+** link:dd-elements.html#fvzeh[Attributes]
+* link:dd-elements.html#beawz[`role-name`]
+
+** link:dd-elements.html#fvzek[Superelements]
+
+** link:dd-elements.html#fvzei[Subelements]
+* link:dd-elements.html#beaxb[`sas-context`]
+
+** link:dd-elements.html#fvzel[Superelements]
+
+** link:dd-elements.html#fvzfb[Subelements]
+* link:dd-elements.html#beaxc[`schema`]
+
+** link:dd-elements.html#fvzfa[Superelements]
+
+** link:dd-elements.html#fvzeq[Subelements]
+
+** link:dd-elements.html#fvzer[Examples]
+* link:dd-elements.html#beaxd[`schema-generator-properties`]
+
+** link:dd-elements.html#fvzen[Superelements]
+
+** link:dd-elements.html#fvzez[Subelements]
+
+** link:dd-elements.html#fvzew[Properties]
+
+** link:dd-elements.html#fvzem[Example]
+* link:dd-elements.html#beaxe[`secondary-table`]
+
+** link:dd-elements.html#fvzep[Superelements]
+
+** link:dd-elements.html#fvzeo[Subelements]
+* link:dd-elements.html#beaxf[`security`]
+
+** link:dd-elements.html#fvzes[Superelements]
+
+** link:dd-elements.html#fvzeu[Subelements]
+* link:dd-elements.html#giyhy[`security-map`]
+
+** link:dd-elements.html#sthref210[Superelements]
+
+** link:dd-elements.html#sthref211[Subelements]
+
+** link:dd-elements.html#sthref214[Attributes]
+* link:dd-elements.html#beaxg[`security-role-mapping`]
+
+** link:dd-elements.html#fvzfc[Superelements]
+
+** link:dd-elements.html#fvzfd[Subelements]
+* link:dd-elements.html#beaxh[`service-endpoint-interface`]
+
+** link:dd-elements.html#fvzfm[Superelements]
+
+** link:dd-elements.html#fvzfl[Subelements]
+* link:dd-elements.html#beaxi[`service-impl-class`]
+
+** link:dd-elements.html#fvzfg[Superelements]
+
+** link:dd-elements.html#fvzfk[Subelements]
+* link:dd-elements.html#beaxj[`service-qname`]
+
+** link:dd-elements.html#fvzfn[Superelements]
+
+** link:dd-elements.html#fvzff[Subelements]
+* link:dd-elements.html#beaxk[`service-ref`]
+
+** link:dd-elements.html#fvzfh[Superelements]
+
+** link:dd-elements.html#fvzhf[Subelements]
+* link:dd-elements.html#beaxl[`service-ref-name`]
+
+** link:dd-elements.html#fvzfx[Superelements]
+
+** link:dd-elements.html#fvzga[Subelements]
+* link:dd-elements.html#beaxm[`servlet`]
+
+** link:dd-elements.html#fvzgd[Superelements]
+
+** link:dd-elements.html#fvzhs[Subelements]
+* link:dd-elements.html#beaxn[`servlet-impl-class`]
+
+** link:dd-elements.html#fvzhx[Superelements]
+
+** link:dd-elements.html#fvzfs[Subelements]
+* link:dd-elements.html#beaxo[`servlet-name`]
+
+** link:dd-elements.html#fvzhj[Superelements]
+
+** link:dd-elements.html#fvzir[Subelements]
+* link:dd-elements.html#beaxp[`session-config`]
+
+** link:dd-elements.html#fvzic[Superelements]
+
+** link:dd-elements.html#fvzfy[Subelements]
+* link:dd-elements.html#beaxq[`session-manager`]
+
+** link:dd-elements.html#fvzgx[Superelements]
+
+** link:dd-elements.html#fvzit[Subelements]
+
+** link:dd-elements.html#fvzgm[Attributes]
+* link:dd-elements.html#beaxr[`session-properties`]
+
+** link:dd-elements.html#fvzha[Superelements]
+
+** link:dd-elements.html#fvzgk[Subelements]
+
+** link:dd-elements.html#fvzht[Properties]
+* link:dd-elements.html#beaxs[`ssl`]
+
+** link:dd-elements.html#fvzft[Superelements]
+
+** link:dd-elements.html#fvzgh[Subelements]
+
+** link:dd-elements.html#fvzip[Attributes]
+* link:dd-elements.html#beaxt[`steady-pool-size`]
+
+** link:dd-elements.html#fvziq[Superelements]
+
+** link:dd-elements.html#fvziy[Subelements]
+* link:dd-elements.html#beaxu[`store-properties`]
+
+** link:dd-elements.html#fvzie[Superelements]
+
+** link:dd-elements.html#fvzid[Subelements]
+
+** link:dd-elements.html#fvzho[Properties]
+* link:dd-elements.html#beaxv[`stub-property`]
+
+** link:dd-elements.html#fvzgu[Superelements]
+
+** link:dd-elements.html#fvzij[Subelements]
+
+** link:dd-elements.html#gawoa[Properties]
+
+** link:dd-elements.html#fvzji[Example]
+* link:dd-elements.html#beaxy[`sun-cmp-mapping`]
+
+** link:dd-elements.html#fvzhh[Superelements]
+
+** link:dd-elements.html#fvzjg[Subelements]
+* link:dd-elements.html#beaxz[`sun-cmp-mappings`]
+
+** link:dd-elements.html#fvzix[Superelements]
+
+** link:dd-elements.html#fvzjj[Subelements]
+* link:dd-elements.html#beayd[`table-name`]
+
+** link:dd-elements.html#fvzis[Superelements]
+
+** link:dd-elements.html#fvzjk[Subelements]
+* link:dd-elements.html#beaye[`target-server`]
+
+** link:dd-elements.html#fvzgy[Superelements]
+
+** link:dd-elements.html#fvzhi[Subelements]
+
+** link:dd-elements.html#fvzfp[Attributes]
+* link:dd-elements.html#beayf[`tie-class`]
+
+** link:dd-elements.html#fvzgz[Superelements]
+
+** link:dd-elements.html#fvzfq[Subelements]
+* link:dd-elements.html#beayg[`timeout`]
+
+** link:dd-elements.html#fvzhc[Superelements]
+
+** link:dd-elements.html#fvziv[Subelements]
+
+** link:dd-elements.html#fvzhd[Attributes]
+* link:dd-elements.html#beayh[`transport-config`]
+
+** link:dd-elements.html#fvzfo[Superelements]
+
+** link:dd-elements.html#fvzhv[Subelements]
+* link:dd-elements.html#beayi[`transport-guarantee`]
+
+** link:dd-elements.html#fvzhb[Superelements]
+
+** link:dd-elements.html#fvzgl[Subelements]
+* link:dd-elements.html#beayk[`unique-id`]
+
+** link:dd-elements.html#fvzig[Superelements]
+
+** link:dd-elements.html#fvzjc[Subelements]
+* link:dd-elements.html#beayl[`url-pattern`]
+
+** link:dd-elements.html#fvziw[Superelements]
+
+** link:dd-elements.html#fvzfw[Subelements]
+* link:dd-elements.html#giyiq[`user-group`]
+
+** link:dd-elements.html#sthref237[Superelements]
+
+** link:dd-elements.html#sthref238[Subelements]
+* link:dd-elements.html#beaym[`use-thread-pool-id`]
+
+** link:dd-elements.html#fvzhz[Superelements]
+
+** link:dd-elements.html#fvzhp[Subelements]
+* link:dd-elements.html#beayo[`value`]
+
+** link:dd-elements.html#fvzhq[Superelements]
+
+** link:dd-elements.html#fvzhe[Subelements]
+* link:dd-elements.html#gikqk[`valve`]
+
+** link:dd-elements.html#giksf[Superelements]
+
+** link:dd-elements.html#gikvt[Subelements]
+
+** link:dd-elements.html#gikuo[Attributes]
+
+** link:dd-elements.html#giksd[Example]
+* link:dd-elements.html#gbgdw[`vendor`]
+
+** link:dd-elements.html#gbgdu[Superelements]
+
+** link:dd-elements.html#gbgcq[Subelements]
+* link:dd-elements.html#gkkfd[`version-identifier`]
+
+** link:dd-elements.html#sthref241[Superelements]
+
+** link:dd-elements.html#sthref242[Subelements]
+* link:dd-elements.html#beayp[`victim-selection-policy`]
+
+** link:dd-elements.html#fvzhu[Superelements]
+
+** link:dd-elements.html#fvzfr[Subelements]
+
+** link:dd-elements.html#fvzgi[Example]
+* link:dd-elements.html#beayr[`web`]
+
+** link:dd-elements.html#fvzil[Superelements]
+
+** link:dd-elements.html#fvzge[Subelements]
+* link:dd-elements.html#beays[`web-uri`]
+
+** link:dd-elements.html#fvzhk[Superelements]
+
+** link:dd-elements.html#fvzik[Subelements]
+* link:dd-elements.html#beayt[`webservice-description`]
+
+** link:dd-elements.html#fvzjd[Superelements]
+
+** link:dd-elements.html#fvzgs[Subelements]
+* link:dd-elements.html#beayu[`webservice-description-name`]
+
+** link:dd-elements.html#fvzgp[Superelements]
+
+** link:dd-elements.html#fvzgw[Subelements]
+* link:dd-elements.html#beayv[`webservice-endpoint`]
+
+** link:dd-elements.html#fvzio[Superelements]
+
+** link:dd-elements.html#fvzjp[Subelements]
+* link:dd-elements.html#giyht[`work-security-map`]
+
+** link:dd-elements.html#sthref246[Superelements]
+
+** link:dd-elements.html#giyih[Subelements]
+
+** link:dd-elements.html#sthref249[Attributes]
+* link:dd-elements.html#beayw[`wsdl-override`]
+
+** link:dd-elements.html#fvzjl[Superelements]
+
+** link:dd-elements.html#fvzjq[Subelements]
+
+** link:dd-elements.html#fvzjt[Example]
+* link:dd-elements.html#beayx[`wsdl-port`]
+
+** link:dd-elements.html#fvzjo[Superelements]
+
+** link:dd-elements.html#fvzjm[Subelements]
+* link:dd-elements.html#beayy[`wsdl-publish-location`]
+
+** link:dd-elements.html#fvzjw[Superelements]
+
+** link:dd-elements.html#fvzjr[Subelements]
+
+** link:dd-elements.html#fvzjn[Example]
+
+

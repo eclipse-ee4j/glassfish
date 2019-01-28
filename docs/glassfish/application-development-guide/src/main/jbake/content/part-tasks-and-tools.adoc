@@ -1,0 +1,19 @@
+type=page
+status=published
+title=Development Tasks and Tools
+next=setting-up-dev-env.html
+prev=preface.html
+~~~~~~
+Development Tasks and Tools
+===========================
+
+[[fvxzc]][[GSDVG00045]][[part-i]]
+
+Part I +
+--------
+
+[[development-tasks-and-tools]]
+Development Tasks and Tools
+---------------------------
+
+

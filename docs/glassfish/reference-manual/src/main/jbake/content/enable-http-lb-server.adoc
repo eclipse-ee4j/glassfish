@@ -1,0 +1,102 @@
+type=page
+status=published
+title=enable-http-lb-server
+next=enable-monitoring.html
+prev=enable-http-lb-application.html
+~~~~~~
+enable-http-lb-server
+=====================
+
+[[enable-http-lb-server-1]][[GSRFM00127]][[enable-http-lb-server]]
+
+enable-http-lb-server
+---------------------
+
+enables a previously disabled sever or cluster managed by a load
+balancer
+
+[[sthref1111]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] enable-http-lb-server [--help] 
+target
+----
+
+[[sthref1112]]
+
+Description
+
+The `enable-http-lb-server` subcommand enables a standalone server
+instance or cluster for load balancing. By default, load balancing is
+enabled for instances and clusters.
+
+
+[NOTE]
+=======================================================================
+
+This subcommand is only applicable to Oracle GlassFish Server. This
+subcommand is not applicable to GlassFish Server Open Source Edition.
+
+=======================================================================
+
+
+[[sthref1113]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1114]]
+
+Operands
+
+target::
+  This operand specifies which server instances and clusters to enable.
+  Valid values are: +
+  * cluster_name- The name of a target cluster.
+  * instance_name- The name of a target server instance.
+
+[[sthref1115]]
+
+Examples
+
+[[GSRFM602]][[sthref1116]]
+
+Example 1   Enabling a Cluster for Load Balancing
+
+This example enables load balancing for a cluster named `mycluster`.
+
+[source,oac_no_warn]
+----
+asadmin> enable-http-lb-server mycluster
+
+Command enable-http-lb-server executed successfully.
+----
+
+[[sthref1117]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1118]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-http-lb-ref.html#create-http-lb-ref-1[`create-http-lb-ref`(1)],
+link:disable-http-lb-server.html#disable-http-lb-server-1[`disable-http-lb-server`(1)]
+
+

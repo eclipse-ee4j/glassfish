@@ -1,0 +1,95 @@
+type=page
+status=published
+title=list-jobs
+next=list-jvm-options.html
+prev=list-jndi-resources.html
+~~~~~~
+list-jobs
+=========
+
+[[list-jobs-1]][[GSRFM867]][[list-jobs]]
+
+list-jobs
+---------
+
+lists information about subcommands that were started using
+`asadmin --detach` or that contain progress information
+
+[[sthref1600]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] list-jobs [--help]
+[job_id]
+----
+
+[[sthref1601]]
+
+Description
+
+The `list-jobs` subcommand lists information about subcommands that were
+started using the `asadmin` utility option `--detach` or that contain
+progress information. The `--detach` option detaches long-running
+subcommands and executes them in the background in detach mode.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1602]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1603]]
+
+Operands
+
+job_id::
+  The ID of the job for which you want to list information.
+
+[[sthref1604]]
+
+Examples
+
+[[GSRFM868]][[sthref1605]]
+
+Example 1   Checking Job Status
+
+This example provides information about subcommands that were started
+using `asadmin --detach` or that contain progress information.
+
+[source,oac_no_warn]
+----
+asadmin> list-jobs
+JOB ID     COMMAND           STATE       EXIT CODE TIME OF COMPLETION
+1          create-cluster    COMPLETED   SUCCESS   2013-02-15 16:16:16 PST
+2          deploy            COMPLETED   FAILURE   2013-02-15 18:26:30 PST
+Command list-jobs executed successfully
+----
+
+[[sthref1606]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1607]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:attach.html#attach-1[`attach`(1)],
+link:configure-managed-jobs.html#configure-managed-jobs-1[`configure-managed-jobs`(1)]
+
+

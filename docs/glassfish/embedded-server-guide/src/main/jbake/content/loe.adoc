@@ -1,0 +1,44 @@
+type=page
+status=published
+title=List of Examples
+next=lot.html
+prev=toc.html
+~~~~~~
+List of Examples
+================
+
+[[list-of-examples]]
+List of Examples
+----------------
+
+* link:embedded-server-guide.html#gikmz[1-1 Creating an Embedded
+GlassFish Server]
+* link:embedded-server-guide.html#gksjo[1-2 Creating an Embedded
+GlassFish Server with configuration customizations]
+* link:embedded-server-guide.html#gjkxc[1-3 Setting the port of an
+Embedded GlassFish Server]
+* link:embedded-server-guide.html#gilry[1-4 Starting an Embedded
+GlassFish Server]
+* link:embedded-server-guide.html#gilnz[1-5 Stopping an Embedded
+GlassFish Server]
+* link:embedded-server-guide.html#gioph[1-6 Deploying an Application From
+an Archive File]
+* link:embedded-server-guide.html#gilwu[1-7 Undeploying an Application]
+* link:embedded-server-guide.html#gjrfq[1-8 Deploying an Application From
+a Scattered Archive]
+* link:embedded-server-guide.html#gkvga[1-9 Deploying an Application From
+a Scattered Enterprise Archive]
+* link:embedded-server-guide.html#gjldj[1-10 Running an asadmin
+create-jdbc-resource Command]
+* link:embedded-server-guide.html#gjlfm[1-11 Running an asadmin
+set-log-level Command]
+* link:embedded-server-guide.html#gionq[1-12 Using an Existing domain.xml
+File and Deploying an Application From an Archive File]
+* link:embedded-server-guide.html#gjkod[1-13 POM File for Configuring
+Maven to Use Embedded GlassFish Server]
+* link:embedded-server-guide.html#gjxds[1-14 Maven POM File for Using the
+EJB 3.1 Embeddable API with Embedded GlassFish Server]
+* link:embedded-server-guide.html#gkrhh[1-15 Using the GlassFish Server
+Embedded Server API]
+* link:embedded-server-guide.html#gkrgw[1-16 Creating a Custom Logging
+Configuration File]

@@ -1,0 +1,14 @@
+theme: jekyll-theme-architect
+
+title: [add-on-component-development-guide]
+description: [Eclipse GlassFish Server Add-On Component Development Guide, Release 5.1]
+
+# sidebar links url
+links:
+  source: https://github.com/javaee/add-on-component-development-guide
+  download: https://github.com/javaee/add-on-component-development-guide/releases
+  #mailinglist: https://javaee.groups.io/g/add-on-component-development-guide
+  #javadocs:
+  docs: https://javaee.github.io/add-on-component-development-guide
+  #faq:
+

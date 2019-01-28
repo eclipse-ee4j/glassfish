@@ -1,0 +1,14 @@
+theme: jekyll-theme-architect
+
+title: [embedded-server-guide]
+description: [Eclipse GlassFish Server Embedded Server Guide, Release 5.1]
+
+# sidebar links url
+links:
+  source: https://github.com/javaee/embedded-server-guide
+  download: https://github.com/javaee/embedded-server-guide/releases
+  #mailinglist: https://javaee.groups.io/g/embedded-server-guide
+  #javadocs:
+  docs: https://javaee.github.io/embedded-server-guide
+  #faq:
+

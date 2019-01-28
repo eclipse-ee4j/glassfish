@@ -1,0 +1,108 @@
+type=page
+status=published
+title=set-log-file-format
+next=set-log-levels.html
+prev=set-log-attributes.html
+~~~~~~
+set-log-file-format
+===================
+
+[[set-log-file-format-1]][[GSRFM879]][[set-log-file-format]]
+
+set-log-file-format
+-------------------
+
+sets the formatter to be used for the server log file
+
+[[sthref2049]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] set-log-file-format [--help]
+[--target target]
+[formatter]
+----
+
+[[sthref2050]]
+
+Description
+
+The `set-log-file-format` subcommand sets the formatter to be used for
+the server log file for the specified target.
+
+\{product---name} provides the ULF (UniformLogFormatter) and ODL (Oracle
+Diagnostics Logging) formatters. A custom formatter can also be used by
+specifying the fully qualified name of a class that extends the
+`java.util.logging.Formatter` class.
+
+The custom formatter class can be packaged in a JAR file and placed in
+domain`/lib/ext`, or implemented as an HK2 service and the JAR
+containing the formatter implementation installed in
+`glassfish/modules`.
+
+This subcommand is supported in remote mode only.
+
+[[sthref2051]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Specifies the target for which the formatter is being set. Specify the
+  name of the server domain, instance, or cluster. If this option is
+  omitted, logger attributes are set for the default server.
+
+[[sthref2052]]
+
+Operands
+
+formatter::
+  Specifies the fomatter to be used for the server log file. Valid
+  values are ULF, ODL, or the fully qualified name of the custom
+  formatter class to be used to render the log files. The default value
+  is ODL.
+
+[[sthref2053]]
+
+Examples
+
+[[GSRFM880]][[sthref2054]]
+
+Example 1   Setting the Log File Format
+
+This example sets the server log file format to `ULF` for `server1`.
+
+[source,oac_no_warn]
+----
+asadmin> set-log-file-format --target server1 ULF
+Command set-log-file-format executed successfully.
+----
+
+[[sthref2055]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref2056]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-loggers.html#list-loggers-1[`list-loggers`(1)]
+
+"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in GlassFish
+Server Open Source Edition Administration Guide
+
+

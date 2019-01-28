@@ -1,0 +1,38 @@
+type=page
+status=published
+title=application
+next=configuration.html
+prev=manvol5asc.html
+~~~~~~
+application
+===========
+
+[[application-5asc]][[GSRFM00265]][[application]]
+
+application
+-----------
+
+server-side Java applications and web services
+
+[[sthref2392]]
+
+Description
+
+The Java EE platform enables applications to access systems that are
+outside of the application server. Applications connect to these systems
+through resources. The \{product---name} infrastructure supports the
+deployment of many types of distributed applications and is an ideal
+foundation for building applications based on Service Oriented
+Architectures (SOA). SOA is a design methodology aimed at maximizing the
+reuse of application services. These features enable you to run scalable
+and highly available Java EE applications.
+
+[[sthref2393]]
+
+See Also
+
+link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
+link:deploy.html#deploy-1[`deploy`(1)],
+link:list-applications.html#list-applications-1[`list-applications`(1)]
+
+

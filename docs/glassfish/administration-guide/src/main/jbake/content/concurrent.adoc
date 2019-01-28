@@ -1,0 +1,880 @@
+type=page
+status=published
+title=Administering Concurrent Resources
+next=orb.html
+prev=http_https.html
+~~~~~~
+Administering Concurrent Resources
+==================================
+
+[[GSADG1108]][[sthref73]]
+
+
+[[administering-concurrent-resources]]
+14 Administering Concurrent Resources
+-------------------------------------
+
+This chapter provides procedures for administering concurrent resources
+in the GlassFish Server environment by using the `asadmin` command-line
+utility.
+
+The following topics are addressed here:
+
+* link:#DAFGCCDI[About Concurrent Resources]
+* link:#DAFFGDCD[Default Concurrent Resources]
+* link:#DAFFCEEA[Configuring Context Services]
+* link:#DAFBAAIJ[Configuring Managed Thread Factories]
+* link:#DAFBHEDI[Configuring Managed Executor Services]
+* link:#DAFHJHCF[Configuring Managed Scheduled Executor Services]
+
+Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.
+
+[[DAFGCCDI]][[GSADG1109]][[about-concurrent-resources]]
+
+About Concurrent Resources
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Concurrent resources are managed objects that provide concurrency
+capabilities to Java EE applications. In GlassFish Server, you configure
+concurrent resources and make them available for use by application
+components such as servlets and EJBs. Concurrent resources are accessed
+through JNDI lookup or resource injection.
+
+Concurrent resources are resources of the following types:
+
+* Context services. See link:#DAFFCEEA[Configuring Context Services].
+* Managed thread factories. See link:#DAFBAAIJ[Configuring Managed
+Thread Factories].
+* Managed executor services. See link:#DAFBHEDI[Configuring Managed
+Executor Services].
+* Managed scheduled executor services. See link:#DAFHJHCF[Configuring
+Managed Scheduled Executor Services].
+
+For detailed information about concurrent resources, see
+"https://javaee.github.io/tutorial/concurrency-utilities.html[Concurrency
+Utilities]" in The Java EE 8 Tutorial. Also see
+http://jcp.org/en/jsr/detail?id=236[Java Specification Request 236:
+Concurrency Utilities for Java EE]
+(`http://jcp.org/en/jsr/detail?id=236`).
+
+[[DAFFGDCD]][[GSADG1110]][[default-concurrent-resources]]
+
+Default Concurrent Resources
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When you create a concurrent resource, you specify a unique JNDI name
+for the resource. Applications use this name to access the resource.
+
+The Java EE standard specifies that certain default resources be made
+available to applications, and defines specific JNDI names for these
+default resources. GlassFish Server makes these names available through
+the use of logical JNDI names, which map Java EE standard JNDI names to
+specific GlassFish Server resources. For concurrent resources, the
+mappings are as follows:
+
+java:comp/DefaultContextService::
+  This Java EE standard name is mapped to the
+  `concurrent/__defaultContextService` resource.
+java:comp/DefaultManagedThreadFactory::
+  This Java EE standard name is mapped to the
+  `concurrent/__defaultManagedThreadFactory` resource.
+java:comp/DefaultManagedExecutorService::
+  This Java EE standard name is mapped to the
+  `concurrent/__defaultManagedExecutorService` resource.
+java:comp/DefaultManagedScheduledExecutorService::
+  This Java EE standard name is mapped to the
+  `concurrent/__defaultManagedScheduledExecutorService` resource.
+
+[[DAFFCEEA]][[GSADG1111]][[configuring-context-services]]
+
+Configuring Context Services
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Context services are used to create dynamic proxy objects that capture
+the context of a container and enable applications to run within that
+context at a later time. The context of the container is propagated to
+the thread executing the task.
+
+The following tasks are used to administer context service resources:
+
+* link:#DAFJACDI[To Create a Context Service]
+* link:#DAFDCFCB[To List Context Services]
+* link:#DAFBFICB[To Update a Context Service]
+* link:#DAFGGGEC[To Delete a Context Service]
+
+[[DAFJACDI]][[GSADG1112]][[to-create-a-context-service]]
+
+To Create a Context Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `create-context-service` subcommand in remote mode to create a
+context service resource.
+
+Because all JNDI names are in the `java:comp/env` subcontext, when
+specifying the JNDI name of a context service, use only the
+`concurrent/`name format. For example, `concurrent/Context1`.
+
+For more information about the default context service resource included
+with GlassFish Server, see link:#DAFFGDCD[Default Concurrent Resources].
+
+
+[NOTE]
+=======================================================================
+
+Creating a context service resource is a dynamic event and typically
+does not require server restart. Applications can use a resource as soon
+as it is created. However, if an application tried to use a resource
+before it was created, and that resource is created later, the
+application or the server must be restarted. Otherwise, the application
+will not be able to locate the resource.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  Create a context service by using the
+link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-context-service`] subcommand.
+3.  If necessary, notify users that the new resource has been created.
+
+[[GSADG1113]][[sthref74]]
+
+
+Example 14-1 Creating a Context Service
+
+This example creates a context service resource named
+`concurrent/Context1`.
+
+[source,oac_no_warn]
+----
+asadmin> create-context-service concurrent/Context1
+Context service concurrent/Context1 created successfully.
+Command create-context-service executed successfully.
+----
+
+[[GSADG1114]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-context-service` at the command line.
+
+[[DAFDCFCB]][[GSADG1115]][[to-list-context-services]]
+
+To List Context Services
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `list-context-services` subcommand in remote mode to list the
+existing context service resources.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List context service resources by using the
+link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-context-services`] subcommand.
+
+[[GSADG1116]][[sthref75]]
+
+
+Example 14-2 Listing Context Services
+
+This example lists context service resources on the default server
+instance, `server`.
+
+[source,oac_no_warn]
+----
+asadmin> list-context-services
+concurrent/__defaultContextService
+concurrent/Context1
+concurrent/Context2
+Command list-context-services executed successfully.
+----
+
+[[GSADG1117]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-context-services` at the command line.
+
+[[DAFBFICB]][[GSADG1118]][[to-update-a-context-service]]
+
+To Update a Context Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can change all of the settings for an existing context service
+resource except its JNDI name. Use the `get` and `set` subcommands to
+view and change the values of the context service attributes.
+
+
+[NOTE]
+=======================================================================
+
+When a resource is updated, the existing resource is shut down and
+recreated. If an application used the resource prior to the update, the
+application or the server must be restarted.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the context service resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-context-services`] subcommand.
+3.  View the attributes of a specific context service by using the `get`
+subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> get resources.context-service.concurrent/Context1.*
+----
+4.  Set an attribute of the context service by using the `set`
+subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> set resources.context-service.concurrent/Context1.deployment-order=120
+----
+
+[[DAFGGGEC]][[GSADG1119]][[to-delete-a-context-service]]
+
+To Delete a Context Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `delete-context-service` subcommand in remote mode to delete an
+existing context service. Deleting a context service is a dynamic event
+and does not require server restart.
+
+Before deleting a context service resource, all associations to the
+resource must be removed.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the context service resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-context-services`] subcommand.
+3.  If necessary, notify users that the context service is being
+deleted.
+4.  Delete the context service by using the
+link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-context-service`] subcommand.
+
+[[GSADG1120]][[sthref76]]
+
+
+Example 14-3 Deleting a Context Service
+
+This example deletes the context service resource named
+`concurrent/Context1`.
+
+[source,oac_no_warn]
+----
+asadmin> delete-context-service concurrent/Context1
+Context service concurrent/Context1 deleted successfully.
+Command delete-context-service executed successfully.
+----
+
+[[GSADG1121]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-context-service` at the command line.
+
+[[DAFBAAIJ]][[GSADG1122]][[configuring-managed-thread-factories]]
+
+Configuring Managed Thread Factories
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Managed thread factories are used by applications to create managed
+threads on demand. The threads are started and managed by the container.
+The context of the container is propagated to the thread executing the
+task.
+
+The following tasks are used to administer managed thread factory
+resources:
+
+* link:#DAFGFAEI[To Create a Managed Thread Factory]
+* link:#DAFDGEGE[To List Managed Thread Factories]
+* link:#DAFDIJIH[To Update a Managed Thread Factory]
+* link:#DAFCEDEI[To Delete a Managed Thread Factory]
+
+[[DAFGFAEI]][[GSADG1123]][[to-create-a-managed-thread-factory]]
+
+To Create a Managed Thread Factory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `create-managed-thread-factory` subcommand in remote mode to
+create a managed thread factory resource.
+
+Because all JNDI names are in the `java:comp/env` subcontext, when
+specifying the JNDI name of a managed thread factory, use only the
+`concurrent/`name format. For example, `concurrent/Factory1`.
+
+For more information about the default managed thread factory resource
+included with GlassFish Server, see link:#DAFFGDCD[Default Concurrent
+Resources].
+
+
+[NOTE]
+=======================================================================
+
+Creating a managed thread factory resource is a dynamic event and
+typically does not require server restart. Applications can use a
+resource as soon as it is created. However, if an application tried to
+use a resource before it was created, and that resource is created
+later, the application or the server must be restarted. Otherwise, the
+application will not be able to locate the resource.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  Create a managed thread factory by using the
+link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-thread-factory`] subcommand.
+3.  If necessary, notify users that the new resource has been created.
+
+[[GSADG1124]][[sthref77]]
+
+
+Example 14-4 Creating a Managed Thread Factory
+
+This example creates a managed thread factory resource named
+`concurrent/Factory1`.
+
+[source,oac_no_warn]
+----
+asadmin> create-managed-thread-factory concurrent/Factory1
+Managed thread factory concurrent/Factory1 created successfully.
+Command create-managed-thread-factory executed successfully.
+----
+
+[[GSADG1125]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-managed-thread-factory` at the command line.
+
+[[DAFDGEGE]][[GSADG1126]][[to-list-managed-thread-factories]]
+
+To List Managed Thread Factories
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `list-managed-thread-factories` subcommand in remote mode to
+list the existing managed thread factory resources.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List managed thread factory resources by using the
+link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-thread-factories`] subcommand.
+
+[[GSADG1127]][[sthref78]]
+
+
+Example 14-5 Listing Managed Thread Factories
+
+This example lists managed thread factory resources on the default
+server instance, `server`.
+
+[source,oac_no_warn]
+----
+asadmin> list-managed-thread-factories
+concurrent/__defaultManagedThreadFactory
+concurrent/Factory1
+concurrent/Factory2
+Command list-managed-thread-factories executed successfully.
+----
+
+[[GSADG1128]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-managed-thread-factories` at the command line.
+
+[[DAFDIJIH]][[GSADG1129]][[to-update-a-managed-thread-factory]]
+
+To Update a Managed Thread Factory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can change all of the settings for an existing managed thread
+factory resource except its JNDI name. Use the `get` and `set`
+subcommands to view and change the values of the managed thread factory
+attributes.
+
+
+[NOTE]
+=======================================================================
+
+When a resource is updated, the existing resource is shut down and
+recreated. If applications used the resource prior to the update, the
+application or the server must be restarted.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the managed thread factory resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-thread-factories`] subcommand.
+3.  View the attributes of a managed thread factory by using the `get`
+subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> get resources.managed-thread-factory.concurrent/Factory1.*
+----
+4.  Set an attribute of the managed thread factory by using the `set`
+subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> set resources.managed-thread-factory.concurrent/Factory1.deployment-order=120
+----
+
+[[DAFCEDEI]][[GSADG1130]][[to-delete-a-managed-thread-factory]]
+
+To Delete a Managed Thread Factory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `delete-managed-thread-factory` subcommand in remote mode to
+delete an existing managed thread factory. Deleting a managed thread
+factory is a dynamic event and does not require server restart.
+
+Before deleting a managed thread factory resource, all associations to
+the resource must be removed.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the managed thread factory resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-thread-factories`] subcommand.
+3.  If necessary, notify users that the managed thread factory is being
+deleted.
+4.  Delete the managed thread factory by using the
+link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-thread-factory`] subcommand.
+
+[[GSADG1131]][[sthref79]]
+
+
+Example 14-6 Deleting a Managed Thread Factory
+
+This example deletes the managed thread factory resource named
+`concurrent/Factory1`.
+
+[source,oac_no_warn]
+----
+asadmin> delete-managed-thread-factory concurrent/Factory1
+Managed thread factory concurrent/Factory1 deleted successfully.
+Command delete-managed-thread-factory executed successfully.
+----
+
+[[GSADG1132]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-managed-thread-factory` at the command line.
+
+[[DAFBHEDI]][[GSADG1133]][[configuring-managed-executor-services]]
+
+Configuring Managed Executor Services
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Managed executor services are used by applications to execute submitted
+tasks asynchronously. Tasks are executed on threads that are started and
+managed by the container. The context of the container is propagated to
+the thread executing the task.
+
+The following tasks are used to administer managed executor service
+resources:
+
+* link:#DAFJIEGA[To Create a Managed Executor Service]
+* link:#DAFIJDAE[To List Managed Executor Services]
+* link:#DAFICEJF[To Update a Managed Executor Service]
+* link:#DAFDAGAD[To Delete a Managed Executor Service]
+
+[[DAFJIEGA]][[GSADG1134]][[to-create-a-managed-executor-service]]
+
+To Create a Managed Executor Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `create-managed-executor-service` subcommand in remote mode to
+create a managed executor service resource.
+
+Because all JNDI names are in the `java:comp/env` subcontext, when
+specifying the JNDI name of a managed executor service, use only the
+`concurrent/`name format. For example, `concurrent/Executor1`.
+
+For more information about the default managed executor service resource
+included with GlassFish Server, see link:#DAFFGDCD[Default Concurrent
+Resources].
+
+
+[NOTE]
+=======================================================================
+
+Creating a managed executor service resource is a dynamic event and
+typically does not require server restart. Applications can use a
+resource as soon as it is created. However, if an application tried to
+use a resource before it was created, and that resource is created
+later, the application or the server must be restarted. Otherwise, the
+application will not be able to locate the resource.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  Create a managed executor service by using the
+link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-executor-service`] subcommand.
+3.  If necessary, notify users that the new resource has been created.
+
+[[GSADG1135]][[sthref80]]
+
+
+Example 14-7 Creating a Managed Executor Service
+
+This example creates a managed executor service resource named
+`concurrent/Executor1`.
+
+[source,oac_no_warn]
+----
+asadmin> create-managed-executor-service concurrent/Executor1
+Managed executor service concurrent/Executor1 created successfully.
+Command create-managed-executor-service executed successfully.
+----
+
+[[GSADG1136]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-managed-executor-service` at the command
+line.
+
+[[DAFIJDAE]][[GSADG1137]][[to-list-managed-executor-services]]
+
+To List Managed Executor Services
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `list-managed-executor-services` subcommand in remote mode to
+list the existing managed executor service resources.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List managed executor service resources by using the
+link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-executor-services`] subcommand.
+
+[[GSADG1138]][[sthref81]]
+
+
+Example 14-8 Listing Managed Executor Services
+
+This example lists managed executor service resources on the default
+server instance, `server`.
+
+[source,oac_no_warn]
+----
+asadmin> list-managed-executor-services
+concurrent/__defaultManagedExecutorService
+concurrent/Executor1
+concurrent/Executor2
+Command list-managed-executor-services executed successfully.
+----
+
+[[GSADG1139]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-managed-executor-services` at the command
+line.
+
+[[DAFICEJF]][[GSADG1140]][[to-update-a-managed-executor-service]]
+
+To Update a Managed Executor Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can change all of the settings for an existing managed executor
+service resource except its JNDI name. Use the `get` and `set`
+subcommands to view and change the values of the managed executor
+service attributes.
+
+
+[NOTE]
+=======================================================================
+
+When a resource is updated, the existing resource is shut down and
+recreated. If applications used the resource prior to the update, the
+application or the server must be restarted.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the managed executor service resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-executor-services`] subcommand.
+3.  View the attributes of a managed executor service by using the `get`
+subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> get resources.managed-executor-service.concurrent/Executor1.*
+----
+4.  Set an attribute of the managed executor service by using the `set`
+subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> set resources.managed-executor-service.concurrent/Executor1.deployment-order=120
+----
+
+[[DAFDAGAD]][[GSADG1141]][[to-delete-a-managed-executor-service]]
+
+To Delete a Managed Executor Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `delete-managed-executor-service` subcommand in remote mode to
+delete an existing managed executor service. Deleting a managed executor
+service is a dynamic event and does not require server restart.
+
+Before deleting a managed executor service resource, all associations to
+the resource must be removed.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the managed executor service resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-executor-services`] subcommand.
+3.  If necessary, notify users that the managed executor service is
+being deleted.
+4.  Delete the managed executor service by using the
+link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-executor-service`] subcommand.
+
+[[GSADG1142]][[sthref82]]
+
+
+Example 14-9 Deleting a Managed Executor Service
+
+This example deletes the managed executor service resource named
+`concurrent/Executor1`.
+
+[source,oac_no_warn]
+----
+asadmin> delete-managed-executor-service concurrent/Executor1
+Managed executor service concurrent/Executor1 deleted successfully.
+Command delete-managed-executor-service executed successfully.
+----
+
+[[GSADG1143]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-managed-executor-service` at the command
+line.
+
+[[DAFHJHCF]][[GSADG1144]][[configuring-managed-scheduled-executor-services]]
+
+Configuring Managed Scheduled Executor Services
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Managed scheduled executor services are used by applications to execute
+submitted tasks asynchronously at specific times. Tasks are executed on
+threads that are started and managed by the container. The context of
+the container is propagated to the thread executing the task.
+
+The following tasks are used to administer managed scheduled executor
+service resources:
+
+* link:#DAFFGDGG[To Create a Managed Scheduled Executor Service]
+* link:#DAFJBADD[To List Managed Scheduled Executor Services]
+* link:#DAFGEBEI[To Update a Managed Scheduled Executor Service]
+* link:#DAFEBEGC[To Delete a Managed Scheduled Executor Service]
+
+[[DAFFGDGG]][[GSADG1145]][[to-create-a-managed-scheduled-executor-service]]
+
+To Create a Managed Scheduled Executor Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `create-managed-scheduled-executor-service` subcommand in remote
+mode to create a managed scheduled executor service resource.
+
+Because all JNDI names are in the `java:comp/env` subcontext, when
+specifying the JNDI name of a managed scheduled executor service, use
+only the `concurrent/`name format. For example,
+`concurrent/ScheduledExecutor1`.
+
+For more information about the default managed scheduled executor
+service resource included with GlassFish Server, see
+link:#DAFFGDCD[Default Concurrent Resources].
+
+
+[NOTE]
+=======================================================================
+
+Creating a managed scheduled executor service resource is a dynamic
+event and typically does not require server restart. Applications can
+use a resource as soon as it is created. However, if an application
+tried to use a resource before it was created, and that resource is
+created later, the application or the server must be restarted.
+Otherwise, the application will not be able to locate the resource.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  Create a managed scheduled executor service by using the
+link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-scheduled-executor-service`]
+subcommand.
+3.  If necessary, notify users that the new resource has been created.
+
+[[GSADG1146]][[sthref83]]
+
+
+Example 14-10 Creating a Managed Scheduled Executor Service
+
+This example creates a managed scheduled executor service resource named
+`concurrent/ScheduledExecutor1`.
+
+[source,oac_no_warn]
+----
+asadmin> create-managed-scheduled-executor-service concurrent/ScheduledExecutor1
+Managed scheduled executor service concurrent/ScheduledExecutor1 created successfully.
+Command create-managed-scheduled-executor-service executed successfully.
+----
+
+[[GSADG1147]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-managed-scheduled-executor-service` at the
+command line.
+
+[[DAFJBADD]][[GSADG1148]][[to-list-managed-scheduled-executor-services]]
+
+To List Managed Scheduled Executor Services
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `list-managed-scheduled-executor-services` subcommand in remote
+mode to list the existing managed scheduled executor service resources.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List managed scheduled executor service resources by using the
+link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-scheduled-executor-services`] subcommand.
+
+[[GSADG1149]][[sthref84]]
+
+
+Example 14-11 Listing Managed Scheduled Executor Services
+
+This example lists managed scheduled executor service resources on the
+default server instance, `server`.
+
+[source,oac_no_warn]
+----
+asadmin> list-managed-scheduled-executor-services
+concurrent/__defaultManagedScheduledExecutorService
+concurrent/ScheduledExecutor1
+concurrent/ScheduledExecutor2
+Command list-managed-scheduled-executor-services executed successfully.
+----
+
+[[GSADG1150]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-managed-scheduled-executor-services` at the
+command line.
+
+[[DAFGEBEI]][[GSADG1151]][[to-update-a-managed-scheduled-executor-service]]
+
+To Update a Managed Scheduled Executor Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can change all of the settings for an existing managed scheduled
+executor service resource except its JNDI name. Use the `get` and `set`
+subcommands to view and change the values of the managed scheduled
+executor service attributes.
+
+
+[NOTE]
+=======================================================================
+
+When a resource is updated, the existing resource is shut down and
+recreated. If applications used the resource prior to the update, the
+application or the server must be restarted.
+
+=======================================================================
+
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the managed scheduled executor service resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-scheduled-executor-services`] subcommand.
+3.  View the attributes of a managed scheduled executor service by using
+the `get` subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> get resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.*
+----
+4.  Set an attribute of the managed scheduled executor service by using
+the `set` subcommand. +
+For example: +
+[source,oac_no_warn]
+----
+asdmin> set resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.deployment-order=120
+----
+
+[[DAFEBEGC]][[GSADG1152]][[to-delete-a-managed-scheduled-executor-service]]
+
+To Delete a Managed Scheduled Executor Service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `delete-managed-scheduled-executor-service` subcommand in remote
+mode to delete an existing managed scheduled executor service. Deleting
+a managed scheduled executor service is a dynamic event and does not
+require server restart.
+
+Before deleting a managed scheduled executor service resource, all
+associations to the resource must be removed.
+
+1.  Ensure that the server is running. +
+Remote subcommands require a running server.
+2.  List the managed scheduled executor service resources by using the
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-scheduled-executor-service`] subcommand.
+3.  If necessary, notify users that the managed scheduled executor
+service is being deleted.
+4.  Delete the managed scheduled executor service by using the
+link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-scheduled-executor-service`]
+subcommand.
+
+[[GSADG1153]][[sthref85]]
+
+
+Example 14-12 Deleting a Managed Scheduled Executor Service
+
+This example deletes the managed scheduled executor service resource
+named `concurrent/ScheduledExecutor1`.
+
+[source,oac_no_warn]
+----
+asadmin> delete-managed-scheduled-executor-service concurrent/ScheduledExecutor1
+Managed scheduled executor service concurrent/ScheduledExecutor1 deleted successfully.
+Command delete-managed-scheduled-executor-service executed successfully.
+----
+
+[[GSADG1154]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-managed-scheduled-executor-service` at the
+command line.
+
+

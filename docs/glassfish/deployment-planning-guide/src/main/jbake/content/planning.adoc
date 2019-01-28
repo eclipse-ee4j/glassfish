@@ -1,0 +1,957 @@
+type=page
+status=published
+title=Planning your Deployment
+next=checklist.html
+prev=concepts.html
+~~~~~~
+Planning your Deployment
+========================
+
+[[GSPLG00002]][[abfcb]]
+
+
+[[planning-your-deployment]]
+2 Planning your Deployment
+--------------------------
+
+Before deploying GlassFish Server, first determine the performance and
+availability goals, and then make decisions about the hardware, network,
+and storage requirements accordingly.
+
+The following topics are addressed here:
+
+* link:#abfcc[Establishing Performance Goals]
+* link:#abfcp[Planning the Network Configuration]
+* link:#abfcy[Planning for Availability]
+* link:#abfdg[Design Decisions]
+* link:#abfdn[Planning Message Queue Broker Deployment]
+
+[[abfcc]][[GSPLG00019]][[establishing-performance-goals]]
+
+Establishing Performance Goals
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+At its simplest, high performance means maximizing throughput and
+reducing response time. Beyond these basic goals, you can establish
+specific goals by determining the following:
+
+* What types of applications and services are deployed, and how do
+clients access them?
+* Which applications and services need to be highly available?
+* Do the applications have session state or are they stateless?
+* What request capacity or throughput must the system support?
+* How many concurrent users must the system support?
+* What is an acceptable average response time for user requests?
+* What is the average think time between requests?
+
+You can calculate some of these metrics using a remote browser emulator
+(RBE) tool, or web site performance and benchmarking software that
+simulates expected application activity. Typically, RBE and benchmarking
+products generate concurrent HTTP requests and then report the response
+time for a given number of requests per minute. You can then use these
+figures to calculate server activity.
+
+The results of the calculations described in this chapter are not
+absolute. Treat them as reference points to work against, as you
+fine-tune the performance of GlassFish Server and your applications.
+
+The following topics are addressed here:
+
+* link:#abfcd[Estimating Throughput]
+* link:#abfce[Estimating Load on GlassFish Server Instances]
+* link:#abfcq[Estimating Bandwidth Requirements]
+* link:#abfct[Estimating Peak Load]
+
+[[abfcd]][[GSPLG00054]][[estimating-throughput]]
+
+Estimating Throughput
+^^^^^^^^^^^^^^^^^^^^^
+
+In broad terms, throughput measures the amount of work performed by
+GlassFish Server. For GlassFish Server, throughput can be defined as the
+number of requests processed per minute per server instance.
+
+As described in the next section, GlassFish Server throughput is a
+function of many factors, including the nature and size of user
+requests, number of users, and performance of GlassFish Server instances
+and back-end databases. You can estimate throughput on a single machine
+by benchmarking with simulated workloads.
+
+High availability applications incur additional overhead because they
+periodically save session data. The amount of overhead depends on the
+amount of data, how frequently it changes, and how often it is saved.
+The first two factors depend on the application in question; the latter
+is also affected by server settings.
+
+[[abfce]][[GSPLG00055]][[estimating-load-on-glassfish-server-instances]]
+
+Estimating Load on GlassFish Server Instances
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Consider the following factors to estimate the load on GlassFish Server
+instances.
+
+The following topics are addressed here:
+
+* link:#abfcf[Maximum Number of Concurrent Users]
+* link:#abfcg[Think Time]
+* link:#abfch[Average Response Time]
+* link:#abfcj[Requests Per Minute]
+
+[[abfcf]][[GSPLG00025]][[maximum-number-of-concurrent-users]]
+
+Maximum Number of Concurrent Users
+++++++++++++++++++++++++++++++++++
+
+Users interact with an application through a client, such as a web
+browser or Java program. Based on the user's actions, the client
+periodically sends requests to the GlassFish Server. A user is
+considered active as long as the user's session has neither expired nor
+been terminated. When estimating the number of concurrent users, include
+all active users.
+
+Initially, as the number of users increases, throughput increases
+correspondingly. However, as the number of concurrent requests
+increases, server performance begins to saturate, and throughput begins
+to decline.
+
+Identify the point at which adding concurrent users reduces the number
+of requests that can be processed per minute. This point indicates when
+optimal performance is reached and beyond which throughput start to
+degrade. Generally, strive to operate the system at optimal throughput
+as much as possible. You might need to add processing power to handle
+additional load and increase throughput.
+
+[[abfcg]][[GSPLG00026]][[think-time]]
+
+Think Time
+++++++++++
+
+A user does not submit requests continuously. A user submits a request,
+the server receives and processes the request, and then returns a
+result, at which point the user spends some time before submitting a new
+request. The time between one request and the next is called think time.
+
+Think times are dependent on the type of users. For example,
+machine-to-machine interaction such as for a web service typically has a
+lower think time than that of a human user. You may have to consider a
+mix of machine and human interactions to estimate think time.
+
+Determining the average think time is important. You can use this
+duration to calculate the number of requests that need to be completed
+per minute, as well as the number of concurrent users the system can
+support.
+
+[[abfch]][[GSPLG00027]][[average-response-time]]
+
+Average Response Time
++++++++++++++++++++++
+
+Response time refers to the amount of time GlassFish Server takes to
+return the results of a request to the user. The response time is
+affected by factors such as network bandwidth, number of users, number
+and type of requests submitted, and average think time.
+
+In this section, response time refers to the mean, or average, response
+time. Each type of request has its own minimal response time. However,
+when evaluating system performance, base the analysis on the average
+response time of all requests.
+
+The faster the response time, the more requests per minute are being
+processed. However, as the number of users on the system increases, the
+response time starts to increase as well, even though the number of
+requests per minute declines.
+
+A system performance graph indicates that after a certain point,
+requests per minute are inversely proportional to response time. The
+sharper the decline in requests per minute, the steeper the increase in
+response time.
+
+The point of the peak load is the point at which requests per minute
+start to decline. Prior to this point, response time calculations are
+not necessarily accurate because they do not use peak numbers in the
+formula. After this point, (because of the inversely proportional
+relationship between requests per minute and response time), the
+administrator can more accurately calculate response time using maximum
+number of users and requests per minute.
+
+Use the following formula to determine T~response~, the response time
+(in seconds) at peak load:
+
+T~response~ = n/r - T~think~
+
+where
+
+* n is the number of concurrent users
+* r is the number requests per second the server receives
+* T~think~ is the average think time (in seconds) +
+To obtain an accurate response time result, always include think time in
+the equation.
+
+[[GSPLG00007]][[fygam]]
+
+
+Example 2-1 Calculation of Response Time
+
+If the following conditions exist:
+
+* Maximum number of concurrent users, n, that the system can support at
+peak load is 5,000.
+* Maximum number of requests, r, the system can process at peak load is
+1,000 per second.
+
+Average think time, T~think~, is three seconds per request.
+
+Thus, the calculation of response time is:
+
+T~response~ = n/r - T~think~ = (5000/ 1000) - 3 sec. = 5 - 3 sec.
+
+Therefore, the response time is two seconds.
+
+After the system's response time has been calculated, particularly at
+peak load, compare it to the acceptable response time for the
+application. Response time, along with throughput, is one of the main
+factors critical to GlassFish Server performance.
+
+[[abfcj]][[GSPLG00028]][[requests-per-minute]]
+
+Requests Per Minute
++++++++++++++++++++
+
+If you know the number of concurrent users at any given time, the
+response time of their requests, and the average user think time, then
+you can calculate the number of requests per minute. Typically, start by
+estimating the number of concurrent users that are on the system.
+
+For example, after running web site performance software, the
+administrator concludes that the average number of concurrent users
+submitting requests on an online banking web site is 3,000. This number
+depends on the number of users who have signed up to be members of the
+online bank, their banking transaction behavior, the time of the day or
+week they choose to submit requests, and so on.
+
+Therefore, knowing this information enables you to use the requests per
+minute formula described in this section to calculate how many requests
+per minute your system can handle for this user base. Since requests per
+minute and response time become inversely proportional at peak load,
+decide if fewer requests per minute is acceptable as a trade-off for
+better response time, or alternatively, if a slower response time is
+acceptable as a trade-off for more requests per minute.
+
+Experiment with the requests per minute and response time thresholds
+that are acceptable as a starting point for fine-tuning system
+performance. Thereafter, decide which areas of the system require
+adjustment.
+
+Solving for r in the equation in the previous section gives:
+
+r = n/(T~response~ + T~think~)
+
+[[GSPLG00008]][[fygaj]]
+
+
+Example 2-2 Calculation of Requests Per Second
+
+For the values:
+
+* n = 2,800 concurrent users
+* T~response~ = 1 (one second per request average response time)
+* T~think~ = 3, (three seconds average think time)
+
+The calculation for the number of requests per second is:
+
+[source,oac_no_warn]
+----
+r = 2800 / (1+3) = 700
+----
+
+Therefore, the number of requests per second is 700 and the number of
+requests per minute is 42000.
+
+[[abfcp]][[GSPLG00020]][[planning-the-network-configuration]]
+
+Planning the Network Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When planning how to integrate the GlassFish Server into the network,
+estimate the bandwidth requirements and plan the network in such a way
+that it can meet users' performance requirements.
+
+The following topics are addressed here:
+
+* link:#gkvdm[Setting Up Traffic Separation]
+* link:#abfcq[Estimating Bandwidth Requirements]
+* link:#abfcr[Calculating Bandwidth Required]
+* link:#abfct[Estimating Peak Load]
+* link:#abfcw[Choosing Network Cards]
+* link:#abfdc[Identifying Failure Classes]
+
+[[gkvdm]][[GSPLG00056]][[setting-up-traffic-separation]]
+
+Setting Up Traffic Separation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can separate external traffic, such as client requests, from the
+internal traffic, such as session state failover, database transactions,
+and messaging. Traffic separation enables you to plan a network better
+and augment certain parts of the network, as required.
+
+To separate the traffic, run each server instance on a multi-homed
+machine. A multi-homed machine has two IP addresses belonging to
+different networks, an external IP and an internal IP. The objective is
+to expose only the external IP to user requests. The internal IP is used
+only by the cluster instances for internal communication. For details,
+see "link:../ha-administration-guide/clusters.html#GSHAG00266[Using the Multi-Homing Feature With GMS]" in
+GlassFish Server Open Source Edition High Availability Administration
+Guide.
+
+To plan for traffic on both networks, see link:#abfcq[Estimating
+Bandwidth Requirements]. For external networks, follow the guidelines in
+link:#abfcr[Calculating Bandwidth Required] and link:#abfct[Estimating
+Peak Load]. To size the interfaces for internal networks, see
+link:#abfcw[Choosing Network Cards].
+
+[[abfcq]][[GSPLG00057]][[estimating-bandwidth-requirements]]
+
+Estimating Bandwidth Requirements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To decide on the desired size and bandwidth of the network, first
+determine the network traffic and identify its peak. Check if there is a
+particular hour, day of the week, or day of the month when overall
+volume peaks, and then determine the duration of that peak.
+
+During peak load times, the number of packets in the network is at its
+highest level. In general, if you design for peak load, scale your
+system with the goal of handling 100 percent of peak volume. Bear in
+mind, however, that any network behaves unpredictably and that despite
+your scaling efforts, it might not always be able handle 100 percent of
+peak volume.
+
+For example, assume that at peak load, five percent of users
+occasionally do not have immediate network access when accessing
+applications deployed on GlassFish Server. Of that five percent,
+estimate how many users retry access after the first attempt. Again, not
+all of those users might get through, and of that unsuccessful portion,
+another percentage will retry. As a result, the peak appears longer
+because peak use is spread out over time as users continue to attempt
+access.
+
+[[abfcr]][[GSPLG00058]][[calculating-bandwidth-required]]
+
+Calculating Bandwidth Required
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Based on the calculations made in link:#abfcc[Establishing Performance
+Goals], determine the additional bandwidth required for deploying
+GlassFish Server at your site.
+
+Depending on the method of access (T-1 lines, ADSL, cable modem, and so
+on), calculate the amount of increased bandwidth required to handle your
+estimated load. For example, suppose your site uses T-1 or higher-speed
+T-3 lines. Given their bandwidth, estimate how many lines are needed on
+the network, based on the average number of requests generated per
+second at your site and the maximum peak load. Calculate these figures
+using a web site analysis and monitoring tool.
+
+[[GSPLG00009]][[fygad]]
+
+
+Example 2-3 Calculation of Bandwidth Required
+
+A single T-1 line can handle 1.544 Mbps. Therefore, a network of four
+T-1 lines can handle approximately 6 Mbps of data. Assuming that the
+average HTML page sent back to a client is 30 kilobytes (KB), this
+network of four T-1 lines can handle the following traffic per second:
+
+6,176,000 bits/10 bits = 772,000 bytes per second
+
+772,000 bytes per second/30 KB = approximately 25 concurrent response
+pages per second.
+
+With traffic of 25 pages per second, this system can handle 90,000 pages
+per hour (25 x 60 seconds x 60 minutes), and therefore 2,160,000 pages
+per day maximum, assuming an even load throughout the day. If the
+maximum peak load is greater than this, increase the bandwidth
+accordingly.
+
+[[abfct]][[GSPLG00059]][[estimating-peak-load]]
+
+Estimating Peak Load
+^^^^^^^^^^^^^^^^^^^^
+
+Having an even load throughout the day is probably not realistic. You
+need to determine when the peak load occurs, how long it lasts, and what
+percentage of the total load is the peak load.
+
+[[GSPLG00010]][[fygai]]
+
+
+Example 2-4 Calculation of Peak Load
+
+If the peak load lasts for two hours and takes up 30 percent of the
+total load of 2,160,000 pages, this implies that 648,000 pages must be
+carried over the T-1 lines during two hours of the day.
+
+Therefore, to accommodate peak load during those two hours, increase the
+number of T-1 lines according to the following calculations:
+
+648,000 pages/120 minutes = 5,400 pages per minute
+
+5,400 pages per minute/60 seconds = 90 pages per second
+
+If four lines can handle 25 pages per second, then approximately four
+times that many pages requires four times that many lines, in this case
+16 lines. The 16 lines are meant for handling the realistic maximum of a
+30 percent peak load. Obviously, the other 70 percent of the load can be
+handled throughout the rest of the day by these many lines.
+
+[[abfcw]][[GSPLG00060]][[choosing-network-cards]]
+
+Choosing Network Cards
+^^^^^^^^^^^^^^^^^^^^^^
+
+For greater bandwidth and optimal network performance, use at least 100
+Mbps Ethernet cards or, preferably, 1 Gbps Ethernet cards between
+servers hosting GlassFish Server.
+
+[[abfcy]][[GSPLG00021]][[planning-for-availability]]
+
+Planning for Availability
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following topics are addressed here:
+
+* link:#abfcz[Rightsizing Availability]
+* link:#abfda[Using Clusters to Improve Availability]
+* link:#abfdb[Adding Redundancy to the System]
+
+[[abfcz]][[GSPLG00061]][[rightsizing-availability]]
+
+Rightsizing Availability
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+To plan availability of systems and applications, assess the
+availability needs of the user groups that access different
+applications. For example, external fee-paying users and business
+partners often have higher quality of service (QoS) expectations than
+internal users. Thus, it may be more acceptable to internal users for an
+application feature, application, or server to be unavailable than it
+would be for paying external customers.
+
+There is an increasing cost and complexity to mitigating against
+decreasingly probable events. At one end of the continuum, a simple
+load-balanced cluster can tolerate localized application, middleware,
+and hardware failures. At the other end of the scale, geographically
+distinct clusters can mitigate against major catastrophes affecting the
+entire data center.
+
+To realize a good return on investment, it often makes sense to identify
+availability requirements of features within an application. For
+example, it may not be acceptable for an insurance quotation system to
+be unavailable (potentially turning away new business), but brief
+unavailability of the account management function (where existing
+customers can view their current coverage) is unlikely to turn away
+existing customers.
+
+[[abfda]][[GSPLG00062]][[using-clusters-to-improve-availability]]
+
+Using Clusters to Improve Availability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+At the most basic level, a cluster is a group of GlassFish Server
+instances—often hosted on multiple physical servers—that appear to
+clients as a single instance. This provides horizontal scalability as
+well as higher availability than a single instance on a single machine.
+This basic level of clustering works in conjunction with the HTTP load
+balancer plug-in, which accepts HTTP and HTTPS requests and forwards
+them to one of the instances in the cluster. The ORB and integrated JMS
+brokers also perform load balancing to GlassFish Server clusters. If an
+instance fails, becomes unavailable (due to network faults), or becomes
+unresponsive, requests are redirected only to existing, available
+machines. The load balancer can also recognize when a failed instance
+has recovered and redistribute load accordingly.
+
+[[abfdb]][[GSPLG00063]][[adding-redundancy-to-the-system]]
+
+Adding Redundancy to the System
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+One way to achieve high availability is to add hardware and software
+redundancy to the system. When one unit fails, the redundant unit takes
+over. This is also referred to as fault tolerance. In general, to
+maximize high availability, determine and remove every possible point of
+failure in the system.
+
+[[abfdc]][[GSPLG00029]][[identifying-failure-classes]]
+
+Identifying Failure Classes
++++++++++++++++++++++++++++
+
+The level of redundancy is determined by the failure classes (types of
+failure) that the system needs to tolerate. Some examples of failure
+classes are:
+
+* System process
+* Machine
+* Power supply
+* Disk
+* Network failures
+* Building fires or other preventable disasters
+* Unpredictable natural catastrophes
+
+Duplicated system processes tolerate single system process failures, as
+well as single machine failures. Attaching the duplicated mirrored
+(paired) machines to different power supplies tolerates single power
+failures. By keeping the mirrored machines in separate buildings, a
+single-building fire can be tolerated. By keeping them in separate
+geographical locations, natural catastrophes like earthquakes can be
+tolerated.
+
+[[abfdf]][[GSPLG00030]][[planning-failover-capacity]]
+
+Planning Failover Capacity
+++++++++++++++++++++++++++
+
+Failover capacity planning implies deciding how many additional servers
+and processes you need to add to the GlassFish Server deployment so that
+in the event of a server or process failure, the system can seamlessly
+recover data and continue processing. If your system gets overloaded, a
+process or server failure might result, causing response time
+degradation or even total loss of service. Preparing for such an
+occurrence is critical to successful deployment.
+
+To maintain capacity, especially at peak loads, add spare machines
+running GlassFish Server instances to the existing deployment.
+
+For example, consider a system with two machines running one GlassFish
+Server instance each. Together, these machines handle a peak load of 300
+requests per second. If one of these machines becomes unavailable, the
+system will be able to handle only 150 requests, assuming an even load
+distribution between the machines. Therefore, half the requests during
+peak load will not be served.
+
+[[abfdg]][[GSPLG00022]][[design-decisions]]
+
+Design Decisions
+~~~~~~~~~~~~~~~~
+
+Design decisions include whether you are designing the system for peak
+or steady-state load, the number of machines in various roles and their
+sizes, and the size of the administration thread pool.
+
+The following topics are addressed here:
+
+* link:#abfdh[Designing for Peak or Steady State Load]
+* link:#abfdi[System Sizing]
+* link:#gkvcu[Sizing the Administration Thread Pool]
+
+[[abfdh]][[GSPLG00064]][[designing-for-peak-or-steady-state-load]]
+
+Designing for Peak or Steady State Load
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In a typical deployment, there is a difference between steady state and
+peak workloads:
+
+* If the system is designed to handle peak load, it can sustain the
+expected maximum load of users and requests without degrading response
+time. This implies that the system can handle extreme cases of expected
+system load. If the difference between peak load and steady state load
+is substantial, designing for peak loads can mean spending money on
+resources that are often idle.
+* If the system is designed to handle steady state load, it does not
+have all the resources required to handle the expected peak load. Thus,
+the system has a slower response time when peak load occurs.
+
+How often the system is expected to handle peak load will determine
+whether you want to design for peak load or for steady state.
+
+If peak load occurs often—say, several times per day—it may be
+worthwhile to expand capacity to handle it. If the system operates at
+steady state 90 percent of the time, and at peak only 10 percent of the
+time, then it may be preferable to deploy a system designed around
+steady state load. This implies that the system's response time will be
+slower only 10 percent of the time. Decide if the frequency or duration
+of time that the system operates at peak justifies the need to add
+resources to the system.
+
+[[abfdi]][[GSPLG00065]][[system-sizing]]
+
+System Sizing
+^^^^^^^^^^^^^
+
+Based on the load on the GlassFish Server instances and failover
+requirements, you can determine the number of applications server
+instances (hosts) needed. Evaluate your environment on the basis of the
+factors explained in link:#abfce[Estimating Load on GlassFish Server
+Instances] to each GlassFish Server instance, although each instance can
+use more than one Central Processing Unit (CPU).
+
+[[gkvcu]][[GSPLG00066]][[sizing-the-administration-thread-pool]]
+
+Sizing the Administration Thread Pool
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The default `admin-thread-pool` size of 50 should be adequate for most
+cluster deployments. If you have unusually large clusters, you may need
+to increase this thread pool size. In this case, set the
+`max-thread-pool-size` attribute to the number of instances in your
+largest cluster, but not larger than the number of incoming
+synchronization requests that the DAS can handle.
+
+[[abfdn]][[GSPLG00023]][[planning-message-queue-broker-deployment]]
+
+Planning Message Queue Broker Deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Java Message Service (JMS) API is a messaging standard that allows
+Java EE applications and components to create, send, receive, and read
+messages. It enables distributed communication that is loosely coupled,
+reliable, and asynchronous. Message Queue, which implements JMS, is
+integrated with GlassFish Server, enabling you to create components that
+send and receive JMS messages, including message-driven beans (MDBs).
+
+Message Queue is integrated with GlassFish Server using a resource
+adapter also known as a connector module. A resource adapter is a Java
+EE component defined according to the Java EE Connector Architecture
+(JCA) Specification. This specification defines a standardized way in
+which application servers such as GlassFish Server can integrate with
+enterprise information systems such as JMS providers. GlassFish Server
+includes a resource adapter that integrates with its own JMS provider,
+Message Queue. To use a different JMS provider, you must obtain and
+deploy a suitable resource adapter that is designed to integrate with
+it.
+
+Creating a JMS resource in GlassFish Server using the Administration
+Console creates a preconfigured connector resource that uses the Message
+Queue resource adapter. To create JMS Resources that use any other
+resource adapter (including `GenericJMSRA`), you must create them under
+the Connectors node in the Administration Console.
+
+In addition to using resource adapter APIs, GlassFish Server uses
+additional Message Queue APIs to provide better integration with Message
+Queue. This tight integration enables features such as connector
+failover, load balancing of outbound connections, and load balancing of
+inbound messages to MDBs. These features enable you to make messaging
+traffic fault-tolerant and highly available.
+
+The following topics are addressed here:
+
+* link:#abfdo[Multi-Broker Clusters]
+* link:#abfdq[Configuring GlassFish Server to Use Message Queue Brokers]
+* link:#abfdx[Example Deployment Scenarios]
+
+[[abfdo]][[GSPLG00067]][[multi-broker-clusters]]
+
+Multi-Broker Clusters
+^^^^^^^^^^^^^^^^^^^^^
+
+Message Queue supports using multiple interconnected broker instances
+known as a broker cluster. With broker clusters, client connections are
+distributed across all the brokers in the cluster. Clustering provides
+horizontal scalability and improves availability.
+
+A single message broker scales to about eight CPUs and provides
+sufficient throughput for typical applications. If a broker process
+fails, it is automatically restarted. However, as the number of clients
+connected to a broker increases, and as the number of messages being
+delivered increases, a broker will eventually exceed limitations such as
+number of file descriptors and memory.
+
+Having multiple brokers in a cluster rather than a single broker enables
+you to:
+
+* Provide messaging services despite hardware failures on a single
+machine.
+* Minimize downtime while performing system maintenance.
+* Accommodate workgroups having different user repositories.
+* Deal with firewall restrictions.
+
+Message Queue allows you to create conventional or enhanced broker
+clusters. Conventional broker clusters offer service availability.
+Enhanced broker clusters offer both service and data availability. For
+more information, see "link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00041[Configuring and Managing Broker
+Clusters]" in Open Message Queue Administration Guide.
+
+In a conventional cluster, having multiple brokers does not ensure that
+transactions in progress at the time of a broker failure will continue
+on the alternate broker. Although Message Queue reestablishes a failed
+connection with a different broker in a cluster, transactions owned by
+the failed broker are not available until it restarts. Except for failed
+in-progress transactions, user applications can continue on the
+failed-over connection. Service failover is thus ensured.
+
+In an enhanced cluster, transactions and persistent messages owned by
+the failed broker are taken over by another running broker in the
+cluster and non-prepared transactions are rolled back. Data failover is
+ensured for prepared transactions and persisted messages.
+
+[[abfdp]][[GSPLG00031]][[master-broker-and-client-synchronization-for-conventional-clusters]]
+
+Master Broker and Client Synchronization for Conventional Clusters
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+In a configuration for a conventional broker cluster, each destination
+is replicated on all of the brokers in a cluster. Each broker knows
+about message consumers that are registered for destinations on all
+other brokers. Each broker can therefore route messages from its own
+directly-connected message producers to remote message consumers, and
+deliver messages from remote producers to its own directly-connected
+consumers.
+
+In a cluster configuration, the broker to which each message producer is
+directly connected performs the routing for messages sent to it by that
+producer. Hence, a persistent message is both stored and routed by the
+message's home broker.
+
+Whenever an administrator creates or destroys a destination on a broker,
+this information is automatically propagated to all other brokers in a
+cluster. Similarly, whenever a message consumer is registered with its
+home broker, or whenever a consumer is disconnected from its home
+broker—either explicitly or because of a client or network failure, or
+because its home broker goes down—the relevant information about the
+consumer is propagated throughout the cluster. In a similar fashion,
+information about durable subscriptions is also propagated to all
+brokers in a cluster.
+
+A shared database of cluster change records can be configured as an
+alternative to using a master broker. For more information, see
+"link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00041[Configuring and Managing Broker Clusters]" in Open
+Message Queue Administration Guide and "link:../ha-administration-guide/jms.html#GSHAG00212[Using Message
+Queue Broker Clusters With GlassFish Server]" in GlassFish Server Open
+Source Edition High Availability Administration Guide.
+
+[[abfdq]][[GSPLG00068]][[configuring-glassfish-server-to-use-message-queue-brokers]]
+
+Configuring GlassFish Server to Use Message Queue Brokers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, Message Queue brokers (JMS hosts) run in the same JVM as the
+GlassFish Server process. However, Message Queue brokers (JMS hosts) can
+be configured to run in a separate JVM from the GlassFish Server
+process. This allows multiple GlassFish Server instances or clusters to
+share the same set of Message Queue brokers.
+
+The GlassFish Server's Java Message Service represents the connector
+module (resource adapter) for Message Queue. You can manage the Java
+Message Service through the Administration Console or the `asadmin`
+command-line utility.
+
+In GlassFish Server, a JMS host refers to a Message Queue broker. The
+GlassFish Server's Java Message Service configuration contains a JMS
+Host List (also called AddressList) that contains all the JMS hosts that
+will be used.
+
+[[abfdt]][[GSPLG00032]][[java-message-service-type]]
+
+Java Message Service Type
++++++++++++++++++++++++++
+
+There are three types of integration between GlassFish Server and
+Message Queue brokers: embedded, local, and remote. You can set this
+type attribute on the Administration Console's Java Message Service
+page.
+
+[[gktcw]][[GSPLG00004]][[embedded-java-message-service]]
+
+Embedded Java Message Service
+
+If the Type attribute is EMBEDDED, GlassFish Server and the JMS broker
+are colocated in the same virtual machine. The JMS Service is started
+in-process and managed by GlassFish Server. In EMBEDDED mode, JMS
+operations on stand-alone server instances bypass the networking stack,
+which leads to performance optimization. The EMBEDDED type is most
+suitable for stand-alone GlassFish Server instances. EMBEDDED mode is
+not supported for enhanced broker clusters.
+
+With the EMBEDDED type, use the Start Arguments attribute to specify
+Message Queue broker startup parameters.
+
+With the EMBEDDED type, make sure the Java heap size is large enough to
+allow GlassFish Server and Message Queue to run in the same virtual
+machine.
+
+[[abfdu]][[GSPLG00005]][[local-java-message-service]]
+
+Local Java Message Service
+
+If the Type attribute is LOCAL, GlassFish Server starts and stops the
+Message Queue broker. When GlassFish Server starts up, it starts the
+Message Queue broker specified as the Default JMS host. Likewise, when
+the GlassFish Server instance shuts down, it shuts down the Message
+Queue broker. The LOCAL type is most suitable for use with enhanced
+broker clusters, and for other cases where the administrator prefers the
+use of separate JVMs.
+
+With the LOCAL type, use the Start Arguments attribute to specify
+Message Queue broker startup parameters.
+
+[[abfdv]][[GSPLG00006]][[remote-java-message-service]]
+
+Remote Java Message Service
+
+If the Type attribute is REMOTE, GlassFish Server uses an externally
+configured broker or broker cluster. In this case, you must start and
+stop Message Queue brokers separately from GlassFish Server, and use
+Message Queue tools to configure and tune the broker or broker cluster.
+The REMOTE type is most suitable for brokers running on different
+machines from the server instances (to share the load among more
+machines or for higher availability), or for using a different number of
+brokers and server instances.
+
+With the REMOTE type, you must specify Message Queue broker startup
+parameters using Message Queue tools. The Start Arguments attribute is
+ignored.
+
+[[abfdr]][[GSPLG00033]][[managing-jms-with-the-administration-console]]
+
+Managing JMS with the Administration Console
+++++++++++++++++++++++++++++++++++++++++++++
+
+In the Administration Console, you can set JMS properties using the Java
+Message Service node for a particular configuration. You can set
+properties such as Reconnect Interval and Reconnect Attempts. For more
+information, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java Message
+Service (JMS)]" in GlassFish Server Open Source Edition Administration
+Guide.
+
+The JMS Hosts node under the Java Message Service node contains a list
+of JMS hosts. You can add and remove hosts from the list. For each host,
+you can set the host name, port number, and the administration user name
+and password. By default, the JMS Hosts list contains one Message Queue
+broker, called "default_JMS_host," that represents the local Message
+Queue broker integrated with GlassFish Server.
+
+In REMOTE mode, configure the JMS Hosts list to contain all the Message
+Queue brokers in the cluster. For example, to set up a cluster
+containing three Message Queue brokers, add a JMS host within the Java
+Message Service for each one. Message Queue clients use the
+configuration information in the Java Message Service to communicate
+with Message Queue broker.
+
+[[abfds]][[GSPLG00034]][[managing-jms-with-asadmin]]
+
+Managing JMS with asadmin
++++++++++++++++++++++++++
+
+In addition to the Administration Console, you can use the `asadmin`
+command-line utility to manage the Java Message Service and JMS hosts.
+Use the following `asadmin` commands:
+
+* Configuring Java Message Service attributes: `asadmin set`
+* Managing JMS hosts:
+
+** `asadmin create-jms-host`
+
+** `asadmin delete-jms-host`
+
+** `asadmin list-jms-hosts`
+* Managing JMS resources:
+
+** `asadmin create-jms-resource`
+
+** `asadmin delete-jms-resource`
+
+** `asadmin list-jms-resources` +
+For more information on these commands, see the link:../reference-manual/toc.html#GSRFM[GlassFish
+Server Open Source Edition Reference Manual] or the corresponding man
+pages.
+
+[[abfdw]][[GSPLG00035]][[default-jms-host]]
+
+Default JMS Host
+++++++++++++++++
+
+You can specify the default JMS Host in the Administration Console Java
+Message Service page. If the Java Message Service type is LOCAL,
+GlassFish Server starts the default JMS host when the GlassFish Server
+instance starts. If the Java Message Service type is EMBEDDED, the
+default JMS host is started lazily when needed.
+
+In REMOTE mode, to use a Message Queue broker cluster, delete the
+default JMS host, then add all the Message Queue brokers in the cluster
+as JMS hosts. In this case, the default JMS host becomes the first JMS
+host in the JMS host list.
+
+You can also explicitly set the default JMS host to one of the JMS
+hosts. When the GlassFish Server uses a Message Queue cluster, the
+default JMS host executes Message Queue-specific commands. For example,
+when a physical destination is created for a Message Queue broker
+cluster, the default JMS host executes the command to create the
+physical destinations, but all brokers in the cluster use the physical
+destination.
+
+[[abfdx]][[GSPLG00069]][[example-deployment-scenarios]]
+
+Example Deployment Scenarios
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To accommodate your messaging needs, modify the Java Message Service and
+JMS host list to suit your deployment, performance, and availability
+needs. The following sections describe some typical scenarios.
+
+For best availability, deploy Message Queue brokers and GlassFish
+Servers on different machines, if messaging needs are not just with
+GlassFish Server. Another option is to run a GlassFish Server instance
+and a Message Queue broker instance on each machine until there is
+sufficient messaging capacity.
+
+[[abfdy]][[GSPLG00036]][[default-deployment]]
+
+Default Deployment
+++++++++++++++++++
+
+Installing the GlassFish Server automatically creates a domain
+administration server (DAS). By default, the Java Message Service type
+for the DAS is EMBEDDED. So, starting the DAS also starts its default
+Message Queue broker.
+
+Creating a new domain also creates a new broker. By default, when you
+add a stand-alone server instance or a cluster to the domain, its Java
+Message Service is configured as EMBEDDED and its default JMS host is
+the broker started by the DAS.
+
+[[abfdz]][[GSPLG00037]][[using-a-message-queue-broker-cluster-with-a-glassfish-server-cluster]]
+
+Using a Message Queue Broker Cluster with a GlassFish Server Cluster
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+In EMBEDDED or LOCAL mode, when a GlassFish Server is configured, a
+Message Queue broker cluster is auto-configured with each GlassFish
+Server instance associated with a Message Queue broker instance.
+
+In REMOTE mode, to configure a GlassFish Server cluster to use a Message
+Queue broker cluster, add all the Message Queue brokers as JMS hosts in
+the GlassFish Server's Java Message Service. Any JMS connection
+factories created and MDBs deployed then uses the JMS configuration
+specified.
+
+[[abfeb]][[GSPLG00038]][[specifying-an-application-specific-message-queue-broker-cluster]]
+
+Specifying an Application-Specific Message Queue Broker Cluster
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+In some cases, an application may need to use a different Message Queue
+broker cluster than the one used by the GlassFish Server cluster. To do
+so, use the `AddressList` property of a JMS connection factory or the
+`activation-config` element in an MDB deployment descriptor to specify
+the Message Queue broker cluster.
+
+For more information about configuring connection factories, see
+"link:../administration-guide/jms.html#GSADG00598[Administering JMS Connection Factories and
+Destinations]" in GlassFish Server Open Source Edition Administration
+Guide. For more information about MDBs, see "link:../application-development-guide/ejb.html#GSDVG00149[Using
+Message-Driven Beans]" in GlassFish Server Open Source Edition
+Application Development Guide.
+
+[[abfec]][[GSPLG00039]][[application-clients]]
+
+Application Clients
++++++++++++++++++++
+
+When an application client or standalone application accesses a JMS
+administered object for the first time, the client JVM retrieves the
+Java Message Service configuration from the server. Further changes to
+the JMS service will not be available to the client JVM until it is
+restarted.

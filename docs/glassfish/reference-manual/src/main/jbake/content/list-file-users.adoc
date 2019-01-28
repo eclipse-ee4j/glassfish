@@ -1,0 +1,102 @@
+type=page
+status=published
+title=list-file-users
+next=list-http-lb-configs.html
+prev=list-file-groups.html
+~~~~~~
+list-file-users
+===============
+
+[[list-file-users-1]][[GSRFM00165]][[list-file-users]]
+
+list-file-users
+---------------
+
+lists the file users
+
+[[sthref1476]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] list-file-users [--help] 
+[--authrealmname auth_realm_name] [target]
+----
+
+[[sthref1477]]
+
+Description
+
+The `list-file-users` subcommand displays a list of file users supported
+by file realm authentication.
+
+[[sthref1478]]
+
+Options
+
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--authrealmname`::
+  Lists only the users in the specified authentication realm.
+
+[[sthref1479]]
+
+Operands
+
+target::
+  Specifies the target for which you want to list file users. The
+  following values are valid: +
+  `server`;;
+    Lists the file users on the default server instance. This is the
+    default value.
+  configuration_name;;
+    Lists the file users in the specified configuration.
+  cluster_name;;
+    Lists the file users on all server instances in the specified
+    cluster.
+  instance_name;;
+    Lists the file users on a specified server instance.
+
+[[sthref1480]]
+
+Examples
+
+[[GSRFM658]][[sthref1481]]
+
+Example 1   Listing Users in a Specific File Realm
+
+The following example lists the users in the file realm named
+`sample_file_realm`.
+
+[source,oac_no_warn]
+----
+asadmin> list-file-users --authrealmname sample_file_realm
+sample_user05
+sample_user08
+sample_user12
+Command list-file-users executed successfully
+----
+
+[[sthref1482]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1483]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
+link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],
+link:list-file-groups.html#list-file-groups-1[`list-file-groups`(1)],
+link:update-file-user.html#update-file-user-1[`update-file-user`(1)]
+
+

@@ -1,0 +1,116 @@
+type=page
+status=published
+title=delete-admin-object
+next=delete-application-ref.html
+prev=create-virtual-server.html
+~~~~~~
+delete-admin-object
+===================
+
+[[delete-admin-object-1]][[GSRFM00063]][[delete-admin-object]]
+
+delete-admin-object
+-------------------
+
+removes the administered object with the specified JNDI name.
+
+[[sthref577]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] delete-admin-object [--help] 
+[--target target] jndi_name
+----
+
+[[sthref578]]
+
+Description
+
+The `delete-admin-object` subcommand removes an administered object with
+the specified JNDI name.
+
+This subcommand is supported in remote mote only.
+
+[[sthref579]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  This is the name of the targets for which the administered object is
+  to be deleted. Valid values are: +
+
+[width="100%",cols="100%",]
+|=======================================================================
+a|
+Note:
+
+Resources are always created for a domain as a whole but are only
+active for targets for which a `<resource-ref>` has been created using
+the `--target` option when the resource was created. This means that
+deleting a resource only deletes the `<resource-ref>` element for the
+specified `--target`, and does not delete the resource from the domain
+as a whole unless `domain` is specified as the `--target` for the
+deletion.
+
+|=======================================================================
+
+  `server`;;
+    Deletes the administered object for the default server instance
+    `server` and is the default value.
+  configuration_name;;
+    Deletes the administered object for the specified configuration.
+  cluster_name;;
+    Deletes the administered object for the specified cluster.
+  instance_name;;
+    Deletes the administered object for a particular server instance.
+
+[[sthref580]]
+
+Operands
+
+jndi_name::
+  JNDI name of the administered object to be deleted.
+
+[[sthref581]]
+
+Examples
+
+[[GSRFM530]][[sthref582]]
+
+Example 1   Deleting an Administered Object
+
+This example deletes the administered object named `jms/samplelqueue`.
+
+[source,oac_no_warn]
+----
+asadmin> delete-admin-object jms/samplequeue
+Command delete-admin-object executed successfully
+----
+
+[[sthref583]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref584]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-admin-object.html#create-admin-object-1[`create-admin-object`(1)],
+link:list-admin-objects.html#list-admin-objects-1[`list-admin-objects`(1)]
+
+

@@ -1,0 +1,14 @@
+theme: jekyll-theme-architect
+
+title: [upgrade-guide]
+description: [Eclipse GlassFish Server Upgrade Guide, Release 5.1]
+
+# sidebar links url
+links:
+  source: https://github.com/javaee/upgrade-guide
+  download: https://github.com/javaee/upgrade-guide/releases
+  #mailinglist: https://javaee.groups.io/g/upgrade-guide
+  #javadocs:
+  docs: https://javaee.github.io/upgrade-guide
+  #faq:
+

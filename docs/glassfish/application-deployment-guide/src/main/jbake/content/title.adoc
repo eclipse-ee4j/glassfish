@@ -1,0 +1,47 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Application Deployment Guide, Release 5.1
+next=preface.html
+prev=lot.html
+~~~~~~
+Eclipse GlassFish Server Application Deployment Guide, Release 5.1
+==================================================================
+
+[[glassfish-server-open-source-edition]]
+Eclipse GlassFish Server
+------------------------
+
+Application Deployment Guide
+
+Release 5.1
+
+Contributed 2018, 2019
+
+This Application Deployment Guide describes deployment of applications
+and application components to Eclipse GlassFish Server, and
+includes information about deployment descriptors.
+
+[[sthref1]]
+
+'''''
+
+Eclipse GlassFish Server Application Deployment Guide,
+Release 5.1
+
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+
+This program and the accompanying materials are made available under the 
+terms of the Eclipse Public License v. 2.0, which is available at 
+http://www.eclipse.org/legal/epl-2.0. 
+
+SPDX-License-Identifier: EPL-2.0
+
+Oracle and Java are registered trademarks of Oracle and/or its 
+affiliates. Other names may be trademarks of their respective owners. 
+
+Intel and Intel Xeon are trademarks or registered trademarks of Intel 
+Corporation. All SPARC trademarks are used under license and are 
+trademarks or registered trademarks of SPARC International, Inc. AMD, 
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or 
+registered trademarks of Advanced Micro Devices. UNIX is a registered 
+trademark of The Open Group. 

@@ -1,0 +1,118 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Embedded Server Guide, Release 5.1
+next=loe.html
+~~~~~~
+Eclipse GlassFish Server Embedded Server Guide, Release 5.1
+===========================================================
+
+[[contents]]
+Contents
+--------
+
+[[list-of-examples]]
+link:loe.html[List of Examples]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[list-of-tables]]
+link:lot.html[List of Tables]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[title-and-copyright-information]]
+link:title.html[Title and Copyright Information]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[preface]]
+link:preface.html#sthref2[Preface]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:preface.html#ghpbz[GlassFish Server Documentation Set]
+* link:preface.html#giprl[Related Documentation]
+* link:preface.html#fwbkx[Typographic Conventions]
+* link:preface.html#fquvc[Symbol Conventions]
+* link:preface.html#ghpfg[Default Paths and File Names]
+
+
+[[glassfish-server-open-source-edition-4.0-embedded-server-guide]]
+link:embedded-server-guide.html#gjldt[1 Eclipse GlassFish Server 5.1 Embedded Server Guide]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:embedded-server-guide.html#giidt[Introduction to Embedded
+GlassFish Server]
+* link:embedded-server-guide.html#gkubb[Embedded GlassFish Server File
+System]
+
+** link:embedded-server-guide.html#gikqf[Installation Root Directory]
+
+** link:embedded-server-guide.html#gikvf[Instance Root Directory]
+
+** link:embedded-server-guide.html#giiak[The `domain.xml` File]
+* link:embedded-server-guide.html#giijw[Including the GlassFish Server
+Embedded Server API in Applications]
+
+** link:embedded-server-guide.html#giide[Setting the Class Path]
+
+** link:embedded-server-guide.html#giiky[Creating, Starting, and Stopping
+Embedded GlassFish Server]
+*** link:embedded-server-guide.html#gihyr[Creating and Configuring an
+Embedded GlassFish Server]
+*** link:embedded-server-guide.html#gihyz[Running an Embedded GlassFish
+Server]
+
+** link:embedded-server-guide.html#giigc[Deploying and Undeploying an
+Application in an Embedded GlassFish Server]
+*** link:embedded-server-guide.html#gilrf[To Deploy an Application From
+an Archive File or a Directory]
+*** link:embedded-server-guide.html#gilpm[Undeploying an Application]
+*** link:embedded-server-guide.html#gjrcs[Creating a Scattered Archive]
+*** link:embedded-server-guide.html#gkvgc[Creating a Scattered Enterprise
+Archive]
+
+** link:embedded-server-guide.html#gjldy[Running `asadmin` Commands Using
+the GlassFish Server Embedded Server API]
+
+** link:embedded-server-guide.html#gikrt[Sample Applications]
+* link:embedded-server-guide.html#gijhs[Testing Applications with the
+Maven Plug-in for Embedded GlassFish Server]
+
+** link:embedded-server-guide.html#gihus[To Set Up Your Maven
+Environment]
+
+** link:embedded-server-guide.html#giivt[To Build and Start an
+Application From Maven]
+
+** link:embedded-server-guide.html#gijly[To Stop Embedded GlassFish
+Server]
+
+** link:embedded-server-guide.html#gijjn[To Redeploy an Application That
+Was Built and Started From Maven]
+
+** link:embedded-server-guide.html#gjkps[Maven Goals for Embedded
+GlassFish Server]
+*** link:embedded-server-guide.html#gjkxo[`embedded-glassfish:run` Goal]
+*** link:embedded-server-guide.html#gjkwy[`embedded-glassfish:start`
+Goal]
+*** link:embedded-server-guide.html#gjkvc[`embedded-glassfish:deploy`
+Goal]
+*** link:embedded-server-guide.html#gjkvg[`embedded-glassfish:undeploy`
+Goal]
+*** link:embedded-server-guide.html#gjkyl[`embedded-glassfish:stop` Goal]
+*** link:embedded-server-guide.html#gjkxq[`embedded-glassfish:admin`
+Goal]
+* link:embedded-server-guide.html#gjlde[Using the EJB 3.1 Embeddable API
+with Embedded GlassFish Server]
+
+** link:embedded-server-guide.html#gjlcr[To Use the EJB 3.1 Embeddable
+API with Embedded GlassFish Server]
+
+** link:embedded-server-guide.html#gksnv[EJB 3.1 Embeddable API
+Properties]
+
+** link:embedded-server-guide.html#gjxff[Using Maven with the EJB 3.1
+Embeddable API and Embedded GlassFish Server]
+* link:embedded-server-guide.html#gjlfe[Changing Log Levels in Embedded
+GlassFish Server]
+* link:embedded-server-guide.html#gksmw[Default Java Persistence Data
+Source for Embedded GlassFish Server]
+* link:embedded-server-guide.html#gihxf[Restrictions for Embedded
+GlassFish Server]

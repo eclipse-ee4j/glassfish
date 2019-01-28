@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.jaccApi.test</groupId>    
     <artifactId>prog-auth</artifactId>
-    <version>5.1.0</version>
+    <version>5.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>Programmatic authetication with JACC api</name>

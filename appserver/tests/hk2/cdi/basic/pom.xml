@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.hk2</groupId>
         <artifactId>cdi</artifactId>
-        <version>5.1.0</version>
+        <version>5.1.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.hk2.cdi</groupId>

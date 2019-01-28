@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.glassfish.main.hk2</groupId>
         <artifactId>glassfish-nucleus-hk2</artifactId>
-        <version>5.1.0</version>
+        <version>5.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>config-types</artifactId>

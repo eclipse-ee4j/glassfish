@@ -1,0 +1,14 @@
+type=page
+status=published
+title=List of Figures
+next=lot.html
+prev=loe.html
+~~~~~~
+List of Figures
+===============
+
+[[list-of-figures]]
+List of Figures
+---------------
+
+* link:overview.html#gacmj[1-1 Java EE Application Model]

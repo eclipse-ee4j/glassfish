@@ -1,0 +1,345 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Performance Tuning Guide, Release 5.1
+next=loe.html
+~~~~~~
+Eclipse GlassFish Server Performance Tuning Guide, Release 5.1
+==============================================================
+
+[[contents]]
+Contents
+--------
+
+[[list-of-examples]]
+link:loe.html[List of Examples]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[list-of-figures]]
+link:lof.html[List of Figures]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[list-of-tables]]
+link:lot.html[List of Tables]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[title-and-copyright-information]]
+link:title.html[Title and Copyright Information]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[preface]]
+link:preface.html#pref[Preface]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:preface.html#gksfg[Oracle GlassFish Server Documentation Set]
+* link:preface.html#fwbkx[Typographic Conventions]
+* link:preface.html#fquvc[Symbol Conventions]
+* link:preface.html#ghpfg[Default Paths and File Names]
+
+[[overview-of-glassfish-server-performance-tuning]]
+link:overview.html#giekg[1 Overview of GlassFish Server Performance Tuning]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:overview.html#abear[Process Overview]
+
+** link:overview.html#abeas[Performance Tuning Sequence]
+* link:overview.html#abeat[Understanding Operational Requirements]
+
+** link:overview.html#abeau[Application Architecture]
+
+** link:overview.html#abeav[Security Requirements]
+*** link:overview.html#abeaw[User Authentication and Authorization]
+*** link:overview.html#abeax[Encryption]
+
+** link:overview.html#gkvjf[High Availability Clustering, Load Balancing,
+and Failover]
+
+** link:overview.html#abeay[Hardware Resources]
+
+** link:overview.html#abeaz[Administration]
+* link:overview.html#abeba[General Tuning Concepts]
+
+** link:overview.html#abebb[Capacity Planning]
+*** link:overview.html#gacmz[To Determine Capacity]
+
+** link:overview.html#abebc[User Expectations]
+* link:overview.html#abebd[Further Information]
+
+[[tuning-your-application]]
+link:tuning-apps.html#abebe[2 Tuning Your Application]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:tuning-apps.html#abebf[Java Programming Guidelines]
+
+** link:tuning-apps.html#abebg[Avoid Serialization and Deserialization]
+
+** link:tuning-apps.html#abebh[Use `StringBuilder` to Concatenate
+Strings]
+
+** link:tuning-apps.html#abebi[Assign null to Variables That Are No
+Longer Needed]
+
+** link:tuning-apps.html#abebj[Declare Methods as final Only If
+Necessary]
+
+** link:tuning-apps.html#abebk[Declare Constants as static final]
+
+** link:tuning-apps.html#abebl[Avoid Finalizers]
+
+** link:tuning-apps.html#abebm[Declare Method Arguments final]
+
+** link:tuning-apps.html#abebn[Synchronize Only When Necessary]
+
+** link:tuning-apps.html#abebo[Use DataHandlers for SOAP Attachments]
+* link:tuning-apps.html#abebp[Java Server Page and Servlet Tuning]
+
+** link:tuning-apps.html#abebq[Suggested Coding Practices]
+*** link:tuning-apps.html#abebr[General Guidelines]
+*** link:tuning-apps.html#abebs[Avoid Shared Modified Class Variables]
+*** link:tuning-apps.html#abebt[HTTP Session Handling]
+*** link:tuning-apps.html#abebu[Configuration and Deployment Tips]
+* link:tuning-apps.html#abebw[EJB Performance Tuning]
+
+** link:tuning-apps.html#abebx[Goals]
+
+** link:tuning-apps.html#abeby[Monitoring EJB Components]
+*** link:tuning-apps.html#abebz[Monitoring Individual EJB Components]
+
+** link:tuning-apps.html#abeca[General Guidelines]
+*** link:tuning-apps.html#abecb[Use High Performance Beans]
+*** link:tuning-apps.html#abecc[Use Caching]
+*** link:tuning-apps.html#abecd[Use the Appropriate Stubs]
+*** link:tuning-apps.html#abece[Remove Unneeded Stateful Session Beans]
+*** link:tuning-apps.html#abecf[Cache and Pool Tuning Tips]
+
+** link:tuning-apps.html#abecg[Using Local and Remote Interfaces]
+*** link:tuning-apps.html#abech[Prefer Local Interfaces]
+*** link:tuning-apps.html#abeci[Using Pass-By-Reference Semantics]
+
+** link:tuning-apps.html#abecj[Improving Performance of EJB Transactions]
+*** link:tuning-apps.html#abeck[Use Container-Managed Transactions]
+*** link:tuning-apps.html#abecl[Do Not Encompass User Input Time]
+*** link:tuning-apps.html#abecm[Identify Non-Transactional Methods]
+*** link:tuning-apps.html#abecn[Use `TX_REQUIRED` for Long Transaction
+Chains]
+*** link:tuning-apps.html#abeco[Use Lowest Cost Database Locking]
+*** link:tuning-apps.html#abecp[Use XA-Capable Data Sources Only When
+Needed]
+*** link:tuning-apps.html#abecq[Configure JDBC Resources as One-Phase
+Commit Resources]
+*** link:tuning-apps.html#abecr[Use the Least Expensive Transaction
+Attribute]
+
+** link:tuning-apps.html#abecs[Using Special Techniques]
+*** link:tuning-apps.html#abect[Version Consistency]
+*** link:tuning-apps.html#abecu[Request Partitioning]
+
+** link:tuning-apps.html#abecv[Tuning Tips for Specific Types of EJB
+Components]
+*** link:tuning-apps.html#abecw[Entity Beans]
+*** link:tuning-apps.html#abecx[Stateful Session Beans]
+*** link:tuning-apps.html#abecz[Stateless Session Beans]
+*** link:tuning-apps.html#abeda[Read-Only Entity Beans]
+*** link:tuning-apps.html#abedc[Pre-Fetching Container Managed
+Relationship (CMR) Beans]
+
+** link:tuning-apps.html#abedd[JDBC and Database Access]
+*** link:tuning-apps.html#abede[Use JDBC Directly]
+*** link:tuning-apps.html#abedf[Encapsulate Business Logic in Entity EJB
+Components]
+*** link:tuning-apps.html#abedg[Close Connections]
+*** link:tuning-apps.html#abedh[Minimize the Database Transaction
+Isolation Level]
+
+** link:tuning-apps.html#abedi[Tuning Message-Driven Beans]
+*** link:tuning-apps.html#abedj[Use `getConnection()`]
+*** link:tuning-apps.html#abedk[Tune the Message-Driven Bean's Pool Size]
+*** link:tuning-apps.html#abedl[Cache Bean-Specific Resources]
+*** link:tuning-apps.html#abedm[Limit Use of JMS Connections]
+
+[[tuning-the-glassfish-server]]
+link:tuning-glassfish.html#abedn[3 Tuning the GlassFish Server]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:tuning-glassfish.html#gkxwm[Using the GlassFish Server Performance
+Tuner]
+* link:tuning-glassfish.html#abedo[Deployment Settings]
+
+** link:tuning-glassfish.html#abedp[Disable Auto-Deployment]
+
+** link:tuning-glassfish.html#abedq[Use Pre-compiled JavaServer Pages]
+
+** link:tuning-glassfish.html#abedr[Disable Dynamic Application
+Reloading]
+* link:tuning-glassfish.html#abeds[Logger Settings]
+
+** link:tuning-glassfish.html#abedt[General Settings]
+
+** link:tuning-glassfish.html#abedu[Log Levels]
+* link:tuning-glassfish.html#abedw[Web Container Settings]
+
+** link:tuning-glassfish.html#abedx[Session Properties: Session Timeout]
+
+** link:tuning-glassfish.html#abedy[Manager Properties: Reap Interval]
+
+** link:tuning-glassfish.html#abedz[Disable Dynamic JSP Reloading]
+* link:tuning-glassfish.html#abeea[EJB Container Settings]
+
+** link:tuning-glassfish.html#abeeb[Monitoring the EJB Container]
+
+** link:tuning-glassfish.html#abeec[Tuning the EJB Container]
+*** link:tuning-glassfish.html#abeed[Overview of EJB Pooling and Caching]
+*** link:tuning-glassfish.html#abeee[Tuning the EJB Pool]
+*** link:tuning-glassfish.html#abeeg[Tuning the EJB Cache]
+*** link:tuning-glassfish.html#abeei[Pool and Cache Settings for
+Individual EJB Components]
+*** link:tuning-glassfish.html#abeej[Commit Option]
+* link:tuning-glassfish.html#abeel[Java Message Service Settings]
+* link:tuning-glassfish.html#abeem[Transaction Service Settings]
+
+** link:tuning-glassfish.html#abeen[Monitoring the Transaction Service]
+*** link:tuning-glassfish.html#abeeo[Viewing Monitoring Information]
+
+** link:tuning-glassfish.html#abeep[Tuning the Transaction Service]
+*** link:tuning-glassfish.html#abeeq[Disable Distributed Transaction
+Logging]
+*** link:tuning-glassfish.html#abeer[Recover On Restart (Automatic
+Recovery)]
+*** link:tuning-glassfish.html#abees[Keypoint Interval]
+* link:tuning-glassfish.html#abeet[HTTP Service Settings]
+
+** link:tuning-glassfish.html#abeeu[Monitoring the HTTP Service]
+*** link:tuning-glassfish.html#abeew[DNS Cache Information (dns)]
+*** link:tuning-glassfish.html#abefh[File Cache Information (file-cache)]
+*** link:tuning-glassfish.html#abefi[Keep Alive (keep-alive)]
+*** link:tuning-glassfish.html#abefg[Connection Queue]
+
+** link:tuning-glassfish.html#abefk[HTTP Service Access Logging]
+* link:tuning-glassfish.html#abegk[Network Listener Settings]
+
+** link:tuning-glassfish.html#abegl[General Settings]
+
+** link:tuning-glassfish.html#gkxjd[HTTP Settings]
+*** link:tuning-glassfish.html#abeft[Max Connections]
+*** link:tuning-glassfish.html#abegd[DNS Lookup Enabled]
+*** link:tuning-glassfish.html#abefu[Timeout]
+*** link:tuning-glassfish.html#abefq[Header Buffer Length]
+
+** link:tuning-glassfish.html#gkxit[File Cache Settings]
+*** link:tuning-glassfish.html#abegf[Max File Count]
+*** link:tuning-glassfish.html#abegh[Max Age]
+* link:tuning-glassfish.html#gkxjt[Transport Settings]
+* link:tuning-glassfish.html#abehk[Thread Pool Settings]
+
+** link:tuning-glassfish.html#abefn[Max Thread Pool Size]
+
+** link:tuning-glassfish.html#abefo[Min Thread Pool Size]
+* link:tuning-glassfish.html#abegt[ORB Settings]
+
+** link:tuning-glassfish.html#abegu[Overview]
+
+** link:tuning-glassfish.html#abegv[How a Client Connects to the ORB]
+
+** link:tuning-glassfish.html#abegw[Monitoring the ORB]
+*** link:tuning-glassfish.html#abegx[Connection Statistics]
+*** link:tuning-glassfish.html#abegy[Thread Pools]
+
+** link:tuning-glassfish.html#abegz[Tuning the ORB]
+*** link:tuning-glassfish.html#abeha[Tunable ORB Parameters]
+*** link:tuning-glassfish.html#abehb[ORB Thread Pool Parameters]
+*** link:tuning-glassfish.html#abehc[Client ORB Properties]
+*** link:tuning-glassfish.html#abehg[Thread Pool Sizing]
+*** link:tuning-glassfish.html#abehh[Examining IIOP Messages]
+* link:tuning-glassfish.html#abehp[Resource Settings]
+
+** link:tuning-glassfish.html#abehq[JDBC Connection Pool Settings]
+*** link:tuning-glassfish.html#abehr[Monitoring JDBC Connection Pools]
+*** link:tuning-glassfish.html#abehs[Tuning JDBC Connection Pools]
+
+** link:tuning-glassfish.html#abehy[Connector Connection Pool Settings]
+*** link:tuning-glassfish.html#abehz[Transaction Support]
+* link:tuning-glassfish.html#gkxvd[Load Balancer Settings]
+
+[[tuning-the-java-runtime-system]]
+link:tuning-java.html#abeia[4 Tuning the Java Runtime System]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:tuning-java.html#abeib[Java Virtual Machine Settings]
+* link:tuning-java.html#gfpzy[Start Options]
+* link:tuning-java.html#glaat[Tuning High Availability Persistence]
+* link:tuning-java.html#abeic[Managing Memory and Garbage Collection]
+
+** link:tuning-java.html#abeid[Tuning the Garbage Collector]
+*** link:tuning-java.html#abeie[Choosing the Garbage Collection
+Algorithm]
+*** link:tuning-java.html#abeif[Additional Information]
+
+** link:tuning-java.html#abeig[Tracing Garbage Collection]
+
+** link:tuning-java.html#abeih[Other Garbage Collector Settings]
+*** link:tuning-java.html#glgkm[Setting the Maximum Permanent Generation]
+*** link:tuning-java.html#glglk[Disabling Explicit Garbage Collection]
+*** link:tuning-java.html#glglr[Setting the Frequency of Full Garbage
+Collection]
+
+** link:tuning-java.html#abeii[Tuning the Java Heap]
+*** link:tuning-java.html#abeij[Guidelines for Java Heap Sizing]
+*** link:tuning-java.html#abeik[Heap Tuning Parameters]
+
+** link:tuning-java.html#abeio[Rebasing DLLs on Windows]
+*** link:tuning-java.html#gacmt[To rebase the GlassFish Server's DLLs]
+* link:tuning-java.html#abeiq[Further Information]
+
+[[tuning-the-operating-system-and-platform]]
+link:tuning-os.html#abeir[5 Tuning the Operating System and Platform]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:tuning-os.html#abeis[Server Scaling]
+
+** link:tuning-os.html#abeit[Processors]
+
+** link:tuning-os.html#abeiu[Memory]
+
+** link:tuning-os.html#abeiv[Disk Space]
+
+** link:tuning-os.html#abeiw[Networking]
+
+** link:tuning-os.html#glglf[UDP Buffer Sizes]
+*** link:tuning-os.html#sthref13[To Determine an Optimal UDP Buffer Size]
+*** link:tuning-os.html#glglz[To Set the UDP Buffer Size on Linux
+Systems]
+* link:tuning-os.html#gfpzp[Solaris 10 Platform-Specific Tuning
+Information]
+* link:tuning-os.html#abeix[Tuning for the Solaris OS]
+
+** link:tuning-os.html#abeiy[Tuning Parameters]
+*** link:tuning-os.html#abeiz[Sizing the Connection Hash Table]
+
+** link:tuning-os.html#abeja[File Descriptor Setting]
+* link:tuning-os.html#abeje[Tuning for Solaris on x86]
+
+** link:tuning-os.html#abejg[File Descriptors]
+
+** link:tuning-os.html#abejh[IP Stack Settings]
+* link:tuning-os.html#abeji[Tuning for Linux platforms]
+
+** link:tuning-os.html#gkvjl[Startup Files]
+
+** link:tuning-os.html#abejj[File Descriptors]
+
+** link:tuning-os.html#abejk[Virtual Memory]
+
+** link:tuning-os.html#abejl[Network Interface]
+
+** link:tuning-os.html#abejm[Disk I/O Settings]
+*** link:tuning-os.html#gaclw[To tune disk I/O performance for non SCSI
+disks]
+
+** link:tuning-os.html#abejn[TCP/IP Settings]
+*** link:tuning-os.html#gacmd[To tune the TCP/IP settings]
+* link:tuning-os.html#gfpzh[Tuning UltraSPARC CMT-Based Systems]
+
+** link:tuning-os.html#gfpzv[Tuning Operating System and TCP Settings]
+
+** link:tuning-os.html#gfpzm[Disk Configuration]
+
+** link:tuning-os.html#gfpzk[Network Configuration]

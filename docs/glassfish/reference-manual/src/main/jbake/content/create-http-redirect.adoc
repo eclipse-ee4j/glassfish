@@ -1,0 +1,94 @@
+type=page
+status=published
+title=create-http-redirect
+next=create-iiop-listener.html
+prev=create-http-listener.html
+~~~~~~
+create-http-redirect
+====================
+
+[[create-http-redirect-1]][[GSRFM00031]][[create-http-redirect]]
+
+create-http-redirect
+--------------------
+
+adds a new HTTP redirect
+
+[[sthref278]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] create-http-redirect [--help]
+[--redirect-port redirect-port] 
+[--secure-redirect={false|true}] 
+[--target target]
+protocol-name
+----
+
+[[sthref279]]
+
+Description
+
+The `create-http-redirect` subcommand creates an HTTP redirect. This
+subcommand is supported in remote mode only.
+
+[[sthref280]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--redirect-port`::
+  Port number for redirects. If the HTTP listener is supporting non-SSL
+  requests, and a request is received for which a matching
+  security-constraint requires SSL transport, \{product---name}
+  automatically redirects the request to this port number.
+`--secure-redirect`::
+  If set to true, the HTTP redirect runs SSL. The default value is
+  `false`.
+`--target`::
+  Creates the HTTP redirect only on the specified target. Valid values
+  are as follows: +
+  `server`;;
+    Creates the HTTP redirect on the default server instance. This is
+    the default value.
+  configuration-name;;
+    Creates the HTTP redirect in the specified configuration.
+  cluster-name;;
+    Creates the HTTP redirect on all server instances in the specified
+    cluster.
+  standalone-instance-name;;
+    Creates the HTTP redirect on the specified standalone server
+    instance.
+
+[[sthref281]]
+
+Operands
+
+protocol-name::
+  The name of the protocol to which to apply the redirect.
+
+[[sthref282]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref283]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:delete-http-redirect.html#delete-http-redirect-1[`delete-http-redirect`(1)]
+
+

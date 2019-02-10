@@ -1,0 +1,17 @@
+type=page
+status=published
+title=List of Examples
+next=lot.html
+prev=toc.html
+~~~~~~
+List of Examples
+================
+
+[[list-of-examples]]
+List of Examples
+----------------
+
+* link:planning.html#fygam[2-1 Calculation of Response Time]
+* link:planning.html#fygaj[2-2 Calculation of Requests Per Second]
+* link:planning.html#fygad[2-3 Calculation of Bandwidth Required]
+* link:planning.html#fygai[2-4 Calculation of Peak Load]

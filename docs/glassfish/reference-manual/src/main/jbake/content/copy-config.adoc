@@ -1,0 +1,175 @@
+type=page
+status=published
+title=copy-config
+next=create-admin-object.html
+prev=configure-managed-jobs.html
+~~~~~~
+copy-config
+===========
+
+[[copy-config-1]][[GSRFM00011]][[copy-config]]
+
+copy-config
+-----------
+
+copies an existing named configuration to create another configuration
+
+[[sthref107]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] copy-config [--help] 
+[--systemproperties (name=value)[:name=value]*]
+source-configuration-name destination-configuration-name
+----
+
+[[sthref108]]
+
+Description
+
+The `copy-config` subcommand creates a named configuration in the
+configuration of the domain administration server (DAS) by copying an
+existing configuration. The new configuration is identical to the copied
+configuration, except for any properties that you specify in the
+`--systemproperties` option.
+
+The `default-config` configuration is copied when a standalone sever
+instance or standalone cluster is created.
+
+This subcommand is supported in remote mode only.
+
+[[sthref109]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--systemproperties`::
+  Optional attribute name-value pairs for the configuration. These
+  properties override port settings in the configuration. +
+  The following properties are available: +
+  `ASADMIN_LISTENER_PORT`;;
+    This property specifies the port number of the HTTP port or HTTPS
+    port through which the DAS connects to the instance to manage the
+    instance. Valid values are 1-65535. On UNIX, creating sockets that
+    listen on ports 1-1024 requires superuser privileges.
+  `HTTP_LISTENER_PORT`;;
+    This property specifies the port number of the port that is used to
+    listen for HTTP requests. Valid values are 1-65535. On UNIX,
+    creating sockets that listen on ports 1-1024 requires superuser
+    privileges.
+  `HTTP_SSL_LISTENER_PORT`;;
+    This property specifies the port number of the port that is used to
+    listen for HTTPS requests. Valid values are 1-65535. On UNIX,
+    creating sockets that listen on ports 1-1024 requires superuser
+    privileges.
+  `IIOP_LISTENER_PORT`;;
+    This property specifies the port number of the port that is used for
+    IIOP connections. Valid values are 1-65535. On UNIX, creating
+    sockets that listen on ports 1-1024 requires superuser privileges.
+  `IIOP_SSL_LISTENER_PORT`;;
+    This property specifies the port number of the port that is used for
+    secure IIOP connections. Valid values are 1-65535. On UNIX, creating
+    sockets that listen on ports 1-1024 requires superuser privileges.
+  `IIOP_SSL_MUTUALAUTH_PORT`;;
+    This property specifies the port number of the port that is used for
+    secure IIOP connections with client authentication. Valid values are
+    1-65535. On UNIX, creating sockets that listen on ports 1-1024
+    requires superuser privileges.
+  `JAVA_DEBUGGER_PORT`;;
+    This property specifies the port number of the port that is used for
+    connections to the Java Platform Debugger Architecture (JPDA)
+    (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
+    debugger. Valid values are 1-65535. On UNIX, creating sockets that
+    listen on ports 1-1024 requires superuser privileges.
+  `JMS_PROVIDER_PORT`;;
+    This property specifies the port number for the Java Message Service
+    provider. Valid values are 1-65535. On UNIX, creating sockets that
+    listen on ports 1-1024 requires superuser privileges.
+  `JMX_SYSTEM_CONNECTOR_PORT`;;
+    This property specifies the port number on which the JMX connector
+    listens. Valid values are 1-65535. On UNIX, creating sockets that
+    listen on ports 1-1024 requires superuser privileges.
+  `OSGI_SHELL_TELNET_PORT`;;
+    This property specifies the port number of the port that is used for
+    connections to the Apache Felix Remote Shell
+    (`http://felix.apache.org/site/apache-felix-remote-shell.html`).
+    This shell uses the Felix shell service to interact with the OSGi
+    module management subsystem. Valid values are 1-65535. On UNIX,
+    creating sockets that listen on ports 1-1024 requires superuser
+    privileges.
+
+[[sthref110]]
+
+Operands
+
+source-configuration-name::
+  The name of the configuration that you are copying.
+destination-configuration-name::
+  The name of the configuration that you are creating by copying the
+  source configuration. +
+  The name must meet the following requirements: +
+  * The name may contain only ASCII characters.
+  * The name must start with a letter, a number, or an underscore.
+  * The name may contain only the following characters:
+  ** Lowercase letters
+  ** Uppercase letters
+  ** Numbers
+  ** Hyphen
+  ** Period
+  ** Underscore
+  * The name must be unique in the domain and must not be the name of a
+  another named configuration, a cluster, a \{product---name} instance ,
+  or a node.
+  * The name must not be `domain`, `server`, or any other keyword that
+  is reserved by \{product---name}.
+
+[[sthref111]]
+
+Examples
+
+[[GSRFM456]][[sthref112]]
+
+Example 1   Copying a Configuration
+
+This example copies the `default-config` configuration to the
+`pmdsaconfig` configuration, overriding the settings for the following
+ports:
+
+* HTTP listener port
+* HTTPS listener port
+
+[source,oac_no_warn]
+----
+asadmin> copy-config 
+--systemproperties HTTP_LISTENER_PORT=2000:HTTP_SSL_LISTENER_PORT=3000 
+default-config pmdsaconfig
+
+Command copy-config executed successfully.
+----
+
+[[sthref113]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref114]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:delete-config.html#delete-config-1[`delete-config`(1)],
+link:list-configs.html#list-configs-1[`list-configs`(1)]
+
+

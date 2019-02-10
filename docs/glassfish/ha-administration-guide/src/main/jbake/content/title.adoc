@@ -1,0 +1,56 @@
+type=page
+status=published
+title=Eclipse GlassFish Server High Availability Administration Guide, Release 5.1
+next=preface.html
+prev=loe.html
+~~~~~~
+Eclipse GlassFish Server High Availability Administration Guide, Release 5.1
+============================================================================
+
+[[glassfish-server-open-source-edition]]
+Eclipse GlassFish Server
+------------------------
+
+High Availability Administration Guide
+
+Release 5.1
+
+Contributed 2018, 2019
+
+This book describes thehigh-availability features in GlassFish Server,
+including converged load balancing, HTTP load balancing, clusters,
+session persistence and failover.
+
+Note: The main thrust of the Eclipse GlassFish Server 5.1
+release is to provide an application server for developers to explore
+and begin exploiting the new and updated technologies in the Java EE 7
+platform. Thus, the clustering, standalone instance and high
+availability features of GlassFish Server were not a focus of this
+release. These features are included in the release, but they may not
+function properly with some of the new features added in support of the
+Java EE 7 platform.
+
+[[sthref1]]
+
+'''''
+
+Eclipse GlassFish Server High Availability Administration
+Guide, Release 5.1
+
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+
+This program and the accompanying materials are made available under the 
+terms of the Eclipse Public License v. 2.0, which is available at 
+http://www.eclipse.org/legal/epl-2.0. 
+
+SPDX-License-Identifier: EPL-2.0
+
+Oracle and Java are registered trademarks of Oracle and/or its 
+affiliates. Other names may be trademarks of their respective owners. 
+
+Intel and Intel Xeon are trademarks or registered trademarks of Intel 
+Corporation. All SPARC trademarks are used under license and are 
+trademarks or registered trademarks of SPARC International, Inc. AMD, 
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or 
+registered trademarks of Advanced Micro Devices. UNIX is a registered 
+trademark of The Open Group. 

@@ -1,0 +1,94 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Quick Start Guide, Release 5.1
+next=title.html
+~~~~~~
+Eclipse GlassFish Server Quick Start Guide, Release 5.1
+=======================================================
+
+[[contents]]
+Contents
+--------
+
+[[title-and-copyright-information]]
+link:title.html[Title and Copyright Information]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[preface]]
+link:preface.html#gkamj[Preface]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:preface.html#ghpbz[GlassFish Server Documentation Set]
+* link:preface.html#fwbkx[Typographic Conventions]
+* link:preface.html#fquvc[Symbol Conventions]
+
+[[quick-start-for-basic-features]]
+link:basic-features.html#aboaa[1 Quick Start for Basic Features]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:basic-features.html#ghgpe[About This Quick Start Guide]
+* link:basic-features.html#ghpfg[Default Paths and File Names]
+* link:basic-features.html#gixue[Default Administration Values]
+* link:basic-features.html#gglog[Starting and Stopping the Default
+Domain]
+
+** link:basic-features.html#ggmpd[To Start the Default Domain]
+
+** link:basic-features.html#ggmsx[To Stop the Default Domain]
+* link:basic-features.html#gglmh[Starting and Stopping the Database
+Server]
+
+** link:basic-features.html#ggncr[To Start the Apache Derby Server]
+
+** link:basic-features.html#ggnez[To Stop the Apache Derby Server]
+* link:basic-features.html#ggllq[Starting the Administration Console]
+
+** link:basic-features.html#ggnbp[To Start the Administration Console]
+* link:basic-features.html#geyvr[Deploying and Undeploying Applications]
+
+** link:basic-features.html#ghgis[To Obtain the Sample Application]
+
+** link:basic-features.html#gkpao[Deploying and Undeploying the Sample
+Application From the Command Line]
+*** link:basic-features.html#ggndq[To Deploy the Sample Application From
+the Command Line]
+*** link:basic-features.html#ggnco[To List Deployed Applications From the
+Command Line]
+*** link:basic-features.html#ggnbm[To Undeploy the Sample Application
+From the Command Line]
+
+** link:basic-features.html#gkpau[Deploying and Undeploying Applications
+by Using the Administration Console]
+*** link:basic-features.html#ggnbn[To Deploy the Sample Application by
+Using the Administration Console]
+*** link:basic-features.html#ggncd[To View Deployed Applications in the
+Administration Console]
+*** link:basic-features.html#ggneh[To Undeploy the Sample Application by
+Using the Administration Console]
+
+** link:basic-features.html#gkpaa[Deploying and Undeploying the Sample
+Application Automatically]
+*** link:basic-features.html#geyvj[To Deploy the Sample Application
+Automatically]
+*** link:basic-features.html#ggncw[To Undeploy the Sample Application
+Automatically]
+* link:basic-features.html#gktqx[High Availability Clustering and Load
+Balancing]
+
+** link:basic-features.html#gktob[Clusters of GlassFish Server Instances]
+
+** link:basic-features.html#gktpt[Session Persistence and Failover]
+
+** link:basic-features.html#gksbz[Load Balancing for Clustered
+Configurations]
+* link:basic-features.html#ggkzh[For More Information]
+
+** link:basic-features.html#ghhir[Product Documentation]
+
+** link:basic-features.html#ghhis[GlassFish Communities]
+
+** link:basic-features.html#giyjo[Tutorials]
+
+** link:basic-features.html#gintm[Java EE 8 Samples]
+
+

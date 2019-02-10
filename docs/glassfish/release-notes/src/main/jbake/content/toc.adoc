@@ -1,0 +1,105 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Release Notes, Release 5.0
+next=title.html
+~~~~~~
+Eclipse GlassFish Server Release Notes, Release 5.0
+===================================================
+
+[[contents]]
+Contents
+--------
+
+[[title-and-copyright-information]]
+link:title.html[Title and Copyright Information]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[preface]]
+link:preface.html#gkamj[Preface]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:preface.html#ghpbz[GlassFish Server Documentation Set]
+* link:preface.html#giprl[Related Documentation]
+* link:preface.html#fwbkx[Typographic Conventions]
+* link:preface.html#fquvc[Symbol Conventions]
+* link:preface.html#ghpfg[Default Paths and File Names]
+
+[[glassfish-server-open-source-edition-5.0-release-notes]]
+link:release-notes.html#abppa[1 Eclipse GlassFish Server 5.0 Release Notes]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:release-notes.html#ghmvk[Revision History]
+* link:release-notes.html#glcmf[What's New in the GlassFish Server 5.0
+Release?]
+* link:release-notes.html#abpaj[Hardware and Software Requirements]
+
+** link:release-notes.html#abpak[Required JDK Versions]
+
+** link:release-notes.html#ggppy[Required Disk Space]
+
+** link:release-notes.html#ggpoq[Required Free Ports]
+*** link:release-notes.html#sthref4[To Configure Specific Ports for a JMS
+Host]
+*** link:release-notes.html#sthref5[To Configure Specific GMS Ports for a
+Cluster]
+
+** link:release-notes.html#gkxlg[Message Queue Broker Requirements]
+
+** link:release-notes.html#gfgps[Paths and Environment Settings for the
+JDK Software]
+*** link:release-notes.html#gldjj[Use the JDK Binaries]
+*** link:release-notes.html#gldgl[Set the `JAVA_HOME` Environment
+Variable]
+*** link:release-notes.html#gldho[Set Other Environment Variables As
+Necessary]
+* link:release-notes.html#glcmm[Known Issues in GlassFish Server 5.0]
+
+** link:release-notes.html#CHDIBHHF[JAXB and JAX-WS no longer part of
+Java EE platform]
+*** link:release-notes.html#sthref6[Description]
+*** link:release-notes.html#sthref7[Workaround]
+
+** link:release-notes.html#CHDIBEAJ[Resource validation property is
+enabled in the JVM option for deployment]
+*** link:release-notes.html#sthref8[Description]
+*** link:release-notes.html#sthref9[Workaround]
+
+** link:release-notes.html#CHDBJDGF[Update Tool and pkg Command no longer
+part of GlassFish Server]
+*** link:release-notes.html#sthref10[Description]
+*** link:release-notes.html#sthref11[Workaround]
+
+** link:release-notes.html#CHDJGJHD[Java DB has been replaced by Apache
+Derby]
+*** link:release-notes.html#sthref12[Description]
+*** link:release-notes.html#sthref13[Workaround]
+* link:release-notes.html#ggqok[Restrictions and Deprecated
+Functionality]
+
+** link:release-notes.html#ggqoc[`asadmin` Subcommands]
+
+** link:release-notes.html#abmbf[Deprecated, Unsupported, and Obsolete
+Options]
+
+** link:release-notes.html#gkueg[Applications That Use Apache Derby]
+
+** link:release-notes.html#ghpen[No Support for Client VM on Windows
+AMD64]
+
+** link:release-notes.html#gkwbd[Metro Reliable Messaging in `InOrder`
+Delivery Mode]
+
+** link:release-notes.html#glgiy[No Support for Kerberos on AIX]
+* link:release-notes.html#BABDACBE[Documentation Errata]
+
+** link:release-notes.html#BABIDEHD[Upgrading to Oracle GlassFish Server
+Is Not Necessary]
+* link:release-notes.html#giraq[Features Available Only in the Full
+Platform]
+* link:release-notes.html#gipkz[Java EE Standards Support]
+* link:release-notes.html#ghmtl[Java EE SDK]
+* link:release-notes.html#abpha[How to Report Problems and Provide
+Feedback]
+* link:release-notes.html#abphc[Additional Resources]
+
+

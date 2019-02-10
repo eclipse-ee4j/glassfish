@@ -1,0 +1,95 @@
+type=page
+status=published
+title=create-protocol-finder
+next=create-resource-adapter-config.html
+prev=create-protocol-filter.html
+~~~~~~
+create-protocol-finder
+======================
+
+[[create-protocol-finder-1]][[GSRFM00053]][[create-protocol-finder]]
+
+create-protocol-finder
+----------------------
+
+adds a new protocol finder
+
+[[sthref505]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] create-protocol-finder [--help]
+--protocol protocol-name 
+--targetprotocol target-protocol-name 
+--classname class-name 
+[--target server]
+protocol-finder-name
+----
+
+[[sthref506]]
+
+Description
+
+The `create-protocol-finder` subcommand creates a protocol finder for a
+protocol. This subcommand is supported in remote mode only.
+
+[[sthref507]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--protocol`::
+  The name of the associated protocol.
+`--targetprotocol`::
+  The name of the target protocol.
+`--classname`::
+  The fully qualified name of the Java class that implements the
+  protocol finder.
+`--target`::
+  Creates the protocol finder only on the specified target. Valid values
+  are as follows: +
+  `server`;;
+    Creates the protocol finder on the default server instance. This is
+    the default value.
+  configuration-name;;
+    Creates the protocol finder in the specified configuration.
+  cluster-name;;
+    Creates the protocol finder on all server instances in the specified
+    cluster.
+  standalone-instance-name;;
+    Creates the protocol finder on the specified standalone server
+    instance.
+
+[[sthref508]]
+
+Operands
+
+protocol-finder-name::
+  The name of the protocol finder.
+
+[[sthref509]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref510]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:delete-protocol-finder.html#delete-protocol-finder-1[`delete-protocol-finder`(1)],
+link:list-protocol-finders.html#list-protocol-finders-1[`list-protocol-finders`(1)]
+
+

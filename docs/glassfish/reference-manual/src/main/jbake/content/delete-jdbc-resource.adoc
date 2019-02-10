@@ -1,0 +1,116 @@
+type=page
+status=published
+title=delete-jdbc-resource
+next=delete-jmsdest.html
+prev=delete-jdbc-connection-pool.html
+~~~~~~
+delete-jdbc-resource
+====================
+
+[[delete-jdbc-resource-1]][[GSRFM00089]][[delete-jdbc-resource]]
+
+delete-jdbc-resource
+--------------------
+
+removes a JDBC resource with the specified JNDI name
+
+[[sthref785]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] delete-jdbc-resource [--help] 
+[--target target] jndi_name
+----
+
+[[sthref786]]
+
+Description
+
+The `delete-jdbc-resource` subcommand removes a JDBC resource. Ensure
+that all associations to the JDBC resource are removed before running
+this subcommand.
+
+This subcommand is supported in remote mode only.
+
+[[sthref787]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  This option helps specify the target from which you are removing the
+  JDBC resource. Valid targets are: +
+  `server`;;
+    Removes the resource from the default server instance. This is the
+    default value.
+  `domain`;;
+    Removes the resource from the domain.
+  cluster_name;;
+    Removes the resource from every server instance in the cluster.
+  instance_name;;
+    Removes the resource from a particular server instance.
+
+
+[NOTE]
+=======================================================================
+
+Resources are always created for a domain as a whole but are only active
+for targets for which a `<resource-ref>` has been created using the
+`--target` option when the resource was created. This means that
+deleting a resource only deletes the `<resource-ref>` element for the
+specified `--target`, and does not delete the resource from the domain
+as a whole unless `domain` is specified as the `--target` for the
+deletion.
+
+=======================================================================
+
+
+[[sthref788]]
+
+Operands
+
+jndi_name::
+  The JNDI name of this JDBC resource to be removed.
+
+[[sthref789]]
+
+Examples
+
+[[GSRFM557]][[sthref790]]
+
+Example 1   Deleting a JDBC Resource
+
+The following example deletes the JDBC resource named `jdbc/DerbyPool`.
+
+[source,oac_no_warn]
+----
+asadmin> delete-jdbc-resource jdbc/DerbyPool
+Command delete-jdbc-resource executed successfully.
+----
+
+[[sthref791]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref792]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-jdbc-resource.html#create-jdbc-resource-1[`create-jdbc-resource`(1)],
+link:list-jdbc-resources.html#list-jdbc-resources-1[`list-jdbc-resources`(1)]
+
+

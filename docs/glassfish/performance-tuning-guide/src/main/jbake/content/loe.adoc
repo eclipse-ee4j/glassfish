@@ -1,0 +1,18 @@
+type=page
+status=published
+title=List of Examples
+next=lof.html
+prev=toc.html
+~~~~~~
+List of Examples
+================
+
+[[list-of-examples]]
+List of Examples
+----------------
+
+* link:tuning-java.html#fxxpw[4-1 Heap Configuration on Solaris]
+* link:tuning-java.html#fxxpz[4-2 Heap Configuration on Windows]
+* link:tuning-os.html#sthref14[5-1 Setting the UDP Buffer Size in the
+/etc/sysctl.conf File]
+* link:tuning-os.html#glgjp[5-2 Setting the UDP Buffer Size at Runtime]

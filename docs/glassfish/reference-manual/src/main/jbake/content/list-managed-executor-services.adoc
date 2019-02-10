@@ -1,0 +1,103 @@
+type=page
+status=published
+title=list-managed-executor-services
+next=list-managed-scheduled-executor-services.html
+prev=list-log-levels.html
+~~~~~~
+list-managed-executor-services
+==============================
+
+[[list-managed-executor-services-1]][[GSRFM871]][[list-managed-executor-services]]
+
+list-managed-executor-services
+------------------------------
+
+lists managed executor service resources
+
+[[sthref1653]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] list-managed-executor-services [--help]
+[target]
+----
+
+[[sthref1654]]
+
+Description
+
+The `list-managed-executor-services` subcommand lists managed executor
+service resources.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1655]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1656]]
+
+Operands
+
+target::
+  Specifies the target for which managed executor service resources are
+  to be listed. Valid targets are: +
+  `server`;;
+    Lists the resources on the default server instance. This is the
+    default value.
+  `domain`;;
+    Lists the resources for the domain.
+  cluster-name;;
+    Lists the resources on all server instances in the specified
+    cluster.
+  instance-name;;
+    Lists the resources on a specified server instance.
+
+[[sthref1657]]
+
+Examples
+
+[[GSRFM872]][[sthref1658]]
+
+Example 1   Listing Managed Executor Service Resources
+
+This example lists managed executor service resources on the default
+server instance.
+
+[source,oac_no_warn]
+----
+asadmin> list-managed-executor-services
+concurrent/__defaultManagedExecutorService
+concurrent/myExecutor1
+concurrent/myExecutor2
+Command list-managed-executor-services executed successfully.
+----
+
+[[sthref1659]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1660]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-managed-executor-service.html#create-managed-executor-service-1[`create-managed-executor-service`(1)],
+link:delete-managed-executor-service.html#delete-managed-executor-service-1[`delete-managed-executor-service`(1)]
+
+

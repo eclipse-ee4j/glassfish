@@ -1,0 +1,1001 @@
+type=page
+status=published
+title=Eclipse GlassFish Server 5.1 Release Notes
+prev=preface.html
+~~~~~~
+Eclipse GlassFish Server 5.1 Release Notes
+==========================================
+
+[[GSRLN00001]][[abppa]]
+
+
+[[glassfish-server-open-source-edition-5.1-release-notes]]
+1 Eclipse GlassFish Server 5.1 Release Notes
+--------------------------------------------
+
+GlassFish Server provides a lightweight, modular server for the
+development of Java Platform Enterprise Edition (Java EE) 8
+applications. It is the Reference Implementation for Java EE. It
+delivers a highly productive platform for developing with the latest
+Java EE technologies.
+
+For any issue or information on Eclipse GlassFish Server,
+see the https://javaee.github.io/glassfish/[GlassFish Server Community]
+(`https://javaee.github.io/glassfish/`).
+
+These Release Notes provide late-breaking information about GlassFish
+Server 5.1 software and documentation. These Release Notes include
+summaries of supported hardware, operating environments, and JDK and
+JDBC/RDBMS requirements. Also included are a summary of new product
+features in the 5.1 release, and descriptions and workarounds for known
+issues and limitations.
+
+Refer to this document prior to installing, configuring, or using
+GlassFish Server 5.1 software. Consult this document periodically to
+view the most up-to-date product information.
+
+* link:#ghmvk["Revision History"]
+* link:#glcmf["What's New in the GlassFish Server 5.1 Release?"]
+* link:#abpaj["Hardware and Software Requirements"]
+* link:#glcmm["Known Issues in GlassFish Server 5.1"]
+* link:#ggqok["Restrictions and Deprecated Functionality"]
+* link:#BABDACBE["Documentation Errata"]
+* link:#giraq["Features Available Only in the Full Platform"]
+* link:#gipkz["Java EE Standards Support"]
+* link:#ghmtl["Java EE SDK"]
+* link:#abpha["How to Report Problems and Provide Feedback"]
+* link:#abphc["Additional Resources"]
+
+[[ghmvk]][[GSRLN00128]][[revision-history]]
+
+Revision History
+~~~~~~~~~~~~~~~~
+
+This section lists the revision history for these Release Notes.
+
+[[sthref2]][[gabzd]]
+
+Table 1-1 Revision History
+
+[width="100%",cols="16%,84%",options="header",]
+|=========================================================
+|Date |Description of Changes
+|September 2017 |Eclipse GlassFish Server 5.1.
+|=========================================================
+
+
+[[glcmf]][[GSRLN00129]][[whats-new-in-the-glassfish-server-5.1-release]]
+
+What's New in the GlassFish Server 5.1 Release?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+GlassFish is the Reference Implementation for Java EE. Java EE 8
+introduces the JSON Binding API (JSON-B) for mapping between JSON text
+and Java objects, building on the JSON Processing API (JSON-P). Servlet
+has been enhanced with the addition of support for the new HTTP/2
+protocol. JAX-RS adds support for server-sent events and, building on
+concurrency facilities added in Java SE 8, a reactive client API. The
+new Java EE Security API provides enhanced support for authentication
+and authorization in web modules, and also introduces APIs for access to
+identity stores. The Bean Validation facility is updated to reflect
+enhancements made in Java SE 8 and to extend the range of validated
+objects.
+
+GlassFish Server 5.1 includes the following new and updated Java EE
+standards.
+
+New Features
+
+* Java EE Security API 1.0
+* Java API for JSON Binding (JSON-B) 1.0
+
+Updated
+
+* Java API for JSON Processing (JSON-P) 1.1
+* Java API for WebSocket 1.1
+* Java API for RESTful Web Services (JAX-RS) 2.1
+* Contexts and Dependency Injection for Java EE (CDI) 2.0
+* Java Persistence API (JPA) 2.2
+* Common annotations 1.3
+* JavaServer Faces (JSF) 2.3
+* Java Servlet 5.1
+* Bean Validation (BV) 2.0
+* Interceptors 1.2
+* JavaMail 1.6
+
+For a complete list of the Java EE technologies included in GlassFish
+Server 5.1, see link:#gipkz[Java EE Standards Support].
+
+
+[NOTE]
+=======================================================================
+
+The main thrust of the Eclipse GlassFish Server 5.1 release
+is to provide an application server for developers to explore and begin
+exploiting the new and updated technologies in the Java EE 8 platform.
+Thus, the following features of GlassFish Server were not a focus of
+this release:
+
+* Clusters and centralized management of standalone instances
+* High availability features
+* Upgrade
+* Embedded Server
+
+These features are included in the release, but they may not function
+properly with some of the new features added in support of the Java EE 8
+platform.
+
+=======================================================================
+
+
+[[abpaj]][[GSRLN00131]][[hardware-and-software-requirements]]
+
+Hardware and Software Requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section lists the requirements that must be met before installing
+Eclipse GlassFish Server Release 5.1 software.
+
+The following topics are addressed here:
+
+* link:#abpak[Required JDK Versions]
+* link:#ggppy[Required Disk Space]
+* link:#ggpoq[Required Free Ports]
+* link:#gkxlg[Message Queue Broker Requirements]
+* link:#gfgps[Paths and Environment Settings for the JDK Software]
+
+[[abpak]][[GSRLN00246]][[required-jdk-versions]]
+
+Required JDK Versions
+^^^^^^^^^^^^^^^^^^^^^
+
+Eclipse GlassFish Server Release 5.1 requires Oracle JDK 8
+Update 144 or later.
+
+Also be sure to see link:#gfgps[Paths and Environment Settings for the
+JDK Software] for important JDK configuration instructions.
+
+
+[NOTE]
+=======================================================================
+
+It is recommended that any machine that is hosting a GlassFish Server
+DAS or server instance have a minimum of 1 GB RAM.
+
+=======================================================================
+
+
+[[ggppy]][[GSRLN00248]][[required-disk-space]]
+
+Required Disk Space
+^^^^^^^^^^^^^^^^^^^
+
+The download sizes for GlassFish Server 5.1 vary depending on the
+package you choose. The following are the approximate sizes of the ZIP
+packages for the Full and Web profiles:
+
+* Full `*.zip`: 114 MB (136 MB unzipped)
+* Web `*.zip`: 64.9 MB (82.9 MB unzipped)
+
+The installation sizes will vary depending on your configuration, but
+the approximate amount of disk space used by GlassFish Server 5.1 is as
+follows:
+
+* Full: 138 MB
+* Web: 84.4 MB
+
+[[ggpoq]][[GSRLN00249]][[required-free-ports]]
+
+Required Free Ports
+^^^^^^^^^^^^^^^^^^^
+
+You must have sixteen unused ports available for the ports GlassFish
+Server uses. The installation program automatically detects ports that
+are in use and suggests currently unused ports for the default settings.
+The initial default port assignments are listed in the following table.
+If these default port numbers are in use, the installation program
+assigns a randomly selected port number from the dynamic port range. The
+selected port number might not be the next available port number.
+
+[[sthref3]][[ggpmu]]
+
+Table 1-2 Default Port Assignments for GlassFish Server 5.1
+
+[width="100%",cols="52%,48%",options="header",]
+|=======================================================================
+|Port Number |Usage
+|4848 a|
+Administration Console
+
+
+|8080 |HTTP
+
+|8081 |HTTPS
+
+|8686 |Pure JMX clients
+
+|3700 |IIOP
+
+|3820 |IIOP/SSL
+
+|3920 |IIOP/SSL with mutual authentication
+
+|22 |SSH port
+
+|9009 |Java debugger
+
+|7676 |JMS provider
+
+|Auto-generated from the operating system's dynamic port range |Message
+Queue TCP port
+
+|Auto-generated from the operating system's dynamic port range |Message
+Queue Admin port
+
+|9090 |GMS TCP start port
+
+|9200 |GMS TCP end port
+
+|Auto-generated between GMS TCP start and end ports |GMS listener port
+
+|Auto generated between 2048 and 49151 |GMS multicast port
+|=======================================================================
+
+
+In some situations, such as when multiple domains are running on a
+single host, port conflicts can arise in the auto-generated ports used
+by Message Queue and the GMS. To avoid these conflicts, you can
+configure the JMS host and the GMS to use specific ports.
+
+[[sthref4]][[to-configure-specific-ports-for-a-jms-host]]
+
+To Configure Specific Ports for a JMS Host
+++++++++++++++++++++++++++++++++++++++++++
+
+When you create a JMS Host, GlassFish server automatically selects ports
+for the JMS provider (called the portmapper port in Message Queue
+terminology), the Message Queue TCP port and the Message Queue admin
+port.
+
+To provide specific values for these ports, use the `--mqport` and
+`--property` options when creating the JMS host:
+
+[source,oac_no_warn]
+----
+asadmin> create-jms-host --mqhost hostName --mqport portNumber \
+--mquser adminUser --mqpassword adminPassword --target glassfishTarget \
+--property imq\\.jms\\.tcp\\.port=tcpPort:imq\\.admin\\.tcp\\.port=adminPort \
+jms-host-name
+----
+
+`--mqport` `portNumber`::
+  This option specifies the JMS provider port number.
+`--property imq\\.jms\\.tcp\\.port=``tcpPort``:imq\\.admin\\.tcp\\.port=``adminPort`::
+  The `imq.jms.tcp.port` and `imq.admin.tcp.port` properties specify the
+  TCP port and the admin port numbers. The double backslashes (`\\`) are
+  used in the `--properties` option to escape the dots in the property
+  names.
+
+[[sthref5]][[to-configure-specific-gms-ports-for-a-cluster]]
+
+To Configure Specific GMS Ports for a Cluster
++++++++++++++++++++++++++++++++++++++++++++++
+
+When you create a cluster, GlassFish server automatically selects a port
+for GMS multicast that does not conflict with the GMS multicast port of
+any other cluster in the domain. Additionally, when you start a cluster,
+the GMS automatically selects an available port in a specific range for
+its TCP listener.
+
+If two or more domains are running on the same host, configure the
+clusters in the domains to ensure that no GMS port conflicts can arise
+among the clusters. To avoid possible port conflicts, use the
+`--multicast` and `--properties` options when creating the cluster:
+
+[source,oac_no_warn]
+----
+asadmin> create-cluster --multicastport multicast-port \
+--properties GMS_TCPSTARTPORT=start-port:GMS_TCPENDPORT=end-port \
+cluster-name
+----
+
+`--multicastport` `multicast-port`::
+  This option specifies the port number for the GMS to use for UDP
+  multicast.
+`--properties GMS_TCPSTARTPORT=``start-port``:GMS_TCPENDPORT=``end-port`::
+  The `GMS_TCPSTARTPORT` and `GMS_TCPENDPORT` properties specify the
+  range of port numbers the GMS is to use when selecting an available
+  port for its TCP listener. +
+
+[width="100%",cols="100%",]
+|=======================================================================
+a|
+Note:
+
+Though you can create a cluster, there is no support for
+configuration, as this has not been tested.
+
+|=======================================================================
+
+
+[[gkxlg]][[GSRLN00250]][[message-queue-broker-requirements]]
+
+Message Queue Broker Requirements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+GlassFish Server 5.1 is now bundled with Message Queue (MQ) Broker
+5.1.1. Refer to the
+https://javaee.github.io/glassfish/doc/5.1/mq-release-notes.pdf[`Open Message Queue Release Notes`]
+for complete information about MQ Broker requirements.
+
+[[gfgps]][[GSRLN00252]][[paths-and-environment-settings-for-the-jdk-software]]
+
+Paths and Environment Settings for the JDK Software
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ensure that your JDK configuration settings on all local and remote
+GlassFish Server hosts adhere to the guidelines listed below. Failure to
+adhere to these guidelines can cause various problems that may be
+difficult to trace.
+
+The following topics are addressed here:
+
+* link:#gldjj[Use the JDK Binaries]
+* link:#gldgl[Set the `JAVA_HOME` Environment Variable]
+* link:#gldho[Set Other Environment Variables As Necessary]
+
+[[gldjj]][[GSRLN00155]][[use-the-jdk-binaries]]
+
+Use the JDK Binaries
+++++++++++++++++++++
+
+The following binary files that are used with GlassFish Server must come
+from the JDK software, not the Java Runtime Environment (JRE) software:
+
+* `java`
+* `keytool`
+
+To meet this requirement, ensure that the `bin` directory for the JDK
+software precedes the `bin` directory for the JRE software in your path.
+
+[[gldgl]][[GSRLN00156]][[set-the-java_home-environment-variable]]
+
+Set the `JAVA_HOME` Environment Variable
+++++++++++++++++++++++++++++++++++++++++
+
+Before performing any GlassFish Server installation or configuration
+procedures, set the `JAVA_HOME` environment variable on the GlassFish
+Server host machine to point to the correct Java version. Also be sure
+to add the `JAVA_HOME/bin` directory to the `PATH` variable for your
+environment. The `JAVA_HOME` variable must be set on all local and
+remote GlassFish Server hosts.
+
+[[gldho]][[GSRLN00157]][[set-other-environment-variables-as-necessary]]
+
+Set Other Environment Variables As Necessary
+++++++++++++++++++++++++++++++++++++++++++++
+
+All remote `asadmin` subcommands require the correct version of Java to
+be available on the affected remote machine. For example, when creating
+a cluster or server instance on a remote machine, the remote machine
+uses its local default Java installation, not the Java installation that
+is on the DAS. Errors will therefore occur if the remote machine uses
+the wrong Java version.
+
+Depending on the remote subcommand, the errors may not occur when the
+subcommand is executed, but may occur later, when interacting with a
+configuration or resource created or modified by the subcommand. For
+example, when creating a clustered server instance on a remote machine,
+the error may only first appear when you attempt to deploy an
+application on that server instance.
+
+This issue is more likely to be encountered when GlassFish Server is
+installed on the remote server by means of a ZIP file package as you do
+not have the option to specifically choose your Java version while
+unzipping a ZIP file.
+
+Depending on what shell is invoked via SSH on the remote host, the
+`JAVA_HOME` and `PATH` environment variables may need to be explicitly
+set in `.bashrc`, `.cshrc`, or some other shell configuration file. This
+configuration file may differ from the one that is used when you log in
+to the machine, such as `.profile`.
+
+Alternatively, you can specifically set the Java path with the `AS_JAVA`
+property in the in the as-install`/config/asenv.conf` file.
+
+[[glcmm]][[GSRLN00253]][[known-issues-in-glassfish-server-5.1]]
+
+Known Issues in GlassFish Server 5.1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section describes known issues and any available workarounds for
+Eclipse GlassFish Server 5.1 software.
+
+The following topics are addressed here:
+
+* link:#CHDIBHHF[JAXB and JAX-WS no longer part of Java EE platform]
+* link:#CHDIBEAJ[Resource validation property is enabled in the JVM
+option for deployment]
+* link:#CHDBJDGF[Update Tool and pkg Command no longer part of GlassFish
+Server]
+* link:#CHDJGJHD[Java DB has been replaced by Apache Derby]
+
+[[CHDIBHHF]][[jaxb-and-jax-ws-no-longer-part-of-java-ee-platform]]
+
+JAXB and JAX-WS no longer part of Java EE platform
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[sthref6]][[description]]
+
+Description
++++++++++++
+
+JAXB and JAX-WS are no longer part of Java EE platform, instead these
+technologies are shipped with Java SE since version 6. However, the jars
+are packaged in GlassFish. The APIs have been updated with newer
+versions (i.e 2.3.0) using the endorsed standard mechanism of JDK.
+
+
+[NOTE]
+=======================================================================
+
+These updated jars are present only in the full profile of GlassFish and
+not part of web profile.
+
+=======================================================================
+
+
+[[sthref7]][[workaround]]
+
+Workaround
+++++++++++
+
+None
+
+[[CHDIBEAJ]][[resource-validation-property-is-enabled-in-the-jvm-option-for-deployment]]
+
+Resource validation property is enabled in the JVM option for deployment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[sthref8]][[description-1]]
+
+Description
++++++++++++
+
+A new JVM option for deployment - deployment.resource.validation is
+introduced in GlassFish Server 5.1. This property is set to True by
+default so that each resource is validated during deployment time. This
+ensures that all resources are created beforehand. This property is
+applicable for administration server as well as instances when clusters
+are involved.
+
+
+[NOTE]
+=======================================================================
+
+However, for deployment of applications containing embedded resource
+adapter, a connector resource is created after deployment. For the
+deployment of such applications to succeed, the server(s) must be
+started with this property set to false. For more information on JVM
+deployment options see
+https://javaee.github.io/glassfish/doc/5.1/administration-guide.pdf#G11.998994[`Administering JVM Options.`]
+
+=======================================================================
+
+
+[[sthref9]][[workaround-1]]
+
+Workaround
+++++++++++
+
+In case you do not want the resource validation to take place during the
+deployment, you can set this property value to False.
+
+[[CHDBJDGF]][[update-tool-and-pkg-command-no-longer-part-of-glassfish-server]]
+
+Update Tool and pkg Command no longer part of GlassFish Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[sthref10]][[description-2]]
+
+Description
++++++++++++
+
+In previous releases, you could update your GlassFish Server software
+using the pkg command and the Update tool. Since the recent release of
+GlassFish server does not require the use of these features, they have
+been removed from the GlassFish server installation.
+
+[[sthref11]][[workaround-2]]
+
+Workaround
+++++++++++
+
+No workaround.
+
+[[CHDJGJHD]][[java-db-has-been-replaced-by-apache-derby]]
+
+Java DB has been replaced by Apache Derby
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[sthref12]][[description-3]]
+
+Description
++++++++++++
+
+In the previous releases, Java DB was used as the database for GlassFish
+servers. With the release of GlassFish Server 5.1, Apache Derby
+10.13.1.1 has replaced Java DB as the database for GlassFish servers.
+
+[[sthref13]][[workaround-3]]
+
+Workaround
+++++++++++
+
+No workaround.
+
+[[ggqok]][[GSRLN00133]][[restrictions-and-deprecated-functionality]]
+
+Restrictions and Deprecated Functionality
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section describes restrictions and deprecated functionality in
+Oracle GlassFish Server 5.1.
+
+The following topics are addressed here:
+
+* link:#ggqoc[`asadmin` Subcommands]
+* link:#abmbf[Deprecated, Unsupported, and Obsolete Options]
+* link:#gkueg[Applications That Use Apache Derby]
+* link:#ghpen[No Support for Client VM on Windows AMD64]
+* link:#gkwbd[Metro Reliable Messaging in `InOrder` Delivery Mode]
+
+[[ggqoc]][[GSRLN00258]][[asadmin-subcommands]]
+
+`asadmin` Subcommands
+^^^^^^^^^^^^^^^^^^^^^
+
+In GlassFish Server 5.1, it is recommended that utility options of the
+`asadmin` command precede the subcommand. Utility options are options
+that control the behavior of the `asadmin` utility, as distinguished
+from subcommand options. Use of the following options after the
+subcommand is deprecated.
+
+* `--host`
+* `--port`
+* `--user`
+* `--passwordfile`
+* `--terse`
+* `--secure`
+* `--echo`
+* `--interactive`
+
+[[abmbf]][[GSRLN00259]][[deprecated-unsupported-and-obsolete-options]]
+
+Deprecated, Unsupported, and Obsolete Options
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Options in link:#gaeki[Table 1-3] are deprecated or no longer supported,
+or are obsolete and are ignored.
+
+[[sthref14]][[gaeki]]
+
+Table 1-3 Deprecated, Unsupported, and Obsolete Options for `asadmin`
+and Subcommands
+
+[width="100%",cols="33%,67%",options="header",]
+|=======================================================================
+|Option |Affected Subcommands
+|`--acceptlang` |Unsupported for the `create-virtual-server` subcommand.
+
+|`--acls` |Unsupported for the `create-virtual-server` subcommand.
+
+|`--adminpassword` |Unsupported for all relevant subcommands. Use
+`--passwordfile` instead.
+
+|`--autoapplyenabled` |Obsolete for the `create-http-lb` subcommand.
+
+|`--autohadb` |Obsolete for the `create-cluster` subcommand.
+
+|`--autohadboverride` |Obsolete for the `start-cluster` subcommand and
+the `stop-cluster` subcommand
+
+|`--blockingenabled` |Unsupported for the `create-http-listener`
+subcommand.
+
+|`--configfile` |Unsupported for the `create-virtual-server` subcommand.
+
+|`--defaultobj` |Unsupported for the `create-virtual-server` subcommand.
+
+|`--defaultvs` |Deprecated for the `create-http-listener` subcommand.
+Use `--default-virtual-server` instead.
+
+|`--description` |Obsolete for the `restore-domain` subcommand.
+
+|`--devicesize` |Obsolete for the `create-cluster` subcommand.
+
+|`--haadminpassword` |Obsolete for the `create-cluster` subcommand.
+
+|`--haadminpasswordfile` |Obsolete for the `create-cluster` subcommand.
+
+|`--haagentport` |Obsolete for the `create-cluster` subcommand.
+
+|`--haproperty` |Obsolete for the `create-cluster` subcommand.
+
+|`--hosts` |Obsolete for the `create-cluster` subcommand.
+
+|`--ignoreDescriptorItem` |Replaced by the all lowercase option
+`--ignoredescriptoritem` in the `set-web-context-param` subcommand and
+the `set-web-env-entry` subcommand.
+
+|`--mime` |Unsupported for the `create-virtual-server` subcommand.
+
+|`--password` |Unsupported for all remote subcommands. Use
+`--passwordfile` instead.
+
+|`--path` |Unsupported for the `create-domain` subcommand. Use
+`--domaindir` instead.
+
+|`--portbase` |Obsolete only for the `create-cluster` subcommand. This
+option is still valid in other subcommands such as `create-domain`,
+`create-instance`, and `create-local-instance`.
+
+|`--resourcetype` |Unsupported for all relevant subcommands. Use
+`--restype` instead.
+
+|`--retrievefile` |Obsolete for the `export-http-lb-config` subcommand.
+
+|`--setenv` |Obsolete for the `start-instance` subcommand.
+
+|`--target` a|
+Obsolete only for the following subcommands:
+
+* `create-connector-connection-pool`
+* `create-resource-adapter-config`
+* `delete-connector-connection-pool`
+* `delete-connector-security-map`
+* `delete-jdbc-connection-pool`
+* `delete-resource-ref`
+
+Replaced by an operand in the `list-custom-resources` subcommand and the
+`list-jndi-entries` subcommand:
+
+|=======================================================================
+
+
+[[gkueg]][[GSRLN00260]][[applications-that-use-apache-derby]]
+
+Applications That Use Apache Derby
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The directory location of Apache Derby in GlassFish Server 5.1 has
+changed from its location in previous installations. Suppose that you
+have deployed applications that use Apache Derby databases in your
+previous server installation, and you upgrade your existing installation
+to GlassFish Server 5.1. If you run the `asadmin start-database` command
+and successfully start Apache Derby, you could run into problems while
+trying to run applications that were deployed on your previous server
+installation.
+
+To solve this problem, you can copy the `databases` directory from your
+previous installation to as-install`/databases`. Make sure the database
+is not running when you do this.
+
+Alternatively, you can perform these steps:
+
+1.  Use the `asadmin start-database` command with the `--dbhome` option
+pointing to the `databases` directory in the older version of Apache
+Derby. For example: +
+[source,oac_no_warn]
+----
+asadmin start-database --dbhome c:\glassfish\databases
+----
+2.  After upgrade, start GlassFish Server 5.1.
+
+[[ghpen]][[GSRLN00261]][[no-support-for-client-vm-on-windows-amd64]]
+
+No Support for Client VM on Windows AMD64
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, the GlassFish Server DAS uses the Client VM to achieve best
+startup and deployment performance. If you are using Windows AMD64, edit
+the `domain.xml` file to remove the line
+`<jvm-options>-client<jvm-options>`. In this case, JVM ergonomics
+chooses the appropriate kind of VM for the given platform. Note that
+server instances use the Server VM by default.
+
+For more information about platform support, see
+http://www.oracle.com/technetwork/java/ergo5-140223.html[Ergonomics in
+the 5.1 Java Virtual Machine].
+
+[[gkwbd]][[GSRLN00262]][[metro-reliable-messaging-in-inorder-delivery-mode]]
+
+Metro Reliable Messaging in `InOrder` Delivery Mode
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Metro Reliable Messaging in `InOrder` Delivery mode has not been
+tested for high availability in GlassFish Server 5.1. The feature may
+work, but it has not been formally tested and is therefore not a
+supported feature.
+
+[[glgiy]][[GSRLN00263]][[no-support-for-kerberos-on-aix]]
+
+No Support for Kerberos on AIX
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+GlassFish Server 5.1 does not support Kerberos on the AIX platform.
+
+For the complete report about this issue, see
+https://github.com/javaee/glassfish/issues/16728[`Issue-16728`]
+
+[[BABDACBE]][[documentation-errata]]
+
+Documentation Errata
+~~~~~~~~~~~~~~~~~~~~
+
+This section describes documentation errata.
+
+* link:#BABIDEHD[Upgrading to Oracle GlassFish Server Is Not Necessary]
+
+[[BABIDEHD]][[upgrading-to-oracle-glassfish-server-is-not-necessary]]
+
+Upgrading to Oracle GlassFish Server Is Not Necessary
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Eclipse GlassFish Server Administration Guide discusses
+upgrading Eclipse GlassFish Server to Oracle GlassFish
+Server. GlassFish Server 4.x is only an open source release, so this
+upgrade is not necessary.
+
+
+[NOTE]
+==============================================
+
+Upgrading may not work for GlassFish Server 5.1
+
+==============================================
+
+
+[[giraq]][[GSRLN00135]][[features-available-only-in-the-full-platform]]
+
+Features Available Only in the Full Platform
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features of GlassFish Server 5.1 are available only in the
+Full Platform:
+
+* EJB features that make up the full EJB 3.2 API, such as remote EJB
+components, message-driven beans, web service EJB endpoints, and the EJB
+Timer Service +
+The EJB 3.2 Lite specification is supported in the Web Profile. This
+specification allows enterprise beans within web applications and
+includes support for local stateless session beans, stateful session
+beans, and singleton session beans.
+* Application Client Container
+* JMS resources
+* Web services +
+In the Web Profile, a servlet or EJB component cannot be a web service
+endpoint. The `sun-web.xml` and `sun-ejb-jar.xml` elements that are
+related to web services are ignored.
+* Message security
+* JavaMail resources
+
+Connector modules that use only outbound communication features and
+work-management that does not involve inbound communication features are
+supported in the Web Profile. Other connector features are supported
+only in the Eclipse GlassFish Server 5.1 full platform.
+
+[[gipkz]][[GSRLN00136]][[java-ee-standards-support]]
+
+Java EE Standards Support
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:#gjxcp[Table 1-4] lists the Java EE standards implemented in
+GlassFish Server 5.1. The table also indicates the distributions in
+which the implementation of a standard is available.
+
+* X indicates that the implementation is available in the distribution.
+* - indicates that the implementation is not available in the
+distribution.
+
+[[sthref15]][[gjxcp]]
+
+Table 1-4 Java EE Standards Implementations in GlassFish Server 5.1
+
+[width="100%",cols="48%,24%,16%,12%",options="header",]
+|=======================================================================
+|Java EE Standard |Java Specification Request (JSR) |GlassFish Server
+5.1 Full Platform |GlassFish Server 5.1 Web Profile
+|https://javaee.github.io/javaee-spec/javadocs/[Java Platform,
+Enterprise Edition 8] `(https://javaee.github.io/javaee-spec/javadocs/)`
+|http://jcp.org/en/jsr/detail?id=366[JSR 366] |X |X
+
+|Java EE Security API |http://jcp.org/en/jsr/detail?id=375[JSR 375] |X
+|X
+
+|Batch Applications for the Java Platform 1.0
+|http://jcp.org/en/jsr/detail?id=352[JSR 352] |X |-
+
+|Concurrency Utilities for Java EE 1.0
+|http://jcp.org/en/jsr/detail?id=236[JSR 236] |X |-
+
+|Java API for JSON Processing 1.1
+|http://jcp.org/en/jsr/detail?id=374[JSR 374] |X |X
+
+|Java API for JSON Binding 1.0 |http://jcp.org/en/jsr/detail?id=367[JSR
+367] |X |X
+
+|Java API for WebSocket 1.1 |http://jcp.org/en/jsr/detail?id=356[JSR
+356] |X |X
+
+|https://javaee.github.io/servlet-spec/[Java Servlet Technology
+5.1]`(https://javaee.github.io/servlet-spec/)/`
+|http://jcp.org/en/jsr/detail?id=369[JSR 369] |X |X
+
+|JavaServer Pages 2.3 |http://jcp.org/en/jsr/detail?id=245[JSR 245] |X
+|X
+
+|Expression Language 3.0 |http://jcp.org/en/jsr/detail?id=341[JSR 341]
+|X |X
+
+|Debugging Support for Other Languages 1.0
+|http://jcp.org/en/jsr/detail?id=45[JSR 45] |X |X
+
+|Standard Tag Library for JavaServer Pages 1.2
+|http://jcp.org/en/jsr/detail?id=52[JSR 52] |X |X
+
+|http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html[JavaServer
+Faces 2.3]`(https://github.com/javaserverfaces/)`
+|http://jcp.org/en/jsr/detail?id=372[JSR 372] |X |X
+
+|Common Annotations for the Java Platform 1.2
+|http://jcp.org/en/jsr/detail?id=250[JSR 250] |X |X
+
+|https://github.com/javaee/jta-spec[Java Transaction API 1.2]
+`(https://github.com/javaee/jta-spec)`
+|http://jcp.org/en/jsr/detail?id=907[JSR 907] |X |X
+
+|https://github.com/javaee/jpa-spec[Java Persistence API 2.2]
+`(https://github.com/javaee/jpa-spec)`
+|http://jcp.org/en/jsr/detail?id=338[JSR 338] |X |X
+
+|Managed Beans 1.0 |http://jcp.org/en/jsr/detail?id=316[JSR 316] |X |X
+
+|Interceptors 1.2 |http://jcp.org/en/jsr/detail?id=318[JSR 318] |X |X
+
+|Dependency Injection for Java 1.0
+|http://jcp.org/en/jsr/detail?id=330[JSR 330] |X |X
+
+|https://github.com/javaee/ejb-spec[Enterprise JavaBeans 3.2 Lite]
+`(https://github.com/javaee/ejb-spec)`
+|http://jcp.org/en/jsr/detail?id=345[JSR 345] |X |X
+
+|https://github.com/javaee/ejb-spec[Enterprise JavaBeans 3.2 Full
+API]`(https://github.com/javaee/ejb-spec)`
+|http://jcp.org/en/jsr/detail?id=345[JSR 345] |X |-
+
+|Contexts and Dependency Injection for Java EE 2.0
+|http://jcp.org/en/jsr/detail?id=365[JSR 365] |X |X
+
+|Java API for RESTful Web Service (JAX-RS) 2.1
+|http://jcp.org/en/jsr/detail?id=370[JSR 370] |X |X
+
+|Bean Validation 2.0 |http://jcp.org/en/jsr/detail?id=349[JSR 380] |X |X
+
+|https://github.com/javaee/connector-spec[Java EE Connector Architecture
+1.7]`(https://github.com/javaee/connector-spec)`
+|http://jcp.org/en/jsr/detail?id=322[JSR 322] |X |X^*^
+
+|https://github.com/javaee/metro-jax-ws[Java API for XML-Based Web
+Services (JAX-WS) 2.3]`(https://github.com/javaee/metro-jax-ws)`
+|http://jcp.org/en/jsr/detail?id=224[JSR 224] |X |-
+
+|https://github.com/javaee/jaxb-v2[Java Architecture for XML Binding
+(JAXB) 2.2]`(https://github.com/javaee/jaxb-v2)`
+|http://jcp.org/en/jsr/detail?id=222[JSR 222] |X |-
+
+|Implementing Enterprise Web Services 1.4
+|http://jcp.org/en/jsr/detail?id=109[JSR 109] |X |-
+
+|Web Services Metadata for the Java Platform 2.1
+|http://jcp.org/en/jsr/detail?id=181[JSR 181] |X |-
+
+|https://javaee.github.io/jms-spec/[Java Message Service
+2.0]`(https://javaee.github.io/jms-spec/)`
+|http://jcp.org/en/jsr/detail?id=343[JSR 343] |X |-
+
+|https://javaee.github.io/javamail/[JavaMail
+1.6]`(https://javaee.github.io/javamail/)`
+|http://jcp.org/en/jsr/detail?id=919[JSR 919] |X |-
+
+|https://javaee.github.io/jacc-spec/[Java Authorization Contract for
+Containers 1.5]`(https://javaee.github.io/jacc-spec/)`
+|http://jcp.org/en/jsr/detail?id=115[JSR 115] |X |-
+
+|Java Authentication Service Provider Interface for Containers 1.1
+|http://jcp.org/en/jsr/detail?id=196[JSR 196] |X |-
+
+|Java EE Application Deployment 1.2
+|http://jcp.org/en/jsr/detail?id=88[JSR 88] |X |-
+
+|J2EE Management 1.1 |http://jcp.org/en/jsr/detail?id=77[JSR 77] |X |-
+
+|https://github.com/javaee/jax-rpc-ri[Java API for XML-Based Remote
+Procedure Calls (JAX-RPC) 1.1]`(https://github.com/javaee/jax-rpc-ri/)`
+|http://jcp.org/en/jsr/detail?id=101[JSR 101] |X |-
+
+|Java API for XML-Based Registries (JAXR) 1.0
+|http://jcp.org/en/jsr/detail?id=93[JSR 93] |X |-
+|=======================================================================
+
+
+^*^ Standalone Connector 1.7 Container only.
+
+Building on these standards, GlassFish Server 5.1 provides a number of
+extensions, including the following:
+
+* Ajax (asynchronous JavaScript and XML): Retrieves and displays new
+data for a portion of a web page without affecting the rest of the page.
+* Metro: A web services stack that implements Java Architecture for XML
+Binding (JAXB) and Java APIs for XML Web Services 2.3 (JAX-WS 2.3).
+* Grizzly: A framework for building scalable and robust servers using
+New I/O (NIO) APIs, which make scaling to thousands of users possible.
+The ability to embed components that support HTTP, Bayeux Protocol, Java
+Servlet API, and Comet is provided.
+
+[[ghmtl]][[GSRLN00137]][[java-ee-sdk]]
+
+Java EE SDK
+~~~~~~~~~~~
+
+GlassFish Server 5.1 is available as part of the Java EE 8 SDK. The
+following versions of the Java EE 8 SDK are available:
+
+* Java EE 8 SDK: This version includes GlassFish Server 5.1. This
+version is designed for developers who require the full set of Java EE
+APIs for enterprise application development.
+* Java EE 8 Web Profile SDK: This version includes GlassFish Server 5.1
+Web Profile. This version contains web technologies that are subset of
+the Full Platform and is designed for developers who do not require the
+full set of Java EE APIs.
+
+More information about the Java EE SDK distributions are available at
+http://www.oracle.com/technetwork/java/javaee/documentation/index.html[Java
+EE Reference at a Glance]
+(`http://www.oracle.com/technetwork/java/javaee/documentation/index.html`).
+Java EE SDK distributions are available from the
+http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
+EE SDK Downloads page]
+(`http://www.oracle.com/technetwork/java/javaee/downloads/index.html`).
+
+[[abpha]][[GSRLN00138]][[how-to-report-problems-and-provide-feedback]]
+
+How to Report Problems and Provide Feedback
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have problems with GlassFish Server 5.1, provide feedback through
+one of the following mechanisms:
+
+* https://javaee.groups.io/g/glassfish[GlassFish Server forum]
+(`https://javaee.groups.io/g/glassfish`) — A variety of GlassFish Server
+community for various interests and feedback
+* https://github.com/javaee/glassfish/issues[GlassFish Issue track]er
+(`https://github.com/javaee/glassfish/issues`) — GlassFish Server
+project dashboards and issue tracking database
+
+[[abphc]][[GSRLN00139]][[additional-resources]]
+
+Additional Resources
+~~~~~~~~~~~~~~~~~~~~
+
+Useful information can be found at the following locations:
+
+* https://javaee.github.io/glassfish/[GlassFish Server Community]
+(`https://javaee.github.io/glassfish/`)
+* http://www.oracle.com/technetwork/index.html[Oracle Developer
+Information] (`http://www.oracle.com/technetwork/index.html`)
+* http://www.oracle.com/technetwork/indexes/documentation/index.html[Oracle
+product documentation]
+(`http://www.oracle.com/technetwork/indexes/documentation/index.html`)
+
+

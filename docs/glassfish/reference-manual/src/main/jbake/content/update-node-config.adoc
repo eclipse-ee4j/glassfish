@@ -1,0 +1,132 @@
+type=page
+status=published
+title=update-node-config
+next=update-node-ssh.html
+prev=update-file-user.html
+~~~~~~
+update-node-config
+==================
+
+[[update-node-config-1]][[GSRFM00255]][[update-node-config]]
+
+update-node-config
+------------------
+
+updates the configuration data of a node
+
+[[sthref2282]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] update-node-config [--help]
+[--nodehost node-host] 
+[--installdir as-install-parent] [--nodedir node-dir] 
+node-name
+----
+
+[[sthref2283]]
+
+Description
+
+The `update-node-config` subcommand updates the configuration data of a
+node.
+
+This subcommand can update any node, regardless of whether the node is
+enabled for remote communication. If a node that is enabled for remote
+communication is updated, the node is not enabled for remote
+communication after the update.
+
+Options of this subcommand specify the new values of the node's
+configuration data. The default for these options is to leave the
+existing value unchanged.
+
+This subcommand does not require the Distributed Component Object Model
+(DCOM) remote protocol or secure shell (SSH) to be configured to update
+the node. You may run this subcommand from any host that can contact the
+DAS.
+
+This subcommand is supported in remote mode only.
+
+[[sthref2284]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--nodehost`::
+  The name of the host that the node is to represent after the node is
+  updated.
+`--installdir`::
+  The full path to the parent of the base installation directory of the
+  \{product---name} software on the host, for example,
+  `/export/glassfish3`.
+`--nodedir`::
+  The path to the directory that is to contain \{product---name}
+  instances that are created on the node. If a relative path is
+  specified, the path is relative to the as-install directory, where
+  as-install is the base installation directory of the \{product---name}
+  software on the host.
+
+[[sthref2285]]
+
+Operands
+
+node-name::
+  The name of the node to update. The node must exist. Otherwise, an
+  error occurs.
+
+[[sthref2286]]
+
+Examples
+
+[[GSRFM788]][[sthref2287]]
+
+Example 1   Updating the Host That a Node Represents
+
+This example updates the host that the node `sj04` represents to
+`hsj04`.
+
+[source,oac_no_warn]
+----
+asadmin> update-node-config --nodehost hsj04 sj04
+Command update-node-config executed successfully.
+----
+
+[[sthref2288]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref2289]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
+link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
+link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
+link:delete-node-config.html#delete-node-config-1[`delete-node-config`(1)],
+link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],
+link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)],
+link:install-node.html#install-node-1[`install-node`(1)],
+link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
+link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
+link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
+link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
+link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)],
+link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)],
+link:update-node-ssh001.html#update-node-ssh-1[`update-node-ssh`(1)]
+
+

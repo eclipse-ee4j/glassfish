@@ -1,0 +1,14 @@
+theme: jekyll-theme-architect
+
+title: [ha-administration-guide]
+description: [Eclipse GlassFish Server High Availability Administration Guide, Release 5.1]
+
+# sidebar links url
+links:
+  source: https://github.com/javaee/ha-administration-guide
+  download: https://github.com/javaee/ha-administration-guide/releases
+  #mailinglist: https://javaee.groups.io/g/ha-administration-guide
+  #javadocs:
+  docs: https://javaee.github.io/ha-administration-guide
+  #faq:
+

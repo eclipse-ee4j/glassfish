@@ -1,0 +1,111 @@
+type=page
+status=published
+title=flush-jmsdest
+next=freeze-transaction-service.html
+prev=flush-connection-pool.html
+~~~~~~
+flush-jmsdest
+=============
+
+[[flush-jmsdest-1]][[GSRFM00136]][[flush-jmsdest]]
+
+flush-jmsdest
+-------------
+
+purges messages in a JMS destination.
+
+[[sthref1185]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] flush-jmsdest [--help]
+--desttype {topic|queue}
+[--target target]
+destname
+----
+
+[[sthref1186]]
+
+Description
+
+The `flush-jmsdest` subcommand purges the messages from a physical
+destination in the server's Java Message Service (JMS) configuration.
+
+This subcommand is supported in remote mode only. Remote `asadmin`
+subcommands require a running domain administration server (DAS).
+
+[[sthref1187]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--desttype`::
+  This option indicates the type of physical destination from which you
+  want to purge messages. The supported destination types are `topic`
+  and `queue`.
+`--target`::
+  Purges messages from the physical destination only for the specified
+  target. Valid values are as follows: +
+  `server`;;
+    Purges messages from the physical destination for the default server
+    instance. This is the default value.
+  configuration-name;;
+    Purges messages from the physical destination in the specified
+    configuration.
+  cluster-name;;
+    Purges messages from the physical destination for every server
+    instance in the specified cluster.
+  instance-name;;
+    Purges messages from the physical destination for the specified
+    server instance.
+
+[[sthref1188]]
+
+Operands
+
+dest_name::
+  The unique identifier of the JMS destination to be purged.
+
+[[sthref1189]]
+
+Examples
+
+[[GSRFM615]][[sthref1190]]
+
+Example 1   Purging messages from a physical destination
+
+The following subcommand purges messages from the queue named
+`PhysicalQueue`.
+
+[source,oac_no_warn]
+----
+asadmin> flush-jmsdest --desttype queue PhysicalQueue
+Command flush-jmsdest executed successfully.
+----
+
+[[sthref1191]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1192]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-jmsdest.html#create-jmsdest-1[`create-jmsdest`(1)],
+link:list-jmsdest.html#list-jmsdest-1[`list-jmsdest`(1)]
+
+

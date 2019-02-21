@@ -7,7 +7,7 @@ prev=toc.html
 Eclipse GlassFish Server Quick Start Guide, Release 5.1
 =======================================================
 
-[[glassfish-server-open-source-edition]]
+[[eclipse-glassfish-server]]
 Eclipse GlassFish Server
 ------------------------
 

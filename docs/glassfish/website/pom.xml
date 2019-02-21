@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ 
+    Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+ 
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+ 
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ 
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.docs</groupId>
+        <artifactId>docs</artifactId>
+        <version>5.1.1-SNAPSHOT</version>
+    </parent>
+    <groupId>org.glassfish.docs</groupId>
+    <artifactId>website</artifactId>
+    <packaging>jar</packaging>
+    <version>5.1.1-SNAPSHOT</version>
+    <name>Eclipse GlassFish website content</name>
+
+    <!--
+        This project doesn't inherit from ../parent because it doesn't
+        need jbake, and so the jar plugin needs to be configured here...
+    -->
+    <build>
+        <defaultGoal>package</defaultGoal>
+        <plugins>
+	    <plugin>
+		<artifactId>maven-jar-plugin</artifactId>
+		<configuration>
+		    <finalName>${project.artifactId}</finalName>
+		</configuration>
+	    </plugin>
+	</plugins>
+
+	<pluginManagement>
+	    <plugins>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <version>3.1.1</version>
+		</plugin>
+	    </plugins>
+	</pluginManagement>
+    </build>
+</project>

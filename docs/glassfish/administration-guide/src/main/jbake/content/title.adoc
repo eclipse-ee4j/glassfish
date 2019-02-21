@@ -7,9 +7,9 @@ prev=lot.html
 = Eclipse GlassFish Server Administration Guide, Release 5.1
 
 
-[[glassfish-server-open-source-edition]]
+[[eclipse-glassfish-server]]
 Eclipse GlassFish Server
-------------------------------------
+------------------------
 
 Administration Guide
 

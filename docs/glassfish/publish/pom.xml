@@ -28,6 +28,12 @@
     <packaging>jar</packaging>
     <name>Publish the Eclipse GlassFish Website</name>
 
+    <distributionManagement>
+        <site>
+            <url>scm:git:git@github.com:eclipse-ee4j/glassfish.git</url>
+        </site>
+    </distributionManagement>
+
     <properties>
         <site.output.dir>${project.build.directory}/staging</site.output.dir>
         <maven.site.skip>true</maven.site.skip>
@@ -159,7 +165,9 @@
                                 <configuration>
                                     <target>
                                         <delete
-                                          file="${site.output.dir}/docs/latest"
+                                          dir="${site.output.dir}/docs/latest"
+                                          followSymlinks="false"
+                                          removeNotFollowedSymlinks="true"
                                           />
                                         <symlink
                                           link="${site.output.dir}/docs/latest"

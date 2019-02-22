@@ -27,6 +27,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>application-development-guide</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.1-SNAPSHOT</version>
     <name>Eclipse GlassFish Server Application Development Guide, Release 5.1</name>
 </project>

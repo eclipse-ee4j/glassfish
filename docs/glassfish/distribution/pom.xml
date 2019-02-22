@@ -25,7 +25,6 @@
     </parent>
     <groupId>org.glassfish.docs</groupId>
     <artifactId>distribution</artifactId>
-    <version>5.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Eclipse GlassFish Documentation Distribution</name>
     <description>
@@ -39,29 +38,7 @@
     </properties>
 
     <build>
-        <defaultGoal>package</defaultGoal>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>[1.8.0,1.9.0)</version>
-                                    <message>You need JDK8 or lower</message>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -106,97 +83,97 @@
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>add-on-component-development-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>administration-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>application-deployment-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>application-development-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>deployment-planning-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>embedded-server-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>error-messages-reference</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>ha-administration-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>installation-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>performance-tuning-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>quick-start-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>reference-manual</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>release-notes</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>security-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>troubleshooting-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
             <artifactId>upgrade-guide</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

@@ -27,6 +27,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>installation-guide</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.1-SNAPSHOT</version>
     <name>Eclipse GlassFish Server Installation Guide, Release 5.1</name>
 </project>

@@ -27,6 +27,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>performance-tuning-guide</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.1-SNAPSHOT</version>
     <name>Eclipse GlassFish Server Performance Tuning Guide, Release 5.1</name>
 </project>

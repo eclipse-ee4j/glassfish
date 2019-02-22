@@ -26,7 +26,6 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>website</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.1-SNAPSHOT</version>
     <name>Eclipse GlassFish website content</name>
 
     <!--

@@ -26,7 +26,6 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>5.1.1-SNAPSHOT</version>
     <name>Eclipse GlassFish Documentation parent pom</name>
 
     <properties>
@@ -36,29 +35,7 @@
     </properties>
 
     <build>
-        <defaultGoal>package</defaultGoal>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>[1.8.0,1.9.0)</version>
-                                    <message>You need JDK8 or lower</message>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>com.blazebit</groupId>
                 <artifactId>jbake-maven-plugin</artifactId>

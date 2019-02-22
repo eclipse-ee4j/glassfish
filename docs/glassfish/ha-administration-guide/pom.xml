@@ -27,6 +27,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>ha-administration-guide</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.1-SNAPSHOT</version>
     <name>Eclipse GlassFish Server High Availability Administration Guide, Release 5.1</name>
 </project>

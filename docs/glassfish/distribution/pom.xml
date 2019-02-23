@@ -34,7 +34,6 @@
 
     <properties>
         <maven.site.skip>true</maven.site.skip>
-        <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
 
     <build>

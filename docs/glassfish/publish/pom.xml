@@ -37,8 +37,6 @@
     <properties>
         <site.output.dir>${project.build.directory}/staging</site.output.dir>
         <maven.site.skip>true</maven.site.skip>
-        <!-- enable nexus staging plugin to deploy distribution project -->
-        <maven.deploy.skip>false</maven.deploy.skip>
         <!-- the directory where the current snapshot is published -->
         <dir.snap>${site.output.dir}/docs/SNAPSHOT</dir.snap>
         <!-- add a new property for each new release -->

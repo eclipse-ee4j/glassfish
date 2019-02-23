@@ -28,5 +28,5 @@ Contributions to the source code are also welcome.
 Please review the following links:
 
 * [Contribute](CONTRIBUTING)
-* [Pull Request Acceptance Workflow](pr_doc_workflow)
+* [Pull Request Acceptance Workflow](pr_workflow)
 * [License](LICENSE)

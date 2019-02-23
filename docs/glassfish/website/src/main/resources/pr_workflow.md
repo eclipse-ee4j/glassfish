@@ -1,8 +1,8 @@
-# Documentation Pull Request Acceptance Workflow
+# Pull Request Acceptance Workflow
 
 ## One Time Setup
 * [Fork](https://help.github.com/articles/fork-a-repo/) the
-[tutorial](https://github.com/eclipse-ee4j/glassfish/) repository.
+[repository](https://github.com/eclipse-ee4j/glassfish/).
 * [Clone](https://help.github.com/articles/cloning-a-repository/)
 your forked repository.
 ```
@@ -28,17 +28,16 @@ $ git push origin master # push local master to github fork.
 ```
 * Create a local topic branch in your fork from your master.
 ```
-$ git checkout -b doc_update
+$ git checkout -b issue_1234
 ```
 * Do the development in your branch.
 * Commit all the changes.
 ```
-$ git add src/main/jbake/content/my.adoc
 $ git commit -m "my commit message"
 ```
 * Push your changes in a remote branch of your fork.
 ```
-$ git push origin doc_update
+$ git push origin issues_1234
 ```
 * Before raising a Pull Request, please raise an
 [issue](https://github.com/eclipse-ee4j/glassfish/issues)

@@ -53,6 +53,3 @@ to add the previous versions to a "previous versions" section.
 ## To Do
 
 * Add a Jenkins job that waits for changes and publishes the web site.
-* Move this directory from `docs/glassfish` to `docs`.  (The extra
-directory layer seems gratuitous.)
-* Deploy/publish 5.1.0 versions of the docs.

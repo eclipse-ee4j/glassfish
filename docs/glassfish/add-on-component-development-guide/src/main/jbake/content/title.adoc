@@ -8,7 +8,7 @@ Eclipse GlassFish Server Add-On Component Development Guide, Release 5.1
 ========================================================================
 
 
-[[glassfish-server-open-source-edition]]
+[[eclipse-glassfish-server]]
 Eclipse GlassFish Server
 ------------------------
 

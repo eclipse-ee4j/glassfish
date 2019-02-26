@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ 
+    Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+ 
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+ 
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ 
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.docs</groupId>
+        <artifactId>docs</artifactId>
+        <version>5.1.1-SNAPSHOT</version>
+    </parent>
+    <groupId>org.glassfish.docs</groupId>
+    <artifactId>publish</artifactId>
+    <packaging>jar</packaging>
+    <name>Publish the Eclipse GlassFish Website</name>
+
+    <distributionManagement>
+        <site>
+            <url>scm:git:git@github.com:eclipse-ee4j/glassfish.git</url>
+        </site>
+    </distributionManagement>
+
+    <properties>
+        <site.output.dir>${project.build.directory}/staging</site.output.dir>
+        <maven.site.skip>true</maven.site.skip>
+        <!-- the directory where the current snapshot is published -->
+        <dir.snap>${site.output.dir}/docs/SNAPSHOT</dir.snap>
+        <!-- add a new property for each new release -->
+        <dir.510>${site.output.dir}/docs/5.1.0</dir.510>
+        <!-- the "latest" version; update when a new release is done -->
+        <docs.version>5.1.0</docs.version>
+    </properties>
+
+    <!--
+        This profile is used to publish the entire web site.
+
+        Usage: mvn -Ppublish-site deploy
+    -->
+    <profiles>
+        <profile>
+            <id>publish-site</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <!--
+                                Get the content for the top level web site.
+                            -->
+                            <execution>
+                                <id>get-website</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <excludes>
+                                        META-INF/**
+                                    </excludes>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.docs</groupId>
+                                            <artifactId>website</artifactId>
+                                            <version>${project.version}</version>
+                                            <outputDirectory>
+                                                ${site.output.dir}
+                                            </outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <!--
+                                Get the collection of documentation for the
+                                current (under development) release.
+                            -->
+                            <execution>
+                                <id>get-current</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <includeGroupIds>
+                                        org.glassfish.docs
+                                    </includeGroupIds>
+                                    <excludes>META-INF/**</excludes>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.docs</groupId>
+                                            <artifactId>distribution</artifactId>
+                                            <version>${project.version}</version>
+                                            <outputDirectory>
+                                                ${dir.snap}
+                                            </outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <!--
+                                Get the collection of documentation for the
+                                5.1.0 release.
+                            -->
+                            <execution>
+                                <id>get-510</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <includeGroupIds>
+                                        org.glassfish.docs
+                                    </includeGroupIds>
+                                    <excludes>META-INF/**</excludes>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.docs</groupId>
+                                            <artifactId>distribution</artifactId>
+                                            <version>5.1.0</version>
+                                            <outputDirectory>
+                                                ${dir.510}
+                                            </outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <!--
+                                Add additional execution blocks here as
+                                new releases are made, using the above
+                                as a template.  Don't forget to update
+                                the docs.version property.
+                            -->
+                        </executions>
+                    </plugin>
+
+                    <!--
+                        Create a symlink from "latest" to the most recently
+                        released version of the docs.
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>create-latest-link</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <delete
+                                          dir="${site.output.dir}/docs/latest"
+                                          followSymlinks="false"
+                                          removeNotFollowedSymlinks="true"
+                                          />
+                                        <symlink
+                                          link="${site.output.dir}/docs/latest"
+                                          resource="${docs.version}"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!--
+                        Publish the entire web site to the gh-pages branch.
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-publish-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>deploy-site</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>publish-scm</goal>
+                                </goals>
+                                <configuration>
+                                    <scmBranch>gh-pages</scmBranch>
+                                    <basedir>docs</basedir>
+                                    <skipDeletedFiles>false</skipDeletedFiles>
+                                    <checkinComment>Update docs</checkinComment>
+                                    <skipCheckin>true</skipCheckin>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

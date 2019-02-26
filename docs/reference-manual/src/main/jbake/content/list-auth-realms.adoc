@@ -1,0 +1,101 @@
+type=page
+status=published
+title=list-auth-realms
+next=list-backups.html
+prev=list-audit-modules.html
+~~~~~~
+list-auth-realms
+================
+
+[[list-auth-realms-1]][[GSRFM00150]][[list-auth-realms]]
+
+list-auth-realms
+----------------
+
+lists the authentication realms
+
+[[sthref1324]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] list-auth-realms [--help] 
+[target]
+----
+
+[[sthref1325]]
+
+Description
+
+The `list-auth-realms` subcommand lists the authentication realms. This
+subcommand is supported in remote mode only.
+
+[[sthref1326]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1327]]
+
+Operands
+
+target::
+  The name of the target for which you want to list the authentication
+  realms. +
+  `server`;;
+    Lists the realms for the default server instance `server` and is the
+    default value.
+  configuration_name;;
+    Lists the realms for the named configuration.
+  cluster_name;;
+    Lists the realms for every server instance in the cluster.
+  instance_name;;
+    Lists the realms for a particular server instance.
+
+[[sthref1328]]
+
+Examples
+
+[[GSRFM638]][[sthref1329]]
+
+Example 1   Listing authentication realms
+
+[source,oac_no_warn]
+----
+asadmin> list-auth-realms 
+file
+ldap
+certificate
+db
+Command list-auth-realms executed successfully
+----
+
+Where file, ldap, certificate, and db are the available authentication
+realms.
+
+[[sthref1330]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1331]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)],
+link:delete-auth-realm.html#delete-auth-realm-1[`delete-auth-realm`(1)]
+
+

@@ -1,0 +1,945 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Administration Guide, Release 5.1
+next=loe.html
+~~~~~~
+= Eclipse GlassFish Server Administration Guide, Release 5.1
+======================================================================
+
+[[contents]]
+Contents
+--------
+
+[[list-of-examples]]
+link:loe.html[List of Examples]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[list-of-figures]]
+link:lof.html[List of Figures]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[list-of-tables]]
+link:lot.html[List of Tables]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[title-and-copyright-information]]
+link:title.html[Title and Copyright Information]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[preface]]
+link:preface.html#gkamj[Preface]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:preface.html#ghpbz[GlassFish Server Documentation Set]
+* link:preface.html#giprl[Related Documentation]
+* link:preface.html#fwbkx[Typographic Conventions]
+* link:preface.html#fquvc[Symbol Conventions]
+* link:preface.html#ghpfg[Default Paths and File Names]
+
+[[overview-of-glassfish-server-administration]]
+link:overview.html#ablaq[1 Overview of GlassFish Server Administration]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:overview.html#giubb[Default Settings and Locations]
+* link:overview.html#ghrcy[Configuration Tasks]
+
+** link:overview.html#gitwr[Initial Configuration Tasks]
+
+** link:overview.html#giusb[How Dotted Names Work for Configuration]
+
+** link:overview.html#gjjrl[Configuration Files]
+
+** link:overview.html#gitzw[Impact of Configuration Changes]
+*** link:overview.html#gkvaj[To Determine Whether the DAS or an Instance
+Requires Restart]
+*** link:overview.html#ghciy[Configuration Changes That Require Restart]
+*** link:overview.html#ghclm[Dynamic Configuration Changes]
+*** link:overview.html#gkvas[Changes That Affect Applications]
+* link:overview.html#ggjxp[Administration Tools]
+
+** link:overview.html#ablav[Administration Console]
+
+** link:overview.html#gcocs[`asadmin` Utility]
+
+** link:overview.html#gjjok[REST Interfaces]
+
+** link:overview.html#gjjxt[OSGi Module Management Subsystem]
+*** link:overview.html#glhdz[To Enable the Apache Felix Gogo Remote
+Shell]
+*** link:overview.html#CJAGIGII[To Run Apache Felix Gogo Remote Shell
+Commands]
+*** link:overview.html#gkwvx[To Download and Install the GlassFish OSGi
+Web Console]
+*** link:overview.html#BABIDJHF[To Access the GlassFish OSGi Web Console
+Through the GlassFish Server Administration Console]
+*** link:overview.html#BABDJHAF[To Access the GlassFish OSGi Web Console
+as a Standalone Web Application]
+
+** link:overview.html#ghcjl[`keytool` Utility]
+
+** link:overview.html#ghrfm[Java Monitoring and Management Console
+(JConsole)]
+* link:overview.html#giudo[Instructions for Administering GlassFish
+Server]
+
+[[part-i-runtime-administration]]
+link:part-runtime-admin.html#gitzg[Part I Runtime Administration]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[general-administration]]
+link:general-administration.html#gitya[2 General Administration]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:general-administration.html#giobi[Using the `asadmin` Utility]
+
+** link:general-administration.html#giwdb[Path to the `asadmin` Utility]
+
+** link:general-administration.html#givvn[`asadmin` Utility Syntax]
+*** link:general-administration.html#ghvzn[Subcommands of the `asadmin`
+Utility]
+*** link:general-administration.html#ghvyd[`asadmin` Utility Options and
+Subcommand Options]
+*** link:general-administration.html#ghvyj[Operands of `asadmin` Utility
+Subcommands]
+
+** link:general-administration.html#ghvzx[To Run an `asadmin` Utility
+Subcommand in Single Mode]
+
+** link:general-administration.html#givlw[To Display Help Information for
+the `asadmin` Utility or a Subcommand]
+
+** link:general-administration.html#giodz[To Start a Multimode Session]
+
+** link:general-administration.html#givjn[To End a Multimode Session]
+
+** link:general-administration.html#givjd[To Run a Set of `asadmin`
+Subcommands From a File]
+
+** link:general-administration.html#CACDDHBA[To Run `asadmin` Subcommands
+in `--detach` Mode]
+* link:general-administration.html#ghcjc[Administering System Properties]
+
+** link:general-administration.html#ggonc[To Create System Properties]
+
+** link:general-administration.html#ggodt[To List System Properties]
+
+** link:general-administration.html#ggomm[To Delete a System Property]
+* link:general-administration.html#CHDJBJDA[Using Configuration
+Modularity]
+
+** link:general-administration.html#CHDGCJCF[To Add the Default
+Configuration of a Module to `domain.xml`]
+
+** link:general-administration.html#CHDJCJFA[To Remove the Configuration
+of a Module From `domain.xml`]
+
+** link:general-administration.html#CHDICIJE[To Display the Current
+Active Configuration of a Module]
+* link:general-administration.html#gixps[Administering Resources]
+
+** link:general-administration.html#ggoeh[To Add Resources From an XML
+File]
+* link:general-administration.html#ggocm[Listing Various System Elements]
+
+** link:general-administration.html#ghhox[To Display the GlassFish Server
+Version]
+
+** link:general-administration.html#ggocy[To List Applications]
+
+** link:general-administration.html#ggocv[To List Containers]
+
+** link:general-administration.html#ghlgf[To List Modules]
+
+** link:general-administration.html#ggoeg[To List Subcommands]
+
+** link:general-administration.html#giojd[To List Timers]
+
+** link:general-administration.html#giyjd[To Show Component Status]
+* link:general-administration.html#gjipx[Using REST Interfaces to
+Administer GlassFish Server]
+
+** link:general-administration.html#gjipk[Using REST URLs to Administer
+GlassFish Server]
+*** link:general-administration.html#gkwhy[REST URLs to Resources for
+Configuration and Monitoring Objects]
+*** link:general-administration.html#gkwib[REST URLs for Accessing the
+Log File]
+
+** link:general-administration.html#gjijx[Using REST Resource Methods to
+Administer GlassFish Server]
+*** link:general-administration.html#gjjei[To Determine the Methods and
+Method Parameters That an Object in the Tree Supports]
+*** link:general-administration.html#gjjel[To Retrieve Data for an Object
+in the Tree]
+*** link:general-administration.html#gjjdv[To Add an Object to the Tree]
+*** link:general-administration.html#gjjgj[To Update an Object in the
+Tree]
+*** link:general-administration.html#gjjgm[To Delete an Object From the
+Tree]
+
+** link:general-administration.html#gjjdg[Resources for `asadmin`
+Subcommands That Perform Non-CRUD Operations]
+
+** link:general-administration.html#gjiut[Securing GlassFish Server REST
+Interfaces]
+*** link:general-administration.html#sthref17[Setting Up Basic
+Authentication Over a Secure Connection]
+*** link:general-administration.html#gkvtj[To Secure REST Interfaces by
+Using Session Tokens]
+
+** link:general-administration.html#gjijz[Formats for Resource
+Representation of Configuration Objects]
+*** link:general-administration.html#gjiji[JSON Resource Representation
+for Configuration Objects]
+*** link:general-administration.html#gkvzs[XML Resource Representation
+for Configuration Objects]
+*** link:general-administration.html#gjipm[HTML Resource Representation
+for Configuration Objects]
+
+** link:general-administration.html#gkwdd[Formats for Resource
+Representation of Monitoring Objects]
+*** link:general-administration.html#gkwgi[JSON Resource Representation
+for Monitoring Objects]
+*** link:general-administration.html#gkwew[XML Resource Representation
+for Monitoring Objects]
+*** link:general-administration.html#gkwij[HTML Resource Representation
+for Monitoring Objects]
+
+** link:general-administration.html#gkwid[Formats for Resource
+Representation of Log File Details]
+*** link:general-administration.html#gkwnp[JSON Resource Representation
+for Log File Details]
+*** link:general-administration.html#gkwmi[XML Resource Representation
+for Log File Details]
+
+** link:general-administration.html#gkwsq[Supported Content Types in
+Requests to REST Resources]
+
+[[administering-domains]]
+link:domains.html#ggnop[3 Administering Domains]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:domains.html#ggoek[About Administering Domains]
+
+** link:domains.html#geolm[GlassFish Server Instances]
+
+** link:domains.html#geojp[Domains for Administering GlassFish Server]
+
+** link:domains.html#geojl[Domain Administration Server (DAS)]
+* link:domains.html#gitvz[Creating, Logging In To, and Deleting a Domain]
+
+** link:domains.html#ggoei[To Create a Domain]
+
+** link:domains.html#gldel[To Create a Domain From a Custom Template]
+
+** link:domains.html#ggoco[To List Domains]
+
+** link:domains.html#ghhjz[To Log In to a Domain]
+
+** link:domains.html#ggofa[To Delete a Domain]
+* link:domains.html#gitwj[Starting and Stopping a Domain]
+
+** link:domains.html#ggoda[To Start a Domain]
+
+** link:domains.html#ggoch[To Stop a Domain]
+
+** link:domains.html#ginqj[To Restart a Domain]
+* link:domains.html#gglqp[Configuring a DAS or a GlassFish Server
+Instance for Automatic Restart]
+
+** link:domains.html#gjzfg[To Configure a DAS or an Instance for
+Automatic Restart on Windows]
+
+** link:domains.html#giurs[To Configure a DAS or an Instance for
+Automatic Restart on Linux]
+
+** link:domains.html#giusi[To Configure a DAS or an Instance for
+Automatic Restart on Oracle Solaris]
+
+** link:domains.html#giurf[To Prevent Service Shutdown When a User Logs
+Out on Windows]
+* link:domains.html#gityo[Backing Up and Restoring a Domain]
+
+** link:domains.html#ggocq[To Back Up a Domain]
+
+** link:domains.html#ggody[To Restore a Domain]
+
+** link:domains.html#ghgod[To List Domain Backups]
+* link:domains.html#gglri[Re-Creating the Domain Administration Server
+(DAS)]
+
+** link:domains.html#gglnp[To Migrate the DAS]
+* link:domains.html#gitvn[Additional Domain Tasks]
+
+** link:domains.html#ghhnt[To Display Domain Uptime]
+
+** link:domains.html#ghmbn[To Switch a Domain to Another Supported Java
+Version]
+
+** link:domains.html#gkvkb[To Change the Administration Port of a Domain]
+
+[[administering-the-virtual-machine-for-the-java-platform]]
+link:jvm.html#ablwj[4 Administering the Virtual Machine for the Java Platform]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:jvm.html#gepzd[Administering JVM Options]
+
+** link:jvm.html#ggnes[To Create JVM Options]
+
+** link:jvm.html#ggnce[To List JVM Options]
+
+** link:jvm.html#ggnfi[To Delete JVM Options]
+
+** link:jvm.html#ggnbu[To Generate a JVM Report]
+* link:jvm.html#ggnde[Administering the Profiler]
+
+** link:jvm.html#ggneb[To Create a Profiler]
+
+** link:jvm.html#ggnem[To Delete a Profiler]
+
+[[administering-thread-pools]]
+link:threadpools.html#abluc[5 Administering Thread Pools]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:threadpools.html#ggjyv[About Thread Pools]
+* link:threadpools.html#ablud[Configuring Thread Pools]
+
+** link:threadpools.html#ggkwj[To Create a Thread Pool]
+
+** link:threadpools.html#giuff[To List Thread Pools]
+
+** link:threadpools.html#ggkyc[To Update a Thread Pool]
+
+** link:threadpools.html#ggkwy[To Delete a Thread Pool]
+
+[[administering-web-applications]]
+link:webapps.html#gbbjk[6 Administering Web Applications]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:webapps.html#beagk[Invoking a Servlet by Alternate Means]
+* link:webapps.html#gixud[Changing Log Output for a Servlet]
+* link:webapps.html#beagc[Defining Global Features for Web Applications]
+
+** link:webapps.html#fvymc[To Use the `default-web.xml` File]
+* link:webapps.html#gixrb[Redirecting a URL]
+* link:webapps.html#gfaad[Administering `mod_jk`]
+
+** link:webapps.html#gixqw[To Enable `mod_jk`]
+
+** link:webapps.html#gixpx[To Load Balance Using `mod_jk` and GlassFish
+Server]
+
+** link:webapps.html#gjpat[To Enable SSL Between the `mod_jk` Load
+Balancer and the Browser]
+
+** link:webapps.html#gjpan[To Enable SSL Between the `mod_jk` Load
+Balancer and GlassFish Server]
+* link:webapps.html#CIHJDAJD[Administering `mod_proxy_ajp`]
+
+** link:webapps.html#sthref21[To Enable `mod_proxy_ajp`]
+
+** link:webapps.html#sthref22[To Load Balance Using `mod_proxy_ajp` and
+GlassFish Server]
+
+[[administering-the-logging-service]]
+link:logging.html#abluj[7 Administering the Logging Service]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:logging.html#abluk[About Logging]
+
+** link:logging.html#ablul[Log Files]
+*** link:logging.html#gkmep[Log File Names and Locations]
+*** link:logging.html#gkmex[Log Records]
+*** link:logging.html#gkmdz[Log Rotation]
+
+** link:logging.html#gkres[Logger Namespaces]
+
+** link:logging.html#gkjft[Logging Targets]
+
+** link:logging.html#gkkit[Logging Properties]
+* link:logging.html#gklmn[Configuring the Logging Service]
+
+** link:logging.html#gklmx[Changing the Name and Location of Logging
+Service Files]
+*** link:logging.html#gkmak[To Change the Name and Location of the Log
+File]
+*** link:logging.html#gkmcz[To Change the Name and Location of the
+Logging Properties File]
+
+** link:logging.html#gklml[Setting Log Levels]
+*** link:logging.html#gjirr[To List Log Levels]
+*** link:logging.html#ghmep[To Set the Global Log Level]
+*** link:logging.html#ghmdu[To Set Module Log Levels]
+
+** link:logging.html#CEGDJEBG[Setting the Log File Format]
+*** link:logging.html#CEGFFJDG[To Set the Log File Format]
+*** link:logging.html#CEGGBJCC[To Exclude Fields in Log Records]
+*** link:logging.html#CEGBBEAH[To Set Multiline Mode]
+
+** link:logging.html#gklni[Setting Log File Rotation]
+*** link:logging.html#gkmbh[To Change the Rotation File Size]
+*** link:logging.html#gkman[To Change the File Rotation Interval]
+*** link:logging.html#gkmai[To Change the Limit Number of Retained Files]
+*** link:logging.html#gkmau[To Rotate Log Files Manually]
+
+** link:logging.html#gklnk[Adding a Custom Logging Handler]
+*** link:logging.html#ghmen[To Add a Custom Log Handler]
+* link:logging.html#gkobx[Viewing Log Records]
+
+** link:logging.html#gklbi[To Collect Log Files into a ZIP Archive]
+* link:logging.html#CEGGHGIJ[Listing Loggers]
+
+** link:logging.html#CEGGICGF[To List Loggers]
+
+[[administering-the-monitoring-service]]
+link:monitoring.html#ablur[8 Administering the Monitoring Service]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:monitoring.html#ablus[About Monitoring]
+
+** link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works]
+*** link:monitoring.html#abluv[Tree Structure of Monitorable Objects]
+
+** link:monitoring.html#gitkq[About Monitoring for Add-on Components]
+
+** link:monitoring.html#ghbfq[Tools for Monitoring GlassFish Server]
+* link:monitoring.html#ablvp[Configuring Monitoring]
+
+** link:monitoring.html#ablvr[To Enable Monitoring]
+
+** link:monitoring.html#gglcu[To Disable Monitoring]
+* link:monitoring.html#ablvs[Viewing Common Monitoring Data]
+
+** link:monitoring.html#gelol[To View Common Monitoring Data]
+
+** link:monitoring.html#ghmdc[Common Monitoring Statistics]
+*** link:monitoring.html#ghltk[HTTP Listener Common Statistics]
+*** link:monitoring.html#ghlvm[JVM Common Statistics]
+*** link:monitoring.html#ghljx[Web Module Common Statistics]
+* link:monitoring.html#ghmct[Viewing Comprehensive Monitoring Data]
+
+** link:monitoring.html#ablwh[Guidelines for Using the `list` and `get`
+Subcommands for Monitoring]
+
+** link:monitoring.html#ablvv[To View Comprehensive Monitoring Data]
+
+** link:monitoring.html#ghmcn[Comprehensive Monitoring Statistics]
+*** link:monitoring.html#gjkbi[EJB Statistics]
+*** link:monitoring.html#ablvg[HTTP Service Statistics]
+*** link:monitoring.html#gjjyb[Jersey Statistics]
+*** link:monitoring.html#ablvi[JMS/Connector Service Statistics]
+*** link:monitoring.html#ablvm[JVM Statistics]
+*** link:monitoring.html#gjipy[Network Statistics]
+*** link:monitoring.html#ablvj[ORB Statistics (Connection Manager)]
+*** link:monitoring.html#gipzv[Resource Statistics (Connection Pool)]
+*** link:monitoring.html#gjiov[Security Statistics]
+*** link:monitoring.html#ablvk[Thread Pool Statistics]
+*** link:monitoring.html#ablvl[Transaction Service Statistics]
+*** link:monitoring.html#ablvf[Web Statistics]
+* link:monitoring.html#giwqm[Configuring JConsole to View GlassFish
+Server Monitoring Data]
+
+** link:monitoring.html#ggpfh[To Connect JConsole to GlassFish Server]
+
+[[administering-life-cycle-modules]]
+link:lifecycle-modules.html#giury[9 Administering Life Cycle Modules]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:lifecycle-modules.html#giuxo[About Life Cycle Modules]
+* link:lifecycle-modules.html#giuue[Configuring Life Cycle Modules]
+
+** link:lifecycle-modules.html#giuus[To Create a Life Cycle Module]
+
+** link:lifecycle-modules.html#giuvh[To List Life Cycle Modules]
+
+** link:lifecycle-modules.html#giuyh[To Update a Life Cycle Module]
+
+** link:lifecycle-modules.html#giuux[To Delete a Life Cycle Module]
+
+[[administering-batch-jobs]]
+link:batch.html#sthref66[10 Administering Batch Jobs]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:batch.html#BABCHGJJ[About Batch Jobs]
+* link:batch.html#BABIHIGA[Viewing Batch Jobs]
+
+** link:batch.html#BABIBFDJ[To List Batch Jobs]
+
+** link:batch.html#BABFBGJB[To List Batch Job Executions]
+
+** link:batch.html#BABGJIDD[To List Batch Job Steps]
+* link:batch.html#BABBFFIG[Configuring the Batch Runtime]
+
+** link:batch.html#BABBGHCJ[To List the Batch Runtime Configuration]
+
+** link:batch.html#BABFEJAD[To Configure the Batch Runtime]
+
+[[part-ii-resources-and-services-administration]]
+link:part-res-and-svcs-admin.html#gitxw[Part II Resources and Services Administration]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[administering-database-connectivity]]
+link:jdbc.html#ablih[11 Administering Database Connectivity]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:jdbc.html#gipbp[About Database Connectivity]
+* link:jdbc.html#ggkon[Setting Up the Database]
+
+** link:jdbc.html#gharl[To Install the Database and Database Driver]
+
+** link:jdbc.html#ggndz[To Start the Database]
+
+** link:jdbc.html#ggnbw[To Stop the Database]
+
+** link:jdbc.html#ghmbq[Apache Derby Database Utility Scripts]
+*** link:jdbc.html#ghmbj[To Configure Your Environment to Run the Apache
+Derby Database Utility Scripts]
+* link:jdbc.html#ggndx[Configuring Access to the Database]
+
+** link:jdbc.html#gharo[Administering JDBC Connection Pools]
+*** link:jdbc.html#ggnfv[To Create a JDBC Connection Pool]
+*** link:jdbc.html#ggnby[To List JDBC Connection Pools]
+*** link:jdbc.html#ggnwn[To Contact (Ping) a Connection Pool]
+*** link:jdbc.html#gjiqp[To Reset (Flush) a Connection Pool]
+*** link:jdbc.html#giosk[To Update a JDBC Connection Pool]
+*** link:jdbc.html#ggngb[To Delete a JDBC Connection Pool]
+*** link:jdbc.html#gktdi[Configuring Specific JDBC Connection Pool
+Features]
+
+** link:jdbc.html#ggndp[Administering JDBC Resources]
+*** link:jdbc.html#ggnda[To Create a JDBC Resource]
+*** link:jdbc.html#ggnhl[To List JDBC Resources]
+*** link:jdbc.html#giwjv[To Update a JDBC Resource]
+*** link:jdbc.html#ggnhz[To Delete a JDBC Resource]
+
+** link:jdbc.html#gkudf[Enabling the `jdbc/__default` Resource in a
+Clustered Environment]
+*** link:jdbc.html#gkubj[To Enable the `jdbc/__default` Resource for a
+Clustered Environment]
+
+** link:jdbc.html#ghatb[Integrating the JDBC Driver]
+*** link:jdbc.html#gkpdj[Supported Database Drivers]
+*** link:jdbc.html#gkpci[Making the JDBC Driver JAR Files Accessible]
+*** link:jdbc.html#gkpfj[Automatic Detection of Installed Drivers]
+* link:jdbc.html#beamw[Configuration Specifics for JDBC Drivers]
+
+** link:jdbc.html#beanc[IBM DB2 Database Type 2 Driver]
+
+** link:jdbc.html#glhim[IBM DB2 Database Type 4 Driver]
+
+** link:jdbc.html#beamx[Apache Derby DB/Derby Type 4 Driver]
+
+** link:jdbc.html#gbsor[MySQL Server Database Type 4 Driver]
+
+** link:jdbc.html#beani[Oracle 10 Database Driver]
+
+** link:jdbc.html#beanh[Oracle 11 Database Driver]
+
+** link:jdbc.html#gjksj[PostgreSQL Type 4 Driver]
+
+** link:jdbc.html#beamy[DataDirect Type 4 Driver for IBM DB2 Database]
+
+** link:jdbc.html#beanj[DataDirect Type 4 Driver for IBM Informix]
+
+** link:jdbc.html#beana[DataDirect Type 4 Driver for Microsoft SQL Server
+Database]
+
+** link:jdbc.html#gjksd[DataDirect Type 4 Driver for MySQL Server
+Database]
+
+** link:jdbc.html#beamz[DataDirect Type 4 Driver for Oracle 11 Database]
+
+** link:jdbc.html#beanb[DataDirect Type 4 Driver for Sybase Database]
+
+** link:jdbc.html#beane[Inet Oraxo Driver for Oracle Database]
+
+** link:jdbc.html#beanf[Inet Merlia Driver for Microsoft SQL Server
+Database]
+
+** link:jdbc.html#beang[Inet Sybelux Driver for Sybase Database]
+
+** link:jdbc.html#beand[JConnect Type 4 Driver for Sybase ASE 12.5
+Database]
+
+[[administering-eis-connectivity]]
+link:connectors.html#abllp[12 Administering EIS Connectivity]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:connectors.html#abllq[About EIS Connectivity]
+* link:connectors.html#ablls[Administering Connector Connection Pools]
+
+** link:connectors.html#gioce[To Create a Connector Connection Pool]
+
+** link:connectors.html#giocg[To List Connector Connection Pools]
+
+** link:connectors.html#gjiqz[To Connect to (Ping) or Reset (Flush) a
+Connector Connection Pool]
+
+** link:connectors.html#gioti[To Update a Connector Connection Pool]
+
+** link:connectors.html#giocp[To Delete a Connector Connection Pool]
+* link:connectors.html#abllx[Administering Connector Resources]
+
+** link:connectors.html#giogt[To Create a Connector Resource]
+
+** link:connectors.html#giohs[To List Connector Resources]
+
+** link:connectors.html#giosg[To Update a Connector Resource]
+
+** link:connectors.html#giofs[To Delete a Connector Resource]
+* link:connectors.html#giope[Administering the Resource Adapter
+Configuration]
+
+** link:connectors.html#gioqx[To Create Configuration Information for a
+Resource Adapter]
+
+** link:connectors.html#giorn[To List Resource Adapter Configurations]
+
+** link:connectors.html#gioum[To Update a Resource Adapter Configuration]
+
+** link:connectors.html#gionv[To Delete a Resource Adapter Configuration]
+* link:connectors.html#gitxy[Administering Connector Security Maps]
+
+** link:connectors.html#gitzz[To Create a Connector Security Map]
+
+** link:connectors.html#gitwx[To List Connector Security Maps]
+
+** link:connectors.html#gityj[To Update a Connector Security Map]
+
+** link:connectors.html#gitvf[To Delete a Connector Security Map]
+* link:connectors.html#giohl[Administering Connector Work Security Maps]
+
+** link:connectors.html#giofz[To Create a Connector Work Security Map]
+
+** link:connectors.html#gioir[To List Connector Work Security Maps]
+
+** link:connectors.html#giogm[To Update a Connector Work Security Map]
+
+** link:connectors.html#gioin[To Delete a Connector Work Security Map]
+* link:connectors.html#ablmc[Administering Administered Objects]
+
+** link:connectors.html#giolr[To Create an Administered Object]
+
+** link:connectors.html#giokm[To List Administered Objects]
+
+** link:connectors.html#giots[To Update an Administered Object]
+
+** link:connectors.html#gioma[To Delete an Administered Object]
+
+[[administering-internet-connectivity]]
+link:http_https.html#ablsw[13 Administering Internet Connectivity]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:http_https.html#giusf[About Internet Connectivity]
+
+** link:http_https.html#giuri[About HTTP Network Listeners]
+
+** link:http_https.html#giupz[About Virtual Servers]
+* link:http_https.html#ggnfu[Administering HTTP Network Listeners]
+
+** link:http_https.html#ggnfh[To Create an Internet Connection]
+
+** link:http_https.html#gjkuy[Administering HTTP Protocols]
+*** link:http_https.html#gjhot[To Create a Protocol]
+*** link:http_https.html#gjhna[To List Protocols]
+*** link:http_https.html#gjhnx[To Delete a Protocol]
+
+** link:http_https.html#gjkzi[Administering HTTP Configurations]
+*** link:http_https.html#gjhqc[To Create an HTTP Configuration]
+*** link:http_https.html#gjhqa[To Delete an HTTP Configuration]
+
+** link:http_https.html#gjkym[Administering HTTP Transports]
+*** link:http_https.html#gjhps[To Create a Transport]
+*** link:http_https.html#gjhmx[To List Transports]
+*** link:http_https.html#gjhqp[To Delete a Transport]
+
+** link:http_https.html#gjkwt[Administering HTTP Network Listeners]
+*** link:http_https.html#gjimx[To Create an HTTP Network Listener]
+*** link:http_https.html#ggnbv[To List HTTP Network Listeners]
+*** link:http_https.html#giwls[To Update an HTTP Network Listener]
+*** link:http_https.html#ggndu[To Delete an HTTP Network Listener]
+*** link:http_https.html#ggnbj[To Configure an HTTP Listener for SSL]
+*** link:http_https.html#CHDEDCEA[To Configure Optional Client
+Authentication for SSL]
+*** link:http_https.html#CHDHEFHG[To Configure a Custom SSL
+Implementation]
+*** link:http_https.html#ggncl[To Delete SSL From an HTTP Listener]
+*** link:http_https.html#gixjb[To Assign a Default Virtual Server to an
+HTTP Listener]
+* link:http_https.html#ggncs[Administering Virtual Servers]
+
+** link:http_https.html#ggnfr[To Create a Virtual Server]
+
+** link:http_https.html#ggndw[To List Virtual Servers]
+
+** link:http_https.html#giwkp[To Update a Virtual Server]
+
+** link:http_https.html#ggnen[To Delete a Virtual Server]
+
+** link:http_https.html#beaga[To Assign a Default Web Module to a Virtual
+Server]
+
+** link:http_https.html#gixku[To Assign a Virtual Server to an
+Application or Module]
+
+** link:http_https.html#glavy[To Set `JSESSIONIDSSO` Cookie Attributes]
+
+[[administering-concurrent-resources]]
+link:concurrent.html#sthref73[14 Administering Concurrent Resources]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:concurrent.html#DAFGCCDI[About Concurrent Resources]
+* link:concurrent.html#DAFFGDCD[Default Concurrent Resources]
+* link:concurrent.html#DAFFCEEA[Configuring Context Services]
+
+** link:concurrent.html#DAFJACDI[To Create a Context Service]
+
+** link:concurrent.html#DAFDCFCB[To List Context Services]
+
+** link:concurrent.html#DAFBFICB[To Update a Context Service]
+
+** link:concurrent.html#DAFGGGEC[To Delete a Context Service]
+* link:concurrent.html#DAFBAAIJ[Configuring Managed Thread Factories]
+
+** link:concurrent.html#DAFGFAEI[To Create a Managed Thread Factory]
+
+** link:concurrent.html#DAFDGEGE[To List Managed Thread Factories]
+
+** link:concurrent.html#DAFDIJIH[To Update a Managed Thread Factory]
+
+** link:concurrent.html#DAFCEDEI[To Delete a Managed Thread Factory]
+* link:concurrent.html#DAFBHEDI[Configuring Managed Executor Services]
+
+** link:concurrent.html#DAFJIEGA[To Create a Managed Executor Service]
+
+** link:concurrent.html#DAFIJDAE[To List Managed Executor Services]
+
+** link:concurrent.html#DAFICEJF[To Update a Managed Executor Service]
+
+** link:concurrent.html#DAFDAGAD[To Delete a Managed Executor Service]
+* link:concurrent.html#DAFHJHCF[Configuring Managed Scheduled Executor
+Services]
+
+** link:concurrent.html#DAFFGDGG[To Create a Managed Scheduled Executor
+Service]
+
+** link:concurrent.html#DAFJBADD[To List Managed Scheduled Executor
+Services]
+
+** link:concurrent.html#DAFGEBEI[To Update a Managed Scheduled Executor
+Service]
+
+** link:concurrent.html#DAFEBEGC[To Delete a Managed Scheduled Executor
+Service]
+
+[[administering-the-object-request-broker-orb]]
+link:orb.html#abltr[15 Administering the Object Request Broker (ORB)]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:orb.html#ablts[About the ORB]
+* link:orb.html#abltw[Configuring the ORB]
+* link:orb.html#ablty[Administering IIOP Listeners]
+
+** link:orb.html#gioyo[To Create an IIOP Listener]
+
+** link:orb.html#giowc[To List IIOP Listeners]
+
+** link:orb.html#giwlq[To Update an IIOP Listener]
+
+** link:orb.html#giowj[To Delete an IIOP Listener]
+
+[[administering-the-javamail-service]]
+link:javamail.html#ablkr[16 Administering the JavaMail Service]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:javamail.html#ggjsf[About JavaMail]
+* link:javamail.html#giowr[Administering JavaMail Resources]
+
+** link:javamail.html#giowd[To Create a JavaMail Resource]
+
+** link:javamail.html#giowq[To List JavaMail Resources]
+
+** link:javamail.html#giwjw[To Update a JavaMail Resource]
+
+** link:javamail.html#gioxj[To Delete a JavaMail Resource]
+
+[[administering-the-java-message-service-jms]]
+link:jms.html#abljw[17 Administering the Java Message Service (JMS)]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:jms.html#gipit[About the JMS Service]
+
+** link:jms.html#gavqn[JMS Service High Availability]
+* link:jms.html#beaof[Updating the JMS Service Configuration]
+
+** link:jms.html#gkxgf[Setting Message Queue Broker Properties in the JMS
+Service Configuration]
+* link:jms.html#gipbg[Administering JMS Hosts]
+
+** link:jms.html#giplw[About JMS Host Types]
+
+** link:jms.html#gktfb[Configuring Embedded and Local JMS Hosts]
+
+** link:jms.html#gipbh[To Create a JMS Host]
+
+** link:jms.html#gipbz[To List JMS Hosts]
+
+** link:jms.html#givno[To Update a JMS Host]
+
+** link:jms.html#gipbv[To Delete a JMS Host]
+* link:jms.html#ablkb[Administering JMS Connection Factories and
+Destinations]
+
+** link:jms.html#giotd[To Create a Connection Factory or Destination
+Resource]
+
+** link:jms.html#giosx[To List JMS Resources]
+
+** link:jms.html#giouw[To Delete a Connection Factory or Destination
+Resource]
+* link:jms.html#ablkj[Administering JMS Physical Destinations]
+
+** link:jms.html#gioue[To Create a JMS Physical Destination]
+
+** link:jms.html#gioyp[To List JMS Physical Destinations]
+
+** link:jms.html#giowx[To Purge Messages From a Physical Destination]
+
+** link:jms.html#giouv[To Delete a JMS Physical Destination]
+* link:jms.html#gkxgk[Special Situations When Using the JMS Service]
+* link:jms.html#gipnh[Troubleshooting the JMS Service]
+* link:jms.html#gbtvg[Using the Generic Resource Adapter for JMS to
+Integrate Supported External JMS Providers]
+
+** link:jms.html#gkkvc[Configuring GenericJMSRA for Supported External
+JMS Providers]
+*** link:jms.html#giosy[To Deploy and Configure GenericJMSRA]
+*** link:jms.html#gbtvu[GenericJMSRA Configuration Properties]
+*** link:jms.html#gbtwu[Connection Factory Properties]
+*** link:jms.html#gbtxa[Destination Properties]
+*** link:jms.html#gbtvf[Activation Spec Properties]
+
+** link:jms.html#gkkuy[Using GenericJMSRA with WebLogic JMS]
+*** link:jms.html#gkmeb[Deploy the WebLogic Thin T3 Client JAR in
+GlassFish Server]
+*** link:jms.html#gkmek[Configure WebLogic JMS Resources for Integration]
+*** link:jms.html#gkmee[Create a Resource Adapter Configuration for
+GenericJMSRA to Work With WebLogic JMS]
+*** link:jms.html#gkkxz[Deploy the GenericJMSRA Resource Archive]
+*** link:jms.html#gkkwq[Configuring an MDB to Receive Messages from
+WebLogic JMS]
+*** link:jms.html#gknjj[Accessing Connections and Destinations Directly]
+*** link:jms.html#gkkvz[Limitations When Using GenericJMSRA with WebLogic
+JMS]
+*** link:jms.html#gktfi[Configuration Reference of GenericJMSRA
+Properties for WebLogic JMS]
+
+** link:jms.html#gkslb[Using GenericJMSRA with IBM WebSphere MQ]
+*** link:jms.html#gksiw[Preliminary Setup Procedures for WebSphere MQ
+Integration]
+*** link:jms.html#gksli[Configure the WebSphere MQ Administered Objects]
+*** link:jms.html#gksni[Create a Resource Adapter Configuration for
+GenericJMSRA to Work With WebSphere MQ]
+*** link:jms.html#gksnh[Deploy the GenericJMSRA Archive]
+*** link:jms.html#gkson[Create the Connection Factories and Administered
+Objects in GlassFish Server]
+*** link:jms.html#gktmn[Configuring an MDB to Receive Messages from
+WebSphere MQ]
+
+[[administering-the-java-naming-and-directory-interface-jndi-service]]
+link:jndi.html#ablky[18 Administering the Java Naming and Directory Interface (JNDI) Service]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:jndi.html#ggjue[About JNDI]
+
+** link:jndi.html#abllb[Java EE Naming Environment]
+
+** link:jndi.html#gglpg[How the Naming Environment and the Container Work
+Together]
+
+** link:jndi.html#abllc[Naming References and Binding Information]
+* link:jndi.html#gglpq[Administering JNDI Resources]
+
+** link:jndi.html#ablle[Administering Custom JNDI Resources]
+*** link:jndi.html#giowe[To Create a Custom JNDI Resource]
+*** link:jndi.html#gioxb[To List Custom JNDI Resources]
+*** link:jndi.html#giwlk[To Update a Custom JNDI Resource]
+*** link:jndi.html#gioxl[To Delete a Custom JNDI Resource]
+
+** link:jndi.html#gitxz[Administering External JNDI Resources]
+*** link:jndi.html#gitxn[To Register an External JNDI Resource]
+*** link:jndi.html#gitvj[To List External JNDI Resources]
+*** link:jndi.html#gitwc[To List External JNDI Entries]
+*** link:jndi.html#giwnr[To Update an External JNDI Resource]
+*** link:jndi.html#gitvt[To Delete an External JNDI Resource]
+*** link:jndi.html#abllk[Example of Using an External JNDI Resource]
+*** link:jndi.html#gknaf[To Disable GlassFish Server v2 Vendor-Specific
+JNDI Names]
+
+[[administering-transactions]]
+link:transactions.html#ablsn[19 Administering Transactions]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:transactions.html#ablso[About Transactions]
+
+** link:transactions.html#beann[Transaction Resource Managers]
+
+** link:transactions.html#beano[Transaction Scope]
+* link:transactions.html#beanp[Configuring the Transaction Service]
+* link:transactions.html#giubd[Managing the Transaction Service for
+Rollbacks]
+
+** link:transactions.html#giufn[To Stop the Transaction Service]
+
+** link:transactions.html#giugk[To Roll Back a Transaction]
+
+** link:transactions.html#giuet[To Restart the Transaction Service]
+
+** link:transactions.html#gkrbo[Determining Local Transaction Completion
+at Shutdown]
+* link:transactions.html#gjjpy[Recovering Transactions]
+
+** link:transactions.html#gkoen[Automatic Transaction Recovery]
+
+** link:transactions.html#giuhe[To Manually Recover Transactions]
+
+** link:transactions.html#gaxim[Distributed Transaction Recovery]
+
+** link:transactions.html#gaxig[Recovery Workarounds and Limitations]
+*** link:transactions.html#gknau[General Recovery Limitations]
+*** link:transactions.html#gknee[Oracle Setup for Transaction Recovery]
+*** link:transactions.html#gjiep[Oracle Thin Driver]
+*** link:transactions.html#gkneq[Delegated Recovery After Server Crash
+Doesn't Work on MySQL]
+*** link:transactions.html#glclh[Call to `XATeminator.recover()` During
+`ResourceAdapter.start()` Hangs If Automatic Recovery Is Enabled]
+* link:transactions.html#beanq[Transaction Logging]
+
+** link:transactions.html#gcmam[To Store Transaction Logs in a Database]
+
+[[part-iii-appendixes]]
+link:part-appendixes.html#gitym[Part III Appendixes]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[a-subcommands-for-the-asadmin-utility]]
+link:asadmin-subcommands.html#gcode[A Subcommands for the `asadmin` Utility]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:asadmin-subcommands.html#ggltk[General Administration Subcommands]
+* link:asadmin-subcommands.html#CHDJGEEG[Batch Jobs Subcommands]
+* link:asadmin-subcommands.html#CHDECJFC[Concurrent Resources
+Subcommands]
+* link:asadmin-subcommands.html#giowb[Connectivity Subcommands]
+* link:asadmin-subcommands.html#gitwu[Domain Subcommands]
+* link:asadmin-subcommands.html#ggltm[Internet Connectivity Subcommands]
+* link:asadmin-subcommands.html#ggltf[JavaMail Subcommands]
+* link:asadmin-subcommands.html#gipen[JMS Subcommands]
+* link:asadmin-subcommands.html#gitws[JNDI Subcommands]
+* link:asadmin-subcommands.html#gglsk[JVM Subcommands]
+* link:asadmin-subcommands.html#giuzl[Life Cycle Module Subcommands]
+* link:asadmin-subcommands.html#gitxd[Logging and Monitoring Subcommands]
+* link:asadmin-subcommands.html#giusq[ORB Subcommands]
+* link:asadmin-subcommands.html#giuqr[Thread Pool Subcommands]
+* link:asadmin-subcommands.html#gitxi[Transaction Service Subcommands]
+
+

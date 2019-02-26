@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>core</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>api-exporter-fragment</artifactId>
@@ -61,7 +61,7 @@
                             <Fragment-Host>GlassFish-Application-Common-Module</Fragment-Host>
                             <Bundle-Name>${project.name}</Bundle-Name>
                             <!-- This is the most important attribute of this bundle 
-                                 We currently import all EE6 APIs. We could include some appserver pkgs as well.
+                                 We currently import all EE8 APIs. We could include some appserver pkgs as well.
                                  Tune this as per performance requirement.
                             -->
                             <Import-Package>
@@ -72,6 +72,14 @@ javax.annotation; \
 javax.annotation.processing; \
 javax.annotation.security; \
 javax.annotation.sql; \
+javax.batch.api; \
+javax.batch.api.chunk; \
+javax.batch.api.chunk.listener; \
+javax.batch.api.listener; \
+javax.batch.api.partition; \
+javax.batch.operations; \
+javax.batch.runtime; \
+javax.batch.runtime.context; \
 javax.crypto; \
 javax.crypto.interfaces; \
 javax.crypto.spec; \
@@ -80,7 +88,9 @@ javax.ejb; \
 javax.ejb.embeddable; \
 javax.ejb.spi; \
 javax.el; \
+javax.enterprise.concurrent; \
 javax.enterprise.context; \
+javax.enterprise.context.control; \
 javax.enterprise.context.spi; \
 javax.enterprise.deploy.model; \
 javax.enterprise.deploy.model.exceptions; \
@@ -92,23 +102,32 @@ javax.enterprise.deploy.spi.factories; \
 javax.enterprise.deploy.spi.status; \
 javax.enterprise.event; \
 javax.enterprise.inject; \
+javax.enterprise.inject.literal; \
+javax.enterprise.inject.se; \
 javax.enterprise.inject.spi; \
+javax.enterprise.inject.spi.configurator; \
 javax.enterprise.util; \
 javax.faces; \
+javax.faces.annotation; \
 javax.faces.application; \
 javax.faces.bean; \
 javax.faces.component; \
 javax.faces.component.behavior; \
 javax.faces.component.html; \
+javax.faces.component.search; \
 javax.faces.component.visit; \
 javax.faces.context; \
 javax.faces.convert; \
 javax.faces.el; \
 javax.faces.event ; \
+javax.faces.flow; \
+javax.faces.flow.builder; \
 javax.faces.lifecycle; \
 javax.faces.model; \
+javax.faces.push; \
 javax.faces.render; \
 javax.faces.validator; \
+javax.faces.view; \
 javax.faces.view.facelets; \
 javax.faces.webapp; \
 javax.inject; \
@@ -121,6 +140,15 @@ javax.imageio.spi; \
 javax.imageio.stream; \
 javax.interceptor; \
 javax.jms; \
+javax.json; \
+javax.json.bind; \
+javax.json.bind.adapter; \
+javax.json.bind.annotation; \
+javax.json.bind.config; \
+javax.json.bind.serializer; \
+javax.json.bind.spi; \
+javax.json.spi; \
+javax.json.stream; \
 javax.jws; \
 javax.jws.soap; \
 javax.lang.model; \
@@ -182,6 +210,10 @@ javax.security.auth.login; \
 javax.security.auth.spi; \
 javax.security.auth.x500; \
 javax.security.cert; \
+javax.security.enterprise; \
+javax.security.enterprise.authentication.mechanism.http; \
+javax.security.enterprise.credential; \
+javax.security.enterprise.identitystore; \
 javax.security.jacc; \
 javax.security.sasl; \
 javax.servlet; \
@@ -212,6 +244,7 @@ javax.swing.plaf; \
 javax.swing.plaf.basic; \
 javax.swing.plaf.metal; \
 javax.swing.plaf.multi; \
+javax.swing.plaf.nimbus; \
 javax.swing.plaf.synth; \
 javax.swing.table; \
 javax.swing.text; \
@@ -222,15 +255,24 @@ javax.swing.tree; \
 javax.swing.undo; \
 javax.tools; \
 javax.transaction; \
+javax.transaction.xa; \
 javax.validation; \
 javax.validation.bootstrap; \
 javax.validation.constraints; \
+javax.validation.constraintvalidation; \
+javax.validation.executable; \
 javax.validation.groups; \
 javax.validation.metadata; \
 javax.validation.spi; \
+javax.validation.valueextraction; \
+javax.websocket; \
+javax.websocket.server; \
 javax.ws.rs; \
+javax.ws.rs.client; \
+javax.ws.rs.container; \
 javax.ws.rs.core; \
 javax.ws.rs.ext; \
+javax.ws.rs.sse; \
 javax.xml.bind; \
 javax.xml.bind.annotation; \
 javax.xml.bind.annotation.adapters; \
@@ -256,7 +298,9 @@ javax.xml.rpc.holders; \
 javax.xml.rpc.server; \
 javax.xml.rpc.soap; \
 javax.xml.soap; \
-javax.xml.stream; javax.xml.stream.events; javax.xml.stream.util; \
+javax.xml.stream; \
+javax.xml.stream.events; \
+javax.xml.stream.util; \
 javax.xml.transform; \
 javax.xml.transform.dom; \
 javax.xml.transform.sax; \
@@ -304,6 +348,7 @@ org.w3c.dom; \
 org.w3c.dom.bootstrap; \
 org.w3c.dom.events; \
 org.w3c.dom.ls; \
+org.w3c.dom.views; \
 org.xml.sax; \
 org.xml.sax.ext; \
 org.xml.sax.helpers; \

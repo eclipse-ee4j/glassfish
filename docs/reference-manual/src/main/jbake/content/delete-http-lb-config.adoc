@@ -1,0 +1,101 @@
+type=page
+status=published
+title=delete-http-lb-config
+next=delete-http-lb-ref.html
+prev=delete-http-lb.html
+~~~~~~
+delete-http-lb-config
+=====================
+
+[[delete-http-lb-config-1]][[GSRFM00080]][[delete-http-lb-config]]
+
+delete-http-lb-config
+---------------------
+
+deletes a load balancer configuration
+
+[[sthref715]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] delete-http-lb-config [--help] 
+config_name
+----
+
+[[sthref716]]
+
+Description
+
+Use the `delete-http-lb-config` subcommand to delete a load balancer
+configuration. The load balancer configuration must not reference any
+clusters or server instances enabled for load balancing. In addition,
+the load balancer configuration must not be referenced by any physical
+load balancers.
+
+
+[NOTE]
+=======================================================================
+
+This subcommand is only applicable to Oracle GlassFish Server. This
+subcommand is not applicable to GlassFish Server Open Source Edition.
+
+=======================================================================
+
+
+[[sthref717]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref718]]
+
+Operands
+
+config_name::
+  The name of the load balancer configuration to delete. The
+  configuration must not reference any clusters or server instances
+  enabled for load balancing, or be used by any physical load balancers.
+
+[[sthref719]]
+
+Examples
+
+[[GSRFM549]][[sthref720]]
+
+Example 1   Deleting a Load Balancer Configuration
+
+This example deletes a load balancer configuration named `mylbconfig`
+
+[source,oac_no_warn]
+----
+asadmin> delete-http-lb-config mylbconfig
+Command delete-http-lb-config executed successfully.
+----
+
+[[sthref721]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref722]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-http-lb-config.html#create-http-lb-config-1[`create-http-lb-config`(1)],
+link:list-http-lb-configs.html#list-http-lb-configs-1[`list-http-lb-configs`(1)]
+
+

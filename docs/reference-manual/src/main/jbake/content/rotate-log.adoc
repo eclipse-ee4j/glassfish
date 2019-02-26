@@ -1,0 +1,112 @@
+type=page
+status=published
+title=rotate-log
+next=set.html
+prev=rollback-transaction.html
+~~~~~~
+rotate-log
+==========
+
+[[rotate-log-1]][[GSRFM00224]][[rotate-log]]
+
+rotate-log
+----------
+
+rotates the log file
+
+[[sthref2016]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] rotate-log [--help]
+----
+
+[[sthref2017]]
+
+Description
+
+The `rotate-log` subcommand rotates the server log by renaming the file
+with a timestamp name in the format `server.log_`date-and-time, and
+creating a new log file. Changes take effect dynamically, that is,
+server restart is not required.
+
+The size of the log queue is configurable through the
+`logging.properties` file. Log rotation is based on file size or elapsed
+time since the last log rotation. In some circumstances, the queue might
+fill up, especially if the log level is set to `FINEST` and there is
+heavy activity on the server. In this case, the `rotate-log` subcommand
+can be used to rotate the server log immediately. This subcommand is
+also useful in creating scripts for rotating the log at convenient
+times.
+
+This subcommand is supported in remote mode only.
+
+[[sthref2018]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  The server, cluster, or server instance for which logs will be
+  rotated. If this option is omitted, logs are rotated for the default
+  server.
+
+[[sthref2019]]
+
+Operands
+
+target::
+  Valid values are: +
+  * server_name - Default target is `server`. If no target is specified
+  then logs are rotated for the server.
+  * cluster_name - The name of a target cluster.
+  * instance_name - The name of a target server instance.
+
+[[sthref2020]]
+
+Examples
+
+[[GSRFM742]][[sthref2021]]
+
+Example 1   Rotating the Server Log
+
+This example rotates the server log.
+
+[source,oac_no_warn]
+----
+asadmin> rotate-log
+Command rotate-log executed successfully.
+----
+
+[[sthref2022]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref2023]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:collect-log-files.html#collect-log-files-1[`collect-log-files`(1)],
+link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)],
+link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],
+link:set-log-attributes.html#set-log-attributes-1[`set-log-attributes`(1)],
+link:set-log-levels.html#set-log-levels-1[`set-log-levels`(1)]
+
+"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in GlassFish
+Server Open Source Edition Administration Guide
+
+

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,16 +22,16 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-SNAPSHOT</version>
         <relativePath>parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-nucleus-parent</artifactId>
-    <version>5.0.1-SNAPSHOT</version>
+    <version>5.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>GlassFish Nucleus Project</name>
-    
+
     <description>Glassfish Nucleus Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
@@ -93,7 +93,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
+                    <groupId>org.glassfish.main.hk2</groupId>
                     <artifactId>config-generator</artifactId>
                     <version>${project.version}</version>
                 </plugin>
@@ -124,6 +124,7 @@
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>config-generator</artifactId>
+                <version>2.5.0-b53</version>
                 <configuration>
                     <excludes>**/.ade_path/**</excludes>
                     <supportedProjectTypes>jar,glassfish-jar</supportedProjectTypes>

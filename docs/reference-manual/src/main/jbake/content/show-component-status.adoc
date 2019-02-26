@@ -1,0 +1,114 @@
+type=page
+status=published
+title=show-component-status
+next=start-cluster.html
+prev=set-web-env-entry.html
+~~~~~~
+show-component-status
+=====================
+
+[[show-component-status-1]][[GSRFM00232]][[show-component-status]]
+
+show-component-status
+---------------------
+
+displays the status of the deployed component
+
+[[sthref2101]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] show-component-status [--help] 
+[--target target] component-name
+----
+
+[[sthref2102]]
+
+Description
+
+The `show-component-status` subcommand gets the status (either enabled
+or disabled) of the deployed component.
+
+This subcommand is supported in remote mode only.
+
+[[sthref2103]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  This option specifies the target on which you are showing the
+  component status. Valid values are: +
+  `server`;;
+    Shows the component status for the default server instance `server`
+    and is the default value.
+  `domain`;;
+    Shows the component status for the domain.
+  cluster_name;;
+    Shows the component status for the cluster.
+  instance_name;;
+    Shows the component status for a clustered or stand-alone server
+    instance.
+
+[[sthref2104]]
+
+Operands
+
+component-name::
+  The name of the component whose status is to be listed. +
+  The name can include an optional version identifier, which follows the
+  name and is separated from the name by a colon (`:`). The version
+  identifier must begin with a letter or number. It can contain
+  alphanumeric characters plus underscore (`_`), dash (`-`), and period
+  (`.`) characters. To list multiple versions, you can use an asterisk
+  (`*`) as a wildcard character. For more information about module and
+  application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
+  Versions]" in GlassFish Server Open Source Edition Application
+  Deployment Guide.
+
+[[sthref2105]]
+
+Examples
+
+[[GSRFM757]][[sthref2106]]
+
+Example 1   Showing the Status of a Component
+
+This example gets the status of the `MEjbApp` component.
+
+[source,oac_no_warn]
+----
+asadmin> show-component-status MEjbApp
+Status of MEjbApp is enabled
+Command show-component-status executed successfully.
+----
+
+[[sthref2107]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref2108]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-applications.html#list-applications-1[`list-applications`(1)],
+link:list-sub-components.html#list-sub-components-1[`list-sub-components`(1)]
+
+link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+Guide]
+
+

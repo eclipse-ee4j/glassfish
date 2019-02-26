@@ -1,0 +1,149 @@
+type=page
+status=published
+title=set
+next=set-batch-runtime-configuration.html
+prev=rotate-log.html
+~~~~~~
+set
+===
+
+[[set-1]][[GSRFM00226]][[set]]
+
+set
+---
+
+sets the values of configurable attributes
+
+[[sthref2024]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] set [--help] 
+attribute-name=value
+----
+
+[[sthref2025]]
+
+Description
+
+The `set` subcommand uses dotted names to modify the values of one or
+more configurable attributes.
+
+Attributes from the monitoring hierarchy are read-only, but
+configuration attributes can be modified. You can use the
+link:list.html#list-1[`list`(1)] subcommand to display the dotted names
+that represent individual server components and subsystems. For example,
+a dotted name might be `server.applications.web-module`. After you
+discover the particular component or subsystem, you can then use the
+`get` subcommand to access the attributes. For more detailed information
+on dotted names, see the
+link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
+
+
+[NOTE]
+=======================================================================
+
+Characters that have special meaning to the shell or command
+interpreter, such as * (asterisk), should be quoted or escaped as
+appropriate to the shell, for example, by enclosing the argument in
+quotes. In multimode, quotes are needed only for arguments that include
+spaces, quotes, or backslash.
+
+=======================================================================
+
+
+By modifying attributes, you can enable and disable services, and
+customize how an existing element functions. An `asadmin` subcommand is
+provided to update some elements. For example, `update-password-alias`.
+However, to update other elements, you must use the `set` command. For
+example, you create a JDBC connection pool by using the
+`create-jdbc-connection-pool` subcommand. To change attribute settings
+later, you use the `set` command.
+
+Any change made by using the `asadmin` utility subcommands or the
+Administration Console are automatically applied to the associated
+\{product---name} configuration file.
+
+[[sthref2026]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref2027]]
+
+Operands
+
+attribute-name=value::
+  Identifies the full dotted name of the attribute name and its value.
+
+[[sthref2028]]
+
+Examples
+
+[[GSRFM745]][[sthref2029]]
+
+Example 1   Setting a JDBC Connection Pool Attribute
+
+This example changes the steady pool size of the `DerbyPool` connection
+pool to 9.
+
+[source,oac_no_warn]
+----
+asadmin> set resources.jdbc-connection-pool.DerbyPool.steady-pool-size=9
+Command set executed successfully.
+----
+
+[[GSRFM746]][[sthref2030]]
+
+Example 2   Enabling the Monitoring Service for a Monitorable Object
+
+This example enables monitoring for the JVM.
+
+[source,oac_no_warn]
+----
+asadmin> set server.monitoring-service.module-monitoring-levels.jvm=HIGH
+Command set executed successfully.
+----
+
+[[GSRFM747]][[sthref2031]]
+
+Example 3   Turning on Automatic Recovery for the Transaction Service
+
+This example turns on automatic recovery for the transaction service.
+
+[source,oac_no_warn]
+----
+asadmin> set server.transaction-service.automatic-recovery=true
+Command set executed successfully.
+----
+
+[[sthref2032]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref2033]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)]
+
+link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+
+link:../administration-guide/toc.html#GSADG[GlassFish Server Open Source Edition Administration Guide]
+
+

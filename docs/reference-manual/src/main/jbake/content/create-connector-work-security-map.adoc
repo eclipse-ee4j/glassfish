@@ -1,0 +1,137 @@
+type=page
+status=published
+title=create-connector-work-security-map
+next=create-context-service.html
+prev=create-connector-security-map.html
+~~~~~~
+create-connector-work-security-map
+==================================
+
+[[create-connector-work-security-map-1]][[GSRFM00021]][[create-connector-work-security-map]]
+
+create-connector-work-security-map
+----------------------------------
+
+creates a work security map for the specified resource adapter
+
+[[sthref183]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] create-connector-work-security-map [--help] 
+--raname raname
+[--principalsmap eis-principal1=principal_name1[, eis-principal2=principal_name2]* 
+|--groupsmap eis-group1=server-group1[, eis-group2=server-group2]*}
+[--description description] 
+mapname
+----
+
+[[sthref184]]
+
+Description
+
+The `create-connector-work-security-map` subcommand maps the caller
+identity of the work submitted by the resource adapter EIS principal or
+EIS user group to a suitable principal or user group in the
+\{product---name} security domain. One or more work security maps may be
+associated with a resource adapter. The connector work security map
+configuration supports the use of the wild card asterisk (`*`) to
+indicate all users or all user groups.
+
+The enterprise information system (EIS) is any system that holds the
+data of an organization. It can be a mainframe, a messaging system, a
+database system, or an application.
+
+This subcommand is supported in remote mode only.
+
+[[sthref185]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--description`::
+  Text providing descriptive details about the connector work security
+  map.
+`--groupsmap`::
+  Specifies a map of the backend EIS user group to the \{product---name}
+  user group. Use a comma-separated list to specify more than one
+  mapping. Use either the `--principalsmap` option or the `--groupsmap`
+  option, but not both.
+`--principalsmap`::
+  Specifies a map of the backend EIS principal to the \{product---name}
+  principal. Use a comma-separated list to specify more than one
+  mapping. Use either the `--principalsmap` option or the `--groupsmap`
+  option, but not both.
+`--raname`::
+  Indicates the connector module name, which is the name of the resource
+  adapter.
+
+[[sthref186]]
+
+Operands
+
+mapname::
+  The name of the work security map to be created.
+
+[[sthref187]]
+
+Examples
+
+[[GSRFM468]][[sthref188]]
+
+Example 1   Creating a Connector Work Security Map (Principal)
+
+This example creates connector work security map `workSecurityMap1` that
+maps the backend EIS principal to the \{product---name} principal.
+
+[source,oac_no_warn]
+----
+asadmin create-connector-work-security-map --raname my-resource-adapter
+--principalsmap eis-principal-1=server-principal-1,eis-principal-2
+=server-principal-2,eis-principal-3=server-principal-1 
+workSecurityMap1
+Command create-connector-work-security-map executed successfully.
+----
+
+[[GSRFM469]][[sthref189]]
+
+Example 2   Creating a Connector Work Security Map (Group)
+
+This example creates connector work security map `workSecurityMap2` that
+maps the backend EIS user group to the \{product---name} user group.
+
+[source,oac_no_warn]
+----
+asadmin create-connector-work-security-map --raname my-resource-adapter
+--groupsmap eis-group-1=server-group-1,eis-group-2=server-group-2,
+eis-group-3=server-group-1 workSecurityMap2
+Command create-connector-work-security-map executed successfully.
+----
+
+[[sthref190]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref191]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:delete-connector-work-security-map.html#delete-connector-work-security-map-1[`delete-connector-work-security-map`(1)],
+link:list-connector-work-security-maps.html#list-connector-work-security-maps-1[`list-connector-work-security-maps`(1)],
+link:update-connector-work-security-map.html#update-connector-work-security-map-1[`update-connector-work-security-map`(1)]
+
+

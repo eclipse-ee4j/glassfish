@@ -1,0 +1,82 @@
+type=page
+status=published
+title=list-connector-connection-pools
+next=list-connector-resources.html
+prev=list-configs.html
+~~~~~~
+list-connector-connection-pools
+===============================
+
+[[list-connector-connection-pools-1]][[GSRFM00157]][[list-connector-connection-pools]]
+
+list-connector-connection-pools
+-------------------------------
+
+lists the existing connector connection pools
+
+[[sthref1407]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] list-connector-connection-pools [--help]
+----
+
+[[sthref1408]]
+
+Description
+
+The `list-connector-connection-pools` subcommand list connector
+connection pools that have been created.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1409]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1410]]
+
+Examples
+
+[[GSRFM649]][[sthref1411]]
+
+Example 1   Listing the Connector Connection Pools
+
+This example lists the existing connector connection pools.
+
+[source,oac_no_warn]
+----
+asadmin> list-connector-connection-pools
+jms/qConnPool
+Command list-connector-connection-pools executed successfully
+----
+
+[[sthref1412]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1413]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-connector-connection-pool.html#create-connector-connection-pool-1[`create-connector-connection-pool`(1)],
+link:delete-connector-connection-pool.html#delete-connector-connection-pool-1[`delete-connector-connection-pool`(1)],
+link:ping-connection-pool.html#ping-connection-pool-1[`ping-connection-pool`(1)]
+
+

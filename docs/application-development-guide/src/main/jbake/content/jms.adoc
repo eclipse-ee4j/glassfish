@@ -1,0 +1,248 @@
+type=page
+status=published
+title=Using the Java Message Service
+next=javamail.html
+prev=jndi.html
+~~~~~~
+Using the Java Message Service
+==============================
+
+[[GSDVG00020]][[beaob]]
+
+
+[[using-the-java-message-service]]
+17 Using the Java Message Service
+---------------------------------
+
+This chapter describes how to use the Java Message Service (JMS) API.
+The Oracle GlassFish Server has a fully integrated JMS provider: the
+Open Message Queue software.
+
+
+[NOTE]
+=======================================================================
+
+JMS resources are supported only in the full GlassFish Server, not in
+the Web Profile.
+
+=======================================================================
+
+
+For information about the JMS, see
+"https://javaee.github.io/tutorial/partmessaging.html[Messaging]" in The
+Java EE 8 Tutorial.
+
+For detailed information about JMS concepts and JMS support in the
+GlassFish Server, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java Message
+Service (JMS)]" in GlassFish Server Open Source Edition Administration
+Guide.
+
+The following topics are addressed here:
+
+* link:#gkpcz[Using Application-Scoped JMS Resources]
+* link:#beaop[Load-Balanced Message Inflow]
+* link:#beaor[Authentication With `ConnectionFactory`]
+* link:#beaot[Delivering SOAP Messages Using the JMS API]
+
+[[gkpcz]][[GSDVG00196]][[using-application-scoped-jms-resources]]
+
+Using Application-Scoped JMS Resources
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can define an application-scoped JMS or other resource for an
+enterprise application, web module, EJB module, connector module, or
+application client module by supplying a `glassfish-resources.xml`
+deployment descriptor file. For details, see
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in GlassFish Server
+Open Source Edition Application Deployment Guide.
+
+[[beaop]][[GSDVG00197]][[load-balanced-message-inflow]]
+
+Load-Balanced Message Inflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can configure `ActivationSpec` properties of the `jmsra` resource
+adapter in the `glassfish-ejb-jar.xml` file for a message-driven bean
+using `activation-config-property` elements. Whenever a message-driven
+bean (`EndPointFactory`) is deployed, the connector runtime engine finds
+these properties and configures them accordingly in the resource
+adapter. See "link:../application-deployment-guide/dd-elements.html#GSDPG00086[activation-config-property]" in GlassFish
+Server Open Source Edition Application Deployment Guide.
+
+The GlassFish Server transparently enables messages to be delivered in
+random fashion to message-driven beans having same `ClientID`. The
+`ClientID` is required for durable subscribers.
+
+For nondurable subscribers in which the `ClientID` is not configured,
+all instances of a specific message-driven bean that subscribe to same
+topic are considered equal. When a message-driven bean is deployed to
+multiple instances of the GlassFish Server, only one of the
+message-driven beans receives the message. If multiple distinct
+message-driven beans subscribe to same topic, one instance of each
+message-driven bean receives a copy of the message.
+
+To support multiple consumers using the same queue, set the
+`maxNumActiveConsumers` property of the physical destination to a large
+value. If this property is set, the Oracle Message Queue software allows
+multiple message-driven beans to consume messages from same queue. The
+message is delivered randomly to the message-driven beans. If
+`maxNumActiveConsumers` is set to `-1`, there is no limit to the number
+of consumers.
+
+To ensure that local delivery is preferred, set `addresslist-behavior`
+to `priority`. This setting specifies that the first broker in the
+`AddressList` is selected first. This first broker is the local
+colocated Message Queue instance. If this broker is unavailable,
+connection attempts are made to brokers in the order in which they are
+listed in the `AddressList`. This setting is the default for GlassFish
+Server instances that belong to a cluster.
+
+[[beaor]][[GSDVG00198]][[authentication-with-connectionfactory]]
+
+Authentication With `ConnectionFactory`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your web, EJB, or client module has `res-auth` set to `Container`,
+but you use the `ConnectionFactory.createConnection("user","password")`
+method to get a connection, the GlassFish Server searches the container
+for authentication information before using the supplied user and
+password. Version 7 of the GlassFish Server threw an exception in this
+situation.
+
+[[beaot]][[GSDVG00199]][[delivering-soap-messages-using-the-jms-api]]
+
+Delivering SOAP Messages Using the JMS API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Web service clients use the Simple Object Access Protocol (SOAP) to
+communicate with web services. SOAP uses a combination of XML-based data
+structuring and Hyper Text Transfer Protocol (HTTP) to define a
+standardized way of invoking methods in objects distributed in diverse
+operating environments across the Internet.
+
+For more information about SOAP, see the Apache SOAP web site at
+`http://xml.apache.org/soap/index.html`.
+
+You can take advantage of the JMS provider's reliable messaging when
+delivering SOAP messages. You can convert a SOAP message into a JMS
+message, send the JMS message, then convert the JMS message back into a
+SOAP message.
+
+The following topics are addressed here:
+
+* link:#beaou[To Send SOAP Messages Using the JMS API]
+* link:#beaov[To Receive SOAP Messages Using the JMS API]
+
+[[beaou]][[GSDVG00077]][[to-send-soap-messages-using-the-jms-api]]
+
+To Send SOAP Messages Using the JMS API
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1.  Import the `MessageTransformer` library. +
+[source,oac_no_warn]
+----
+import com.sun.messaging.xml.MessageTransformer;
+----
+This is the utility whose methods you use to convert SOAP messages to
+JMS messages and the reverse. You can then send a JMS message containing
+a SOAP payload as if it were a normal JMS message.
+2.  Initialize the `TopicConnectionFactory`, `TopicConnection`,
+`TopicSession`, and publisher. +
+[source,oac_no_warn]
+----
+tcf = new TopicConnectionFactory();
+tc = tcf.createTopicConnection();
+session = tc.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
+topic = session.createTopic(topicName);
+publisher = session.createPublisher(topic);
+----
+3.  Construct a SOAP message using the SOAP with Attachments API for
+Java (SAAJ). +
+[source,oac_no_warn]
+----
+/*construct a default soap MessageFactory */
+MessageFactory mf = MessageFactory.newInstance();
+* Create a SOAP message object.*/
+SOAPMessage soapMessage = mf.createMessage();
+/** Get SOAP part.*/
+SOAPPart soapPart = soapMessage.getSOAPPart();
+/* Get SOAP envelope. */
+SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
+/* Get SOAP body.*/
+SOAPBody soapBody = soapEnvelope.getBody();
+/* Create a name object. with name space */
+/* http://www.sun.com/imq. */
+Name name = soapEnvelope.createName("HelloWorld", "hw",
+ "http://www.sun.com/imq");
+* Add child element with the above name. */
+SOAPElement element = soapBody.addChildElement(name)
+/* Add another child element.*/
+element.addTextNode( "Welcome to GlassFish Web Services." );
+/* Create an atachment with activation API.*/
+URL url = new URL ("http://java.sun.com/webservices/");
+DataHandler dh = new DataHandler (url);
+AttachmentPart ap = soapMessage.createAttachmentPart(dh);
+/*set content type/ID. */
+ap.setContentType("text/html");
+ap.setContentId("cid-001");
+/** add the attachment to the SOAP message.*/
+soapMessage.addAttachmentPart(ap);
+soapMessage.saveChanges();
+----
+4.  Convert the SOAP message to a JMS message by calling the
+`MessageTransformer.SOAPMessageintoJMSMessage()` method. +
+[source,oac_no_warn]
+----
+Message m = MessageTransformer.SOAPMessageIntoJMSMessage (soapMessage, 
+session );
+----
+5.  Publish the JMS message. +
+[source,oac_no_warn]
+----
+publisher.publish(m);
+----
+6.  Close the JMS connection. +
+[source,oac_no_warn]
+----
+tc.close();
+----
+
+[[beaov]][[GSDVG00078]][[to-receive-soap-messages-using-the-jms-api]]
+
+To Receive SOAP Messages Using the JMS API
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1.  Import the `MessageTransformer` library. +
+[source,oac_no_warn]
+----
+import com.sun.messaging.xml.MessageTransformer;
+----
+This is the utility whose methods you use to convert SOAP messages to
+JMS messages and the reverse. The JMS message containing the SOAP
+payload is received as if it were a normal JMS message.
+2.  Initialize the `TopicConnectionFactory`, `TopicConnection`,
+`TopicSession`, `TopicSubscriber`, and Topic. +
+[source,oac_no_warn]
+----
+messageFactory = MessageFactory.newInstance();
+tcf = new com.sun.messaging.TopicConnectionFactory();
+tc = tcf.createTopicConnection();
+session = tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+topic = session.createTopic(topicName);
+subscriber = session.createSubscriber(topic);
+subscriber.setMessageListener(this);
+tc.start();
+----
+3.  Use the `OnMessage` method to receive the message. Use the
+`SOAPMessageFromJMSMessage` method to convert the JMS message to a SOAP
+message. +
+[source,oac_no_warn]
+----
+public void onMessage (Message message) {
+SOAPMessage soapMessage =
+ MessageTransformer.SOAPMessageFromJMSMessage( message,
+ messageFactory ); }
+----
+4.  Retrieve the content of the SOAP message.
+
+

@@ -1,0 +1,571 @@
+type=page
+status=published
+title=Tuning the Java Runtime System
+next=tuning-os.html
+prev=tuning-glassfish.html
+~~~~~~
+Tuning the Java Runtime System
+==============================
+
+[[GSPTG00006]][[abeia]]
+
+
+[[tuning-the-java-runtime-system]]
+4 Tuning the Java Runtime System
+--------------------------------
+
+The following topics are addressed here:
+
+* link:#abeib[Java Virtual Machine Settings]
+* link:#gfpzy[Start Options]
+* link:#glaat[Tuning High Availability Persistence]
+* link:#abeic[Managing Memory and Garbage Collection]
+* link:#abeiq[Further Information]
+
+[[abeib]][[GSPTG00069]][[java-virtual-machine-settings]]
+
+Java Virtual Machine Settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Java SE 7 provides two implementations of the HotSpot Java virtual
+machine (JVM):
+
+* The client VM is tuned for reducing startup time and memory footprint.
+Invoke it by using the `-client` JVM command-line option.
+* The server VM is designed for maximum program execution speed. Invoke
+it by using the `-server` JVM command-line option.
+
+By default, the GlassFish Server uses the JVM setting appropriate to the
+purpose:
+
+* Developer Profile, targeted at application developers, uses the
+`-client` JVM flag to optimize startup performance and conserve memory
+resources.
+* Enterprise Profile, targeted at production deployments, uses the
+`-server` JVM flag to maximize program execution speed.
+
+You can override the default JVM options by following the instructions
+in "link:../administration-guide/jvm.html#GSADG00544[Administering JVM Options]" in GlassFish Server
+Open Source Edition Administration Guide. If using the Administration
+Console, navigate to the Configurations>configuration-name>JVM Settings
+node, and then click the JVM Options tab. Refer to the online help for
+complete information about the settings on this page.
+
+For more information on server-class machine detection in Java SE 7, see
+http://download.oracle.com/javase/6/docs/technotes/guides/vm/server-class.html[Server-Class
+Machine Detection]
+(`http://docs.oracle.com/javase/7/docs/technotes/guides/vm/server-class.html`).
+
+For more information on JVMs, see
+http://download.oracle.com/javase/6/docs/[Java Virtual Machines]
+(`http://docs.oracle.com/javase/7/docs/`).
+
+[[gfpzy]][[GSPTG00070]][[start-options]]
+
+Start Options
+~~~~~~~~~~~~~
+
+In some situations, performance can be improved by using large page
+sizes. For Ultrasparc CMT systems, include the `-XX:+UseLargePages` and
+`-XX:LargePageSizeInBytes=256m` arguments with your JVM tuning.
+
+[[glaat]][[GSPTG00071]][[tuning-high-availability-persistence]]
+
+Tuning High Availability Persistence
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If session `s1` and `s2` need to be replicated to an instance (backup
+server), the replication module batches the replication messages to be
+sent to that instance instead of sending separate replication messages.
+This improves performance. In configurations in which a lot of session
+replication is performed, you may find better performance by tuning the
+`org.shoal.cache.transmitter.max.batch.size` system property. This
+property determines the number of replication messages that constitute
+one batch.
+
+The default value for this property is `20`. You can try setting it as
+high as `90`, depending on system loads. Like all system properties,
+this property is set with the `-D` flag in your Java arguments.
+
+[[abeic]][[GSPTG00072]][[managing-memory-and-garbage-collection]]
+
+Managing Memory and Garbage Collection
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The efficiency of any application depends on how well memory and garbage
+collection are managed. The following sections provide information on
+optimizing memory and allocation functions:
+
+* link:#abeid[Tuning the Garbage Collector]
+* link:#abeig[Tracing Garbage Collection]
+* link:#abeih[Other Garbage Collector Settings]
+* link:#abeii[Tuning the Java Heap]
+* link:#abeio[Rebasing DLLs on Windows]
+
+[[abeid]][[GSPTG00205]][[tuning-the-garbage-collector]]
+
+Tuning the Garbage Collector
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Garbage collection (GC) reclaims the heap space previously allocated to
+objects no longer needed. The process of locating and removing the dead
+objects can stall any application and consume as much as 25 percent
+throughput.
+
+Almost all Java Runtime Environments come with a generational object
+memory system and sophisticated GC algorithms. A generational memory
+system divides the heap into a few carefully sized partitions called
+generations. The efficiency of a generational memory system is based on
+the observation that most of the objects are short lived. As these
+objects accumulate, a low memory condition occurs forcing GC to take
+place.
+
+The heap space is divided into the old and the new generation. The new
+generation includes the new object space (eden), and two survivor
+spaces. The JVM allocates new objects in the eden space, and moves
+longer lived objects from the new generation to the old generation.
+
+The young generation uses a fast copying garbage collector which employs
+two semi-spaces (survivor spaces) in the eden, copying surviving objects
+from one survivor space to the second. Objects that survive multiple
+young space collections are tenured, meaning they are copied to the
+tenured generation. The tenured generation is larger and fills up less
+quickly. So, it is garbage collected less frequently; and each
+collection takes longer than a young space only collection. Collecting
+the tenured space is also referred to as doing a full generation
+collection.
+
+The frequent young space collections are quick (a few milliseconds),
+while the full generation collection takes a longer (tens of
+milliseconds to a few seconds, depending upon the heap size).
+
+Other GC algorithms, such as the Concurrent Mark Sweep (CMS) algorithm,
+are incremental. They divide the full GC into several incremental
+pieces. This provides a high probability of small pauses. This process
+comes with an overhead and is not required for enterprise web
+applications.
+
+When the new generation fills up, it triggers a minor collection in
+which the surviving objects are moved to the old generation. When the
+old generation fills up, it triggers a major collection which involves
+the entire object heap.
+
+Both HotSpot and Solaris JDK use thread local object allocation pools
+for lock-free, fast, and scalable object allocation. So, custom object
+pooling is not often required. Consider pooling only if object
+construction cost is high and significantly affects execution profiles.
+
+[[abeie]][[GSPTG00146]][[choosing-the-garbage-collection-algorithm]]
+
+Choosing the Garbage Collection Algorithm
++++++++++++++++++++++++++++++++++++++++++
+
+The default collector for Java server class machines will optimize for
+throughput but be tolerant of somewhat long pause times. If you would
+prefer to have minimal pause times at the expense of some throughput and
+increased CPU usage, consider using the CMS collector.
+
+[[gaclx]][[GSPTG00038]][[to-use-the-cms-collector]]
+
+To use the CMS collector
+
+Follow this procedure.
+
+1.  Make sure that the system is not using 100 percent of its CPU.
+2.  Configure the CMS collector in the server instance. +
+To do this, add the following JVM options:
+* `-XX:+UseConcMarkSweepGC`
+* `-XX:SoftRefLRUPolicyMSPerMB=1`
+
+[[abeif]][[GSPTG00147]][[additional-information]]
+
+Additional Information
+++++++++++++++++++++++
+
+Use the `jvmstat` utility to monitor HotSpot garbage collection. (See
+link:#abeiq[Further Information].)
+
+For detailed information on tuning the garbage collector, see
+http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html[Java
+SE 6 HotSpot Virtual Machine Garbage Collection Tuning]
+(`http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html`).
+
+[[abeig]][[GSPTG00206]][[tracing-garbage-collection]]
+
+Tracing Garbage Collection
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The two primary measures of garbage collection performance are
+throughput and pauses. Throughput is the percentage of the total time
+spent on other activities apart from GC. Pauses are times when an
+application appears unresponsive due to GC.
+
+Two other considerations are footprint and promptness. Footprint is the
+working size of the JVM process, measured in pages and cache lines.
+Promptness is the time between when an object becomes dead, and when the
+memory becomes available. This is an important consideration for
+distributed systems.
+
+A particular generation size makes a trade-off between these four
+metrics. For example, a large young generation likely maximizes
+throughput, but at the cost of footprint and promptness. Conversely,
+using a small young generation and incremental GC will minimize pauses,
+and thus increase promptness, but decrease throughput.
+
+JVM diagnostic output will display information on pauses due to garbage
+collection. If you start the server in verbose mode (use the command
+`asadmin start-domain --verbose` domain), then the command line argument
+`-verbose:gc` prints information for every collection. Here is an
+example of output of the information generated with this JVM flag:
+
+[source,oac_no_warn]
+----
+[GC 50650K->21808K(76868K), 0.0478645 secs]
+ [GC 51197K->22305K(76868K), 0.0478645 secs]
+ [GC 52293K->23867K(76868K), 0.0478645 secs]
+ [Full GC 52970K->1690K(76868K), 0.54789968 secs]
+----
+
+On each line, the first number is the combined size of live objects
+before GC, the second number is the size of live objects after GC, the
+number in parenthesis is the total available space, which is the total
+heap minus one of the survivor spaces. The final figure is the amount of
+time that the GC took. This example shows three minor collections and
+one major collection. In the first GC, 50650 KB of objects existed
+before collection and 21808 KB of objects after collection. This means
+that 28842 KB of objects were dead and collected. The total heap size is
+76868 KB. The collection process required 0.0478645 seconds.
+
+Other useful monitoring options include:
+
+* `-XX:+PrintGCDetails` for more detailed logging information
+* `-Xloggc:file` to save the information in a log file
+
+[[abeih]][[GSPTG00207]][[other-garbage-collector-settings]]
+
+Other Garbage Collector Settings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To specify the attributes for the Java virtual machine, use the
+Administration Console and set the property under config-name > JVM
+settings (JVM options).
+
+[[glgkm]][[GSPTG00148]][[setting-the-maximum-permanent-generation]]
+
+Setting the Maximum Permanent Generation
+++++++++++++++++++++++++++++++++++++++++
+
+For applications that do not dynamically generate and load classes, the
+size of the permanent generation does not affect GC performance. For
+applications that dynamically generate and load classes (for example,
+JSP applications), the size of the permanent generation does affect GC
+performance, since filling the permanent generation can trigger a Full
+GC. Tune the maximum permanent generation with the `-XX:MaxPermSize`
+option.
+
+[[glglk]][[GSPTG00149]][[disabling-explicit-garbage-collection]]
+
+Disabling Explicit Garbage Collection
++++++++++++++++++++++++++++++++++++++
+
+Although applications can explicitly invoke GC with the `System.gc()`
+method, doing so is a bad idea since this forces major collections, and
+inhibits scalability on large systems. It is best to disable explicit GC
+by using the flag `-XX:+DisableExplicitGC`.
+
+
+[width="100%",cols="<100%",]
+|=======================================================================
+a|
+Note:
+
+On Windows systems, setting the `-XX:+DisableExplicitGC` option might
+prevent the renaming or removal of open application files. As a result,
+deployment, redeployment, or other operations that attempt to rename or
+delete files might fail.
+
+Application files can remain open because the files have been used by
+class loaders to find classes or resources, or have been opened
+explicitly by GlassFish Server or application code but never explicitly
+closed. On Windows systems, open files cannot be renamed or deleted. To
+overcome this limitation, GlassFish Server uses the `System.gc()` method
+to garbage collect the Java object that corresponds to an open file.
+When the Java object that corresponds to an open file is garbage
+collected, the object's `finalize` method closes the open channel to the
+file. GlassFish Server can then delete or rename the file.
+
+|=======================================================================
+
+
+[[glglr]][[GSPTG00150]][[setting-the-frequency-of-full-garbage-collection]]
+
+Setting the Frequency of Full Garbage Collection
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+GlassFish Server uses RMI in the Administration module for monitoring.
+Garbage cannot be collected in RMI-based distributed applications
+without occasional local collections, so RMI forces a periodic full
+collection. Control the frequency of these collections with the property
+`-sun.rmi.dgc.client.gcInterval`. For example,
+`- java -Dsun.rmi.dgc.client.gcInterval=3600000` specifies explicit
+collection once per hour instead of the default rate of once per minute.
+
+[[abeii]][[GSPTG00208]][[tuning-the-java-heap]]
+
+Tuning the Java Heap
+^^^^^^^^^^^^^^^^^^^^
+
+This section discusses topics related to tuning the Java Heap for
+performance.
+
+* link:#abeij[Guidelines for Java Heap Sizing]
+* link:#abeik[Heap Tuning Parameters]
+
+[[abeij]][[GSPTG00151]][[guidelines-for-java-heap-sizing]]
+
+Guidelines for Java Heap Sizing
++++++++++++++++++++++++++++++++
+
+Maximum heap size depends on maximum address space per process. The
+following table shows the maximum per-process address values for various
+platforms:
+
+[[sthref10]][[gacna]]
+
+Table 4-1 Maximum Address Space Per Process
+
+[width="100%",cols="<62%,<38%",options="header",]
+|===================================================
+|Operating System |Maximum Address Space Per Process
+|Oracle/Redhat/Ubuntu Linux 32-bit |4 GB
+|Oracle/Redhat/Ubuntu Linux 64-bit |Terabytes
+|Windows XP/2008/7 |2 GB
+|Solaris x86 (32-bit) |4 GB
+|Solaris 32-bit |4 GB
+|Solaris 64-bit |Terabytes
+|===================================================
+
+
+Maximum heap space is always smaller than maximum address space per
+process, because the process also needs space for stack, libraries, and
+so on. To determine the maximum heap space that can be allocated, use a
+profiling tool to examine the way memory is used. Gauge the maximum
+stack space the process uses and the amount of memory taken up libraries
+and other memory structures. The difference between the maximum address
+space and the total of those values is the amount of memory that can be
+allocated to the heap.
+
+You can improve performance by increasing your heap size or using a
+different garbage collector. In general, for long-running server
+applications, use the Java SE throughput collector on machines with
+multiple processors (`-XX:+AggressiveHeap`) and as large a heap as you
+can fit in the free memory of your machine.
+
+[[abeik]][[GSPTG00152]][[heap-tuning-parameters]]
+
+Heap Tuning Parameters
+++++++++++++++++++++++
+
+You can control the heap size with the following JVM parameters:
+
+* `-Xms`value
+* `-Xmx`value
+* `-XX:MinHeapFreeRatio=`minimum
+* `-XX:MaxHeapFreeRatio=`maximum
+* `-XX:NewRatio=`ratio
+* `-XX:NewSize=`size
+* `-XX:MaxNewSize=`size
+* `-XX:+AggressiveHeap`
+
+The `-Xms` and `-Xmx` parameters define the minimum and maximum heap
+sizes, respectively. Since GC occurs when the generations fill up,
+throughput is inversely proportional to the amount of the memory
+available. By default, the JVM grows or shrinks the heap at each GC to
+try to keep the proportion of free space to the living objects at each
+collection within a specific range. This range is set as a percentage by
+the parameters `-XX:MinHeapFreeRatio=`minimum and
+`-XX:MaxHeapFreeRatio=`maximum; and the total size bounded by `-Xms` and
+`-Xmx`.
+
+Set the values of `-Xms` and `-Xmx` equal to each other for a fixed heap
+size. When the heap grows or shrinks, the JVM must recalculate the old
+and new generation sizes to maintain a predefined `NewRatio`.
+
+The `NewSize` and `MaxNewSize` parameters control the new generation's
+minimum and maximum size. Regulate the new generation size by setting
+these parameters equal. The bigger the younger generation, the less
+often minor collections occur. The size of the young generation relative
+to the old generation is controlled by `NewRatio`. For example, setting
+`-XX:NewRatio=3` means that the ratio between the old and young
+generation is 1:3, the combined size of eden and the survivor spaces
+will be fourth of the heap.
+
+By default, the GlassFish Server is invoked with the Java HotSpot Server
+JVM. The default `NewRatio` for the Server JVM is 2: the old generation
+occupies 2/3 of the heap while the new generation occupies 1/3. The
+larger new generation can accommodate many more short-lived objects,
+decreasing the need for slow major collections. The old generation is
+still sufficiently large enough to hold many long-lived objects.
+
+To size the Java heap:
+
+* Decide the total amount of memory you can afford for the JVM.
+Accordingly, graph your own performance metric against young generation
+sizes to find the best setting.
+* Make plenty of memory available to the young generation. The default
+is calculated from `NewRatio` and the `-Xmx` setting.
+* Larger eden or younger generation spaces increase the spacing between
+full GCs. But young space collections could take a proportionally longer
+time. In general, keep the eden size between one fourth and one third
+the maximum heap size. The old generation must be larger than the new
+generation.
+
+For up-to-date defaults, see
+http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[Java
+HotSpot VM Options]
+(`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`).
+
+[[GSPTG00032]][[fxxpw]]
+
+
+Example 4-1 Heap Configuration on Solaris
+
+This is an exmple heap configuration used by GlassFish Server on Solaris
+for large applications:
+
+[source,oac_no_warn]
+----
+-Xms3584m
+ -Xmx3584m
+ -verbose:gc
+ -Dsun.rmi.dgc.client.gcInterval=3600000
+----
+
+[[abeil]][[GSPTG00031]][[survivor-ratio-sizing]]
+
+Survivor Ratio Sizing
+
+The `SurvivorRatio` parameter controls the size of the two survivor
+spaces. For example, `-XX:SurvivorRatio=6` sets the ratio between each
+survivor space and eden to be 1:6, each survivor space will be one
+eighth of the young generation. The default for Solaris is 32. If
+survivor spaces are too small, copying collection overflows directly
+into the old generation. If survivor spaces are too large, they will be
+empty. At each GC, the JVM determines the number of times an object can
+be copied before it is tenured, called the tenure threshold. This
+threshold is chosen to keep the survivor space half full.
+
+Use the option `-XX:+PrintTenuringDistribution` to show the threshold
+and ages of the objects in the new generation. It is useful for
+observing the lifetime distribution of an application.
+
+[[abeio]][[GSPTG00209]][[rebasing-dlls-on-windows]]
+
+Rebasing DLLs on Windows
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+When the JVM initializes, it tries to allocate its heap using the `-Xms`
+setting. The base addresses of GlassFish Server DLLs can restrict the
+amount of contiguous address space available, causing JVM initialization
+to fail. The amount of contiguous address space available for Java
+memory varies depending on the base addresses assigned to the DLLs. You
+can increase the amount of contiguous address space available by
+rebasing the GlassFish Server DLLs.
+
+To prevent load address collisions, set preferred base addresses with
+the rebase utilty that comes with Visual Studio and the Platform SDK.
+Use the rebase utility to reassign the base addresses of the GlassFish
+Server DLLs to prevent relocations at load time and increase the
+available process memory for the Java heap.
+
+There are a few GlassFish Server DLLs that have non-default base
+addresses that can cause collisions. For example:
+
+* The `nspr` libraries have a preferred address of 0x30000000.
+* The `icu` libraries have the address of 0x4A?00000.
+
+Move these libraries near the system DLLs (`msvcrt.dll` is at
+`0x78000000`) to increase the available maximum contiguous address space
+substantially. Since rebasing can be done on any DLL, rebase to the DLLs
+after installing the GlassFish Server.
+
+[[gacmt]][[GSPTG00039]][[to-rebase-the-glassfish-servers-dlls]]
+
+To rebase the GlassFish Server's DLLs
++++++++++++++++++++++++++++++++++++++
+
+[[sthref11]]
+
+Before You Begin
+
+To perform rebasing, you need:
+
+* Windows 2000
+* Visual Studio and the Microsoft Framework SDK rebase utility
+
+1.  Make as-install\ `bin` the default directory. +
+[source,oac_no_warn]
+----
+cd as-install\bin
+----
+2.  Enter this command: +
+[source,oac_no_warn]
+----
+rebase -b 0x6000000 *.dll
+----
+3.  Use the `dependencywalker` utility to make sure the DLLs were
+rebased correctly. +
+For more information, see the http://www.dependencywalker.com[Dependency
+Walker website] (`http://www.dependencywalker.com`).
+4.  Increase the size for the Java heap, and set the JVM Option
+accordingly on the JVM Settings page in the Admin Console.
+5.  Restart the GlassFish Server.
+
+[[GSPTG00033]][[fxxpz]]
+
+
+Example 4-2 Heap Configuration on Windows
+
+This is an example heap configuration used by Oracle GlassFish Server
+for heavy server-centric applications, on Windows, as set in the
+`domain.xml` file.
+
+[source,oac_no_warn]
+----
+<jvm-options> -Xms1400m </jvm-options>
+<jvm-options> -Xmx1400m </jvm-options>
+----
+
+[[sthref12]]
+
+See Also
+
+For more information on rebasing, see
+http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tools/tools/rebase.asp[MSDN
+documentation for rebase utility]
+(`http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tools/tools/rebase.asp`).
+
+[[abeiq]][[GSPTG00073]][[further-information]]
+
+Further Information
+~~~~~~~~~~~~~~~~~~~
+
+For more information on tuning the JVM, see:
+
+* http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[Java
+HotSpot VM Options]
+(`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`)
+* http://www.oracle.com/technetwork/java/hotspotfaq-138619.html[Frequently
+Asked Questions About the Java HotSpot Virtual Machine]
+(`http://www.oracle.com/technetwork/java/hotspotfaq-138619.html`)
+* http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html[Performance
+Documentation for the Java HotSpot VM]
+(`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html`)
+* http://java.sun.com/javase/technologies/performance.jsp[Java
+performance web page]
+(`http://java.sun.com/javase/technologies/performance.jsp`)
+* http://java.sun.com/developer/technicalArticles/J2SE/monitoring/[Monitoring
+and Managing Java SE 6 Platform Applications]
+(`http://java.sun.com/developer/technicalArticles/J2SE/monitoring/`)
+* The http://java.sun.com/performance/jvmstat/[jvmstat monitoring
+utility] (`http://java.sun.com/performance/jvmstat/`)

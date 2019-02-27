@@ -1,0 +1,148 @@
+type=page
+status=published
+title=create-http-lb-config
+next=create-http-lb-ref.html
+prev=create-http-lb.html
+~~~~~~
+create-http-lb-config
+=====================
+
+[[create-http-lb-config-1]][[GSRFM00028]][[create-http-lb-config]]
+
+create-http-lb-config
+---------------------
+
+creates a configuration for the load balancer
+
+[[sthref251]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] create-http-lb-config [--help] 
+[--responsetimeout 60]
+[httpsrouting=false] [--reloadinterval 60]
+[--monitor=false] [--property (name=value)[:name=value]*]
+--target target | config_name
+----
+
+[[sthref252]]
+
+Description
+
+Use the `create-http-lb-config` subcommand to create a load balancer
+configuration. This configuration applies to load balancing in the HTTP
+path. After using this subcommand to create the load balancer
+configuration file, create the load balancer by running
+`create-http-lb`.
+
+You must specify either a target or a configuration name, or both. If
+you do not specify a target, the configuration is created without a
+target and you add one later using `create-http-lb-ref`. If you don't
+specify a configuration name, a name is created based on the target
+name. If you specify both, the configuration is created with the
+specified name, referencing the specified target.
+
+
+[NOTE]
+=======================================================================
+
+This subcommand is only applicable to Oracle GlassFish Server. This
+subcommand is not applicable to GlassFish Server Open Source Edition.
+
+=======================================================================
+
+
+[[sthref253]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--responsetimeout`::
+  The time in seconds within which a server instance must return a
+  response. If no response is received within the time period, the
+  server is considered unhealthy. If set to a positive number, and the
+  request is idempotent, the request is retried. If the request is not
+  idempotent, an error page is returned. If set to 0 no timeout is used.
+  The default is 60.
+`--httpsrouting`::
+  If set to `true`, HTTPS requests to the load balancer result in HTTPS
+  requests to the server instance. If set to `false`, HTTPS requests to
+  the load balancer result in HTTP requests to the server instance. The
+  default is `false`.
+`--reloadinterval`::
+  The interval between checks for changes to the load balancer
+  configuration file `loadbalancer.xml`. When the check detects changes,
+  the configuration file is reloaded. A value of `0` disables reloading.
+`--monitor`::
+  Specifies whether monitoring is enabled. The default is `false`.
+`--routecookie`::
+  This option is deprecated. The value is always `true`.
+`--property`::
+  Optional attribute name/value pairs for configuring the load balancer.
+`--target`::
+  Specifies the target to which the load balancer configuration applies.
+  If you don't specify a target, the load balancer configuration is
+  created without a target. You can specify targets later using the
+  subcommand `create-http-lb-ref`. +
+  Valid values are: +
+  * cluster_name- Specifies that requests for this cluster will be
+  handled by the load balancer.
+  * stand-alone_instance_name- Specifies that requests for this
+  standalone instance will be handled by the load balancer.
+
+[[sthref254]]
+
+Operands
+
+config_name::
+  The name of the new load balancer configuration. This name must not
+  conflict with any other load balancer groups, agents, configurations,
+  clusters, or sever instances in the domain. If you don't specify a
+  name, the load balancer configuration name is based on the target
+  name, target_name`-http-lb-config`.
+
+[[sthref255]]
+
+Examples
+
+[[GSRFM479]][[sthref256]]
+
+Example 1   Creating a Load Balancer Configuration
+
+This example creates a load balancer configuration on a target named
+`mycluster` and load balancer configuration named `mylbconfigname`.
+
+[source,oac_no_warn]
+----
+asadmin> create-http-lb-config --target mycluster mylbconfigname
+
+Command create-http-lb-config executed successfully.
+----
+
+[[sthref257]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref258]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:delete-http-lb-config.html#delete-http-lb-config-1[`delete-http-lb-config`(1)],
+link:list-http-lb-configs.html#list-http-lb-configs-1[`list-http-lb-configs`(1)],
+link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)]
+
+

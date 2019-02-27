@@ -1,0 +1,150 @@
+type=page
+status=published
+title=configure-jms-cluster
+next=configure-lb-weight.html
+prev=collect-log-files.html
+~~~~~~
+configure-jms-cluster
+=====================
+
+[[configure-jms-cluster-1]][[GSRFM00008]][[configure-jms-cluster]]
+
+configure-jms-cluster
+---------------------
+
+configures the Message Queue cluster providing JMS services to a
+\{product---name} cluster
+
+[[sthref79]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] configure-jms-cluster [--help]
+[--clustertype={conventional|enhanced}]
+[--configstoretype={masterbroker|shareddb}]
+[--messagestoretype={file|jdbc}]
+[--dbvendor database-vendor]
+[--dbuser database-user]
+[--dburl database-url]
+[--property (name=value)[:name=value]*]
+cluster-name
+----
+
+[[sthref80]]
+
+Description
+
+The `configure-jms-cluster` configures the Message Queue cluster
+providing JMS services to a \{product---name} cluster.
+
+This subcommand should be used before the \{product---name} cluster is
+started for the first time. Otherwise, follow the instructions in
+"link:../administration-guide/jms.html#GSADG00020[Administering the Java Message Service (JMS)]" in
+GlassFish Server Open Source Edition Administration Guide.
+
+This subcommand is supported in remote mode only. Remote `asadmin`
+subcommands require a running domain administration server (DAS).
+
+[[sthref81]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--clustertype`::
+  The type of Message Queue cluster to configure. The value
+  `conventional` specifies a conventional cluster, and the value
+  `enhanced` specifies an enhanced, high-availability cluster. For
+  information about these cluster types of Message Queue clusters, see
+  "link:../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker Clusters]" in Open Message Queue Technical
+  Overview. +
+  The default value is `conventional`. +
+  If `enhanced` is specified, the `configstoretype` and
+  `messagestoretype` options are ignored.
+`--configstoretype`::
+  The type of data store for configuration data in a conventional
+  cluster. The value `masterbroker` specifies the use of a master broker
+  to store and manage the configuration data. The value `shareddb`
+  specifies the use of a shared database to store the configuration
+  data. +
+  The default value is `masterbroker`. +
+  This option is ignored if `clustertype` is set to `enhanced`.
+`--messagestoretype`::
+  The type of data store for message data in brokers in a conventional
+  cluster. The value `file` specifies a file store. The value `jdbc`
+  specifies a JDBC store. +
+  The default value is `file`. +
+  This option is ignored if `clustertype` is set to `enhanced`.
+`--dbvendor` +
+`--dbuser`::
+`--dburl`::
+  The database vendor, user, and access url of the JDBC database to use
+  in any of these situations: +
+  * When `clustertype` is set to `enhanced`
+  * When `configstoretype` is set to `shareddb`
+  * When `messagestoretype` is set to `jdbc` +
+  For information about supported vendors and the formats of access urls
+  for each vendor, see "link:../../openmq/mq-admin-guide/persistence-services.html#GMADG00244[JDBC-Based Persistence]" in
+  Open Message Queue Administration Guide. +
+
+[width="100%",cols="100%",]
+|=======================================================================
+a|
+Note:
+
+To specify the password of the JDBC database user, use the
+`--passwordfile` utility option of the
+link:asadmin.html#asadmin-1m[`asadmin`(1M)] command after adding the
+entry `AS_ADMIN_JMSDBPASSWORD` to the password file.
+
+|=======================================================================
+
+`--property`::
+  A list of additional database-vendor-specific properties to configure
+  the JDBC database for use by the Message Queue cluster. Specify
+  properties as a colon (`:`) separated list of property names and
+  values in the form: +
+[source,oac_no_warn]
+----
+prop1name=prop1value:prop2name=prop2value
+----
+
+[[sthref82]]
+
+Operands
+
+cluster-name::
+  The name of the \{product---name} cluster for which the Message Queue
+  cluster is to provide JMS services. +
+  Because \{product---name} uses the cluster name to uniquely identify
+  database tables the Message Queue cluster might require, the length of
+  the name is restricted in the following situations: +
+  * If `clustertype` is set to `enhanced`, the name can be no longer
+  than n–21 characters, where n is the maximum table name length allowed
+  by the database.
+  * If `configstoretype` is set to `shareddb`, the name can be no longer
+  than n–19 characters, where n is the maximum table name length allowed
+  by the database.
+
+[[sthref83]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref84]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+

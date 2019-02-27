@@ -1,0 +1,113 @@
+type=page
+status=published
+title=delete-cluster
+next=delete-config.html
+prev=delete-auth-realm.html
+~~~~~~
+delete-cluster
+==============
+
+[[delete-cluster-1]][[GSRFM00068]][[delete-cluster]]
+
+delete-cluster
+--------------
+
+deletes a \{product---name} cluster
+
+[[sthref609]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] delete-cluster [--help]
+[--autohadboverride={true|false}] [--node-agent=node-agent--name]
+cluster-name
+----
+
+[[sthref610]]
+
+Description
+
+The `delete-cluster` subcommand deletes a \{product---name} cluster. A
+cluster can be deleted only if the cluster contains no \{product---name}
+instances. If a cluster that you are deleting contains any instances,
+stop and delete the instances before deleting the cluster.
+
+If the cluster's named configuration was created automatically for the
+cluster and no other clusters or unclustered instances refer to the
+configuration, the configuration is deleted when the cluster is deleted.
+A configuration that is created automatically for a cluster is named
+cluster-name`-config`, where cluster-name is the name of the cluster.
+
+This command is supported in remote mode only.
+
+[[sthref611]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--autohadboverride`::
+  Do not specify this option. This option is retained for compatibility
+  with earlier releases. If you specify this option, a syntax error does
+  not occur. Instead, the subcommand runs successfully and displays a
+  warning message that the option is ignored.
+`--nodeagent`::
+  Do not specify this option. This option is retained for compatibility
+  with earlier releases. If you specify this option, a syntax error does
+  not occur. Instead, the subcommand runs successfully and displays a
+  warning message that the option is ignored.
+
+[[sthref612]]
+
+Operands
+
+cluster-name::
+  The name of the cluster to delete.
+
+[[sthref613]]
+
+Examples
+
+[[GSRFM535]][[sthref614]]
+
+Example 1   Deleting a \{product---name} Cluster
+
+This example deletes the \{product---name} cluster `adccluster`.
+
+[source,oac_no_warn]
+----
+asadmin> delete-cluster adccluster
+Command delete-cluster executed successfully.
+----
+
+[[sthref615]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref616]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-cluster.html#create-cluster-1[`create-cluster`(1)],
+link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
+link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
+link:list-clusters.html#list-clusters-1[`list-clusters`(1)],
+link:start-cluster.html#start-cluster-1[`start-cluster`(1)],
+link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
+link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)],
+link:stop-cluster.html#stop-cluster-1[`stop-cluster`(1)]
+
+

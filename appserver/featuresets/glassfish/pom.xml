@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>featuresets</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
     <artifactId>glassfish</artifactId>
     <name>Glassfish Featureset</name>
@@ -160,8 +160,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise.concurrent</groupId>
-            <artifactId>javax.enterprise.concurrent-api</artifactId>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -171,7 +171,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.enterprise.concurrent</artifactId>
+            <artifactId>jakarta.enterprise.concurrent</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -180,8 +180,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.xml.rpc</groupId>
-            <artifactId>javax.xml.rpc-api</artifactId>
+            <groupId>jakarta.xml.rpc</groupId>
+            <artifactId>jakarta.xml.rpc-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -468,8 +468,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -574,8 +574,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.xml.registry</groupId>
-            <artifactId>javax.xml.registry-api</artifactId>
+            <groupId>jakarta.xml.registry</groupId>
+            <artifactId>jakarta.xml.registry-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -756,8 +756,8 @@
        </dependency>
 
        <dependency>
-           <groupId>javax.jms</groupId>
-           <artifactId>javax.jms-api</artifactId>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

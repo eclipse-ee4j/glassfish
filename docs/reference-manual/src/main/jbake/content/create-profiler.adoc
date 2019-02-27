@@ -1,0 +1,121 @@
+type=page
+status=published
+title=create-profiler
+next=create-protocol.html
+prev=create-password-alias.html
+~~~~~~
+create-profiler
+===============
+
+[[create-profiler-1]][[GSRFM00050]][[create-profiler]]
+
+create-profiler
+---------------
+
+creates the profiler element
+
+[[sthref481]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] create-profiler [--help] 
+[--target target_name] 
+[--classpath classpath] [--nativelibpath native_library_path] [--enabled=true] 
+[--property(name=value)[:name=value]*] profiler_name
+----
+
+[[sthref482]]
+
+Description
+
+The `create-profiler` subcommand creates the profiler element. A server
+instance is tied to the profiler by the profiler element in the Java
+configuration. Only one profiler exists at a time. If you attempt to
+create a profiler while one already exists, an error message is
+displayed.
+
+For changes to take effect, the server must restarted.
+
+This subcommand is supported in remote mode only.
+
+[[sthref483]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  This option specifies the target on which you are creating a profiler.
+  Valid values are +
+  `server`;;
+    Creates the profiler for the default server instance. This is the
+    default value.
+  configuration_name;;
+    Creates the profiler for the named configuration
+  cluster_name;;
+    Creates the profiler for every server instance in the cluster
+  instance_name;;
+    Creates the profiler for a particular server instance
+`--classpath`::
+  Java classpath string that specifies the classes needed by the
+  profiler.
+`--nativelibpath`::
+  This path is automatically constructed to be a concatenation of the
+  \{product---name} installation relative path for its native shared
+  libraries, standard JRE native library path, the shell environment
+  setting (`LD_LIBRARY_PATH` on UNIX) and any path that may be specified
+  in the profile element.
+`--enabled`::
+  Profiler is enabled by default.
+`--property`::
+  Name/value pairs of provider-specific attributes.
+
+[[sthref484]]
+
+Operands
+
+profiler_name::
+  Name of the profiler.
+
+[[sthref485]]
+
+Examples
+
+[[GSRFM516]][[sthref486]]
+
+Example 1   Creating a Profiler
+
+This example creates a profiler named `sample_profiler`.
+
+[source,oac_no_warn]
+----
+asadmin> create-profiler --classpath /home/appserver/
+--nativelibpath /u/home/lib --enabled=false
+--property defaultuser=admin:password=adminadmin sample_profiler
+Created Profiler with id = sample_profiler
+----
+
+[[sthref487]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref488]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:delete-profiler.html#delete-profiler-1[`delete-profiler`(1)]
+
+

@@ -1,0 +1,84 @@
+type=page
+status=published
+title=configure-ldap-for-admin
+next=configure-managed-jobs.html
+prev=configure-lb-weight.html
+~~~~~~
+configure-ldap-for-admin
+========================
+
+[[configure-ldap-for-admin-1]][[GSRFM00010]][[configure-ldap-for-admin]]
+
+configure-ldap-for-admin
+------------------------
+
+configures the authentication realm named admin-realm for the given LDAP
+
+[[sthref93]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] configure-ldap-for-admin [--help]
+----
+
+[[sthref94]]
+
+Description
+
+The `configure-ldap-for-admin` subcommand configures the authentication
+realm named `admin-realm` for the given LDAP. The
+`configure-ldap-for-admin` subcommand is interactive. The subcommand
+prompts the user for the `basedn` and `ldap-group` options.
+
+This command is supported in remote mode only.
+
+[[sthref95]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref96]]
+
+Examples
+
+[[GSRFM455]][[sthref97]]
+
+Example 1    Configuring the LDAP Authentication Realm
+
+[source,oac_no_warn]
+----
+asadmin> configure-ldap-for-admin 
+Enter the value for the basedn option>
+Enter the value for the ldap-group option>
+The LDAP Auth Realm admin-realm was configured correctly 
+in admin server's configuration.
+----
+
+[[sthref98]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref99]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:change-admin-password.html#change-admin-password-1[`change-admin-password`(1)],
+link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)]link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)],
+link:list-auth-realms.html#list-auth-realms-1[`list-auth-realms`(1)]
+
+

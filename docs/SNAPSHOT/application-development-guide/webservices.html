@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Developing Web Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Developing Web Services</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="securing-apps.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jpa.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00007"></a><a id="gaszn"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="developing-web-services">5 Developing Web Services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes Oracle GlassFish Server support for web services.
+The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gbizi">Creating Portable Web Service Artifacts</a></p>
+</li>
+<li>
+<p><a href="#gbixz">Deploying a Web Service</a></p>
+</li>
+<li>
+<p><a href="#gbiyw">The Web Service URI, WSDL File, and Test Page</a></p>
+</li>
+<li>
+<p><a href="#CHDEBBCH">The Databinding Provider</a></p>
+</li>
+<li>
+<p><a href="#gcgzz">GlassFish Java EE Service Engine</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you installed the Web Profile, web services are not supported unless
+the optional Metro Web Services Stack add-on component is downloaded
+from the Update Tool. Without the Metro add-on component, a servlet or
+EJB component cannot be a web service endpoint, and the
+<code>glassfish-web.xml</code> and <code>glassfish-ejb-jar.xml</code> elements related to web
+services are ignored. For information about the Update Tool, see
+"o<a href="GSADG00701">Update Tool</a>" in GlassFish Server Open Source Edition
+Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>In addition, the as-install`/modules/webservices-osgi.jar` and
+as-install`/modules/endorsed/webservices-api-osgi.jar` files must be in
+the classpath of your web services application. IDEs such as NetBeans
+and Eclipse do this automatically.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>"https://javaee.github.io/tutorial/partwebsvcs.html[Web Services]" in
+The Java EE 8 Tutorial shows how to deploy simple web services to
+GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>For additional information about JAXB (Java Architecture for XML
+Binding), see
+<a href="http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html">Java
+Specification Request (JSR) 222</a> and <a href="#CHDEBBCH">The Databinding
+Provider</a>.</p>
+</div>
+<div class="paragraph">
+<p>For additional information about JAX-WS (Java API for XML-Based Web
+Services), see
+<a href="http://jcp.org/aboutJava/communityprocess/pfd/jsr224/index.html">Java
+Specification Request (JSR) 224</a> and
+<a href="http://jcp.org/en/jsr/detail?id=109">Java Specification Request (JSR)
+109</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information about web services security, see
+<a href="securing-apps.html#beaca">Configuring Message Security for Web
+Services</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Fast Infoset standard specifies a binary format based on the XML
+Information Set. This format is an efficient alternative to XML. For
+information about using Fast Infoset, see the following links:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://download.oracle.com/docs/cd/E17802_01/webservices/webservices/docs/1.6/ReleaseNotes.html">Java
+Web Services Developer Pack 1.6 Release Notes</a></p>
+</li>
+<li>
+<p><a href="http://download.oracle.com/docs/cd/E17802_01/webservices/webservices/docs/1.6/jaxrpc/fastinfoset/manual.html">Fast
+Infoset in Java Web Services Developer Pack, Version 1.6</a></p>
+</li>
+<li>
+<p><a href="https://javaee.github.io/metro-fi/">Fast Infoset Project</a>
+(<code>https://javaee.github.io/metro-fi/</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gbizi"></a><a id="GSDVG00126"></a><a id="creating-portable-web-service-artifacts"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_creating_portable_web_service_artifacts">Creating Portable Web Service Artifacts</h3>
+<div class="paragraph">
+<p>For a tutorial that shows how to use the <code>wsimport</code> and <code>wsgen</code>
+commands, see "https://javaee.github.io/tutorial/partwebsvcs.html[Web
+Services]" in The Java EE 8 Tutorial.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbixz"></a><a id="GSDVG00127"></a><a id="deploying-a-web-service"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploying_a_web_service">Deploying a Web Service</h3>
+<div class="paragraph">
+<p>You deploy a web service endpoint to the GlassFish Server just as you
+would any servlet, stateless session bean (SLSB), or application.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For complex services with dependent classes, user specified WSDL files,
+or other advanced features, autodeployment of an annotated file is not
+sufficient.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server deployment descriptor files <code>glassfish-web.xml</code> and
+<code>glassfish-ejb-jar.xml</code> provide optional web service enhancements in the
+<code>webservice-endpoint</code> and <code>webservice-description</code> elements, including a
+<code>debugging-enabled</code> subelement that enables the creation of a test page.
+The test page feature is enabled by default and described in
+<a href="#gbiyw">The Web Service URI, WSDL File, and Test Page</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about deployment, autodeployment, and deployment
+descriptors, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition
+Application Deployment Guide</a>. For more information about the
+<code>asadmin deploy</code> command, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open
+Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbiyw"></a><a id="GSDVG00128"></a><a id="the-web-service-uri-wsdl-file-and-test-page"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_web_service_uri_wsdl_file_and_test_page">The Web Service URI, WSDL File, and Test Page</h3>
+<div class="paragraph">
+<p>Clients can run a deployed web service by accessing its service endpoint
+address URI, which has the following format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://host:port/context-root/servlet-mapping-url-pattern</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The context-root is defined in the <code>application.xml</code> or <code>web.xml</code> file,
+and can be overridden in the <code>glassfish-application.xml</code> or
+<code>glassfish-web.xml</code> file. The servlet-mapping-url-pattern is defined in
+the <code>web.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, the context-root is <code>my-ws</code> and the
+servlet-mapping-url-pattern is <code>/simple</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/my-ws/simple</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can view the WSDL file of the deployed service in a browser by
+adding <code>?WSDL</code> to the end of the URI. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/my-ws/simple?WSDL</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For debugging, you can run a test page for the deployed service in a
+browser by adding <code>?Tester</code> to the end of the URL. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/my-ws/simple?Tester</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also test a service using the Administration Console. Open the
+Web Services component, select the web service in the listing on the
+General tab, and select Test. For details, click the Help button in the
+Administration Console.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The test page works only for WS-I compliant web services. This means
+that the tester servlet does not work for services with WSDL files that
+use RPC/encoded binding.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Generation of the test page is enabled by default. You can disable the
+test page for a web service by setting the value of the
+<code>debugging-enabled</code> element in the <code>glassfish-web.xml</code> and
+<code>glassfish-ejb-jar.xml</code> deployment descriptor to <code>false</code>. For more
+information, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition
+Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="CHDEBBCH"></a><a id="GSDVG536"></a><a id="the-databinding-provider"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_databinding_provider">The Databinding Provider</h3>
+<div class="paragraph">
+<p>The JAX-WS reference implementation (RI) used to be dependent on the
+JAXB RI for databinding. JAXB and JAX-WS implementations have been
+decoupled, and databinding is modular. JAXB and JAX-WS are no longer
+Java EE APIs.</p>
+</div>
+<div class="paragraph">
+<p>The EclipseLink JAXB implementation, plus EclipseLink extensions, is
+called MOXy. The <code>org.eclipse.persistence.moxy.jar</code> file is bundled with
+GlassFish Server, which supports the JAXB RI and MOXy as databinding
+providers.</p>
+</div>
+<div class="paragraph">
+<p>To specify the databinding provider for the JVM, set the
+<code>com.sun.xml.ws.spi.db.BindingContextFactory</code> JVM property to one of the
+following values:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">com.sun.xml.ws.db.glassfish.JAXBRIContextFactory</dt>
+<dd>
+<p>Specifies the JAXB reference implementation. This is the default.</p>
+</dd>
+<dt class="hdlist1">com.sun.xml.ws.db.toplink.JAXBContextFactory</dt>
+<dd>
+<p>Specifies Eclipselink MOXy JAXB binding.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -Dcom.sun.xml.ws.spi.db.BindingContextFactory=com.sun.xml.ws.db.toplink.JAXBContextFactory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To specify the databinding provider for a web service endpoint:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the <code>org.jvnet.ws.databinding.DatabindingModeFeature</code> feature
+during <code>WebServiceFeature</code> initialization or using the <code>add</code> method.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed values are as follows</dt>
+<dd>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">org.jvnet.ws.databinding.DatabindingModeFeature.GLASSFISH_JAXB</dt>
+<dd>
+<p>Specifies the JAXB reference implementation. This is the default.</p>
+</dd>
+<dt class="hdlist1">com.sun.xml.ws.db.toplink.JAXBContextFactory.ECLIPSELINK_JAXB</dt>
+<dd>
+<p>  Specifies Eclipselink MOXy JAXB binding.<br>
+For example:<br></p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>import javax.xml.ws.WebServiceFeature;
+import org.jvnet.ws.databinding.DatabindingModeFeature;
+import com.sun.xml.ws.db.toplink.JAXBContextFactory;
+...
+WebServiceFeature[] features = {new DatabindingModeFeature(JAXBContextFactory.ECLIPSELINK_JAXB)};
+...</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the <code>org.jvnet.ws.databinding.DatabindingModeFeature</code> feature
+using the <code>@DatabindingMode</code> annotation. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>import javax.jws.WebService;
+import org.jvnet.ws.databinding.DatabindingMode;
+import com.sun.xml.ws.db.toplink.JAXBContextFactory;
+...
+@WebService()
+@DatabindingMode(JAXBContextFactory.ECLIPSELINK_JAXB);
+...</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the <code>databinding</code> attribute of the <code>endpoint</code> element in the
+<code>sun-jaxws.xml</code> file. Allowed values are <code>glassfish.jaxb</code> or
+<code>eclipselink.jaxb</code>. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;endpoint
+name='hello'
+implementation='hello.HelloImpl'
+url-pattern='/hello'
+databinding='eclipselink.jaxb'/&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The EclipseLink JAXB compiler is not included but can be used with
+GlassFish Server. Download the EclipseLink zip file at
+<code>http://www.eclipse.org/eclipselink/downloads/</code> and unzip it. The
+compiler files are located here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">bin/jaxb-compiler.cmd
+bin/jaxb-compiler.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gcgzz"></a><a id="GSDVG00129"></a><a id="glassfish-java-ee-service-engine"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_glassfish_java_ee_service_engine">GlassFish Java EE Service Engine</h3>
+<div class="paragraph">
+<p>GlassFish Server 5.0 provides the GlassFish Java EE Service Engine, a
+JSR 208 compliant Java Business Integration (JBI) runtime component that
+connects Java EE web services to JBI components. The Java EE Service
+Engine is installed as an add-on component using the Update Tool. Look
+for the JBI component named Java EE Service Engine. A JBI runtime is not
+installed with or integrated into GlassFish Server 5.0 and must be
+obtained separately. For more information about using the Update Tool to
+obtain the Java EE Service Engine and other add-on components, see
+"<a href="../administration-guide/toc.html#GSADG00701">Update Tool</a>" in GlassFish Server Open Source Edition
+Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>The Java EE Service Engine acts as a bridge between the Java EE and JBI
+runtime environments for web service providers and web service
+consumers. The Java EE Service Engine provides better performance than a
+SOAP over HTTP binding component due to in-process communication between
+components and additional protocols provided by JBI binding components
+such as JMS, SMTP, and File.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="http://jcp.org/en/jsr/detail?id=208">JSR 208</a>
+(<code>http://jcp.org/en/jsr/detail?id=208</code>) specification allows
+transactions to be propagated to other components using a message
+exchange property specified in the <code>JTA_TRANSACTION_PROPERTY_NAME</code>
+field. The Java EE Service Engine uses this property to set and get a
+transaction object from the JBI message exchange. It then uses the
+transaction object to take part in a transaction. This means a Java EE
+application or module can take part in a transaction started by a JBI
+application. Conversely, a JBI application can take part in a
+transaction started by a Java EE application or module.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, the JSR 208 specification allows a security subject to be
+propagated as a message exchange property named
+<code>javax.jbi.security.subject</code>. Thus a security subject can be propagated
+from a Java EE application or module to a JBI application or the
+reverse.</p>
+</div>
+<div class="paragraph">
+<p>To deploy a Java EE application or module as a JBI service unit, use the
+<code>asadmin deploy</code> command, or autodeployment. For more information about
+the <code>asadmin deploy</code> command, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open
+Source Edition Reference Manual</a>. For more information about
+autodeployment, see "<a href="../application-deployment-guide/deploying-applications.html#GSDPG00041">To Deploy an Application or Module
+Automatically</a>" in GlassFish Server Open Source Edition Application
+Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="gelxr"></a><a id="GSDVG00387"></a><a id="using-the-jbi.xml-file"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_using_the_code_jbi_xml_code_file">Using the <code>jbi.xml</code> File</h4>
+<div class="paragraph">
+<p>Section 6.3.1 of the JSR 208 specification describes the <code>jbi.xml</code> file.
+This is a deployment descriptor, located in the <code>META-INF</code> directory. To
+deploy a Java EE application or module as a JBI service unit, you need
+only specify a small subset of elements in the <code>jbi.xml</code> file. Here is
+an example provider:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://ejbws.jbi.misc/"&gt;
+  &lt;services binding-component="false"&gt;
+    &lt;provides endpoint-name="MiscPort" interface-name="ns0:Misc" service-name="ns0:MiscService"/&gt;
+  &lt;/services&gt;
+&lt;/jbi&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is an example consumer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://message.hello.jbi/"&gt;
+  &lt;services binding-component="false"&gt;
+    &lt;consumes endpoint-name="MsgPort" interface-name="ns0:Msg" service-name="ns0:MsgService"/&gt;
+  &lt;/services&gt;
+&lt;/jbi&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Java EE Service Engine enables the endpoints described in the
+<code>provides</code> section of the <code>jbi.xml</code> file in the JBI runtime. Similarly,
+the Java EE Service Engine routes invocations of the endpoints described
+in the <code>consumes</code> section from the Java EE web service consumer to the
+JBI runtime.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="securing-apps.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jpa.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+</body>
+</html>

@@ -1,0 +1,663 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Using the Transaction Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Using the Transaction Service</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jdbc.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jndi.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00018"></a><a id="beanm"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-the-transaction-service">15 Using the Transaction Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Java EE platform provides several abstractions that simplify
+development of dependable transaction processing for applications. This
+chapter discusses Java EE transactions and transaction support in the
+Oracle GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giybi">Handling Transactions with Databases</a></p>
+</li>
+<li>
+<p><a href="#beaje">Handling Transactions with Enterprise Beans</a></p>
+</li>
+<li>
+<p><a href="#gknrh">Handling Transactions with the Java Message Service</a></p>
+</li>
+<li>
+<p><a href="#gaxit">The Transaction Manager, the Transaction Synchronization
+Registry, and <code>UserTransaction</code></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about the Java Transaction API (JTA) and Java
+Transaction Service (JTS), see "<a href="../administration-guide/transactions.html#GSADG00022">Administering
+Transactions</a>" in GlassFish Server Open Source Edition Administration
+Guide and the following sites:
+<code>http://www.oracle.com/technetwork/java/javaee/jta/index.html</code> and
+<code>http://www.oracle.com/technetwork/java/javaee/tech/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>You might also want to read
+"https://javaee.github.io/tutorial/transactions.html[Transactions]" in
+The Java EE 8 Tutorial.</p>
+</div>
+<div class="paragraph">
+<p><a id="giybi"></a><a id="GSDVG00188"></a><a id="handling-transactions-with-databases"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_handling_transactions_with_databases">Handling Transactions with Databases</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beamv">Using JDBC Transaction Isolation Levels</a></p>
+</li>
+<li>
+<p><a href="#beamu">Using Non-Transactional Connections</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beamv"></a><a id="GSDVG00511"></a><a id="using-jdbc-transaction-isolation-levels"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_using_jdbc_transaction_isolation_levels">Using JDBC Transaction Isolation Levels</h4>
+<div class="paragraph">
+<p>Not all database vendors support all transaction isolation levels
+available in the JDBC API. The GlassFish Server permits specifying any
+isolation level your database supports. The following table defines
+transaction isolation levels.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG559"></a><a id="sthref27"></a><a id="fvyoi"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 15-1 Transaction Isolation Levels</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 27%;">
+<col style="width: 28%;">
+<col style="width: 45%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Transaction Isolation Level</th>
+<th class="tableblock halign-left valign-top"><code>getTransactionIsolation</code> Return Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>read-uncommitted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dirty reads, non-repeatable reads, and phantom
+reads can occur.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>read-committed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dirty reads are prevented; non-repeatable reads
+and phantom reads can occur.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repeatable-read</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dirty reads and non-repeatable reads are
+prevented; phantom reads can occur.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>serializable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dirty reads, non-repeatable reads and phantom
+reads are prevented.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>By default, the transaction isolation level is undefined (empty), and
+the JDBC driver&#8217;s default isolation level is used. You can specify the
+transaction isolation level in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Select the value from the Transaction Isolation drop-down list on the
+New JDBC Connection Pool or Edit Connection Pool page in the
+Administration Console. For more information, click the Help button in
+the Administration Console.</p>
+</li>
+<li>
+<p>Specify the <code>--isolationlevel</code> option in the
+<code>asadmin create-jdbc-connection-pool</code> command. For more information, see
+the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+<li>
+<p>Specify the <code>transaction-isolation-level</code> option in the <code>asadmin set</code>
+command. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.transaction-isolation-level=serializable</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source
+Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>Note that you cannot call <code>setTransactionIsolation</code> during a
+transaction.</p>
+</div>
+<div class="paragraph">
+<p>You can set the default transaction isolation level for a JDBC
+connection pool. For details, see "<a href="../administration-guide/jdbc.html#GSADG00420">To Create a JDBC
+Connection Pool</a>" in GlassFish Server Open Source Edition Administration
+Guide.</p>
+</div>
+<div class="paragraph">
+<p>To verify that a level is supported by your database management system,
+test your database programmatically using the
+<code>supportsTransactionIsolationLevel</code> method in
+<code>java.sql.DatabaseMetaData</code>, as shown in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">InitialContext ctx = new InitialContext();
+DataSource ds = (DataSource)
+ctx.lookup("jdbc/MyBase");
+Connection con = ds.getConnection();
+DatabaseMetaData dbmd = con.getMetaData();
+if (dbmd.supportsTransactionIsolationLevel(TRANSACTION_SERIALIZABLE)
+{ Connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE); }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about these isolation levels and what they mean,
+see the JDBC API specification.</p>
+</div>
+<div class="paragraph">
+<p>Setting or resetting the transaction isolation level for every
+<code>getConnection</code> call can degrade performance. So by default the
+isolation level is not guaranteed.</p>
+</div>
+<div class="paragraph">
+<p>Applications that change the transaction isolation level on a pooled
+connection programmatically risk polluting the JDBC connection pool,
+which can lead to errors. If an application changes the isolation level,
+enabling the <code>is-isolation-level-guaranteed</code> setting in the pool can
+minimize such errors.</p>
+</div>
+<div class="paragraph">
+<p>You can guarantee the transaction isolation level in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check the Isolation Level Guaranteed box on the New JDBC Connection
+Pool or Edit Connection Pool page in the Administration Console. For
+more information, click the Help button in the Administration Console.</p>
+</li>
+<li>
+<p>Specify the <code>--isisolationguaranteed</code> option in the
+<code>asadmin create-jdbc-connection-pool</code> command. For more information, see
+the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+<li>
+<p>Specify the <code>is-isolation-level-guaranteed</code> option in the
+<code>asadmin set</code> command. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.is-isolation-level-guaranteed=true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source
+Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beamu"></a><a id="GSDVG00512"></a><a id="using-non-transactional-connections"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_non_transactional_connections">Using Non-Transactional Connections</h4>
+<div class="paragraph">
+<p>You can specify a non-transactional database connection in any of these
+ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check the Non-Transactional Connections box on the New JDBC Connection
+Pool or Edit Connection Pool page in the Administration Console. The
+default is unchecked. For more information, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>Specify the <code>--nontransactionalconnections</code> option in the
+<code>asadmin create-jdbc-connection-pool</code> command. For more information, see
+the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+<li>
+<p>Specify the <code>non-transactional-connections</code> option in the
+<code>asadmin set</code> command. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.non-transactional-connections=true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source
+Edition Reference Manual</a>.
+* Use the <code>DataSource</code> implementation in the GlassFish Server, which
+provides a <code>getNonTxConnection</code> method. This method retrieves a JDBC
+connection that is not in the scope of any transaction. There are two
+variants.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public java.sql.Connection getNonTxConnection() throws java.sql.SQLException
+
+public java.sql.Connection getNonTxConnection(String user, String password)
+   throws java.sql.SQLException</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a resource with the JNDI name ending in <code>__nontx</code>. This forces
+all connections looked up using this resource to be non transactional.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Typically, a connection is enlisted in the context of the transaction in
+which a <code>getConnection</code> call is invoked. However, a non-transactional
+connection is not enlisted in a transaction context even if a
+transaction is in progress.</p>
+</div>
+<div class="paragraph">
+<p>The main advantage of using non-transactional connections is that the
+overhead incurred in enlisting and delisting connections in transaction
+contexts is avoided. However, use such connections carefully. For
+example, if a non-transactional connection is used to query the database
+while a transaction is in progress that modifies the database, the query
+retrieves the unmodified data in the database. This is because the
+in-progress transaction hasn&#8217;t committed. For another example, if a
+non-transactional connection modifies the database and a transaction
+that is running simultaneously rolls back, the changes made by the
+non-transactional connection are not rolled back.</p>
+</div>
+<div class="paragraph">
+<p>Here is a typical use case for a non-transactional connection: a
+component that is updating a database in a transaction context spanning
+over several iterations of a loop can refresh cached data by using a
+non-transactional connection to read data before the transaction
+commits.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaje"></a><a id="GSDVG00189"></a><a id="handling-transactions-with-enterprise-beans"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_handling_transactions_with_enterprise_beans">Handling Transactions with Enterprise Beans</h3>
+<div class="paragraph">
+<p>This section describes the transaction support built into the Enterprise
+JavaBeans programming model for the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>As a developer, you can write an application that updates data in
+multiple databases distributed across multiple sites. The site might use
+EJB servers from different vendors.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beajf">Flat Transactions</a></p>
+</li>
+<li>
+<p><a href="#beajg">Global and Local Transactions</a></p>
+</li>
+<li>
+<p><a href="#beajh">Commit Options</a></p>
+</li>
+<li>
+<p><a href="#beaht">Bean-Level Container-Managed Transaction Timeouts</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beajf"></a><a id="GSDVG00513"></a><a id="flat-transactions"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_flat_transactions">Flat Transactions</h4>
+<div class="paragraph">
+<p>The Enterprise JavaBeans Specification, v3.0 requires support for flat
+(as opposed to nested) transactions. In a flat transaction, each
+transaction is decoupled from and independent of other transactions in
+the system. Another transaction cannot start in the same thread until
+the current transaction ends.</p>
+</div>
+<div class="paragraph">
+<p>Flat transactions are the most prevalent model and are supported by most
+commercial database systems. Although nested transactions offer a finer
+granularity of control over transactions, they are supported by far
+fewer commercial database systems.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajg"></a><a id="GSDVG00514"></a><a id="global-and-local-transactions"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_global_and_local_transactions">Global and Local Transactions</h4>
+<div class="paragraph">
+<p>Both local and global transactions are demarcated using the
+javax.transaction.UserTransaction interface, which the client must use.
+Local transactions bypass the XA commit protocol and are faster. For
+more information, see <a href="#gaxit">The Transaction Manager, the
+Transaction Synchronization Registry, and <code>UserTransaction</code></a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajh"></a><a id="GSDVG00515"></a><a id="commit-options"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_commit_options">Commit Options</h4>
+<div class="paragraph">
+<p>The EJB protocol is designed to give the container the flexibility to
+select the disposition of the instance state at the time a transaction
+is committed. This allows the container to best manage caching an entity
+object&#8217;s state and associating an entity object identity with the EJB
+instances.</p>
+</div>
+<div class="paragraph">
+<p>There are three commit-time options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Option A - The container caches a ready instance between transactions.
+The container ensures that the instance has exclusive access to the
+state of the object in persistent storage.<br>
+In this case, the container does not have to synchronize the instance&#8217;s
+state from the persistent storage at the beginning of the next
+transaction.<br></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Commit option A is not supported for this GlassFish Server release.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Option B - The container caches a ready instance between transactions,
+but the container does not ensure that the instance has exclusive access
+to the state of the object in persistent storage. This is the default.<br>
+In this case, the container must synchronize the instance&#8217;s state by
+invoking <code>ejbLoad</code> from persistent storage at the beginning of the next
+transaction.</p>
+</li>
+<li>
+<p>Option C - The container does not cache a ready instance between
+transactions, but instead returns the instance to the pool of available
+instances after a transaction has completed.<br>
+The life cycle for every business method invocation under commit option
+C looks like this.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ejbActivate   ejbLoad   business method   ejbStore   ejbPassivate</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If there is more than one transactional client concurrently accessing
+the same entity, the first client gets the ready instance and subsequent
+concurrent clients get new instances from the pool.</p>
+</div>
+<div class="paragraph">
+<p>The <code>glassfish-ejb-jar.xml</code> deployment descriptor has an element,
+<code>commit-option</code>, that specifies the commit option to be used. Based on
+the specified commit option, the appropriate handler is instantiated.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaht"></a><a id="GSDVG00516"></a><a id="bean-level-container-managed-transaction-timeouts"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_bean_level_container_managed_transaction_timeouts">Bean-Level Container-Managed Transaction Timeouts</h4>
+<div class="paragraph">
+<p>The transaction timeout for the domain is specified using the
+Transaction Timeout setting of the Transaction Service. A transaction
+started by the container must commit (or rollback) within this time,
+regardless of whether the transaction is suspended (and resumed), or the
+transaction is marked for rollback. The default value, <code>0</code>, specifies
+that the server waits indefinitely for a transaction to complete.</p>
+</div>
+<div class="paragraph">
+<p>To override this timeout for an individual bean, use the optional
+<code>cmt-timeout-in-seconds</code> element in <code>glassfish-ejb-jar.xml</code>. The default
+value, <code>0</code>, specifies that the Transaction Service timeout is used. The
+value of <code>cmt-timeout-in-seconds</code> is used for all methods in the bean
+that start a new container-managed transaction. This value is not used
+if the bean joins a client transaction.</p>
+</div>
+<div class="paragraph">
+<p><a id="gknrh"></a><a id="GSDVG00190"></a><a id="handling-transactions-with-the-java-message-service"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_handling_transactions_with_the_java_message_service">Handling Transactions with the Java Message Service</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaoq">Transactions and Non-Persistent Messages</a></p>
+</li>
+<li>
+<p><a href="#gdyya">Using the ConfigurableTransactionSupport Interface</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaoq"></a><a id="GSDVG00517"></a><a id="transactions-and-non-persistent-messages"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_transactions_and_non_persistent_messages">Transactions and Non-Persistent Messages</h4>
+<div class="paragraph">
+<p>During transaction recovery, non-persistent messages might be lost. If
+the broker fails between the transaction manager&#8217;s prepare and commit
+operations, any non-persistent message in the transaction is lost and
+cannot be delivered. A message that is not saved to a persistent store
+is not available for transaction recovery.</p>
+</div>
+<div class="paragraph">
+<p><a id="gdyya"></a><a id="GSDVG00518"></a><a id="using-the-configurabletransactionsupport-interface"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_configurabletransactionsupport_interface">Using the ConfigurableTransactionSupport Interface</h4>
+<div class="paragraph">
+<p>The Java EE Connector 1.6 specification allows a resource adapter to use
+the <code>transaction-support</code> attribute to specify the level of transaction
+support that the resource adapter handles. However, the resource adapter
+vendor does not have a mechanism to figure out the current transactional
+context in which a <code>ManagedConnectionFactory</code> is used.</p>
+</div>
+<div class="paragraph">
+<p>If a <code>ManagedConnectionFactory</code> implements an optional interface called
+com.sun.appserv.connectors.spi.ConfigurableTransactionSupport , the
+GlassFish Server notifies the <code>ManagedConnectionFactory</code> of the
+<code>transaction-support</code> configured for the connector connection pool when
+the <code>ManagedConnectionFactory</code> instance is created for the pool.
+Connections obtained from the pool can then be used with a transaction
+level at or lower than the configured value. For example, a connection
+obtained from a pool that is set to <code>XA_TRANSACTION</code> could be used as a
+LOCAL resource in a last-agent-optimized transaction or in a
+non-transactional context.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaxit"></a><a id="GSDVG00191"></a><a id="the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_transaction_manager_the_transaction_synchronization_registry_and_code_usertransaction_code">The Transaction Manager, the Transaction Synchronization Registry, and <code>UserTransaction</code></h3>
+<div class="paragraph">
+<p>To access a <code>UserTransaction</code> instance, you can either look it up using
+the <code>java:comp/``UserTransaction</code> JNDI name or inject it using the
+<code>@Resource</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Accessing a <code>DataSource</code> using the <code>Synchronization.beforeCompletion()</code>
+method requires setting Allow Non Component Callers to <code>true</code>. The
+default is <code>false</code>. For more information about non-component callers,
+see <a href="jdbc.html#gavro">Allowing Non-Component Callers</a>.</p>
+</div>
+<div class="paragraph">
+<p>If possible, you should use the
+javax.transaction.TransactionSynchronizationRegistry interface instead
+of javax.transaction.TransactionManager , for portability. You can look
+up the implementation of this interface by using the JNDI name
+<code>java:comp/``TransactionSynchronizationRegistry</code>. For details, see the
+<a href="https://javaee.github.io/javaee-spec/javadocs/"><code>TransactionSynchronizationRegistryInterface</code></a>
+API documentation (<code>https://javaee.github.io/javaee-spec/javadocs/</code>) and
+<a href="http://www.jcp.org/en/jsr/detail?id=907">Java Specification Request (JSR)
+907</a> (<code>http://www.jcp.org/en/jsr/detail?id=907</code>).</p>
+</div>
+<div class="paragraph">
+<p>If accessing the javax.transaction.TransactionManager implementation is
+absolutely necessary, you can look up the GlassFish Server
+implementation of this interface using the JNDI name
+java:appserver/TransactionManager . This lookup should not be used by
+the application code.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jdbc.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jndi.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+</body>
+</html>

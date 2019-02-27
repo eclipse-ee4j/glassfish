@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering the Object Request Broker (ORB)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering the Object Request Broker (ORB)</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="concurrent.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="javamail.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00018"></a><a id="abltr"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-the-object-request-broker-orb">15 Administering the Object Request Broker (ORB)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GlassFish Server supports a standard set of protocols and formats that
+ensure interoperability. Among these protocols are those defined by
+CORBA. The Object Request Broker (ORB) is the central component of
+CORBA. The ORB provides the required infrastructure to identify and
+locate objects, handle connection management, deliver data, and request
+communication. This chapter describes how to configure the ORB and the
+IIOP listeners.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablts">About the ORB</a></p>
+</li>
+<li>
+<p><a href="#abltw">Configuring the ORB</a></p>
+</li>
+<li>
+<p><a href="#ablty">Administering IIOP Listeners</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablts"></a><a id="GSADG00590"></a><a id="about-the-orb"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_the_orb">About the ORB</h3>
+<div class="paragraph">
+<p>The Common Object Request Broker Architecture (CORBA) model is based on
+clients requesting services from distributed objects or servers through
+a well-defined interface by issuing requests to the objects in the form
+of remote method requests. A remote method request carries information
+about the operation that needs to be performed, including the object
+name (called an object reference) of the service provider and
+parameters, if any, for the invoked method. CORBA automatically handles
+network programming tasks such as object registration, object location,
+object activation, request de-multiplexing, error-handling, marshalling,
+and operation dispatching.</p>
+</div>
+<div class="paragraph">
+<p><a id="abltw"></a><a id="GSADG00591"></a><a id="configuring-the-orb"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_the_orb">Configuring the ORB</h3>
+<div class="paragraph">
+<p>A CORBA object never talks directly with another. Instead, the object
+makes requests through a remote stub to the Internet Inter-Orb Protocol
+(IIOP) running on the local host. The local ORB then passes the request
+to an ORB on the other host using IIOP. The remote ORB then locates the
+appropriate object, processes the request, and returns the results.</p>
+</div>
+<div class="paragraph">
+<p>IIOP can be used as a Remote Method Invocation (RMI) protocol by
+applications or objects using RMI-IIOP. Remote clients of enterprise
+beans (EJB modules) communicate with GlassFish Server by using RMI-IIOP.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablty"></a><a id="GSADG00592"></a><a id="administering-iiop-listeners"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_iiop_listeners">Administering IIOP Listeners</h3>
+<div class="paragraph">
+<p>An IIOP listener is a listen socket that accepts incoming connections
+from the remote clients of enterprise beans and from other CORBA-based
+clients. Multiple IIOP listeners can be configured for GlassFish Server.
+For each listener, specify a port number (optional; default 1072), a
+network address, and security attributes (optional). If you create
+multiple listeners, you must assign a different port number for each
+listener.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gioyo">To Create an IIOP Listener</a></p>
+</li>
+<li>
+<p><a href="#giowc">To List IIOP Listeners</a></p>
+</li>
+<li>
+<p><a href="#giwlq">To Update an IIOP Listener</a></p>
+</li>
+<li>
+<p><a href="#giowj">To Delete an IIOP Listener</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gioyo"></a><a id="GSADG00478"></a><a id="to-create-an-iiop-listener"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_an_iiop_listener">To Create an IIOP Listener</h4>
+<div class="paragraph">
+<p>Use the <code>create-iiop-listener</code> subcommand in remote mode to create an
+IIOP listener.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create an IIOP listener by using the
+<a href="../reference-manual/create-iiop-listener.html#GSRFM00032"><code>create-iiop-listener</code></a> subcommand.<br>
+Information about the properties for the subcommand is included in this
+help page.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00263"></a><a id="gipfl"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 15-1 Creating an IIOP Listener</p>
+</div>
+<div class="paragraph">
+<p>This example creates an IIOP listener named <code>sample_iiop_listener</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-iiop-listener --listeneraddress 192.168.1.100
+--iiopport 1400 sample_iiop_listener
+Command create-iiop-listener executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1011" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-iiop-listener</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giowc"></a><a id="GSADG00479"></a><a id="to-list-iiop-listeners"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_iiop_listeners">To List IIOP Listeners</h4>
+<div class="paragraph">
+<p>Use the <code>list-iiop-listeners</code> subcommand in remote mode to list the
+existing IIOP listeners.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the IIOP listeners by using the
+<a href="../reference-manual/list-iiop-listeners.html#GSRFM00169"><code>list-iiop-listeners</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00264"></a><a id="gipcm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 15-2 Listing IIOP Listeners</p>
+</div>
+<div class="paragraph">
+<p>This example lists all the IIOP listeners for the server instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-iiop-listeners
+orb-listener-1
+SSL
+SSL_MUTUALAUTH
+sample_iiop_listener
+Command list-iiop-listeners executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1012" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-iiop-listeners</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giwlq"></a><a id="GSADG00480"></a><a id="to-update-an-iiop-listener"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_an_iiop_listener">To Update an IIOP Listener</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the IIOP listeners by using the
+<a href="../reference-manual/list-iiop-listeners.html#GSRFM00169"><code>list-iiop-listeners</code></a> subcommand.</p>
+</li>
+<li>
+<p>Modify the values for the specified IIOP listener by using the
+<a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand.<br>
+The listener is identified by its dotted name.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00265"></a><a id="giwlj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 15-3 Updating an IIOP Listener</p>
+</div>
+<div class="paragraph">
+<p>This example changes SSL from enabled to disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set "server.iiop-service.iiop-listener.SSL.enabled"
+server.iiop-service.iiop-listener.SSL.enabled=false
+Command set executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="giowj"></a><a id="GSADG00481"></a><a id="to-delete-an-iiop-listener"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_an_iiop_listener">To Delete an IIOP Listener</h4>
+<div class="paragraph">
+<p>Use the <code>delete-iiop-listener</code> subcommand in remote mode to delete an
+IIOP listener.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the IIOP listeners by using the
+<a href="../reference-manual/list-iiop-listeners.html#GSRFM00169"><code>list-iiop-listeners</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete an IIOP listener by using the
+<a href="../reference-manual/delete-iiop-listener.html#GSRFM00084"><code>delete-iiop-listener</code></a> subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00266"></a><a id="giped"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 15-4 Deleting an IIOP Listener</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the IIOP listener named <code>sample_iiop_listener</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-iiop-listener sample_iiop_listener
+ Command delete-iiop-listener executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1013" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-iiop-listener</code> at the command line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="concurrent.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="javamail.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

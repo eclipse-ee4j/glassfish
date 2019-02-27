@@ -1,0 +1,2066 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering GlassFish Server Clusters</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering GlassFish Server Clusters</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="nodes.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="instances.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00005"></a><a id="gjfom"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-glassfish-server-clusters">4 Administering GlassFish Server Clusters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A cluster is a collection of GlassFish Server instances that work
+together as one logical entity. A cluster provides a runtime environment
+for one or more Java Platform, Enterprise Edition (Java EE)
+applications. A cluster provides high availability through failure
+protection, scalability, and load balancing.</p>
+</div>
+<div class="paragraph">
+<p>The Group Management Service (GMS) enables instances to participate in a
+cluster by detecting changes in cluster membership and notifying
+instances of the changes. To ensure that GMS can detect changes in
+cluster membership, a cluster&#8217;s GMS settings must be configured
+correctly.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjfqp">About GlassFish Server Clusters</a></p>
+</li>
+<li>
+<p><a href="#gjfnl">Group Management Service</a></p>
+</li>
+<li>
+<p><a href="#gkqdy">Creating, Listing, and Deleting Clusters</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjfqp"></a><a id="GSHAG00183"></a><a id="about-glassfish-server-clusters"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_glassfish_server_clusters">About GlassFish Server Clusters</h3>
+<div class="paragraph">
+<p>A cluster is a named collection of GlassFish Server instances that share
+the same applications, resources, and configuration information. For
+information about GlassFish Server instances, see
+<a href="instances.html#gkrbv">Administering GlassFish Server Instances</a>.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server enables you to administer all the instances in a
+cluster as a single unit from a single host, regardless of whether the
+instances reside on the same host or different hosts. You can perform
+the same operations on a cluster that you can perform on an unclustered
+instance, for example, deploying applications and creating resources.</p>
+</div>
+<div class="paragraph">
+<p>A cluster provides high availability through failure protection,
+scalability, and load balancing.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Failure protection. If an instance or a host in a cluster fails,
+GlassFish Server detects the failure and recovers the user session
+state. If a load balancer is configured for the cluster, the load
+balancer redirects requests from the failed instance to other instances
+in the cluster. Because the same applications and resources are on all
+instances in the cluster, an instance can fail over to any other
+instance in the cluster.<br>
+To enable the user session state to be recovered, each instance in a
+cluster sends in-memory state data to another instance. As state data is
+updated in any instance, the data is replicated.</p>
+</li>
+<li>
+<p>Scalability. If increased capacity is required, you can add instances
+to a cluster with no disruption in service. When an instance is added or
+removed, the changes are handled automatically.</p>
+</li>
+<li>
+<p>Load balancing. If instances in a cluster are distributed among
+different hosts, the workload can be distributed among the hosts to
+increase overall system throughput.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjfnl"></a><a id="GSHAG00184"></a><a id="group-management-service"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_group_management_service">Group Management Service</h3>
+<div class="paragraph">
+<p>The Group Management Service (GMS) is an infrastructure component that
+is enabled for the instances in a cluster. When GMS is enabled, if a
+clustered instance fails, the cluster and the Domain Administration
+Server (DAS) are aware of the failure and can take action when failure
+occurs. Many features of GlassFish Server depend upon GMS. For example,
+GMS is used by the in-memory session replication, transaction service,
+and timer service features.</p>
+</div>
+<div class="paragraph">
+<p>GMS is a core service of the Shoal framework. For more information about
+Shoal, visit the <a href="http://shoal.dev.java.net/">Project Shoal home page</a>
+(<code>https://shoal.dev.java.net/</code>).</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#CHDFEGAG">Protocols and Transports for GMS</a></p>
+</li>
+<li>
+<p><a href="#gjfpd">GMS Configuration Settings</a></p>
+</li>
+<li>
+<p><a href="#gjfog">Dotted Names for GMS Settings</a></p>
+</li>
+<li>
+<p><a href="#gkoac">To Preconfigure Nondefault GMS Configuration Settings</a></p>
+</li>
+<li>
+<p><a href="#gkqqo">To Change GMS Settings After Cluster Creation</a></p>
+</li>
+<li>
+<p><a href="#gklhl">To Check the Health of Instances in a Cluster</a></p>
+</li>
+<li>
+<p><a href="#gklhd">To Validate That Multicast Transport Is Available for a
+Cluster</a></p>
+</li>
+<li>
+<p><a href="#CHDGAIBJ">Discovering a Cluster When Multicast Transport Is
+Unavailable</a></p>
+</li>
+<li>
+<p><a href="#gjdlw">Using the Multi-Homing Feature With GMS</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDFEGAG"></a><a id="GSHAG485"></a><a id="protocols-and-transports-for-gms"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_protocols_and_transports_for_gms">Protocols and Transports for GMS</h4>
+<div class="paragraph">
+<p>You can specify that GMS should use one of the following combinations of
+protocol and transport for broadcasting messages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>User Datagram Protocol (UDP) multicast</p>
+</li>
+<li>
+<p>Transmission Control Protocol (TCP) without multicast</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Even if GMS should use UDP multicast for broadcasting messages, you must
+ensure that TCP is enabled. On Windows systems, enabling TCP involves
+enabling a protocol and port for security when a firewall is enabled.</p>
+</div>
+<div class="paragraph">
+<p>If GMS should use UDP multicast for broadcasting messages and if
+GlassFish Server instances in a cluster are located on different hosts,
+the following conditions must be met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The DAS host and all hosts for the instances must be on the same
+subnet.</p>
+</li>
+<li>
+<p>UDP multicast must be enabled for the network. To test whether
+multicast is enabled, use the <a href="../reference-manual/validate-multicast.html#GSRFM00259"><code>validate-multicast</code>(1)</a>
+subcommand.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If GMS should use TCP without multicast, you must configure GMS to
+locate the instances to use for discovering the cluster. For more
+information, see <a href="#CHDGAIBJ">Discovering a Cluster When Multicast
+Transport Is Unavailable</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>If you do not configure GMS to locate the instances to use for
+discovering a cluster, GMS uses UDP multicast by default.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjfpd"></a><a id="GSHAG00264"></a><a id="gms-configuration-settings"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gms_configuration_settings">GMS Configuration Settings</h4>
+<div class="paragraph">
+<p>GlassFish Server has the following types of GMS settings:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GMS cluster settings — These are determined during cluster creation.
+For more information about these settings, see <a href="#gkqdm">To Create a
+Cluster</a>.</p>
+</li>
+<li>
+<p>GMS configuration settings — These are determined during configuration
+creation and are explained here.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following GMS configuration settings are used in GMS for group
+discovery and failure detection:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>group-discovery-timeout-in-millis</code></dt>
+<dd>
+<p>Indicates the amount of time (in milliseconds) an instance&#8217;s GMS
+module will wait during instance startup for discovering other members
+of the group.<br>
+The <code>group-discovery-timeout-in-millis</code> timeout value should be set to
+the default or higher. The default is 5000.</p>
+</dd>
+<dt class="hdlist1"><code>max-missed-heartbeats</code></dt>
+<dd>
+<p>Indicates the maximum number of missed heartbeats that the health
+monitor counts before the instance can be marked as a suspected
+failure. GMS also tries to make a peer-to-peer connection with the
+suspected member. If the maximum number of missed heartbeats is
+exceeded and peer-to-peer connection fails, the member is marked as a
+suspected failure. The default is 3.</p>
+</dd>
+<dt class="hdlist1"><code>heartbeat-frequency-in-millis</code></dt>
+<dd>
+<p>Indicates the frequency (in milliseconds) at which a heartbeat is sent
+by each server instance to the cluster.<br>
+The failure detection interval is the <code>max-missed-heartbeats</code>
+multiplied by the <code>heartbeat-frequency-in-millis</code>. Therefore, the
+combination of defaults, 3 multiplied by 2000 milliseconds, results in
+a failure detection interval of 6 seconds.<br>
+Lowering the value of <code>heartbeat-frequency-in-millis</code> below the
+default would result in more frequent heartbeat messages being sent
+out from each member. This could potentially result in more heartbeat
+messages in the network than a system needs for triggering failure
+detection protocols. The effect of this varies depending on how
+quickly the deployment environment needs to have failure detection
+performed. That is, the (lower) number of retries with a lower
+heartbeat interval would make it quicker to detect failures.<br>
+However, lowering this value could result in false positives because
+you could potentially detect a member as failed when, in fact, the
+member&#8217;s heartbeat is reflecting the network load from other parts of
+the server. Conversely, a higher timeout interval results in fewer
+heartbeats in the system because the time interval between heartbeats
+is longer. As a result, failure detection would take a longer. In
+addition, a startup by a failed member during this time results in a
+new join notification but no failure notification, because failure
+detection and verification were not completed.<br>
+The default is 2000.</p>
+</dd>
+<dt class="hdlist1"><code>verify-failure-waittime-in-millis</code></dt>
+<dd>
+<p>Indicates the verify suspect protocol&#8217;s timeout used by the health
+monitor. After a member is marked as suspect based on missed
+heartbeats and a failed peer-to-peer connection check, the verify
+suspect protocol is activated and waits for the specified timeout to
+check for any further health state messages received in that time, and
+to see if a peer-to-peer connection can be made with the suspect
+member. If not, then the member is marked as failed and a failure
+notification is sent. The default is 1500.</p>
+</dd>
+<dt class="hdlist1"><code>verify-failure-connect-timeout-in-millis</code></dt>
+<dd>
+<p>Indicates the time it takes for the GMS to detect a hardware or
+network failure of a server instance. Be careful not to set this value
+too low. The smaller this timeout value is, the greater the chance of
+detecting false failures. That is, the instance has not failed but
+doesn&#8217;t respond within the short window of time. The default is 10000.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The heartbeat frequency, maximum missed heartbeats, peer-to-peer
+connection-based failure detection, and the verify timeouts are all
+needed to ensure that failure detection is robust and reliable in
+GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>For the dotted names for each of these GMS configuration settings, see
+<a href="#gjfog">Dotted Names for GMS Settings</a>. For the steps to specify
+these settings, see <a href="#gkoac">To Preconfigure Nondefault GMS
+Configuration Settings</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjfog"></a><a id="GSHAG00265"></a><a id="dotted-names-for-gms-settings"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dotted_names_for_gms_settings">Dotted Names for GMS Settings</h4>
+<div class="paragraph">
+<p>Below are sample <a href="../reference-manual/get.html#GSRFM00139"><code>get</code></a> subcommands to get all the GMS
+configuration settings (attributes associated with the referenced
+<code>mycfg</code> configuration) and GMS cluster settings (attributes and
+properties associated with a cluster named <code>mycluster</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get "configs.config.mycfg.group-management-service.*"
+configs.config.mycfg.group-management-service.failure-detection.heartbeat-frequency-in-millis=2000
+configs.config.mycfg.group-management-service.failure-detection.max-missed-heartbeats=3
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-connect-timeout-in-millis=10000
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-waittime-in-millis=1500
+configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=5000
+
+asadmin&gt; get clusters.cluster.mycluster
+clusters.cluster.mycluster.config-ref=mycfg
+clusters.cluster.mycluster.gms-bind-interface-address=${GMS-BIND-INTERFACE-ADDRESS-mycluster}
+clusters.cluster.mycluster.gms-enabled=true
+clusters.cluster.mycluster.gms-multicast-address=228.9.245.47
+clusters.cluster.mycluster.gms-multicast-port=9833
+clusters.cluster.mycluster.name=mycluster
+
+asadmin&gt; get "clusters.cluster.mycluster.property.*"
+clusters.cluster.mycluster.property.GMS_LISTENER_PORT=${GMS_LISTENER_PORT-mycluster}
+clusters.cluster.mycluster.property.GMS_MULTICAST_TIME_TO_LIVE=4
+clusters.cluster.mycluster.property.GMS_LOOPBACK=false
+clusters.cluster.mycluster.property.GMS_TCPSTARTPORT=9090
+clusters.cluster.mycluster.property.GMS_TCPENDPORT=9200</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The last <code>get</code> subcommand displays only the properties that have been
+explicitly set.</p>
+</div>
+<div class="paragraph">
+<p>For the steps to specify these settings, see <a href="#gkoac">To Preconfigure
+Nondefault GMS Configuration Settings</a> and <a href="#gkqqo">To Change GMS
+Settings After Cluster Creation</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkoac"></a><a id="GSHAG00098"></a><a id="to-preconfigure-nondefault-gms-configuration-settings"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_preconfigure_nondefault_gms_configuration_settings">To Preconfigure Nondefault GMS Configuration Settings</h4>
+<div class="paragraph">
+<p>You can preconfigure GMS with values different than the defaults without
+requiring a restart of the DAS and the cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a configuration using the <a href="../reference-manual/copy-config.html#GSRFM00011"><code>copy-config</code></a>
+subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; copy-config default-config mycfg</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="named-configurations.html#abdjr">To Create
+a Named Configuration</a>.
+2.  Set the values for the new configuration&#8217;s GMS configuration
+settings.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=8000
+asadmin&gt; set configs.config.mycfg.group-management-service.failure-detection.max-missed-heartbeats=5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a complete list of the dotted names for these settings, see
+<a href="#gjfog">Dotted Names for GMS Settings</a>.
+3.  Create the cluster so it uses the previously created configuration.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster --config mycfg mycluster</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also set GMS cluster settings during this step. For more
+information, see <a href="#gkqdm">To Create a Cluster</a>.
+4.  Create server instances for the cluster.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-instance --node localhost --cluster mycluster instance01
+
+asadmin&gt; create-instance --node localhost --cluster mycluster instance02</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start the cluster.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; start-cluster mycluster</pre>
+</div>
+</div>
+<div id="GSHAG367" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of a subcommand by typing
+<code>asadmin help</code> subcommand at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqqo"></a><a id="GSHAG00099"></a><a id="to-change-gms-settings-after-cluster-creation"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_change_gms_settings_after_cluster_creation">To Change GMS Settings After Cluster Creation</h4>
+<div class="paragraph">
+<p>To avoid the need to restart the DAS and the cluster, configure GMS
+configuration settings before cluster creation as explained in
+<a href="#gkoac">To Preconfigure Nondefault GMS Configuration Settings</a>.</p>
+</div>
+<div class="paragraph">
+<p>To avoid the need to restart the DAS and the cluster, configure the GMS
+cluster settings during cluster creation as explained in <a href="#gkqdm">To
+Create a Cluster</a>.</p>
+</div>
+<div class="paragraph">
+<p>Changing any GMS settings using the <code>set</code> subcommand after cluster
+creation requires a domain administration server (DAS) and cluster
+restart as explained here.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS and cluster are running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Use the <a href="../reference-manual/get.html#GSRFM00139"><code>get</code></a> subcommand to determine the settings
+to change.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; get "configs.config.mycfg.group-management-service.*"
+configs.config.mycfg.group-management-service.failure-detection.heartbeat-frequency-in-millis=2000
+configs.config.mycfg.group-management-service.failure-detection.max-missed-heartbeats=3
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-connect-timeout-in-millis=10000
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-waittime-in-millis=1500
+configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=5000</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a complete list of the dotted names for these settings, see
+<a href="#gjfog">Dotted Names for GMS Settings</a>.
+3.  Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to change the settings.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=6000</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>get</code> subcommand again to confirm that the changes were
+made.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; get configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the DAS.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; stop-domain domain1
+
+asadmin&gt; start-domain domain1</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the cluster.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; stop-cluster mycluster
+
+asadmin&gt; start-cluster mycluster</pre>
+</div>
+</div>
+<div id="GSHAG368" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of a subcommand by typing
+<code>asadmin help</code> subcommand at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gklhl"></a><a id="GSHAG00100"></a><a id="to-check-the-health-of-instances-in-a-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_check_the_health_of_instances_in_a_cluster">To Check the Health of Instances in a Cluster</h4>
+<div class="paragraph">
+<p>The <code>get-health</code> subcommand only works when GMS is enabled. This is the
+quickest way to evaluate the health of a cluster and to detect if
+cluster is properly operating; that is, all members of the cluster are
+running and visible to DAS.</p>
+</div>
+<div class="paragraph">
+<p>If multicast is not enabled for the network, all instances could be
+running (as shown by the <a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code></a> subcommand),
+yet isolated from each other. The <code>get-health</code> subcommand does not show
+the instances if they are running but cannot discover each other due to
+multicast not being configured properly. See <a href="#gklhd">To Validate
+That Multicast Transport Is Available for a Cluster</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS and cluster are running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Check whether server instances in a cluster are running by using the
+<a href="../reference-manual/get-health.html#GSRFM00141"><code>get-health</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00032"></a><a id="gklgw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-1 Checking the Health of Instances in a Cluster</p>
+</div>
+<div class="paragraph">
+<p>This example checks the health of a cluster named <code>cluster1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get-health cluster1
+instance1 started since Wed Sep 29 16:32:46 EDT 2010
+instance2 started since Wed Sep 29 16:32:45 EDT 2010
+Command get-health executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG369" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help get-health</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gklhd"></a><a id="GSHAG00101"></a><a id="to-validate-that-multicast-transport-is-available-for-a-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_validate_that_multicast_transport_is_available_for_a_cluster">To Validate That Multicast Transport Is Available for a Cluster</h4>
+<div id="GSHAG370" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>To test a specific multicast address, multicast port, or bind interface
+address, get this information beforehand using the <code>get</code> subcommand. Use
+the following subcommand to get the multicast address and port for a
+cluster named <code>c1</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get clusters.cluster.c1
+clusters.cluster.c1.config-ref=mycfg
+clusters.cluster.c1.gms-bind-interface-address=${GMS-BIND-INTERFACE-ADDRESS-c1}
+clusters.cluster.c1.gms-enabled=true
+clusters.cluster.c1.gms-multicast-address=228.9.174.162
+clusters.cluster.c1.gms-multicast-port=5383
+clusters.cluster.c1.name=c1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the following subcommand to get the bind interface address of a
+server instance named <code>i1`that belongs to a cluster named `c1</code>, if this
+system property has been set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get servers.server.i1.system-property.GMS-BIND-INTERFACE-ADDRESS-c1
+servers.server.i1.system-property.GMS-BIND-INTERFACE-ADDRESS-c1.name=GMS-BIND-INTERFACE-ADDRESS-c1
+servers.server.i1.system-property.GMS-BIND-INTERFACE-ADDRESS-c1.value=10.12.152.30</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For information on how to set this system property, see
+<a href="#gjdlw">Using the Multi-Homing Feature With GMS</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Do not run the <code>validate-multicast</code> subcommand using the DAS and
+cluster&#8217;s multicast address and port values while the DAS and cluster
+are running. Doing so results in an error.</p>
+</div>
+<div class="paragraph">
+<p>The <code>validate-multicast</code> subcommand must be run at the same time on two
+or more machines to validate whether multicast messages are being
+received between the machines.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Check whether multicast transport is available for a cluster by using
+the <a href="../reference-manual/validate-multicast.html#GSRFM00259"><code>validate-multicast</code></a> subcommand.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00033"></a><a id="gklhv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-2 Validating That Multicast Transport Is Available for a
+Cluster</p>
+</div>
+<div class="paragraph">
+<p>This example checks whether multicast transport is available for a
+cluster named <code>c1</code>.</p>
+</div>
+<div class="paragraph">
+<p>Run from host <code>sr1</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; validate-multicast
+Will use port 2048
+Will use address 228.9.3.1
+Will use bind interface null
+Will use wait period 2,000 (in milliseconds)
+
+Listening for data...
+Sending message with content "sr1" every 2,000 milliseconds
+Received data from sr1 (loopback)
+Received data from sr2
+Exiting after 20 seconds. To change this timeout, use the --timeout command line option.
+Command validate-multicast executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run from host <code>sr2</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; validate-multicast
+Will use port 2048
+Will use address 228.9.3.1
+Will use bind interface null
+Will use wait period 2,000 (in milliseconds)
+
+Listening for data...
+Sending message with content "sr2" every 2,000 milliseconds
+Received data from sr2 (loopback)
+Received data from sr1
+Exiting after 20 seconds. To change this timeout, use the --timeout command line option.
+Command validate-multicast executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG371" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>As long as all machines see each other, multicast is validated to be
+working properly across the machines. If the machines are not seeing
+each other, set the <code>--bindaddress</code> option explicitly to ensure that all
+machines are using interface on same subnet, or increase the
+<code>--timetolive</code> option from the default of <code>4</code>. If these changes fail to
+resolve the multicast issues, ask the network administrator to verify
+that the network is configured so the multicast messages can be seen
+between all the machines used to run the cluster.</p>
+</div>
+<div id="GSHAG372" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help get-health</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="CHDGAIBJ"></a><a id="GSHAG00373"></a><a id="discovering-a-cluster-when-multicast-transport-is-unavailable"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_discovering_a_cluster_when_multicast_transport_is_unavailable">Discovering a Cluster When Multicast Transport Is Unavailable</h4>
+<div class="paragraph">
+<p>When multicast transport is unavailable, GlassFish Server instances that
+are joining a cluster cannot rely on broadcast messages from GMS to
+discover the cluster. Instead, an instance that is joining a cluster
+uses a running instance or the DAS in the cluster to discover the
+cluster.</p>
+</div>
+<div class="paragraph">
+<p>Therefore, when multicast transport is unavailable, you must provide the
+locations of instances in the cluster to use for discovering the
+cluster. You are not required to provide the locations of all instances
+in the cluster. However, for an instance to discover the cluster, at
+least one instance whose location you provide must be running. To
+increase the probability of finding a running instance, provide the
+locations of several instances.</p>
+</div>
+<div class="paragraph">
+<p>If the DAS will be left running after the cluster is started, provide
+the location of the DAS first in the list of instances. When a cluster
+is started, the DAS is running before any of the instances in the
+cluster are started.</p>
+</div>
+<div class="paragraph">
+<p>The locations of the instances to use for discovering a cluster are part
+of the configuration data that you provide when creating the cluster.
+How to provide this data depends on how instances are distributed, as
+explained in the following subsections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#CHDCGIFF">To Discover a Cluster When Multiple Instances in a
+Cluster are Running on a Host</a></p>
+</li>
+<li>
+<p><a href="#CHDIGFCG">To Discover a Cluster When Each Instance in a Cluster
+Is Running on a Different Host</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDCGIFF"></a><a id="GSHAG486"></a><a id="to-discover-a-cluster-when-multiple-instances-in-a-cluster-are-running-on-a-host"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_discover_a_cluster_when_multiple_instances_in_a_cluster_are_running_on_a_host">To Discover a Cluster When Multiple Instances in a Cluster are Running on a Host</h5>
+<div class="paragraph">
+<p>If multiple instances in the same cluster are running on a host, you
+must provide a list of uniform resource indicators (URIs). Each URI must
+locate a GlassFish Server instance or the DAS in the cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a system property to represent the port number of the port on
+which the DAS listens for messages from GMS for the cluster.<br>
+Use the <a href="../reference-manual/create-system-properties.html#GSRFM00059"><code>create-system-properties</code></a> subcommand for this
+purpose.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-system-properties GMS_LISTENER_PORT-cluster-name=gms-port</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster to which the messages from GMS apply.</p>
+</dd>
+<dt class="hdlist1">gms-port</dt>
+<dd>
+<p>The port number of the port on which the DAS listens for messages from
+GMS.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the DAS.</p>
+</li>
+<li>
+<p>When creating the cluster, set the <code>GMS_DISCOVERY_URI_LIST</code> property
+to a comma-separated list of URIs that locate instances to use for
+discovering the cluster.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster --properties GMS_DISCOVERY_URI_LIST=uri-list cluster-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">uri-list</dt>
+<dd>
+<p>A comma-separated list of URIs that locate a GlassFish Server instance
+or the DAS in the cluster.<br>
+The format of each URI in the list is as follows:<br>
+scheme`://<code>host-name-or -IP-address</code>:`port<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>scheme is the URI scheme, which is <code>tcp</code>.</p>
+</li>
+<li>
+<p>host-name-or -IP-address is the host name or IP address of the host
+on which the instance is running.</p>
+</li>
+<li>
+<p>port is the port number of the port on which the instance will
+listen for messages from GMS.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster that you are creating.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>For complete instructions for creating a cluster, see <a href="#gkqdm">To
+Create a Cluster</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When you add each instance to the cluster, set the system property
+`GMS_LISTENER_PORT-`clustername for the instance.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To create the instance centrally, run the following command:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-instance --node node-name
+--systemproperties GMS_LISTENER_PORT-cluster-name=gms-port --cluster  cluster-name instance-name</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To create the instance locally, run the following command:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-local-instance
+--systemproperties GMS_LISTENER_PORT-cluster-name=gms-port --cluster  cluster-name instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of an existing GlassFish Server node on which the instance is
+to reside. For more information about nodes, see
+<a href="nodes.html#gkrle">Administering GlassFish Server Nodes</a>.</p>
+</dd>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster to which the you are adding the instance.</p>
+</dd>
+<dt class="hdlist1">gms-port</dt>
+<dd>
+<p>The port number of the port on which the instance listens for messages
+from GMS.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are creating.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>For full instructions for adding an instance to a cluster, see the
+following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqbl">To Create an Instance Locally</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSHAG487"></a><a id="sthref19"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-3 Discovering a Cluster When Multiple Instances are Running on
+a Host</p>
+</div>
+<div class="paragraph">
+<p>This example creates a cluster that is named <code>tcpcluster</code> for which GMS
+is not using multicast for broadcasting messages.</p>
+</div>
+<div class="paragraph">
+<p>The cluster contains the instances <code>instance101</code> and <code>instance102</code>.
+These instances reside on the host whose IP address is <code>10.152.23.224</code>
+and listen for GMS events on ports 9091 and 9092. The DAS is also
+running on this host and listens for GMS events on port 9090.</p>
+</div>
+<div class="paragraph">
+<p>Instances that are joining the cluster will use the DAS and the
+instances <code>instance101</code> and <code>instance102</code> to discover the cluster.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-system-properties GMS_LISTENER_PORT-tcpcluster=9090
+Command create-system-properties executed successfully.
+asadmin&gt; restart-domain
+Successfully restarted the domain
+Command restart-domain executed successfully.
+asadmin&gt; create-cluster --properties GMS_DISCOVERY_URI_LIST=
+tcp'\\:'//10.152.23.224'\\:'9090,
+tcp'\\:'//10.152.23.224'\\:'9091,
+tcp'\\:'//10.152.23.224'\\:'9092 tcpcluster
+Command create-cluster executed successfully.
+asadmin&gt; create-local-instance
+--systemproperties GMS_LISTENER_PORT-tcpcluster=9091 --cluster tcpcluster
+instance101
+Rendezvoused with DAS on localhost:4848.
+Port Assignments for server instance instance101:
+JMX_SYSTEM_CONNECTOR_PORT=28686
+JMS_PROVIDER_PORT=27676
+HTTP_LISTENER_PORT=28080
+ASADMIN_LISTENER_PORT=24848
+JAVA_DEBUGGER_PORT=29009
+IIOP_SSL_LISTENER_PORT=23820
+IIOP_LISTENER_PORT=23700
+OSGI_SHELL_TELNET_PORT=26666
+HTTP_SSL_LISTENER_PORT=28181
+IIOP_SSL_MUTUALAUTH_PORT=23920
+Command create-local-instance executed successfully.
+asadmin&gt; create-local-instance
+--systemproperties GMS_LISTENER_PORT-tcpcluster=9092 --cluster tcpcluster
+instance102
+Rendezvoused with DAS on localhost:4848.
+Using DAS host localhost and port 4848 from existing das.properties for node
+localhost-domain1. To use a different DAS, create a new node using
+create-node-ssh or create-node-config. Create the instance with the new node and
+correct host and port:
+asadmin --host das_host --port das_port create-local-instance --node node_name
+instance_name.
+Port Assignments for server instance instance102:
+JMX_SYSTEM_CONNECTOR_PORT=28687
+JMS_PROVIDER_PORT=27677
+HTTP_LISTENER_PORT=28081
+ASADMIN_LISTENER_PORT=24849
+JAVA_DEBUGGER_PORT=29010
+IIOP_SSL_LISTENER_PORT=23821
+IIOP_LISTENER_PORT=23701
+OSGI_SHELL_TELNET_PORT=26667
+HTTP_SSL_LISTENER_PORT=28182
+IIOP_SSL_MUTUALAUTH_PORT=23921
+Command create-local-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG488" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/create-system-properties.html#GSRFM00059"><code>create-system-properties</code>(1)</a></p>
+</li>
+<li>
+<p><a href="#gkqdm">To Create a Cluster</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqbl">To Create an Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDIGFCG"></a><a id="GSHAG489"></a><a id="to-discover-a-cluster-when-each-instance-in-a-cluster-is-running-on-a-different-host"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_discover_a_cluster_when_each_instance_in_a_cluster_is_running_on_a_different_host">To Discover a Cluster When Each Instance in a Cluster Is Running on a Different Host</h5>
+<div class="paragraph">
+<p>If all instances in a cluster and the DAS are running on different
+hosts, you can specify the locations of instances to use for discovering
+the cluster as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>By specifying a list of host names or Internet Protocol (IP)
+addresses. Each host name or IP address must locate a host on which the
+DAS or a GlassFish Server instance in the cluster is running. Instances
+that are joining the cluster will use the DAS or the instances to
+discover the cluster.</p>
+</li>
+<li>
+<p>By generating the list of locations automatically. The generated list
+contains the locations of the DAS and all instances in the cluster.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Multiple instances on the same host cannot be members of the same
+cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>When creating the cluster, set the properties of the cluster as
+follows:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the <code>GMS_DISCOVERY_URI_LIST</code> property to one of the following
+values:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>A comma-separated list of IP addresses or host names on which the DAS
+or the instances to use for discovering the cluster are running.<br>
+The list can contain a mixture of IP addresses and host names.</p>
+</li>
+<li>
+<p>The keyword <code>generate</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Set the <code>GMS_LISTENER_PORT</code> property to a port number that is unique
+for the cluster in the domain.<br>
+If you are specifying a list of IP addresses or host names, type the
+following command:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-cluster --properties GMS_DISCOVERY_URI_LIST=host-list:
+GMS_LISTENER_PORT=gms-port cluster-name</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are specifying the keyword <code>generate</code>, type the following
+command:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster --properties GMS_DISCOVERY_URI_LIST=generate:
+GMS_LISTENER_PORT=gms-port cluster-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">host-list</dt>
+<dd>
+<p>A comma-separated list of IP addresses or host names on which the DAS
+or the instances to use for discovering the cluster are running.</p>
+</dd>
+<dt class="hdlist1">gms-port</dt>
+<dd>
+<p>The port number of the port on which the cluster listens for messages
+from GMS.</p>
+</dd>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster that you are creating.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>For complete instructions for creating a cluster, see <a href="#gkqdm">To
+Create a Cluster</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSHAG490"></a><a id="sthref20"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-4 Discovering a Cluster by Specifying a List of IP Addresses</p>
+</div>
+<div class="paragraph">
+<p>This example creates a cluster that is named <code>ipcluster</code> for which GMS
+is not using multicast for broadcasting messages. The instances to use
+for discovering the cluster are located through a list of IP addresses.
+In this example, one instance in the cluster is running on each host and
+the DAS is running on a separate host. The cluster listens for messages
+from GMS on port 9090.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster --properties 'GMS_DISCOVERY_URI_LIST=
+10.152.23.225,10.152.23.226,10.152.23.227,10.152.23.228:
+GMS_LISTENER_PORT=9090' ipcluster
+Command create-cluster executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG491"></a><a id="sthref21"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-5 Discovering a Cluster by Generating a List of Locations of
+Instances</p>
+</div>
+<div class="paragraph">
+<p>This example creates a cluster that is named <code>gencluster</code> for which GMS
+is not using multicast for broadcasting messages. The list of locations
+of instances to use for discovering the cluster is generated
+automatically. In this example, one instance in the cluster is running
+on each host and the DAS is running on a separate host. The cluster
+listens for messages from GMS on port 9090.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster --properties 'GMS_DISCOVERY_URI_LIST=generate:
+GMS_LISTENER_PORT=9090' gencluster
+Command create-cluster executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG492" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After creating the cluster, add instances to the cluster as explained in
+the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqbl">To Create an Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div id="GSHAG493" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqdm">To Create a Cluster</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqbl">To Create an Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjdlw"></a><a id="GSHAG00266"></a><a id="using-the-multi-homing-feature-with-gms"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_multi_homing_feature_with_gms">Using the Multi-Homing Feature With GMS</h4>
+<div class="paragraph">
+<p>Multi-homing enables GlassFish Server clusters to be used in an
+environment that uses multiple Network Interface Cards (NICs). A
+multi-homed host has multiple network connections, of which the
+connections may or may not be the on same network. Multi-homing provides
+the following benefits:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Provides redundant network connections within the same subnet. Having
+multiple NICs ensures that one or more network connections are available
+for communication.</p>
+</li>
+<li>
+<p>Supports communication across two or more different subnets. The DAS
+and all server instances in the same cluster must be on the same subnet
+for GMS communication, however.</p>
+</li>
+<li>
+<p>Binds to a specific IPv4 address and receives GMS messages in a system
+that has multiple IP addresses configured. The responses for GMS
+messages received on a particular interface will also go out through
+that interface.</p>
+</li>
+<li>
+<p>Supports separation of external and internal traffic.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjdoo"></a><a id="GSHAG00224"></a><a id="traffic-separation-using-multi-homing"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_traffic_separation_using_multi_homing">Traffic Separation Using Multi-Homing</h5>
+<div class="paragraph">
+<p>You can separate the internal traffic resulting from GMS from the
+external traffic. Traffic separation enables you plan a network better
+and augment certain parts of the network, as required.</p>
+</div>
+<div class="paragraph">
+<p>Consider a simple cluster, <code>c1</code>, with three instances, <code>i101</code>, <code>i102</code>,
+and <code>i103</code>. Each instance runs on a different machine. In order to
+separate the traffic, the multi-homed machine should have at least two
+IP addresses belonging to different networks. The first IP as the
+external IP and the second one as internal IP. The objective is to
+expose the external IP to user requests, so that all the traffic from
+the user requests would be through them. The internal IP is used only by
+the cluster instances for internal communication through GMS. The
+following procedure describes how to set up traffic separation.</p>
+</div>
+<div class="paragraph">
+<p>To configure multi-homed machines for GMS without traffic separation,
+skip the steps or commands that configure the <code>EXTERNAL-ADDR</code> system
+property, but perform the others.</p>
+</div>
+<div class="paragraph">
+<p>To avoid having to restart the DAS or cluster, perform the following
+steps in the specified order.</p>
+</div>
+<div class="paragraph">
+<p>To set up traffic separation, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the system properties <code>EXTERNAL-ADDR</code> and
+<code>GMS-BIND-INTERFACE-ADDRESS-c1</code> for the DAS.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin create-system-properties</code> <code>target</code>
+<code>server EXTERNAL-ADDR=192.155.35.4</code></p>
+</li>
+<li>
+<p><code>asadmin create-system-properties</code> <code>target</code>
+<code>server GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.20</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Create the cluster with the default settings.<br>
+Use the following command:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin create-cluster c1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A reference to a system property for GMS traffic is already set up by
+default in the <code>gms-bind-interface-address</code> cluster setting. The default
+value of this setting is <code>${GMS-BIND-INTERFACE-ADDRESS-`cluster-name</code>}<code>.
+3.  When creating the clustered instances, configure the external and
+GMS IP addresses. +
+Use the following commands:
+* `asadmin create-instance</code> <code>node</code> <code>localhost</code> <code>cluster</code> <code>c1</code>
+<code>systemproperties</code>
+<code>EXTERNAL-ADDR=192.155.35.5:GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.30 i101</code>
+* <code>asadmin create-instance</code> <code>node</code> <code>localhost</code> <code>cluster</code> <code>c1</code>
+<code>systemproperties</code>
+<code>EXTERNAL-ADDR=192.155.35.6:GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.40 i102</code>
+* <code>asadmin create-instance</code> <code>node</code> <code>localhost</code> <code>cluster</code> <code>c1</code>
+<code>systemproperties</code>
+<code>EXTERNAL-ADDR=192.155.35.7:GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.50 i103</code>
+4.  Set the address attribute of HTTP listeners to refer to the
+<code>EXTERNAL-ADDR</code> system properties.<br>
+Use the following commands:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set c1-config.network-config.network-listeners.network-listener.http-1.address=\${EXTERNAL-ADDR}
+asadmin set c1-config.network-config.network-listeners.network-listener.http-2.address=\${EXTERNAL-ADDR}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkqdy"></a><a id="GSHAG00185"></a><a id="creating-listing-and-deleting-clusters"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_listing_and_deleting_clusters">Creating, Listing, and Deleting Clusters</h3>
+<div class="paragraph">
+<p>GlassFish Server enables you to create clusters, obtain information
+about clusters, and delete clusters that are no longer required.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqdm">To Create a Cluster</a></p>
+</li>
+<li>
+<p><a href="#gkqdn">To List All Clusters in a Domain</a></p>
+</li>
+<li>
+<p><a href="#gkqcp">To Delete a Cluster</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkqdm"></a><a id="GSHAG00103"></a><a id="to-create-a-cluster"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_cluster">To Create a Cluster</h4>
+<div class="paragraph">
+<p>Use the <code>create-cluster</code> subcommand in remote mode to create a cluster.</p>
+</div>
+<div class="paragraph">
+<p>To ensure that the GMS can detect changes in cluster membership, a
+cluster&#8217;s GMS settings must be configured correctly. To avoid the need
+to restart the DAS and the cluster, configure a cluster&#8217;s GMS settings
+when you create the cluster. If you change GMS settings for an existing
+cluster, the DAS and the cluster must be restarted to apply the changes.</p>
+</div>
+<div class="paragraph">
+<p>When you create a cluster, GlassFish Server automatically creates a
+Message Queue cluster for the GlassFish Server cluster. For more
+information about Message Queue clusters, see <a href="jms.html#abdbx">Using
+Message Queue Broker Clusters With GlassFish Server</a>.</p>
+</div>
+<div id="GSHAG374" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>If the cluster is to reference an existing named configuration, ensure
+that the configuration exists. For more information, see
+<a href="named-configurations.html#abdjr">To Create a Named Configuration</a>. If
+you are using a named configuration to preconfigure GMS settings, ensure
+that these settings have the required values in the named configuration.
+For more information, see <a href="#gkoac">To Preconfigure Nondefault GMS
+Configuration Settings</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you are configuring the cluster&#8217;s GMS settings when you create the
+cluster, ensure that you have the following information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The address on which GMS listens for group events</p>
+</li>
+<li>
+<p>The port number of the communication port on which GMS listens for
+group events</p>
+</li>
+<li>
+<p>The maximum number of iterations or transmissions that a multicast
+message for GMS events can experience before the message is discarded</p>
+</li>
+<li>
+<p>The lowest port number in the range of ports from which GMS selects a
+TCP port on which to listen</p>
+</li>
+<li>
+<p>The highest port number in the range of ports from which GMS selects a
+TCP port on which to listen</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the DAS is running on a multihome host, ensure that you have the
+Internet Protocol (IP) address of the network interface on the DAS host
+to which GMS binds.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p><a id="gkrco"></a>
+Run the <code>create-cluster</code> subcommand.</p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for configuring the
+cluster, see the <a href="../reference-manual/create-cluster.html#GSRFM00017"><code>create-cluster</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p>If multicast transport is available, run the <code>create-cluster</code>
+subcommand as follows:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-cluster --config configuration
+--multicastaddress multicast-address --multicastport multicast-port
+--properties GMS_MULTICAST_TIME_TO_LIVE=max-iterations:
+GMS_TCPSTARTPORT=start-port:GMS_TCPENDPORT=end-port cluster-name</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If multicast transport is not available, run the <code>create-cluster</code>
+subcommand as follows:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-cluster --config configuration
+--properties GMS_DISCOVERY_URI_LIST=discovery-instances:
+GMS_LISTENER_PORT=gms-port
+cluster-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">configuration</dt>
+<dd>
+<p>An existing named configuration that the cluster is to reference.</p>
+</dd>
+<dt class="hdlist1">multicast-address</dt>
+<dd>
+<p>The address on which GMS listens for group events.</p>
+</dd>
+<dt class="hdlist1">multicast-port</dt>
+<dd>
+<p>The port number of the communication port on which GMS listens for
+group events.</p>
+</dd>
+<dt class="hdlist1">max-iterations</dt>
+<dd>
+<p>The maximum number of iterations or transmissions that a multicast
+message for GMS events can experience before the message is discarded.</p>
+</dd>
+<dt class="hdlist1">discovery-instances</dt>
+<dd>
+<p>Instances to use for discovering the cluster. For more information,
+see <a href="#CHDGAIBJ">Discovering a Cluster When Multicast Transport Is
+Unavailable</a>.</p>
+</dd>
+<dt class="hdlist1">gms-port</dt>
+<dd>
+<p>The port number of the port on which the cluster listens for messages
+from GMS.</p>
+</dd>
+<dt class="hdlist1">start-port</dt>
+<dd>
+<p>The lowest port number in the range of ports from which GMS selects a
+TCP port on which to listen. The default is 9090.</p>
+</dd>
+<dt class="hdlist1">end-port</dt>
+<dd>
+<p>The highest port number in the range of ports from which GMS selects a
+TCP port on which to listen. The default is 9200.</p>
+</dd>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>Your choice of name for the cluster that you are creating.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If necessary, create a system property to represent the IP address
+of the network interface on the DAS host to which GMS binds.<br>
+This step is necessary only if the DAS is running on a multihome host.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-system-properties
+GMS-BIND-INTERFACE-ADDRESS-cluster-name=das-bind-address</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name that you assigned to the cluster in Step <a href="#gkrco">2</a>.</p>
+</dd>
+<dt class="hdlist1">das-bind-address</dt>
+<dd>
+<p>The IP address of the network interface on the DAS host to which GMS
+binds.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00034"></a><a id="gkqaz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-6 Creating a Cluster for a Network in Which Multicast
+Transport Is Available</p>
+</div>
+<div class="paragraph">
+<p>This example creates a cluster that is named <code>ltscluster</code> for which port
+1169 is to be used for secure IIOP connections. Because the <code>--config</code>
+option is not specified, the cluster references a copy of the named
+configuration <code>default-config</code> that is named <code>ltscluster-config</code>. This
+example assumes that multicast transport is available.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster
+--systemproperties IIOP_SSL_LISTENER_PORT=1169
+ltscluster
+Command create-cluster executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00035"></a><a id="gkqiq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-7 Creating a Cluster and Setting GMS Options for a Network in
+Which Multicast Transport Is Available</p>
+</div>
+<div class="paragraph">
+<p>This example creates a cluster that is named <code>pmdcluster</code>, which
+references the existing configuration <code>clusterpresets</code> and for which the
+cluster&#8217;s GMS settings are configured as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GMS listens for group events on address 228.9.3.1 and port 2048.</p>
+</li>
+<li>
+<p>A multicast message for GMS events is discarded after 3 iterations or
+transmissions.</p>
+</li>
+<li>
+<p>GMS selects a TCP port on which to listen from ports in the range
+10000-10100.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This example assumes that multicast transport is available.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster --config clusterpresets
+--multicastaddress 228.9.3.1 --multicastport 2048
+--properties GMS_MULTICAST_TIME_TO_LIVE=3:
+GMS_TCPSTARTPORT=10000:GMS_TCPENDPORT=10100 pmdcluster
+Command create-cluster executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG375" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After creating a cluster, you can add GlassFish Server instances to the
+cluster as explained in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqbl">To Create an Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div id="GSHAG376" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="named-configurations.html#abdjr">To Create a Named Configuration</a></p>
+</li>
+<li>
+<p><a href="#gkoac">To Preconfigure Nondefault GMS Configuration Settings</a></p>
+</li>
+<li>
+<p><a href="jms.html#abdbx">Using Message Queue Broker Clusters With GlassFish
+Server</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/create-cluster.html#GSRFM00017"><code>create-cluster</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/create-system-properties.html#GSRFM00059"><code>create-system-properties</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help create-cluster</code></p>
+</li>
+<li>
+<p><code>asadmin help create-system-properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkqdn"></a><a id="GSHAG00104"></a><a id="to-list-all-clusters-in-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_all_clusters_in_a_domain">To List All Clusters in a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>list-clusters</code> subcommand in remote mode to obtain information
+about existing clusters in a domain.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/list-clusters.html#GSRFM00153"><code>list-clusters</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-clusters</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00036"></a><a id="gksfc"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-8 Listing All Clusters in a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists all clusters in the current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-clusters
+pmdclust not running
+ymlclust not running
+Command list-clusters executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00037"></a><a id="gkhsp"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-9 Listing All Clusters That Are Associated With a Node</p>
+</div>
+<div class="paragraph">
+<p>This example lists the clusters that contain an instance that resides on
+the node <code>sj01</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-clusters sj01
+ymlclust not running
+Command list-clusters executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG377" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/list-clusters.html#GSRFM00153"><code>list-clusters</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-clusters</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqcp"></a><a id="GSHAG00105"></a><a id="to-delete-a-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_cluster">To Delete a Cluster</h4>
+<div class="paragraph">
+<p>Use the <code>delete-cluster</code> subcommand in remote mode to remove a cluster
+from the DAS configuration.</p>
+</div>
+<div class="paragraph">
+<p>If the cluster&#8217;s named configuration was created automatically for the
+cluster and no other clusters or unclustered instances refer to the
+configuration, the configuration is deleted when the cluster is deleted.</p>
+</div>
+<div id="GSHAG378" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The cluster that you are deleting is stopped. For information about
+how to stop a cluster, see <a href="instances.html#gkqcl">To Stop a Cluster</a>.</p>
+</li>
+<li>
+<p>The cluster that you are deleting contains no GlassFish Server
+instances. For information about how to remove instances from a cluster,
+see the following sections:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqcw">To Delete an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqed">To Delete an Instance Locally</a></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Confirm that the cluster is stopped.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-clusters cluster-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster that you are deleting.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Confirm that the cluster contains no instances.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-instances cluster-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster that you are deleting.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the <a href="../reference-manual/delete-cluster.html#GSRFM00068"><code>delete-cluster</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-cluster cluster-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster that you are deleting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00038"></a><a id="gkqkr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-10 Deleting a Cluster</p>
+</div>
+<div class="paragraph">
+<p>This example confirms that the cluster <code>adccluster</code> is stopped and
+contains no instances and deletes the cluster <code>adccluster</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-clusters adccluster
+adccluster not running
+Command list-clusters executed successfully.
+asadmin&gt; list-instances adccluster
+Nothing to list.
+Command list-instances executed successfully.
+asadmin&gt; delete-cluster adccluster
+Command delete-cluster executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG379" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqcl">To Stop a Cluster</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqcw">To Delete an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqed">To Delete an Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/delete-cluster.html#GSRFM00068"><code>delete-cluster</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-clusters.html#GSRFM00153"><code>list-clusters</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help delete-cluster</code></p>
+</li>
+<li>
+<p><code>asadmin help list-clusters</code></p>
+</li>
+<li>
+<p><code>asadmin help list-instances</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="nodes.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="instances.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

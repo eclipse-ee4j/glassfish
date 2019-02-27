@@ -1,0 +1,2473 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Using Container-Managed Persistence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Using Container-Managed Persistence</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="ejb.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="java-clients.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00011"></a><a id="beajj"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-container-managed-persistence">9 Using Container-Managed Persistence</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter contains information on how EJB 2.1 container-managed
+persistence (CMP) works in Oracle GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beajk">GlassFish Server Support for CMP</a></p>
+</li>
+<li>
+<p><a href="#beajl">CMP Mapping</a></p>
+</li>
+<li>
+<p><a href="#beajv">Automatic Schema Generation for CMP</a></p>
+</li>
+<li>
+<p><a href="#beajy">Schema Capture</a></p>
+</li>
+<li>
+<p><a href="#beakb">Configuring the CMP Resource</a></p>
+</li>
+<li>
+<p><a href="#beaki">Performance-Related Features</a></p>
+</li>
+<li>
+<p><a href="#beakc">Configuring Queries for 1.1 Finders</a></p>
+</li>
+<li>
+<p><a href="#beakm">CMP Restrictions and Optimizations</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The full GlassFish Server supports the entire EJB
+3.1 specification. For details, see
+<a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a>
+(<code>http://jcp.org/en/jsr/detail?id=318</code>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beajk"></a><a id="GSDVG00150"></a><a id="glassfish-server-support-for-cmp"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_glassfish_server_support_for_cmp">GlassFish Server Support for CMP</h3>
+<div class="paragraph">
+<p>GlassFish Server support for EJB 2.1 CMP beans includes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full support for the J2EE v1.4 specification&#8217;s CMP model. Extensive
+information on CMP is contained in chapters 10, 11, and 14 of the
+Enterprise JavaBeans Specification, v2.1. This includes the following:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Support for commit options B and C for transactions. See
+<a href="transaction-service.html#beajh">Commit Options</a>.</p>
+</li>
+<li>
+<p>The primary key class must be a subclass of <code>java.lang.Object</code>. This
+ensures portability, and is noted because some vendors allow primitive
+types (such as <code>int</code>) to be used as the primary key class.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The GlassFish Server CMP implementation, which provides the following:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>An Object/Relational (O/R) mapping tool that creates XML deployment
+descriptors for EJB JAR files that contain beans that use CMP.</p>
+</li>
+<li>
+<p>Support for compound (multi-column) primary keys.</p>
+</li>
+<li>
+<p>Support for sophisticated custom finder methods.</p>
+</li>
+<li>
+<p>Standards-based query language (EJB QL).</p>
+</li>
+<li>
+<p>CMP runtime support. See <a href="#beakb">Configuring the CMP Resource</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>GlassFish Server performance-related features, including the
+following:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Version column consistency checking</p>
+</li>
+<li>
+<p>Relationship prefetching</p>
+</li>
+<li>
+<p>Read-Only Beans<br>
+For details, see <a href="#beaki">Performance-Related Features</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beajl"></a><a id="GSDVG00151"></a><a id="cmp-mapping"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cmp_mapping">CMP Mapping</h3>
+<div class="paragraph">
+<p>Implementation for entity beans that use CMP is mostly a matter of
+mapping CMP fields and CMR fields (relationships) to the database.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beajm">Mapping Capabilities</a></p>
+</li>
+<li>
+<p><a href="#beajn">The Mapping Deployment Descriptor File</a></p>
+</li>
+<li>
+<p><a href="#beajo">Mapping Considerations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beajm"></a><a id="GSDVG00434"></a><a id="mapping-capabilities"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_mapping_capabilities">Mapping Capabilities</h4>
+<div class="paragraph">
+<p>Mapping refers to the ability to tie an object-based model to a
+relational model of data, usually the schema of a relational database.
+The CMP implementation provides the ability to tie a set of interrelated
+beans containing data and associated behaviors to the schema. This
+object representation of the database becomes part of the Java
+application. You can also customize this mapping to optimize these beans
+for the particular needs of an application. The result is a single data
+model through which both persistent database information and regular
+transient program data are accessed.</p>
+</div>
+<div class="paragraph">
+<p>The mapping capabilities provided by the GlassFish Server include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Mapping a CMP bean to one or more tables</p>
+</li>
+<li>
+<p>Mapping CMP fields to one or more columns</p>
+</li>
+<li>
+<p>Mapping CMP fields to different column types</p>
+</li>
+<li>
+<p>Mapping tables with compound primary keys</p>
+</li>
+<li>
+<p>Mapping tables with unknown primary keys</p>
+</li>
+<li>
+<p>Mapping CMP relationships to foreign keys</p>
+</li>
+<li>
+<p>Mapping tables with overlapping primary and foreign keys</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beajn"></a><a id="GSDVG00435"></a><a id="the-mapping-deployment-descriptor-file"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_mapping_deployment_descriptor_file">The Mapping Deployment Descriptor File</h4>
+<div class="paragraph">
+<p>Each module with CMP beans must have the following files:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ejb-jar.xml</code> - The J2EE standard file for assembling enterprise
+beans. For a detailed description, see the Enterprise JavaBeans
+Specification, v2.1.</p>
+</li>
+<li>
+<p><code>glassfish-ejb-jar.xml</code> - The GlassFish Server standard file for
+assembling enterprise beans. For a detailed description, see
+"<a href="../application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</li>
+<li>
+<p><code>sun-cmp-mappings.xml</code> - The mapping deployment descriptor file, which
+describes the mapping of CMP beans to tables in a database. For a
+detailed description, see "<a href="../application-deployment-guide/dd-files.html#GSDPG00080">The sun-cmp-mappings.xml
+File</a>" in GlassFish Server Open Source Edition Application Deployment
+Guide.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>sun-cmp-mappings.xml</code> file can be automatically generated and does
+not have to exist prior to deployment. For details, see
+<a href="#beajx">Generation Options for CMP</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>sun-cmp-mappings.xml</code> file maps CMP fields and CMR fields
+(relationships) to the database. A primary table must be selected for
+each CMP bean, and optionally, multiple secondary tables. CMP fields are
+mapped to columns in either the primary or secondary table(s). CMR
+fields are mapped to pairs of column lists (normally, column lists are
+the lists of columns associated with primary and foreign keys).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Table names in databases can be case-sensitive. Make sure that the table
+names in the <code>sun-cmp-mappings.xml</code> file match the names in the
+database.</p>
+</div>
+<div class="paragraph">
+<p>Relationships should always be mapped to the primary key field(s) of the
+related table.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>sun-cmp-mappings.xml</code> file conforms to the
+<code>sun-cmp-mapping_1_2.dtd</code> file and is packaged with the user-defined
+bean classes in the EJB JAR file under the <code>META-INF</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server creates the mappings in the <code>sun-cmp-mappings.xml</code>
+file automatically during deployment if the file is not present.</p>
+</div>
+<div class="paragraph">
+<p>To map the fields and relationships of your entity beans manually, edit
+the <code>sun-cmp-mappings.xml</code> deployment descriptor. Only do this if you
+are proficient in editing XML.</p>
+</div>
+<div class="paragraph">
+<p>The mapping information is developed in conjunction with the database
+schema (<code>.dbschema</code>) file, which can be automatically captured when you
+deploy the bean (see <a href="#beajz">Automatic Database Schema Capture</a>).
+You can manually generate the schema using the <code>capture-schema</code> utility
+(<a href="#beaka">Using the <code>capture-schema</code> Utility</a>).</p>
+</div>
+<div class="paragraph">
+<p><a id="beajo"></a><a id="GSDVG00436"></a><a id="mapping-considerations"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mapping_considerations">Mapping Considerations</h4>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beajp">Join Tables and Relationships</a></p>
+</li>
+<li>
+<p><a href="#beajq">Automatic Primary Key Generation</a></p>
+</li>
+<li>
+<p><a href="#beajr">Fixed Length CHAR Primary Keys</a></p>
+</li>
+<li>
+<p><a href="#beajs">Managed Fields</a></p>
+</li>
+<li>
+<p><a href="#beajt">BLOB Support</a></p>
+</li>
+<li>
+<p><a href="#beaju">CLOB Support</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The data types used in automatic schema generation are also suggested
+for manual mapping. These data types are described in
+<a href="#beajw">Supported Data Types for CMP</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajp"></a><a id="GSDVG00303"></a><a id="join-tables-and-relationships"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_join_tables_and_relationships">Join Tables and Relationships</h5>
+<div class="paragraph">
+<p>Use of join tables in the database schema is supported for all types of
+relationships, not just many-to-many relationships. For general
+information about relationships, see section 10.3.7 of the Enterprise
+JavaBeans Specification, v2.1.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajq"></a><a id="GSDVG00304"></a><a id="automatic-primary-key-generation"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_automatic_primary_key_generation">Automatic Primary Key Generation</h5>
+<div class="paragraph">
+<p>The GlassFish Server supports automatic primary key generation for EJB
+1.1, 2.0, and 2.1 CMP beans. To specify automatic primary key
+generation, give the <code>prim-key-class</code> element in the <code>ejb-jar.xml</code> file
+the value <code>java.lang.Object</code>. CMP beans with automatically generated
+primary keys can participate in relationships with other CMP beans. The
+GlassFish Server does not support database-generated primary key values.</p>
+</div>
+<div class="paragraph">
+<p>If the database schema is created during deployment, the GlassFish
+Server creates the schema with the primary key column, then generates
+unique values for the primary key column at runtime.</p>
+</div>
+<div class="paragraph">
+<p>If the database schema is not created during deployment, the primary key
+column in the mapped table must be of type <code>NUMERIC</code> with a precision of
+19 or more, and must not be mapped to any CMP field. The GlassFish
+Server generates unique values for the primary key column at runtime.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajr"></a><a id="GSDVG00305"></a><a id="fixed-length-char-primary-keys"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_fixed_length_char_primary_keys">Fixed Length CHAR Primary Keys</h5>
+<div class="paragraph">
+<p>If an existing database table has a primary key column in which the
+values vary in length, but the type is <code>CHAR</code> instead of <code>VARCHAR</code>, the
+GlassFish Server automatically trims any extra spaces when retrieving
+primary key values. It is not a good practice to use a fixed length
+<code>CHAR</code> column as a primary key. Use this feature with schemas that
+cannot be changed, such as a schema inherited from a legacy application.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajs"></a><a id="GSDVG00306"></a><a id="managed-fields"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_managed_fields">Managed Fields</h5>
+<div class="paragraph">
+<p>A managed field is a CMP or CMR field that is mapped to the same
+database column as another CMP or CMR field. CMP fields mapped to the
+same column and CMR fields mapped to exactly the same column lists
+always have the same value in memory. For CMR fields that share only a
+subset of their mapped columns, changes to the columns affect the
+relationship fields in memory differently. Basically, the GlassFish
+Server always tries to keep the state of the objects in memory
+synchronized with the database.</p>
+</div>
+<div class="paragraph">
+<p>A managed field can have any <code>fetched-with</code> subelement. If the
+<code>fetched-with</code> subelement is <code>&lt;default/&gt;</code>, the
+<code>-DAllowManagedFieldsInDefaultFetchGroup</code> flag must be set to <code>true</code>.
+See <a href="#gemln">Default Fetch Group Flags</a> and
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00153">fetched-with</a>" in GlassFish Server Open Source Edition
+Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajt"></a><a id="GSDVG00307"></a><a id="blob-support"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_blob_support">BLOB Support</h5>
+<div class="paragraph">
+<p>Binary Large Object (BLOB) is a data type used to store values that do
+not correspond to other types such as numbers, strings, or dates. Java
+fields whose types implement java.io.Serializable or are represented as
+<code>byte[]</code> can be stored as BLOBs.</p>
+</div>
+<div class="paragraph">
+<p>If a CMP field is defined as Serializable, it is serialized into a
+<code>byte[]</code> before being stored in the database. Similarly, the value
+fetched from the database is deserialized. However, if a CMP field is
+defined as <code>byte[]</code>, it is stored directly instead of being serialized
+and deserialized when stored and fetched, respectively.</p>
+</div>
+<div class="paragraph">
+<p>To enable BLOB support in the GlassFish Server environment, define a CMP
+field of type <code>byte[]</code> or a user-defined type that implements the
+java.io.Serializable interface. If you map the CMP bean to an existing
+database schema, map the field to a column of type BLOB.</p>
+</div>
+<div class="paragraph">
+<p>To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
+Oraxo JDBC Driver for Oracle Databases, you must set the <code>streamstolob</code>
+property value to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>For a list of the JDBC drivers currently supported by the GlassFish
+Server, see the <a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source Edition Release
+Notes</a>. For configurations of supported and other drivers, see
+"<a href="../administration-guide/jdbc.html#GSADG00579">Configuration Specifics for JDBC Drivers</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>For automatic mapping, you might need to change the default BLOB column
+length for the generated schema using the <code>schema-generator-properties</code>
+element in <code>glassfish-ejb-jar.xml</code>. See your database vendor
+documentation to determine whether you need to specify the length. For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;schema-generator-properties&gt;
+   &lt;property&gt;
+      &lt;name&gt;Employee.voiceGreeting.jdbc-type&lt;/name&gt;
+      &lt;value&gt;BLOB&lt;/value&gt;
+   &lt;/property&gt;
+   &lt;property&gt;
+      &lt;name&gt;Employee.voiceGreeting.jdbc-maximum-length&lt;/name&gt;
+      &lt;value&gt;10240&lt;/value&gt;
+   &lt;/property&gt;
+   ...
+&lt;/schema-generator-properties&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaju"></a><a id="GSDVG00308"></a><a id="clob-support"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_clob_support">CLOB Support</h5>
+<div class="paragraph">
+<p>Character Large Object (CLOB) is a data type used to store and retrieve
+very long text fields. CLOBs translate into long strings.</p>
+</div>
+<div class="paragraph">
+<p>To enable CLOB support in the GlassFish Server environment, define a CMP
+field of type <code>java.lang.String</code>. If you map the CMP bean to an existing
+database schema, map the field to a column of type CLOB.</p>
+</div>
+<div class="paragraph">
+<p>To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
+Oraxo JDBC Driver for Oracle Databases, you must set the <code>streamstolob</code>
+property value to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>For a list of the JDBC drivers currently supported by the GlassFish
+Server, see the <a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source Edition Release
+Notes</a>. For configurations of supported and other drivers, see
+"<a href="../administration-guide/jdbc.html#GSADG00579">Configuration Specifics for JDBC Drivers</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>For automatic mapping, you might need to change the default CLOB column
+length for the generated schema using the <code>schema-generator-properties</code>
+element in <code>glassfish-ejb-jar.xml</code>. See your database vendor
+documentation to determine whether you need to specify the length. For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;schema-generator-properties&gt;
+   &lt;property&gt;
+      &lt;name&gt;Employee.resume.jdbc-type&lt;/name&gt;
+      &lt;value&gt;CLOB&lt;/value&gt;
+   &lt;/property&gt;
+   &lt;property&gt;
+      &lt;name&gt;Employee.resume.jdbc-maximum-length&lt;/name&gt;
+      &lt;value&gt;10240&lt;/value&gt;
+   &lt;/property&gt;
+   ...
+&lt;/schema-generator-properties&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beajv"></a><a id="GSDVG00152"></a><a id="automatic-schema-generation-for-cmp"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_automatic_schema_generation_for_cmp">Automatic Schema Generation for CMP</h3>
+<div class="paragraph">
+<p>The automatic schema generation feature provided in the GlassFish Server
+defines database tables based on the fields in entity beans and the
+relationships between the fields. This insulates developers from many of
+the database related aspects of development, allowing them to focus on
+entity bean development. The resulting schema is usable as-is or can be
+given to a database administrator for tuning with respect to
+performance, security, and so on.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beajw">Supported Data Types for CMP</a></p>
+</li>
+<li>
+<p><a href="#beajx">Generation Options for CMP</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Automatic schema generation is supported on an all-or-none basis: it
+expects that no tables exist in the database before it is executed. It
+is not intended to be used as a tool to generate extra tables or
+constraints.</p>
+</div>
+<div class="paragraph">
+<p>Deployment won&#8217;t fail if all tables are not created, and undeployment
+won&#8217;t fail if not all tables are dropped. This is done to allow you to
+investigate the problem and fix it manually. You should not rely on the
+partially created database schema to be correct for running the
+application.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beajw"></a><a id="GSDVG00437"></a><a id="supported-data-types-for-cmp"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_supported_data_types_for_cmp">Supported Data Types for CMP</h4>
+<div class="paragraph">
+<p>CMP supports a set of JDBC data types that are used in mapping Java data
+fields to SQL types. Supported JDBC data types are as follows: BIGINT,
+BIT, BLOB, CHAR, CLOB, DATE, DECIMAL, DOUBLE, FLOAT, INTEGER, NUMERIC,
+REAL, SMALLINT, TIME, TIMESTAMP, TINYINT, VARCHAR.</p>
+</div>
+<div class="paragraph">
+<p>The following table contains the mappings of Java types to JDBC types
+when automatic mapping is used.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG550"></a><a id="sthref19"></a><a id="fvyaq"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 9-1 Java Type to JDBC Type Mappings for CMP</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 39%;">
+<col style="width: 40%;">
+<col style="width: 21%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Java Type</th>
+<th class="tableblock halign-left valign-top">JDBC Type</th>
+<th class="tableblock halign-left valign-top">Nullability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TINYINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Byte</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TINYINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Double</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Float</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIGINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIGINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>short</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Short</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigInteger</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>char</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Character</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code> or <code>CLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serializable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.Date</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>DATE</code> (Oracle only)</p>
+</div>
+<div class="paragraph">
+<p><code>TIMESTAMP</code> (all other databases)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.sql.Date</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.sql.Time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.sql.Timestamp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Java types assigned to CMP fields must be restricted to Java primitive
+types, Java Serializable types, <code>java.util.Date</code>, <code>java.sql.Date</code>,
+<code>java.sql.Time</code>, or <code>java.sql.Timestamp</code>. An entity bean local interface
+type (or a collection of such) can be the type of a CMR field.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following table contains the mappings of JDBC types to database
+vendor-specific types when automatic mapping is used. For a list of the
+JDBC drivers currently supported by the GlassFish Server, see the
+<a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source Edition Release Notes</a>. For
+configurations of supported and other drivers, see
+"<a href="../administration-guide/jdbc.html#GSADG00579">Configuration Specifics for JDBC Drivers</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG551"></a><a id="sthref20"></a><a id="fvymp"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 9-2 Mappings of JDBC Types to Database Vendor Specific Types for
+CMP</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 15%;">
+<col style="width: 17%;">
+<col style="width: 17%;">
+<col style="width: 17%;">
+<col style="width: 17%;">
+<col style="width: 17%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">JDBC Type</th>
+<th class="tableblock halign-left valign-top">Apache Derby, CloudScape</th>
+<th class="tableblock halign-left valign-top">Oracle</th>
+<th class="tableblock halign-left valign-top">DB2</th>
+<th class="tableblock halign-left valign-top">Sybase ASE 12.5</th>
+<th class="tableblock halign-left valign-top">MS-SQL Server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TINYINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TINYINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TINYINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TINYINT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIGINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIGINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NUMBER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIGINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NUMERIC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NUMERIC</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FLOAT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FLOAT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE PRECISION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE PRECISION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE PRECISION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FLOAT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL(p,s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL(p,s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NUMBER(p,s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL(p,s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL(p,s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL(p,s)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATETIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATETIME</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATETIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATETIME</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP(9)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATETIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATETIME</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGE</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TEXT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NTEXT</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="beajx"></a><a id="GSDVG00438"></a><a id="generation-options-for-cmp"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_generation_options_for_cmp">Generation Options for CMP</h4>
+<div class="paragraph">
+<p>Deployment descriptor elements or <code>asadmin</code> command line options can
+control automatic schema generation by the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating tables during deployment</p>
+</li>
+<li>
+<p>Dropping tables during undeployment</p>
+</li>
+<li>
+<p>Dropping and creating tables during redeployment</p>
+</li>
+<li>
+<p>Specifying the database vendor</p>
+</li>
+<li>
+<p>Specifying that table names are unique</p>
+</li>
+<li>
+<p>Specifying type mappings for individual CMP fields</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Before using these options, make sure you have a properly configured CMP
+resource. See <a href="#beakb">Configuring the CMP Resource</a>.</p>
+</div>
+<div class="paragraph">
+<p>For a read-only bean, do not create the database schema during
+deployment. Instead, work with your database administrator to populate
+the data into the tables. See <a href="ejb.html#beail">Using Read-Only Beans</a>.</p>
+</div>
+<div class="paragraph">
+<p>Automatic schema generation is not supported for beans with version
+column consistency checking. Instead, work with your database
+administrator to create the schema and add the required triggers. See
+<a href="#beakj">Version Column Consistency Checking</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following optional data subelements of the <code>cmp-resource</code> element in
+the <code>glassfish-ejb-jar.xml</code> file control the automatic creation of
+database tables at deployment. For more information about the
+<code>cmp-resource</code> element, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00115">cmp-resource</a>" in
+GlassFish Server Open Source Edition Application Deployment Guide and
+<a href="#beakb">Configuring the CMP Resource</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG552"></a><a id="sthref21"></a><a id="fvymo"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 9-3 The <code>glassfish-ejb-jar.xml</code> Generation Elements</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 46%;">
+<col style="width: 34%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Element</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../application-deployment-guide/dd-elements.html#GSDPG00131"><code>create-tables-at-deploy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, causes
+database tables to be created for beans that are automatically mapped by
+the EJB container. No unique constraints are created. If <code>false</code>, does
+not create tables.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../application-deployment-guide/dd-elements.html#GSDPG00141"><code>drop-tables-at-undeploy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, causes
+database tables that were automatically created when the bean(s) were
+last deployed to be dropped when the bean(s) are undeployed. If <code>false</code>,
+does not drop tables.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../application-deployment-guide/dd-elements.html#GSDPG00133"><code>database-vendor-name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specifies the name of the database vendor for which tables are created.
+Allowed values are <code>javadb</code>, <code>db2</code>, <code>mssql</code>, <code>mysql</code>, <code>oracle</code>,
+<code>postgresql</code>, <code>pointbase</code>, <code>derby</code> (also for CloudScape), and <code>sybase</code>,
+case-insensitive.</p>
+</div>
+<div class="paragraph">
+<p>If no value is specified, a connection is made to the resource specified
+by the <code>jndi-name</code> subelement of the <code>cmp-resource</code> element in the
+<code>glassfish-ejb-jar.xml</code> file, and the database vendor name is read. If
+the connection cannot be established, or if the value is not recognized,
+SQL-92 compliance is presumed.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../application-deployment-guide/dd-elements.html#GSDPG00261"><code>schema-generator-properties</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specifies field-specific column attributes in <code>property</code> subelements.
+Each property name is of the following format:</p>
+</div>
+<div class="paragraph">
+<p>bean-name`.<code>field-name</code>.`attribute</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="paragraph">
+<p><code>Employee.firstName.jdbc-type</code></p>
+</div>
+<div class="paragraph">
+<p>Also allows you to set the <code>use-unique-table-names</code> property. If <code>true</code>,
+this property specifies that generated table names are unique within
+each GlassFish Server domain. The default is <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>For further information and an example, see
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00261">schema-generator-properties</a>" in GlassFish Server Open
+Source Edition Application Deployment Guide.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following options of the <code>asadmin deploy</code> or <code>asadmin deploydir</code>
+command control the automatic creation of database tables at deployment.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG553"></a><a id="sthref22"></a><a id="fvymn"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 9-4 The <code>asadmin deploy</code> and <code>asadmin deploydir</code> Generation
+Options for CMP</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 46%;">
+<col style="width: 38%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--createtables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, causes database tables to be created
+for beans that need them. No unique constraints are created. If <code>false</code>,
+does not create tables. If not specified, the value of the
+<code>create-tables-at-deploy</code> attribute in <code>glassfish-ejb-jar.xml</code> is used.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dropandcreatetables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>If <code>true</code>, and if tables were automatically created when this
+application was last deployed, tables from the earlier deployment are
+dropped and fresh ones are created.</p>
+</div>
+<div class="paragraph">
+<p>If <code>true</code>, and if tables were not automatically created when this
+application was last deployed, no attempt is made to drop any tables. If
+tables with the same names as those that would have been automatically
+created are found, the deployment proceeds, but a warning indicates that
+tables could not be created.</p>
+</div>
+<div class="paragraph">
+<p>If <code>false</code>, settings of <code>create-tables-at-deploy</code> or
+<code>drop-tables-at-undeploy</code> in the <code>glassfish-ejb-jar.xml</code> file are
+overridden.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--uniquetablenames</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, specifies that table names are
+unique within each GlassFish Server domain. If not specified, the value
+of the <code>use-unique-table-names</code> property in <code>glassfish-ejb-jar.xml</code> is
+used.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dbvendorname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specifies the name of the database vendor for which tables are created.
+Allowed values are <code>javadb</code>, <code>db2</code>, <code>mssql</code>, <code>oracle</code>, <code>postgresql</code>,
+<code>pointbase</code>, <code>derby</code> (also for CloudScape), and <code>sybase</code>,
+case-insensitive.</p>
+</div>
+<div class="paragraph">
+<p>If not specified, the value of the <code>database-vendor-name</code> attribute in
+<code>glassfish-ejb-jar.xml</code> is used.</p>
+</div>
+<div class="paragraph">
+<p>If no value is specified, a connection is made to the resource specified
+by the <code>jndi-name</code> subelement of the <code>cmp-resource</code> element in the
+<code>glassfish-ejb-jar.xml</code> file, and the database vendor name is read. If
+the connection cannot be established, or if the value is not recognized,
+SQL-92 compliance is presumed.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If one or more of the beans in the module are manually mapped and you
+use any of the <code>asadmin deploy</code> or <code>asadmin deploydir</code> options, the
+deployment is not harmed in any way, but the options have no effect, and
+a warning is written to the server log.</p>
+</div>
+<div class="paragraph">
+<p>The following options of the <code>asadmin undeploy</code> command control the
+automatic removal of database tables at undeployment.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG554"></a><a id="sthref23"></a><a id="fvymt"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 9-5 The <code>asadmin undeploy</code> Generation Options for CMP</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 46%;">
+<col style="width: 44%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--droptables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>If <code>true</code>, causes database tables that were automatically created when
+the bean(s) were last deployed to be dropped when the bean(s) are
+undeployed. If <code>false</code>, does not drop tables.</p>
+</div>
+<div class="paragraph">
+<p>If not specified, the value of the <code>drop-tables-at-undeploy</code> attribute
+in <code>glassfish-ejb-jar.xml</code> is used.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more information about the <code>asadmin deploy</code>, <code>asadmin deploydir</code>,
+and <code>asadmin undeploy</code> commands, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server
+Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>When command line and <code>glassfish-ejb-jar.xml</code> options are both
+specified, the <code>asadmin</code> options take precedence.</p>
+</div>
+<div class="paragraph">
+<p><a id="beajy"></a><a id="GSDVG00153"></a><a id="schema-capture"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_schema_capture">Schema Capture</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beajz">Automatic Database Schema Capture</a></p>
+</li>
+<li>
+<p><a href="#beaka">Using the <code>capture-schema</code> Utility</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beajz"></a><a id="GSDVG00439"></a><a id="automatic-database-schema-capture"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_automatic_database_schema_capture">Automatic Database Schema Capture</h4>
+<div class="paragraph">
+<p>You can configure a CMP bean in GlassFish Server to automatically
+capture the database metadata and save it in a <code>.dbschema</code> file during
+deployment. If the <code>sun-cmp-mappings.xml</code> file contains an empty
+<code>&lt;schema/&gt;</code> entry, the <code>cmp-resource</code> entry in the
+<code>glassfish-ejb-jar.xml</code> file is used to get a connection to the
+database, and automatic generation of the schema is performed.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Before capturing the database schema automatically, make sure you have a
+properly configured CMP resource. See <a href="#beakb">Configuring the CMP
+Resource</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beaka"></a><a id="GSDVG00440"></a><a id="using-the-capture-schema-utility"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_code_capture_schema_code_utility">Using the <code>capture-schema</code> Utility</h4>
+<div class="paragraph">
+<p>You can use the <code>capture-schema</code> command to manually generate the
+database metadata (<code>.dbschema</code>) file. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>capture-schema</code> utility does not modify the schema in any way. Its
+only purpose is to provide the persistence engine with information about
+the structure of the database (the schema).</p>
+</div>
+<div class="paragraph">
+<p>Keep the following in mind when using the <code>capture-schema</code> command:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The name of a <code>.dbschema</code> file must be unique across all deployed
+modules in a domain.</p>
+</li>
+<li>
+<p>If more than one schema is accessible for the schema user, more than
+one table with the same name might be captured if the <code>-schemaname</code>
+option of <code>capture-schema</code> is not set.</p>
+</li>
+<li>
+<p>The schema name must be upper case.</p>
+</li>
+<li>
+<p>Table names in databases are case-sensitive. Make sure that the table
+name matches the name in the database.</p>
+</li>
+<li>
+<p>PostgreSQL databases internally convert all names to lower case.
+Before running the <code>capture-schema</code> command on a PostgreSQL database,
+make sure table and column names are lower case in the
+<code>sun-cmp-mappings.xml</code> file.</p>
+</li>
+<li>
+<p>An Oracle database user running the <code>capture-schema</code> command needs
+ANALYZE ANY TABLE privileges if that user does not own the schema. These
+privileges are granted to the user by the database administrator.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beakb"></a><a id="GSDVG00154"></a><a id="configuring-the-cmp-resource"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_the_cmp_resource">Configuring the CMP Resource</h3>
+<div class="paragraph">
+<p>An EJB module that contains CMP beans requires the JNDI name of a JDBC
+resource in the <code>jndi-name</code> subelement of the <code>cmp-resource</code> element in
+the <code>glassfish-ejb-jar.xml</code> file. Set <code>PersistenceManagerFactory</code>
+properties as properties of the <code>cmp-resource</code> element in the
+<code>glassfish-ejb-jar.xml</code> file. See "<a href="../application-deployment-guide/dd-elements.html#GSDPG00115">cmp-resource</a>" in
+GlassFish Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>In the Administration Console, open the Resources component, then select
+JDBC. Click the Help button in the Administration Console for
+information on creating a new JDBC resource.</p>
+</div>
+<div class="paragraph">
+<p>For a list of the JDBC drivers currently supported by the GlassFish
+Server, see the <a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source Edition Release
+Notes</a>. For configurations of supported and other drivers, see
+"<a href="../administration-guide/jdbc.html#GSADG00579">Configuration Specifics for JDBC Drivers</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>For example, if the JDBC resource has the JNDI name <code>jdbc/MyDatabase</code>,
+set the CMP resource in the <code>glassfish-ejb-jar.xml</code> file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;cmp-resource&gt;
+   &lt;jndi-name&gt;jdbc/MyDatabase&lt;/jndi-name&gt;
+&lt;/cmp-resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaki"></a><a id="GSDVG00155"></a><a id="performance-related-features"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance_related_features">Performance-Related Features</h3>
+<div class="paragraph">
+<p>The GlassFish Server provides the following features to enhance
+performance or allow more fine-grained data checking. These features are
+supported only for entity beans with container managed persistence.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beakj">Version Column Consistency Checking</a></p>
+</li>
+<li>
+<p><a href="#beakk">Relationship Prefetching</a></p>
+</li>
+<li>
+<p><a href="#beakl">Read-Only Beans</a></p>
+</li>
+<li>
+<p><a href="#gemln">Default Fetch Group Flags</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Use of any of these features results in a non-portable application.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beakj"></a><a id="GSDVG00441"></a><a id="version-column-consistency-checking"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_version_column_consistency_checking">Version Column Consistency Checking</h4>
+<div class="paragraph">
+<p>The version consistency feature saves the bean state at first
+transactional access and caches it between transactions. The state is
+copied from the cache instead of being read from the database. The bean
+state is verified by primary key and version column values at flush for
+custom queries (for dirty instances only) and at commit (for clean and
+dirty instances).</p>
+</div>
+<div class="paragraph">
+<p><a id="fwbei"></a><a id="GSDVG00071"></a><a id="to-use-version-consistency"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_use_version_consistency">To Use Version Consistency</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the version column in the primary table.</p>
+</li>
+<li>
+<p>Give the version column a numeric data type.</p>
+</li>
+<li>
+<p>Provide appropriate update triggers on the version column.<br>
+These triggers must increment the version column on each update of the
+specified row.</p>
+</li>
+<li>
+<p>Specify the version column.<br>
+This is specified in the <code>check-version-of-accessed-instances</code>
+subelement of the <code>consistency</code> element in the <code>sun-cmp-mappings.xml</code>
+file. See "<a href="../application-deployment-guide/dd-elements.html#GSDPG00126">consistency</a>" in GlassFish Server Open
+Source Edition Application Deployment Guide.</p>
+</li>
+<li>
+<p>Map the CMP bean to an existing schema.<br>
+Automatic schema generation is not supported for beans with version
+column consistency checking. Instead, work with your database
+administrator to create the schema and add the required triggers.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="beakk"></a><a id="GSDVG00442"></a><a id="relationship-prefetching"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_relationship_prefetching">Relationship Prefetching</h4>
+<div class="paragraph">
+<p>In many cases when an entity bean&#8217;s state is fetched from the database,
+its relationship fields are always accessed in the same transaction.
+Relationship prefetching saves database round trips by fetching data for
+an entity bean and those beans referenced by its CMR fields in a single
+database round trip.</p>
+</div>
+<div class="paragraph">
+<p>To enable relationship prefetching for a CMR field, use the <code>default</code>
+subelement of the <code>fetched-with</code> element in the <code>sun-cmp-mappings.xml</code>
+file. By default, these CMR fields are prefetched whenever
+<code>findByPrimaryKey</code> or a custom finder is executed for the entity, or
+when the entity is navigated to from a relationship. (Recursive
+prefetching is not supported, because it does not usually enhance
+performance.) See "<a href="../application-deployment-guide/dd-elements.html#GSDPG00153">fetched-with</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>To disable prefetching for specific custom finders, use the
+<code>prefetch-disabled</code> element in the <code>glassfish-ejb-jar.xml</code> file. See
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00226">prefetch-disabled</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>Multilevel relationship prefetching is supported for CMP 2.1 entity
+beans. To enable multilevel relationship prefetching, set the following
+property using the <code>asadmin create-jvm-options</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -Dcom.sun.jdo.spi.persistence.support.sqlstore.MULTILEVEL_PREFETCH=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beakl"></a><a id="GSDVG00443"></a><a id="read-only-beans"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_read_only_beans">Read-Only Beans</h4>
+<div class="paragraph">
+<p>Another feature that the GlassFish Server provides is the read-only
+bean, an entity bean that is never modified by an EJB client. Read-only
+beans avoid database updates completely.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Read-only beans are specific to the GlassFish Server and are not part of
+the Enterprise JavaBeans Specification, v2.1. Use of this feature for an
+EJB 2.1 bean results in a non-portable application.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A read-only bean can be used to cache a database entry that is
+frequently accessed but rarely updated (externally by other beans). When
+the data that is cached by a read-only bean is updated by another bean,
+the read-only bean can be notified to refresh its cached data.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server provides a number of ways by which a read-only
+bean&#8217;s state can be refreshed. By setting the
+<code>refresh-period-in-seconds</code> element in the <code>glassfish-ejb-jar.xml</code> file
+and the <code>trans-attribute</code> element (or <code>@TransactionAttribute</code>
+annotation) in the <code>ejb-jar.xml</code> file, it is easy to configure a
+read-only bean that is one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Always refreshed</p>
+</li>
+<li>
+<p>Periodically refreshed</p>
+</li>
+<li>
+<p>Never refreshed</p>
+</li>
+<li>
+<p>Programmatically refreshed</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Access to CMR fields of read-only beans is not supported. Deployment
+will succeed, but an exception will be thrown at runtime if a get or set
+method is invoked.</p>
+</div>
+<div class="paragraph">
+<p>Read-only beans are best suited for situations where the underlying data
+never changes, or changes infrequently. For further information and
+usage guidelines, see <a href="ejb.html#beail">Using Read-Only Beans</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gemln"></a><a id="GSDVG00156"></a><a id="default-fetch-group-flags"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_default_fetch_group_flags">Default Fetch Group Flags</h3>
+<div class="paragraph">
+<p>Using the following flags can improve performance.</p>
+</div>
+<div class="paragraph">
+<p>Setting <code>-DAllowManagedFieldsInDefaultFetchGroup=true</code> allows CMP fields
+that by default cannot be placed into the default fetch group to be
+loaded along with all other fields that are fetched when the CMP state
+is loaded into memory. These could be multiple fields mapped to the same
+column in the database table, for example, an instance field and a CMR.
+By default this flag is set to <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>For additional information, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00181">level</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>Setting <code>-DAllowMediatedWriteInDefaultFetchGroup</code> specifies how updated
+CMP fields are written back to the database. If the flag is <code>false</code>, all
+fields in the CMP bean are written back to the database if at least one
+field in the default fetch group has been changed in a transaction. If
+the flag is <code>true</code>, only fields modified by the bean are written back to
+the database. Specifying <code>true</code> can improve performance, particularly on
+database tables with many columns that have not been updated. By default
+this flag is set to <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>To set one of these flags, use the <code>asadmin create-jvm-options</code> command.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -DAllowManagedFieldsInDefaultFetchGroup=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beakc"></a><a id="GSDVG00157"></a><a id="configuring-queries-for-1.1-finders"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_queries_for_1_1_finders">Configuring Queries for 1.1 Finders</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ganjq">About JDOQL Queries</a></p>
+</li>
+<li>
+<p><a href="#gankm">Query Filter Expression</a></p>
+</li>
+<li>
+<p><a href="#ganjt">Query Parameters</a></p>
+</li>
+<li>
+<p><a href="#ganky">Query Variables</a></p>
+</li>
+<li>
+<p><a href="#ganla">JDOQL Examples</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ganjq"></a><a id="GSDVG00444"></a><a id="about-jdoql-queries"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_about_jdoql_queries">About JDOQL Queries</h4>
+<div class="paragraph">
+<p>The Enterprise JavaBeans Specification, v1.1 does not specify the format
+of the finder method description. The GlassFish Server uses an extension
+of Java Data Objects Query Language (JDOQL) queries to implement finder
+and selector methods. You can specify the following elements of the
+underlying JDOQL query:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Filter expression - A Java-like expression that specifies a condition
+that each object returned by the query must satisfy. Corresponds to the
+WHERE clause in EJB QL.</p>
+</li>
+<li>
+<p>Query parameter declaration - Specifies the name and the type of one
+or more query input parameters. Follows the syntax for formal parameters
+in the Java language.</p>
+</li>
+<li>
+<p>Query variable declaration - Specifies the name and type of one or
+more query variables. Follows the syntax for local variables in the Java
+language. A query filter might use query variables to implement joins.</p>
+</li>
+<li>
+<p>Query ordering declaration - Specifies the ordering expression of the
+query. Corresponds to the ORDER BY clause of EJB QL.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server specific deployment descriptor
+(<code>glassfish-ejb-jar.xml</code>) provides the following elements to store the
+EJB 1.1 finder method settings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">query-filter
+query-params
+query-variables
+query-ordering</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The bean developer uses these elements to construct a query. When the
+finder method that uses these elements executes, the values of these
+elements are used to execute a query in the database. The objects from
+the JDOQL query result set are converted into primary key instances to
+be returned by the EJB 1.1 <code>ejbFind</code> method.</p>
+</div>
+<div class="paragraph">
+<p>The JDO specification, <a href="http://jcp.org/en/jsr/detail?id=12">JSR 12</a>
+(<code>http://jcp.org/en/jsr/detail?id=12</code>), provides a comprehensive
+description of JDOQL. The following information summarizes the elements
+used to define EJB 1.1 finders.</p>
+</div>
+<div class="paragraph">
+<p><a id="gankm"></a><a id="GSDVG00445"></a><a id="query-filter-expression"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_query_filter_expression">Query Filter Expression</h4>
+<div class="paragraph">
+<p>The filter expression is a String containing a Boolean expression
+evaluated for each instance of the candidate class. If the filter is not
+specified, it defaults to true. Rules for constructing valid expressions
+follow the Java language, with the following differences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Equality and ordering comparisons between primitives and instances of
+wrapper classes are valid.</p>
+</li>
+<li>
+<p>Equality and ordering comparisons of Date fields and Date parameters
+are valid.</p>
+</li>
+<li>
+<p>Equality and ordering comparisons of String fields and String
+parameters are valid.</p>
+</li>
+<li>
+<p>White space (non-printing characters space, tab, carriage return, and
+line feed) is a separator and is otherwise ignored.</p>
+</li>
+<li>
+<p>The following assignment operators are not supported.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Comparison operators such as =, +=, and so on</p>
+</li>
+<li>
+<p>Pre- and post-increment</p>
+</li>
+<li>
+<p>Pre- and post-decrement</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Methods, including object construction, are not supported, except for
+these methods.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Collection.contains(Object o)
+Collection.isEmpty()
+String.startsWith(String s)
+String.endsWith(String e)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition, the GlassFish Server supports the following nonstandard
+JDOQL methods.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">String.like(String pattern)
+String.like(String pattern, char escape)
+String.substring(int start, int length)
+String.indexOf(String str)
+String.indexOf(String str, int start)
+String.length()
+Math.abs(numeric n)
+Math.sqrt(double d)</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Navigation through a null-valued field, which throws a
+<code>NullPointerException</code>, is treated as if the sub-expression returned
+<code>false</code>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Comparisons between floating point values are by nature inexact.
+Therefore, equality comparisons (== and !=) with floating point values
+should be used with caution. Identifiers in the expression are
+considered to be in the name space of the candidate class, with the
+addition of declared parameters and variables. As in the Java language,
+<code>this</code> is a reserved word, and refers to the current instance being
+evaluated.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following expressions are supported.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Relational operators (==, !=,&gt;, &lt;,&gt;=, &#8656;)</p>
+</li>
+<li>
+<p>Boolean operators (&amp;, &amp;&amp;, |, ||, ~, !)</p>
+</li>
+<li>
+<p>Arithmetic operators (+, -, *, /)</p>
+</li>
+<li>
+<p>String concatenation, only for String + String</p>
+</li>
+<li>
+<p>Parentheses to explicitly mark operator precedence</p>
+</li>
+<li>
+<p>Cast operator</p>
+</li>
+<li>
+<p>Promotion of numeric operands for comparisons and arithmetic
+operations</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The rules for promotion follow the Java rules extended by BigDecimal,
+BigInteger, and numeric wrapper classes. See the numeric promotions of
+the Java language specification.</p>
+</div>
+<div class="paragraph">
+<p><a id="ganjt"></a><a id="GSDVG00446"></a><a id="query-parameters"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_query_parameters">Query Parameters</h4>
+<div class="paragraph">
+<p>The parameter declaration is a String containing one or more parameter
+type declarations separated by commas. This follows the Java syntax for
+method signatures.</p>
+</div>
+<div class="paragraph">
+<p><a id="ganky"></a><a id="GSDVG00447"></a><a id="query-variables"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_query_variables">Query Variables</h4>
+<div class="paragraph">
+<p>The type declarations follow the Java syntax for local variable
+declarations.</p>
+</div>
+<div class="paragraph">
+<p><a id="ganla"></a><a id="GSDVG00448"></a><a id="jdoql-examples"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jdoql_examples">JDOQL Examples</h4>
+<div class="paragraph">
+<p>This section provides a few query examples.</p>
+</div>
+<div class="paragraph">
+<p><a id="gankk"></a><a id="GSDVG00309"></a><a id="example-1"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_example_1">Example 1</h5>
+<div class="paragraph">
+<p>The following query returns all players called Michael. It defines a
+filter that compares the name field with a string literal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">name == "Michael"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>finder</code> element of the <code>glassfish-ejb-jar.xml</code> file looks like
+this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;finder&gt;
+   &lt;method-name&gt;findPlayerByName&lt;/method-name&gt;
+   &lt;query-filter&gt;name == "Michael"&lt;/query-filter&gt;
+&lt;/finder&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ganjz"></a><a id="GSDVG00310"></a><a id="example-2"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_2">Example 2</h5>
+<div class="paragraph">
+<p>This query returns all products in a specified price range. It defines
+two query parameters which are the lower and upper bound for the price:
+double low, double high. The filter compares the query parameters with
+the price field:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">low &lt; price &amp;&amp; price &lt; high</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Query ordering is set to <code>price ascending</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finder</code> element of the <code>glassfish-ejb-jar.xml</code> file looks like
+this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;finder&gt;
+   &lt;method-name&gt;findInRange&lt;/method-name&gt;
+   &lt;query-params&gt;double low, double high&lt;/query-params&gt;
+   &lt;query-filter&gt;low &amp;lt; price &amp;amp;&amp;amp; price &amp;lt high&lt;/query-filter&gt;
+   &lt;query-ordering&gt;price ascending&lt;/query-ordering&gt;
+&lt;/finder&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gankz"></a><a id="GSDVG00311"></a><a id="example-3"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_3">Example 3</h5>
+<div class="paragraph">
+<p>This query returns all players having a higher salary than the player
+with the specified name. It defines a query parameter for the name
+<code>java.lang.String name</code>. Furthermore, it defines a variable to which the
+player&#8217;s salary is compared. It has the type of the persistence capable
+class that corresponds to the bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    mypackage.PlayerEJB_170160966_JDOState player</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The filter compares the salary of the current player denoted by the
+<code>this</code> keyword with the salary of the player with the specified name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    (this.salary&gt; player.salary) &amp;&amp; (player.name == name)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>finder</code> element of the <code>glassfish-ejb-jar.xml</code> file looks like
+this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;finder&gt;
+   &lt;method-name&gt;findByHigherSalary&lt;/method-name&gt;
+   &lt;query-params&gt;java.lang.String name&lt;/query-params&gt;
+   &lt;query-filter&gt;
+      (this.salary &amp;gt; player.salary) &amp;amp;&amp;amp; (player.name == name)
+   &lt;/query-filter&gt;
+   &lt;query-variables&gt;
+      mypackage.PlayerEJB_170160966_JDOState player
+   &lt;/query-variables&gt;
+&lt;/finder&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beakm"></a><a id="GSDVG00158"></a><a id="cmp-restrictions-and-optimizations"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cmp_restrictions_and_optimizations">CMP Restrictions and Optimizations</h3>
+<div class="paragraph">
+<p>This section discusses restrictions and performance optimizations that
+pertain to using CMP.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gdtfj">Disabling ORDER BY Validation</a></p>
+</li>
+<li>
+<p><a href="#geprt">Setting the Heap Size on DB2</a></p>
+</li>
+<li>
+<p><a href="#beakn">Eager Loading of Field State</a></p>
+</li>
+<li>
+<p><a href="#beako">Restrictions on Remote Interfaces</a></p>
+</li>
+<li>
+<p><a href="#gcnto">PostgreSQL Case Insensitivity</a></p>
+</li>
+<li>
+<p><a href="#beakr">No Support for <code>lock-when-loaded</code> on Sybase</a></p>
+</li>
+<li>
+<p><a href="#beakp">Sybase Finder Limitation</a></p>
+</li>
+<li>
+<p><a href="#beakq">Date and Time Fields</a></p>
+</li>
+<li>
+<p><a href="#beaks">Set <code>RECURSIVE_TRIGGERS</code> to <code>false</code> on MSSQL</a></p>
+</li>
+<li>
+<p><a href="#gbhbr">MySQL Database Restrictions</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gdtfj"></a><a id="GSDVG00449"></a><a id="disabling-order-by-validation"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_disabling_order_by_validation">Disabling ORDER BY Validation</h4>
+<div class="paragraph">
+<p>EJB QL as defined in the EJB 2.1 Specification defines certain
+restrictions for the SELECT clause of an ORDER BY query (see section
+11.2.8 ORDER BY Clause). This ensures that a query does not order by a
+field that is not returned by the query. By default, the EJB QL compiler
+checks the above restriction and throws an exception if the query does
+not conform.</p>
+</div>
+<div class="paragraph">
+<p>However, some databases support SQL statements with an ORDER BY column
+that is not included in the SELECT clause. To disable the validation of
+the ORDER BY clause against the SELECT clause, set the
+<code>DISABLE_ORDERBY_VALIDATION</code> JVM option as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options
+-Dcom.sun.jdo.spi.persistence.support.ejb.ejbqlc.DISABLE_ORDERBY_VALIDATION=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>DISABLE_ORDERBY_VALIDATION</code> option is set to <code>false</code> by default.
+Setting it to <code>true</code> results in a non-portable module or application.</p>
+</div>
+<div class="paragraph">
+<p><a id="geprt"></a><a id="GSDVG00450"></a><a id="setting-the-heap-size-on-db2"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_setting_the_heap_size_on_db2">Setting the Heap Size on DB2</h4>
+<div class="paragraph">
+<p>On DB2, the database configuration parameter <code>APPLHEAPSZ</code> determines the
+heap size. If you are using the Oracle or DataDirect database driver,
+set this parameter to at least <code>2048</code> for CMP. For more information, see
+<code>http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/opt/tsbp2024.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beakn"></a><a id="GSDVG00451"></a><a id="eager-loading-of-field-state"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_eager_loading_of_field_state">Eager Loading of Field State</h4>
+<div class="paragraph">
+<p>By default, the EJB container loads the state for all persistent fields
+(excluding relationship, BLOB, and CLOB fields) before invoking the
+<code>ejbLoad</code> method of the abstract bean. This approach might not be
+optimal for entity objects with large state if most business methods
+require access to only parts of the state.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>fetched-with</code> element in <code>sun-cmp-mappings.xml</code> for fields that
+are used infrequently. See "<a href="../application-deployment-guide/dd-elements.html#GSDPG00153">fetched-with</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beako"></a><a id="GSDVG00452"></a><a id="restrictions-on-remote-interfaces"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_restrictions_on_remote_interfaces">Restrictions on Remote Interfaces</h4>
+<div class="paragraph">
+<p>The following restrictions apply to the remote interface of an EJB 2.1
+bean that uses CMP:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Do not expose the <code>get</code> and <code>set</code> methods for CMR fields or the
+persistence collection classes that are used in container-managed
+relationships through the remote interface of the bean.<br>
+However, you are free to expose the <code>get</code> and <code>set</code> methods that
+correspond to the CMP fields of the entity bean through the bean&#8217;s
+remote interface.</p>
+</li>
+<li>
+<p>Do not expose the container-managed collection classes that are used
+for relationships through the remote interface of the bean.</p>
+</li>
+<li>
+<p>Do not expose local interface types or local home interface types
+through the remote interface or remote home interface of the bean.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Dependent value classes can be exposed in the remote interface or remote
+home interface, and can be included in the client EJB JAR file.</p>
+</div>
+<div class="paragraph">
+<p><a id="gcnto"></a><a id="GSDVG00453"></a><a id="postgresql-case-insensitivity"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_postgresql_case_insensitivity">PostgreSQL Case Insensitivity</h4>
+<div class="paragraph">
+<p>Case-sensitive behavior cannot be achieved for PostgreSQL databases.
+PostgreSQL databases internally convert all names to lower case, which
+makes the following workarounds necessary:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the CMP 2.1 runtime, PostgreSQL table and column names are not
+quoted, which makes these names case insensitive.</p>
+</li>
+<li>
+<p>Before running the <code>capture-schema</code> command on a PostgreSQL database,
+make sure table and column names are lower case in the
+<code>sun-cmp-mappings.xml</code> file.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beakr"></a><a id="GSDVG00454"></a><a id="no-support-for-lock-when-loaded-on-sybase"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_no_support_for_code_lock_when_loaded_code_on_sybase">No Support for <code>lock-when-loaded</code> on Sybase</h4>
+<div class="paragraph">
+<p>For EJB 2.1 beans, the <code>lock-when-loaded</code> consistency level is
+implemented by placing update locks on the data corresponding to a bean
+when the data is loaded from the database. There is no suitable
+mechanism available on Sybase databases to implement this feature.
+Therefore, the <code>lock-when-loaded</code> consistency level is not supported on
+Sybase databases. See "<a href="../application-deployment-guide/dd-elements.html#GSDPG00126">consistency</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beakp"></a><a id="GSDVG00455"></a><a id="sybase-finder-limitation"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sybase_finder_limitation">Sybase Finder Limitation</h4>
+<div class="paragraph">
+<p>If a finder method with an input greater than 255 characters is executed
+and the primary key column is mapped to a VARCHAR column, Sybase
+attempts to convert type VARCHAR to type TEXT and generates the
+following error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype
+'TEXT' to 'VARCHAR' is not allowed. Use the CONVERT function to run this query.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To avoid this error, make sure the finder method input is less than 255
+characters.</p>
+</div>
+<div class="paragraph">
+<p><a id="beakq"></a><a id="GSDVG00456"></a><a id="date-and-time-fields"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_date_and_time_fields">Date and Time Fields</h4>
+<div class="paragraph">
+<p>If a field type is a Java date or time type (<code>java.util.Date</code>,
+<code>java.sql.Date</code>, <code>java.sql.Time</code>, <code>java.sql.Timestamp</code>), make sure that
+the field value exactly matches the value in the database.</p>
+</div>
+<div class="paragraph">
+<p>For example, the following code uses a <code>java.sql.Date</code> type as a primary
+key field:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">java.sql.Date myDate = new java.sql.Date(System.currentTimeMillis())
+BeanA.create(myDate, ...);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For some databases, this code results in only the year, month, and date
+portion of the field value being stored in the database. Later if the
+client tries to find this bean by primary key as follows, the bean is
+not found in the database because the value does not match the one that
+is stored in the database.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">myBean = BeanA.findByPrimaryKey(myDate);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similar problems can happen if the database truncates the timestamp
+value while storing it, or if a custom query has a date or time value
+comparison in its WHERE clause.</p>
+</div>
+<div class="paragraph">
+<p>For automatic mapping to an Oracle database, fields of type
+<code>java.util.Date</code>, <code>java.sql.Date</code>, and <code>java.sql.Time</code> are mapped to
+Oracle&#8217;s DATE data type. Fields of type <code>java.sql.Timestamp</code> are mapped
+to Oracle&#8217;s <code>TIMESTAMP(9)</code> data type.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaks"></a><a id="GSDVG00457"></a><a id="set-recursive_triggers-to-false-on-mssql"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_set_code_recursive_triggers_code_to_code_false_code_on_mssql">Set <code>RECURSIVE_TRIGGERS</code> to <code>false</code> on MSSQL</h4>
+<div class="paragraph">
+<p>For version consistency triggers on MSSQL, the property
+<code>RECURSIVE_TRIGGERS</code> must be set to <code>false</code>, which is the default. If
+set to <code>true</code>, triggers throw a <code>java.sql.SQLException</code>.</p>
+</div>
+<div class="paragraph">
+<p>Set this property as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">EXEC sp_dboption 'database-name', 'recursive triggers', 'FALSE'
+go</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can test this property as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">SELECT DATABASEPROPERTYEX('database-name', 'IsRecursiveTriggersEnabled')
+go</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gbhbr"></a><a id="GSDVG00458"></a><a id="mysql-database-restrictions"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mysql_database_restrictions">MySQL Database Restrictions</h4>
+<div class="paragraph">
+<p>The following restrictions apply when you use a MySQL database with the
+GlassFish Server for persistence.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>MySQL treats <code>int1</code> and <code>int2</code> as reserved words. If you want to
+define <code>int1</code> and <code>int2</code> as fields in your table, use <code>\`int1\`</code> and
+<code>\`int2\`</code> field names in your SQL file.</p>
+</li>
+<li>
+<p>When <code>VARCHAR</code> fields get truncated, a warning is displayed instead of
+an error. To get an error message, start the MySQL database in strict
+SQL mode.</p>
+</li>
+<li>
+<p>The order of fields in a foreign key index must match the order in the
+explicitly created index on the primary table.</p>
+</li>
+<li>
+<p>The <code>CREATE TABLE</code> syntax in the SQL file must end with the following
+line.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>)  Engine=InnoDB;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>InnoDB</code> provides MySQL with a transaction-safe (ACID compliant) storage
+engine having commit, rollback, and crash recovery capabilities.
+* For a <code>FLOAT</code> type field, the correct precision must be defined. By
+default, MySQL uses four bytes to store a <code>FLOAT</code> type that does not
+have an explicit precision definition. For example, this causes a number
+such as 12345.67890123 to be rounded off to 12345.7 during an <code>INSERT</code>.
+To prevent this, specify <code>FLOAT(10,2)</code> in the DDL file, which forces the
+database to use an eight-byte double-precision column. For more
+information, see <code>http://dev.mysql.com/doc/mysql/en/numeric-types.html</code>.
+* To use <code>||</code> as the string concatenation symbol, start the MySQL server
+with the <code>--sql-mode="PIPES_AS_CONCAT"</code> option. For more information,
+see <code>http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html</code> and
+<code>http://dev.mysql.com/doc/mysql/en/ansi-mode.html</code>.
+* MySQL always starts a new connection when <code>autoCommit==true</code> is set.
+This ensures that each SQL statement forms a single transaction on its
+own. If you try to rollback or commit an SQL statement, you get an error
+message.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">javax.transaction.SystemException: java.sql.SQLException:
+Can't call rollback when autocommit=true
+
+javax.transaction.SystemException: java.sql.SQLException:
+Error open transaction is not closed</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To resolve this issue, add <code>relaxAutoCommit=true</code> to the JDBC URL. For
+more information, see <code>http://forums.mysql.com/read.php?39,31326,31404</code>.
+* Change the trigger create format from the following:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">CREATE TRIGGER T_UNKNOWNPKVC1
+BEFORE UPDATE ON UNKNOWNPKVC1
+FOR EACH ROW
+        WHEN (NEW.VERSION = OLD.VERSION)
+BEGIN
+        :NEW.VERSION := :OLD.VERSION + 1;
+END;
+/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To the following:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">DELIMITER |
+CREATE TRIGGER T_UNKNOWNPKVC1
+BEFORE UPDATE ON UNKNOWNPKVC1
+FOR EACH ROW
+        WHEN (NEW.VERSION = OLD.VERSION)
+BEGIN
+        :NEW.VERSION := :OLD.VERSION + 1;
+END
+|
+DELIMITER ;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see
+<code>http://dev.mysql.com/doc/mysql/en/create-trigger.html</code>.
+* MySQL does not allow a <code>DELETE</code> on a row that contains a reference to
+itself. Here is an example that illustrates the issue.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example fails with the following error message.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">ERROR 1217 (23000): Cannot delete or update a parent row:
+a foreign key constraint fails</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To resolve this issue, change the table creation script to the
+following:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This can be done only if the foreign key field is allowed to be null.
+For more information, see
+<code>http://dev.mysql.com/doc/mysql/en/innodb-foreign-key-constraints.html</code>.
+* When an SQL script has foreign key constraints defined,
+<code>capture-schema</code> fails to capture the table information correctly. To
+work around the problem, remove the constraints and then run
+<code>capture-schema</code>. Here is an example that illustrates the issue.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255)
+    NOT NULL PRIMARY KEY,
+CONNECTEDUSERS              BLOB NULL,
+OWNER                       VARCHAR(256),
+FK_FOR_ACCESSPRIVILEGES     VARCHAR(256),
+CONSTRAINT FK_ACCESSPRIVILEGE FOREIGN KEY (FK_FOR_ACCESSPRIVILEGES)
+    REFERENCES ACCESSPRIVILEGESBEANTABLE (ROOT)
+) ENGINE=InnoDB;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To resolve this issue, change the table creation script to the
+following:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255)
+    NOT NULL PRIMARY KEY,
+CONNECTEDUSERS              BLOB NULL,
+OWNER                       VARCHAR(256),
+FK_FOR_ACCESSPRIVILEGES     VARCHAR(256)
+) ENGINE=InnoDB;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="ejb.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="java-clients.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+</body>
+</html>

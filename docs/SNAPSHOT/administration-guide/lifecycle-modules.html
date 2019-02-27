@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Life Cycle Modules</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Life Cycle Modules</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="monitoring.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="batch.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00013"></a><a id="giury"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-life-cycle-modules">9 Administering Life Cycle Modules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures for administering life cycle modules in
+the GlassFish Server Open Source Edition 5.0 environment.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giuxo">About Life Cycle Modules</a></p>
+</li>
+<li>
+<p><a href="#giuue">Configuring Life Cycle Modules</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="giuxo"></a><a id="GSADG00566"></a><a id="about-life-cycle-modules"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_life_cycle_modules">About Life Cycle Modules</h3>
+<div class="paragraph">
+<p>Life cycle modules, also known as initialization services, provide a
+means of running short or long duration Java-based tasks within the
+GlassFish Server environment. These modules are automatically initiated
+at server startup and are notified at various phases of the server life
+cycle. Configured properties for a life cycle module are passed as
+properties during server initialization.</p>
+</div>
+<div class="paragraph">
+<p>All life cycle module classes and interfaces are in the
+as-install`/modules/glassfish-api.jar` file.</p>
+</div>
+<div class="paragraph">
+<p>A life cycle module listens for and performs its tasks in response to
+the following GlassFish Server sequence of events:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Initialization. The server reads the configuration, initializes
+built-in subsystems (such as security and logging services), and creates
+the containers.</p>
+</li>
+<li>
+<p>Startup. The server loads and initializes deployed applications.</p>
+</li>
+<li>
+<p>Ready. The server begins servicing requests.</p>
+</li>
+<li>
+<p>Shutdown. The server shuts down the applications and stops.</p>
+</li>
+<li>
+<p>Termination. The server closes the containers, the built-in
+subsystems, and the server runtime environment.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These events are defined in the <code>LifecycleEvent</code> class. For information
+on creating life cycle modules, see "<a href="../application-development-guide/lifecycle-listeners.html#GSDVG00014">Developing
+Lifecycle Listeners</a>" in GlassFish Server Open Source Edition
+Application Development Guide.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If the <code>is-failure-fatal</code> setting is set to true (the default is false),
+life cycle module failure prevents server initialization or startup, but
+not shutdown or termination.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="giuue"></a><a id="GSADG00567"></a><a id="configuring-life-cycle-modules"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_life_cycle_modules">Configuring Life Cycle Modules</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giuus">To Create a Life Cycle Module</a></p>
+</li>
+<li>
+<p><a href="#giuvh">To List Life Cycle Modules</a></p>
+</li>
+<li>
+<p><a href="#giuyh">To Update a Life Cycle Module</a></p>
+</li>
+<li>
+<p><a href="#giuux">To Delete a Life Cycle Module</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giuus"></a><a id="GSADG00399"></a><a id="to-create-a-life-cycle-module"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_life_cycle_module">To Create a Life Cycle Module</h4>
+<div class="paragraph">
+<p>Use the <code>create-lifecycle-module</code> subcommand in remote mode to create a
+life cycle module.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a new life cycle modules by using the
+<a href="../reference-manual/create-lifecycle-module.html#GSRFM00043"><code>create-lifecycle-module</code></a> subcommand.<br>
+Information about options and properties for the subcommand are included
+in this help page.</p>
+</li>
+<li>
+<p>Restart the server for your changes to take effect.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00206"></a><a id="giuyo"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 9-1 Creating a Life Cycle Module</p>
+</div>
+<div class="paragraph">
+<p>This example creates the <code>customSetup</code> life cycle module :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-lifecycle-module --classname "com.acme.CustomSetup"
+--classpath "/export/customSetup" --loadorder 1 --failurefatal=true
+--description "this is a sample customSetup"
+--property rmi="Server\=acme1\:7070":timeout=30 customSetup
+Command create-lifecycle-module executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG927" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-lifecycle-module</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giuvh"></a><a id="GSADG00400"></a><a id="to-list-life-cycle-modules"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_life_cycle_modules">To List Life Cycle Modules</h4>
+<div class="paragraph">
+<p>Use the <code>list-lifecycle-modules</code> subcommand in remote mode to list the
+existing life cycle modules.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List life cycle modules by using the
+<a href="../reference-manual/list-lifecycle-modules.html#GSRFM00181"><code>list-lifecycle-modules</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00207"></a><a id="giuyr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 9-2 Listing Life Cycle Modules</p>
+</div>
+<div class="paragraph">
+<p>This example lists the existing life cycle modules.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-lifecycle-modules
+WSTCPConnectorLCModule
+Command list-lifecycle-modules executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG928" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-lifecycle-modules</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giuyh"></a><a id="GSADG00401"></a><a id="to-update-a-life-cycle-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_life_cycle_module">To Update a Life Cycle Module</h4>
+<div class="paragraph">
+<p>Use the <code>set</code> subcommand to update an existing life cycle module.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the properties that can be updated for a life cycle module by
+using the <a href="../reference-manual/get.html#GSRFM00139"><code>get</code></a> subcommand.<br>
+For example (single mode):<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin get "*" | grep sampleLCM
+applications.application.sampleLCMmodule.availability-enabled=false
+applications.application.sampleLCMmodule.directory-deployed=false
+applications.application.sampleLCMmodule.enabled=true
+applications.application.sampleLCMmodule.name=sampleLCMmodule
+applications.application.sampleLCMmodule.object-type=user
+applications.application.sampleLCMmodule.property.class-name=example.lc.SampleModule
+applications.application.sampleLCMmodule.property.classpath=/build/lcm.jar
+applications.application.sampleLCMmodule.property.is-failure-fatal=false
+applications.application.sampleLCMmodule.property.isLifecycle=true</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Update a life cycle module by using the o<a href="GSRFM00226"><code>set</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>Restart the server for your changes to take effect.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00208"></a><a id="giuyq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 9-3 Updating a Life Cycle Module</p>
+</div>
+<div class="paragraph">
+<p>This example updates the <code>classpath</code> property.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">sadmin&gt; set applications.application.sampleLCMmodule.
+property.classpath=/build/lcm_new.jarapplications.application.
+sampleLCMmodule.property.classpath=/build/lcm_new.jar
+Command set executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG929" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help set</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giuux"></a><a id="GSADG00402"></a><a id="to-delete-a-life-cycle-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_life_cycle_module">To Delete a Life Cycle Module</h4>
+<div class="paragraph">
+<p>Use the <code>delete-lifecycle-module</code> subcommand in remote mode to delete a
+life cycle module.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the current life cycle modules by using the
+<a href="../reference-manual/list-lifecycle-modules.html#GSRFM00181"><code>list-lifecycle-modules</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete a life cycle module by using the
+<a href="../reference-manual/delete-lifecycle-module.html#GSRFM00095"><code>delete-lifecycle-module</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00209"></a><a id="giuyi"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 9-4 Deleting a Life Cycle Module</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the <code>customSetup</code> life cycle module.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-lifecycle-module customSetup
+Command delete-lifecycle-module executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG930" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-lifecycle-module</code> at the command line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="monitoring.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="batch.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

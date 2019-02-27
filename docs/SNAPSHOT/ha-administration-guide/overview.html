@@ -1,0 +1,749 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>High Availability in GlassFish Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>High Availability in GlassFish Server</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="preface.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="ssh-setup.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00002"></a><a id="abdaq"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="high-availability-in-glassfish-server">1 High Availability in GlassFish Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes the high availability features in Eclipse GlassFish
+Server 5.1.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdar">Overview of High Availability</a></p>
+</li>
+<li>
+<p><a href="#gaymr">How GlassFish Server Provides High Availability</a></p>
+</li>
+<li>
+<p><a href="#gbcot">Recovering from Failures</a></p>
+</li>
+<li>
+<p><a href="#abdaz">More Information</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdar"></a><a id="GSHAG00168"></a><a id="overview-of-high-availability"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_overview_of_high_availability">Overview of High Availability</h3>
+<div class="paragraph">
+<p>High availability applications and services provide their functionality
+continuously, regardless of hardware and software failures. To make such
+reliability possible, GlassFish Server provides mechanisms for
+maintaining application state data between clustered GlassFish Server
+instances. Application state data, such as HTTP session data, stateful
+EJB sessions, and dynamic cache information, is replicated in real time
+across server instances. If any one server instance goes down, the
+session state is available to the next failover server, resulting in
+minimum application downtime and enhanced transactional security.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server provides the following high availability features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gksdm">Load Balancing With the Apache <code>mod_jk</code> or <code>mod_proxy_ajp</code>
+Module</a></p>
+</li>
+<li>
+<p><a href="#gaynn">High Availability Session Persistence</a></p>
+</li>
+<li>
+<p><a href="#gayna">High Availability Java Message Service</a></p>
+</li>
+<li>
+<p><a href="#gaymz">RMI-IIOP Load Balancing and Failover</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksdm"></a><a id="GSHAG00252"></a><a id="load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_load_balancing_with_the_apache_code_mod_jk_code_or_code_mod_proxy_ajp_code_module">Load Balancing With the Apache <code>mod_jk</code> or <code>mod_proxy_ajp</code> Module</h4>
+<div class="paragraph">
+<p>A common load balancing configuration for GlassFish Server 4.0 is to use
+the Apache HTTP Server as the web server front-end, and the Apache
+<code>mod_jk</code> or <code>mod_proxy_ajp</code> module as the connector between the web
+server and GlassFish Server. See
+<a href="http-load-balancing.html#gksdt">Configuring GlassFish Server with
+Apache HTTP Server and <code>mod_jk</code></a> and
+<a href="http-load-balancing.html#CHDCCGDC">Configuring GlassFish Server with
+Apache HTTP Server and <code>mod_proxy_ajp</code></a> for more information.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaynn"></a><a id="GSHAG00253"></a><a id="high-availability-session-persistence"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_high_availability_session_persistence">High Availability Session Persistence</h4>
+<div class="paragraph">
+<p>GlassFish Server provides high availability of HTTP requests and session
+data (both HTTP session data and stateful session bean data).</p>
+</div>
+<div class="paragraph">
+<p>Java EE applications typically have significant amounts of session state
+data. A web shopping cart is the classic example of a session state.
+Also, an application can cache frequently-needed data in the session
+object. In fact, almost all applications with significant user
+interactions need to maintain session state. Both HTTP sessions and
+stateful session beans (SFSBs) have session state data.</p>
+</div>
+<div class="paragraph">
+<p>Preserving session state across server failures can be important to end
+users. If the GlassFish Server instance hosting the user session
+experiences a failure, the session state can be recovered, and the
+session can continue without loss of information. High availability is
+implemented in GlassFish Server by means of in-memory session
+replication on GlassFish Server instances running in a cluster.</p>
+</div>
+<div class="paragraph">
+<p>For more information about in-memory session replication in GlassFish
+Server, see <a href="#gaymr">How GlassFish Server Provides High
+Availability</a>. For detailed instructions on configuring high
+availability session persistence, see
+<a href="session-persistence-and-failover.html#abdkz">Configuring High
+Availability Session Persistence and Failover</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gayna"></a><a id="GSHAG00254"></a><a id="high-availability-java-message-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_high_availability_java_message_service">High Availability Java Message Service</h4>
+<div class="paragraph">
+<p>GlassFish Server supports the Java Message Service (JMS) API and JMS
+messaging through its built-in jmsra resource adapter communicating with
+Open Message Queue as the JMS provider. This combination is often called
+the JMS Service.</p>
+</div>
+<div class="paragraph">
+<p>The JMS service makes JMS messaging highly available as follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Message Queue Broker Clusters</dt>
+<dd>
+<p>By default, when a GlassFish cluster is created, the JMS service
+automatically configures a Message Queue broker cluster to provide JMS
+messaging services, with one clustered broker assigned to each cluster
+instance. This automatically created broker cluster is configurable to
+take advantage of the two types of broker clusters, conventional and
+enhanced, supported by Message Queue.<br>
+Additionally, Message Queue broker clusters created and managed using
+Message Queue itself can be used as external, or remote, JMS hosts.
+Using external broker clusters provides additional deployment options,
+such as deploying Message Queue brokers on different hosts from the
+GlassFish instances they service, or deploying different numbers of
+Message Queue brokers and GlassFish instances.<br>
+For more information about Message Queue clustering, see
+<a href="jms.html#abdbx">Using Message Queue Broker Clusters With GlassFish
+Server</a>.</p>
+</dd>
+<dt class="hdlist1">Connection Failover</dt>
+<dd>
+<p>The use of Message Queue broker clusters allows connection failover in
+the event of a broker failure. If the primary JMS host (Message Queue
+broker) in use by a GlassFish instance fails, connections to the
+failed JMS host will automatically fail over to another host in the
+JMS host list, allowing messaging operations to continue and
+maintaining JMS messaging semantics.<br>
+For more information about JMS connection failover, see
+<a href="jms.html#abdbv">Connection Failover</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gaymz"></a><a id="GSHAG00255"></a><a id="rmi-iiop-load-balancing-and-failover"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rmi_iiop_load_balancing_and_failover">RMI-IIOP Load Balancing and Failover</h4>
+<div class="paragraph">
+<p>With RMI-IIOP load balancing, IIOP client requests are distributed to
+different server instances or name servers, which spreads the load
+evenly across the cluster, providing scalability. IIOP load balancing
+combined with EJB clustering and availability also provides EJB
+failover.</p>
+</div>
+<div class="paragraph">
+<p>When a client performs a JNDI lookup for an object, the Naming Service
+essentially binds the request to a particular server instance. From then
+on, all lookup requests made from that client are sent to the same
+server instance, and thus all <code>EJBHome</code> objects will be hosted on the
+same target server. Any bean references obtained henceforth are also
+created on the same target host. This effectively provides load
+balancing, since all clients randomize the list of target servers when
+performing JNDI lookups. If the target server instance goes down, the
+lookup or EJB method invocation will failover to another server
+instance.</p>
+</div>
+<div class="paragraph">
+<p>IIOP Load balancing and failover happens transparently. No special steps
+are needed during application deployment. If the GlassFish Server
+instance on which the application client is deployed participates in a
+cluster, the GlassFish Server finds all currently active IIOP endpoints
+in the cluster automatically. However, a client should have at least two
+endpoints specified for bootstrapping purposes, in case one of the
+endpoints has failed.</p>
+</div>
+<div class="paragraph">
+<p>For more information on RMI-IIOP load balancing and failover, see
+<a href="rmi-iiop.html#fxxqs">RMI-IIOP Load Balancing and Failover</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaymr"></a><a id="GSHAG00169"></a><a id="how-glassfish-server-provides-high-availability"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_glassfish_server_provides_high_availability">How GlassFish Server Provides High Availability</h3>
+<div class="paragraph">
+<p>GlassFish Server provides high availability through the following
+subcomponents and features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjghv">Storage for Session State Data</a></p>
+</li>
+<li>
+<p><a href="#abdax">Highly Available Clusters</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjghv"></a><a id="GSHAG00256"></a><a id="storage-for-session-state-data"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_storage_for_session_state_data">Storage for Session State Data</h4>
+<div class="paragraph">
+<p>Storing session state data enables the session state to be recovered
+after the failover of a server instance in a cluster. Recovering the
+session state enables the session to continue without loss of
+information. GlassFish Server supports in-memory session replication on
+other servers in the cluster for maintaining HTTP session and stateful
+session bean data.</p>
+</div>
+<div class="paragraph">
+<p>In-memory session replication is implemented in GlassFish Server 4.0 as
+an OSGi module. Internally, the replication module uses a consistent
+hash algorithm to pick a replica server instance within a cluster of
+instances. This allows the replication module to easily locate the
+replica or replicated data when a container needs to retrieve the data.</p>
+</div>
+<div class="paragraph">
+<p>The use of in-memory replication requires the Group Management Service
+(GMS) to be enabled. For more information about GMS, see
+<a href="clusters.html#gjfnl">Group Management Service</a>.</p>
+</div>
+<div class="paragraph">
+<p>If server instances in a cluster are located on different hosts, ensure
+that the following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To ensure that GMS and in-memory replication function correctly, the
+hosts must be on the same subnet.</p>
+</li>
+<li>
+<p>To ensure that in-memory replication functions correctly, the system
+clocks on all hosts in the cluster must be synchronized as closely as
+possible.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdax"></a><a id="GSHAG00257"></a><a id="highly-available-clusters"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_highly_available_clusters">Highly Available Clusters</h4>
+<div class="paragraph">
+<p>A highly available cluster integrates a state replication service with
+clusters and load balancer.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>When implementing a highly available cluster, use a load balancer that
+includes session-based stickiness as part of its load-balancing
+algorithm. Otherwise, session data can be misdirected or lost. An
+example of a load balancer that includes session-based stickiness is the
+Loadbalancer Plug-In available in Oracle GlassFish Server.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="abday"></a><a id="GSHAG00218"></a><a id="clusters-instances-sessions-and-load-balancing"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_clusters_instances_sessions_and_load_balancing">Clusters, Instances, Sessions, and Load Balancing</h5>
+<div class="paragraph">
+<p>Clusters, server instances, load balancers, and sessions are related as
+follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A server instance is not required to be part of a cluster. However, an
+instance that is not part of a cluster cannot take advantage of high
+availability through transfer of session state from one instance to
+other instances.</p>
+</li>
+<li>
+<p>The server instances within a cluster can be hosted on one or multiple
+hosts. You can group server instances across different hosts into a
+cluster.</p>
+</li>
+<li>
+<p>A particular load balancer can forward requests to server instances on
+multiple clusters. You can use this ability of the load balancer to
+perform an online upgrade without loss of service. For more information,
+see <a href="rolling-upgrade.html#abdin">Upgrading in Multiple Clusters</a>.</p>
+</li>
+<li>
+<p>A single cluster can receive requests from multiple load balancers. If
+a cluster is served by more than one load balancer, you must configure
+the cluster in exactly the same way on each load balancer.</p>
+</li>
+<li>
+<p>Each session is tied to a particular cluster. Therefore, although you
+can deploy an application on multiple clusters, session failover will
+occur only within a single cluster.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The cluster thus acts as a safe boundary for session failover for the
+server instances within the cluster. You can use the load balancer and
+upgrade components within the GlassFish Server without loss of service.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktax"></a><a id="GSHAG00219"></a><a id="protocols-for-centralized-cluster-administration"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_protocols_for_centralized_cluster_administration">Protocols for Centralized Cluster Administration</h5>
+<div class="paragraph">
+<p>GlassFish Server uses the Distributed Component Object Model (DCOM)
+remote protocol or secure shell (SSH) to ensure that clusters that span
+multiple hosts can be administered centrally. To perform administrative
+operations on GlassFish Server instances that are remote from the domain
+administration server (DAS), the DAS must be able to communicate with
+those instances. If an instance is running, the DAS connects to the
+running instance directly. For example, when you deploy an application
+to an instance, the DAS connects to the instance and deploys the
+application to the instance.</p>
+</div>
+<div class="paragraph">
+<p>However, the DAS cannot connect to an instance to perform operations on
+an instance that is not running, such as creating or starting the
+instance. For these operations, the DAS uses DCOM or SSH to contact a
+remote host and administer instances there. DCOM or SSH provides
+confidentiality and security for data that is exchanged between the DAS
+and remote hosts.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>The use of DCOM or SSH to enable centralized administration of remote
+instances is optional. If the use of DCOM SSH is not feasible in your
+environment, you can administer remote instances locally.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more information, see <a href="ssh-setup.html#gkshg">Enabling Centralized
+Administration of GlassFish Server Instances</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbcot"></a><a id="GSHAG00170"></a><a id="recovering-from-failures"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_recovering_from_failures">Recovering from Failures</h3>
+<div class="paragraph">
+<p>You can use various techniques to manually recover individual
+subcomponents after hardware failures such as disk crashes.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gcmkp">Recovering the Domain Administration Server</a></p>
+</li>
+<li>
+<p><a href="#gcmkc">Recovering GlassFish Server Instances</a></p>
+</li>
+<li>
+<p><a href="#gcmjs">Recovering the HTTP Load Balancer and Web Server</a></p>
+</li>
+<li>
+<p><a href="#gcmjr">Recovering Message Queue</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gcmkp"></a><a id="GSHAG00258"></a><a id="recovering-the-domain-administration-server"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_recovering_the_domain_administration_server">Recovering the Domain Administration Server</h4>
+<div class="paragraph">
+<p>Loss of the Domain Administration Server (DAS) affects only
+administration. GlassFish Server clusters and standalone instances, and
+the applications deployed to them, continue to run as before, even if
+the DAS is not reachable</p>
+</div>
+<div class="paragraph">
+<p>Use any of the following methods to recover the DAS:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Back up the domain periodically, so you have periodic snapshots. After
+a hardware failure, re-create the DAS on a new host, as described in
+"<a href="../administration-guide/domains.html#GSADG00542">Re-Creating the Domain Administration Server (DAS)</a>"
+in Eclipse GlassFish Server Administration Guide.</p>
+</li>
+<li>
+<p>Put the domain installation and configuration on a shared and robust
+file system (NFS for example). If the primary DAS host fails, a second
+host is brought up with the same IP address and will take over with
+manual intervention or user supplied automation.</p>
+</li>
+<li>
+<p>Zip the GlassFish Server installation and domain root directory.
+Restore it on the new host, assigning it the same network identity.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gcmkc"></a><a id="GSHAG00259"></a><a id="recovering-glassfish-server-instances"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_recovering_glassfish_server_instances">Recovering GlassFish Server Instances</h4>
+<div class="paragraph">
+<p>GlassFish Server provide tools for backing up and restoring GlassFish
+Server instances. For more information, see <a href="instances.html#gksdy">To
+Resynchronize an Instance and the DAS Offline</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gcmjs"></a><a id="GSHAG00260"></a><a id="recovering-the-http-load-balancer-and-web-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_recovering_the_http_load_balancer_and_web_server">Recovering the HTTP Load Balancer and Web Server</h4>
+<div class="paragraph">
+<p>There are no explicit commands to back up only a web server
+configuration. Simply zip the web server installation directory. After
+failure, unzip the saved backup on a new host with the same network
+identity. If the new host has a different IP address, update the DNS
+server or the routers.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>This assumes that the web server is either reinstalled or restored from
+an image first.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The Load Balancer Plug-In (<code>plugins</code> directory) and configurations are
+in the web server installation directory, typically <code>/opt/SUNWwbsvr</code>.
+The web-install`/<code>web-instance</code>/config` directory contains the
+<code>loadbalancer.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p><a id="gcmjr"></a><a id="GSHAG00261"></a><a id="recovering-message-queue"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_recovering_message_queue">Recovering Message Queue</h4>
+<div class="paragraph">
+<p>When a Message Queue broker becomes unavailable, the method you use to
+restore the broker to operation depends on the nature of the failure
+that caused the broker to become unavailable:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Power failure or failure other than disk storage</p>
+</li>
+<li>
+<p>Failure of disk storage</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Additionally, the urgency of restoring an unavailable broker to
+operation depends on the type of the broker:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Standalone Broker. When a standalone broker becomes unavailable, both
+service availability and data availability are interrupted. Restore the
+broker to operation as soon as possible to restore availability.</p>
+</li>
+<li>
+<p>Broker in a Conventional Cluster. When a broker in a conventional
+cluster becomes unavailable, service availability continues to be
+provided by the other brokers in the cluster. However, data availability
+of the persistent data stored by the unavailable broker is interrupted.
+Restore the broker to operation to restore availability of its
+persistent data.</p>
+</li>
+<li>
+<p>Broker in an Enhanced Cluster. When a broker in an enhanced cluster
+becomes unavailable, service availability and data availability continue
+to be provided by the other brokers in the cluster. Restore the broker
+to operation to return the cluster to its previous capacity.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="glaiv"></a><a id="GSHAG00220"></a><a id="recovering-from-power-failure-and-failures-other-than-disk-storage"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_recovering_from_power_failure_and_failures_other_than_disk_storage">Recovering From Power Failure and Failures Other Than Disk Storage</h5>
+<div class="paragraph">
+<p>When a host is affected by a power failure or failure of a non-disk
+component such as memory, processor or network card, restore Message
+Queue brokers on the affected host by starting the brokers after the
+failure has been remedied.</p>
+</div>
+<div class="paragraph">
+<p>To start brokers serving as Embedded or Local JMS hosts, start the
+GlassFish instances the brokers are servicing. To start brokers serving
+as Remote JMS hosts, use the <code>imqbrokerd</code> Message Queue utility.</p>
+</div>
+<div class="paragraph">
+<p><a id="glaiu"></a><a id="GSHAG00221"></a><a id="recovering-from-failure-of-disk-storage"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_recovering_from_failure_of_disk_storage">Recovering from Failure of Disk Storage</h5>
+<div class="paragraph">
+<p>Message Queue uses disk storage for software, configuration files and
+persistent data stores. In a default GlassFish installation, all three
+of these are generally stored on the same disk: the Message Queue
+software in as-install-parent`/mq`, and broker configuration files and
+persistent data stores (except for the persistent data stores of
+enhanced clusters, which are housed in highly available databases) in
+domain-dir`/imq`. If this disk fails, restoring brokers to operation is
+impossible unless you have previously created a backup of these items.
+To create such a backup, use a utility such as <code>zip</code>, <code>gzip</code> or <code>tar</code> to
+create archives of these directories and all their content. When
+creating the backup, you should first quiesce all brokers and physical
+destinations, as described in "<a href="../../openmq/mq-admin-guide/broker-management.html#GMADG00522">Quiescing a Broker</a>" and
+"<a href="../../openmq/mq-admin-guide/message-delivery.html#GMADG00533">Pausing and Resuming a Physical Destination</a>" in Open
+Message Queue Administration Guide, respectively. Then, after the failed
+disk is replaced and put into service, expand the backup archive into
+the same location.</p>
+</div>
+<div class="paragraph">
+<p>Restoring the Persistent Data Store From Backup. For many messaging
+applications, restoring a persistent data store from backup does not
+produce the desired results because the backed up store does not
+represent the content of the store when the disk failure occurred. In
+some applications, the persistent data changes rapidly enough to make
+backups obsolete as soon as they are created. To avoid issues in
+restoring a persistent data store, consider using a RAID or SAN data
+storage solution that is fault tolerant, especially for data stores in
+production environments.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdaz"></a><a id="GSHAG00171"></a><a id="more-information"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_more_information">More Information</h3>
+<div class="paragraph">
+<p>For information about planning a high-availability deployment, including
+assessing hardware requirements, planning network configuration, and
+selecting a topology, see the <a href="../deployment-planning-guide/toc.html#GSPLG">GlassFish Server Open Source
+Edition Deployment Planning Guide</a>. This manual also provides a
+high-level introduction to concepts such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GlassFish Server components such as node agents, domains, and clusters</p>
+</li>
+<li>
+<p>IIOP load balancing in a cluster</p>
+</li>
+<li>
+<p>Message queue failover</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about developing applications that take advantage
+of high availability features, see the <a href="../application-development-guide/toc.html#GSDVG">GlassFish Server Open
+Source Edition Application Development Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information on how to configure and tune applications and GlassFish
+Server for best performance with high availability, see the
+<a href="../performance-tuning-guide/toc.html#GSPTG">GlassFish Server Open Source Edition Performance Tuning
+Guide</a>, which discusses topics such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Tuning persistence frequency and persistence scope</p>
+</li>
+<li>
+<p>Checkpointing stateful session beans</p>
+</li>
+<li>
+<p>Configuring the JDBC connection pool</p>
+</li>
+<li>
+<p>Session size</p>
+</li>
+<li>
+<p>Configuring load balancers for best performance</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="preface.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="ssh-setup.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

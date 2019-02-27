@@ -1,0 +1,2001 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Using Enterprise JavaBeans Technology</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Using Enterprise JavaBeans Technology</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="webapps.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="container_managed-persistence.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00010"></a><a id="beahl"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-enterprise-javabeans-technology">8 Using Enterprise JavaBeans Technology</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how Enterprise JavaBeans ( EJB) technology is
+supported in the Oracle GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beahn">Value Added Features</a></p>
+</li>
+<li>
+<p><a href="#beahw">EJB Timer Service</a></p>
+</li>
+<li>
+<p><a href="#beahx">Using Session Beans</a></p>
+</li>
+<li>
+<p><a href="#beail">Using Read-Only Beans</a></p>
+</li>
+<li>
+<p><a href="#beait">Using Message-Driven Beans</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For general information about enterprise beans, see
+"https://javaee.github.io/tutorial/partentbeans.html[Enterprise Beans]"
+in The Java EE 8 Tutorial.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The full GlassFish Server supports the entire EJB
+3.1 specification. For details, see
+<a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a>
+(<code>http://jcp.org/en/jsr/detail?id=318</code>).</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server is backward compatible with 1.1, 2.0, 2.1, and 3.0
+enterprise beans. However, to take advantage of version 3.1 features,
+you should develop new beans as 3.1 enterprise beans.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beahn"></a><a id="GSDVG00145"></a><a id="value-added-features"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_value_added_features">Value Added Features</h3>
+<div class="paragraph">
+<p>The GlassFish Server provides a number of value additions that relate to
+EJB development. References to more in-depth material are included.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaho">Read-Only Beans</a></p>
+</li>
+<li>
+<p><a href="#beahp">The <code>pass-by-reference</code> Element</a></p>
+</li>
+<li>
+<p><a href="#beahq">Pooling and Caching</a></p>
+</li>
+<li>
+<p><a href="#beahu">Priority Based Scheduling of Remote Bean Invocations</a></p>
+</li>
+<li>
+<p><a href="#beahv">Immediate Flushing</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaho"></a><a id="GSDVG00420"></a><a id="read-only-beans"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_read_only_beans">Read-Only Beans</h4>
+<div class="paragraph">
+<p>Another feature that the GlassFish Server provides is the read-only
+bean, an EJB 2.1 entity bean that is never modified by an EJB client.
+Read-only beans avoid database updates completely.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Read-only beans are specific to the GlassFish Server and are not part of
+the Enterprise JavaBeans Specification, v2.1. Use of this feature for an
+EJB 2.1 bean results in a non-portable application.</p>
+</div>
+<div class="paragraph">
+<p>To make an EJB 3.0 entity read-only, use <code>@Column</code> annotations to mark
+its columns <code>insertable=false</code> and <code>updatable=false</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A read-only bean can be used to cache a database entry that is
+frequently accessed but rarely updated (externally by other beans). When
+the data that is cached by a read-only bean is updated by another bean,
+the read-only bean can be notified to refresh its cached data.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server provides a number of ways by which a read-only
+bean&#8217;s state can be refreshed. By setting the
+<code>refresh-period-in-seconds</code> element in the <code>glassfish-ejb-jar.xml</code> file
+and the <code>trans-attribute</code> element (or <code>@TransactionAttribute</code>
+annotation) in the <code>ejb-jar.xml</code> file, it is easy to configure a
+read-only bean that is one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Always refreshed</p>
+</li>
+<li>
+<p>Periodically refreshed</p>
+</li>
+<li>
+<p>Never refreshed</p>
+</li>
+<li>
+<p>Programmatically refreshed</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Read-only beans are best suited for situations where the underlying data
+never changes, or changes infrequently. For further information and
+usage guidelines, see <a href="#beail">Using Read-Only Beans</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahp"></a><a id="GSDVG00421"></a><a id="the-pass-by-reference-element"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_code_pass_by_reference_code_element">The <code>pass-by-reference</code> Element</h4>
+<div class="paragraph">
+<p>The <code>pass-by-reference</code> element in the <code>glassfish-ejb-jar.xml</code> file
+allows you to specify the parameter passing semantics for colocated
+remote EJB invocations. This is an opportunity to improve performance.
+However, use of this feature results in non-portable applications. See
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00219">pass-by-reference</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahq"></a><a id="GSDVG00422"></a><a id="pooling-and-caching"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pooling_and_caching">Pooling and Caching</h4>
+<div class="paragraph">
+<p>The EJB container of the GlassFish Server pools anonymous instances
+(message-driven beans, stateless session beans, and entity beans) to
+reduce the overhead of creating and destroying objects. The EJB
+container maintains the free pool for each bean that is deployed. Bean
+instances in the free pool have no identity (that is, no primary key
+associated) and are used to serve method calls. The free beans are also
+used to serve all methods for stateless session beans.</p>
+</div>
+<div class="paragraph">
+<p>Bean instances in the free pool transition from a Pooled state to a
+Cached state after <code>ejbCreate</code> and the business methods run. The size
+and behavior of each pool is controlled using pool-related properties in
+the EJB container or the <code>glassfish-ejb-jar.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>In addition, the GlassFish Server supports a number of tunable
+parameters that can control the number of "stateful" instances (stateful
+session beans and entity beans) cached as well as the duration they are
+cached. Multiple bean instances that refer to the same database row in a
+table can be cached. The EJB container maintains a cache for each bean
+that is deployed.</p>
+</div>
+<div class="paragraph">
+<p>To achieve scalability, the container selectively evicts some bean
+instances from the cache, usually when cache overflows. These evicted
+bean instances return to the free bean pool. The size and behavior of
+each cache can be controlled using the cache-related properties in the
+EJB container or the <code>glassfish-ejb-jar.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>Pooling and caching parameters for the <code>glassfish-ejb-jar.xml</code> file are
+described in "<a href="../application-deployment-guide/dd-elements.html#GSDPG00095">bean-cache</a>" in GlassFish Server Open
+Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahr"></a><a id="GSDVG00285"></a><a id="pooling-parameters"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_pooling_parameters">Pooling Parameters</h5>
+<div class="paragraph">
+<p>One of the most important parameters for GlassFish Server pooling is
+<code>steady-pool-size</code>. When <code>steady-pool-size</code> is set to a value greater
+than 0, the container not only pre-populates the bean pool with the
+specified number of beans, but also attempts to ensure that this number
+of beans is always available in the free pool. This ensures that there
+are enough beans in the ready-to-serve state to process user requests.</p>
+</div>
+<div class="paragraph">
+<p>Note that the <code>steady-pool-size</code> and <code>max-pool-size</code> parameters only
+govern the number of instances that are pooled over a long period of
+time. They do not necessarily guarantee that the number of instances
+that may exist in the JVM at a given time will not exceed the value
+specified by <code>max-pool-size</code>. For example, suppose an idle stateless
+session container has a fully-populated pool with a <code>steady-pool-size</code>
+of 10. If 20 concurrent requests arrive for the EJB component, the
+container creates 10 additional instances to satisfy the burst of
+requests. The advantage of this is that it prevents the container from
+blocking any of the incoming requests. However, if the activity dies
+down to 10 or fewer concurrent requests, the additional 10 instances are
+discarded.</p>
+</div>
+<div class="paragraph">
+<p>Another parameter, <code>pool-idle-timeout-in-seconds</code>, allows the
+administrator to specify the amount of time a bean instance can be idle
+in the pool. When <code>pool-idle-timeout-in-seconds</code> is set to greater than
+0, the container removes or destroys any bean instance that is idle for
+this specified duration.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahs"></a><a id="GSDVG00286"></a><a id="caching-parameters"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_caching_parameters">Caching Parameters</h5>
+<div class="paragraph">
+<p>GlassFish Server provides a way that completely avoids caching of entity
+beans, using commit option C. Commit option C is particularly useful if
+beans are accessed in large number but very rarely reused. For
+additional information, refer to
+<a href="transaction-service.html#beajh">Commit Options</a>.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server caches can be either bounded or unbounded. Bounded
+caches have limits on the number of beans that they can hold beyond
+which beans are passivated. For stateful session beans, there are three
+ways (LRU, NRU and FIFO) of picking victim beans when cache overflow
+occurs. Caches can also passivate beans that are idle (not accessed for
+a specified duration).</p>
+</div>
+<div class="paragraph">
+<p><a id="beahu"></a><a id="GSDVG00423"></a><a id="priority-based-scheduling-of-remote-bean-invocations"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_priority_based_scheduling_of_remote_bean_invocations">Priority Based Scheduling of Remote Bean Invocations</h4>
+<div class="paragraph">
+<p>You can create multiple thread pools, each having its own work queues.
+An optional element in the <code>glassfish-ejb-jar.xml</code> file,
+<code>use-thread-pool-id</code>, specifies the thread pool that processes the
+requests for the bean. The bean must have a remote interface, or
+<code>use-thread-pool-id</code> is ignored. You can create different thread pools
+and specify the appropriate thread pool ID for a bean that requires a
+quick response time. If there is no such thread pool configured or if
+the element is absent, the default thread pool is used.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahv"></a><a id="GSDVG00424"></a><a id="immediate-flushing"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_immediate_flushing">Immediate Flushing</h4>
+<div class="paragraph">
+<p>Normally, all entity bean updates within a transaction are batched and
+executed at the end of the transaction. The only exception is the
+database flush that precedes execution of a finder or select query.</p>
+</div>
+<div class="paragraph">
+<p>Since a transaction often spans many method calls, you might want to
+find out if the updates made by a method succeeded or failed immediately
+after method execution. To force a flush at the end of a method&#8217;s
+execution, use the <code>flush-at-end-of-method</code> element in the
+<code>glassfish-ejb-jar.xml</code> file. Only non-finder methods in an entity bean
+can be flush-enabled. (For an EJB 2.1 bean, these methods must be in the
+Local, Local Home, Remote, or Remote Home interface.) See
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00156">flush-at-end-of-method</a>" in GlassFish Server Open
+Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>Upon completion of the method, the EJB container updates the database.
+Any exception thrown by the underlying data store is wrapped as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the method that triggered the flush is a <code>create</code> method, the
+exception is wrapped with <code>CreateException</code>.</p>
+</li>
+<li>
+<p>If the method that triggered the flush is a <code>remove</code> method, the
+exception is wrapped with <code>RemoveException</code>.</p>
+</li>
+<li>
+<p>For all other methods, the exception is wrapped with <code>EJBException</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All normal end-of-transaction database synchronization steps occur
+regardless of whether the database has been flushed during the
+transaction.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahw"></a><a id="GSDVG00146"></a><a id="ejb-timer-service"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejb_timer_service">EJB Timer Service</h3>
+<div class="paragraph">
+<p>The EJB Timer Service uses a database to store persistent information
+about EJB timers. The EJB Timer Service in GlassFish Server is
+preconfigured to use an embedded version of the Apache Derby database.</p>
+</div>
+<div class="paragraph">
+<p>The EJB Timer Service configuration can store persistent timer
+information in any database supported by the GlassFish Server for
+persistence. For a list of the JDBC drivers currently supported by the
+GlassFish Server, see the <a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source
+Edition Release Notes</a>. For configurations of supported and other
+drivers, see "<a href="../administration-guide/jdbc.html#GSADG00579">Configuration Specifics for JDBC
+Drivers</a>" in GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>The timer service is automatically enabled when you deploy an
+application or module that uses it. You can verify that the timer
+service is running by accessing the following URL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/ejb-timer-service-app/timer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To change the database used by the EJB Timer Service, set the EJB Timer
+Service&#8217;s Timer DataSource setting to a valid JDBC resource. If the EJB
+Timer Service has already been started in a server instance, you must
+also create the timer database table. DDL files are located in
+as-install`/lib/install/databases`.</p>
+</div>
+<div class="paragraph">
+<p>Using the EJB Timer Service is equivalent to interacting with a single
+JDBC resource manager. If an EJB component or application accesses a
+database either directly through JDBC or indirectly (for example,
+through an entity bean&#8217;s persistence mechanism), and also interacts with
+the EJB Timer Service, its data source must be configured with an XA
+JDBC driver.</p>
+</div>
+<div class="paragraph">
+<p>You can change the following EJB Timer Service settings. You must
+restart the server for the changes to take effect.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Minimum Delivery Interval</dt>
+<dd>
+<p>Specifies the minimum time in milliseconds before an expiration for a
+particular timer can occur. This guards against extremely small timer
+increments that can overload the server. The default is <code>1000</code>.</p>
+</dd>
+<dt class="hdlist1">Maximum Redeliveries</dt>
+<dd>
+<p>Specifies the maximum number of times the EJB timer service attempts
+to redeliver a timer expiration after an exception or rollback of a
+container-managed transaction. The default is <code>1</code>.</p>
+</dd>
+<dt class="hdlist1">Redelivery Interval</dt>
+<dd>
+<p>Specifies how long in milliseconds the EJB timer service waits after a
+failed <code>ejbTimeout</code> delivery before attempting a redelivery. The
+default is <code>5000</code>.</p>
+</dd>
+<dt class="hdlist1">Timer DataSource</dt>
+<dd>
+<p>Specifies the database used by the EJB Timer Service. The default is
+<code>jdbc/__TimerPool</code>.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>Do not use the <code>jdbc/<em>TimerPool</code> resource for timers in clustered
+GlassFish Server environments. You must instead use a custom JDBC
+resource or the <code>jdbc/</em>default</code> resource. See the instructions below,
+in <a href="#gktqo">To Deploy an EJB Timer to a Cluster</a>. Also refer to
+"<a href="../administration-guide/jdbc.html#GSADG00747">Enabling the jdbc/__default Resource in a Clustered
+Environment</a>" in GlassFish Server Open Source Edition Administration
+Guide.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For information about the <code>asadmin list-timers</code> and
+<code>asadmin migrate-timers</code> subcommands, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish
+Server Open Source Edition Reference Manual</a>. For information about
+migrating EJB timers, see "<a href="../ha-administration-guide/instances.html#GSHAG00190">Migrating EJB Timers</a>" in
+GlassFish Server Open Source Edition High Availability Administration
+Guide.</p>
+</div>
+<div class="paragraph">
+<p>You can use the <code>--keepstate</code> option of the <code>asadmin redeploy</code> command
+to retain EJB timers between redeployments.</p>
+</div>
+<div class="paragraph">
+<p>The default for <code>--keepstate</code> is false. This option is supported only on
+the default server instance, named <code>server</code>. It is not supported and
+ignored for any other target.</p>
+</div>
+<div class="paragraph">
+<p>When the <code>--keepstate</code> is set to true, each application that uses an EJB
+timer is assigned an ID in the timer database. The EJB object that is
+associated with a given application is assigned an ID that is
+constructed from the application ID and a numerical suffix. To preserve
+active timer data, GlassFish Server stores the application ID and the
+EJB ID in the timer database. To restore the data, the class loader of
+the newly redeployed application retrieves the EJB timers that
+correspond to these IDs from the timer database.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin redeploy</code> command, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktqo"></a><a id="GSDVG00070"></a><a id="to-deploy-an-ejb-timer-to-a-cluster"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_deploy_an_ejb_timer_to_a_cluster">To Deploy an EJB Timer to a Cluster</h4>
+<div class="paragraph">
+<p>This procedure explains how to deploy an EJB timer to a cluster.</p>
+</div>
+<div class="paragraph">
+<p>By default, the GlassFish Server 5.0 timer service points to the
+preconfigured <code>jdbc/__TimerPool</code> resource, which uses an embedded Apache
+Derby database configuration that will not work in clustered
+environments.</p>
+</div>
+<div class="paragraph">
+<p>The problem is that embedded Apache Derby database runs in the GlassFish
+Server Java VM, so when you use the <code>jdbc/__TimerPool</code> resource, each
+DAS and each clustered server instance will have its own database table.
+Because of this, clustered server instances will not be able to find the
+database table on the DAS, and the DAS will not be able to find the
+tables on the clustered server instances.</p>
+</div>
+<div class="paragraph">
+<p>The solution is to use either a custom JDBC resource or the
+<code>jdbc/__default</code> resource that is preconfigured but not enabled by
+default in GlassFish Server. The <code>jdbc/__default</code> resource does not use
+the embedded Apache Derby database by default.</p>
+</div>
+<div id="GSDVG547" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>If creating a new timer resource, the resource should be created before
+deploying applications that will use the timer.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not use the <code>jdbc/__TimerPool</code> resource for timers in clustered
+GlassFish Server environments. You must instead use a custom JDBC
+resource or the <code>jdbc/__default</code> resource. See
+"o<a href="GSADG00747">Enabling the jdbc/__default Resource in a Clustered
+Environment</a>" in GlassFish Server Open Source Edition Administration
+Guide.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Execute the following command:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set configs.config.cluster_name-config.ejb-container.ejb-timer-service.timer-
+datasource=jdbc/my-timer-resource</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the DAS and the target cluster(s).<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin stop-cluster cluster-name
+asadmin stop-domain domain-name
+asadmin start-domain domain-name
+asadmin start-cluster cluster-name</pre>
+</div>
+</div>
+<div id="GSDVG548" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>If you inadvertently used the <code>jdbc/__TimerPool</code> resource for your EJB
+timer in a clustered GlassFish Server environment, the DAS and the
+clustered server instances will be using separate Apache Derby database
+tables that are running in individual Java VMs. For timers to work in a
+clustered environment, the DAS and the clustered server instances must
+share a common database table.</p>
+</div>
+<div class="paragraph">
+<p>If you attempt to deploy an application with EJB timers without setting
+the timer resource correctly, the startup will fail, and you will be
+left with a marker file, named <code>ejb-timer-service-app</code>, on the DAS that
+will prevent the Timer Service from correctly creating the database
+table.</p>
+</div>
+<div class="paragraph">
+<p>The solution is to remove the marker file on the DAS, restart the DAS
+and the clusters, and then redploy any applications that rely on the
+offending EJB timer. The marker file is located on the DAS in
+domain-dir`/generated/ejb/``ejb-timer-service-app`.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahx"></a><a id="GSDVG00147"></a><a id="using-session-beans"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_session_beans">Using Session Beans</h3>
+<div class="paragraph">
+<p>This section provides guidelines for creating session beans in the
+GlassFish Server environment.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beahy">About the Session Bean Containers</a></p>
+</li>
+<li>
+<p><a href="#beaib">Stateful Session Bean Failover</a></p>
+</li>
+<li>
+<p><a href="#beaii">Session Bean Restrictions and Optimizations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Information on session beans is contained in the Enterprise JavaBeans
+Specification, v3.1.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahy"></a><a id="GSDVG00425"></a><a id="about-the-session-bean-containers"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_about_the_session_bean_containers">About the Session Bean Containers</h4>
+<div class="paragraph">
+<p>Like an entity bean, a session bean can access a database through Java
+Database Connectivity (JDBC) calls. A session bean can also provide
+transaction settings. These transaction settings and JDBC calls are
+referenced by the session bean&#8217;s container, allowing it to participate
+in transactions managed by the container.</p>
+</div>
+<div class="paragraph">
+<p>A container managing stateless session beans has a different charter
+from a container managing stateful session beans.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beahz">Stateless Container</a></p>
+</li>
+<li>
+<p><a href="#beaia">Stateful Container</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beahz"></a><a id="GSDVG00287"></a><a id="stateless-container"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_stateless_container">Stateless Container</h5>
+<div class="paragraph">
+<p>The stateless container manages stateless session beans, which, by
+definition, do not carry client-specific states. All session beans (of a
+particular type) are considered equal.</p>
+</div>
+<div class="paragraph">
+<p>A stateless session bean container uses a bean pool to service requests.
+The GlassFish Server specific deployment descriptor file,
+<code>glassfish-ejb-jar.xml</code>, contains the properties that define the pool:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>steady-pool-size</code></p>
+</li>
+<li>
+<p><code>resize-quantity</code></p>
+</li>
+<li>
+<p><code>max-pool-size</code></p>
+</li>
+<li>
+<p><code>pool-idle-timeout-in-seconds</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about <code>glassfish-ejb-jar.xml</code>, see
+"<a href="../application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server provides the <code>wscompile</code> and <code>wsdeploy</code> tools to
+help you implement a web service endpoint as a stateless session bean.
+For more information about these tools, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish
+Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaia"></a><a id="GSDVG00288"></a><a id="stateful-container"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_stateful_container">Stateful Container</h5>
+<div class="paragraph">
+<p>The stateful container manages the stateful session beans, which, by
+definition, carry the client-specific state. There is a one-to-one
+relationship between the client and the stateful session beans. At
+creation, each stateful session bean (SFSB) is given a unique session ID
+that is used to access the session bean so that an instance of a
+stateful session bean is accessed by a single client only.</p>
+</div>
+<div class="paragraph">
+<p>Stateful session beans are managed using cache. The size and behavior of
+stateful session beans cache are controlled by specifying the following
+<code>glassfish-ejb-jar.xml</code> parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>max-cache-size</code></p>
+</li>
+<li>
+<p><code>resize-quantity</code></p>
+</li>
+<li>
+<p><code>cache-idle-timeout-in-seconds</code></p>
+</li>
+<li>
+<p><code>removal-timeout-in-seconds</code></p>
+</li>
+<li>
+<p><code>victim-selection-policy</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>max-cache-size</code> element specifies the maximum number of session
+beans that are held in cache. If the cache overflows (when the number of
+beans exceeds <code>max-cache-size</code>), the container then passivates some
+beans or writes out the serialized state of the bean into a file. The
+directory in which the file is created is obtained from the EJB
+container using the configuration APIs.</p>
+</div>
+<div class="paragraph">
+<p>For more information about <code>glassfish-ejb-jar.xml</code>, see
+"<a href="../application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>The passivated beans are stored on the file system. The Session Store
+Location setting in the EJB container allows the administrator to
+specify the directory where passivated beans are stored. By default,
+passivated stateful session beans are stored in application-specific
+subdirectories created under domain-dir`/session-store`.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Make sure the <code>delete</code> option is set in the <code>server.policy</code> file, or
+expired file-based sessions might not be deleted properly. For more
+information about <code>server.policy</code>, see <a href="securing-apps.html#beabx">The
+<code>server.policy</code> File</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The Session Store Location setting also determines where the session
+state is persisted if it is not highly available; see
+<a href="#beaic">Choosing a Persistence Store</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaib"></a><a id="GSDVG00426"></a><a id="stateful-session-bean-failover"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_stateful_session_bean_failover">Stateful Session Bean Failover</h4>
+<div class="paragraph">
+<p>An SFSB&#8217;s state can be saved in a persistent store in case a server
+instance fails. The state of an SFSB is saved to the persistent store at
+predefined points in its life cycle. This is called checkpointing. If
+SFSB checkpointing is enabled, checkpointing generally occurs after any
+transaction involving the SFSB is completed, even if the transaction
+rolls back.</p>
+</div>
+<div class="paragraph">
+<p>However, if an SFSB participates in a bean-managed transaction, the
+transaction might be committed in the middle of the execution of a bean
+method. Since the bean&#8217;s state might be undergoing transition as a
+result of the method invocation, this is not an appropriate instant to
+checkpoint the bean&#8217;s state. In this case, the EJB container checkpoints
+the bean&#8217;s state at the end of the corresponding method, provided the
+bean is not in the scope of another transaction when that method ends.
+If a bean-managed transaction spans across multiple methods,
+checkpointing is delayed until there is no active transaction at the end
+of a subsequent method.</p>
+</div>
+<div class="paragraph">
+<p>The state of an SFSB is not necessarily transactional and might be
+significantly modified as a result of non-transactional business
+methods. If this is the case for an SFSB, you can specify a list of
+checkpointed methods. If SFSB checkpointing is enabled, checkpointing
+occurs after any checkpointed methods are completed.</p>
+</div>
+<div class="paragraph">
+<p>The following table lists the types of references that SFSB failover
+supports. All objects bound into an SFSB must be one of the supported
+types. In the table, No indicates that failover for the object type
+might not work in all cases and that no failover support is provided.
+However, failover might work in some cases for that object type. For
+example, failover might work because the class implementing that type is
+serializable.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG549"></a><a id="sthref18"></a><a id="fvyed"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-1 Object Types Supported for Java EE Stateful Session Bean State
+Failover</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 45%;">
+<col style="width: 55%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Java Object Type</th>
+<th class="tableblock halign-left valign-top">Failover Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Colocated or distributed stateless session, stateful session, or entity
+bean reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, <code>InitialContext</code> and <code>java:comp/env</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UserTransaction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, but if the instance that fails is never
+restarted, any prepared global transactions are lost and might not be
+correctly rolled back or committed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC DataSource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Message Service (JMS) ConnectionFactory, Destination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JavaMail Session</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connection Factory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administered Object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web service reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serializable Java types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extended persistence context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more information about the <code>InitialContext</code>, see
+<a href="jndi.html#beans">Accessing the Naming Context</a>. For more information
+about transaction recovery, see <a href="transaction-service.html#beanm">Using
+the Transaction Service</a>. For more information about Administered
+Objects, see "<a href="../administration-guide/jms.html#GSADG00599">Administering JMS Physical Destinations</a>"
+in GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Idempotent URLs are supported along the HTTP path, but not the RMI-IIOP
+path. For more information, see <a href="webapps.html#beage">Configuring
+Idempotent URL Requests</a>.</p>
+</div>
+<div class="paragraph">
+<p>If a server instance to which an RMI-IIOP client request is sent crashes
+during the request processing (before the response is prepared and sent
+back to the client), an error is sent to the client. The client must
+retry the request explicitly. When the client retries the request, the
+request is sent to another server instance in the cluster, which
+retrieves session state information for this client.</p>
+</div>
+<div class="paragraph">
+<p>HTTP sessions can also be saved in a persistent store in case a server
+instance fails. In addition, if a distributable web application
+references an SFSB, and the web application&#8217;s session fails over, the
+EJB reference is also failed over. For more information, see
+<a href="webapps.html#beahe">Distributed Sessions and Persistence</a>.</p>
+</div>
+<div class="paragraph">
+<p>If an SFSB that uses session persistence is undeployed while the
+GlassFish Server instance is stopped, the session data in the
+persistence store might not be cleared. To prevent this, undeploy the
+SFSB while the GlassFish Server instance is running.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Configure SFSB failover by:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaic">Choosing a Persistence Store</a></p>
+</li>
+<li>
+<p><a href="#beaid">Enabling Checkpointing</a></p>
+</li>
+<li>
+<p><a href="#beaih">Specifying Methods to Be Checkpointed</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaic"></a><a id="GSDVG00289"></a><a id="choosing-a-persistence-store"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_choosing_a_persistence_store">Choosing a Persistence Store</h5>
+<div class="paragraph">
+<p>The following types of persistent storage are supported for passivation
+and checkpointing of the SFSB state:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The local file system - Allows a single server instance to recover the
+SFSB state after a failure and restart. This store also provides
+passivation and activation of the state to help control the amount of
+memory used. This option is not supported in a production environment
+that requires SFSB state persistence. This is the default storage
+mechanism if availability is not enabled.</p>
+</li>
+<li>
+<p>Other servers - Uses other server instances in the cluster for session
+persistence. Clustered server instances replicate session state. Each
+backup instance stores the replicated data in memory. This is the
+default storage mechanism if availability is enabled.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Choose the persistence store in one of the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To use the local file system, first disable availability. Select the
+Availability Service component under the relevant configuration in the
+Administration Console. Uncheck the Availability Service box. Then
+select the EJB Container component and edit the Session Store Location
+value. The default is domain-dir`/session-store`.</p>
+</li>
+<li>
+<p>To use other servers, select the Availability Service component under
+the relevant configuration in the Administration Console. Check the
+Availability Service box. To enable availability for the EJB container,
+select the EJB Container Availability tab, then check the Availability
+Service box. All instances in an GlassFish Server cluster should have
+the same availability settings to ensure consistent behavior.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about SFSB state persistence, see the
+<a href="../ha-administration-guide/toc.html#GSHAG">GlassFish Server Open Source Edition High Availability
+Administration Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkpdg"></a><a id="GSDVG00033"></a><a id="using-the---keepstate-option"></a></p>
+</div>
+<div class="paragraph">
+<p>Using the <code>--keepstate</code> Option</p>
+</div>
+<div class="paragraph">
+<p>If you are using the file system for persistence, you can use the
+<code>--keepstate</code> option of the <code>asadmin redeploy</code> command to retain the
+SFSB state between redeployments.</p>
+</div>
+<div class="paragraph">
+<p>The default for <code>--keepstate</code> is false. This option is supported only on
+the default server instance, named <code>server</code>. It is not supported and
+ignored for any other target.</p>
+</div>
+<div class="paragraph">
+<p>Some changes to an application between redeployments prevent this
+feature from working properly. For example, do not change the set of
+instance variables in the SFSB bean class.</p>
+</div>
+<div class="paragraph">
+<p>If any active SFSB instance fails to be preserved or restored, none of
+the SFSB instances will be available when the redeployment is complete.
+However, the redeployment continues and a warning is logged.</p>
+</div>
+<div class="paragraph">
+<p>To preserve active state data, GlassFish Server serializes the data and
+saves it in memory. To restore the data, the class loader of the newly
+redeployed application deserializes the data that was previously saved.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin redeploy</code> command, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkpef"></a><a id="GSDVG00034"></a><a id="using-the---asyncreplication-option"></a></p>
+</div>
+<div class="paragraph">
+<p>Using the <code>--asyncreplication</code> Option</p>
+</div>
+<div class="paragraph">
+<p>If you are using replication on other servers for persistence, you can
+use the <code>--asyncreplication</code> option of the <code>asadmin deploy</code> command to
+specify that SFSB states are first buffered and then replicated using a
+separate asynchronous thread. If <code>--asyncreplication</code> is set to true
+(default), performance is improved but availability is reduced. If the
+instance where states are buffered but not yet replicated fails, the
+states are lost. If set to false, performance is reduced but
+availability is guaranteed. States are not buffered but immediately
+transmitted to other instances in the cluster.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin deploy</code> command, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaid"></a><a id="GSDVG00290"></a><a id="enabling-checkpointing"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_enabling_checkpointing">Enabling Checkpointing</h5>
+<div class="paragraph">
+<p>The following sections describe how to enable SFSB checkpointing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaie">Server Instance and EJB Container Levels</a></p>
+</li>
+<li>
+<p><a href="#beaif">Application and EJB Module Levels</a></p>
+</li>
+<li>
+<p><a href="#beaig">SFSB Level</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaie"></a><a id="GSDVG00035"></a><a id="server-instance-and-ejb-container-levels"></a></p>
+</div>
+<div class="paragraph">
+<p>Server Instance and EJB Container Levels</p>
+</div>
+<div class="paragraph">
+<p>To enable SFSB checkpointing at the server instance or EJB container
+level, see <a href="#beaic">Choosing a Persistence Store</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaif"></a><a id="GSDVG00036"></a><a id="application-and-ejb-module-levels"></a></p>
+</div>
+<div class="paragraph">
+<p>Application and EJB Module Levels</p>
+</div>
+<div class="paragraph">
+<p>To enable SFSB checkpointing at the application or EJB module level
+during deployment, use the <code>asadmin deploy</code> or <code>asadmin deploydir</code>
+command with the <code>--availabilityenabled</code> option set to <code>true</code>. For
+details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaig"></a><a id="GSDVG00037"></a><a id="sfsb-level"></a></p>
+</div>
+<div class="paragraph">
+<p>SFSB Level</p>
+</div>
+<div class="paragraph">
+<p>To enable SFSB checkpointing at the SFSB level, set
+<code>availability-enabled="true"</code> in the <code>ejb</code> element of the SFSB&#8217;s
+<code>glassfish-ejb-jar.xml</code> file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-ejb-jar&gt;
+   ...
+   &lt;enterprise-beans&gt;
+      ...
+      &lt;ejb availability-enabled="true"&gt;
+         &lt;ejb-name&gt;MySFSB&lt;/ejb-name&gt;
+      &lt;/ejb&gt;
+   ...
+   &lt;/enterprise-beans&gt;
+&lt;/glassfish-ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaih"></a><a id="GSDVG00291"></a><a id="specifying-methods-to-be-checkpointed"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_specifying_methods_to_be_checkpointed">Specifying Methods to Be Checkpointed</h5>
+<div class="paragraph">
+<p>If SFSB checkpointing is enabled, checkpointing generally occurs after
+any transaction involving the SFSB is completed, even if the transaction
+rolls back.</p>
+</div>
+<div class="paragraph">
+<p>To specify additional optional checkpointing of SFSBs at the end of
+non-transactional business methods that cause important modifications to
+the bean&#8217;s state, use the <code>checkpoint-at-end-of-method</code> element within
+the <code>ejb</code> element in <code>glassfish-ejb-jar.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-ejb-jar&gt;
+   ...
+   &lt;enterprise-beans&gt;
+      ...
+      &lt;ejb availability-enabled="true"&gt;
+         &lt;ejb-name&gt;ShoppingCartEJB&lt;/ejb-name&gt;
+         &lt;checkpoint-at-end-of-method&gt;
+            &lt;method&gt;
+               &lt;method-name&gt;addToCart&lt;/method-name&gt;
+            &lt;/method&gt;
+         &lt;/checkpoint-at-end-of-method&gt;
+      &lt;/ejb&gt;
+      ...
+   &lt;/enterprise-beans&gt;
+&lt;/glassfish-ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00108">checkpoint-at-end-of-method</a>" in
+GlassFish Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>The non-transactional methods in the <code>checkpoint-at-end-of-method</code>
+element can be the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create</code> methods defined in the home or business interface of the
+SFSB, if you want to checkpoint the initial state of the SFSB
+immediately after creation</p>
+</li>
+<li>
+<p>For SFSBs using container managed transactions only, methods in the
+remote interface of the bean marked with the transaction attribute
+TX_NOT_SUPPORTED or TX_NEVER</p>
+</li>
+<li>
+<p>For SFSBs using bean managed transactions only, methods in which a
+bean managed transaction is neither started nor committed</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any other methods mentioned in this list are ignored. At the end of
+invocation of each of these methods, the EJB container saves the state
+of the SFSB to persistent store.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If an SFSB does not participate in any transaction, and if none of its
+methods are explicitly specified in the <code>checkpoint-at-end-of-method</code>
+element, the bean&#8217;s state is not checkpointed at all even if
+<code>availability-enabled="true"</code> for this bean.</p>
+</div>
+<div class="paragraph">
+<p>For better performance, specify a small subset of methods. The methods
+chosen should accomplish a significant amount of work in the context of
+the Java EE application or should result in some important modification
+to the bean&#8217;s state.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beaii"></a><a id="GSDVG00427"></a><a id="session-bean-restrictions-and-optimizations"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_session_bean_restrictions_and_optimizations">Session Bean Restrictions and Optimizations</h4>
+<div class="paragraph">
+<p>This section discusses restrictions on developing session beans and
+provides some optimization guidelines.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaij">Optimizing Session Bean Performance</a></p>
+</li>
+<li>
+<p><a href="#beaik">Restricting Transactions</a></p>
+</li>
+<li>
+<p><a href="#glanq">EJB Singletons</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaij"></a><a id="GSDVG00292"></a><a id="optimizing-session-bean-performance"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_optimizing_session_bean_performance">Optimizing Session Bean Performance</h5>
+<div class="paragraph">
+<p>For stateful session beans, colocating the stateful beans with their
+clients so that the client and bean are executing in the same process
+address space improves performance.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaik"></a><a id="GSDVG00293"></a><a id="restricting-transactions"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_restricting_transactions">Restricting Transactions</h5>
+<div class="paragraph">
+<p>The following restrictions on transactions are enforced by the container
+and must be observed as session beans are developed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A session bean can participate in, at most, a single transaction at a
+time.</p>
+</li>
+<li>
+<p>If a session bean is participating in a transaction, a client cannot
+invoke a method on the bean such that the <code>trans-attribute</code> element (or
+<code>@TransactionAttribute</code> annotation) in the <code>ejb-jar.xml</code> file would
+cause the container to execute the method in a different or unspecified
+transaction context or an exception is thrown.</p>
+</li>
+<li>
+<p>If a session bean instance is participating in a transaction, a client
+cannot invoke the <code>remove</code> method on the session object&#8217;s home or
+business interface object, or an exception is thrown.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="glanq"></a><a id="GSDVG00294"></a><a id="ejb-singletons"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_ejb_singletons">EJB Singletons</h5>
+<div class="paragraph">
+<p>EJB Singletons are created for each server instance in a cluster, and
+not once per cluster.</p>
+</div>
+<div class="paragraph">
+<p><a id="beail"></a><a id="GSDVG00148"></a><a id="using-read-only-beans"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_read_only_beans">Using Read-Only Beans</h3>
+<div class="paragraph">
+<p>A read-only bean is an EJB 2.1 entity bean that is never modified by an
+EJB client. The data that a read-only bean represents can be updated
+externally by other enterprise beans, or by other means, such as direct
+database updates.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Read-only beans are specific to the GlassFish Server and are not part of
+the Enterprise JavaBeans Specification, v2.1. Use of this feature for an
+EJB 2.1 bean results in a non-portable application.</p>
+</div>
+<div class="paragraph">
+<p>To make an EJB 3.0 entity bean read-only, use <code>@Column</code> annotations to
+mark its columns <code>insertable=false</code> and <code>updatable=false</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Read-only beans are best suited for situations where the underlying data
+never changes, or changes infrequently.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaim">Read-Only Bean Characteristics and Life Cycle</a></p>
+</li>
+<li>
+<p><a href="#beain">Read-Only Bean Good Practices</a></p>
+</li>
+<li>
+<p><a href="#beaio">Refreshing Read-Only Beans</a></p>
+</li>
+<li>
+<p><a href="#beais">Deploying Read-Only Beans</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaim"></a><a id="GSDVG00428"></a><a id="read-only-bean-characteristics-and-life-cycle"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_read_only_bean_characteristics_and_life_cycle">Read-Only Bean Characteristics and Life Cycle</h4>
+<div class="paragraph">
+<p>Read-only beans are best suited for situations where the underlying data
+never changes, or changes infrequently. For example, a read-only bean
+can be used to represent a stock quote for a particular company, which
+is updated externally. In such a case, using a regular entity bean might
+incur the burden of calling <code>ejbStore</code>, which can be avoided by using a
+read-only bean.</p>
+</div>
+<div class="paragraph">
+<p>Read-only beans have the following characteristics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Only entity beans can be read-only beans.</p>
+</li>
+<li>
+<p>Either bean-managed persistence (BMP) or container-managed persistence
+(CMP) is allowed. If CMP is used, do not create the database schema
+during deployment. Instead, work with your database administrator to
+populate the data into the tables. See
+<a href="container_managed-persistence.html#beajj">Using Container-Managed
+Persistence</a>.</p>
+</li>
+<li>
+<p>Only container-managed transactions are allowed; read-only beans
+cannot start their own transactions.</p>
+</li>
+<li>
+<p>Read-only beans don&#8217;t update any bean state.</p>
+</li>
+<li>
+<p><code>ejbStore</code> is never called by the container.</p>
+</li>
+<li>
+<p><code>ejbLoad</code> is called only when a transactional method is called or when
+the bean is initially created (in the cache), or at regular intervals
+controlled by the bean&#8217;s <code>refresh-period-in-seconds</code> element in the
+<code>glassfish-ejb-jar.xml</code> file.</p>
+</li>
+<li>
+<p>The home interface can have any number of find methods. The return
+type of the find methods must be the primary key for the same bean type
+(or a collection of primary keys).</p>
+</li>
+<li>
+<p>If the data that the bean represents can change, then
+<code>refresh-period-in-seconds</code> must be set to refresh the beans at regular
+intervals. <code>ejbLoad</code> is called at this regular interval.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A read-only bean comes into existence using the appropriate find
+methods.</p>
+</div>
+<div class="paragraph">
+<p>Read-only beans are cached and have the same cache properties as entity
+beans. When a read-only bean is selected as a victim to make room in the
+cache, <code>ejbPassivate</code> is called and the bean is returned to the free
+pool. When in the free pool, the bean has no identity and is used only
+to serve any finder requests.</p>
+</div>
+<div class="paragraph">
+<p>Read-only beans are bound to the naming service like regular read-write
+entity beans, and clients can look up read-only beans the same way
+read-write entity beans are looked up.</p>
+</div>
+<div class="paragraph">
+<p><a id="beain"></a><a id="GSDVG00429"></a><a id="read-only-bean-good-practices"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_read_only_bean_good_practices">Read-Only Bean Good Practices</h4>
+<div class="paragraph">
+<p>For best results, follow these guidelines when developing read-only
+beans:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Avoid having any <code>create</code> or <code>remove</code> methods in the home interface.</p>
+</li>
+<li>
+<p>Use any of the valid EJB 2.1 transaction attributes for the
+<code>trans-attribute</code> element.<br>
+The reason for having <code>TX_SUPPORTED</code> is to allow reading uncommitted
+data in the same transaction. Also, the transaction attributes can be
+used to force <code>ejbLoad</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaio"></a><a id="GSDVG00430"></a><a id="refreshing-read-only-beans"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_refreshing_read_only_beans">Refreshing Read-Only Beans</h4>
+<div class="paragraph">
+<p>There are several ways of refreshing read-only beans, as addressed in
+the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaip">Invoking a Transactional Method</a></p>
+</li>
+<li>
+<p><a href="#beaiq">Refreshing Periodically</a></p>
+</li>
+<li>
+<p><a href="#beair">Refreshing Programmatically</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaip"></a><a id="GSDVG00295"></a><a id="invoking-a-transactional-method"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_invoking_a_transactional_method">Invoking a Transactional Method</h5>
+<div class="paragraph">
+<p>Invoking any transactional method invokes <code>ejbLoad</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaiq"></a><a id="GSDVG00296"></a><a id="refreshing-periodically"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_refreshing_periodically">Refreshing Periodically</h5>
+<div class="paragraph">
+<p>Use the <code>refresh-period-in-seconds</code> element in the
+<code>glassfish-ejb-jar.xml</code> file to refresh a read-only bean periodically.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the value specified in <code>refresh-period-in-seconds</code> is zero or not
+specified, which is the default, the bean is never refreshed (unless a
+transactional method is accessed).</p>
+</li>
+<li>
+<p>If the value is greater than zero, the bean is refreshed at the rate
+specified.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is the only way to refresh the bean state if the data can be
+modified external to the GlassFish Server.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By default, a single timer is used for all instances of a read-only
+bean. When that timer fires, all bean instances are marked as expired
+and are refreshed from the database the next time they are used.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>-Dcom.sun.ejb.containers.readonly.relative.refresh.mode=true</code>
+flag to refresh each bean instance independently upon access if its
+refresh period has expired. The default is <code>false</code>. Note that each
+instance still has the same refresh period. This additional level of
+granularity can improve the performance of read-only beans that do not
+need to be refreshed at the same time.</p>
+</div>
+<div class="paragraph">
+<p>To set this flag, use the <code>asadmin create-jvm-options</code> command. For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -Dcom.sun.ejb.containers.readonly.relative.refresh.mode=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beair"></a><a id="GSDVG00297"></a><a id="refreshing-programmatically"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_refreshing_programmatically">Refreshing Programmatically</h5>
+<div class="paragraph">
+<p>Typically, beans that update any data that is cached by read-only beans
+need to notify the read-only beans to refresh their state. Use
+ReadOnlyBeanNotifier to force the refresh of read-only beans.</p>
+</div>
+<div class="paragraph">
+<p>To do this, invoke the following methods on the ReadOnlyBeanNotifier
+bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public interface ReadOnlyBeanNotifier extends java.rmi.Remote {
+   refresh(Object PrimaryKey) throws RemoteException;
+ }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The implementation of the ReadOnlyBeanNotifier interface is provided by
+the container. The bean looks up ReadOnlyBeanNotifier using a fragment
+of code such as the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">com.sun.appserv.ejb.ReadOnlyBeanHelper helper =
+  new com.sun.appserv.ejb.ReadOnlyBeanHelper();
+com.sun.appserv.ejb.ReadOnlyBeanNotifier notifier =
+  helper.getReadOnlyBeanNotifier("java:comp/env/ejb/ReadOnlyCustomer");
+notifier.refresh(PrimaryKey);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a local read-only bean notifier, the lookup has this modification:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">helper.getReadOnlyBeanLocalNotifier("java:comp/env/ejb/LocalReadOnlyCustomer");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Beans that update any data that is cached by read-only beans need to
+call the <code>refresh</code> methods. The next (non-transactional) call to the
+read-only bean invokes <code>ejbLoad</code>.</p>
+</div>
+<div class="paragraph">
+<p>For Javadoc tool pages relevant to read-only beans, go to
+<code>http://glassfish.java.net/nonav/docs/v3/api/</code> and click on the
+<code>com.sun.appserv.ejb</code> package.</p>
+</div>
+<div class="paragraph">
+<p><a id="beais"></a><a id="GSDVG00431"></a><a id="deploying-read-only-beans"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_deploying_read_only_beans">Deploying Read-Only Beans</h4>
+<div class="paragraph">
+<p>Read-only beans are deployed in the same manner as other entity beans.
+However, in the entry for the bean in the <code>glassfish-ejb-jar.xml</code> file,
+the <code>is-read-only-bean</code> element must be set to true. That is:</p>
+</div>
+<div class="paragraph">
+<p><code>&lt;is-read-only-bean&gt;true&lt;/is-read-only-bean&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>Also, the <code>refresh-period-in-seconds</code> element in the
+<code>glassfish-ejb-jar.xml</code> file can be set to some value that specifies the
+rate at which the bean is refreshed. If this element is missing, no
+refresh occurs.</p>
+</div>
+<div class="paragraph">
+<p>All requests in the same transaction context are routed to the same
+read-only bean instance. Set the <code>allow-concurrent-access</code> element to
+either <code>true</code> (to allow concurrent accesses) or <code>false</code> (to serialize
+concurrent access to the same read-only bean). The default is <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>For further information on these elements, refer to
+"<a href="../application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beait"></a><a id="GSDVG00149"></a><a id="using-message-driven-beans"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_message_driven_beans">Using Message-Driven Beans</h3>
+<div class="paragraph">
+<p>This section describes message-driven beans and explains the
+requirements for creating them in the GlassFish Server environment.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaiu">Message-Driven Bean Configuration</a></p>
+</li>
+<li>
+<p><a href="#beaiy">Message-Driven Bean Restrictions and Optimizations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaiu"></a><a id="GSDVG00432"></a><a id="message-driven-bean-configuration"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_message_driven_bean_configuration">Message-Driven Bean Configuration</h4>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaiv">Connection Factory and Destination</a></p>
+</li>
+<li>
+<p><a href="#beaiw">Message-Driven Bean Pool</a></p>
+</li>
+<li>
+<p><a href="#beaix">Domain-Level Settings</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about setting up load balancing for message-driven
+beans, see <a href="jms.html#beaop">Load-Balanced Message Inflow</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaiv"></a><a id="GSDVG00298"></a><a id="connection-factory-and-destination"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_connection_factory_and_destination">Connection Factory and Destination</h5>
+<div class="paragraph">
+<p>A message-driven bean is a client to a Connector inbound resource
+adapter. The message-driven bean container uses the JMS service
+integrated into the GlassFish Server for message-driven beans that are
+JMS clients. JMS clients use JMS Connection Factory- and
+Destination-administered objects. A JMS Connection Factory administered
+object is a resource manager Connection Factory object that is used to
+create connections to the JMS provider.</p>
+</div>
+<div class="paragraph">
+<p>The <code>mdb-connection-factory</code> element in the <code>glassfish-ejb-jar.xml</code> file
+for a message-driven bean specifies the connection factory that creates
+the container connection to the JMS provider.</p>
+</div>
+<div class="paragraph">
+<p>The <code>jndi-name</code> element of the <code>ejb</code> element in the
+<code>glassfish-ejb-jar.xml</code> file specifies the JNDI name of the administered
+object for the JMS Queue or Topic destination that is associated with
+the message-driven bean.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaiw"></a><a id="GSDVG00299"></a><a id="message-driven-bean-pool"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_message_driven_bean_pool">Message-Driven Bean Pool</h5>
+<div class="paragraph">
+<p>The container manages a pool of message-driven beans for the concurrent
+processing of a stream of messages. The <code>glassfish-ejb-jar.xml</code> file
+contains the elements that define the pool (that is, the <code>bean-pool</code>
+element):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>steady-pool-size</code></p>
+</li>
+<li>
+<p><code>resize-quantity</code></p>
+</li>
+<li>
+<p><code>max-pool-size</code></p>
+</li>
+<li>
+<p><code>pool-idle-timeout-in-seconds</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about <code>glassfish-ejb-jar.xml</code>, see
+"<a href="../application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaix"></a><a id="GSDVG00300"></a><a id="domain-level-settings"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_domain_level_settings">Domain-Level Settings</h5>
+<div class="paragraph">
+<p>You can control the following domain-level message-driven bean settings
+in the EJB container:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Initial and Minimum Pool Size</dt>
+<dd>
+<p>Specifies the initial and minimum number of beans maintained in the
+pool. The default is <code>0</code>.</p>
+</dd>
+<dt class="hdlist1">Maximum Pool Size</dt>
+<dd>
+<p>Specifies the maximum number of beans that can be created to satisfy
+client requests. The default is 3`2`.</p>
+</dd>
+<dt class="hdlist1">Pool Resize Quantity</dt>
+<dd>
+<p>Specifies the number of beans to be created if a request arrives when
+the pool is empty (subject to the Initial and Minimum Pool Size), or
+the number of beans to remove if idle for more than the Idle Timeout.
+The default is <code>8</code>.</p>
+</dd>
+<dt class="hdlist1">Idle Timeout</dt>
+<dd>
+<p>Specifies the maximum time in seconds that a bean can remain idle in
+the pool. After this amount of time, the bean is destroyed. The
+default is <code>600</code> (10 minutes). A value of <code>0</code> means a bean can remain
+idle indefinitely.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>For information on monitoring message-driven beans, click the Help
+button in the Administration Console. Select the Stand-Alone Instances
+component, select the instance from the table, and select the Monitor
+tab. Or select the Clusters component, select the cluster from the
+table, select the Instances tab, select the instance from the table, and
+select the Monitor tab.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Running monitoring when it is not needed might impact performance, so
+you might choose to turn monitoring off when it is not in use. For
+details, see "o<a href="GSADG00011">Administering the Monitoring Service</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beaiy"></a><a id="GSDVG00433"></a><a id="message-driven-bean-restrictions-and-optimizations"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_message_driven_bean_restrictions_and_optimizations">Message-Driven Bean Restrictions and Optimizations</h4>
+<div class="paragraph">
+<p>This section discusses the following restrictions and performance
+optimizations that pertain to developing message-driven beans:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaiz">Pool Tuning and Monitoring</a></p>
+</li>
+<li>
+<p><a href="#beaja">The <code>onMessage</code> Runtime Exception</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaiz"></a><a id="GSDVG00301"></a><a id="pool-tuning-and-monitoring"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_pool_tuning_and_monitoring">Pool Tuning and Monitoring</h5>
+<div class="paragraph">
+<p>The message-driven bean pool is also a pool of threads, with each
+message-driven bean instance in the pool associating with a server
+session, and each server session associating with a thread. Therefore, a
+large pool size also means a high number of threads, which impacts
+performance and server resources.</p>
+</div>
+<div class="paragraph">
+<p>When configuring message-driven bean pool properties, make sure to
+consider factors such as message arrival rate and pattern, <code>onMessage</code>
+method processing time, overall server resources (threads, memory, and
+so on), and any concurrency requirements and limitations from other
+resources that the message-driven bean accesses.</p>
+</div>
+<div class="paragraph">
+<p>When tuning performance and resource usage, make sure to consider
+potential JMS provider properties for the connection factory used by the
+container (the <code>mdb-connection-factory</code> element in the
+<code>glassfish-ejb-jar.xml</code> file). For example, you can tune the Open
+Message Queue flow control related properties for connection factory in
+situations where the message incoming rate is much higher than
+<code>max-pool-size</code> can handle.</p>
+</div>
+<div class="paragraph">
+<p>Refer to "<a href="../administration-guide/monitoring.html#GSADG00011">Administering the Monitoring Service</a>" in
+GlassFish Server Open Source Edition Administration Guide for
+information on how to get message-driven bean pool statistics.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaja"></a><a id="GSDVG00302"></a><a id="the-onmessage-runtime-exception"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_the_code_onmessage_code_runtime_exception">The <code>onMessage</code> Runtime Exception</h5>
+<div class="paragraph">
+<p>Message-driven beans, like other well-behaved MessageListeners, should
+not, in general, throw runtime exceptions. If a message-driven bean&#8217;s
+<code>onMessage</code> method encounters a system-level exception or error that
+does not allow the method to successfully complete, the Enterprise
+JavaBeans Specification, v3.0 provides the following guidelines:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the bean method encounters a runtime exception or error, it should
+simply propagate the error from the bean method to the container.</p>
+</li>
+<li>
+<p>If the bean method performs an operation that results in a checked
+exception that the bean method cannot recover, the bean method should
+throw the <code>javax.ejb.EJBException</code> that wraps the original exception.</p>
+</li>
+<li>
+<p>Any other unexpected error conditions should be reported using
+<code>javax.ejb.EJBException</code> (<code>javax.ejb.EJBException</code> is a subclass of
+<code>java.lang.RuntimeException</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Under container-managed transaction demarcation, upon receiving a
+runtime exception from a message-driven bean&#8217;s <code>onMessage</code> method, the
+container rolls back the container-started transaction and the message
+is redelivered. This is because the message delivery itself is part of
+the container-started transaction. By default, the GlassFish Server
+container closes the container&#8217;s connection to the JMS provider when the
+first runtime exception is received from a message-driven bean
+instance&#8217;s <code>onMessage</code> method. This avoids potential message redelivery
+looping and protects server resources if the message-driven bean&#8217;s
+<code>onMessage</code> method continues misbehaving. To change this default
+container behavior, use the <code>cmt-max-runtime-exceptions</code> property of the
+MDB container. Here is an example <code>asadmin set</code> command that sets this
+property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.mdb-container.property.cmt-max-runtime-exceptions="5"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin set</code> command, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>cmt-max-runtime-exceptions</code> property specifies the maximum number
+of runtime exceptions allowed from a message-driven bean&#8217;s <code>onMessage</code>
+method before the container starts to close the container&#8217;s connection
+to the message source. By default this value is 1; -1 disables this
+container protection.</p>
+</div>
+<div class="paragraph">
+<p>A message-driven bean&#8217;s <code>onMessage</code> method can use the
+<code>javax.jms.Message.getJMSRedelivered</code> method to check whether a received
+message is a redelivered message.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>cmt-max-runtime-exceptions</code> property is deprecated.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="webapps.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="container_managed-persistence.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+</body>
+</html>

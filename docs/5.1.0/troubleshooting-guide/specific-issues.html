@@ -1,0 +1,1339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Specific Issues</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Specific Issues</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="overview.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="faqs.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSTSG00003"></a><a id="abgbj"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specific-issues">2 Specific Issues</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter lists problems that you might encounter when using Oracle
+GlassFish Server 4.0. The following topics are addressed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abgca">Cannot Access Local Server (<code>http://localhost:8080</code>)</a></p>
+</li>
+<li>
+<p><a href="#abgcf">Cannot Access Remote Server</a></p>
+</li>
+<li>
+<p><a href="#abgcm">Cannot Access the Administration Console</a></p>
+</li>
+<li>
+<p><a href="#abgcw">Cannot Access a Server Application</a></p>
+</li>
+<li>
+<p><a href="#gjjoz">Administrator User Name or Password Not Known</a></p>
+</li>
+<li>
+<p><a href="#gjjpj">Experience Issues Related to the JDK</a></p>
+</li>
+<li>
+<p><a href="#abgdi">Server Will Not Start on Windows (Port Conflict)</a></p>
+</li>
+<li>
+<p><a href="#gkvcs">GlassFish Server Fails to Start in an OpenSolaris Zone</a></p>
+</li>
+<li>
+<p><a href="#abgdr">Two Server Instances Bind to Same Port on Windows</a></p>
+</li>
+<li>
+<p><a href="#abgel">Cannot Produce a JVM Thread Dump After Server Crash</a></p>
+</li>
+<li>
+<p><a href="#ghvgk">Issues Related to Applications</a></p>
+</li>
+<li>
+<p><a href="#ghvhy">Issues Related to <code>asadmin</code></a></p>
+</li>
+<li>
+<p><a href="#ghvgu">Issues Related to Installation</a></p>
+</li>
+<li>
+<p><a href="#ghvrh">Issues Related to Security</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abgca"></a><a id="GSTSG00043"></a><a id="cannot-access-local-server-httplocalhost8080"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_cannot_access_local_server_code_http_localhost_8080_code">Cannot Access Local Server (<code>http://localhost:8080</code>)</h3>
+<div class="paragraph">
+<p>When this error occurs, check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abgcb">Did the Server Start?</a></p>
+</li>
+<li>
+<p><a href="#abgcd">Was the Server Started at the Expected Port?</a></p>
+</li>
+<li>
+<p><a href="#gjjpn">Is a Personal Firewall Enabled?</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abgcb"></a><a id="GSTSG00179"></a><a id="did-the-server-start"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_did_the_server_start">Did the Server Start?</h4>
+<div class="paragraph">
+<p><a id="abgcc"></a><a id="GSTSG00085"></a><a id="description"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description">Description</h5>
+<div class="paragraph">
+<p>If the console window is still open, the expected message indicates that
+the default domain was started successfully.</p>
+</div>
+<div class="paragraph">
+<p>If the console window is already closed, check for messages in the log
+file. This is the default location:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">domain-dir/logs/server.log</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If startup was successful, the expected message is similar to that on
+the console, and appears at the end of the log file.</p>
+</div>
+<div class="paragraph">
+<p>For more information about starting a domain, see
+"<a href="../administration-guide/domains.html#GSADG00537">Starting and Stopping a Domain</a>" in GlassFish Server
+Open Source Edition Administration Guide. To easily determine if a
+domain is running, use the <code>asadmin list-domains</code> command.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcd"></a><a id="GSTSG00180"></a><a id="was-the-server-started-at-the-expected-port"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_was_the_server_started_at_the_expected_port">Was the Server Started at the Expected Port?</h4>
+<div class="paragraph">
+<p><a id="abgce"></a><a id="GSTSG00086"></a><a id="description-1"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_2">Description</h5>
+<div class="paragraph">
+<p>The server might be running at a different port number than expected,
+either because it was intentionally installed there, or because another
+server was already running on the default port when the server was
+installed.</p>
+</div>
+<div class="paragraph">
+<p><a id="fxxov"></a><a id="GSTSG00024"></a><a id="to-determine-which-port-number-the-server-is-using"></a></p>
+</div>
+<div class="paragraph">
+<p>To Determine Which Port Number the Server Is Using</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Examine the server&#8217;s configuration file:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>domain-dir/config/domain.xml</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Find the <code>network-listener</code> element.</p>
+</li>
+<li>
+<p>Inspect the value of the <code>port</code> attribute.<br>
+Be sure to enter the correct port number when invoking the server.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>The server&#8217;s default port number is <code>8080</code>, however, there are a number
+of ways in which the expected value can change:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A different port number was specified during installation.</p>
+</li>
+<li>
+<p>A previous installation exists.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjjpn"></a><a id="GSTSG00181"></a><a id="is-a-personal-firewall-enabled"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_is_a_personal_firewall_enabled">Is a Personal Firewall Enabled?</h4>
+<div class="paragraph">
+<p>Issues might result when personal firewalls are enabled. Disable your
+personal firewall and see if the server access problem still exists.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcf"></a><a id="GSTSG00044"></a><a id="cannot-access-remote-server"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cannot_access_remote_server">Cannot Access Remote Server</h3>
+<div class="paragraph">
+<p>When attempting to open the start page of GlassFish Server, the initial
+screen does not appear.</p>
+</div>
+<div class="paragraph">
+<p>When this error occurs, check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abgcg">Is the Server Available Locally?</a></p>
+</li>
+<li>
+<p><a href="#abgcj">Is the Proxy Setting Causing a Problem?</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abgcg"></a><a id="GSTSG00182"></a><a id="is-the-server-available-locally"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_is_the_server_available_locally">Is the Server Available Locally?</h4>
+<div class="paragraph">
+<p><a id="abgch"></a><a id="GSTSG00087"></a><a id="description-2"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_3">Description</h5>
+<div class="paragraph">
+<p>If the server cannot be accessed from the web, but it is running
+locally, then the server is actually running.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgci"></a><a id="GSTSG00088"></a><a id="solution"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution">Solution</h5>
+<div class="paragraph">
+<p>Verify that the server is running locally.</p>
+</div>
+<div class="paragraph">
+<p><a id="fxxod"></a><a id="GSTSG00025"></a><a id="to-verify-that-the-server-is-running-locally"></a></p>
+</div>
+<div class="paragraph">
+<p>To Verify That the Server Is Running Locally</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log on to the host where the server is running.</p>
+</li>
+<li>
+<p>Go to the local web page. For example, if <code>8080</code> is the default
+port, go to:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://localhost:8080/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the start page does appear, the web connection is encountering a
+problem that prevents accessing the server remotely. If the start page
+does not appear, see <a href="#abgcb">Did the Server Start?</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcj"></a><a id="GSTSG00183"></a><a id="is-the-proxy-setting-causing-a-problem"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_is_the_proxy_setting_causing_a_problem">Is the Proxy Setting Causing a Problem?</h4>
+<div class="paragraph">
+<p><a id="abgck"></a><a id="GSTSG00089"></a><a id="description-3"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_4">Description</h5>
+<div class="paragraph">
+<p>The server should be accessible directly from the host on which it is
+running (<code>localhost</code>); for example, using the default port <code>8080</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abgcl"></a><a id="GSTSG00090"></a><a id="solution-1"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_2">Solution</h5>
+<div class="paragraph">
+<p>A server instance running on <code>localhost</code> might not be accessible if the
+server host machine is connected to the web through a proxy. To solve
+this problem, do one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the browser to bypass the proxy server when accessing <code>localhost</code>.
+Refer to the browser&#8217;s help system for information about how to do this.</p>
+</li>
+<li>
+<p>Use the fully-qualified host name or IP address of your system; for
+example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://myhost.mydomain.com:8080/</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create an entry in the system&#8217;s hosts file (for example, pointing
+<code>127.0.0.1</code> to <code>localhost</code>; <code>127.0.0.1</code> is not proxied).</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>To determine the host name for the <code>localhost</code> machine, type <code>hostname</code>
+at the command prompt.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="abgcm"></a><a id="GSTSG00045"></a><a id="cannot-access-the-administration-console"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cannot_access_the_administration_console">Cannot Access the Administration Console</h3>
+<div class="paragraph">
+<p>The Administration Console provides a graphical interface for
+administrative functions. If the Administration Console is not
+accessible, check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abgcn">Is the Application Server Running?</a></p>
+</li>
+<li>
+<p><a href="#abgcq">Is the Administration Console Running on the Expected
+Port?</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about the Administration Console, see
+"<a href="../administration-guide/overview.html#GSADG00698">Administration Console</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcn"></a><a id="GSTSG00184"></a><a id="is-the-application-server-running"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_is_the_application_server_running">Is the Application Server Running?</h4>
+<div class="paragraph">
+<p><a id="abgco"></a><a id="GSTSG00091"></a><a id="description-4"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_5">Description</h5>
+<div class="paragraph">
+<p>The server must be running before the Administration Console can be
+accessed.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcp"></a><a id="GSTSG00092"></a><a id="solution-2"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_3">Solution</h5>
+<div class="paragraph">
+<p>Review the information in <a href="#abgcb">Did the Server Start?</a> to
+determine if the server is running.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcq"></a><a id="GSTSG00185"></a><a id="is-the-administration-console-running-on-the-expected-port"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_is_the_administration_console_running_on_the_expected_port">Is the Administration Console Running on the Expected Port?</h4>
+<div class="paragraph">
+<p><a id="abgcr"></a><a id="GSTSG00093"></a><a id="description-5"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_6">Description</h5>
+<div class="paragraph">
+<p>The default port number for the Administration Console is <code>4848</code>.
+However, it could be running on a different port number than expected,
+either because it was intentionally installed there, or because that
+port was in use when the server was started.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcs"></a><a id="GSTSG00094"></a><a id="solution-3"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_4">Solution</h5>
+<div class="paragraph">
+<p>Refer to <a href="#abgcd">Was the Server Started at the Expected Port?</a> for
+guidelines on verifying the port on which the Administration Console is
+running. Be sure to enter the correct port number and HTTP protocol when
+invoking the Administration Console.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcw"></a><a id="GSTSG00046"></a><a id="cannot-access-a-server-application"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cannot_access_a_server_application">Cannot Access a Server Application</h3>
+<div class="paragraph">
+<p>If a particular application cannot be accessed through GlassFish Server,
+check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abgcx">Is the Application Server Running?</a></p>
+</li>
+<li>
+<p><a href="#abgda">Was Application Deployment Successful?</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abgcx"></a><a id="GSTSG00186"></a><a id="is-the-application-server-running-1"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_is_the_application_server_running_2">Is the Application Server Running?</h4>
+<div class="paragraph">
+<p><a id="abgcy"></a><a id="GSTSG00095"></a><a id="description-6"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_7">Description</h5>
+<div class="paragraph">
+<p>If GlassFish Server is not running, applications are not accessible.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgcz"></a><a id="GSTSG00096"></a><a id="solution-4"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_5">Solution</h5>
+<div class="paragraph">
+<p>Review the information in <a href="#abgcb">Did the Server Start?</a> to
+determine if the server is running. The server must be running before a
+server application can be accessed.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgda"></a><a id="GSTSG00187"></a><a id="was-application-deployment-successful"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_was_application_deployment_successful">Was Application Deployment Successful?</h4>
+<div class="paragraph">
+<p><a id="abgdb"></a><a id="GSTSG00097"></a><a id="description-7"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_8">Description</h5>
+<div class="paragraph">
+<p>An application must be successfully deployed before it can be accessed.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgdc"></a><a id="GSTSG00098"></a><a id="solution-5"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_6">Solution</h5>
+<div class="paragraph">
+<p>Verify that the application was successfully deployed. There are several
+ways to do this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check the server&#8217;s log file for related entries:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>domain-dir/server.log</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the <code>asadmin list-applications</code> command to determine which
+applications are deployed.</p>
+</li>
+<li>
+<p>View the Applications page in the Administration Console, accessed by
+clicking the Applications node.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about deploying applications, see
+"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00004">Deploying Applications</a>" in GlassFish Server Open
+Source Edition Application Deployment Guide. Also see the Administration
+Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjoz"></a><a id="GSTSG00047"></a><a id="administrator-user-name-or-password-not-known"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administrator_user_name_or_password_not_known">Administrator User Name or Password Not Known</h3>
+<div class="paragraph">
+<p>If you have forgotten the administrator user name, you can find it by
+inspecting the domain-dir`/config/admin-keyfile` file, where domain-dir
+is the directory for the domain. In the default domain, <code>domain1</code>, the
+file to inspect is domain-dir`/config/admin-keyfile`. For a different
+domain, substitute its name in the path.</p>
+</div>
+<div class="paragraph">
+<p>If you have forgotten the administrator password, one solution is to
+create a new domain with the admin username and password that you want,
+then copy the entry from the <code>config/admin-keyfile</code> file in that new
+domain to the other domain.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjpj"></a><a id="GSTSG00048"></a><a id="experience-issues-related-to-the-jdk"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_experience_issues_related_to_the_jdk">Experience Issues Related to the JDK</h3>
+<div class="paragraph">
+<p><a id="gjjpl"></a><a id="GSTSG00188"></a><a id="description-8"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_description_9">Description</h4>
+<div class="paragraph">
+<p>You experience JDK-related issues in a variety of circumstances.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjop"></a><a id="GSTSG00189"></a><a id="solution-6"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_solution_7">Solution</h4>
+<div class="paragraph">
+<p>GlassFish Server 4.0 requires JDK 6, so check your system for that
+dependency.</p>
+</div>
+<div class="paragraph">
+<p>The minimum (and certified) version of the JDK software that is required
+for GlassFish Server depends on the operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For supported operating systems except Mac OS, the minimum required
+version is 1.6.0_17.</p>
+</li>
+<li>
+<p>For the Mac OS X operating system, the minimum required version is
+1.6.0_15.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Ensure that the required JDK software is installed and that the
+<code>JAVA_HOME</code> environment variable points to the JDK installation
+directory, not the Java Runtime Environment (JRE) software.</p>
+</div>
+<div class="paragraph">
+<p>Set <code>JAVA_HOME</code> and <code>$JAVA_HOME/bin</code> in the <code>PATH</code> to point to the
+supported JDK version.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgdi"></a><a id="GSTSG00049"></a><a id="server-will-not-start-on-windows-port-conflict"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_will_not_start_on_windows_port_conflict">Server Will Not Start on Windows (Port Conflict)</h3>
+<div class="paragraph">
+<p>If a message similar to the following is displayed when starting
+GlassFish Server on Microsoft Windows, a server port conflict has
+occurred:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Address already in use</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This error occurs when another application is running on the GlassFish
+Server port (default <code>8080</code>), or because a previous instance of
+GlassFish Server did not shut down cleanly.</p>
+</div>
+<div class="paragraph">
+<p>You might also check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abgdj">Is Another Application Running on the Server&#8217;s Port?</a></p>
+</li>
+<li>
+<p><a href="#abgdk">Has an Ungraceful Shutdown Occurred on a Previously
+Running Server?</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abgdj"></a><a id="GSTSG00190"></a><a id="is-another-application-running-on-the-servers-port"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_is_another_application_running_on_the_server_s_port">Is Another Application Running on the Server&#8217;s Port?</h4>
+<div class="paragraph">
+<p>If another application is using the server&#8217;s port, stop the other
+application, then restart GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgdk"></a><a id="GSTSG00191"></a><a id="has-an-ungraceful-shutdown-occurred-on-a-previously-running-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_has_an_ungraceful_shutdown_occurred_on_a_previously_running_server">Has an Ungraceful Shutdown Occurred on a Previously Running Server?</h4>
+<div class="paragraph">
+<p>Use the <code>asadmin stop-domain</code> command to stop the server, or explicitly
+kill the Java process and then restart GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkvcs"></a><a id="GSTSG00050"></a><a id="glassfish-server-fails-to-start-in-an-opensolaris-zone"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_glassfish_server_fails_to_start_in_an_opensolaris_zone">GlassFish Server Fails to Start in an OpenSolaris Zone</h3>
+<div class="paragraph">
+<p><a id="gkvcx"></a><a id="GSTSG00192"></a><a id="description-9"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_description_10">Description</h4>
+<div class="paragraph">
+<p>If GlassFish Server is installed in an OpenSolaris zone, an attempt to
+start a domain might fail with the following error message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Waiting for DAS to start ..Error starting domain: domain.
+The server exited prematurely with exit code 6.
+Before it died, it produced the following output:
+
+UTF ERROR ["../../../src/solaris/instrument/EncodingSupport_md.c":66]:
+Failed to complete iconv_open() setup</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The failure occurs because, by default, an OpenSolaris zone is installed
+without language and encoding support, which GlassFish Server requires.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkvdf"></a><a id="GSTSG00026"></a><a id="resolution-to-enable-glassfish-server-to-run-in-an-opensolaris-zone"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resolution_to_enable_glassfish_server_to_run_in_an_opensolaris_zone">Resolution: To Enable GlassFish Server to Run in an OpenSolaris Zone</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the package that provides language and encoding support for
+your locale.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ pkg install package-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">package-name</dt>
+<dd>
+<p>The name of the package that provides language and encoding support
+for your locale. For example, the name of the package that provides
+language and encoding support for the US English locale is
+<code>SUNWlang-enUS</code>.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the <code>LANG</code> environment variable to the code for your locale.<br>
+For example, if your locale is US English, set the <code>LANG</code> environment
+variable to <code>en_US.UTF-8</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="abgdr"></a><a id="GSTSG00051"></a><a id="two-server-instances-bind-to-same-port-on-windows"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_two_server_instances_bind_to_same_port_on_windows">Two Server Instances Bind to Same Port on Windows</h3>
+<div class="paragraph">
+<p><a id="abgds"></a><a id="GSTSG00193"></a><a id="description-10"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_description_11">Description</h4>
+<div class="paragraph">
+<p>This problem occurs on Windows XP systems with GlassFish Server
+software, and is due to a known Windows security flaw rather than a
+problem with GlassFish Server itself.</p>
+</div>
+<div class="paragraph">
+<p>The problem occurs when two or more instances of GlassFish Server are
+created using the same port number for the <code>instanceport</code> option; for
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-domain -adminport 5001 options -instanceport 6001 domain
+asadmin create-domain -adminport 5002 options -instanceport 6001 domain</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the two domains are started on a UNIX or Linux system, a port
+conflict error is thrown and the second instance fails to start.
+However, when the two domains are started on Windows XP, no error is
+thrown, both server instances start, but only the first instance is
+accessible at the specified port. When that first server instance is
+subsequently shut down, the second instance then becomes accessible.
+Moreover, when both instances are running, the Windows <code>netstat</code> command
+only reports the first instance.</p>
+</div>
+<div class="paragraph">
+<p><a id="fxxyd"></a><a id="GSTSG00194"></a><a id="solution-7"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_solution_8">Solution</h4>
+<div class="paragraph">
+<p>Be sure to use unique port numbers for all server instances on Windows
+systems.</p>
+</div>
+<div class="paragraph">
+<p><a id="abgel"></a><a id="GSTSG00052"></a><a id="cannot-produce-a-jvm-thread-dump-after-server-crash"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cannot_produce_a_jvm_thread_dump_after_server_crash">Cannot Produce a JVM Thread Dump After Server Crash</h3>
+<div class="paragraph">
+<p><a id="abgem"></a><a id="GSTSG00195"></a><a id="description-11"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_description_12">Description</h4>
+<div class="paragraph">
+<p>If GlassFish Server crashes, the server dumps a core file and, by
+default, restarts with the <code>-Xrs</code> flag, which prevents the dump of a JVM
+thread dump.</p>
+</div>
+<div class="paragraph">
+<p><a id="fxxyw"></a><a id="GSTSG00196"></a><a id="solution-8"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_solution_9">Solution</h4>
+<div class="paragraph">
+<p><a id="ghylc"></a><a id="GSTSG00027"></a><a id="to-obtain-a-server-thread-dump"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_obtain_a_server_thread_dump">To Obtain a Server Thread Dump</h5>
+<div class="paragraph">
+<p>Type the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin generate-jvm-report --type=thread</code></pre>
+</div>
+</div>
+<div id="sthref4" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/generate-jvm-report.html#GSRFM00138"><code>generate-jvm-report</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p><a id="ghvgk"></a><a id="GSTSG00053"></a><a id="issues-related-to-applications"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_issues_related_to_applications">Issues Related to Applications</h3>
+<div class="paragraph">
+<p><a id="abgee"></a><a id="GSTSG00197"></a><a id="cannot-undeploy-or-redeploy-application-with-open-streams-to-jar-files-windows"></a></p>
+</div>
+<div class="paragraph">
+<p>Cannot Undeploy or Redeploy Application With Open Streams to <code>jar</code> Files
+(Windows)
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup>^</p>
+</div>
+<div class="paragraph">
+<p><a id="abgef"></a><a id="GSTSG00099"></a><a id="description-12"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_13">Description</h5>
+<div class="paragraph">
+<p>On Windows systems, after running an application, subsequent attempts to
+undeploy it or redeploy it throw exceptions about the server being
+unable to delete a file or rename a directory.</p>
+</div>
+<div class="paragraph">
+<p>On Windows systems, an application may use <code>getClass().getResource</code> or
+<code>getResourceAsStream</code> methods to locate a resource inside the
+application, particularly in <code>jar</code> files that are in the application or
+accessible to it. If the streams remain open, subsequent attempts to
+redeploy or undeploy the application can fail. In addition, the Java
+runtime by default caches streams to <code>jar</code> files for performance
+reasons.</p>
+</div>
+<div class="paragraph">
+<p><a id="fxxyr"></a><a id="GSTSG00100"></a><a id="solution-9"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_10">Solution</h5>
+<div class="paragraph">
+<p>Be sure to close streams opened by your applications. Also, if an
+application needs to be redeployed or undeployed repeatedly, and also
+needs to obtain a resource from a <code>jar</code> file using <code>getResource</code> or
+<code>getResourceAsStream</code>, consider using <code>getClass().getResource</code>, which
+returns a URL object, then invoke the <code>url.setUseCaches</code> method to turn
+off caching for that <code>jar</code> file, and use <code>url.getInputStream()</code> to
+obtain the stream.</p>
+</div>
+<div class="paragraph">
+<p>Although turning off caching for access to the <code>jar</code> file can slow
+performance, this approach does allow the application to be undeployed
+or redeployed. Note also that if the <code>getClass().getResourceAsStream</code>
+method is used instead, then the <code>jar</code> file in which the resource is
+located is cached (this is the default Java runtime setting) and remains
+open until the server is stopped.</p>
+</div>
+<div class="paragraph">
+<p><a id="gldbk"></a><a id="GSTSG00198"></a><a id="maxpermgen-exception"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_maxpermgen_code_exception"><code>MaxPermGen</code> Exception</h4>
+<div class="paragraph">
+<p><a id="gldbn"></a><a id="GSTSG00101"></a><a id="description-13"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_14">Description</h5>
+<div class="paragraph">
+<p>Application servers such as GlassFish Server allow you to redeploy an
+application without restarting the server. Simply make the change in
+your source code, compile the source, and redeploy the application.</p>
+</div>
+<div class="paragraph">
+<p>Each application is loaded using its own classloader. When you undeploy
+an application, its classloader is discarded with all the classes it
+loaded and is garbage collected sooner or later. However, if there&#8217;s a
+reference from outside an application to an object in the application
+loaded by the application&#8217;s classloader, that object can&#8217;t be garbage
+collected. The reference holds the object in memory.</p>
+</div>
+<div class="paragraph">
+<p>The memory in the Virtual Machine is divided into a number of regions.
+One of these regions is <code>PermGen</code>. It&#8217;s an area of memory used to (among
+other things) load class files. The size of this memory region is fixed;
+it does not change when the VM is running. You can specify the size of
+this region with a command line switch: <code>-XX:MaxPermSize</code>. Setting the
+<code>-Xmx</code> parameter does not help: this parameter only specifies the total
+heap size and does not affect the size of the <code>PermGen</code> region.</p>
+</div>
+<div class="paragraph">
+<p>If you keep loading new classes that can&#8217;t be garbage collected because
+of references to them from outside the application, the VM runs out of
+space in the <code>PermGen</code> region, even if there&#8217;s plenty of memory
+available. This is called a classloader leak. The resulting exception is
+<code>java.lang.OutOfMemoryError: PermGen space</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>java.lang.String.intern()</code> method also allocates memory in the
+<code>PermGen</code> region. If your application uses this method with strings and
+holds references to these strings, thereby making garbage collection
+impossible, your application may cause the same <code>PermGen space</code>
+exception.</p>
+</div>
+<div class="paragraph">
+<p><a id="gldbw"></a><a id="GSTSG00102"></a><a id="solution-10"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_11">Solution</h5>
+<div class="paragraph">
+<p>Classloader leaks are difficult to diagnose. Most profilers list leaked
+objects but don&#8217;t highlight the ones causing classloader leaks. Most
+profilers also stop tracing as soon as they reach a class object or
+classloader.</p>
+</div>
+<div class="paragraph">
+<p>One diagnostic approach involves undeploying the application and
+triggering a memory dump using the JDK 6.0 <code>jmap</code> tool. Then you can use
+the JDK 6.0 <code>jhat</code> tool to analyze the dump. The simplest analysis is to
+list all instances of <code>java.lang.Class</code> and look for class objects that
+have many instances. This is a sign that the class has been loaded
+multiple times without being garbage collected.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re willing to modify the <code>jhat</code> code, you can perform more
+refined queries. For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Trace references to a classloader from all the instances of the
+classes it loaded.</p>
+</li>
+<li>
+<p>Generate a list of all classloader instances that have loaded an
+identical set of classes.</p>
+</li>
+<li>
+<p>Find classloader instances whose only strong-reference chains from the
+root set go through instances of classes loaded by those classloaders.
+These are called orphaned classloaders.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To override the original <code>jhat</code> code, put the JAR file of the modified
+<code>jhat</code> code in the <code>lib/ext</code> directory of the JDK.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghvhy"></a><a id="GSTSG00054"></a><a id="issues-related-to-asadmin"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_issues_related_to_code_asadmin_code">Issues Related to <code>asadmin</code></h3>
+<div class="paragraph">
+<p><a id="ghvhi"></a><a id="GSTSG00199"></a><a id="asadmin-start-domain-command-fails"></a></p>
+</div>
+<div class="sect3">
+<h4 id="__code_asadmin_code_code_start_domain_code_command_fails"><code>asadmin</code> <code>start-domain</code> Command Fails</h4>
+<div class="paragraph">
+<p>The command <code>asadmin start-domain</code> fails with the following error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">There is more than one domain...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gjkph"></a><a id="GSTSG00103"></a><a id="description-14"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_15">Description</h5>
+<div class="paragraph">
+<p>When issued with no arguments, the command <code>asadmin start-domain</code> fails.</p>
+</div>
+<div class="paragraph">
+<p>This error occurs when there is more than one domain in the domains
+directory, none of them is named <code>domain1,</code> and no domain is specified
+with the <code>start-domain</code> command.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjkoy"></a><a id="GSTSG00104"></a><a id="solution-11"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_12">Solution</h5>
+<div class="paragraph">
+<p>Specify the domain when issuing the <code>start-domain</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin start-domain domain-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin start-domain mycustomdomain</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghvhx"></a><a id="GSTSG00200"></a><a id="cannot-stop-domain-using-asadmin-stop-domain"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cannot_stop_domain_using_code_asadmin_code_code_stop_domain_code">Cannot Stop Domain Using <code>asadmin</code> <code>stop-domain</code></h4>
+<div class="paragraph">
+<p><a id="ghvhl"></a><a id="GSTSG00105"></a><a id="description-15"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_16">Description</h5>
+<div class="paragraph">
+<p>You cannot stop the domain using the <code>asadmin</code> <code>stop-domain</code> command.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghvha"></a><a id="GSTSG00106"></a><a id="solution-12"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_13">Solution</h5>
+<div class="paragraph">
+<p>Look for error messages that display in the console when you issue the
+command.</p>
+</div>
+<div class="paragraph">
+<p>Search the <code>server.log</code> file for error messages related to your
+inability to stop the domain.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghvgu"></a><a id="GSTSG00055"></a><a id="issues-related-to-installation"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_issues_related_to_installation">Issues Related to Installation</h3>
+<div class="paragraph">
+<p><a id="gjjnu"></a><a id="GSTSG00201"></a><a id="installation-hangs-during-update-tool-configuration"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_installation_hangs_during_update_tool_configuration">Installation Hangs During Update Tool Configuration</h4>
+<div class="paragraph">
+<p><a id="giqjt"></a><a id="GSTSG00107"></a><a id="description-16"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_17">Description</h5>
+<div class="paragraph">
+<p>Installation hangs more than five minutes during Update Tool
+configuration.</p>
+</div>
+<div class="paragraph">
+<p><a id="giqle"></a><a id="GSTSG00108"></a><a id="solution-13"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_14">Solution</h5>
+<div class="paragraph">
+<p>Cancel the installation and run the installation program again, but this
+time deselect the Install Update Tool check box. Update Tool can be
+installed later from as-install`/bin/`. For more information about
+Update Tool, see "<a href="../administration-guide/toc.html#GSADG00701">Update Tool</a>" in GlassFish Server
+Open Source Edition Administration Guide. For general information about
+GlassFish Serverinstallation, see the <a href="../installation-guide/toc.html#GSING">GlassFish Server Open
+Source Edition Installation Guide</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Update Tool differs from Upgrade Tool, which is used to migrate the
+configuration and deployed applications from an earlier version of
+GlassFish Server to the current version. For more information about
+Upgrade Tool and upgrading, see the <a href="../upgrade-guide/toc.html#GSUPG">GlassFish Server Open
+Source Edition Upgrade Guide</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjjob"></a><a id="GSTSG00202"></a><a id="glassfish-server-components-not-removed-during-uninstallation"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_glassfish_server_components_not_removed_during_uninstallation">GlassFish Server Components Not Removed During Uninstallation</h4>
+<div class="paragraph">
+<p><a id="gjjoh"></a><a id="GSTSG00109"></a><a id="description-17"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_18">Description</h5>
+<div class="paragraph">
+<p>Not all GlassFish Server directories are automatically removed by the
+uninstallation program. Some directories and files remain after
+uninstalling.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjnk"></a><a id="GSTSG00110"></a><a id="solution-14"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_15">Solution</h5>
+<div class="paragraph">
+<p>Examine the remaining directories and remove any files or directories
+that you do not want, including hidden directories prefixed with a dot.
+It is safe to remove uninstallation and installation log files after you
+have examined them.</p>
+</div>
+<div class="paragraph">
+<p>For information related to uninstallation, see
+"<a href="../installation-guide/uninstalling.html#GSING00003">Uninstalling GlassFish Server 3.1</a>" in GlassFish
+Server Open Source Edition Installation Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghvrh"></a><a id="GSTSG00056"></a><a id="issues-related-to-security"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_issues_related_to_security">Issues Related to Security</h3>
+<div class="paragraph">
+<p><a id="abgjt"></a><a id="GSTSG00203"></a><a id="java.security.accesscontrolexception-access-denied-error"></a></p>
+</div>
+<div class="sect3">
+<h4 id="__code_java_security_accesscontrolexception_code_access_denied_error"><code>java.security.AccessControlException</code>: Access Denied Error</h4>
+<div class="paragraph">
+<p><a id="abgju"></a><a id="GSTSG00111"></a><a id="description-18"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_19">Description</h5>
+<div class="paragraph">
+<p>The following error occurs from an application client, or appears in the
+<code>server.log</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">java.security.AccessControlException: access denied
+(java.util.PropertyPermission name write...)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is a permissions issue in the policy files. Either the
+<code>client.policy</code> file for the application client or the <code>server.policy</code>
+file for server side components does not have permission to set the
+property.</p>
+</div>
+<div class="paragraph">
+<p><a id="fxxzk"></a><a id="GSTSG00112"></a><a id="solution-15"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_16">Solution</h5>
+<div class="paragraph">
+<p>Add the permission in <code>client.policy</code> (for the application client), or
+in <code>server.policy</code> (for web modules) for the application that needs to
+set the property. By default, applications only have read permission for
+properties.</p>
+</div>
+<div class="paragraph">
+<p>For example, to grant read/write permission for all files in the
+codebase directory, add or append the following to <code>client.policy</code> or
+<code>server.policy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:/.../build/sparc_SunOS/sec/-" {
+   permission java.util.PropertyPermission "*", "read,write";
+ };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abgka"></a><a id="GSTSG00204"></a><a id="mutual-authentication-not-working-with-the-application-client"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mutual_authentication_not_working_with_the_application_client">Mutual Authentication Not Working With the Application Client</h4>
+<div class="paragraph">
+<p><a id="abgkb"></a><a id="GSTSG00113"></a><a id="description-19"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_20">Description</h5>
+<div class="paragraph">
+<p>This failure can occur when the keystore and truststore properties are
+not set properly.</p>
+</div>
+<div class="paragraph">
+<p><a id="fxxzu"></a><a id="GSTSG00114"></a><a id="solution-16"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_17">Solution</h5>
+<div class="paragraph">
+<p>Set the following properties on the JVM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">javax.net.ssl.keyStore=
+&lt;keystore-file-path&gt;;javax.net.ssl.trustStore=&lt;truststore-file-path&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use the application client, set the environment variable <code>VMARGS</code> to
+the following value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks
+-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="overview.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="faqs.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

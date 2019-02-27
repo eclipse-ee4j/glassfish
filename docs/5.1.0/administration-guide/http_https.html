@@ -1,0 +1,1719 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Internet Connectivity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Internet Connectivity</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="connectors.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="concurrent.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00017"></a><a id="ablsw"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-internet-connectivity">13 Administering Internet Connectivity</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures for performing internet connectivity
+tasks in the GlassFish Server Open Source Edition 5.0 environment by
+using the <code>asadmin</code> command-line utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giusf">About Internet Connectivity</a></p>
+</li>
+<li>
+<p><a href="#ggnfu">Administering HTTP Network Listeners</a></p>
+</li>
+<li>
+<p><a href="#ggncs">Administering Virtual Servers</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="giusf"></a><a id="GSADG00587"></a><a id="about-internet-connectivity"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_internet_connectivity">About Internet Connectivity</h3>
+<div class="paragraph">
+<p>The HTTP service provides functionality for deploying web applications
+and for making deployed web applications accessible by Internet clients,
+either in a single application server instance or in a cluster of
+multiple server instances. HTTP services are provided by two kinds of
+related objects: listeners and virtual servers.</p>
+</div>
+<div class="paragraph">
+<p>For more information about clusters, see the <a href="../ha-administration-guide/toc.html#GSHAG">GlassFish
+Server Open Source Edition High Availability Administration Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giuri">About HTTP Network Listeners</a></p>
+</li>
+<li>
+<p><a href="#giupz">About Virtual Servers</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giuri"></a><a id="GSADG00766"></a><a id="about-http-network-listeners"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_about_http_network_listeners">About HTTP Network Listeners</h4>
+<div class="paragraph">
+<p>An HTTP listener, also known as a network listener, is a listen socket
+that has an Internet Protocol (IP) address, a port number, a server
+name, and a default virtual server. Each virtual server provides
+connections between the server and clients through one or more
+listeners. Each listener must have a unique combination of port number
+and IP address. For example, an HTTP listener can listen for a host on
+all configured IP addresses on a given port by specifying the IP address
+0.0.0.0. Alternatively, the listener can specify a unique IP address for
+each listener while using the same port.</p>
+</div>
+<div class="paragraph">
+<p>Because an HTTP listener is a combination of IP address and port number,
+you can have multiple HTTP listeners with the same IP address and
+different port numbers, or with different IP addresses and the same port
+number (if your host was configured to respond to these addresses).
+However, if an HTTP listener uses the 0.0.0.0 IP address, which listens
+on all IP addresses on a port, you cannot create HTTP listeners for
+additional IP addresses that listen on the same port for a specific IP
+address. For example, if an HTTP listener uses 0.0.0.0:8080 (all IP
+addresses on port 8080), another HTTP listener cannot use 1.2.3.4:8080.
+The host running the GlassFish Server typically has access to only one
+IP address. HTTP listeners typically use the 0.0.0.0 IP address and
+different port numbers, with each port number serving a different
+purpose. However, if the host does have access to more than one IP
+address, each address can serve a different purpose.</p>
+</div>
+<div class="paragraph">
+<p>To access a web application deployed on GlassFish Server, use the URL
+<code>http://localhost:8080/</code> (or <code>https://localhost:8081/</code> for a secure
+application), along with the context root specified for the web
+application.</p>
+</div>
+<div class="paragraph">
+<p>To access the Administration Console, use the URL
+<code>https://localhost:4848/</code> or <code>http://localhost:4848/asadmin/</code> (console
+default context root).</p>
+</div>
+<div class="paragraph">
+<p><a id="giupz"></a><a id="GSADG00767"></a><a id="about-virtual-servers"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_about_virtual_servers">About Virtual Servers</h4>
+<div class="paragraph">
+<p>A virtual server, sometimes called a virtual host, is an object that
+allows the same physical server to host multiple Internet domain names.
+All virtual servers hosted on the same physical server share the IP
+address of that physical server. A virtual server associates a domain
+name for a server (such as <code>www.aaa.com</code>) with the particular server on
+which GlassFish Server is running. Each virtual server must be
+registered with the DNS server for your network.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not confuse an Internet domain with the administrative domain of
+GlassFish Server.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For example, assume that you want to host the following domains on your
+physical server: <code>www.aaa.com</code>, <code>www.bbb.com</code>, and <code>www.ccc.com</code>. Assume
+that these domains are respectively associated with web modules <code>web1</code>,
+<code>web2</code>, and <code>web3</code>. This means that the following URLs are handled by
+your physical server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://www.aaa.com:8080/web1
+http://www.bbb.com:8080/web2
+http://www.ccc.com:8080/web3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first URL is mapped to virtual server <code>www.aaa.com</code>, the second URL
+is mapped to virtual server <code>www.bbb.com</code>, and the third is mapped to
+virtual server <code>www.ccc.com</code>. For this mapping to work, <code>www.aaa.com</code>,
+<code>www.bbb.com</code>, and <code>www.ccc.com</code> must all resolve to your physical
+server&#8217;s IP address and each virtual server must be registered with the
+DNS server for your network. In addition, on a UNIX system, add these
+domains to your <code>/etc/hosts</code> file (if the setting for <code>hosts</code> in your
+<code>/etc/nsswitch.conf</code> file includes <code>files</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnfu"></a><a id="GSADG00588"></a><a id="administering-http-network-listeners"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_http_network_listeners">Administering HTTP Network Listeners</h3>
+<div class="paragraph">
+<p>By default, when GlassFish Server starts, the following HTTP listeners
+are started automatically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>HTTP listeners associated with the virtual server named <code>server</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The listener named <code>http-listener-1</code> does not have security enabled.</p>
+</li>
+<li>
+<p>The listener named <code>http-listener-2</code> has security enabled</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>An HTTP listener named <code>admin-listener</code>, associated with the virtual
+server named <code>__asadmin</code>. For this listener, security is not enabled.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following table describes the GlassFish Server default ports for the
+listeners that use ports.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG990"></a><a id="sthref72"></a><a id="ggnpj"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 13-1 Default Ports for Listeners</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 18%;">
+<col style="width: 13%;">
+<col style="width: 69%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Listener</th>
+<th class="tableblock halign-left valign-top">Default Port</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administrative server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4848</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A domain&#8217;s administrative server is
+accessed by the Administration Console and the <code>asadmin</code> utility. For
+the Administration Console, specify the port number in the URL of the
+browser. When running an <code>asadmin</code> subcommand remotely, specify the port
+number by using the <code>--port</code> option.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8080</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The web server listens for HTTP requests on a port. To
+access deployed web applications and services, clients connect to this
+port.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8181</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web applications configured for secure communications
+listen on a separate port.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggnfh">To Create an Internet Connection</a></p>
+</li>
+<li>
+<p><a href="#gjkuy">Administering HTTP Protocols</a></p>
+</li>
+<li>
+<p><a href="#gjkzi">Administering HTTP Configurations</a></p>
+</li>
+<li>
+<p><a href="#gjkym">Administering HTTP Transports</a></p>
+</li>
+<li>
+<p><a href="#gjkwt">Administering HTTP Network Listeners</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggnfh"></a><a id="GSADG00456"></a><a id="to-create-an-internet-connection"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_an_internet_connection">To Create an Internet Connection</h4>
+<div class="paragraph">
+<p>Use the subcommands in this procedure to create an internet connection
+with the full range of listener options. A network listener is created
+behind the scenes. For the shortcut version of this process , see
+<a href="#gjimx">To Create an HTTP Network Listener</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create an HTTP or HTTPS protocol by using the
+<a href="../reference-manual/create-protocol.html#GSRFM00051"><code>create-protocol</code></a> subcommand with the
+<code>--securityenabled</code> option.<br>
+To use the built-in <code>http-listener-1</code> HTTP protocol, or
+<code>http-listener-2</code> HTTPS protocol, skip this step.</p>
+</li>
+<li>
+<p>Create an HTTP configuration by using the
+<a href="../reference-manual/create-http.html#GSRFM00025"><code>create-http</code></a> subcommand.<br>
+To use a built-in protocol, skip this step.</p>
+</li>
+<li>
+<p>Create a transport by using the <a href="../reference-manual/create-transport.html#GSRFM00061"><code>create-transport</code></a>
+subcommand.<br>
+To use the built-in <code>tcp</code> transport, skip this step.</p>
+</li>
+<li>
+<p>Create a thread pool by using the
+<a href="../reference-manual/create-threadpool.html#GSRFM00060"><code>create-threadpool</code></a> subcommand.<br>
+To avoid using a thread pool, or to use the built-in <code>http-thread-pool</code>
+thread pool, skip this step.<br>
+For additional thread pool information, see
+<a href="threadpools.html#abluc">Administering Thread Pools</a>.</p>
+</li>
+<li>
+<p>Create an HTTP listener by using the
+<a href="../reference-manual/create-network-listener.html#GSRFM00046"><code>create-network-listener</code></a> subcommand.<br>
+Specify a protocol and transport, optionally a thread pool.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div id="GSADG991" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing a command such as <code>asadmin help create-http-listener</code> at the
+command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjkuy"></a><a id="GSADG00768"></a><a id="administering-http-protocols"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administering_http_protocols">Administering HTTP Protocols</h4>
+<div class="paragraph">
+<p>Each HTTP listener has an HTTP protocol, which is created either by
+using the <code>create-protocol</code> subcommand or by using the built-in
+protocols that are applied when you follow the instructions in
+<a href="#gjimx">To Create an HTTP Network Listener</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjhot">To Create a Protocol</a></p>
+</li>
+<li>
+<p><a href="#gjhna">To List Protocols</a></p>
+</li>
+<li>
+<p><a href="#gjhnx">To Delete a Protocol</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjhot"></a><a id="GSADG00457"></a><a id="to-create-a-protocol"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_create_a_protocol">To Create a Protocol</h5>
+<div class="paragraph">
+<p>Use the <code>create-protocol</code> subcommand in remote mode to create a
+protocol.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a protocol by using the <a href="../reference-manual/create-protocol.html#GSRFM00051"><code>create-protocol</code></a><br>
+Information about options and properties for the subcommand are included
+in this help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00245"></a><a id="gjhos"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-1 Creating an HTTP Protocol</p>
+</div>
+<div class="paragraph">
+<p>This example creates a protocol named <code>http-1</code> with security enabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-protocol --securityenabled=true http-1
+Command create-protocol executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG992" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-protocol</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjhna"></a><a id="GSADG00458"></a><a id="to-list-protocols"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_list_protocols">To List Protocols</h5>
+<div class="paragraph">
+<p>Use the <code>list-protocols</code> subcommand in remote mode to list the existing
+HTTP protocols.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing protocols by using the
+<a href="../reference-manual/list-protocols.html#GSRFM00195"><code>list-protocols</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00246"></a><a id="gjhqg"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-2 Listing the Protocols</p>
+</div>
+<div class="paragraph">
+<p>This example lists the existing protocols.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-protocols
+admin-listener
+http-1
+http-listener-1
+http-listener-2
+Command list-protocols executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG993" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-protocols</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjhnx"></a><a id="GSADG00459"></a><a id="to-delete-a-protocol"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_a_protocol">To Delete a Protocol</h5>
+<div class="paragraph">
+<p>Use the <code>delete-protocol</code> subcommand in remote mode to remove a
+protocol.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Delete a protocol by using the <a href="../reference-manual/delete-protocol.html#GSRFM00103"><code>delete-protocol</code></a>
+subcommand</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00247"></a><a id="gjhop"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-3 Deleting a Protocol</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the protocol named <code>http-1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-protocol http-1
+Command delete-protocol executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG994" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-protocol</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjkzi"></a><a id="GSADG00769"></a><a id="administering-http-configurations"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administering_http_configurations">Administering HTTP Configurations</h4>
+<div class="paragraph">
+<p>Each HTTP listener has an HTTP configuration, which is created either by
+using the <code>create-http</code> subcommand or by using the built-in
+configurations that are applied when you follow the instructions in
+<a href="#gjimx">To Create an HTTP Network Listener</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjhqc">To Create an HTTP Configuration</a></p>
+</li>
+<li>
+<p><a href="#gjhqa">To Delete an HTTP Configuration</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjhqc"></a><a id="GSADG00460"></a><a id="to-create-an-http-configuration"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_create_an_http_configuration">To Create an HTTP Configuration</h5>
+<div class="paragraph">
+<p>Use the <code>create-http</code> subcommand in remote mode to create a set of HTTP
+parameters for a protocol. This set of parameters configures one or more
+network listeners,</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create an HTTP configuration by using the
+<a href="../reference-manual/create-http.html#GSRFM00025"><code>create-http</code></a> subcommand.<br>
+Information about options and properties for the subcommand are included
+in this help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00248"></a><a id="gjhnz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-4 Creating an HTTP Configuration</p>
+</div>
+<div class="paragraph">
+<p>This example creates an HTTP parameter set for the protocol named
+<code>http-1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-http --timeout-seconds 60 --default-virtual-server server http-1
+Command create-http executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG995" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-http</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjhqa"></a><a id="GSADG00461"></a><a id="to-delete-an-http-configuration"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_an_http_configuration">To Delete an HTTP Configuration</h5>
+<div class="paragraph">
+<p>Use the <code>delete-http</code> subcommand in remote mode to remove HTTP
+parameters from a protocol.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Delete the HTTP parameters from a protocol by using the
+<a href="../reference-manual/delete-http.html#GSRFM00077"><code>delete-http</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00249"></a><a id="gjhov"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-5 Deleting an HTTP Configuration</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the HTTP parameter set from a protocol named
+<code>http-1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-http http-1
+Command delete-http executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG996" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-http</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjkym"></a><a id="GSADG00770"></a><a id="administering-http-transports"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administering_http_transports">Administering HTTP Transports</h4>
+<div class="paragraph">
+<p>Each HTTP listener has an HTTP transport, which is created either by
+using the <code>create-transport</code> subcommand or by using the built-in
+transports that are applied when you follow the instructions in
+<a href="#gjimx">To Create an HTTP Network Listener</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjhps">To Create a Transport</a></p>
+</li>
+<li>
+<p><a href="#gjhmx">To List Transports</a></p>
+</li>
+<li>
+<p><a href="#gjhqp">To Delete a Transport</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjhps"></a><a id="GSADG00462"></a><a id="to-create-a-transport"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_create_a_transport">To Create a Transport</h5>
+<div class="paragraph">
+<p>Use the <code>create-transport</code> subcommand in remote mode to create a
+transport for a network listener,</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a transport by using the <a href="../reference-manual/create-transport.html#GSRFM00061"><code>create-transport</code></a>
+subcommand.<br>
+Information about options and properties for the subcommand are included
+in this help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00250"></a><a id="gjhpx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-6 Creating a Transport</p>
+</div>
+<div class="paragraph">
+<p>This example creates a transport named <code>http1-trans</code> that uses a
+non-default number of acceptor threads.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-transport --acceptorthreads 100 http1-trans
+Command create-transport executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG997" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-transport</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjhmx"></a><a id="GSADG00463"></a><a id="to-list-transports"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_list_transports">To List Transports</h5>
+<div class="paragraph">
+<p>Use the <code>list-transports</code> subcommand in remote mode to list the existing
+HTTP transports.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing transports by using the
+<a href="../reference-manual/list-transports.html#GSRFM00206"><code>list-transports</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00251"></a><a id="gjhqj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-7 Listing HTTP Transports</p>
+</div>
+<div class="paragraph">
+<p>This example lists the existing transports.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-transports
+http1-trans
+tcp
+Command list-transports executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG998" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-transports</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjhqp"></a><a id="GSADG00464"></a><a id="to-delete-a-transport"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_a_transport">To Delete a Transport</h5>
+<div class="paragraph">
+<p>Use the <code>delete-transport</code> subcommand in remote mode to remove a
+transport.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Delete a transport by using the <a href="../reference-manual/delete-transport.html#GSRFM00112"><code>delete-transport</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00252"></a><a id="gjhoh"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-8 Deleting a Transport</p>
+</div>
+<div class="paragraph">
+<p>This example deletes he transport named <code>http1-trans</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-transport http1-trans
+Command delete-transport executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG999" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-transport</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjkwt"></a><a id="GSADG00771"></a><a id="administering-http-network-listeners-1"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administering_http_network_listeners_2">Administering HTTP Network Listeners</h4>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjimx">To Create an HTTP Network Listener</a></p>
+</li>
+<li>
+<p><a href="#ggnbv">To List HTTP Network Listeners</a></p>
+</li>
+<li>
+<p><a href="#giwls">To Update an HTTP Network Listener</a></p>
+</li>
+<li>
+<p><a href="#ggndu">To Delete an HTTP Network Listener</a></p>
+</li>
+<li>
+<p><a href="#ggnbj">To Configure an HTTP Listener for SSL</a></p>
+</li>
+<li>
+<p><a href="#CHDEDCEA">To Configure Optional Client Authentication for SSL</a></p>
+</li>
+<li>
+<p><a href="#CHDHEFHG">To Configure a Custom SSL Implementation</a></p>
+</li>
+<li>
+<p><a href="#ggncl">To Delete SSL From an HTTP Listener</a></p>
+</li>
+<li>
+<p><a href="#gixjb">To Assign a Default Virtual Server to an HTTP Listener</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjimx"></a><a id="GSADG00465"></a><a id="to-create-an-http-network-listener"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_create_an_http_network_listener">To Create an HTTP Network Listener</h5>
+<div class="paragraph">
+<p>Use the <code>create-http-listener</code> subcommand or the
+<code>create-network-listener</code> subcommand in remote mode to create a
+listener. These subcommands provide backward compatibility and also
+provide a shortcut for creating network listeners that use the HTTP
+protocol. Behind the scenes, a network listener is created as well as
+its associated protocol, transport, and HTTP configuration. This method
+is a convenient shortcut, but it gives access to only a limited number
+of options. If you want to specify the full range of listener options,
+follow the instructions in <a href="#ggnfh">To Create an Internet
+Connection</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create an HTTP network listener by using the
+<a href="../reference-manual/create-network-listener.html#GSRFM00046"><code>create-network-listener</code></a> subcommand or the
+<a href="../reference-manual/create-http-listener.html#GSRFM00030"><code>create-http-listener</code></a> subcommand.</p>
+</li>
+<li>
+<p>If needed, restart the server.<br>
+If you edit the special HTTP network listener named <code>admin-listener</code>,
+you must restart the server for changes to take effect. See
+<a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00253"></a><a id="ggpjk"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-9 Creating an HTTP Listener</p>
+</div>
+<div class="paragraph">
+<p>This example creates an HTTP listener named <code>sampleListener</code> that uses a
+non-default number of acceptor threads. Security is not enabled at
+runtime.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-http-listener --listeneraddress 0.0.0.0
+--listenerport 7272 --defaultvs server --servername host1.sun.com
+--acceptorthreads 100 --securityenabled=false
+--enabled=false sampleListener
+Command create-http-listener executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00254"></a><a id="gjimj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-10 Creating a Network Listener</p>
+</div>
+<div class="paragraph">
+<p>This example a network listener named <code>sampleListener</code> that is not
+enabled at runtime:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-network-listener --listenerport 7272 protocol http-1
+--enabled=false sampleListener
+Command create-network-listener executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1000" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-http-listener</code> or
+<code>asadmin help create-network-listener</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnbv"></a><a id="GSADG00466"></a><a id="to-list-http-network-listeners"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_list_http_network_listeners">To List HTTP Network Listeners</h5>
+<div class="paragraph">
+<p>Use the <code>list-http-listeners</code> subcommand or the <code>list-network-listeners</code>
+subcommand in remote mode to list the existing HTTP listeners.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List HTTP listeners by using the
+<a href="../reference-manual/list-http-listeners.html#GSRFM00168"><code>list-http-listeners</code></a> or
+<a href="../reference-manual/list-network-listeners.html#GSRFM00186"><code>list-network-listeners</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00255"></a><a id="ggpgw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-11 Listing HTTP Listeners</p>
+</div>
+<div class="paragraph">
+<p>This example lists the HTTP listeners. The same output is given if you
+use the <code>list-network-listeners</code> subcommand.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-http-listeners
+admin-listener
+http-listener-2
+http-listener-1
+Command list-http-listeners executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1001" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-http-listeners</code> or
+<code>asadmin help list-network-listeners</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giwls"></a><a id="GSADG00467"></a><a id="to-update-an-http-network-listener"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_update_an_http_network_listener">To Update an HTTP Network Listener</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List HTTP listeners by using the
+<a href="../reference-manual/list-http-listeners.html#GSRFM00168"><code>list-http-listeners</code></a> or
+<a href="../reference-manual/list-network-listeners.html#GSRFM00186"><code>list-network-listeners</code></a> subcommand.</p>
+</li>
+<li>
+<p>Modify the values for the specified listener by using the
+<a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand.<br>
+The listener is identified by its dotted name.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00256"></a><a id="giwiw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-12 Updating an HTTP Network Listener</p>
+</div>
+<div class="paragraph">
+<p>This example changes <code>security-enabled</code> to <code>false</code> on <code>http-listener-2</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.network-config.protocols.protocol.http-listener-2.security-enabled=false
+Command set executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ggndu"></a><a id="GSADG00468"></a><a id="to-delete-an-http-network-listener"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_an_http_network_listener">To Delete an HTTP Network Listener</h5>
+<div class="paragraph">
+<p>Use the <code>delete-http-listener</code> subcommand or the
+<code>delete-network-listener</code> subcommand in remote mode to delete an
+existing HTTP listener. This disables secure communications for the
+listener.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List HTTP listeners by using the
+<a href="../reference-manual/list-http-listeners.html#GSRFM00168"><code>list-http-listeners</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete an HTTP listener by using the
+<a href="../reference-manual/delete-http-listener.html#GSRFM00082"><code>delete-http-listener</code></a> or
+<a href="../reference-manual/delete-network-listener.html#GSRFM00098"><code>delete-network-listener</code></a> subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00257"></a><a id="ggpjr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-13 Deleting an HTTP Listener</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the HTTP listener named <code>sampleListener</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-http-listener sampleListener
+Command delete-http-listener executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1002" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-http-listener</code> or
+<code>asadmin help delete-network-listener</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnbj"></a><a id="GSADG00469"></a><a id="to-configure-an-http-listener-for-ssl"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_configure_an_http_listener_for_ssl">To Configure an HTTP Listener for SSL</h5>
+<div class="paragraph">
+<p>Use the <code>create-ssl</code> subcommand in remote mode to create and configure
+an SSL element in the specified listener. This enables secure
+communication for the listener.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Configure an HTTP listener by using the
+<a href="../reference-manual/create-ssl.html#GSRFM00058"><code>create-ssl</code></a> subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00258"></a><a id="ggphv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-14 Configuring an HTTP Listener for SSL</p>
+</div>
+<div class="paragraph">
+<p>This example enables the HTTP listener named <code>http-listener-1</code> for SSL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-ssl --type http-listener --certname sampleCert http-listener-1
+Command create-ssl executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1003" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-ssl</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="CHDEDCEA"></a><a id="GSADG1106"></a><a id="to-configure-optional-client-authentication-for-ssl"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_configure_optional_client_authentication_for_ssl">To Configure Optional Client Authentication for SSL</h5>
+<div class="paragraph">
+<p>In GlassFish Server, you can configure the SSL protocol of an HTTP
+listener such that it requests a certificate before permitting a client
+connection, but does not refuse a connection if the client does not
+provide one. To enable this feature, set the <code>client-auth</code> property of
+the SSL protocol to the value <code>want</code>. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set configs.config.config-name.network-config.protocols.\
+protocol.listener-name.ssl.client-auth=want</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="CHDHEFHG"></a><a id="GSADG1107"></a><a id="to-configure-a-custom-ssl-implementation"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_configure_a_custom_ssl_implementation">To Configure a Custom SSL Implementation</h5>
+<div class="paragraph">
+<p>In GlassFish Server, you can configure the SSL protocol an HTTP listener
+such that it uses a custom implementation of SSL. To enable this
+feature, set the <code>classname</code> property of the SSL protocol to the name of
+a class that implements the <code>com.sun.grizzly.util.net.SSLImplementation</code>
+interface. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set configs.config.config-name.network-config.protocols.\
+protocol.listener-name.ssl.classname=SSLImplementation-class-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, GlassFish Server uses the implementation
+<code>com.sun.enterprise.security.ssl.GlassfishSSLImpl</code> for the SSL protocol.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggncl"></a><a id="GSADG00470"></a><a id="to-delete-ssl-from-an-http-listener"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_ssl_from_an_http_listener">To Delete SSL From an HTTP Listener</h5>
+<div class="paragraph">
+<p>Use the <code>delete-ssl</code> subcommand in remote mode to delete the SSL element
+in the specified listener. This disables secure communications for the
+listener.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Delete SSL from an HTTP listener by using the
+<a href="../reference-manual/delete-ssl.html#GSRFM00109"><code>delete-ssl</code></a> subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00259"></a><a id="ggpln"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-15 Deleting SSL From an HTTP Listener</p>
+</div>
+<div class="paragraph">
+<p>This example disables SSL for the HTTP listener named <code>http-listener-1</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-ssl --type http-listener http-listener-1
+Command delete-http-listener executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1004" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-ssl</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gixjb"></a><a id="GSADG00471"></a><a id="to-assign-a-default-virtual-server-to-an-http-listener"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_assign_a_default_virtual_server_to_an_http_listener">To Assign a Default Virtual Server to an HTTP Listener</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the Administration Console, open the HTTP Service component under
+the relevant configuration.</p>
+</li>
+<li>
+<p>Open the HTTP Listeners component under the HTTP Service component.</p>
+</li>
+<li>
+<p>Select or create a new HTTP listener.</p>
+</li>
+<li>
+<p>Select from the Default Virtual Server drop-down list.<br>
+For more information, see <a href="#beaga">To Assign a Default Web Module to
+a Virtual Server</a>.</p>
+</li>
+</ol>
+</div>
+<div id="GSADG1005" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For details, click the Help button in the Administration Console from
+the HTTP Listeners page.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggncs"></a><a id="GSADG00589"></a><a id="administering-virtual-servers"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_virtual_servers">Administering Virtual Servers</h3>
+<div class="paragraph">
+<p>A virtual server is a virtual web server that serves content targeted
+for a specific URL. Multiple virtual servers can serve content using the
+same or different host names, port numbers, or IP addresses. The HTTP
+service directs incoming web requests to different virtual servers based
+on the URL.</p>
+</div>
+<div class="paragraph">
+<p>When you first install GlassFish Server, a default virtual server is
+created. You can assign a default virtual server to each new HTTP
+listener you create.</p>
+</div>
+<div class="paragraph">
+<p>Web applications and Java EE applications containing web components (web
+modules) can be assigned to virtual servers during deployment. A web
+module can be assigned to more than one virtual server, and a virtual
+server can have more than one web module assigned to it. If you deploy a
+web application and don&#8217;t specify any assigned virtual servers, the web
+application is assigned to all currently defined virtual servers. If you
+then create additional virtual servers and want to assign existing web
+applications to them, you must redeploy the web applications. For more
+information about deployment, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open
+Source Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can define virtual server properties using the <code>asadmin set</code>
+command. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server-config.http-service.virtual-server.MyVS.property.sso-enabled="true"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some virtual server properties can be set for a specific web
+application. For details, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00161">glassfish-web-app</a>" in
+GlassFish Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggnfr">To Create a Virtual Server</a></p>
+</li>
+<li>
+<p><a href="#ggndw">To List Virtual Servers</a></p>
+</li>
+<li>
+<p><a href="#giwkp">To Update a Virtual Server</a></p>
+</li>
+<li>
+<p><a href="#ggnen">To Delete a Virtual Server</a></p>
+</li>
+<li>
+<p><a href="#beaga">To Assign a Default Web Module to a Virtual Server</a></p>
+</li>
+<li>
+<p><a href="#gixku">To Assign a Virtual Server to an Application or Module</a></p>
+</li>
+<li>
+<p><a href="#glavy">To Set <code>JSESSIONIDSSO</code> Cookie Attributes</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggnfr"></a><a id="GSADG00472"></a><a id="to-create-a-virtual-server"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_virtual_server">To Create a Virtual Server</h4>
+<div class="paragraph">
+<p>By default, when GlassFish Server starts, the following virtual servers
+are started automatically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A virtual server named <code>server</code>, which hosts all user-defined web
+modules.<br>
+For development, testing, and deployment of web services in a
+non-production environment, <code>server</code> is often the only virtual server
+required.</p>
+</li>
+<li>
+<p>A virtual server named <code>__asadmin</code>, which hosts all
+administration-related web modules (specifically, the Administration
+Console). This server is restricted, which means that you cannot deploy
+web modules to this virtual server.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In a production environment, additional virtual servers provide hosting
+facilities for users and customers so that each appears to have its own
+web server, even though there is only one physical server.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>create-virtual-server</code> subcommand in remote mode to create the
+named virtual server.</p>
+</div>
+<div id="GSADG1006" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>A virtual server must specify an existing HTTP listener. Because the
+virtual server cannot specify an HTTP listener that is already being
+used by another virtual server, create at least one HTTP listener before
+creating a new virtual server.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a virtual server by using the
+<a href="../reference-manual/create-virtual-server.html#GSRFM00062"><code>create-virtual-server</code></a> subcommand.<br>
+Information about properties for this subcommand is included in this
+help page.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00260"></a><a id="ggpha"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-16 Creating a Virtual Server</p>
+</div>
+<div class="paragraph">
+<p>This example creates a virtual server named <code>sampleServer</code> on
+<code>localhost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-virtual-server sampleServer
+Command create-virtual-server executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1007" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-virutal-server</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggndw"></a><a id="GSADG00473"></a><a id="to-list-virtual-servers"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_virtual_servers">To List Virtual Servers</h4>
+<div class="paragraph">
+<p>Use the <code>list-virtual-servers</code> subcommand in remote mode to list the
+existing virtual servers.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List virtual servers by using the
+<a href="../reference-manual/list-virtual-servers.html#GSRFM00207"><code>list-virtual-servers</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00261"></a><a id="ggpgr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-17 Listing Virtual Servers</p>
+</div>
+<div class="paragraph">
+<p>This example lists the virtual servers for <code>localhost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-virtual-servers
+sampleListener
+admin-listener
+http-listener-2
+http-listener-1
+Command list-http-listeners executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1008" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-virutal-servers</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giwkp"></a><a id="GSADG00474"></a><a id="to-update-a-virtual-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_virtual_server">To Update a Virtual Server</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List virtual servers by using the
+<a href="../reference-manual/list-virtual-servers.html#GSRFM00207"><code>list-virtual-servers</code></a> subcommand.</p>
+</li>
+<li>
+<p>Modify the values for the specified virtual server by using the
+<a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand.<br>
+The virtual server is identified by its dotted name.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ggnen"></a><a id="GSADG00475"></a><a id="to-delete-a-virtual-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_virtual_server">To Delete a Virtual Server</h4>
+<div class="paragraph">
+<p>Use the <code>delete-virtual-server</code> subcommand in remote mode to delete an
+existing virtual server.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List virtual servers by using the
+<a href="../reference-manual/list-virtual-servers.html#GSRFM00207"><code>list-virtual-servers</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the virtual server is being deleted.</p>
+</li>
+<li>
+<p>Delete a virtual server by using the
+<a href="../reference-manual/delete-virtual-server.html#GSRFM00113"><code>delete-virtual-server</code></a> subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00262"></a><a id="ggpmd"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-18 Deleting a Virtual Server</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the virtual server named <code>sampleServer</code> from
+<code>localhost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-virtual-server sampleServer
+Command delete-virtual-server executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1009" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-virutal-server</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaga"></a><a id="GSADG00772"></a><a id="to-assign-a-default-web-module-to-a-virtual-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_assign_a_default_web_module_to_a_virtual_server">To Assign a Default Web Module to a Virtual Server</h4>
+<div class="paragraph">
+<p>A default web module can be assigned to the default virtual server and
+to each new virtual server. To access the default web module for a
+virtual server, point the browser to the URL for the virtual server, but
+do not supply a context root. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://myvserver:3184/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A virtual server with no default web module assigned serves HTML or
+JavaServer Pages ( JSP) content from its document root, which is usually
+domain-dir`/docroot`. To access this HTML or JSP content, point your
+browser to the URL for the virtual server, do not supply a context root,
+but specify the target file.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://myvserver:3184/hellothere.jsp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gixku"></a><a id="GSADG00476"></a><a id="to-assign-a-virtual-server-to-an-application-or-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_assign_a_virtual_server_to_an_application_or_module">To Assign a Virtual Server to an Application or Module</h4>
+<div class="paragraph">
+<p>You can assign a virtual server to a deployed application or web module.</p>
+</div>
+<div id="GSADG1010" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The application or module must already be deployed. For more
+information, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition
+Application Deployment Guide</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the Administration Console, open the HTTP Service component under
+the relevant configuration.</p>
+</li>
+<li>
+<p>Open the Virtual Servers component under the HTTP Service component.</p>
+</li>
+<li>
+<p>Select the virtual server to which you want to assign a default web
+module.</p>
+</li>
+<li>
+<p>Select the application or web module from the Default Web Module
+drop-down list.<br>
+For more information, see <a href="#beaga">To Assign a Default Web Module to
+a Virtual Server</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="glavy"></a><a id="GSADG00477"></a><a id="to-set-jsessionidsso-cookie-attributes"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_set_code_jsessionidsso_code_cookie_attributes">To Set <code>JSESSIONIDSSO</code> Cookie Attributes</h4>
+<div class="paragraph">
+<p>Use the <code>sso-cookie-http-only</code> and <code>sso-cookie-secure</code> virtual server
+attributes to set the <code>HttpOnly</code> and <code>Secure</code> attributes of any
+<code>JSESSIONIDSSO</code> cookies associated with web applications deployed to the
+virtual server.</p>
+</div>
+<div class="paragraph">
+<p>Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to set the value of the
+<code>sso-cookie-http-only</code> and <code>sso-cookie-secure</code> virtual server
+attributes.</p>
+</div>
+<div class="paragraph">
+<p>The values supported for these attributes are as follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>sso-cookie-http-only</code></dt>
+<dd>
+<p>A boolean value that specifies whether the <code>HttpOnly</code> attribute is
+included in <code>JSESSIONIDSSO</code> cookies. When set to <code>true</code>, which is the
+default, the <code>HttpOnly</code> attribute is included. When set to <code>false</code>,
+the <code>HttpOnly</code> attribute is not included.</p>
+</dd>
+<dt class="hdlist1"><code>sso-cookie-secure</code></dt>
+<dd>
+<p>A string value that specifies whether the <code>Secure</code> attribute is
+included in <code>JSESSIONIDSSO</code> cookies. Allowed values are as follows:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>true</code> — The <code>Secure</code> attribute is included.</p>
+</li>
+<li>
+<p><code>false</code> — The <code>Secure</code> attribute is not included.</p>
+</li>
+<li>
+<p><code>dynamic</code> — The <code>Secure</code> attribute setting is inherited from the
+first session participating in SSO. This is the default value.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="connectors.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="concurrent.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

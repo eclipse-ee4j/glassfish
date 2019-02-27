@@ -1,0 +1,789 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>RMI-IIOP Load Balancing and Failover</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>RMI-IIOP Load Balancing and Failover</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jms.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00013"></a><a id="fxxqs"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rmi-iiop-load-balancing-and-failover">11 RMI-IIOP Load Balancing and Failover</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes using high-availability features for remote EJB
+references and JNDI objects over RMI-IIOP in GlassFish Server.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdbe">Overview</a></p>
+</li>
+<li>
+<p><a href="#gknqo"><code>InitialContext</code> Load Balancing</a></p>
+</li>
+<li>
+<p><a href="#gknpv">Per-Request Load Balancing (PRLB)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdbe"></a><a id="GSHAG00215"></a><a id="overview"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_overview">Overview</h3>
+<div class="paragraph">
+<p>With RMI-IIOP load balancing, IIOP client requests are distributed to
+different server instances or name servers. The goal is to spread the
+load evenly across the cluster, thus providing scalability. IIOP load
+balancing combined with EJB clustering and availability also provides
+EJB failover.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdbf">General Requirements for Configuring Load Balancing</a></p>
+</li>
+<li>
+<p><a href="#gknpk">Load Balancing Models</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdbf"></a><a id="GSHAG00313"></a><a id="general-requirements-for-configuring-load-balancing"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_general_requirements_for_configuring_load_balancing">General Requirements for Configuring Load Balancing</h4>
+<div class="paragraph">
+<p>Oracle GlassFish Server provides high availability of remote EJB
+references and <code>NameService</code> objects over RMI-IIOP, provided all the
+following apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Your deployment has a cluster of at least two instances.</p>
+</li>
+<li>
+<p>Java EE applications are deployed to all instances and clusters that
+participate in load balancing.</p>
+</li>
+<li>
+<p>RMI-IIOP client applications are enabled for load balancing.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>GlassFish Server supports load balancing for Java applications executing
+in the Application Client Container (ACC). See <a href="#abdbd">Enabling
+RMI-IIOP Hardware Load Balancing and Failover</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server does not support RMI-IIOP load balancing and failover
+over secure sockets layer (SSL).</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gknpk"></a><a id="GSHAG00314"></a><a id="load-balancing-models"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_load_balancing_models">Load Balancing Models</h4>
+<div class="paragraph">
+<p>GlassFish Server supports two general models for load balancing:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#gknqo"><code>InitialContext</code> Load Balancing</a></dt>
+<dd>
+<p>When a client performs a JNDI lookup for an object, the Naming Service
+creates a <code>InitialContext</code> (IC) object associated with a particular
+server instance. From then on, all lookup requests made using that IC
+object are sent to the same server instance. <code>InitialContext</code> load
+balancing can be configured automatically across an entire cluster.</p>
+</dd>
+<dt class="hdlist1"><a href="#gknpv">Per-Request Load Balancing (PRLB)</a></dt>
+<dd>
+<p>Per Request Load Balancing (PRLB) is a method for load balancing
+stateless EJBs that enables load-balancing for each request to an EJB
+instance. PRLB chooses the first node in a cluster to use on each
+request. PRLB is configured on a per-EJB basis.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gknqo"></a><a id="GSHAG00216"></a><a id="initialcontext-load-balancing"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__code_initialcontext_code_load_balancing"><code>InitialContext</code> Load Balancing</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gknpn"><code>InitialContext</code> Summary</a></p>
+</li>
+<li>
+<p><a href="#abdbg"><code>InitialContext</code> Algorithm</a></p>
+</li>
+<li>
+<p><a href="#abdbd">Enabling RMI-IIOP Hardware Load Balancing and Failover</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gknpn"></a><a id="GSHAG00315"></a><a id="initialcontext-summary"></a></p>
+</div>
+<div class="sect3">
+<h4 id="__code_initialcontext_code_summary"><code>InitialContext</code> Summary</h4>
+<div class="paragraph">
+<p>When <code>InitialContext</code> load balancing is used, the client calls the
+<code>InitialContext()</code> method to create a new <code>InitialContext</code> (IC) object
+that is associated with a particular server instance. JNDI lookups are
+then performed on that IC object, and all lookup requests made using
+that IC object are sent to the same server instance. All <code>EJBHome</code>
+objects looked up with that <code>InitialContext</code> are hosted on the same
+target server. Any bean references obtained henceforth are also created
+on the same target host. This effectively provides load balancing, since
+all clients randomize the list of live target servers when creating
+<code>InitialContext</code> objects. If the target server instance goes down, the
+lookup or EJB method invocation will failover to another server
+instance. All objects derived from same <code>InitialContext</code> will failover
+to the same server instance.</p>
+</div>
+<div class="paragraph">
+<p>IIOP load balancing and failover happens transparently. No special steps
+are needed during application deployment. IIOP load balancing and
+failover for the GlassFish Server supports dynamically reconfigured
+clusters. If the GlassFish Server instance on which the application
+client is deployed participates in a cluster, the GlassFish Server finds
+all currently active IIOP endpoints in the cluster automatically.
+Therefore, you are not required to manually update the list of endpoints
+if a new instance is added to the cluster or deleted from the cluster.
+However, a client should have at least two endpoints specified for
+bootstrapping purposes, in case one of the endpoints has failed.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdbg"></a><a id="GSHAG00316"></a><a id="initialcontext-algorithm"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_initialcontext_code_algorithm"><code>InitialContext</code> Algorithm</h4>
+<div class="paragraph">
+<p>GlassFish Server uses a randomization and round-robin algorithm for
+RMI-IIOP load balancing and failover.</p>
+</div>
+<div class="paragraph">
+<p>When an RMI-IIOP client first creates a new <code>InitialContext</code> object, the
+list of available GlassFish Server IIOP endpoints is randomized for that
+client. For that <code>InitialContext</code> object, the load balancer directs
+lookup requests and other <code>InitialContext</code> operations to an endpoint on
+the randomized list. If that endpoint is not available then a different
+random endpoint in the list is used.</p>
+</div>
+<div class="paragraph">
+<p>Each time the client subsequently creates a new <code>InitialContext</code> object,
+the endpoint list is rotated so that a different IIOP endpoint is used
+for <code>InitialContext</code> operations. The rotation is randomized, so the
+rotation is not to the next endpoint in the list, but instead to a
+random endpoint in the list.</p>
+</div>
+<div class="paragraph">
+<p>When you obtain or create beans from references obtained by an
+<code>InitialContext</code> object, those beans are created on the GlassFish Server
+instance serving the IIOP endpoint assigned to the <code>InitialContext</code>
+object. The references to those beans contain the IIOP endpoint
+addresses of all GlassFish Server instances in the cluster.</p>
+</div>
+<div class="paragraph">
+<p>The primary endpoint is the bean endpoint corresponding to the
+<code>InitialContext</code> endpoint used to look up or create the bean. The other
+IIOP endpoints in the cluster are designated as alternate endpoints. If
+the bean&#8217;s primary endpoint becomes unavailable, further requests on
+that bean fail over to one of the alternate endpoints.</p>
+</div>
+<div class="paragraph">
+<p>You can configure RMI-IIOP load balancing and failover to work with
+applications running in the ACC.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdbd"></a><a id="GSHAG00317"></a><a id="enabling-rmi-iiop-hardware-load-balancing-and-failover"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_enabling_rmi_iiop_hardware_load_balancing_and_failover">Enabling RMI-IIOP Hardware Load Balancing and Failover</h4>
+<div class="paragraph">
+<p>You can enable RMI-IIOP load balancing and failover for applications
+running in the application client container (ACC). Weighted round-robin
+load balancing is also supported.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdbi"></a><a id="GSHAG00161"></a><a id="to-enable-rmi-iiop-hardware-load-balancing-for-the-application-client-container"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_enable_rmi_iiop_hardware_load_balancing_for_the_application_client_container">To Enable RMI-IIOP Hardware Load Balancing for the Application Client Container</h5>
+<div class="paragraph">
+<p>This procedure provides an overview of the steps necessary to enable
+RMI-IIOP load balancing and failover with the application client
+container (ACC). For additional information on the ACC, see
+"<a href="../application-development-guide/java-clients.html#GSDVG00160">Developing Clients Using the ACC</a>" in GlassFish Server
+Open Source Edition Application Development Guide.</p>
+</div>
+<div id="GSHAG440" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The first five steps in this procedure are only necessary if you are
+enabling RMI-IIOP load balancing on a system other than the DAS. This is
+common in production environment, but less common in a development
+environment. For example, a developer who wants to experiment with a
+cluster and load balancing might create two instances on the same system
+on which the DAS is running. In such cases, these steps are unnecessary.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to the install_dir <code>/bin</code> directory.</p>
+</li>
+<li>
+<p>Run <code>package-appclient</code>.<br>
+This utility produces an <code>appclient.jar</code> file. For more information on
+<code>package-appclient</code>, see <a href="../reference-manual/package-appclient.html#GSRFM00264"><code>package-appclient</code>(1M)</a>.</p>
+</li>
+<li>
+<p>Copy the <code>appclient.jar</code> file to the machine where you want your
+client and extract it.</p>
+</li>
+<li>
+<p>Edit the <code>asenv.conf</code> or <code>asenv.bat</code> path variables to refer to the
+correct directory values on that machine.<br>
+The file is at appclient-install-dir <code>/config/</code>.<br>
+For a list of the path variables to update, see
+<a href="../reference-manual/package-appclient.html#GSRFM00264"><code>package-appclient</code>(1M)</a>.</p>
+</li>
+<li>
+<p>If required, make the <code>appclient</code> script executable.<br>
+For example, on UNIX use <code>chmod 700</code>.</p>
+</li>
+<li>
+<p><a id="gevjb"></a>
+Find the IIOP listener port number for at least two instances in the
+cluster.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You specify the IIOP listeners as endpoints in <a href="#gevkc">Add at least
+two <code>target-server</code> elements in the <code>sun-acc.xml</code> file.</a>.</p>
+</div>
+<div class="paragraph">
+<p>For each instance, obtain the IIOP listener ports as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Verify that the instances for which you want to determine the IIOP
+listener port numbers are running.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A list of instances and their status (running, not running) is
+displayed.<br>
+The instances for which you want to display the IIOP listener ports must
+be running.
+2.  For each instance, enter the following command to list the various
+port numbers used by the instance.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get servers.server.instance-name.system-property.*.value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, for an instance name <code>in1</code>, you would enter the following
+command:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get servers.server.in1.system-property.*.value</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="gevkc"></a>
+Add at least two <code>target-server</code> elements in the <code>sun-acc.xml</code> file.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Use the endpoints that you obtained in <a href="#gevjb">Find the IIOP
+listener port number for at least two instances in the cluster.</a>.</p>
+</div>
+<div class="paragraph">
+<p>If the GlassFish Server instance on which the application client is
+deployed participates in a cluster, the ACC finds all currently active
+IIOP endpoints in the cluster automatically. However, a client should
+have at least two endpoints specified for bootstrapping purposes, in
+case one of the endpoints has failed.</p>
+</div>
+<div class="paragraph">
+<p>The <code>target-server</code> element specifies one or more IIOP endpoints used
+for load balancing. The <code>address</code> attribute is an IPv4 address or host
+name, and the <code>port</code> attribute specifies the port number. See
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00111">client-container</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>As an alternative to using <code>target-server</code> elements, you can use the
+<code>endpoints</code> property as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">jvmarg value = "-Dcom.sun.appserv.iiop.endpoints=host1:port1,host2:port2,..."</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you require weighted round-robin load balancing, perform the
+following steps:</p>
+</li>
+<li>
+<p>Set the load-balancing weight of each server instance.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set instance-name.lb-weight=weight</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the <code>sun-acc.xml</code>, set the
+<code>com.sun.appserv.iiop.loadbalancingpolicy</code> property of the ACC to
+<code>ic-based-weighted</code>.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>…
+&lt;client-container send-password="true"&gt;
+  &lt;property name="com.sun.appserv.iiop.loadbalancingpolicy" \
+     value="ic-based-weighed"/&gt;
+…</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Deploy your client application with the <code>--retrieve</code> option to get
+the client jar file.<br>
+Keep the client jar file on the client machine.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin  --user admin --passwordfile pw.txt deploy --target cluster1 \
+--retrieve my_dir myapp.ear</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the application client as follows:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>appclient --client my_dir/myapp.jar</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00070"></a><a id="gfohj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 11-1 Setting Load-Balancing Weights for RMI-IIOP Weighted
+Round-Robin Load Balancing</p>
+</div>
+<div class="paragraph">
+<p>In this example, the load-balancing weights in a cluster of three
+instances are to be set as shown in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 44%;">
+<col style="width: 56%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Instance Name</th>
+<th class="tableblock halign-left valign-top">Load-Balancing Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>i1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>i2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>i3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">300</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The sequence of commands to set these load balancing weights is as
+follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set i1.lb-weight=100
+asadmin set i2.lb-weight=200
+asadmin set i3.lb-weight=300</code></pre>
+</div>
+</div>
+<div id="GSHAG441" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>To test failover, stop one instance in the cluster and see that the
+application functions normally. You can also have breakpoints (or
+sleeps) in your client application.</p>
+</div>
+<div class="paragraph">
+<p>To test load balancing, use multiple clients and see how the load gets
+distributed among all endpoints.</p>
+</div>
+<div id="GSHAG442" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>See <a href="session-persistence-and-failover.html#abdle">Enabling the High
+Availability Session Persistence Service</a> for instructions on enabling
+the session availability service for a cluster or for a Web, EJB, or JMS
+container running in a cluster.</p>
+</div>
+<div class="paragraph">
+<p><a id="gknpv"></a><a id="GSHAG00217"></a><a id="per-request-load-balancing-prlb"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_per_request_load_balancing_prlb">Per-Request Load Balancing (PRLB)</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gksgt">PRLB Summary</a></p>
+</li>
+<li>
+<p><a href="#gksgy">Enabling Per-Request Load Balancing</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksgt"></a><a id="GSHAG00318"></a><a id="prlb-summary"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_prlb_summary">PRLB Summary</h4>
+<div class="paragraph">
+<p>Per Request Load Balancing (PRLB) is a method for load balancing
+stateless EJBs that enables load-balancing for each request to an EJB
+instance. PRLB chooses the first node in a cluster to use on each
+request. By contrast, <code>InitialContext</code> (hardware) load balancing chooses
+the first node to use when the <code>InitialContext</code> is created, and each
+request thereafter uses the same node unless a failure occurred.</p>
+</div>
+<div class="paragraph">
+<p>PRLB is enabled by means of the boolean <code>per-request-load-balancing</code>
+property in the <code>glassfish-ejb-jar.xml</code> deployment descriptor file for
+the EJB. If this property is not set, the original load balancing
+behavior is preserved.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>PRLB is only supported for stateless session beans. Using PRLB with any
+other bean types will result in a deployment error.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gksgy"></a><a id="GSHAG00319"></a><a id="enabling-per-request-load-balancing"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_enabling_per_request_load_balancing">Enabling Per-Request Load Balancing</h4>
+<div class="paragraph">
+<p>You can enable Per-Request Load Balancing (PRLB) by setting the boolean
+<code>per-request-load-balancing</code> property to <code>true</code> in the
+<code>glassfish-ejb-jar.xml</code> deployment descriptor file for the EJB. On the
+client side, the <code>initContext.lookup</code> method is used to access the
+stateless EJB.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksgo"></a><a id="GSHAG00162"></a><a id="to-enable-rmi-iiop-per-request-load-balancing-for-a-stateless-ejb"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_enable_rmi_iiop_per_request_load_balancing_for_a_stateless_ejb">To Enable RMI-IIOP Per-Request Load Balancing for a Stateless EJB</h5>
+<div class="paragraph">
+<p>This procedure describes how to enable PRLB for a stateless EJB that is
+deployed to clustered GlassFish Server instances. This procedure also
+provides an client-side example for accessing a stateless EJB that uses
+PRLB.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Choose or assemble the EJB that you want to deploy.<br>
+In this example, an EJB named <code>TheGreeter</code> is used.<br>
+For instructions on developing and assembling an EJB for deployment to
+GlassFish Server, refer to the following documentation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>"<a href="../application-development-guide/ejb.html#GSDVG00010">Using Enterprise JavaBeans Technology</a>" in GlassFish
+Server Open Source Edition Application Development Guide</p>
+</li>
+<li>
+<p>"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00068">EJB Module Deployment Guidelines</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide</p>
+</li>
+<li>
+<p>"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00070">Assembling and Deploying an Application Client
+Module</a>" in GlassFish Server Open Source Edition Application Deployment
+Guide</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Set the <code>per-request-load-balancing</code> property to <code>true</code> in the
+<code>glassfish-ejb-jar.xml</code> deployment descriptor file for the EJB.<br>
+For more information about the <code>glassfish-ejb-jar.xml</code> deployment
+descriptor file, refer to "<a href="../application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml
+File</a>" in GlassFish Server Open Source Edition Application Deployment
+Guide<br>
+For example, the <code>glassfish-ejb-jar.xml</code> file for a sample EJB named
+<code>TheGreeter</code> is listed below.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;glassfish-ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;unique-id&gt;1&lt;/unique-id&gt;
+    &lt;ejb&gt;
+      &lt;ejb-name&gt;TheGreeter&lt;/ejb-name&gt;
+    &lt;jndi-name&gt;greeter&lt;/jndi-name&gt;
+    &lt;per-request-load-balancing&gt;true&lt;/per-request-load-balancing&gt;
+    &lt;/ejb&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/glassfish-ejb-jar&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Deploy the EJB.<br>
+If the EJB was previously deployed, it must be redployed.<br>
+For instructions on deploying EJBs, refer to the following
+documentation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00033">To Deploy an Application or Module</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide</p>
+</li>
+<li>
+<p>"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00036">To Redeploy an Application or Module</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Verify the PRLB configuration by looking for the following <code>FINE</code>
+message in the CORBA log file:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Setting per-request-load-balancing policyfor EJB EJB-name</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure a client application to access the PRLB-enabled EJB.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>public class EJBClient {
+    public static void main(String args[]) {
+    :
+    :
+    :
+    try {
+    // only one lookup
+
+    Object objref = initContext.lookup("test.cluster.loadbalancing.ejb.\
+      TestSessionBeanRemote");
+        myGreeterRemote = (TestSessionBeanRemote)PortableRemoteObject.narrow\
+          (objref,
+                                            TestSessionBeanRemote.class);
+
+    } catch (Exception e) {
+    :
+    }
+
+    for (int i=0; i &lt; 10; i++ ) {
+    // method calls in a loop.
+        String theMessage = myGreeterRemote.sayHello(Integer.toString(i));
+        System.out.println("got"+": " + theMessage);
+        }
+    }
+}</pre>
+</div>
+</div>
+<div id="GSHAG443" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>See <a href="session-persistence-and-failover.html#abdle">Enabling the High
+Availability Session Persistence Service</a> for instructions on enabling
+the session availability service for a cluster or for a Web, EJB, or JMS
+container running in a cluster.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jms.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

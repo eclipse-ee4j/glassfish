@@ -1,0 +1,3095 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering System Security</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering System Security</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="preface.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="user-security.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSSCG00035"></a><a id="ablnk"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-system-security">1 Administering System Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes general information about administering system
+security.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggktf">About System Security in GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#ghgrp">Administering Passwords</a></p>
+</li>
+<li>
+<p><a href="#ghgol">Administering Audit Modules</a></p>
+</li>
+<li>
+<p><a href="#ablqz">Administering JSSE Certificates</a></p>
+</li>
+<li>
+<p><a href="#gkngj">Administering JACC Providers</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing many of these tasks by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p>Information on application security is contained in
+"<a href="../application-development-guide/securing-apps.html#GSDVG00006">Securing Applications</a>" in GlassFish Server Open
+Source Edition Application Development Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggktf"></a><a id="GSSCG00143"></a><a id="about-system-security-in-glassfish-server"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_system_security_in_glassfish_server">About System Security in GlassFish Server</h3>
+<div class="paragraph">
+<p>Security is about protecting data, that is, how to prevent unauthorized
+access or damage to data that is in storage or in transit. The GlassFish
+Server is built on the Java security model, which uses a sandbox where
+applications can run safely, without potential risk to systems or users.
+System security affects all the applications in the GlassFish Server
+environment.</p>
+</div>
+<div class="paragraph">
+<p>The Java EE Security API specification defines portable, plug-in
+interfaces for authentication and identity stores, and a new
+injectable-type SecurityContext interface that provides an access point
+for programmatic security. You can use the built-in implementations of
+the plug-in SPIs, or write custom implementations.</p>
+</div>
+<div class="paragraph">
+<p>System security features include the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablnx">Authentication</a></p>
+</li>
+<li>
+<p><a href="#ghlvu">Authorization</a></p>
+</li>
+<li>
+<p><a href="#ghlql">Auditing</a></p>
+</li>
+<li>
+<p><a href="#ghlti">Firewalls</a></p>
+</li>
+<li>
+<p><a href="#abloj">Certificates and SSL</a></p>
+</li>
+<li>
+<p><a href="#ablno">Tools for Managing System Security</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ablnx"></a><a id="GSSCG00203"></a><a id="authentication"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_authentication">Authentication</h4>
+<div class="paragraph">
+<p>Authentication is the way in which an entity (a user, an application, or
+a component) determines that another entity is who it claims to be. An
+entity uses security credentials to authenticate itself. The credentials
+might be a user name and password, a digital certificate, or something
+else. Usually, servers or applications require clients to authenticate
+themselves. Additionally, clients might require servers to authenticate
+themselves. When authentication is bidirectional, it is called mutual
+authentication.</p>
+</div>
+<div class="paragraph">
+<p>When an entity tries to access a protected resource, GlassFish Server
+uses the authentication mechanism configured for that resource to
+determine whether to grant access. For example, a user can enter a user
+name and password in a web browser, and if the application verifies
+those credentials, the user is authenticated. The user is associated
+with this authenticated security identity for the remainder of the
+session.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghsqc"></a><a id="GSSCG00184"></a><a id="authentication-types"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_authentication_types">Authentication Types</h5>
+<div class="paragraph">
+<p>Within its deployment descriptors, an application can specify the type
+of authentication that it uses. The Java EE Security API provides an
+alternative mechanism for configuring the type of authentication an
+application uses. See <a href="https://jcp.org/en/jsr/detail?id=375">Java EE
+Security API 1.0 specification</a>. GlassFish Server supports specifying
+the following types of authentication in deployment descriptors:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">BASIC</dt>
+<dd>
+<p>Uses the standard Basic Authentication Scheme as described in RFC</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The communication protocol is HTTP (SSL optional). There is no
+encryption of user credentials unless using SSL. This type is not
+considered to be a secure method of user authentication unless used in
+conjunction with an encrypted communications channel, such as that
+provided by SSL.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">FORM</dt>
+<dd>
+<p>The application provides its own custom login and error pages. The
+communication protocol is HTTP (SSL optional). There is no encryption
+of user credentials unless using SSL.</p>
+</dd>
+<dt class="hdlist1">CLIENT-CERT</dt>
+<dd>
+<p>The server authenticates the client using a public key certificate.
+The communication protocol is HTTPS (HTTP over SSL).</p>
+</dd>
+<dt class="hdlist1">DIGEST</dt>
+<dd>
+<p>The server authenticates a user based on a user name and a password.
+Unlike BASIC authentication, the plaintext password is never sent over
+the network, although a hash of the password combined with other
+parameters is sent. While Digest Authentication is more secure than
+Basic Authentication, user names and passwords are not strongly
+protected, and the use of SSL is still recommended.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="sthref4"></a><a id="jsr-375-authentication-mechanisms-and-identity-stores"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jsr_375_authentication_mechanisms_and_identity_stores">JSR 375 Authentication Mechanisms and Identity Stores</h5>
+<div class="paragraph">
+<p>The Java EE Security API defines the <code>HttpAuthenticationMechanism</code>
+interface, the <code>IdentityStore</code> and <code>IdentityStoreHandler</code> interfaces.</p>
+</div>
+<div class="paragraph">
+<p>The <code>HttpAuthenticationMechanism</code> interface defines an SPI for writing
+authentication mechanisms that can be provided with an application and
+deployed using CDI. Developers can write their own implementations of
+<code>HttpAuthenticationMechanism</code> to support specific authentication token
+types or protocols. There are also several built-in authentication
+mechanisms that perform BASIC, FORM, and Custom FORM authentication.The
+<code>HttpAuthenticationMechanism</code> interface defines three methods -
+<code>validateRequest()</code>, <code>secureResponse()</code>, and <code>cleanSubject()</code>. These
+methods align closely with the methods defined by the JASPIC
+<code>ServerAuth</code> interface.</p>
+</div>
+<div class="paragraph">
+<p>The <code>IdentityStore</code> interface provides an abstraction of an identity
+store that holds user account information including name, password,
+group membership, and potentially other attributes. Implementations of
+the <code>IdentityStore</code> interface are used to validate caller credentials,
+typically username and password, and retrieve and group information.
+There are built-in implementations of this SPI that can validate
+credentials against external LDAP or Database identity stores.</p>
+</div>
+<div class="paragraph">
+<p><code>IdentityStore</code> is intended primarily for use by
+<code>HttpAuthenticationMechanism</code> implementations, but could be used by
+other authentication mechanisms, such as a JASPIC <code>ServerAuthModule</code>, or
+a container&#8217;s built-in authentication mechanisms. Though
+<code>HttpAuthenticationMechanism</code> implementations can authenticate users in
+any manner they choose, the <code>IdentityStore</code> interface provides a
+convenient mechanism. A significant advantage of using
+<code>HttpAuthenticationMechanism</code> and <code>IdentityStore</code> over the declarative
+mechanisms defined by the Servlet specification is that it allows an
+application to control the identity stores that it authenticates
+against, in a standard, portable way. You can use the built-in
+implementations of the  plug-in SPIs, or define custom implementations.</p>
+</div>
+<div class="paragraph">
+<p><a id="gknah"></a><a id="GSSCG00185"></a><a id="jsr-196-server-authentication-modules"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jsr_196_server_authentication_modules">JSR 196 Server Authentication Modules</h5>
+<div class="paragraph">
+<p>GlassFish Server implements the Servlet Container Profile of
+<a href="http://www.jcp.org/en/jsr/detail?id=196">JSR 196 Java Authentication
+Service Provider Interface for Containers specification</a>.</p>
+</div>
+<div class="paragraph">
+<p>JSR 196 defines a standard service-provider interface (SPI) for
+integrating authentication mechanism implementations in message
+processing runtimes. JSR 196 extends the concepts of the Java
+Authentication and Authorization Service (JAAS) to enable pluggability
+of message authentication modules in message processing runtimes. The
+standard defines profiles that establish contracts for the use of the
+SPI in specific contexts.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghltx"></a><a id="GSSCG00186"></a><a id="passwords"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_passwords">Passwords</h5>
+<div class="paragraph">
+<p>Passwords are your first line of defense against unauthorized access to
+the components and data of GlassFish Server. For Information about how
+to use passwords for GlassFish Server, see <a href="#ghgrp">Administering
+Passwords</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gczen"></a><a id="GSSCG00042"></a><a id="master-password-and-keystores"></a></p>
+</div>
+<div class="paragraph">
+<p>Master Password and Keystores</p>
+</div>
+<div class="paragraph">
+<p>The master password is not tied to a user account and it is not used for
+authentication. Instead, GlassFish Server uses the master password only
+to encrypt the keystore and truststore for the DAS and instances.</p>
+</div>
+<div class="paragraph">
+<p>When you create a new GlassFish Server domain, a new self-signed
+certificate is generated and stored in the domain keystore and
+truststore. The DAS needs the master password to open these stores at
+startup. Similarly, the associated server instances need the master
+password to open their copy of these stores at startup.</p>
+</div>
+<div class="paragraph">
+<p>If you use a utility such as keytool to modify the keystore or
+truststore, you must provide the master password in that case as well.</p>
+</div>
+<div class="paragraph">
+<p>The master password is a shared password and must be the same for the
+DAS and all instances in the domain in order to manage the instances
+from the DAS. However, because GlassFish Server never transmits the
+master password over the network, it is up to you to keep the master
+password in sync between the DAS and instances.</p>
+</div>
+<div class="paragraph">
+<p>If you change the master password, you can choose to enter the master
+password manually when required, or save it in a file.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktgy"></a><a id="GSSCG00043"></a><a id="understanding-master-password-synchronization"></a></p>
+</div>
+<div class="paragraph">
+<p>Understanding Master Password Synchronization</p>
+</div>
+<div class="paragraph">
+<p>The master password is used encrypt the keystore and truststore for the
+DAS and instances. The DAS needs the master password to open these
+stores at startup. Similarly, the associated server instances need the
+master password to open their copy of these stores at startup.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server keeps the keystore and truststore for the DAS and
+instances in sync, which guarantees that all copies of the stores are
+encrypted with the same master password at any given time.</p>
+</div>
+<div class="paragraph">
+<p>However, GlassFish Server does not synchronize the master password
+itself, and it is possible that the DAS and instances might attempt to
+use different master passwords.</p>
+</div>
+<div class="paragraph">
+<p>Consider the following potential scenario:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You create a domain and instances, using the default master password
+(changeit). As a result, the DAS and instances have keystores and
+truststores encrypted using changeit.</p>
+</li>
+<li>
+<p>You use the <code>change-master-password</code> subcommand on the DAS to change
+the master password to ichangedit. As a result, the DAS and instance
+keystores and truststores are encrypted using ichangedit.</p>
+</li>
+<li>
+<p>Access to the keystore and truststore from an instance now requires
+the master password ichangedit. You are responsible for changing the
+master password as needed.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If you do not use a master password file, you assume the responsibility
+for using the <code>change-master-password</code> subcommand on the DAS and
+instances to keep the master passwords in sync. Be aware that not using
+a master password file has additional considerations for the
+start-instance and start-cluster subcommands, as described in
+<a href="#gktgr">Additional Considerations for the <code>start-instance</code> and
+<code>start-cluster</code> Subcommands</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you do use a master password file, you assume the responsibility for
+using the <code>change-master-password</code> subcommand on the DAS and instances
+to keep the master password file in sync.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktez"></a><a id="GSSCG00044"></a><a id="using-the-default-master-password"></a></p>
+</div>
+<div class="paragraph">
+<p>Using the Default Master Password</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server uses the known phrase "changeit" as the default master
+password. This master password is not stored in a file. The default
+password is a convenience feature and provides no additional security
+because it is assumed to be widely known.</p>
+</div>
+<div class="paragraph">
+<p>All GlassFish Server subcommands work as expected with the default
+master password and there are no synchronization issues.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktfy"></a><a id="GSSCG00045"></a><a id="saving-the-master-password-to-a-file"></a></p>
+</div>
+<div class="paragraph">
+<p>Saving the Master Password to a File</p>
+</div>
+<div class="paragraph">
+<p>The <code>change-master-password</code> <code>--savemasterpassword</code> option indicates
+whether the master password should be written to the file system in the
+<code>master-password</code> file for the DAS or a node. The default is false.</p>
+</div>
+<div class="paragraph">
+<p>For a domain, the master password is kept in
+domain-dir`/master-password`.</p>
+</div>
+<div class="paragraph">
+<p>For a node, the master-password file is kept in
+<code>nodes/`node-name</code>/agent/master-password`. You can set a master password
+at the node level and all instances created on that node will use that
+master-password file. To do this, use the <code>--nodedir</code> option and provide
+a node name.</p>
+</div>
+<div class="paragraph">
+<p>You might want to save the master password to the file so that the
+<code>start-domain</code> subcommand can start the server without having to prompt
+the user. There are additional considerations for using a master
+password with the <code>start-instance</code> and <code>start-cluster</code> subcommands, as
+described in <a href="#gktgr">Additional Considerations for the
+<code>start-instance</code> and <code>start-cluster</code> Subcommands</a>.</p>
+</div>
+<div class="paragraph">
+<p>The master-password file is encoded, not encrypted. You must use
+filesystem permissions to protect the file.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkthb"></a><a id="GSSCG00046"></a><a id="using-the-master-password-when-creating-a-domain"></a></p>
+</div>
+<div class="paragraph">
+<p>Using the Master Password When Creating a Domain</p>
+</div>
+<div class="paragraph">
+<p>The <code>create-domain</code> <code>--usemasterpassword</code> option specifies whether the
+keystore is encrypted with a master password that is built into the
+system, or by a user-defined master password.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If false (default), the keystore is encrypted with a well-known
+password (changeit) that is built into GlassFish Server.</p>
+</li>
+<li>
+<p>If true, the subcommand obtains the master password from the
+<code>AS_ADMIN_MASTERPASSWORD</code> entry in the password file you specified in
+the <code>--passwordfile</code> option of the <code>asadmin</code> utility. Or, if none is
+defined, <code>--usemasterpassword</code> prompts the user for the master password.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghgof"></a><a id="GSSCG00047"></a><a id="administration-password"></a></p>
+</div>
+<div class="paragraph">
+<p>Administration Password</p>
+</div>
+<div class="paragraph">
+<p>An administration password, also known as the admin password, is used to
+invoke the Administration Console and the <code>asadmin</code> utility. As with the
+default admin username, the default admin password is usually set during
+installation but it can be changed. For instructions, see <a href="#ghgpu">To
+Change an Administration Password</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablnq"></a><a id="GSSCG00048"></a><a id="encoded-passwords"></a></p>
+</div>
+<div class="paragraph">
+<p>Encoded Passwords</p>
+</div>
+<div class="paragraph">
+<p>Files that contain encoded passwords need to be protected using file
+system permissions. These files include the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>domain-dir`/master-password`<br>
+This file contains the encoded master password and should be protected
+with file system permissions 600.</p>
+</li>
+<li>
+<p>Any password file created to pass as an argument by using the
+<code>--passwordfile</code> argument to the <code>asadmin</code> utility should be protected
+with file system permissions. Additionally, any password file being used
+for a transient purpose, such as setting up SSH among nodes, should be
+deleted after it has served its purpose.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For instructions, see <a href="#ghytn">To Set a Password From a File</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkaol"></a><a id="GSSCG00049"></a><a id="web-browsers-and-password-storage"></a></p>
+</div>
+<div class="paragraph">
+<p>Web Browsers and Password Storage</p>
+</div>
+<div class="paragraph">
+<p>Most web browsers can save login credentials entered through HTML forms.
+This function can be configured by the user and also by applications
+that employ user credentials. If the function is enabled, then
+credentials entered by the user are stored on their local computer and
+retrieved by the browser on future visits to the same application. This
+function is convenient for users, but can also be a security risk. The
+stored credentials can be captured by an attacker who gains access to
+the computer, either locally or through some remote compromise. Further,
+methods have existed whereby a malicious web site can retrieve the
+stored credentials for other applications, by exploiting browser
+vulnerabilities or through application-level cross-domain attacks.</p>
+</div>
+<div class="paragraph">
+<p>To prevent your web browser from saving login credentials for the
+GlassFish Server Administration Console, choose "No" or "Never for this
+page" when prompted by the browser during login.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgoj"></a><a id="GSSCG00187"></a><a id="password-aliases"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_password_aliases">Password Aliases</h5>
+<div class="paragraph">
+<p>To avoid storing passwords in the domain configuration file in clear
+text, you can create an alias for a password. This process is also known
+as encrypting a password. For more information, see
+<a href="#ghgqc">Administering Password Aliases</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlus"></a><a id="GSSCG00188"></a><a id="single-sign-on"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_single_sign_on">Single Sign-on</h5>
+<div class="paragraph">
+<p>With single sign-on, a user who logs in to one application becomes
+implicitly logged in to other applications that require the same
+authentication information. Single sign-on is based on groups. Single
+sign-on applies to web applications configured for the same realm and
+virtual server. The realm is defined by the <code>realm-name</code> element in the
+<code>web.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>On GlassFish Server, single sign-on behavior can be inherited from the
+HTTP Service, enabled, or disabled. By default, it is inherited from the
+HTTP Service. If enabled, single sign-on is enabled for web applications
+on this virtual server that are configured for the same realm. If
+disabled, single sign-on is disabled for this virtual server, and users
+must authenticate separately to every application on the virtual server.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlvu"></a><a id="GSSCG00204"></a><a id="authorization"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_authorization">Authorization</h4>
+<div class="paragraph">
+<p>Authorization, also known as access control, is the means by which users
+are granted permission to access data or perform operations. After a
+user is authenticated, the user&#8217;s level of authorization determines what
+operations the owner can perform. A user&#8217;s authorization is based on the
+user&#8217;s role.</p>
+</div>
+<div class="paragraph">
+<p><a id="abloh"></a><a id="GSSCG00189"></a><a id="roles"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_roles">Roles</h5>
+<div class="paragraph">
+<p>A role defines which applications and what parts of each application
+users can access and what those users or groups can do with the
+applications. For example, in a personnel application, all employees
+might be able to see phone numbers and email addresses, but only
+managers have access to salary information. This application would
+define at least two roles: <code>employee</code> and <code>manager</code>. Only users in the
+<code>manager</code> role are allowed to view salary information.</p>
+</div>
+<div class="paragraph">
+<p>A role is different from a group in that a role defines a function in an
+application, while a group is a set of users who are related in some
+way. For example, the personnel application specify groups such as
+<code>full-time</code>, <code>part-time</code>, and <code>on-leave</code>. Users in these groups are all
+employees (the <code>employee</code> role). In addition, each user has its own
+designation that defines an additional level of employment.</p>
+</div>
+<div class="paragraph">
+<p>Roles are defined in the deployment descriptor for the application. The
+application developer or deployer maps roles to one or more groups in
+the deployment descriptor for each application. When the application is
+being packaged and deployed, the application specifies mappings between
+users, groups, and roles, as illustrated in <a href="#fxjfw">Figure 1-1</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>By default, group principal names are mapped to roles of the same name.
+Therefore, the Default Principal To Role Mapping setting is enabled by
+default on the Security page of the GlassFish Server Administration
+Console. With this setting enabled, if the group name defined on
+GlassFish Server matches the role name defined in the application, there
+is no need to use the runtime deployment descriptor to provide a
+mapping. The application server will implicitly make this mapping, as
+long as the names of the groups and roles match.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00001"></a><a id="fxjfw"></a></p>
+</div>
+<div class="paragraph">
+<div class="title"><strong>Figure 1-1 Role Mapping</strong></div>
+<p><span class="image"><img src="img/securityrolemapping.png" alt="Figure shows how users are assigned to groups, how users and groups are assigned to roles, and how applications use groups and roles."></span></p>
+</div>
+<div class="paragraph">
+<p><a id="ghsqd"></a><a id="GSSCG00190"></a><a id="java-authorization-contract-for-containers"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_java_authorization_contract_for_containers">Java Authorization Contract for Containers</h5>
+<div class="paragraph">
+<p>Java Authorization Contract for Containers (JACC) is the part of the
+Java EE specification that defines an interface for pluggable
+authorization providers. This enables you to set up third-party plug-in
+modules to perform authorization. By default, the GlassFish Server
+provides a simple, file-based authorization engine that complies with
+the JACC specification.</p>
+</div>
+<div class="paragraph">
+<p>This release includes Administration Console support and CLI subcommands
+to create (<code>create-jacc-provider</code>), delete (<code>delete-jacc-provider</code>), and
+list (<code>list-jacc-providers</code>) JACC providers. <a href="#gkngj">Administering
+JACC Providers</a> for additional information.</p>
+</div>
+<div class="paragraph">
+<p>You can also specify additional third-party JACC providers.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkriq"></a><a id="GSSCG00191"></a><a id="working-with-the-server.policy-policy-file"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_working_with_the_server_policy_policy_file">Working With the server.policy Policy File</h5>
+<div class="paragraph">
+<p>Each GlassFish Server domain has its own global Java SE policy file,
+located in domain-dir`/config`. The file is named <code>server.policy</code>.</p>
+</div>
+<div class="paragraph">
+<p>This section covers the following topics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkrkh">Contents of server.policy</a></p>
+</li>
+<li>
+<p><a href="#gkrmo">Changing the Default Permissions</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrkh"></a><a id="GSSCG00050"></a><a id="contents-of-server.policy"></a></p>
+</div>
+<div class="paragraph">
+<p>Contents of server.policy</p>
+</div>
+<div class="paragraph">
+<p>A sample server.policy file is as follows. Comments in the file describe
+why various permissions are granted. These permissions are described in
+more detail in the next section.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This server.policy file is presented for example purposes only and is
+subject to change.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">// classes in lib get all permissions by default
+grant codeBase "file:${com.sun.aas.installRoot}/lib/-" {
+    permission java.security.AllPermission;
+};
+
+// Core server classes get all permissions by default
+grant codeBase "file:${com.sun.aas.installRoot}/modules/-" {
+    permission java.security.AllPermission;
+};
+
+// Felix classes get all permissions by default
+grant codeBase "file:${com.sun.aas.installRoot}/osgi/felix/bin/-" {
+    permission java.security.AllPermission;
+};
+
+// iMQ classes get all permissions by default
+grant codeBase "file:${com.sun.aas.imqLib}/-" {
+    permission java.security.AllPermission;
+};
+
+// Derby driver classes get all permissions by default
+grant codeBase "file:${com.sun.aas.derbyRoot}/lib/-" {
+    permission java.security.AllPermission;
+};
+
+
+// permission for JDK's tools.jar to enable webservice annotation processing
+// at runtime by wsgen tool:
+//       permission java.lang.RuntimePermission "createClassLoader";
+//
+// permission for JDK's tools.jar to sign JARs at runtime for
+// Java Web Start support:
+//       permissions java.security.AllPermission;
+// on the advice of the JDK tools folks.  Should be refined later.
+grant codeBase "file:${com.sun.aas.javaRoot}/lib/tools.jar" {
+    permission java.security.AllPermission;
+};
+
+//Loading MBeans from anywhere, to take care of side effects of 6235678.
+grant {
+    permission javax.management.MBeanTrustPermission "register" ;
+};
+//Loading MBeans from anywhere, to take care of side effects of 6235678.
+
+
+// Basic set of required permissions granted to all remaining code
+// The permission FilePermission "&lt;&lt;ALL FILES&gt;&gt;", "read,write"
+// allows all applications to read and write any file in the filesystem.
+// It should be changed based on real deployment needs. If you know your
+// applications just need to read/write a few directories consider removing
+// this permission and adding grants indicating those specific directories.
+// against the codebase of your application(s).
+grant {
+    //Workaround for bugs #6484935, 6513799
+    permission java.lang.RuntimePermission "getProtectionDomain";
+    permission com.sun.corba.ee.impl.presentation.rmi.DynamicAccessPermission "access";
+    permission java.util.PropertyPermission "*", "read,write";
+
+    permission java.lang.RuntimePermission  "loadLibrary.*";
+    permission java.lang.RuntimePermission  "queuePrintJob";
+    permission java.net.SocketPermission    "*", "connect";
+    permission java.io.FilePermission       "&lt;&lt;ALL FILES&gt;&gt;", "read,write";
+
+        // work-around for pointbase bug 4864405
+        permission java.io.FilePermission
+          "${com.sun.aas.instanceRoot}${/}lib${/}databases${/}-",
+           "delete";
+        permission java.io.FilePermission "${java.io.tmpdir}${/}-", "delete";
+
+    permission java.util.PropertyPermission "*", "read";
+
+    permission java.lang.RuntimePermission    "modifyThreadGroup";
+    permission java.lang.RuntimePermission    "getClassLoader";
+    permission java.lang.RuntimePermission    "setContextClassLoader";
+        permission javax.management.MBeanPermission
+               "[com.sun.messaging.jms.*:*]", "*";
+};
+
+
+// Following grant block is only required by Connectors. If Connectors
+// are not in use the recommendation is to remove this grant.
+grant {
+        permission javax.security.auth.PrivateCredentialPermission
+               "javax.resource.spi.security.PasswordCredential * \"*\"","read";
+};
+
+// Following grant block is only required for Reflection. If Reflection
+// is not in use the recommendation is to remove this section.
+grant {
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+};
+
+// Permissions to invoke CORBA objects in server
+grant {
+    permission com.sun.enterprise.security.CORBAObjectPermission "*", "*";
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkrmo"></a><a id="GSSCG00051"></a><a id="changing-the-default-permissions"></a></p>
+</div>
+<div class="paragraph">
+<p>Changing the Default Permissions</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server internal server code is granted all permissions.
+These grants are covered by the <code>AllPermission</code> grant blocks to various
+parts of the server infrastructure code. Do not modify these entries.</p>
+</div>
+<div class="paragraph">
+<p>Application permissions are granted in the default grant block. These
+permissions apply to all code not part of the internal server code
+listed previously.</p>
+</div>
+<div class="paragraph">
+<p>The last section, beginning with the comment "Basic set of required
+permissions&#8230;&#8203;" provides the basic set of permissions granted to all
+remaining code.</p>
+</div>
+<div class="paragraph">
+<p>Depending on your GlassFish Server implementation, deleting or modifying
+these permissions might be appropriate.</p>
+</div>
+<div class="paragraph">
+<p>Specifically, the following permission allows all applications to read
+and write all properties and read and write all files on the filesystem.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">permission java.util.PropertyPermission "*", "read,write";
+ permission java.io.FilePermission       "&lt;&lt;ALL FILES\&gt;&gt;", "read,write";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>While this grant provides optimum flexibility, it is inherently
+unsecure. For enhanced security, change this permission based on your
+real deployment needs.</p>
+</div>
+<div class="paragraph">
+<p>For example, consider removing this permission and assign default read
+and write permissions only to the application&#8217;s install directory
+(context-root). (This example uses <code>com.sun.aas.instanceRoot</code>, which
+specifies the top level directory for a server instance.)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyApp/-"
+{
+permission java.io.FilePermission "file:${com.sun.aas.instanceRoot}
+/applications/MyApp/-", "read,write";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For any application that needs to read and write additional directories,
+you would then have to explicitly allow such permissions by adding
+specific grants. In general, you should add extra permissions only to
+the applications or modules that require them, not to all applications
+deployed to a domain.</p>
+</div>
+<div class="paragraph">
+<p>Additional permissions (see the embedded comments in <code>server.policy</code>)
+are granted specifically for using connectors and reflection. If
+connectors or reflection are not used in a particular domain, you should
+remove these permissions, because they are otherwise unnecessary.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlql"></a><a id="GSSCG00205"></a><a id="auditing"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_auditing">Auditing</h4>
+<div class="paragraph">
+<p>Auditing is the means used to capture security-related events for the
+purpose of evaluating the effectiveness of security measures. GlassFish
+Server uses audit modules to capture audit trails of all authentication
+and authorization decisions. GlassFish Server provides a default audit
+module, as well as the ability to plug in custom audit modules. The
+scope of the audit module is the entire server, which means that all the
+applications on the server will use the same audit module.</p>
+</div>
+<div class="paragraph">
+<p>For administration instructions, see <a href="#ghgol">Administering Audit
+Modules</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlti"></a><a id="GSSCG00206"></a><a id="firewalls"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_firewalls">Firewalls</h4>
+<div class="paragraph">
+<p>A firewall controls the flow of data between two or more networks, and
+manages the links between the networks. A firewall can consist of both
+hardware and software elements. The following guidelines pertain
+primarily to GlassFish Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In general, firewalls should be configured so that clients can access
+the necessary TCP/IP ports.<br>
+For example, if the HTTP listener is operating on port 8080, configure
+the firewall to allow HTTP requests on port 8080 only. Likewise, if
+HTTPS requests are set up for port 8081, you must configure the
+firewalls to allow HTTPS requests on port 8081.</p>
+</li>
+<li>
+<p>If direct Remote Method Invocations over Internet Inter-ORB Protocol
+(RMI-IIOP) access from the Internet to EJB modules is required, open the
+RMI-IIOP listener port as well.<br></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Opening the RMI-IIOP listener port is strongly discouraged because it
+creates security risks.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In double firewall architecture, you must configure the outer firewall
+to allow for HTTP and HTTPS transactions. You must configure the inner
+firewall to allow the HTTP server plug-in to communicate with GlassFish
+Server behind the firewall.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abloj"></a><a id="GSSCG00207"></a><a id="certificates-and-ssl"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_certificates_and_ssl">Certificates and SSL</h4>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablok">Certificates</a></p>
+</li>
+<li>
+<p><a href="#ablol">Certificate Chains</a></p>
+</li>
+<li>
+<p><a href="#ablqx">Certificate Files</a></p>
+</li>
+<li>
+<p><a href="#ablom">Secure Sockets Layer</a></p>
+</li>
+<li>
+<p><a href="#gksdc">Custom Authentication of Client Certificate in SSL Mutual
+Authentication</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For administration instructions, see <a href="#ablqz">Administering JSSE
+Certificates</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablok"></a><a id="GSSCG00192"></a><a id="certificates"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_certificates">Certificates</h5>
+<div class="paragraph">
+<p>Certificates, also called digital certificates, are electronic files
+that uniquely identify people and resources on the Internet.
+Certificates also enable secure, confidential communication between two
+entities. There are different kinds of certificates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Personal certificates are used by individuals.</p>
+</li>
+<li>
+<p>Server certificates are used to establish secure sessions between the
+server and clients through secure sockets layer (SSL) technology.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Certificates are based on public key cryptography, which uses pairs of
+digital keys (very long numbers) to encrypt, or encode, information so
+the information can be read only by its intended recipient. The
+recipient then decrypts (decodes) the information to read it. A key pair
+contains a public key and a private key. The owner distributes the
+public key and makes it available to anyone. But the owner never
+distributes the private key, which is always kept secret. Because the
+keys are mathematically related, data encrypted with one key can only be
+decrypted with the other key in the pair.</p>
+</div>
+<div class="paragraph">
+<p>Certificates are issued by a trusted third party called a Certification
+Authority (CA). The CA is analogous to a passport office: it validates
+the certificate holder&#8217;s identity and signs the certificate so that it
+cannot be forged or tampered with. After a CA has signed a certificate,
+the holder can present it as proof of identity and to establish
+encrypted, confidential communications. Most importantly, a certificate
+binds the owner&#8217;s public key to the owner&#8217;s identity.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the public key, a certificate typically includes
+information such as the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The name of the holder and other identification, such as the URL of
+the web server using the certificate, or an individual&#8217;s email address</p>
+</li>
+<li>
+<p>The name of the CA that issued the certificate</p>
+</li>
+<li>
+<p>An expiration date</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Certificates are governed by the technical specifications of the X.509
+format. To verify the identity of a user in the <code>certificate</code> realm, the
+authentication service verifies an X.509 certificate, using the common
+name field of the X.509 certificate as the principal name.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablol"></a><a id="GSSCG00193"></a><a id="certificate-chains"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_certificate_chains">Certificate Chains</h5>
+<div class="paragraph">
+<p>A certificate chain is a series of certificates issued by successive CA
+certificates, eventually ending in a root CA certificate.</p>
+</div>
+<div class="paragraph">
+<p>Web browsers are preconfigured with a set of root CA certificates that
+the browser automatically trusts. Any certificates from elsewhere must
+come with a certificate chain to verify their validity.</p>
+</div>
+<div class="paragraph">
+<p>When a certificate is first generated, it is a self-signed certificate.
+A self-signed certificate is one for which the issuer (signer) is the
+same as the subject (the entity whose public key is being authenticated
+by the certificate). When the owner sends a certificate signing request
+(CSR) to a CA, then imports the response, the self-signed certificate is
+replaced by a chain of certificates. At the bottom of the chain is the
+certificate (reply) issued by the CA authenticating the subject&#8217;s public
+key. The next certificate in the chain is one that authenticates the
+CA&#8217;s public key. Usually, this is a self-signed certificate (that is, a
+certificate from the CA authenticating its own public key) and the last
+certificate in the chain.</p>
+</div>
+<div class="paragraph">
+<p>In other cases, the CA can return a chain of certificates. In this
+situation, the bottom certificate in the chain is the same (a
+certificate signed by the CA, authenticating the public key of the key
+entry), but the second certificate in the chain is a certificate signed
+by a different CA, authenticating the public key of the CA to which you
+sent the CSR. Then, the next certificate in the chain is a certificate
+authenticating the second CA&#8217;s key, and so on, until a self-signed root
+certificate is reached. Each certificate in the chain (after the first)
+thus authenticates the public key of the signer of the previous
+certificate in the chain.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablqx"></a><a id="GSSCG00194"></a><a id="certificate-files"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_certificate_files">Certificate Files</h5>
+<div class="paragraph">
+<p>During GlassFish Server installation, a certificate is generated in Java
+Secure Socket Extension (JSSE) format suitable for internal testing.
+(The certificate is self-signed.) By default, GlassFish Server stores
+its certificate information in certificate databases in the
+domain-dir`/config` directory:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Keystore file</dt>
+<dd>
+<p>The <code>keystore.jks</code> file contains GlassFish Server certificate,
+including its private key. The keystore file is protected with a
+password.<br>
+Each keystore entry has a unique alias. After installation, the
+GlassFish Server keystore has a single entry with an alias of <code>s1as</code>.</p>
+</dd>
+<dt class="hdlist1">Truststore file</dt>
+<dd>
+<p>The <code>cacerts.jks</code> file contains the GlassFish Server trusted
+certificates, including public keys for other entities. For a trusted
+certificate, the server has confirmed that the public key in the
+certificate belongs to the certificate&#8217;s owner. Trusted certificates
+generally include those of CAs.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>By default, GlassFish Server is configured with a keystore and
+truststore that will work with the example applications and for
+development purposes.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablom"></a><a id="GSSCG00195"></a><a id="secure-sockets-layer"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_secure_sockets_layer">Secure Sockets Layer</h5>
+<div class="paragraph">
+<p>Secure Sockets Layer (SSL) is the most popular standard for securing
+Internet communications and transactions. Secure web applications use
+HTTPS (HTTP over SSL). The HTTPS protocol uses certificates to ensure
+confidential and secure communications between server and clients. In an
+SSL connection, both the client and the server encrypt data before
+sending it. Data is decrypted upon receipt.</p>
+</div>
+<div class="paragraph">
+<p>When a Web browser (client) wants to connect to a secure site, an SSL
+handshake happens, like this:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The browser sends a message over the network requesting a secure
+session (typically, by requesting a URL that begins with <code>https</code> instead
+of <code>http</code>).</p>
+</li>
+<li>
+<p>The server responds by sending its certificate (including its public
+key).</p>
+</li>
+<li>
+<p>The browser verifies that the server&#8217;s certificate is valid and is
+signed by a CA whose certificate is in the browser&#8217;s database (and who
+is trusted). It also verifies that the CA certificate has not expired.</p>
+</li>
+<li>
+<p>If the certificate is valid, the browser generates a one time,
+unique session key and encrypts it with the server&#8217;s public key. The
+browser then sends the encrypted session key to the server so that they
+both have a copy.</p>
+</li>
+<li>
+<p>The server decrypts the message using its private key and recovers
+the session key.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After the handshake, the client has verified the identity of the Web
+site, and only the client and the Web server have a copy of the session
+key. From this point forward, the client and the server use the session
+key to encrypt all their communications with each other. Thus, their
+communications are ensured to be secure.</p>
+</div>
+<div class="paragraph">
+<p>The newest version of the SSL standard is called Transport Layer
+Security (TLS). The GlassFish Server supports the SSL 3.0 and the TLS
+1.0 encryption protocols.</p>
+</div>
+<div class="paragraph">
+<p>To use SSL, GlassFish Server must have a certificate for each external
+interface or IP address that accepts secure connections. The HTTPS
+service of most web servers will not run unless a certificate has been
+installed. For instructions on applying SSL to HTTP listeners, see
+"<a href="../administration-guide/http_https.html#GSADG00469">To Configure an HTTP Listener for SSL</a>" in GlassFish
+Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablon"></a><a id="GSSCG00052"></a><a id="ciphers"></a></p>
+</div>
+<div class="paragraph">
+<p>Ciphers</p>
+</div>
+<div class="paragraph">
+<p>A cipher is a cryptographic algorithm used for encryption or decryption.
+SSL and TLS protocols support a variety of ciphers used to authenticate
+the server and client to each other, transmit certificates, and
+establish session keys.</p>
+</div>
+<div class="paragraph">
+<p>Some ciphers are stronger and more secure than others. Clients and
+servers can support different cipher suites. During a secure connection,
+the client and the server agree to use the strongest cipher that they
+both have enabled for communication, so it is usually sufficient to
+enable all ciphers.</p>
+</div>
+<div class="paragraph">
+<p><a id="abloo"></a><a id="GSSCG00053"></a><a id="name-based-virtual-hosts"></a></p>
+</div>
+<div class="paragraph">
+<p>Name-based Virtual Hosts</p>
+</div>
+<div class="paragraph">
+<p>Using name-based virtual hosts for a secure application can be
+problematic. This is a design limitation of the SSL protocol itself. The
+SSL handshake, where the client browser accepts the server certificate,
+must occur before the HTTP request is accessed. As a result, the request
+information containing the virtual host name cannot be determined prior
+to authentication, and it is therefore not possible to assign multiple
+certificates to a single IP address.</p>
+</div>
+<div class="paragraph">
+<p>If all virtual hosts on a single IP address need to authenticate against
+the same certificate, the addition of multiple virtual hosts probably
+will not interfere with normal SSL operations on the server. Be aware,
+however, that most browsers will compare the server&#8217;s domain name
+against the domain name listed in the certificate, if any (applicable
+primarily to official, CA-signed certificates). If the domain names do
+not match, these browsers display a warning. In general, only
+address-based virtual hosts are commonly used with SSL in a production
+environment.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksdc"></a><a id="GSSCG00196"></a><a id="custom-authentication-of-client-certificate-in-ssl-mutual-authentication"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_custom_authentication_of_client_certificate_in_ssl_mutual_authentication">Custom Authentication of Client Certificate in SSL Mutual Authentication</h5>
+<div class="paragraph">
+<p>Release 4.0 of GlassFish Server extends the Certificate realm to allow
+custom authentication and group assignment based on the client
+certificate received as part of SSL mutual (two-way) authentication.</p>
+</div>
+<div class="paragraph">
+<p>As in previous releases, you can create only one certificate realm.
+However, you can now use a convenient abstract base class to configure a
+JAAS LoginModule for the Certificate realm. Specifically, your
+LoginModule can now extend
+<code>com.sun.appserv.security.AppservCertificateLoginModule</code>. When you do
+this, you need to implement only the <code>authenticateUser</code> method and call
+the <code>commitUserAuthentication</code> method to signify success.</p>
+</div>
+<div class="paragraph">
+<p>This section describes the following topics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gksfl">Understanding the <code>AppservCertificateLoginModule</code> Class</a></p>
+</li>
+<li>
+<p><a href="#gksej">Example AppservCertificateLoginModule Code</a></p>
+</li>
+<li>
+<p><a href="#gksee">Setting the JAAS Context</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksfl"></a><a id="GSSCG00054"></a><a id="understanding-the-appservcertificateloginmodule-class"></a></p>
+</div>
+<div class="paragraph">
+<p>Understanding the <code>AppservCertificateLoginModule</code> Class</p>
+</div>
+<div class="paragraph">
+<p>The <code>AppservCertificateLoginModule</code> class provides some convenience
+methods for accessing the certificates, the application name and so
+forth, and for adding the group principals to the subject. The
+convenience methods include the following:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>getAppName()</code></dt>
+<dd>
+<p>Returns the name of the application to be authenticated. This may be
+useful when a single LoginModule has to handle multiple applications
+that use certificates.</p>
+</dd>
+<dt class="hdlist1"><code>getCerts()</code></dt>
+<dd>
+<p>Returns the certificate chain as an array of
+<code>java.security.cert.X509Certificate</code> certificates.</p>
+</dd>
+<dt class="hdlist1"><code>getX500Principal()</code></dt>
+<dd>
+<p>Returns the Distinguished principal from the first certificate in the
+chain.</p>
+</dd>
+<dt class="hdlist1"><code>getSubject()</code></dt>
+<dd>
+<p>Returns the subject that is being authenticated.</p>
+</dd>
+<dt class="hdlist1"><code>commitUserAuthentication(final String[] groups)</code></dt>
+<dd>
+<p>This method sets the authentication status to success if the groups
+parameter is non-null. Note that this method is called after the
+authentication has succeeded. If authentication failed, do not call
+this method.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You do not have to extend the convenience base class, you can extend the
+JAAS LoginModule <code>javax.security.auth.spi.LoginModule</code> instead if you so
+choose.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gksej"></a><a id="GSSCG00055"></a><a id="example-appservcertificateloginmodule-code"></a></p>
+</div>
+<div class="paragraph">
+<p>Example AppservCertificateLoginModule Code</p>
+</div>
+<div class="paragraph">
+<p><a href="#gksel">Example 1-1</a> shows a sample instance of the
+AppservCertificateLoginModule class.</p>
+</div>
+<div class="paragraph">
+<p>Take note of the following points from the example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>getX500Principal()</code> method returns the subject (subject
+distinguished name) value from the first certificate in the client
+certificate chain as an <code>X500Principal</code>.</p>
+</li>
+<li>
+<p>From that <code>X500Principal</code>, the <code>getName()</code> method then returns a
+string representation of the X.500 distinguished name using the format
+defined in RFC 2253.</p>
+</li>
+<li>
+<p>The example uses the <code>getAppName()</code> method to determine the
+application name. It also determines the organizational unit (<code>OU</code>) from
+the distinguished name.</p>
+</li>
+<li>
+<p>The example concatenates the application name with the value of <code>OU</code>,
+and uses it as the group name in the <code>commitUserAuthentication</code> method.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00060"></a><a id="gksel"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-1 Sample AppservCertificateLoginModule Code</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">/**
+ *
+ * @author nasradu8
+ */
+public class CertificateLM extends AppservCertificateLoginModule {
+
+    @Override
+    protected void authenticateUser() throws LoginException {
+        // Get the distinguished name from the X500Principal.
+        String dname = getX500Principal().getName();
+        StringTokenizer st = new StringTokenizer(dname, "B \t\n\r\f,");
+        while (st.hasMoreTokens()) {
+            String next = st.nextToken();
+            // Set the appname:OU as the group.
+            // At this point, one has the application name and the DN of
+            // the certificate. A suitable login decision can be made here.
+            if (next.startsWith("OU=")) {
+            commitUserAuthentication(new String[]{getAppName()
++ ":" + next.substring(3)});
+                return;
+            }
+        }
+        throw new LoginException("No OU found.");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gksee"></a><a id="GSSCG00056"></a><a id="setting-the-jaas-context"></a></p>
+</div>
+<div class="paragraph">
+<p>Setting the JAAS Context</p>
+</div>
+<div class="paragraph">
+<p>After you create your LoginModule, you must plug it in to a
+jaas-context, which you then specify as a parameter to the certificate
+realm in GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>To do this, perform the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Specify a new jaas-context for the Certificate realm in the file
+domain-dir`/config/login.conf`. For example, using the <code>CertificateLM</code>
+class from <a href="#gksej">Example AppservCertificateLoginModule Code</a>:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>certRealm {
+    com.sun.blogs.certificate.login.CertificateLM required;
+};</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Specify this jaas-context as a parameter to the <code>set</code> subcommand in
+the
+<code>configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=</code>&lt;jaas-context-name&gt;
+property. For example:<br>
+<code>asadmin&gt;</code>
+<code>set configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm</code><br>
+<code>configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm</code><br>
+<code>Command set executed successfully.</code></p>
+</li>
+<li>
+<p>Optionally, get the value you just set to make sure that it is
+correct.<br>
+<code>asadmin&gt;</code>
+<code>get configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context</code><br>
+<code>configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm</code><br>
+<code>Command get executed successfully.</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ablno"></a><a id="GSSCG00208"></a><a id="tools-for-managing-system-security"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tools_for_managing_system_security">Tools for Managing System Security</h4>
+<div class="paragraph">
+<p>GlassFish Server provides the following tools for managing system
+security:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Administration Console</dt>
+<dd>
+<p>The Administration Console is a browser-based utility used to
+configure security for the entire server. Tasks include managing
+certificates, users, groups, and realms, and performing other
+system-wide security tasks. For a general introduction to the
+Administration Console, see "<a href="../administration-guide/overview.html#GSADG00698">Administration Console</a>"
+in GlassFish Server Open Source Edition Administration Guide.</p>
+</dd>
+<dt class="hdlist1">The <code>asadmin</code> utility</dt>
+<dd>
+<p>The <code>asadmin</code> command-line utility performs many of the same tasks as
+the Administration Console. You might be able to do some things with
+the <code>asadmin</code> utility that you cannot do with the Administration
+Console. For a general introduction to <code>asadmin</code>, see
+"<a href="../administration-guide/overview.html#GSADG00699">asadmin Utility</a>" in GlassFish Server Open Source
+Edition Administration Guide.</p>
+</dd>
+<dt class="hdlist1">The <code>keytool</code> utility</dt>
+<dd>
+<p>The <code>keytool</code> Java Platform, Standard Edition (Java SE) command-line
+utility is used for managing digital certificates and key pairs. For
+more information, see <a href="#ablqz">Administering JSSE Certificates</a>.</p>
+</dd>
+<dt class="hdlist1">The <code>policytool</code> utility</dt>
+<dd>
+<p>The <code>policytool</code> Java SE graphical utility is used for managing
+system-wide Java security policies. As an administrator, you rarely
+use <code>policytool</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="ghgrp"></a><a id="GSSCG00144"></a><a id="administering-passwords"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_passwords">Administering Passwords</h3>
+<div class="paragraph">
+<p>There are multiple ways to administer passwords. You can rely on
+administrators to keep passwords secret and change the passwords
+regularly. You can set up files for storing passwords so that <code>asadmin</code>
+subcommands can access these files rather than having users type the
+commands. You can encrypt passwords by setting up aliases so that
+sensitive passwords are not visible in the <code>domain.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giudi">To Change the Master Password</a></p>
+</li>
+<li>
+<p><a href="#gktgr">Additional Considerations for the <code>start-instance</code> and
+<code>start-cluster</code> Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gktey">Using <code>start-instance</code> and <code>start-cluster</code> With a Password
+File</a></p>
+</li>
+<li>
+<p><a href="#ghgpu">To Change an Administration Password</a></p>
+</li>
+<li>
+<p><a href="#ghytn">To Set a Password From a File</a></p>
+</li>
+<li>
+<p><a href="#ghgqc">Administering Password Aliases</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giudi"></a><a id="GSSCG00093"></a><a id="to-change-the-master-password"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_change_the_master_password">To Change the Master Password</h4>
+<div class="paragraph">
+<p>The master password gives access to the keystore used with the domain.
+This password is not tied to a UNIX user. You should treat this overall
+shared password as sensitive data. GlassFish Server never uses it for
+authentication and never transmits it over the network.</p>
+</div>
+<div class="paragraph">
+<p>You can choose to type the password manually when required, or to
+obscure the password in a password file. If there is no password file,
+you are prompted for the master password. If there is a password file,
+but you want to change access to require prompting, remove the file. The
+default master password is <code>changeit</code>.</p>
+</div>
+<div class="paragraph">
+<p>When changing the master password, it has to be changed on all nodes as
+well as on the DAS. The master password on nodes is only stored once in
+the node, for all instances that are on that node.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>change-master-password</code> subcommand in local mode to modify the
+master password.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you change the master password and are not using a master password
+file, the <code>start-instance</code> and <code>start-cluster</code> subcommands are not able
+to determine the master password. In this case, you must start those
+instances locally by using start-local-instance.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the master password is saved, it is saved in the <code>master-password</code>
+file.</p>
+</div>
+<div id="sthref6" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>This subcommand will not work unless the domain is stopped.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Stop the domain whose password you are changing.<br>
+See "<a href="../administration-guide/domains.html#GSADG00336">To Stop a Domain</a>" in GlassFish Server Open Source
+Edition Administration Guide.</p>
+</li>
+<li>
+<p>Change the master password for the domain by using the
+<a href="../reference-manual/change-master-password.html#GSRFM00006"><code>change-master-password</code></a> subcommand.<br>
+You are prompted for the old and new passwords. All dependent items are
+re-encrypted.</p>
+</li>
+<li>
+<p>Start the domain.<br>
+See "<a href="../administration-guide/domains.html#GSADG00335">To Start a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00061"></a><a id="givil"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-2 Changing the Master Password</p>
+</div>
+<div class="paragraph">
+<p>The <code>change-master-password</code> subcommand is interactive in that you are
+prompted for the old master password as well as the new master password.
+This example changes the master password for <code>domain44ps</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; change-master-password domain44ps</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you have already logged into the domain using the
+<a href="../reference-manual/login.html#GSRFM00210"><code>login</code></a> subcommand, you are prompted for the new
+master password:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Please enter the new master password&gt;
+Please enter the new master password again&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are not logged into the domain, you are prompted for both the old
+and the new master passwords:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Please enter the master password&gt;
+Please enter the new master password&gt;
+Please enter the new master password again&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Information similar to the following is displayed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Master password changed for domain44ps</code></pre>
+</div>
+</div>
+<div id="sthref7" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin --help change-master-password</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktgr"></a><a id="GSSCG00209"></a><a id="additional-considerations-for-the-start-instance-and-start-cluster-subcommands"></a></p>
+</div>
+<div class="paragraph">
+<p>Additional Considerations for the <code>start-instance</code> and <code>start-cluster</code>
+Subcommands
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup>^</p>
+</div>
+<div class="paragraph">
+<p>If you change the master password for DAS, the <code>start-domain</code> and
+<code>start-local-instance</code> subcommands allow you to provide it during domain
+or instance startup in one of three ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Via the master-password file</p>
+</li>
+<li>
+<p>By entering it interactively</p>
+</li>
+<li>
+<p>Via the <code>asadmin</code> <code>passwordfile</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>start-instance</code> and <code>start-cluster</code> subcommands are more
+problematic. If you create a domain with a master password other than
+the default, an associated remote instance or cluster must have access
+to the master password in order to start. However, for security reasons
+GlassFish Server never transmits the master password or the master
+password file over the network.</p>
+</div>
+<div class="paragraph">
+<p>Consider the following scenario:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change the master password on the DAS and save it with
+<code>--savemasterpassword</code>.</p>
+</li>
+<li>
+<p>Create an instance on another host using the subcommand
+<code>create-instance</code>. GlassFish Server copies the keystore and truststore
+from the DAS to the instance, but it does not copy the master password
+file.</p>
+</li>
+<li>
+<p>Try to start the instance using the <code>start-instance</code> subcommand. An
+error results.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The <code>start-instance</code> command is looking for the file master-password in
+the node directory on the instance machine, and it is not there by
+default. Therefore, the subcommand fails.</p>
+</div>
+<div class="paragraph">
+<p>You can use the <code>change-master-password</code> subcommand to make sure the
+correct password is used in this password file, as described in
+<a href="#gktey">Using <code>start-instance</code> and <code>start-cluster</code> With a Password
+File</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>start-instance</code> and <code>start-cluster</code> subcommands do not include any
+other way for you to provide the password. If you change the master
+password and are not using a master password file, the <code>start-instance</code>
+and <code>start-cluster</code> subcommands are not able to determine the master
+password. In this case, you must start the instances locally by using
+<code>start-local-instance</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gktey"></a><a id="GSSCG00094"></a><a id="using-start-instance-and-start-cluster-with-a-password-file"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_code_start_instance_code_and_code_start_cluster_code_with_a_password_file">Using <code>start-instance</code> and <code>start-cluster</code> With a Password File</h4>
+<div class="paragraph">
+<p>Assume that you have changed the master password on the DAS and you want
+to make the same change for all instances.</p>
+</div>
+<div class="paragraph">
+<p>The <code>start-instance</code> and`start-cluster` subcommands automatically use
+the master password file if it exists in the instance filesystem. You
+can use the <code>change-master-password</code> subcommand to make sure the
+password file exists and that the correct password is used.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the DAS, create a domain and set the master password.<br>
+<code>asadmin&gt;</code> <code>create-domain --savemasterpassword true</code> domain-name</p>
+</li>
+<li>
+<p>Start the domain.<br>
+<code>asadmin&gt;``start-domain</code> domain-name</p>
+</li>
+<li>
+<p>Create a node that is enabled for communication over secure shell
+(SSH).<br>
+<code>asadmin&gt;</code> <code>create-node-ssh --nodehost</code> host-name --installdir/some-dir
+node-name</p>
+</li>
+<li>
+<p>Create an instance on the node.<br>
+<code>asadmin&gt;</code> <code>create-instance --node</code> node-name instance-name</p>
+</li>
+<li>
+<p>Before you start the instance, on the instance machine run
+<code>change-master-password</code> with the <code>---savemasterpassword</code> option to
+create a file called <code>master-password</code> in the agents directory to access
+the keystores. (The <code>start-instance</code> subcommand is looking for a file
+called <code>master-password</code> in the agents directory to access the stores.)<br>
+<code>asadmin&gt;</code> <code>change-master-password --savemasterpassword true --nodedir</code>
+/some-dir node-name<br>
+You are prompted to enter the current and new master password:<br>
+<code>Enter the current master password&gt;</code><br>
+<code>Enter the new master password&gt;</code><br>
+<code>Enter the new master password again&gt;</code><br>
+<code>Command change-master-password executed successfully.</code><br>
+Remember that when you created the domain you specified a new master
+password. This master password was then used to encrypt the keystore and
+truststore for the DAS, and these stores were copied to the instance as
+a result of the <code>create-instance</code> subcommand.<br>
+Therefore, enter the master password you set when you created the domain
+as both the current master password and again as the new master
+password. You enter it as the new master password because you do not
+want to change the master password for the instance and make it out of
+sync with the DAS.</p>
+</li>
+<li>
+<p>Run start-instance from the DAS.<br>
+<code>asadmin&gt;</code> <code>start-instance</code> instance-name<br>
+The master password file is associated with the node and not with an
+instance. After the master password file exists in the node directory on
+the instance machine, additional instances can be created, started and
+stopped from the DAS.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ghgpu"></a><a id="GSSCG00095"></a><a id="to-change-an-administration-password"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_change_an_administration_password">To Change an Administration Password</h4>
+<div class="paragraph">
+<p>Use the <code>change-admin-password</code> subcommand in remote mode to change an
+administration password. The default administration user is <code>admin</code>. You
+are prompted for the old and new admin passwords, with confirmation. The
+passwords are not echoed to the display.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For the zip bundle of GlassFish Server 5.0, the default administrator
+login is <code>admin</code>, with no password, which means that no login is
+required. For Oracle GlassFish Server, you are prompted to provide a
+password for the <code>admin</code> user when you start the domain for the first
+time.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If there is a single user called <code>admin</code> that does not have a password,
+you are not prompted for login information. Any other situation requires
+login.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If secure administration is enabled as described in
+<a href="administrative-security.html#gkomz">Running Secure Admin</a>, you cannot
+change an administration password to a blank value.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Encrypting the admin password is strongly encouraged.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change the admin password by using the
+<a href="../reference-manual/change-admin-password.html#GSRFM00004"><code>change-admin-password</code></a> subcommand.</p>
+</li>
+<li>
+<p>Enter the old and new admin passwords when prompted.</p>
+</li>
+<li>
+<p>Restart GlassFish Server.<br>
+See "<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00062"></a><a id="ghlac"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-3 Changing the Admin Password</p>
+</div>
+<div class="paragraph">
+<p>This example changes the admin password for user anonymous from
+<code>adminadmin</code> to <code>newadmin</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; change-admin-password --username anonymous</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You are prompted to enter the old and the new admin passwords:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Enter admin password&gt;adminadmin
+Enter new admin password&gt;newadmin
+Enter new admin password again&gt;newadmin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Information similar to the following is displayed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Command change-admin-password executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref8" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help change-admin-password</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghytn"></a><a id="GSSCG00096"></a><a id="to-set-a-password-from-a-file"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_set_a_password_from_a_file">To Set a Password From a File</h4>
+<div class="paragraph">
+<p>Instead of typing the password at the command line, you can access the
+password for a command from a file such as <code>passwords.txt</code>. The
+<code>--passwordfile</code> option of the <code>asadmin</code> utility takes the name of the
+file that contains the passwords. The entry for a password in the file
+must have the <code>AS_ADMIN_</code> prefix followed by the password name in
+uppercase letters.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Any password file created to pass as an argument by using the
+<code>--passwordfile</code> argument to the <code>asadmin</code> utility should be protected
+with file system permissions. Additionally, any password file being used
+for a transient purpose, such as setting up SSH among nodes, should be
+deleted after it has served its purpose.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For a list of the types of passwords that can be specified, see the
+<a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a> help page.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">AS_ADMIN_MASTERPASSWORD
+AS_ADMIN_USERPASSWORD
+AS_ADMIN_ALIASPASSWORD</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Edit the password file.<br>
+For example, to specify the password for the domain administration
+server (DAS), add an entry similar to the following to the password
+file, where <code>adminadmin</code> is the administrator password:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>AS_ADMIN_PASSWORD=adminadmin</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Save the password file.<br>
+You can now specify the password file in an <code>asadmin</code> subcommand. In
+this example, <code>passwords.txt</code> is the file that contains the password:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt;delete-jdbc-resource --user admin --passwordfile passwords.txt jdbc/DerbyPool</pre>
+</div>
+</div>
+<div id="sthref9" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>If <code>AS_ADMIN_PASSWORD</code> has been exported to the global environment,
+specifying the <code>--passwordfile</code> option will produce a warning about
+using the <code>--passwordfile</code> option. To prevent this warning situation
+from happening, unset <code>AS_ADMIN_PASSWORD</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgqc"></a><a id="GSSCG00210"></a><a id="administering-password-aliases"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administering_password_aliases">Administering Password Aliases</h4>
+<div class="paragraph">
+<p>A password alias is used to indirectly access a password so that the
+password itself does not appear in cleartext in the domain&#8217;s
+<code>domain.xml</code> configuration file.</p>
+</div>
+<div class="paragraph">
+<p>Storing passwords in cleartext format in system configuration files is
+common in many open source projects. In addition to GlassFish Server,
+Apache Tomcat, Maven, and Subversion, among others, store and pass
+passwords in cleartext format. However, storing and passing passwords in
+cleartext can be a security risk, and may violate some corporate
+security policies. In such cases, you can use password aliases.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghgrf">To Create a Password Alias</a></p>
+</li>
+<li>
+<p><a href="#ghgsr">To List Password Aliases</a></p>
+</li>
+<li>
+<p><a href="#ghgnv">To Delete a Password Alias</a></p>
+</li>
+<li>
+<p><a href="#giobz">To Update a Password Alias</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghgrf"></a><a id="GSSCG00097"></a><a id="to-create-a-password-alias"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_create_a_password_alias">To Create a Password Alias</h5>
+<div class="paragraph">
+<p>Use the <code>create-password-alias</code> subcommand in remote mode to create an
+alias for a password in the domain&#8217;s keystore. The password
+corresponding to the alias name is stored in an encrypted form in the
+domain configuration file. The <code>create-password-alias</code> subcommand takes
+both a secure interactive form, in which users are prompted for all
+information, and a more script-friendly form, in which the password is
+propagated on the command line.</p>
+</div>
+<div class="paragraph">
+<p>You can also use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to remove and
+replace the password in the configuration file. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set --user admin server.jms-service.jms-host.default_JMS_host.
+admin-password='${ALIAS=jms-password}'</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Go to the directory where the configuration file resides.<br>
+By default, the configuration file is located in domain-dir`/config`.</p>
+</li>
+<li>
+<p>Create the password alias by using the
+<a href="../reference-manual/create-password-alias.html#GSRFM00049"><code>create-password-alias</code></a> subcommand.</p>
+</li>
+<li>
+<p>Type the password for the alias when prompted.</p>
+</li>
+<li>
+<p>Add the alias to a password file.<br>
+For example, assume the use of a password file such as <code>passwords.txt</code>.
+Assume further that you want to add an alias for the
+<code>AS_ADMIN_USERPASSWORD</code> entry that is read by the
+<a href="../reference-manual/create-file-user.html#GSRFM00024"><code>create-file-user</code></a> subcommand. You would add the
+following line to the password file:
+`AS_ADMIN_USERPASSWORD=${ALIAS=`user-password-alias}, where
+user-password-alias is the new password alias.</p>
+</li>
+<li>
+<p>To continue the example of the previous step, you would then run the
+<a href="../reference-manual/create-file-user.html#GSRFM00024"><code>create-file-user</code></a> subcommand.<br>
+You could use this method to create several users (user1, user2, and so
+forth), all with the same password.<br>
+<code>asadmin&gt;</code> <code>--passwordfile``passwords.txt create-file-user</code> user1</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00063"></a><a id="ginvi"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-4 Creating a Password Alias</p>
+</div>
+<div class="paragraph">
+<p>This example creates the new <code>jms-password</code> alias for the <code>admin</code> user:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-password-alias --user admin jms-password</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You are prompted to type the password for the alias:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Please enter the alias password&gt;secret-password
+Please enter the alias password again&gt;secret-password
+Command create-password-alias executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref10" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-password-alias</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgsr"></a><a id="GSSCG00098"></a><a id="to-list-password-aliases"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_list_password_aliases">To List Password Aliases</h5>
+<div class="paragraph">
+<p>Use the <code>list-password-aliases</code> subcommand in remote mode to list
+existing the password aliases.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List password aliases by using the
+<a href="../reference-manual/list-password-aliases.html#GSRFM00190"><code>list-password-aliases</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00064"></a><a id="ginsk"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-5 Listing Password Aliases</p>
+</div>
+<div class="paragraph">
+<p>This example lists the existing password aliases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-password aliases
+jmspassword-alias
+Command list-password-aliases executed successfully</code></pre>
+</div>
+</div>
+<div id="sthref11" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-password-aliases</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgnv"></a><a id="GSSCG00099"></a><a id="to-delete-a-password-alias"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_a_password_alias">To Delete a Password Alias</h5>
+<div class="paragraph">
+<p>Use the <code>delete-password-alias</code> subcommand in remote mode to delete an
+existing password alias.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List all aliases by using the
+<a href="../reference-manual/list-password-aliases.html#GSRFM00190"><code>list-password-aliases</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete a password alias by using the
+<a href="../reference-manual/list-password-aliases.html#GSRFM00190"><code>list-password-aliases</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00065"></a><a id="ginul"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-6 Deleting a Password Alias</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the password alias <code>jmspassword-alias</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-password-alias jmspassword-alias
+Command list-password-aliases executed successfully</code></pre>
+</div>
+</div>
+<div id="sthref12" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-password-alias</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giobz"></a><a id="GSSCG00100"></a><a id="to-update-a-password-alias"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_update_a_password_alias">To Update a Password Alias</h5>
+<div class="paragraph">
+<p>Use the <code>update-password-alias</code> subcommand in remote mode to change the
+password for an existing password alias. The <code>update-password-alias</code>
+subcommand takes both a secure interactive form, in which the user is
+prompted for all information, and a more script-friendly form, in which
+the password is propagated on the command line.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Update an alias by using the
+<a href="../reference-manual/update-password-alias.html#GSRFM00257"><code>update-password-alias</code></a> subcommand.</p>
+</li>
+<li>
+<p>Type the password when prompted.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00066"></a><a id="giodl"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-7 Updating a Password Alias</p>
+</div>
+<div class="paragraph">
+<p>This example updates the password for the <code>jmspassword-alias</code> alias:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-password-alias jsmpassword-alias</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You are prompted to type the new password for the alias:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Please enter the alias password&gt;new-secret-password
+Please enter the alias password again&gt;new-secret-password
+Command update-password-alias executed successfully</code></pre>
+</div>
+</div>
+<div id="sthref13" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help update-password-alias</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgol"></a><a id="GSSCG00146"></a><a id="administering-audit-modules"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_audit_modules">Administering Audit Modules</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghgra">To Create an Audit Module</a></p>
+</li>
+<li>
+<p><a href="#ghgsm">To List Audit Modules</a></p>
+</li>
+<li>
+<p><a href="#ghgpo">To Delete an Audit Module</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghgra"></a><a id="GSSCG00101"></a><a id="to-create-an-audit-module"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_an_audit_module">To Create an Audit Module</h4>
+<div class="paragraph">
+<p>Use the <code>create-audit-module</code> subcommand in remote mode to create an
+audit module for the add-on component that implements the audit
+capabilities.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create an audit module by using the
+<a href="../reference-manual/create-audit-module.html#GSRFM00014"><code>create-audit-module</code></a> subcommand.<br>
+Information about properties for this subcommand is included in this
+help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00067"></a><a id="ghjlw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-8 Creating an Audit Module</p>
+</div>
+<div class="paragraph">
+<p>This example creates an audit module named <code>sampleAuditModule</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-audit-module
+--classname com.sun.appserv.auditmodule --property defaultuser=
+admin:Password=admin sampleAuditModule
+Command create-audit-module executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref14" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-audit-module</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgsm"></a><a id="GSSCG00102"></a><a id="to-list-audit-modules"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_audit_modules">To List Audit Modules</h4>
+<div class="paragraph">
+<p>Use the <code>list-audit-modules</code> subcommand in remote mode to list the audit
+modules on one of the following targets:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Server instance, <code>server</code> (the default)</p>
+</li>
+<li>
+<p>Specified server instance</p>
+</li>
+<li>
+<p>Specified configuration</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the audit modules by using the
+<a href="../reference-manual/list-audit-modules.html#GSRFM00149"><code>list-audit-modules</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00068"></a><a id="ghjmy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-9 Listing Audit Modules</p>
+</div>
+<div class="paragraph">
+<p>This example lists the audit modules on <code>localhost</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-audit-modules
+audit-module : default
+audit-module : sampleAuditModule
+Command list-audit-modules executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref15" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-audit-modules</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgpo"></a><a id="GSSCG00104"></a><a id="to-delete-an-audit-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_an_audit_module">To Delete an Audit Module</h4>
+<div class="paragraph">
+<p>Use the <code>delete-audit-module</code> subcommand in remote mode to delete an
+existing audit module.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the audit modules by using the
+<a href="../reference-manual/list-audit-modules.html#GSRFM00149"><code>list-audit-modules</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete an audit module by using the
+<a href="../reference-manual/delete-audit-module.html#GSRFM00065"><code>delete-audit-module</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00070"></a><a id="ghjhm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-10 Deleting an Audit Module</p>
+</div>
+<div class="paragraph">
+<p>This example deletes <code>sampleAuditModule</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-audit-module sampleAuditModule
+Command delete-audit-module executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ablqz"></a><a id="GSSCG00147"></a><a id="administering-jsse-certificates"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_jsse_certificates">Administering JSSE Certificates</h3>
+<div class="paragraph">
+<p>In the developer profile, the GlassFish Server 5.0 uses the JSSE format
+on the server side to manage certificates and key stores. In all
+profiles, the client side (appclient or stand-alone) uses the JSSE
+format.</p>
+</div>
+<div class="paragraph">
+<p>The Java SE SDK ships with the <code>keytool</code> utility, which enables you to
+set up and work with Java Secure Socket Extension (JSSE) digital
+certificates. You can administer public/private key pairs and associated
+certificates, and cache the public keys (in the form of certificates) of
+their communicating peers.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghlgv">To Generate a Certificate by Using <code>keytool</code></a></p>
+</li>
+<li>
+<p><a href="#ghlgj">To Sign a Certificate by Using <code>keytool</code></a></p>
+</li>
+<li>
+<p><a href="#ghleq">To Delete a Certificate by Using <code>keytool</code></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghlgv"></a><a id="GSSCG00105"></a><a id="to-generate-a-certificate-by-using-keytool"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_generate_a_certificate_by_using_code_keytool_code">To Generate a Certificate by Using <code>keytool</code></h4>
+<div class="paragraph">
+<p>By default, the <code>keytool</code> utility creates a keystore file in the
+directory where the utility is run.</p>
+</div>
+<div id="sthref16" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>To run the <code>keytool</code> utility, your shell environment must be configured
+so that the Java SE <code>/bin</code> directory is in the path, otherwise the full
+path to the utility must be present on the command line.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change to the directory that contains the keystore and truststore
+files.<br>
+Always generate the certificate in the directory containing the keystore
+and truststore files. The default is domain-dir`/config`.</p>
+</li>
+<li>
+<p>Generate the certificate in the keystore file, <code>keystore.jks</code>, using
+the following command format:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>keytool -genkey -alias keyAlias-keyalg RSA
+ -keypass changeit
+ -storepass changeit
+keystore keystore.jks</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use any unique name as your keyAlias. If you have changed the keystore
+or private key password from the default (<code>changeit</code>), substitute the
+new password for <code>changeit</code>. The default key password alias is <code>s1as</code>.<br>
+A prompt appears that asks for your name, organization, and other
+information.
+3.  Export the generated certificate to the <code>server.cer</code> file (or
+<code>client.cer</code> if you prefer), using the following command format:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -export -alias keyAlias-storepass changeit
+ -file server.cer
+ -keystore keystore.jks</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If a certificate signed by a certificate authority is required, see
+<a href="#ghlgj">To Sign a Certificate by Using <code>keytool</code></a>.</p>
+</li>
+<li>
+<p>Create the <code>cacerts.jks</code> truststore file and add the certificate to
+the truststore, using the following command format:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>keytool -import -v -trustcacerts
+-alias keyAlias
+ -file server.cer
+-keystore cacerts.jks
+ -keypass changeit</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you have changed the keystore or private key password from the
+default (<code>changeit</code>), substitute the new password.<br>
+Information about the certificate is displayed and a prompt appears
+asking if you want to trust the certificate.
+6.  Type <code>yes</code>, then press Enter.<br>
+Information similar to the following is displayed:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Certificate was added to keystore
+[Saving cacerts.jks]</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To apply your changes, restart GlassFish Server. See
+"<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open Source
+Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00071"></a><a id="ghlii"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
+Using an RSA Key Algorithm</p>
+</div>
+<div class="paragraph">
+<p>RSA is public-key encryption technology developed by RSA Data Security,
+Inc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
+-dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file}
+-storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00072"></a><a id="ghlew"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-12 Creating a Self-Signed Certificate in a JKS Keystore by
+Using a Default Key Algorithm</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -genkey -noprompt -trustcacerts -alias ${cert.alias} -dname
+${dn.name} -keypass ${key.pass} -keystore ${keystore.file} -storepass
+${keystore.pass}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00073"></a><a id="ghldw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-13 Displaying Available Certificates From a JKS Keystore</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -list -v -keystore ${keystore.file} -storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00074"></a><a id="ghlfd"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-14 Displaying Certificate information From a JKS Keystore</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -list -v -alias ${cert.alias} -keystore ${keystore.file}
+-storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div id="sthref17" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlgj"></a><a id="GSSCG00106"></a><a id="to-sign-a-certificate-by-using-keytool"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_sign_a_certificate_by_using_code_keytool_code">To Sign a Certificate by Using <code>keytool</code></h4>
+<div class="paragraph">
+<p>After creating a certificate, the owner must sign the certificate to
+prevent forgery. E-commerce sites, or those for which authentication of
+identity is important, can purchase a certificate from a well-known
+Certificate Authority (CA).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If authentication is not a concern, for example if private secure
+communications are all that is required, you can save the time and
+expense involved in obtaining a CA certificate by using a self-signed
+certificate.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Delete the default self-signed certificate:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>keytool -delete -alias s1as -keystore keystore.jks -storepass &lt;store_passwd&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where &lt;store_passwd&gt; is the password for the keystore. For example,
+"mypass". Note that <code>s1as</code> is the default alias of the GlassFish Server
+keystore.
+2.  Generate a new key pair for the application server:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -genkeypair -keyalg &lt;key_alg&gt; -keystore keystore.jks
+-validity &lt;val_days&gt; -alias s1as</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where &lt;key_alg&gt; is the algorithm to be used for generating the key pair,
+for example RSA, and &lt;val_days&gt; is the number of days that the
+certificate should be considered valid. For example, 365.<br>
+In addition to generating a key pair, the command wraps the public key
+into a self-signed certificate and stores the certificate and the
+private key in a new keystore entry identified by the alias.<br>
+For HTTPS hostname verification, it is important to ensure that the name
+of the certificate (CN) matches the fully-qualified hostname of your
+site (fully-qualified domain name). If the names do not match, clients
+connecting to the server will see a security alert stating that the name
+of the certificate does not match the name of the site.
+3.  Generate a Certificate Signing Request (CSR):<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -certreq -alias s1as -file &lt;certreq_file&gt; -keystore keystore.jks
+-storepass &lt;store_passwd&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where &lt;certreq_file&gt; is the file in which the CSR is stored (for
+example, <code>s1as.csr</code>) and &lt;store_passwd&gt; is the password for the
+keystore. For example, changeit.
+4.  Submit the CSR to a Certificate Authority such as VeriSign (at
+<code>http://www.verisign.com/ssl/buy-ssl-certificates/index.html</code>). In
+response, you should receive a signed server certificate. Make sure to
+import into your browser the CA certificate of the CA (if not already
+present) and any intermediate certificates indicated by the CA in the
+reply.
+5.  Store the signed server certificate from the CA, including the
+markers <code>-----BEGIN CERTIFICATE-----</code> and <code>-----END CERTIFICATE-----</code>,
+into a file such as <code>s1as.cert</code>. Download the CA certificate and any
+intermediate CA certificates and store them in local files.
+6.  Import the CA certificate (if not already present) and any
+intermediate CA certificates (if not already present) indicated by the
+CA into the truststore <code>cacerts.jks</code>:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -import -v -trustcacerts -alias &lt;CA-Name&gt; -file ca.cert
+ -keystore cacerts.jks -storepass &lt;store_passwd&gt;</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Replace the original self-signed certificate with the certificate
+you obtained from the CA, as stored in a file such as <code>s1as.cert</code>:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>keytool -import -v -trustcacerts -alias s1as -file s1as.cert
+   -keystore keystore.jks -storepass &lt;store_passwd&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you import the certificate using the same original alias`s1as`,
+keytool treats it as a command to replace the original certificate with
+the certificate obtained as a reply to a CSR.<br>
+After running the command, you should see that the certificate <code>s1as</code> in
+the keystore is no longer the original self-signed certificate, but is
+now the response certificate from the CA.<br>
+Consider the following example that compares an original <code>s1as</code>
+certificate with a new <code>s1as</code> certificate obtained from VeriSign:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Original s1as (self-signed):
+
+Owner: CN=FQDN, OU=Sun Java System Application Server, O=Sun
+Microsystems, L=Santa Clara, ST=California, C=US
+Issuer: CN=KUMAR, OU=Sun Java System Application Server, O=Su
+n Microsystems, L=Santa Clara, ST=California, C=US
+Serial number: 472acd34
+Valid from: Fri Nov 02 12:39:40 GMT+05:30 2007 until: Mon Oct
+30 12:39:40 GMT+05:30 2017
+
+New s1as (contains signed cert from CA):
+
+Owner: CN=FQDN, OU=Terms of use at www.verisign.com/cps/test
+ca (c)05, OU=Sun Java System Application Server, O=Sun Micros
+ystems, L=Santa Clara, ST=California, C=US
+Issuer: CN=VeriSign Trial Secure Server Test CA, OU=Terms of
+use at https://www.verisign.com/cps/testca (c)05, OU="For Test
+Purposes Only. No assurances.", O="VeriSign, Inc.", C=US
+Serial number: 1375de18b223508c2cb0123059d5c440
+Valid from: Sun Nov 11 05:30:00 GMT+05:30 2007 until: Mon Nov
+26 05:29:59 GMT+05:30 2007</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See "<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00075"></a><a id="ghlhu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-15 Importing an RFC/Text-Formatted Certificate Into a JKS
+Keystore</p>
+</div>
+<div class="paragraph">
+<p>Certificates are often stored using the printable encoding format
+defined by the Internet Request for Comments (RFC) 1421 standard instead
+of their binary encoding. This certificate format, also known as Base 64
+encoding, facilitates exporting certificates to other applications by
+email or through some other mechanism.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -import -noprompt -trustcacerts -alias ${cert.alias} -file
+${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00076"></a><a id="ghlim"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-16 Exporting a Certificate From a JKS Keystore in PKCS7 Format</p>
+</div>
+<div class="paragraph">
+<p>The reply format defined by the Public Key Cryptography Standards #7,
+Cryptographic Message Syntax Standard, includes the supporting
+certificate chain in addition to the issued certificate.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -export -noprompt -alias ${cert.alias} -file ${cert.file}
+-keystore ${keystore.file} -storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00077"></a><a id="ghleb"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-17 Exporting a Certificate From a JKS Keystore in RFC/Text
+Format</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -export -noprompt -rfc -alias ${cert.alias} -file
+${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div id="sthref18" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a id="ghleq"></a><a id="GSSCG00107"></a><a id="to-delete-a-certificate-by-using-keytool"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_certificate_by_using_code_keytool_code">To Delete a Certificate by Using <code>keytool</code></h4>
+<div class="paragraph">
+<p>Use the <code>keytool</code> <code>delete</code> command to delete an existing certificate.</p>
+</div>
+<div class="paragraph">
+<p>Delete a certificate using the following command format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -delete
+ -alias keyAlias
+ -keystore keystore-name
+ -storepass password</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00078"></a><a id="ghlgy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-18 Deleting a Certificate From a JKS Keystore</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -delete -noprompt -alias ${cert.alias} -keystore ${keystore.file}
+-storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div id="sthref19" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a id="gkngj"></a><a id="GSSCG00148"></a><a id="administering-jacc-providers"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_jacc_providers">Administering JACC Providers</h3>
+<div class="paragraph">
+<p>The Java Authorization Contract for Containers (JACC) is part of the
+J2EE 1.4 specification that defines an interface for pluggable
+authorization providers. This enables the administrator to set up
+third-party plug-in modules to perform authorization.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server includes Administration Console support and subcommands
+to support JACC providers, as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>create <code>create-jacc-provider</code></p>
+</li>
+<li>
+<p>delete <code>delete-jacc-provider</code></p>
+</li>
+<li>
+<p>list <code>list-jacc-providers</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The default GlassFish Server installation includes two JACC providers,
+named default and simple. You should not delete these default providers.
+Any JACC providers you create with the <code>create-jacc-provider</code> subcommand
+are in addition to these two default providers.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server creates a JSR-115-compliant JACC provider that you
+can use with third-party authorization modules for applications running
+in GlassFish Server. The JACC provider is created as a <code>jacc-provider</code>
+element within the security-service element in the domain&#8217;s <code>domain.xml</code>
+file.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksgp"></a><a id="GSSCG00108"></a><a id="administering-jacc-providers-from-the-administration-console"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_administering_jacc_providers_from_the_administration_console">Administering JACC Providers From the Administration Console</h4>
+<div class="paragraph">
+<p>To use the Administration Console to administer JACC providers, perform
+the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select Configurations and expand the entry.</p>
+</li>
+<li>
+<p>Select the server configuration for which you want to administer
+JACC providers and expand the entry.</p>
+</li>
+<li>
+<p>Select Security and expand the entry.</p>
+</li>
+<li>
+<p>Select JACC Providers. The JACC Providers page is displayed. The
+existing JACC providers are shown on this page.<br>
+<span class="image"><img src="img/jacc-providers.png" alt="This screen shot shows the default JACC providers."></span></p>
+</li>
+<li>
+<p>To create a new provider, click New.<br>
+Enter the Name, Policy Configuration (the class that implements the
+policy configuration factory) and the Policy Provider (the class that
+implements the policy factory) for the new JACC provider. You can also
+enter optional properties (name/value) for the provider.</p>
+</li>
+<li>
+<p>To delete an existing JACC provider, select that provider and click
+Delete.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="gksfx"></a><a id="GSSCG00109"></a><a id="administering-jacc-providers-from-the-command-line"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administering_jacc_providers_from_the_command_line">Administering JACC Providers from the Command Line</h4>
+<div class="paragraph">
+<p>To use the command line to administer JACC providers, perform the
+following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To create a JACC provider, use the <code>create-jacc-provider</code>
+subcommand. The following example shows how to create a JACC provider
+named testJACC on the default server target.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-jacc-provider
+       --policyproviderclass com.sun.enterprise.security.provider.PolicyWrapper
+       --policyconfigfactoryclass com.sun.enterprise.security.provider.PolicyCon
+figurationFactoryImpl
+       testJACC</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To delete a JACC provider, use the <code>create-jacc-provider</code>
+subcommand. The following example shows how to delete a JACC provider
+named testJACC from the default domain:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; delete-jacc-provider testJACC</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To list the available providers, use the <code>list-jacc-providers</code>
+subcommand. The following example shows how to list JACC providers for
+the default domain:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-jacc-providers
+default
+simple
+Command list-jacc-providers executed successfully.</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="preface.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="user-security.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+</body>
+</html>

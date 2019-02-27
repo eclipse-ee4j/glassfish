@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering the JavaMail Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering the JavaMail Service</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="orb.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jms.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00019"></a><a id="ablkr"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-the-javamail-service">16 Administering the JavaMail Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GlassFish Server includes the JavaMail API along with JavaMail service
+providers that allow an application component to send email
+notifications over the Internet and to read email from IMAP and POP3
+mail servers.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggjsf">About JavaMail</a></p>
+</li>
+<li>
+<p><a href="#giowr">Administering JavaMail Resources</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggjsf"></a><a id="GSADG00593"></a><a id="about-javamail"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_javamail">About JavaMail</h3>
+<div class="paragraph">
+<p>The JavaMail API is a set of abstract APIs that model a mail system. The
+JavaMail API provides a platform-independent and protocol-independent
+framework to build mail and messaging applications and provide
+facilities for reading and sending electronic messages. Service
+providers implement particular protocols. Using the API you can add
+email capabilities to your applications. JavaMail provides access from
+Java applications to Internet Message Access Protocol (IMAP) and Simple
+Mail Transfer Protocol (SMTP) capable mail servers on your network or
+the Internet. The API does not provide mail server functionality; you
+must have access to a mail server to use JavaMail.</p>
+</div>
+<div class="paragraph">
+<p>The JavaMail API is implemented as an optional package in the Java
+platform and is also available as part of the Java EE platform.</p>
+</div>
+<div class="paragraph">
+<p>To learn more about the JavaMail API, consult the
+<a href="http://www.oracle.com/technetwork/java/javamail/">JavaMail web site</a> .</p>
+</div>
+<div class="paragraph">
+<p><a id="giowr"></a><a id="GSADG00594"></a><a id="administering-javamail-resources"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_javamail_resources">Administering JavaMail Resources</h3>
+<div class="paragraph">
+<p>When you create a mail session, the server-side components and
+applications are enabled to access JavaMail services with JNDI, using
+the session properties you assign for them. When creating a mail
+session, you can designate the mail hosts, the transport and store
+protocols, and the default mail user so that components that use
+JavaMail do not have to set these properties. Applications that are
+heavy email users benefit because GlassFish Server creates a single
+session object and makes the session available to any component that
+needs it.</p>
+</div>
+<div class="paragraph">
+<p>JavaMail settings such as the following can be specified:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JNDI Name. The unique name for the mail session. Use the naming
+sub-context prefix mail/ for JavaMail resources. For example:
+<code>mail/MySession</code></p>
+</li>
+<li>
+<p>Mail Host. The host name of the default mail server. The connect
+methods of the store and transport objects use this value if a
+protocol-specific host property is not supplied. The name must be
+resolvable to an actual host name.</p>
+</li>
+<li>
+<p>Default User. The default user name to provide when connecting to a
+mail server. The connect methods of the store and transport objects use
+this value if a protocol-specific username property is not supplied.</p>
+</li>
+<li>
+<p>Default Return Address. The email address of the default user, in the
+form: username@host.domain.</p>
+</li>
+<li>
+<p>Description. A descriptive statement for the component.</p>
+</li>
+<li>
+<p>Session. Indicates whether or not mail session is enabled or disabled
+at this time</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giowd">To Create a JavaMail Resource</a></p>
+</li>
+<li>
+<p><a href="#giowq">To List JavaMail Resources</a></p>
+</li>
+<li>
+<p><a href="#giwjw">To Update a JavaMail Resource</a></p>
+</li>
+<li>
+<p><a href="#gioxj">To Delete a JavaMail Resource</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giowd"></a><a id="GSADG00482"></a><a id="to-create-a-javamail-resource"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_javamail_resource">To Create a JavaMail Resource</h4>
+<div class="paragraph">
+<p>Use the <code>create-javamail-resource</code> subcommand in remote mode to create a
+JavaMail session resource. The JNDI name for a JavaMail session resource
+customarily includes the mail/ naming subcontext, For example:
+<code>mail/MyMailSession.</code></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a JavaMail resource by using the
+<a href="../reference-manual/create-javamail-resource.html#GSRFM00035"><code>create-javamail-resource</code></a> subcommand.<br>
+Information about the properties for the subcommand is included in this
+help page.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00267"></a><a id="gipfs"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 16-1 Creating a JavaMail Resource</p>
+</div>
+<div class="paragraph">
+<p>This example creates a JavaMail resource named <code>mail/MyMailSession</code>. The
+escape character (\) is used in the <code>--fromaddress</code> option to
+distinguish the dot (.) and at sign (@).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-javamail-resource --mailhost localhost
+--mailuser sample --fromaddress sample\@sun\.com mail/MyMailSession
+Command create-javamail-resource executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1014" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-javamail-resource</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giowq"></a><a id="GSADG00483"></a><a id="to-list-javamail-resources"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_javamail_resources">To List JavaMail Resources</h4>
+<div class="paragraph">
+<p>Use the <code>list-javamail-resources</code> subcommand in remote mode to list the
+existing JavaMail session resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the JavaMail resources by using the
+<a href="../reference-manual/list-javamail-resources.html#GSRFM00172"><code>list-javamail-resources</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00268"></a><a id="gipfe"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 16-2 Listing JavaMail Resources</p>
+</div>
+<div class="paragraph">
+<p>This example lists the JavaMail resources on <code>localhost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-javamail-resources
+mail/MyMailSession
+Command list-javamail-resources executed successfuly.</code></pre>
+</div>
+</div>
+<div id="GSADG1015" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing <code>asadmin help list-javamail-resources</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giwjw"></a><a id="GSADG00484"></a><a id="to-update-a-javamail-resource"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_javamail_resource">To Update a JavaMail Resource</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the JavaMail resources by using the
+<a href="../reference-manual/list-javamail-resources.html#GSRFM00172"><code>list-javamail-resources</code></a> subcommand.</p>
+</li>
+<li>
+<p>Modify the values for the specified JavaMail source by using the
+<a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand.<br>
+The resource is identified by its dotted name.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00269"></a><a id="giwjb"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 16-3 Updating a JavaMail Resource</p>
+</div>
+<div class="paragraph">
+<p>This example changes <code>joeserver</code> to <code>joe</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.resources.mail-resource.mail/
+MyMailSession.user=joeserver.resources.mail-resource.mail/
+MyMailSession.user=joe
+Command set executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gioxj"></a><a id="GSADG00485"></a><a id="to-delete-a-javamail-resource"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_javamail_resource">To Delete a JavaMail Resource</h4>
+<div class="paragraph">
+<p>Use the <code>delete-javamail-resource</code> subcommands in remote mode to delete
+a JavaMail session resource.</p>
+</div>
+<div id="GSADG1016" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>References to the specified resource must be removed before running the
+<code>delete-javamail-resource</code> subcommands.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the JavaMail resources by using the
+<a href="../reference-manual/list-javamail-resources.html#GSRFM00172"><code>list-javamail-resources</code></a> subcommands.</p>
+</li>
+<li>
+<p>Delete a JavaMail resource by using the
+<a href="../reference-manual/delete-javamail-resource.html#GSRFM00087"><code>delete-javamail-resource</code></a> subcommands.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00270"></a><a id="gipcd"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 16-4 Deleting a JavaMail Resource</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the JavaMail session resource named
+<code>mail/MyMailSession</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-javamail-resource mail/MyMailSession
+Command delete-javamail-resource executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1017" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-javamail-resource</code> at the command line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="orb.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jms.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

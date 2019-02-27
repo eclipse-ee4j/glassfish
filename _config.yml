@@ -1,7 +1,7 @@
 remote_theme: jakartaee/jekyll-theme-jakarta-ee
 
 title: [Eclipse GlassFish]
-description: [The Open Source Jakarta EE Platform Implementation]
+description: [Open Source Jakarta EE Platform Implementation]
 
 # sidebar links url
 links:
@@ -11,5 +11,8 @@ links:
   #javadocs:
   docs: documentation
   #faq:
-  #hide_issuetracker: true #set explicitly to 'true' if you don't want to have the issue tracker link displayed
+  hide_issuetracker: true #set explicitly to 'true' if you don't want to have the issue tracker link displayed
 
+include:
+  - LICENSE.md
+  - CONTRIBUTING.md

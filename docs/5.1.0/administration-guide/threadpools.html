@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Thread Pools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Thread Pools</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jvm.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="webapps.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00008"></a><a id="abluc"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-thread-pools">5 Administering Thread Pools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures for administering thread pools in the
+GlassFish Server Open Source Edition 5.0 environment by using the
+<code>asadmin</code> command-line utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggjyv">About Thread Pools</a></p>
+</li>
+<li>
+<p><a href="#ablud">Configuring Thread Pools</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggjyv"></a><a id="GSADG00546"></a><a id="about-thread-pools"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_thread_pools">About Thread Pools</h3>
+<div class="paragraph">
+<p>The Virtual Machine for the Java platform (Java Virtual Machine) or JVM
+machine) can support many threads of execution simultaneously. To help
+performance, GlassFish Server maintains one or more thread pools. It is
+possible to assign specific thread pools to connector modules, to
+network listeners, or to the Object Request Broker (ORB).</p>
+</div>
+<div class="paragraph">
+<p>One thread pool can serve multiple connector modules and enterprise
+beans. Request threads handle user requests for application components.
+When GlassFish Server receives a request, it assigns the request to a
+free thread from the thread pool. The thread executes the client&#8217;s
+requests and returns results. For example, if the request needs to use a
+system resource that is currently busy, the thread waits until that
+resource is free before allowing the request to use that resource.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablud"></a><a id="GSADG00547"></a><a id="configuring-thread-pools"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_thread_pools">Configuring Thread Pools</h3>
+<div class="paragraph">
+<p>You can specify the minimum and maximum number of threads that are
+reserved for requests from applications. The thread pool is dynamically
+adjusted between these two values.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggkwj">To Create a Thread Pool</a></p>
+</li>
+<li>
+<p><a href="#giuff">To List Thread Pools</a></p>
+</li>
+<li>
+<p><a href="#ggkyc">To Update a Thread Pool</a></p>
+</li>
+<li>
+<p><a href="#ggkwy">To Delete a Thread Pool</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggkwj"></a><a id="GSADG00366"></a><a id="to-create-a-thread-pool"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_thread_pool">To Create a Thread Pool</h4>
+<div class="paragraph">
+<p>Use the <code>create-threadpool</code> subcommand in remote mode to create a thread
+pool.</p>
+</div>
+<div class="paragraph">
+<p>The minimum thread pool size that is specified signals the server to
+allocate at least that many threads in reserve for application requests.
+That number is increased up to the maximum thread pool size that is
+specified. Increasing the number of threads available to a process
+allows the process to respond to more application requests
+simultaneously.</p>
+</div>
+<div class="paragraph">
+<p>If one resource adapter or application occupies all the GlassFish Server
+threads, thread starvation might occur. You can avoid this by dividing
+the GlassFish Server threads into different thread pools.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a new thread pool by using the
+<a href="../reference-manual/create-threadpool.html#GSRFM00060"><code>create-threadpool</code></a> subcommand.<br>
+Information about options for the subcommand is included in this help
+page.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Restart is not necessary for thread pools used by the web container.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00162"></a><a id="giuez"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-1 Creating a Thread Pool</p>
+</div>
+<div class="paragraph">
+<p>This example creates <code>threadpool-l</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-threadpool --maxthreadpoolsize 100
+--minthreadpoolsize 20 --idletimeout 2 --workqueues 100 threadpool-1
+Command create-threadpool executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG853" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-threadpool</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giuff"></a><a id="GSADG00367"></a><a id="to-list-thread-pools"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_thread_pools">To List Thread Pools</h4>
+<div class="paragraph">
+<p>Use the <code>list-threadpools</code> subcommand in remote mode to list the
+existing thread pools.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing thread pools by using the
+<a href="../reference-manual/list-threadpools.html#GSRFM00204"><code>list-threadpools</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00163"></a><a id="giugs"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-2 Listing Thread Pools</p>
+</div>
+<div class="paragraph">
+<p>This example lists the existing thread pools.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-threadpools
+threadpool-1
+Command list-threadpools executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG854" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-threadpools</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggkyc"></a><a id="GSADG00368"></a><a id="to-update-a-thread-pool"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_thread_pool">To Update a Thread Pool</h4>
+<div class="paragraph">
+<p>Use the <code>set</code> subcommand to update the values for a specified thread
+pool.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the existing thread pools by using the
+<a href="../reference-manual/list-threadpools.html#GSRFM00204"><code>list-threadpools</code></a> subcommand.</p>
+</li>
+<li>
+<p>Modify the values for a thread pool by using the
+<a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand.<br>
+The thread pool is identified by its dotted name.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Restart is not necessary for thread pools used by the web container.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00164"></a><a id="giuhc"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-3 Updating a Thread Pool</p>
+</div>
+<div class="paragraph">
+<p>This example sets the <code>max-thread-pool-size</code> from its previous value to
+8.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=8
+Command set executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG855" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help set</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggkwy"></a><a id="GSADG00369"></a><a id="to-delete-a-thread-pool"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_thread_pool">To Delete a Thread Pool</h4>
+<div class="paragraph">
+<p>Use the <code>delete-threadpool</code> subcommand in remote mode to delete an
+existing thread pool. Deleting a thread pool will fail if that pool is
+referenced by a network listener.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing thread pools by using the
+<a href="../reference-manual/list-threadpools.html#GSRFM00204"><code>list-threadpools</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete the specified thread pool by using the
+<a href="../reference-manual/delete-threadpool.html#GSRFM00111"><code>delete-threadpool</code></a> subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Restart is not necessary for thread pools used by the web container.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00165"></a><a id="giugt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-4 Deleting a Thread Pool</p>
+</div>
+<div class="paragraph">
+<p>This example deletes <code>threadpool-1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-threadpool threadpool-1
+Command delete-threadpool executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG856" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-threadpool</code> at the command line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jvm.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="webapps.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

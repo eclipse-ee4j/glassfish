@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Eclipse GlassFish Server Release Notes, Release 5.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Eclipse GlassFish Server Release Notes, Release 5.0</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+
+		<td align="left">
+		<a href="title.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="contents">Contents</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="title-and-copyright-information"><a href="title.html">Title and Copyright Information</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="preface"><a href="preface.html#gkamj">Preface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="preface.html#ghpbz">GlassFish Server Documentation Set</a></p>
+</li>
+<li>
+<p><a href="preface.html#giprl">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="preface.html#fwbkx">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#fquvc">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#ghpfg">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-open-source-edition-5.0-release-notes"><a href="release-notes.html#abppa">1 Eclipse GlassFish Server 5.0 Release Notes</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#ghmvk">Revision History</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#glcmf">What&#8217;s New in the GlassFish Server 5.0
+Release?</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#abpaj">Hardware and Software Requirements</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#abpak">Required JDK Versions</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#ggppy">Required Disk Space</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#ggpoq">Required Free Ports</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#sthref4">To Configure Specific Ports for a JMS
+Host</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#sthref5">To Configure Specific GMS Ports for a
+Cluster</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#gkxlg">Message Queue Broker Requirements</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#gfgps">Paths and Environment Settings for the
+JDK Software</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#gldjj">Use the JDK Binaries</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#gldgl">Set the <code>JAVA_HOME</code> Environment
+Variable</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#gldho">Set Other Environment Variables As
+Necessary</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#glcmm">Known Issues in GlassFish Server 5.0</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#CHDIBHHF">JAXB and JAX-WS no longer part of
+Java EE platform</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#sthref6">Description</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#sthref7">Workaround</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#CHDIBEAJ">Resource validation property is
+enabled in the JVM option for deployment</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#sthref8">Description</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#sthref9">Workaround</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#CHDBJDGF">Update Tool and pkg Command no longer
+part of GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#sthref10">Description</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#sthref11">Workaround</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#CHDJGJHD">Java DB has been replaced by Apache
+Derby</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#sthref12">Description</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#sthref13">Workaround</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#ggqok">Restrictions and Deprecated
+Functionality</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#ggqoc"><code>asadmin</code> Subcommands</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#abmbf">Deprecated, Unsupported, and Obsolete
+Options</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#gkueg">Applications That Use Apache Derby</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#ghpen">No Support for Client VM on Windows
+AMD64</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#gkwbd">Metro Reliable Messaging in <code>InOrder</code>
+Delivery Mode</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#glgiy">No Support for Kerberos on AIX</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#BABDACBE">Documentation Errata</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#BABIDEHD">Upgrading to Oracle GlassFish Server
+Is Not Necessary</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="release-notes.html#giraq">Features Available Only in the Full
+Platform</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#gipkz">Java EE Standards Support</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#ghmtl">Java EE SDK</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#abpha">How to Report Problems and Provide
+Feedback</a></p>
+</li>
+<li>
+<p><a href="release-notes.html#abphc">Additional Resources</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+
+		<td align="left">
+		<a href="title.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+
+</body>
+</html>

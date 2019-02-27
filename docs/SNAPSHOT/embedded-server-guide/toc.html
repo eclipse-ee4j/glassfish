@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Eclipse GlassFish Server Embedded Server Guide, Release 5.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Eclipse GlassFish Server Embedded Server Guide, Release 5.1</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+
+		<td align="left">
+		<a href="loe.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="contents">Contents</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="list-of-examples"><a href="loe.html">List of Examples</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="list-of-tables"><a href="lot.html">List of Tables</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="title-and-copyright-information"><a href="title.html">Title and Copyright Information</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="preface"><a href="preface.html#sthref2">Preface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="preface.html#ghpbz">GlassFish Server Documentation Set</a></p>
+</li>
+<li>
+<p><a href="preface.html#giprl">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="preface.html#fwbkx">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#fquvc">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#ghpfg">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-open-source-edition-4.0-embedded-server-guide"><a href="embedded-server-guide.html#gjldt">1 Eclipse GlassFish Server 5.1 Embedded Server Guide</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#giidt">Introduction to Embedded
+GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gkubb">Embedded GlassFish Server File
+System</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#gikqf">Installation Root Directory</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gikvf">Instance Root Directory</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#giiak">The <code>domain.xml</code> File</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#giijw">Including the GlassFish Server
+Embedded Server API in Applications</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#giide">Setting the Class Path</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#giiky">Creating, Starting, and Stopping
+Embedded GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#gihyr">Creating and Configuring an
+Embedded GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gihyz">Running an Embedded GlassFish
+Server</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#giigc">Deploying and Undeploying an
+Application in an Embedded GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#gilrf">To Deploy an Application From
+an Archive File or a Directory</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gilpm">Undeploying an Application</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjrcs">Creating a Scattered Archive</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gkvgc">Creating a Scattered Enterprise
+Archive</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjldy">Running <code>asadmin</code> Commands Using
+the GlassFish Server Embedded Server API</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gikrt">Sample Applications</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gijhs">Testing Applications with the
+Maven Plug-in for Embedded GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#gihus">To Set Up Your Maven
+Environment</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#giivt">To Build and Start an
+Application From Maven</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gijly">To Stop Embedded GlassFish
+Server</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gijjn">To Redeploy an Application That
+Was Built and Started From Maven</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjkps">Maven Goals for Embedded
+GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#gjkxo"><code>embedded-glassfish:run</code> Goal</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjkwy"><code>embedded-glassfish:start</code>
+Goal</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjkvc"><code>embedded-glassfish:deploy</code>
+Goal</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjkvg"><code>embedded-glassfish:undeploy</code>
+Goal</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjkyl"><code>embedded-glassfish:stop</code> Goal</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjkxq"><code>embedded-glassfish:admin</code>
+Goal</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjlde">Using the EJB 3.1 Embeddable API
+with Embedded GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="embedded-server-guide.html#gjlcr">To Use the EJB 3.1 Embeddable
+API with Embedded GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gksnv">EJB 3.1 Embeddable API
+Properties</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjxff">Using Maven with the EJB 3.1
+Embeddable API and Embedded GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gjlfe">Changing Log Levels in Embedded
+GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gksmw">Default Java Persistence Data
+Source for Embedded GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#gihxf">Restrictions for Embedded
+GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+
+		<td align="left">
+		<a href="loe.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

@@ -1,0 +1,3465 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering GlassFish Server Instances</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering GlassFish Server Instances</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="clusters.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="named-configurations.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00006"></a><a id="gkrbv"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-glassfish-server-instances">5 Administering GlassFish Server Instances</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A GlassFish Server instance is a single Virtual Machine for the Java
+platform (Java Virtual Machine or JVM machine) on a single node in which
+GlassFish Server is running. A node defines the host where the GlassFish
+Server instance resides. The JVM machine must be compatible with the
+Java Platform, Enterprise Edition (Java EE).</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server instances form the basis of an application deployment.
+An instance is a building block in the clustering, load balancing, and
+session persistence features of GlassFish Server. Each instance belongs
+to a single domain and has its own directory structure, configuration,
+and deployed applications. Every instance contains a reference to a node
+that defines the host where the instance resides.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkrbn">Types of GlassFish Server Instances</a></p>
+</li>
+<li>
+<p><a href="#gkqal">Administering GlassFish Server Instances Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqdw">Administering GlassFish Server Instances Locally</a></p>
+</li>
+<li>
+<p><a href="#gkrdd">Resynchronizing GlassFish Server Instances and the DAS</a></p>
+</li>
+<li>
+<p><a href="#gkqcr">Migrating EJB Timers</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrbn"></a><a id="GSHAG00186"></a><a id="types-of-glassfish-server-instances"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_types_of_glassfish_server_instances">Types of GlassFish Server Instances</h3>
+<div class="paragraph">
+<p>Each GlassFish Server instance is one of the following types of
+instance:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Standalone instance</dt>
+<dd>
+<p>A standalone instance does not share its configuration with any other
+instances or clusters. A standalone instance is created if either of
+the following conditions is met:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>No configuration or cluster is specified in the command to create
+the instance.</p>
+</li>
+<li>
+<p>A configuration that is not referenced by any other instances or
+clusters is specified in the command to create the instance.<br>
+When no configuration or cluster is specified, a copy of the
+<code>default-config</code> configuration is created for the instance. The name
+of this configuration is instance-name`-config`, where instance-name
+represents the name of an unclustered server instance.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Shared instance</dt>
+<dd>
+<p>A shared instance shares its configuration with other instances or
+clusters. A shared instance is created if a configuration that is
+referenced by other instances or clusters is specified in the command
+to create the instance.</p>
+</dd>
+<dt class="hdlist1">Clustered instance</dt>
+<dd>
+<p>A clustered instance inherits its configuration from the cluster to
+which the instance belongs and shares its configuration with other
+instances in the cluster. A clustered instance is created if a cluster
+is specified in the command to create the instance.<br>
+Any instance that is not part of a cluster is considered an
+unclustered server instance. Therefore, standalone instances and
+shared instances are unclustered server instances.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gkqal"></a><a id="GSHAG00187"></a><a id="administering-glassfish-server-instances-centrally"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_glassfish_server_instances_centrally">Administering GlassFish Server Instances Centrally</h3>
+<div class="paragraph">
+<p>Centralized administration requires the Distributed Component Object
+Model (DCOM) remote protocol or secure shell (SSH) to be set up. If DCOM
+or SSH is set up, you can administer clustered instances without the
+need to log in to hosts where remote instances reside. For information
+about setting up DCOM and SSH, see <a href="ssh-setup.html#gkshg">Enabling
+Centralized Administration of GlassFish Server Instances</a>.</p>
+</div>
+<div class="paragraph">
+<p>Administering GlassFish Server instances centrally involves the
+following tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkrcb">To List All Instances in a Domain</a></p>
+</li>
+<li>
+<p><a href="#gkqcw">To Delete an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqcj">To Start a Cluster</a></p>
+</li>
+<li>
+<p><a href="#gkqcl">To Stop a Cluster</a></p>
+</li>
+<li>
+<p><a href="#gkqaw">To Start an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqaj">To Stop an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqcc">To Restart an Individual Instance Centrally</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkqch"></a><a id="GSHAG00106"></a><a id="to-create-an-instance-centrally"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_an_instance_centrally">To Create an Instance Centrally</h4>
+<div class="paragraph">
+<p>Use the <code>create-instance</code> subcommand in remote mode to create a
+GlassFish Server instance centrally. Creating an instance adds the
+instance to the DAS configuration and creates the instance&#8217;s files on
+the host where the instance resides.</p>
+</div>
+<div class="paragraph">
+<p>If the instance is a clustered instance that is managed by GMS, system
+properties for the instance that relate to GMS must be configured
+correctly. To avoid the need to restart the DAS and the instance,
+configure an instance&#8217;s system properties that relate to GMS when you
+create the instance. If you change GMS-related system properties for an
+existing instance, the DAS and the instance must be restarted to apply
+the changes. For information about GMS, see
+<a href="clusters.html#gjfnl">Group Management Service</a>.</p>
+</div>
+<div id="GSHAG380" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The node where the instance is to reside exists.</p>
+</li>
+<li>
+<p>The node where the instance is to reside is either enabled for remote
+communication or represents the host on which the DAS is running. For
+information about how to create a node that is enabled for remote
+communication, see the following sections:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="nodes.html#CHDIGBJB">To Create a <code>DCOM</code> Node</a></p>
+</li>
+<li>
+<p><a href="nodes.html#gkrnf">To Create an <code>SSH</code> Node</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The user of the DAS can use DCOM or SSH to log in to the host for the
+node where the instance is to reside.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If any of these prerequisites is not met, create the instance locally as
+explained in <a href="#gkqbl">To Create an Instance Locally</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you are adding the instance to a cluster, ensure that the cluster to
+which you are adding the instance exists. For information about how to
+create a cluster, see <a href="clusters.html#gkqdm">To Create a Cluster</a>.</p>
+</div>
+<div class="paragraph">
+<p>If the instance is to reference an existing named configuration, ensure
+that the configuration exists. For more information, see
+<a href="named-configurations.html#abdjr">To Create a Named Configuration</a>.</p>
+</div>
+<div class="paragraph">
+<p>The instance might be a clustered instance that is managed by GMS and
+resides on a node that represents a multihome host. In this situation,
+ensure that you have the Internet Protocol (IP) address of the network
+interface to which GMS binds.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>create-instance</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for configuring the
+instance, see the <a href="../reference-manual/create-instance.html#GSRFM00033"><code>create-instance</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are creating a standalone instance, do not specify a cluster.<br>
+If the instance is to reference an existing configuration, specify a
+configuration that no other cluster or instance references.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-instance --node node-name
+[--config configuration-name]instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance is to reside.</p>
+</dd>
+<dt class="hdlist1">configuration-name</dt>
+<dd>
+<p>The name of the existing named configuration that the instance will
+reference.<br>
+If you do not require the instance to reference an existing
+configuration, omit this option. A copy of the <code>default-config</code>
+configuration is created for the instance. The name of this
+configuration is instance-name`-config`, where instance-name is the
+name of the server instance.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>Your choice of name for the instance that you are creating.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are creating a shared instance, specify the configuration that
+the instance will share with other clusters or instances.<br>
+Do not specify a cluster.<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-instance --node node-name
+--config configuration-name instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance is to reside.</p>
+</dd>
+<dt class="hdlist1">configuration-name</dt>
+<dd>
+<p>The name of the existing named configuration that the instance will
+reference.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>Your choice of name for the instance that you are creating.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are creating a clustered instance, specify the cluster to which
+the instance will belong.<br>
+If the instance is managed by GMS and resides on a node that represents
+a multihome host, specify the `GMS-BIND-INTERFACE-ADDRESS-`cluster-name
+system property.<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-instance --cluster cluster-name --node node-name
+[--systemproperties GMS-BIND-INTERFACE-ADDRESS-cluster-name=bind-address]instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster to which you are adding the instance.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance is to reside.</p>
+</dd>
+<dt class="hdlist1">bind-address</dt>
+<dd>
+<p>The IP address of the network interface to which GMS binds. Specify
+this option only if the instance is managed by GMS and resides on a
+node that represents a multihome host.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>Your choice of name for the instance that you are creating.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00039"></a><a id="gkqmv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-1 Creating a Clustered Instance Centrally</p>
+</div>
+<div class="paragraph">
+<p>This example adds the instance <code>pmd-i1</code> to the cluster <code>pmdclust</code> in the
+domain <code>domain1</code>. The instance resides on the node <code>sj01</code>, which
+represents the host <code>sj01.example.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-instance --cluster pmdclust --node sj01 pmd-i1
+Port Assignments for server instance pmd-i1:
+JMX_SYSTEM_CONNECTOR_PORT=28686
+JMS_PROVIDER_PORT=27676
+HTTP_LISTENER_PORT=28080
+ASADMIN_LISTENER_PORT=24848
+IIOP_SSL_LISTENER_PORT=23820
+IIOP_LISTENER_PORT=23700
+HTTP_SSL_LISTENER_PORT=28181
+IIOP_SSL_MUTUALAUTH_PORT=23920
+The instance, pmd-i1, was created on host sj01.example.com
+Command create-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG381" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="nodes.html#CHDIGBJB">To Create a <code>DCOM</code> Node</a></p>
+</li>
+<li>
+<p><a href="nodes.html#gkrnf">To Create an <code>SSH</code> Node</a></p>
+</li>
+<li>
+<p><a href="#gkqbl">To Create an Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/create-instance.html#GSRFM00033"><code>create-instance</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG382" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After creating an instance, you can start the instance as explained in
+the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqaw">To Start an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqci">To Stop an Individual Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrcb"></a><a id="GSHAG00107"></a><a id="to-list-all-instances-in-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_all_instances_in_a_domain">To List All Instances in a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>list-instances</code> subcommand in remote mode to obtain information
+about existing instances in a domain.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00040"></a><a id="gksfe"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-2 Listing Basic Information About All GlassFish Server
+Instances in a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists the name and status of all GlassFish Server instances
+in the current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-instances
+pmd-i2 running
+yml-i2 running
+pmd-i1 running
+yml-i1 running
+pmdsa1 not running
+Command list-instances executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00041"></a><a id="gkabz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-3 Listing Detailed Information About All GlassFish Server
+Instances in a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists detailed information about all GlassFish Server
+instances in the current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-instances --long=true
+NAME    HOST              PORT   PID    CLUSTER     STATE
+pmd-i1  sj01.example.com  24848  31310  pmdcluster   running
+yml-i1  sj01.example.com  24849  25355  ymlcluster   running
+pmdsa1  localhost         24848  -1     ---          not running
+pmd-i2  sj02.example.com  24848  22498  pmdcluster   running
+yml-i2  sj02.example.com  24849  20476  ymlcluster   running
+ymlsa1  localhost         24849  -1     ---          not running
+Command list-instances executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG383" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-instances</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqcw"></a><a id="GSHAG00108"></a><a id="to-delete-an-instance-centrally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_an_instance_centrally">To Delete an Instance Centrally</h4>
+<div class="paragraph">
+<p>Use the <code>delete-instance</code> subcommand in remote mode to delete a
+GlassFish Server instance centrally.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>If you are using a Java Message Service (JMS) cluster with a master
+broker, do not delete the instance that is associated with the master
+broker. If this instance must be deleted, use the
+<a href="../reference-manual/change-master-broker.html#GSRFM00005"><code>change-master-broker</code></a> subcommand to assign the master
+broker to a different instance.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Deleting an instance involves the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Removing the instance from the configuration of the DAS</p>
+</li>
+<li>
+<p>Deleting the instance&#8217;s files from file system</p>
+</li>
+</ul>
+</div>
+<div id="GSHAG384" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the instance that you are deleting is not running. For
+information about how to stop an instance, see the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqaj">To Stop an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqci">To Stop an Individual Instance Locally</a></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Confirm that the instance is not running.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are deleting.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the <a href="../reference-manual/delete-instance.html#GSRFM00085"><code>delete-instance</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-instance instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are deleting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00042"></a><a id="gkqms"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-4 Deleting an Instance Centrally</p>
+</div>
+<div class="paragraph">
+<p>This example confirms that the instance <code>pmd-i1</code> is not running and
+deletes the instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-instances pmd-i1
+pmd-i1   not running
+Command list-instances executed successfully.
+asadmin&gt; delete-instance pmd-i1
+Command _delete-instance-filesystem executed successfully.
+The instance, pmd-i1, was deleted from host sj01.example.com
+Command delete-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG385" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqaj">To Stop an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqci">To Stop an Individual Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/change-master-broker.html#GSRFM00005"><code>change-master-broker</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/delete-instance.html#GSRFM00085"><code>delete-instance</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help delete-instance</code></p>
+</li>
+<li>
+<p><code>asadmin help list-instances</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkqcj"></a><a id="GSHAG00109"></a><a id="to-start-a-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_start_a_cluster">To Start a Cluster</h4>
+<div class="paragraph">
+<p>Use the <code>start-cluster</code> subcommand in remote mode to start a cluster.</p>
+</div>
+<div class="paragraph">
+<p>Starting a cluster starts all instances in the cluster that are not
+already running.</p>
+</div>
+<div id="GSHAG386" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each node where an instance in the cluster resides is either enabled
+for remote communication or represents the host on which the DAS is
+running.</p>
+</li>
+<li>
+<p>The user of the DAS can use DCOM or SSH to log in to the host for any
+node where instances in the cluster reside.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If any of these prerequisites is not met, start the cluster by starting
+each instance locally as explained in <a href="#gkqak">To Start an Individual
+Instance Locally</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/start-cluster.html#GSRFM00233"><code>start-cluster</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; start-cluster cluster-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster that you are starting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00043"></a><a id="gkqml"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-5 Starting a Cluster</p>
+</div>
+<div class="paragraph">
+<p>This example starts the cluster <code>pmdcluster</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; start-cluster pmdcluster
+Command start-cluster executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG387" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqak">To Start an Individual Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/start-cluster.html#GSRFM00233"><code>start-cluster</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help start-cluster</code> at the command line.</p>
+</div>
+<div id="GSHAG388" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After starting a cluster, you can deploy applications to the cluster.
+For more information, see <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source
+Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqcl"></a><a id="GSHAG00110"></a><a id="to-stop-a-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_stop_a_cluster">To Stop a Cluster</h4>
+<div class="paragraph">
+<p>Use the <code>stop-cluster</code> subcommand in remote mode to stop a cluster.</p>
+</div>
+<div class="paragraph">
+<p>Stopping a cluster stops all running instances in the cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/stop-cluster.html#GSRFM00238"><code>stop-cluster</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; stop-cluster cluster-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster that you are stopping.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00044"></a><a id="gkqmn"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-6 Stopping a Cluster</p>
+</div>
+<div class="paragraph">
+<p>This example stops the cluster <code>pmdcluster</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; stop-cluster pmdcluster
+Command stop-cluster executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG389" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/stop-cluster.html#GSRFM00238"><code>stop-cluster</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help stop-cluster</code> at the command line.</p>
+</div>
+<div id="GSHAG390" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>If instances in the cluster have become unresponsive and fail to stop,
+run the subcommand again with the <code>--kill</code> option set to <code>true</code>. When
+this option is <code>true</code>, the subcommand uses functionality of the
+operating system to kill the process for each running instance in the
+cluster.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqaw"></a><a id="GSHAG00111"></a><a id="to-start-an-individual-instance-centrally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_start_an_individual_instance_centrally">To Start an Individual Instance Centrally</h4>
+<div class="paragraph">
+<p>Use the <code>start-instance</code> subcommand in remote mode to start an
+individual instance centrally.</p>
+</div>
+<div id="GSHAG391" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The node where the instance resides is either enabled for remote
+communication or represents the host on which the DAS is running.</p>
+</li>
+<li>
+<p>The user of the DAS can use DCOM or SSH to log in to the host for the
+node where the instance resides.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If any of these prerequisites is not met, start the instance locally as
+explained in <a href="#gkqak">To Start an Individual Instance Locally</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>start-instance</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; start-instance instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for controlling the
+behavior of the instance, see the <a href="../reference-manual/start-instance.html#GSRFM00236"><code>start-instance</code>(1)</a>
+help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are starting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00045"></a><a id="gkqoa"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-7 Starting an Individual Instance Centrally</p>
+</div>
+<div class="paragraph">
+<p>This example starts the instance <code>pmd-i2</code>, which resides on the node
+<code>sj02</code>. This node represents the host <code>sj02.example.com</code>. The
+configuration of the instance on this node already matched the
+configuration of the instance in the DAS when the instance was started.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; start-instance pmd-i2
+CLI801 Instance is already synchronized
+Waiting for pmd-i2 to start ............
+Successfully started the instance: pmd-i2
+instance Location: /export/glassfish3/glassfish/nodes/sj02/pmd-i2
+Log File: /export/glassfish3/glassfish/nodes/sj02/pmd-i2/logs/server.log
+Admin Port: 24851
+Command start-local-instance executed successfully.
+The instance, pmd-i2, was started on host sj02.example.com
+Command start-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG392" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/start-instance.html#GSRFM00236"><code>start-instance</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help start-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG393" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After starting an instance, you can deploy applications to the instance.
+For more information, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source
+Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqaj"></a><a id="GSHAG00112"></a><a id="to-stop-an-individual-instance-centrally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_stop_an_individual_instance_centrally">To Stop an Individual Instance Centrally</h4>
+<div class="paragraph">
+<p>Use the <code>stop-instance</code> subcommand in remote mode to stop an individual
+instance centrally.</p>
+</div>
+<div class="paragraph">
+<p>When an instance is stopped, the instance stops accepting new requests
+and waits for all outstanding requests to be completed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/stop-instance.html#GSRFM00241"><code>stop-instance</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00046"></a><a id="gkqpy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-8 Stopping an Individual Instance Centrally</p>
+</div>
+<div class="paragraph">
+<p>This example stops the instance <code>pmd-i2</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; stop-instance pmd-i2
+The instance, pmd-i2, is stopped.
+Command stop-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG394" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/stop-instance.html#GSRFM00241"><code>stop-instance</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help stop-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG395" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>If the instance has become unresponsive and fails to stop, run the
+subcommand again with the <code>--kill</code> option set to <code>true</code>. When this
+option is <code>true</code>, the subcommand uses functionality of the operating
+system to kill the instance process.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqcc"></a><a id="GSHAG00113"></a><a id="to-restart-an-individual-instance-centrally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_restart_an_individual_instance_centrally">To Restart an Individual Instance Centrally</h4>
+<div class="paragraph">
+<p>Use the <code>restart-instance</code> subcommand in remote mode to start an
+individual instance centrally.</p>
+</div>
+<div class="paragraph">
+<p>When this subcommand restarts an instance, the DAS synchronizes the
+instance with changes since the last synchronization as described in
+<a href="#gksbo">Default Synchronization for Files and Directories</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you require different synchronization behavior, stop and start the
+instance as explained in <a href="#gksak">To Resynchronize an Instance and
+the DAS Online</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/restart-instance.html#GSRFM00219"><code>restart-instance</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; restart-instance instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are restarting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00047"></a><a id="gkqqt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-9 Restarting an Individual Instance Centrally</p>
+</div>
+<div class="paragraph">
+<p>This example restarts the instance <code>pmd-i2</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; restart-instance pmd-i2
+pmd-i2 was restarted.
+Command restart-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG396" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqaj">To Stop an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqaw">To Start an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/restart-instance.html#GSRFM00219"><code>restart-instance</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help restart-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG397" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>If the instance has become unresponsive and fails to stop, run the
+subcommand again with the <code>--kill</code> option set to <code>true</code>. When this
+option is <code>true</code>, the subcommand uses functionality of the operating
+system to kill the instance process before restarting the instance.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqdw"></a><a id="GSHAG00188"></a><a id="administering-glassfish-server-instances-locally"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_glassfish_server_instances_locally">Administering GlassFish Server Instances Locally</h3>
+<div class="paragraph">
+<p>Local administration does not require DCOM or SSH to be set up. If
+neither DCOM nor SSH is set up, you must log in to each host where
+remote instances reside and administer the instances individually.</p>
+</div>
+<div class="paragraph">
+<p>Administering GlassFish Server instances locally involves the following
+tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqbl">To Create an Instance Locally</a></p>
+</li>
+<li>
+<p><a href="#gkqed">To Delete an Instance Locally</a></p>
+</li>
+<li>
+<p><a href="#gkqak">To Start an Individual Instance Locally</a></p>
+</li>
+<li>
+<p><a href="#gkqci">To Stop an Individual Instance Locally</a></p>
+</li>
+<li>
+<p><a href="#gkqef">To Restart an Individual Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Even if neither DCOM nor SSH is set up, you can obtain information about
+instances in a domain without logging in to each host where remote
+instances reside. For instructions, see <a href="#gkrcb">To List All
+Instances in a Domain</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gkqbl"></a><a id="GSHAG00114"></a><a id="to-create-an-instance-locally"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_an_instance_locally">To Create an Instance Locally</h4>
+<div class="paragraph">
+<p>Use the <code>create-local-instance</code> subcommand in remote mode to create a
+GlassFish Server instance locally. Creating an instance adds the
+instance to the DAS configuration and creates the instance&#8217;s files on
+the host where the instance resides.</p>
+</div>
+<div class="paragraph">
+<p>If the instance is a clustered instance that is managed by GMS, system
+properties for the instance that relate to GMS must be configured
+correctly. To avoid the need to restart the DAS and the instance,
+configure an instance&#8217;s system properties that relate to GMS when you
+create the instance. If you change GMS-related system properties for an
+existing instance, the DAS and the instance must be restarted to apply
+the changes. For information about GMS, see
+<a href="clusters.html#gjfnl">Group Management Service</a>.</p>
+</div>
+<div id="GSHAG398" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>If you plan to specify the node on which the instance is to reside,
+ensure that the node exists.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>If you create the instance on a host for which no nodes are defined, you
+can create the instance without creating a node beforehand. In this
+situation, GlassFish Server creates a <code>CONFIG</code> node for you. The name of
+the node is the unqualified name of the host.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For information about how to create a node, see the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="nodes.html#CHDIGBJB">To Create a <code>DCOM</code> Node</a></p>
+</li>
+<li>
+<p><a href="nodes.html#gkrnf">To Create an <code>SSH</code> Node</a></p>
+</li>
+<li>
+<p><a href="nodes.html#gkrll">To Create a <code>CONFIG</code> Node</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you are adding the instance to a cluster, ensure that the cluster to
+which you are adding the instance exists. For information about how to
+create a cluster, see <a href="clusters.html#gkqdm">To Create a Cluster</a>.</p>
+</div>
+<div class="paragraph">
+<p>If the instance is to reference an existing named configuration, ensure
+that the configuration exists. For more information, see
+<a href="named-configurations.html#abdjr">To Create a Named Configuration</a>.</p>
+</div>
+<div class="paragraph">
+<p>The instance might be a clustered instance that is managed by GMS and
+resides on a node that represents a multihome host. In this situation,
+ensure that you have the Internet Protocol (IP) address of the network
+interface to which GMS binds.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Log in to the host that is represented by the node where the
+instance is to reside.</p>
+</li>
+<li>
+<p>Run the <code>create-local-instance</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for configuring the
+instance, see the <a href="../reference-manual/create-local-instance.html#GSRFM00044"><code>create-local-instance</code>(1)</a> help
+page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are creating a standalone instance, do not specify a cluster.<br>
+If the instance is to reference an existing configuration, specify a
+configuration that no other cluster or instance references.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ asadmin --host das-host [--port admin-port]
+create-local-instance [--node node-name] [--config configuration-name]instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">das-host</dt>
+<dd>
+<p>The name of the host where the DAS is running.</p>
+</dd>
+<dt class="hdlist1">admin-port</dt>
+<dd>
+<p>The HTTP or HTTPS port on which the DAS listens for administration
+requests. If the DAS listens on the default port for administration
+requests, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance is to reside.<br>
+If you are creating the instance on a host for which fewer than two
+nodes are defined, you may omit this option.<br>
+If no nodes are defined for the host, GlassFish Server creates a
+CONFIG node for you. The name of the node is the unqualified name of
+the host.<br>
+If one node is defined for the host, the instance is created on that
+node.</p>
+</dd>
+<dt class="hdlist1">configuration-name</dt>
+<dd>
+<p>The name of the existing named configuration that the instance will
+reference.<br>
+If you do not require the instance to reference an existing
+configuration, omit this option. A copy of the <code>default-config</code>
+configuration is created for the instance. The name of this
+configuration is instance-name`-config`, where instance-name is the
+name of the server instance.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>Your choice of name for the instance that you are creating.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are creating a shared instance, specify the configuration that
+the instance will share with other clusters or instances.<br>
+Do not specify a cluster.<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host das-host [--port admin-port]
+create-local-instance [--node node-name] --config configuration-name instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">das-host</dt>
+<dd>
+<p>The name of the host where the DAS is running.</p>
+</dd>
+<dt class="hdlist1">admin-port</dt>
+<dd>
+<p>The HTTP or HTTPS port on which the DAS listens for administration
+requests. If the DAS listens on the default port for administration
+requests, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance is to reside.<br>
+If you are creating the instance on a host for which fewer than two
+nodes are defined, you may omit this option.<br>
+If no nodes are defined for the host, GlassFish Server creates a
+<code>CONFIG</code> node for you. The name of the node is the unqualified name of
+the host.<br>
+If one node is defined for the host, the instance is created on that
+node.</p>
+</dd>
+<dt class="hdlist1">configuration-name</dt>
+<dd>
+<p>The name of the existing named configuration that the instance will
+reference.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>Your choice of name for the instance that you are creating.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are creating a clustered instance, specify the cluster to which
+the instance will belong.<br>
+If the instance is managed by GMS and resides on a node that represents
+a multihome host, specify the `GMS-BIND-INTERFACE-ADDRESS-`cluster-name
+system property.<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host das-host [--port admin-port]
+create-local-instance --cluster cluster-name [--node node-name]
+[--systemproperties GMS-BIND-INTERFACE-ADDRESS-cluster-name=bind-address]instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">das-host</dt>
+<dd>
+<p>The name of the host where the DAS is running.</p>
+</dd>
+<dt class="hdlist1">admin-port</dt>
+<dd>
+<p>The HTTP or HTTPS port on which the DAS listens for administration
+requests. If the DAS listens on the default port for administration
+requests, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">cluster-name</dt>
+<dd>
+<p>The name of the cluster to which you are adding the instance.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance is to reside.<br>
+If you are creating the instance on a host for which fewer than two
+nodes are defined, you may omit this option.<br>
+If no nodes are defined for the host, GlassFish Server creates a
+<code>CONFIG</code> node for you. The name of the node is the unqualified name of
+the host.<br>
+If one node is defined for the host, the instance is created on that
+node.</p>
+</dd>
+<dt class="hdlist1">bind-address</dt>
+<dd>
+<p>The IP address of the network interface to which GMS binds. Specify
+this option only if the instance is managed by GMS and resides on a
+node that represents a multihome host.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>Your choice of name for the instance that you are creating.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00048"></a><a id="gktfa"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-10 Creating a Clustered Instance Locally Without Specifying a
+Node</p>
+</div>
+<div class="paragraph">
+<p>This example adds the instance <code>kui-i1</code> to the cluster <code>kuicluster</code>
+locally. The <code>CONFIG</code> node <code>xk01</code> is created automatically to represent
+the host <code>xk01.example.com</code>, on which this example is run. The DAS is
+running on the host <code>dashost.example.com</code> and listens for administration
+requests on the default port.</p>
+</div>
+<div class="paragraph">
+<p>The commands to list the nodes in the domain are included in this
+example only to demonstrate the creation of the node <code>xk01</code>. These
+commands are not required to create the instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host dashost.example.com list-nodes --long
+NODE NAME          TYPE    NODE HOST         INSTALL DIRECTORY   REFERENCED BY
+localhost-domain1  CONFIG  localhost         /export/glassfish3
+Command list-nodes executed successfully.
+$ asadmin --host dashost.example.com
+create-local-instance --cluster kuicluster kui-i1
+Rendezvoused with DAS on dashost.example.com:4848.
+Port Assignments for server instance kui-i1:
+JMX_SYSTEM_CONNECTOR_PORT=28687
+JMS_PROVIDER_PORT=27677
+HTTP_LISTENER_PORT=28081
+ASADMIN_LISTENER_PORT=24849
+JAVA_DEBUGGER_PORT=29009
+IIOP_SSL_LISTENER_PORT=23820
+IIOP_LISTENER_PORT=23700
+OSGI_SHELL_TELNET_PORT=26666
+HTTP_SSL_LISTENER_PORT=28182
+IIOP_SSL_MUTUALAUTH_PORT=23920
+Command create-local-instance executed successfully.
+$ asadmin --host dashost.example.com list-nodes --long
+NODE NAME          TYPE    NODE HOST         INSTALL DIRECTORY   REFERENCED BY
+localhost-domain1  CONFIG  localhost         /export/glassfish3
+xk01               CONFIG  xk01.example.com  /export/glassfish3  kui-i1
+Command list-nodes executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00049"></a><a id="gkqps"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-11 Creating a Clustered Instance Locally</p>
+</div>
+<div class="paragraph">
+<p>This example adds the instance <code>yml-i1</code> to the cluster <code>ymlcluster</code>
+locally. The instance resides on the node <code>sj01</code>. The DAS is running on
+the host <code>das1.example.com</code> and listens for administration requests on
+the default port.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host das1.example.com
+create-local-instance --cluster ymlcluster --node sj01 yml-i1
+Rendezvoused with DAS on das1.example.com:4848.
+Port Assignments for server instance yml-i1:
+JMX_SYSTEM_CONNECTOR_PORT=28687
+JMS_PROVIDER_PORT=27677
+HTTP_LISTENER_PORT=28081
+ASADMIN_LISTENER_PORT=24849
+JAVA_DEBUGGER_PORT=29009
+IIOP_SSL_LISTENER_PORT=23820
+IIOP_LISTENER_PORT=23700
+OSGI_SHELL_TELNET_PORT=26666
+HTTP_SSL_LISTENER_PORT=28182
+IIOP_SSL_MUTUALAUTH_PORT=23920
+Command create-local-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG399" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="nodes.html#CHDIGBJB">To Create a <code>DCOM</code> Node</a></p>
+</li>
+<li>
+<p><a href="nodes.html#gkrnf">To Create an <code>SSH</code> Node</a></p>
+</li>
+<li>
+<p><a href="nodes.html#gkrll">To Create a <code>CONFIG</code> Node</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/create-local-instance.html#GSRFM00044"><code>create-local-instance</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-local-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG400" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After creating an instance, you can start the instance as explained in
+the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqaw">To Start an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqci">To Stop an Individual Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkqed"></a><a id="GSHAG00115"></a><a id="to-delete-an-instance-locally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_an_instance_locally">To Delete an Instance Locally</h4>
+<div class="paragraph">
+<p>Use the <code>delete-local-instance</code> subcommand in remote mode to delete a
+GlassFish Server instance locally.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>If you are using a Java Message Service (JMS) cluster with a master
+broker, do not delete the instance that is associated with the master
+broker. If this instance must be deleted, use the
+<a href="../reference-manual/change-master-broker.html#GSRFM00005"><code>change-master-broker</code></a> subcommand to assign the master
+broker to a different instance.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Deleting an instance involves the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Removing the instance from the configuration of the DAS</p>
+</li>
+<li>
+<p>Deleting the instance&#8217;s files from file system</p>
+</li>
+</ul>
+</div>
+<div id="GSHAG401" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the instance that you are deleting is not running. For
+information about how to stop an instance, see the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqaj">To Stop an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqci">To Stop an Individual Instance Locally</a></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Log in to the host that is represented by the node where the
+instance resides.</p>
+</li>
+<li>
+<p>Confirm that the instance is not running.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ asadmin --host das-host [--port admin-port]
+list-instances instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">das-host</dt>
+<dd>
+<p>The name of the host where the DAS is running.</p>
+</dd>
+<dt class="hdlist1">admin-port</dt>
+<dd>
+<p>The HTTP or HTTPS port on which the DAS listens for administration
+requests. If the DAS listens on the default port for administration
+requests, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are deleting.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the <a href="../reference-manual/delete-local-instance.html#GSRFM00096"><code>delete-local-instance</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host das-host [--port admin-port]
+delete-local-instance [--node node-name]instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">das-host</dt>
+<dd>
+<p>The name of the host where the DAS is running.</p>
+</dd>
+<dt class="hdlist1">admin-port</dt>
+<dd>
+<p>The HTTP or HTTPS port on which the DAS listens for administration
+requests. If the DAS listens on the default port for administration
+requests, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance resides. If only one node is defined
+for the GlassFish Server installation that you are running on the
+node&#8217;s host, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are deleting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00050"></a><a id="gkqqu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-12 Deleting an Instance Locally</p>
+</div>
+<div class="paragraph">
+<p>This example confirms that the instance <code>yml-i1</code> is not running and
+deletes the instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host das1.example.com list-instances yml-i1
+yml-i1   not running
+Command list-instances executed successfully.
+$ asadmin --host das1.example.com delete-local-instance --node sj01 yml-i1
+Command delete-local-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG402" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkqaj">To Stop an Individual Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="#gkqci">To Stop an Individual Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/change-master-broker.html#GSRFM00005"><code>change-master-broker</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/delete-local-instance.html#GSRFM00096"><code>delete-local-instance</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help delete-local-instance</code></p>
+</li>
+<li>
+<p><code>asadmin help list-instances</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkqak"></a><a id="GSHAG00116"></a><a id="to-start-an-individual-instance-locally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_start_an_individual_instance_locally">To Start an Individual Instance Locally</h4>
+<div class="paragraph">
+<p>Use the <code>start-local-instance</code> subcommand in local mode to start an
+individual instance locally.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in to the host that is represented by the node where the
+instance resides.</p>
+</li>
+<li>
+<p>Run the <code>start-local-instance</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ asadmin start-local-instance [--node node-name]instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for controlling the
+behavior of the instance, see the
+<a href="../reference-manual/start-local-instance.html#GSRFM00237"><code>start-local-instance</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance resides. If only one node is defined
+for the GlassFish Server installation that you are running on the
+node&#8217;s host, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are starting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00051"></a><a id="gkqpu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-13 Starting an Individual Instance Locally</p>
+</div>
+<div class="paragraph">
+<p>This example starts the instance <code>yml-i1</code> locally. The instance resides
+on the node <code>sj01</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin start-local-instance --node sj01 yml-i1
+Waiting for yml-i1 to start ...............
+Successfully started the instance: yml-i1
+instance Location: /export/glassfish3/glassfish/nodes/sj01/yml-i1
+Log File: /export/glassfish3/glassfish/nodes/sj01/yml-i1/logs/server.log
+Admin Port: 24849
+Command start-local-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG403" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/start-local-instance.html#GSRFM00237"><code>start-local-instance</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help start-local-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG404" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After starting an instance, you can deploy applications to the instance.
+For more information, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source
+Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqci"></a><a id="GSHAG00117"></a><a id="to-stop-an-individual-instance-locally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_stop_an_individual_instance_locally">To Stop an Individual Instance Locally</h4>
+<div class="paragraph">
+<p>Use the <code>stop-local-instance</code> subcommand in local mode to stop an
+individual instance locally.</p>
+</div>
+<div class="paragraph">
+<p>When an instance is stopped, the instance stops accepting new requests
+and waits for all outstanding requests to be completed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in to the host that is represented by the node where the
+instance resides.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/stop-local-instance.html#GSRFM00242"><code>stop-local-instance</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ asadmin stop-local-instance [--node node-name]instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance resides. If only one node is defined
+for the GlassFish Server installation that you are running on the
+node&#8217;s host, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are stopping.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00052"></a><a id="gkqoo"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-14 Stopping an Individual Instance Locally</p>
+</div>
+<div class="paragraph">
+<p>This example stops the instance <code>yml-i1</code> locally. The instance resides
+on the node <code>sj01</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin stop-local-instance --node sj01 yml-i1
+Waiting for the instance to stop ....
+Command stop-local-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG405" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/stop-local-instance.html#GSRFM00242"><code>stop-local-instance</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help stop-local-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG406" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>If the instance has become unresponsive and fails to stop, run the
+subcommand again with the <code>--kill</code> option set to <code>true</code>. When this
+option is <code>true</code>, the subcommand uses functionality of the operating
+system to kill the instance process.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqef"></a><a id="GSHAG00118"></a><a id="to-restart-an-individual-instance-locally"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_restart_an_individual_instance_locally">To Restart an Individual Instance Locally</h4>
+<div class="paragraph">
+<p>Use the <code>restart-local-instance</code> subcommand in local mode to restart an
+individual instance locally.</p>
+</div>
+<div class="paragraph">
+<p>When this subcommand restarts an instance, the DAS synchronizes the
+instance with changes since the last synchronization as described in
+<a href="#gksbo">Default Synchronization for Files and Directories</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you require different synchronization behavior, stop and start the
+instance as explained in <a href="#gksak">To Resynchronize an Instance and
+the DAS Online</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in to the host that is represented by the node where the
+instance resides.</p>
+</li>
+<li>
+<p>Run the <code>restart-local-instance</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ asadmin restart-local-instance [--node node-name]instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance resides. If only one node is defined
+for the GlassFish Server installation that you are running on the
+node&#8217;s host, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are restarting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00053"></a><a id="gkqnt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-15 Restarting an Individual Instance Locally</p>
+</div>
+<div class="paragraph">
+<p>This example restarts the instance <code>yml-i1</code> locally. The instance
+resides on the node <code>sj01</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin restart-local-instance --node sj01 yml-i1
+Command restart-local-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG407" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/restart-local-instance.html#GSRFM00220"><code>restart-local-instance</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help restart-local-instance</code> at the command line.</p>
+</div>
+<div id="GSHAG408" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>If the instance has become unresponsive and fails to stop, run the
+subcommand again with the <code>--kill</code> option set to <code>true</code>. When this
+option is <code>true</code>, the subcommand uses functionality of the operating
+system to kill the instance process before restarting the instance.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkrdd"></a><a id="GSHAG00189"></a><a id="resynchronizing-glassfish-server-instances-and-the-das"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resynchronizing_glassfish_server_instances_and_the_das">Resynchronizing GlassFish Server Instances and the DAS</h3>
+<div class="paragraph">
+<p>Configuration data for a GlassFish Server instance is stored as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the repository of the domain administration server (DAS)</p>
+</li>
+<li>
+<p>In a cache on the host that is local to the instance</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The configuration data in these locations must be synchronized. The
+cache is synchronized in the following circumstances:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Whenever an <code>asadmin</code> subcommand is run. For more information, see
+"<a href="../administration-guide/overview.html#GSADG00697">Impact of Configuration Changes</a>" in GlassFish Server
+Open Source Edition Administration Guide.</p>
+</li>
+<li>
+<p>When a user uses the administration tools to start or restart an
+instance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksbo"></a><a id="GSHAG00267"></a><a id="default-synchronization-for-files-and-directories"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_default_synchronization_for_files_and_directories">Default Synchronization for Files and Directories</h4>
+<div class="paragraph">
+<p>The <code>--sync</code> option of the subcommands for starting an instance controls
+the type of synchronization between the DAS and the instance&#8217;s files
+when the instance is started. You can use this option to override the
+default synchronization behavior for the files and directories of an
+instance. For more information, see <a href="#gksak">To Resynchronize an
+Instance and the DAS Online</a>.</p>
+</div>
+<div class="paragraph">
+<p>On the DAS, the files and directories of an instance are stored in the
+domain-dir directory, where domain-dir is the directory in which a
+domain&#8217;s configuration is stored. The default synchronization behavior
+for the files and directories of an instance is as follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>applications</code></dt>
+<dd>
+<p>This directory contains a subdirectory for each application that is
+deployed to the instance.<br>
+By default, only a change to an application&#8217;s top-level directory
+within the application directory causes the DAS to synchronize that
+application&#8217;s directory. When the DAS resynchronizes the
+<code>applications</code> directory, all the application&#8217;s files and all
+generated content that is related to the application are copied to the
+instance.<br>
+If a file below a top-level subdirectory is changed without a change
+to a file in the top-level subdirectory, full synchronization is
+required. In normal operation, files below the top-level
+subdirectories of these directories are not changed and such files
+should not be changed by users. If an application is deployed and
+undeployed, full synchronization is not necessary to update the
+instance with the change.</p>
+</dd>
+<dt class="hdlist1"><code>config</code></dt>
+<dd>
+<p>This directory contains configuration files for the entire domain.<br>
+By default, the DAS resynchronizes files that have been modified since
+the last resynchronization only if the <code>domain.xml</code> file in this
+directory has been modified.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>If you add a file to the <code>config</code> directory of an instance, the file
+is deleted when the instance is resynchronized with the DAS. However,
+any file that you add to the <code>config</code> directory of the DAS is not
+deleted when instances and the DAS are resynchronized. By default, any
+file that you add to the <code>config</code> directory of the DAS is not
+resynchronized. If you require any additional configuration files to
+be resynchronized, you must specify the files explicitly. For more
+information, see <a href="#gksaz">To Resynchronize Additional Configuration
+Files</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>config</code></dt>
+<dt class="hdlist1">`config/`config-name</dt>
+<dd>
+<p>This directory contains files that are to be shared by all instances
+that reference the named configuration config-name. A config-name
+directory exists for each named configuration in the configuration of
+the DAS.<br>
+Because the config-name directory contains the subdirectories <code>lib</code>
+and <code>docroot</code>, this directory might be very large. Therefore, by
+default, only a change to a file or a top-level subdirectory of
+config-name causes the DAS to resynchronize the config-name directory.</p>
+</dd>
+<dt class="hdlist1"><code>config/domain.xml</code></dt>
+<dd>
+<p>This file contains the DAS configuration for the domain to which the
+instance belongs.<br>
+By default, the DAS resynchronizes this file if it has been modified
+since the last resynchronization.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>A change to the <code>config/domain.xml</code> file is required to cause the DAS
+to resynchronize an instance&#8217;s files. If the <code>config/domain.xml</code> file
+has not changed since the last resynchronization, none of the
+instance&#8217;s files is resynchronized, even if some of these files are
+out of date in the cache.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>docroot</code></dt>
+<dd>
+<p>This directory is the HTTP document root directory. By default, all
+instances in a domain use the same document root directory. To enable
+instances to use a different document root directory, a virtual server
+must be created in which the <code>docroot</code> property is set. For more
+information, see the <a href="../reference-manual/create-virtual-server.html#GSRFM00062"><code>create-virtual-server</code>(1)</a> help
+page.<br>
+The <code>docroot</code> directory might be very large. Therefore, by default,
+only a change to a file or a subdirectory in the top level of the
+<code>docroot</code> directory causes the DAS to resynchronize the <code>docroot</code>
+directory. The DAS checks files in the top level of the <code>docroot</code>
+directory to ensure that changes to the <code>index.html</code> file are
+detected.<br>
+When the DAS resynchronizes the <code>docroot</code> directory, all modified
+files and subdirectories at any level are copied to the instance.<br>
+If a file below a top-level subdirectory is changed without a change
+to a file in the top-level subdirectory, full synchronization is
+required.</p>
+</dd>
+<dt class="hdlist1"><code>generated</code></dt>
+<dd>
+<p>This directory contains generated files for Java EE applications and
+modules, for example, EJB stubs, compiled JSP classes, and security
+policy files. Do not modify the contents of this directory.<br>
+This directory is resynchronized when the <code>applications</code> directory is
+resynchronized. Therefore, only directories for applications that are
+deployed to the instance are resynchronized.</p>
+</dd>
+<dt class="hdlist1"><code>java-web-start</code></dt>
+<dd>
+<p>This directory is not resynchronized. It is created and populated as
+required on each instance.</p>
+</dd>
+<dt class="hdlist1"><code>lib</code></dt>
+<dt class="hdlist1"><code>lib/classes</code></dt>
+<dd>
+<p>These directories contain common Java class files or JAR archives and
+ZIP archives for use by applications that are deployed to the entire
+domain. Typically, these directories contain common JDBC drivers and
+other utility libraries that are shared by all applications in the
+domain.<br>
+The contents of these directories are loaded by the common class
+loader. For more information, see "<a href="../application-development-guide/class-loaders.html#GSDVG00342">Using the Common
+Class Loader</a>" in GlassFish Server Open Source Edition Application
+Development Guide. The class loader loads the contents of these
+directories in the following order:<br></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>lib/classes</code></p>
+</li>
+<li>
+<p><code>lib/*.jar</code></p>
+</li>
+<li>
+<p><code>lib/*.zip</code><br>
+The <code>lib</code> directory also contains the following subdirectories:<br></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>applibs</code></dt>
+<dd>
+<p>This directory contains application-specific Java class files or JAR
+archives and ZIP archives for use by applications that are deployed
+to the entire domain.</p>
+</dd>
+<dt class="hdlist1"><code>ext</code></dt>
+<dd>
+<p>This directory contains optional packages in JAR archives and ZIP
+archives for use by applications that are deployed to the entire
+domain. These archive files are loaded by using Java extension
+mechanism. For more information, see
+<a href="http://download.oracle.com/javase/6/docs/technotes/guides/extensions/extensions.html">Optional
+Packages - An Overview</a>
+(<code>http://docs.oracle.com/javase/7/docs/technotes/guides/extensions/extensions.html</code>).<br></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Optional packages were formerly known as standard extensions or
+extensions.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="literalblock">
+<div class="content">
+<pre>The `lib` directory and its subdirectories typically contain only a
+small number of files. Therefore, by default, a change to any file in
+these directories causes the DAS to resynchronize the file that
+changed.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gksak"></a><a id="GSHAG00119"></a><a id="to-resynchronize-an-instance-and-the-das-online"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_resynchronize_an_instance_and_the_das_online">To Resynchronize an Instance and the DAS Online</h4>
+<div class="paragraph">
+<p>Resynchronizing an instance and the DAS updates the instance with
+changes to the instance&#8217;s configuration files on the DAS. An instance is
+resynchronized with the DAS when the instance is started or restarted.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Resynchronization of an instance is only required if the instance is
+stopped. A running instance does not require resynchronization.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.</p>
+</li>
+<li>
+<p>Determine whether the instance is stopped.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances instance-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>  The name of the instance that you are resynchronizing with the DAS.<br>
+If the instance is stopped, the <code>list-instances</code> subcommand indicates
+that the instance is not running.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If the instance is stopped, start the instance.<br>
+If the instance is running, no further action is required.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If DCOM or SSH is set up, start the instance centrally.<br>
+If you require full synchronization, set the <code>--sync</code> option of the
+<code>start-instance</code> subcommand to <code>full</code>. If default synchronization is
+sufficient, omit this option.<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; start-instance [--sync full] instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for controlling the
+behavior of the instance, see the <a href="../reference-manual/start-instance.html#GSRFM00236"><code>start-instance</code>(1)</a>
+help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are starting.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If neither DCOM nor SSH is set up, start the instance locally from the
+host where the instance resides.<br>
+If you require full synchronization, set the <code>--sync</code> option of the
+<code>start-local-instance</code> subcommand to <code>full</code>. If default synchronization
+is sufficient, omit this option.<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin start-local-instance [--node node-name] [--sync full] instance-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for controlling the
+behavior of the instance, see the
+<a href="../reference-manual/start-local-instance.html#GSRFM00237"><code>start-local-instance</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance resides. If only one node is defined
+for the GlassFish Server installation that you are running on the
+node&#8217;s host, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are starting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00054"></a><a id="gksfu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-16 Resynchronizing an Instance and the DAS Online</p>
+</div>
+<div class="paragraph">
+<p>This example determines that the instance <code>yml-i1</code> is stopped and fully
+resynchronizes the instance with the DAS. Because neither DCOM nor SSH
+is set up, the instance is started locally on the host where the
+instance resides. In this example, multiple nodes are defined for the
+GlassFish Server installation that is running on the node&#8217;s host.</p>
+</div>
+<div class="paragraph">
+<p>To determine whether the instance is stopped, the following command is
+run in multimode on the DAS host:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-instances yml-i1
+yml-i1   not running
+Command list-instances executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To start the instance, the following command is run in single mode on
+the host where the instance resides:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin start-local-instance --node sj01 --sync full yml-i1
+Removing all cached state for instance yml-i1.
+Waiting for yml-i1 to start ...............
+Successfully started the instance: yml-i1
+instance Location: /export/glassfish3/glassfish/nodes/sj01/yml-i1
+Log File: /export/glassfish3/glassfish/nodes/sj01/yml-i1/logs/server.log
+Admin Port: 24849
+Command start-local-instance executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG409" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/start-instance.html#GSRFM00236"><code>start-instance</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/start-local-instance.html#GSRFM00237"><code>start-local-instance</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line.</p>
+</div>
+<div class="paragraph">
+<p><code>asadmin help list-instances</code></p>
+</div>
+<div class="paragraph">
+<p><code>asadmin help start-instance</code></p>
+</div>
+<div class="paragraph">
+<p><code>asadmin help start-local-instance</code></p>
+</div>
+<div class="paragraph">
+<p><a id="gksav"></a><a id="GSHAG00120"></a><a id="to-resynchronize-library-files"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_resynchronize_library_files">To Resynchronize Library Files</h4>
+<div class="paragraph">
+<p>To ensure that library files are resynchronized correctly, you must
+ensure that each library file is placed in the correct directory for the
+type of file.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Place each library file in the correct location for the type of
+library file as shown in the following table.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type of Library Files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Location</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Common JAR archives and ZIP archives for all applications in a domain.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/lib`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Common Java class files for a domain for all applications in a domain.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/lib/classes`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application-specific libraries.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/lib/applibs`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional packages for all applications in a domain.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/lib/ext`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Library files for all applications that are deployed to a specific
+cluster or standalone instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/config/<code>config-name</code>/lib`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional packages for all applications that are deployed to a specific
+cluster or standalone instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/config/<code>config-name</code>/lib/ext`</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">domain-dir</dt>
+<dd>
+<p>The directory in which the domain&#8217;s configuration is stored.</p>
+</dd>
+<dt class="hdlist1">config-name</dt>
+<dd>
+<p>For a standalone instance: the named configuration that the instance
+references.<br>
+For a clustered instance: the named configuration that the cluster to
+which the instance belongs references.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When you deploy an application that depends on these library files,
+use the <code>--libraries</code> option of the deploy subcommand to specify these
+dependencies.<br>
+For library files in the domain-dir`/lib/applib` directory, only the JAR
+file name is required, for example:<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy --libraries commons-coll.jar,X1.jar app.ear</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For other types of library file, the full path is required.</p>
+</div>
+<div id="GSHAG411" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the command <code>asadmin help deploy</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksco"></a><a id="GSHAG00121"></a><a id="to-resynchronize-custom-configuration-files-for-an-instance"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_resynchronize_custom_configuration_files_for_an_instance">To Resynchronize Custom Configuration Files for an Instance</h4>
+<div class="paragraph">
+<p>Configuration files in the domain-dir`/config` directory that are
+resynchronized are resynchronized for the entire domain. If you create a
+custom configuration file for an instance or a cluster, the custom file
+is resynchronized only for the instance or cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Place the custom configuration file in the</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">domain-dir`/config/`config-name directory.</dt>
+<dt class="hdlist1">domain-dir</dt>
+<dd>
+<p>The directory in which the domain&#8217;s configuration is stored.</p>
+</dd>
+<dt class="hdlist1">config-name</dt>
+<dd>
+<p>The named configuration that the instance references.</p>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>If the instance locates the file through an option of the Java
+application launcher, update the option.</p>
+</li>
+<li>
+<p>Delete the option.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; delete-jvm-options --target instance-name
+option-name=current-value</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance for which the custom configuration file is
+created.</p>
+</dd>
+<dt class="hdlist1">option-name</dt>
+<dd>
+<p>The name of the option for locating the file.</p>
+</dd>
+<dt class="hdlist1">current-value</dt>
+<dd>
+<p>The current value of the option for locating the file.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Re-create the option that you deleted in the previous step.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jvm-options --target instance-name
+option-name=new-value</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance for which the custom configuration file is
+created.</p>
+</dd>
+<dt class="hdlist1">option-name</dt>
+<dd>
+<p>The name of the option for locating the file.</p>
+</dd>
+<dt class="hdlist1">new-value</dt>
+<dd>
+<p>The new value of the option for locating the file.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00055"></a><a id="gksfr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-17 Updating the Option for Locating a Configuration File</p>
+</div>
+<div class="paragraph">
+<p>This example updates the option for locating the <code>server.policy</code> file to
+specify a custom file for the instance <code>pmd</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-jvm-options --target pmd
+-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
+Deleted 1 option(s)
+Command delete-jvm-options executed successfully.
+asadmin&gt; create-jvm-options --target pmd
+-Djava.security.policy=${com.sun.aas.instanceRoot}/config/pmd-config/server.policy
+Created 1 option(s)
+Command create-jvm-options executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG412" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/create-jvm-options.html#GSRFM00042"><code>create-jvm-options</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/delete-jvm-options.html#GSRFM00094"><code>delete-jvm-options</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line.</p>
+</div>
+<div class="paragraph">
+<p><code>asadmin help create-jvm-options</code></p>
+</div>
+<div class="paragraph">
+<p><code>asadmin help delete-jvm-options</code></p>
+</div>
+<div class="paragraph">
+<p><a id="gkscp"></a><a id="GSHAG00122"></a><a id="to-resynchronize-users-changes-to-files"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_resynchronize_users_changes_to_files">To Resynchronize Users' Changes to Files</h4>
+<div class="paragraph">
+<p>A change to the <code>config/domain.xml</code> file is required to cause the DAS to
+resynchronize instances' files. If other files in the domain directory
+are changed without a change to the <code>config/domain.xml</code> file, instances
+are not resynchronized with these changes.</p>
+</div>
+<div class="paragraph">
+<p>The following changes are examples of changes to the domain directory
+without a change to the <code>config/domain.xml</code> file:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Adding files to the <code>lib</code> directory</p>
+</li>
+<li>
+<p>Adding certificates to the key store by using the <code>keytool</code> command</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change the last modified time of the <code>config/domain.xml</code> file.<br>
+Exactly how to change the last modified time depends on the operating
+system. For example, on UNIX and Linux systems, you can use the
+<a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1touch-1"><code>touch</code>(1)</a>
+command.</p>
+</li>
+<li>
+<p>Resynchronize each instance in the domain with the DAS.<br>
+For instructions, see <a href="#gksak">To Resynchronize an Instance and the
+DAS Online</a>.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div id="GSHAG413" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gksak">To Resynchronize an Instance and the DAS Online</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1touch-1"><code>touch</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksaz"></a><a id="GSHAG00123"></a><a id="to-resynchronize-additional-configuration-files"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_resynchronize_additional_configuration_files">To Resynchronize Additional Configuration Files</h4>
+<div class="paragraph">
+<p>By default, GlassFish Server synchronizes only the following
+configuration files:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>admin-keyfile</code></p>
+</li>
+<li>
+<p><code>cacerts.jks</code></p>
+</li>
+<li>
+<p><code>default-web.xml</code></p>
+</li>
+<li>
+<p><code>domain.xml</code></p>
+</li>
+<li>
+<p><code>domain-passwords</code></p>
+</li>
+<li>
+<p><code>keyfile</code></p>
+</li>
+<li>
+<p><code>keystore.jks</code></p>
+</li>
+<li>
+<p><code>server.policy</code></p>
+</li>
+<li>
+<p><code>sun-acc.xml</code></p>
+</li>
+<li>
+<p><code>wss-server-config-1.0</code></p>
+</li>
+<li>
+<p><code>xml wss-server-config-2.0.xml</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you require instances in a domain to be resynchronized with
+additional configuration files for the domain, you can specify a list of
+files to resynchronize.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>If you specify a list of files to resynchronize, you must specify all
+the files that the instances require, including the files that GlassFish
+Server resynchronizes by default. Any file in the instance&#8217;s cache that
+is not in the list is deleted when the instance is resynchronized with
+the DAS.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In the <code>config</code> directory of the domain, create a plain text file that
+is named <code>config-files</code> that lists the files to resynchronize.</p>
+</div>
+<div class="paragraph">
+<p>In the <code>config-files</code> file, list each file name on a separate line.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00056"></a><a id="gksgl"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-18 <code>config-files</code> File</p>
+</div>
+<div class="paragraph">
+<p>This example shows the content of a <code>config-files</code> file. This file
+specifies that the <code>some-other-info</code> file is to be resynchronized in
+addition to the files that GlassFish Server resynchronizes by default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">admin-keyfile
+cacerts.jks
+default-web.xml
+domain.xml
+domain-passwords
+keyfile
+keystore.jks
+server.policy
+sun-acc.xml
+wss-server-config-1.0.xml
+wss-server-config-2.0.xml
+some-other-info</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gksdj"></a><a id="GSHAG00124"></a><a id="to-prevent-deletion-of-application-generated-files"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_prevent_deletion_of_application_generated_files">To Prevent Deletion of Application-Generated Files</h4>
+<div class="paragraph">
+<p>When the DAS resynchronizes an instance&#8217;s files, the DAS deletes from
+the instance&#8217;s cache any files that are not listed for
+resynchronization. If an application creates files in a directory that
+the DAS resynchronizes, these files are deleted when the DAS
+resynchronizes an instance with the DAS.</p>
+</div>
+<div class="paragraph">
+<p>Put the files in a subdirectory under the domain directory that is not
+defined by GlassFish Server, for example,
+<code>/export/glassfish3/glassfish/domains/domain1/myapp/myfile</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksdy"></a><a id="GSHAG00125"></a><a id="to-resynchronize-an-instance-and-the-das-offline"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_resynchronize_an_instance_and_the_das_offline">To Resynchronize an Instance and the DAS Offline</h4>
+<div class="paragraph">
+<p>Resynchronizing an instance and the DAS offline updates the instance&#8217;s
+cache without the need for the instance to be able to communicate with
+the DAS. Offline resynchronization is typically required for the
+following reasons:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To reestablish the instance after an upgrade</p>
+</li>
+<li>
+<p>To synchronize the instance manually with the DAS when the instance
+cannot contact the DAS</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.</p>
+</li>
+<li>
+<p><a id="gktio"></a>
+Export the configuration data that you are resynchronizing to an archive
+file.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for exporting the
+configuration data, see the <a href="../reference-manual/export-sync-bundle.html#GSRFM00134"><code>export-sync-bundle</code>(1)</a>
+help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>How to export the data depends on the host from where you run the
+<code>export-sync-bundle</code> subcommand.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>From the DAS host, run the <code>export-sync-bundle</code> subcommand as follows:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; export-sync-bundle --target target</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">target</dt>
+<dd>
+<p>  The cluster or standalone instance for which to export configuration
+  data.<br>
+  Do not specify a clustered instance. If you specify a clustered
+  instance, an error occurs. To export configuration data for a
+  clustered instance, specify the name of the cluster of which the
+  instance is a member, not the instance.<br>
+The file is created on the DAS host.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>From the host where the instance resides, run the <code>export-sync-bundle</code>
+subcommand as follows:<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host das-host [--port admin-port]
+export-sync-bundle [--retrieve=true] --target target</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">das-host</dt>
+<dd>
+<p>The name of the host where the DAS is running.</p>
+</dd>
+<dt class="hdlist1">admin-port</dt>
+<dd>
+<p>The HTTP or HTTPS port on which the DAS listens for administration
+requests. If the DAS listens on the default port for administration
+requests, you may omit this option.</p>
+</dd>
+<dt class="hdlist1">target</dt>
+<dd>
+<p>The cluster or standalone instance for which to export configuration
+data.<br>
+Do not specify a clustered instance. If you specify a clustered
+instance, an error occurs. To export configuration data for a
+clustered instance, specify the name of the cluster of which the
+instance is a member, not the instance.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>To create the archive file on the host where the instance resides, set
+the <code>--retrieve</code> option to <code>true</code>. If you omit this option, the archive
+file is created on the DAS host.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If necessary, copy the archive file that you created in
+Step <a href="#gktio">2</a> from the DAS host to the host where the instance
+resides.</p>
+</li>
+<li>
+<p>From the host where the instance resides, import the instance&#8217;s
+configuration data from the archive file that you created in
+Step <a href="#gktio">2</a>.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for importing the
+configuration data, see the <a href="../reference-manual/import-sync-bundle.html#GSRFM00142"><code>import-sync-bundle</code>(1)</a>
+help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin import-sync-bundle [--node node-name] --instance instance-name archive-file</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The node on which the instance resides. If you omit this option, the
+subcommand determines the node from the DAS configuration in the
+archive file.</p>
+</dd>
+<dt class="hdlist1">instance-name</dt>
+<dd>
+<p>The name of the instance that you are resynchronizing.</p>
+</dd>
+<dt class="hdlist1">archive-file</dt>
+<dd>
+<p>The name of the file, including the path, that contains the archive
+file to import.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00057"></a><a id="gksgg"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-19 Resynchronizing an Instance and the DAS Offline</p>
+</div>
+<div class="paragraph">
+<p>This example resynchronizes the clustered instance <code>yml-i1</code> and the DAS
+offline. The instance is a member of the cluster <code>ymlcluster</code>. The
+archive file that contains the instance&#8217;s configuration data is created
+on the host where the instance resides.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host dashost.example.com
+export-sync-bundle --retrieve=true --target ymlcluster
+Command export-sync-bundle executed successfully.
+$ asadmin import-sync-bundle --node sj01
+--instance yml-i1 ymlcluster-sync-bundle.zip
+Command import-sync-bundle executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG414" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/export-sync-bundle.html#GSRFM00134"><code>export-sync-bundle</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/import-sync-bundle.html#GSRFM00142"><code>import-sync-bundle</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line.</p>
+</div>
+<div class="paragraph">
+<p><code>asadmin help export-sync-bundle</code></p>
+</div>
+<div class="paragraph">
+<p><code>asadmin help import-sync-bundle</code></p>
+</div>
+<div class="paragraph">
+<p><a id="gkqcr"></a><a id="GSHAG00190"></a><a id="migrating-ejb-timers"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_migrating_ejb_timers">Migrating EJB Timers</h3>
+<div class="paragraph">
+<p>If a GlassFish Server server instance stops or fails abnormally, it may
+be desirable to migrate the EJB timers defined for that stopped server
+instance to another running server instance.</p>
+</div>
+<div class="paragraph">
+<p>Automatic timer migration is enabled by default for clustered server
+instances that are stopped normally. Automatic timer migration can also
+be enabled to handle clustered server instance crashes. In addition,
+timers can be migrated manually for stopped or crashed server instances.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkvwo">To Enable Automatic EJB Timer Migration for Failed
+Clustered Instances</a></p>
+</li>
+<li>
+<p><a href="#abdji">To Migrate EJB Timers Manually</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkvwo"></a><a id="GSHAG00126"></a><a id="to-enable-automatic-ejb-timer-migration-for-failed-clustered-instances"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_automatic_ejb_timer_migration_for_failed_clustered_instances">To Enable Automatic EJB Timer Migration for Failed Clustered Instances</h4>
+<div class="paragraph">
+<p>Automatic migration of EJB timers is enabled by default for clustered
+server instances that are stopped normally. If the Group Management
+Service (GMS) is enabled and a clustered instance is stopped normally,
+no further action is required for timer migration to occur. The
+procedure in this section is only necessary if you want to enable
+automatic timer migration for clustered server instances that have
+stopped abnormally.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>If the GMS is enabled, the default automatic timer migration cannot be
+disabled. To disable automatic timer migration, you must first disable
+the GMS. For information about the GMS, see
+<a href="clusters.html#gjfnl">Group Management Service</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div id="GSHAG415" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Automatic EJB timer migration can only be configured for clustered
+server instances. Automatic timer migration is not possible for
+standalone server instances.</p>
+</div>
+<div class="paragraph">
+<p>Enable delegated transaction recovery for the cluster.</p>
+</div>
+<div class="paragraph">
+<p>This enables automatic timer migration for failed server instances in
+the cluster.</p>
+</div>
+<div class="paragraph">
+<p>For instructions on enabling delegated transaction recovery, see
+"<a href="../administration-guide/transactions.html#GSADG00022">Administering Transactions</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdji"></a><a id="GSHAG00127"></a><a id="to-migrate-ejb-timers-manually"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_migrate_ejb_timers_manually">To Migrate EJB Timers Manually</h4>
+<div class="paragraph">
+<p>EJB timers can be migrated manually from a stopped source instance to a
+specified target instance in the same cluster if GMS notification is not
+enabled. If no target instance is specified, the DAS will attempt to
+find a suitable server instance. A migration notification will then be
+sent to the selected target server instance.</p>
+</div>
+<div class="paragraph">
+<p>Note the following restrictions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the source instance is part of a cluster, then the target instance
+must also be part of that same cluster.</p>
+</li>
+<li>
+<p>It is not possible to migrate timers from a standalone instance to a
+clustered instance, or from one cluster to another cluster.</p>
+</li>
+<li>
+<p>It is not possible to migrate timers from one standalone instance to
+another standalone instance.</p>
+</li>
+<li>
+<p>All EJB timers defined for a given instance are migrated with this
+procedure. It is not possible to migrate individual timers.</p>
+</li>
+</ul>
+</div>
+<div id="GSHAG416" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The server instance from which the EJB timers are to be migrated should
+not be active during the migration process.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Verify that the source clustered server instance from which the EJB
+timers are to be migrated is not currently running.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances source-instance</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Stop the instance from which the timers are to be migrated, if that
+instance is still running.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; stop-instance source-instance</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>The target instance to which the timers will be migrated should be
+running.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the currently defined EJB timers on the source instance, if
+desired.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-timers source-cluster</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Migrate the timers from the stopped source instance to the target
+instance.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; migrate-timers --target target-instance source-instance</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00058"></a><a id="gkmgw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 5-20 Migrating an EJB Timer</p>
+</div>
+<div class="paragraph">
+<p>The following example show how to migrate timers from a clustered source
+instance named <code>football</code> to a clustered target instance named <code>soccer</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; migrate-timers --target soccer football</code></pre>
+</div>
+</div>
+<div id="GSHAG417" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/list-timers.html#GSRFM00205"><code>list-timers</code>(1)</a>,
+<a href="../reference-manual/migrate-timers.html#GSRFM00211"><code>migrate-timers</code>(1)</a>,
+<a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code>(1)</a>,
+<a href="../reference-manual/stop-instance.html#GSRFM00241"><code>stop-instance</code>(1)</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="clusters.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="named-configurations.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

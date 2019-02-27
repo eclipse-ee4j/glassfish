@@ -1,10 +1,11 @@
-# Jakarta EE Tutorials
-(Coming soon!)
+# Jakarta EE and GlassFish Documentation
 
-* [Jakarta EE 8 First Cup]()
-* [Jakarta EE 8 Tutorial]()
+## Jakarta EE Tutorials
 
-# API Documentation and Tag Reference
+* [Jakarta EE 8 First Cup](https://eclipse-ee4j.github.io/jakartaee-firstcup)
+* [Jakarta EE 8 Tutorial](https://eclipse-ee4j.github.io/jakartaee-tutorial)
+
+## Jakarta EE API Documentation and Tag Reference
 (Coming soon!)
 
 * [Jakarta EE 8 Specification APIs]()
@@ -13,31 +14,12 @@
 * [JavaServer Faces 2.3 Standard HTML RenderKit Documentation]()
 * [JavaServer Faces 2.3 JavaScript Documentation]()
 
+## Eclipse GlassFish Documentation and User Guides
 
-# Eclipse GlassFish Server Documentation
-(Coming soon!)
+* [Current release](docs#current)
+* [Development version](docs#development)
+* [5.1.0 release](docs#5.1.0)
 
-* [Eclipse GlassFish Server 5.0 Release Notes]()
-* [Installation Guide]()
-* [Quick Start Guide]()
-* [Administration Guide]()
-* [Application Development Guide]()
-* [Application Deployment Guide]()
-* [Security Guide]()
-* [Reference Manual]()
-* [Error Messages Reference]()
+## Eclipse Open MQ Documentation
 
-# Eclipse Open MQ Documentation
-(Coming soon!)
-
-* [Eclipse Open MQ Release Notes]()
-* [Technical Overview]()
-* [Developer's Guide for Java Clients]()
-* [Developer's Guide for JMX Clients]()
-* [Developer's Guide for C Clients]()
-* [Administration Guide]()
-
-# Documentation for Previous Releases (archive)
-
-* This is the first Eclipse GlassFish release
-
+* See the [Open MQ Project](https://eclipse-ee4j.github.io/openmq/guides)

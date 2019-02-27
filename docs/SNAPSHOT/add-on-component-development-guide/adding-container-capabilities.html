@@ -1,0 +1,1171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Adding Container Capabilities</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Adding Container Capabilities</b><br />
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="adding-configuration-data.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="session-persistence-modules.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSACG00007"></a><a id="ghmon"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-container-capabilities">7 Adding Container Capabilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Applications run on GlassFish Server in containers. GlassFish Server
+enables you to create containers that extend or replace the existing
+containers of GlassFish Server. Adding container capabilities enables
+you to run new types of applications and to deploy new archive types in
+GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghpjl">Creating a <code>Container</code> Implementation</a></p>
+</li>
+<li>
+<p><a href="#ghozu">Adding an Archive Type</a></p>
+</li>
+<li>
+<p><a href="#ghphp">Creating Connector Modules</a></p>
+</li>
+<li>
+<p><a href="#gkane">Example of Adding Container Capabilities</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghpjl"></a><a id="GSACG00132"></a><a id="creating-a-container-implementation"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_creating_a_code_container_code_implementation">Creating a <code>Container</code> Implementation</h3>
+<div class="paragraph">
+<p>To implement a container that extends or replaces a service in GlassFish
+Server, you must create a Java programming language class that includes
+the following characteristics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It is annotated with the <code>org.jvnet.hk2.annotations.Service</code>
+annotation.</p>
+</li>
+<li>
+<p>It implements the <code>org.glassfish.api.container.Container</code> interface.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You should also run the HK2 Inhabitants Generator utility on your class
+files, which adds classes marked with the <code>@Service</code> annotation to the
+<code>META-INF/hk2-locator/default</code> file in your JAR file. For more
+information about the HK2 Inhabitants Generator, see the
+<a href="https://hk2.java.net/inhabitant-generator.html">HK2 Inhabitants Generator
+page</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghogv"></a><a id="GSACG00234"></a><a id="marking-the-class-with-the-service-annotation"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_marking_the_class_with_the_code_service_code_annotation">Marking the Class With the <code>@Service</code> Annotation</h4>
+<div class="paragraph">
+<p>Add a <code>com.jvnet.hk2.annotations.Service</code> annotation at the class
+definition level to identify your class as a service implementation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Service
+public class MyContainer implements Container {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To avoid potential name collisions with other containers, use the fully
+qualified class name of your container class in the <code>@Service</code>
+annotation&#8217;s <code>name</code> element:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package com.example.containers;
+...
+
+@Service @javax.inject.Named("com.example.containers.MyContainer")
+public class MyContainer implements Container {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghohg"></a><a id="GSACG00235"></a><a id="implementing-the-container-interface"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_implementing_the_code_container_code_interface">Implementing the <code>Container</code> Interface</h4>
+<div class="paragraph">
+<p>The <code>org.glassfish.api.container.Container</code> interface is the contract
+that defines a container implementation. Classes that implement
+<code>Container</code> can extend or replace the functionality in GlassFish Server
+by allowing applications to be deployed and run within the GlassFish
+Server runtime.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Container</code> interface consists of two methods, <code>getDeployer</code> and
+<code>getName</code>. The <code>getDeployer</code> method returns an implementation class of
+the <code>org.glassfish.api.deployment.Deployer</code> interface capable of
+managing applications that run within this container. The <code>getName</code>
+method returns a human-readable name for the container, and is typically
+used to display messages belonging to the container.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Deployer</code> interface defines the contract for managing a particular
+application that runs in the container. It consists of the following
+methods:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>getMetaData</code></dt>
+<dd>
+<p>Retrieves the metadata used by the <code>Deployer</code> instance, and returns an
+<code>org.glassfish.api.deployment.MetaData</code> object.</p>
+</dd>
+<dt class="hdlist1"><code>loadMetaData</code></dt>
+<dd>
+<p>Loads the metadata associated with an application.</p>
+</dd>
+<dt class="hdlist1"><code>prepare</code></dt>
+<dd>
+<p>Prepares the application to run in GlassFish Server.</p>
+</dd>
+<dt class="hdlist1"><code>load</code></dt>
+<dd>
+<p>Loads a previously prepared application to the container.</p>
+</dd>
+<dt class="hdlist1"><code>unload</code></dt>
+<dd>
+<p>Unloads or stops a previously loaded application.</p>
+</dd>
+<dt class="hdlist1"><code>clean</code></dt>
+<dd>
+<p>Removes any artifacts generated by an application during the <code>prepare</code>
+phase.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The <code>DeploymentContext</code> is the usual context object passed around
+deployer instances during deployment.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00064"></a><a id="ghojg"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-1 Example Implementation of <code>Container</code></p>
+</div>
+<div class="paragraph">
+<p>This example shows a Java programming language class that implements the
+<code>Container</code> interface and is capable of extending the functionality of
+GlassFish Server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package com.example.containers;
+contains
+@Service(name="com.example.containers.MyContainer")
+public class MyContainer implements Container {
+    public String getName() {
+        return "MyContainer";
+    }
+
+    public Class&lt;? extends org.glassfish.api.deployment.Deployer&gt; getDeployer() {
+        return MyDeployer.class;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00065"></a><a id="ghoiv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-2 Example Implementation of <code>Deployer</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package com.example.containers;
+
+@Service
+public class MyDeployer {
+
+    public MetaData getMetaData() {
+        return new MetaData(...);
+    }
+
+    public &lt;V&gt; v loadMetaData(Class&lt;V&gt; type, DeploymentContext dc) {
+        ...
+    }
+
+    public boolean prepare(DeploymentContext dc) {
+        // performs any actions needed to allow the application to run,
+        // such as generating artifacts
+        ...
+    }
+
+    public MyApplication load(MyContainer container, DeploymentContext dc) {
+        // creates a new instance of an application
+        MyApplication myApp = new MyApplication (...);
+        ...
+        // returns the application instance
+        return myApp;
+    }
+
+    public void unload(MyApplication myApp, DeploymentContext dc) {
+        // stops and removes the application
+        ...
+    }
+
+    public void clean (DeploymentContext dc) {
+        // cleans up any artifacts generated during prepare()
+        ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghozu"></a><a id="GSACG00133"></a><a id="adding-an-archive-type"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_an_archive_type">Adding an Archive Type</h3>
+<div class="paragraph">
+<p>An archive type is an abstraction of the archive file format. An archive
+type can be implemented as a plain JAR file, as a directory layout, or a
+custom type. By default, GlassFish Server recognizes JAR based and
+directory based archive types. A new container might require a new
+archive type.</p>
+</div>
+<div class="paragraph">
+<p>There are two sub-interfaces of the
+<code>org.glassfish.api.deployment.archive.Archive</code> interface,
+<code>org.glassfish.api.deployment.archive.ReadableArchive</code> and
+<code>org.glassfish.api.deployment.archive.WritableArchive</code>. Typically
+developers of new archive types will provide separate implementations of
+<code>ReadableArchive</code> and <code>WritableArchive</code>, or a single implementation that
+implements both <code>ReadableArchive</code> and <code>WritableArchive</code>.</p>
+</div>
+<div class="paragraph">
+<p>Implementations of the <code>ReadableArchive</code> interface provide read access
+to an archive type. <code>ReadableArchive</code> defines the following methods:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>getEntry(String name)</code></dt>
+<dd>
+<p>Returns a <code>java.io.InputStream</code> for the specified entry name, or null
+if the entry doesn&#8217;t exist.</p>
+</dd>
+<dt class="hdlist1"><code>exists(String name)</code></dt>
+<dd>
+<p>Returns a <code>boolean</code> value indicating whether the specified entry name
+exists.</p>
+</dd>
+<dt class="hdlist1"><code>getEntrySize(String name)</code></dt>
+<dd>
+<p>Returns the size of the specified entry as a <code>long</code> value.</p>
+</dd>
+<dt class="hdlist1"><code>open(URI uri)</code></dt>
+<dd>
+<p>Returns an archive for the given <code>java.net.URI</code>.</p>
+</dd>
+<dt class="hdlist1"><code>getSubArchive(String name)</code></dt>
+<dd>
+<p>Returns an instance of <code>ReadableArchive</code> for the specified sub-archive
+contained within the parent archive, or null if no such archive
+exists.</p>
+</dd>
+<dt class="hdlist1"><code>exists()</code></dt>
+<dd>
+<p>Returns a <code>boolean</code> value indicating whether this archive exists.</p>
+</dd>
+<dt class="hdlist1"><code>delete()</code></dt>
+<dd>
+<p>Deletes the archive, and returns a <code>boolean</code> value indicating whether
+the archive has been successfully deleted.</p>
+</dd>
+<dt class="hdlist1"><code>renameTo(String name)</code></dt>
+<dd>
+<p>Renames the archive to the specified name, and returns a <code>boolean</code>
+value indicating whether the archive has been successfully renamed.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Implementations of the <code>WritableArchive</code> interface provide write access
+to the archive type. <code>WritableArchive</code> defines the following methods:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>create(URI uri)</code></dt>
+<dd>
+<p>Creates a new archive with the given path, specified as a
+<code>java.net.URI</code>.</p>
+</dd>
+<dt class="hdlist1"><code>closeEntry(WritableArchive subArchive)</code></dt>
+<dd>
+<p>Closes the specified sub-archive contained within the parent archive.</p>
+</dd>
+<dt class="hdlist1"><code>closeEntry()</code></dt>
+<dd>
+<p>Closes the current entry.</p>
+</dd>
+<dt class="hdlist1"><code>createSubArchive(String name)</code></dt>
+<dd>
+<p>Creates a new sub-archive in the parent archive with the specified
+name, and returns it as a <code>WritableArchive</code> instance.</p>
+</dd>
+<dt class="hdlist1"><code>putNextEntry(String name)</code></dt>
+<dd>
+<p>Creates a new entry in the archive with the specified name, and
+returns it as a <code>java.io.OutputStream</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="ghoyp"></a><a id="GSACG00236"></a><a id="implementing-the-archivehandler-interface"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_implementing_the_code_archivehandler_code_interface">Implementing the <code>ArchiveHandler</code> Interface</h4>
+<div class="paragraph">
+<p>An archive handler is responsible for handling the particular layout of
+an archive. Java EE defines a set of archives (WAR, JAR, and RAR, for
+example), and each of these archives has an <code>ArchiveHandler</code> instance
+associated with the archive type.</p>
+</div>
+<div class="paragraph">
+<p>Each layout should have one handler associated with it. There is no
+extension point support at this level; the archive handler&#8217;s
+responsibility is to give access to the classes and resources packaged
+in the archive, and it should not contain any container-specific code.
+The <code>java.lang.ClassLoader</code> returned by the handler is used by all the
+containers in which the application will be deployed.</p>
+</div>
+<div class="paragraph">
+<p><code>ArchiveHandler</code> defines the following methods:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>getArchiveType()</code></dt>
+<dd>
+<p>Returns the name of the archive type as a <code>String</code>. Typically, this is
+the archive extension, such as <code>jar</code> or <code>war</code>.</p>
+</dd>
+<dt class="hdlist1"><code>getDefaultApplicationName(ReadableArchive archive)</code></dt>
+<dd>
+<p>Returns the default name of the specified archive as a <code>String</code>.
+Typically this default name is the name part of the <code>URI</code> location of
+the archive.</p>
+</dd>
+<dt class="hdlist1"><code>handles(ReadableArchive archive)</code></dt>
+<dd>
+<p>Returns a <code>boolean</code> value indicating whether this implementation of
+<code>ArchiveHandler</code> can work with the specified archive.</p>
+</dd>
+<dt class="hdlist1"><code>getClassLoader(DeploymentContext dc)</code></dt>
+<dd>
+<p>Returns a <code>java.lang.ClassLoader</code> capable of loading all classes from
+the archive passed in by the <code>DeploymentContext</code> instance. Typically
+the <code>ClassLoader</code> will load classes in the scratch directory area,
+returned by <code>DeploymentContext.getScratchDir()</code>, as stubs and other
+artifacts are generated in the scratch directory.</p>
+</dd>
+<dt class="hdlist1"><code>expand(ReadableArchive source, WritableArchive target)</code></dt>
+<dd>
+<p>Prepares the <code>ReadableArchive`source archive for loading into the
+container in a format the container accepts. Such preparation could be
+to expand a compressed archive, or possibly nothing at all if the
+source archive format is already in a state that the container can
+handle. This method returns the archive as an instance of
+`WritableArchive</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="ghphp"></a><a id="GSACG00134"></a><a id="creating-connector-modules"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_connector_modules">Creating Connector Modules</h3>
+<div class="paragraph">
+<p>Connector modules are small add-on modules that consist of application
+"sniffers" that associate application types with containers that can run
+the application type. GlassFish Server connector modules are separate
+from the associated add-on module that delivers the container
+implementation to allow GlassFish Server to dynamically install and
+configure containers on demand.</p>
+</div>
+<div class="paragraph">
+<p>When a deployment request is received by the GlassFish Server runtime:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The current <code>Sniffer</code> implementations are used to determine the
+application type.</p>
+</li>
+<li>
+<p>Once an application type is found, the runtime looks for a running
+container associated with that application type. If no running container
+is found, the runtime attempts to install and configure the container
+associated with the application type as defined by the <code>Sniffer</code>
+implementation.</p>
+</li>
+<li>
+<p>The <code>Deployer</code> interface is used to prepare and load the
+implementation.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ghozd"></a><a id="GSACG00237"></a><a id="associating-file-types-with-containers-by-using-the-sniffer-interface"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_associating_file_types_with_containers_by_using_the_code_sniffer_code_interface">Associating File Types With Containers by Using the <code>Sniffer</code> Interface</h4>
+<div class="paragraph">
+<p>Containers do not necessarily need to be installed on the local machine
+for GlassFish Server to recognize the container&#8217;s application type.
+GlassFish Server uses a "sniffer" concept to study the artifacts in a
+deployment request and to choose the associated container that handles
+the application type that the user is trying to deploy. To create this
+association, create a Java programming language class that implements
+the <code>org.glassfish.api.container.Sniffer</code> interface. This implementation
+can be as simple as looking for a specific file in the application&#8217;s
+archive (such as the presence of <code>WEB-INF/web.xml</code>), or as complicated
+as running an annotation scanner to determine an XML-less archive (such
+as enterprise bean annotations in a JAR file). A <code>Sniffer</code>
+implementation must be as small as possible and must not load any of the
+container&#8217;s runtime classes.</p>
+</div>
+<div class="paragraph">
+<p>A simple version of a <code>Sniffer</code> implementation uses the <code>handles</code> method
+to check the existence of a file in the archive that denotes the
+application type (as <code>WEB-INF/web.xml</code> denotes a web application). Once
+a <code>Sniffer</code> implementation has detected that it can handle the
+deployment request artifact, GlassFish Server calls the <code>setUp</code> method.
+The <code>setUp</code> method is responsible for setting up the container, which
+can involve one or more of the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Downloading the container&#8217;s runtime (the first time that a container
+is used)</p>
+</li>
+<li>
+<p>Installing the container&#8217;s runtime (the first time that a container is
+used)</p>
+</li>
+<li>
+<p>Setting up one or more repositories to access the runtime&#8217;s classes
+(these are implementations of the HK2
+<code>com.sun.enterprise.module.Repository</code> interface, such as the
+<code>com.sun.enterprise.module.impl.DirectoryBasedRepository</code> class)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>setUp</code> method returns an array of the
+<code>com.sun.enterprise.module.Module</code> objects required by the container.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Sniffer</code> interface defines the following methods:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>handles(ReadableArchive source, ClassLoader loader)</code></dt>
+<dd>
+<p>Returns a <code>boolean</code> value indicating whether this <code>Sniffer</code>
+implementation can handle the specified archive.</p>
+</dd>
+<dt class="hdlist1"><code>getURLPatterns()</code></dt>
+<dd>
+<p>Returns a <code>String</code> array containing all URL patterns to apply against
+the request URL. If a pattern matches, the service method of the
+associated container is invoked.</p>
+</dd>
+<dt class="hdlist1"><code>getAnnotationTypes()</code></dt>
+<dd>
+<p>Returns a list of annotation types recognized by this <code>Sniffer</code>
+implementation. If an application archive contains one of the returned
+annotation types, the deployment process invokes the container&#8217;s
+deployers as if the <code>handles</code> method had returned true.</p>
+</dd>
+<dt class="hdlist1"><code>getModuleType()</code></dt>
+<dd>
+<p>Returns the module type associated with this <code>Sniffer</code> implementation
+as a <code>String</code>.</p>
+</dd>
+<dt class="hdlist1"><code>setup(String containerHome, Logger logger)</code></dt>
+<dd>
+<p>Sets up the container libraries so that any dependent bundles from the
+connector JAR file will be made available to the HK2 runtime. The
+<code>setup</code> method returns an array of <code>com.sun.enterprise.module.Module</code>
+classes, which are definitions of container implementations. GlassFish
+Server can then load these modules so that it can create an instance
+of the container&#8217;s <code>Deployer</code> or <code>Container</code> implementations when it
+needs to. The module is locked as long as at least one module is
+loaded in the associated container.</p>
+</dd>
+<dt class="hdlist1"><code>teardown()</code></dt>
+<dd>
+<p>Removes a container and all associated modules in the HK2 modules
+subsystem.</p>
+</dd>
+<dt class="hdlist1"><code>getContainerNames()</code></dt>
+<dd>
+<p>Returns a <code>String</code> array containing the <code>Container</code> implementations
+that this <code>Sniffer</code> implementation enables.</p>
+</dd>
+<dt class="hdlist1"><code>isUserVisible()</code></dt>
+<dd>
+<p>Returns a <code>boolean</code> value indicating whether this <code>Sniffer</code>
+implementation should be visible to end-users.</p>
+</dd>
+<dt class="hdlist1"><code>getDeploymentConfigurations(final ReadableArchive source)</code></dt>
+<dd>
+<p>Returns a <code>Map&lt;String, String&gt;</code> of deployment configuration names to
+configurations from this <code>Sniffer</code> implementation for the specified
+application (the archive source). The names are created by GlassFish
+Server; the configurations are the names of the files that contain
+configuration information (for example, <code>WEB-INF/web.xml</code> and possibly
+<code>WEB-INF/sun-web.xml</code> for a web application). If the
+<code>getDeploymentConfigurations</code> method encounters errors while searching
+or reading the specified archive source, it throws a
+<code>java.io.IOException</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="ghpbx"></a><a id="GSACG00172"></a><a id="making-sniffer-implementations-available-to-the-glassfish-server"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_making_code_sniffer_code_implementations_available_to_the_glassfish_server">Making <code>Sniffer</code> Implementations Available to the GlassFish Server</h5>
+<div class="paragraph">
+<p>Package <code>Sniffer</code> implementation code into modules and install the
+modules in the as-install`/modules` directory. GlassFish Server will
+automatically discover these modules. If an administrator installs
+connector modules that contain`Sniffer` implementations while GlassFish
+Server is running, GlassFish Server will pick them up at the next
+deployment request.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkane"></a><a id="GSACG00135"></a><a id="example-of-adding-container-capabilities"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_of_adding_container_capabilities">Example of Adding Container Capabilities</h3>
+<div class="paragraph">
+<p>This example shows a custom container and a web client of the container.
+The example is comprised of the following code:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Code for the container, which is shown in <a href="#gkbah">Container
+Component Code</a></p>
+</li>
+<li>
+<p>Code for a web client of the container, which is shown in
+<a href="#gkbcq">Web Client Code</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Code that defines the configuration data for the container component is
+shown in <a href="adding-configuration-data.html#gkaal">Examples of Adding
+Configuration Data for a Component</a>.</p>
+</div>
+<div class="paragraph">
+<p>Code for an <code>asadmin</code> subcommand that updates the configuration data in
+this example is shown in <a href="extending-asadmin.html#gkbdf">Example 4-7</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkbah"></a><a id="GSACG00238"></a><a id="container-component-code"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_container_component_code">Container Component Code</h4>
+<div class="paragraph">
+<p>The container component code is comprised of the classes and interfaces
+that are listed in the following table. The table also provides a
+cross-reference to the listing of each class or interface.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class or Interface</th>
+<th class="tableblock halign-left valign-top">Listing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Greeter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkamr">Example 7-3</a><br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreeterContainer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkand">Example 7-4</a><br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreeterContainer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkamm">Example 7-5</a><br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreeterDeployer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkalo">Example 7-6</a><br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreeterSniffer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkaks">Example 7-7</a><br></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSACG00066"></a><a id="gkamr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-3 Annotation to Denote a Container&#8217;s Component</p>
+</div>
+<div class="paragraph">
+<p>This example shows the code for defining a component of the <code>Greeter</code>
+container.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package org.glassfish.examples.extension.greeter;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ * Simple annotation to denote Greeter's component
+ */
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+public @interface Greeter {
+
+    /**
+     * Name to uniquely identify different greeters
+     *
+     * @return a good greeter name
+     */
+    public String name();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00067"></a><a id="gkand"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-4 Application Container Class</p>
+</div>
+<div class="paragraph">
+<p>This example shows the Java language class <code>GreeterAppContainer</code>, which
+implements the <code>ApplicationContainer</code> interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package org.glassfish.examples.extension.greeter;
+
+import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.ApplicationContext;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class GreeterAppContainer implements ApplicationContainer {
+
+    final GreeterContainer ctr;
+    final List&lt;Class&gt; componentClasses = new ArrayList&lt;Class&gt;();
+
+    public GreeterAppContainer(GreeterContainer ctr) {
+        this.ctr = ctr;
+    }
+
+    void addComponent(Class componentClass) {
+        componentClasses.add(componentClass);
+    }
+
+    public Object getDescriptor() {
+        return null;
+    }
+
+    public boolean start(ApplicationContext startupContext) throws Exception {
+        for (Class componentClass : componentClasses) {
+            try {
+                Object component = componentClass.newInstance();
+                Greeter greeter = (Greeter)
+                     componentClass.getAnnotation(Greeter.class);
+                ctr.habitat.addComponent(greeter.name(), component);
+            } catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
+    }
+
+    public boolean stop(ApplicationContext stopContext) {
+        for (Class componentClass : componentClasses) {
+            ctr.habitat.removeAllByType(componentClass);
+        }
+        return true;
+    }
+
+    public boolean suspend() {
+        return false;
+    }
+
+    public boolean resume() throws Exception {
+        return false;
+    }
+
+    public ClassLoader getClassLoader() {
+        return null;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00068"></a><a id="gkamm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-5 Container Class</p>
+</div>
+<div class="paragraph">
+<p>This example shows the Java language class <code>GreeterContainer</code>, which
+implements the <code>Container</code> interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package org.glassfish.examples.extension.greeter;
+
+import org.glassfish.api.container.Container;
+import org.glassfish.api.deployment.Deployer;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.annotations.Inject;
+import org.jvnet.hk2.component.Habitat;
+
+@Service(name="org.glassfish.examples.extension.GreeterContainer")
+public class GreeterContainer implements Container {
+
+    @Inject
+    Habitat habitat;
+
+    public Class&lt;? extends Deployer&gt; getDeployer() {
+        return GreeterDeployer.class;
+    }
+
+    public String getName() {
+        return "greeter";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00069"></a><a id="gkalo"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-6 Deployer Class</p>
+</div>
+<div class="paragraph">
+<p>This example shows the Java language class <code>GreeterDeployer</code>, which
+implements the <code>Deployer</code> interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package org.glassfish.examples.extension.greeter;
+
+import org.glassfish.api.deployment.Deployer;
+import org.glassfish.api.deployment.MetaData;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.container.Container;
+import org.jvnet.hk2.annotations.Service;
+
+import java.util.Enumeration;
+
+@Service
+public class GreeterDeployer
+    implements Deployer&lt;GreeterContainer, GreeterAppContainer&gt; {
+
+    public MetaData getMetaData() {
+        return null;
+    }
+
+    public &lt;V&gt; V loadMetaData(Class&lt;V&gt; type, DeploymentContext context) {
+        return null;
+    }
+
+    public boolean prepare(DeploymentContext context) {
+        return false;
+    }
+
+    public GreeterAppContainer load(
+        GreeterContainer container, DeploymentContext context) {
+
+        GreeterAppContainer appCtr = new GreeterAppContainer(container);
+        ClassLoader cl = context.getClassLoader();
+
+        ReadableArchive ra = context.getOriginalSource();
+        Enumeration&lt;String&gt; entries = ra.entries();
+        while (entries.hasMoreElements()) {
+            String entry = entries.nextElement();
+            if (entry.endsWith(".class")) {
+                String className = entryToClass(entry);
+                try {
+                    Class componentClass = cl.loadClass(className);
+                    // ensure it is one of our component
+                    if (componentClass.isAnnotationPresent(Greeter.class)) {
+                        appCtr.addComponent(componentClass);
+                    }
+                } catch(Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return appCtr;
+    }
+
+    public void unload(GreeterAppContainer appContainer, DeploymentContext context) {
+
+    }
+
+    public void clean(DeploymentContext context) {
+
+    }
+
+    private String entryToClass(String entry) {
+        String str = entry.substring("WEB-INF/classes/".length(), entry.length()-6);
+        return str.replaceAll("/", ".");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00070"></a><a id="gkaks"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-7 Sniffer Class</p>
+</div>
+<div class="paragraph">
+<p>This example shows the Java language class <code>GreeterSniffer</code>, which
+implements the <code>Sniffer</code> interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package org.glassfish.examples.extension.greeter;
+
+import org.glassfish.api.container.Sniffer;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.admin.config.ConfigParser;
+import org.glassfish.examples.extension.greeter.config.GreeterContainerConfig;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.annotations.Inject;
+import org.jvnet.hk2.component.Habitat;
+import com.sun.enterprise.module.Module;
+
+import java.util.logging.Logger;
+import java.util.Map;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.net.URL;
+
+/**
+ * @author Jerome Dochez
+ */
+@Service(name="greeter")
+public class GreeterSniffer implements Sniffer {
+
+    @Inject(optional=true)
+    GreeterContainerConfig config=null;
+
+    @Inject
+    ConfigParser configParser;
+
+    @Inject
+    Habitat habitat;
+
+    public boolean handles(ReadableArchive source, ClassLoader loader) {
+        return false;
+    }
+
+    public String[] getURLPatterns() {
+        return new String[0];
+    }
+
+    public Class&lt;? extends Annotation&gt;[] getAnnotationTypes() {
+        Class&lt;? extends Annotation&gt;[] a = (Class&lt;? extends Annotation&gt;[]) Array.newInstance(Class.class, 1);
+        a[0] = Greeter.class;
+        return a;
+    }
+
+    public String getModuleType() {
+        return "greeter";
+    }
+
+    public Module[] setup(String containerHome, Logger logger) throws IOException {
+        if (config==null) {
+            URL url = this.getClass().getClassLoader().getResource("init.xml");
+            if (url!=null) {
+                configParser.parseContainerConfig(
+                    habitat, url, GreeterContainerConfig.class);
+            }
+        }
+        return null;
+    }
+
+    public void tearDown() {
+
+    }
+
+    public String[] getContainersNames() {
+        String[] c = { GreeterContainer.class.getName() };
+        return c;
+    }
+
+    public boolean isUserVisible() {
+        return true;
+    }
+
+    public Map&lt;String, String&gt; getDeploymentConfigurations
+        (ReadableArchive source) throws IOException {
+        return null;
+    }
+
+    public String[] getIncompatibleSnifferTypes() {
+        return new String[0];
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkbcq"></a><a id="GSACG00239"></a><a id="web-client-code"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_web_client_code">Web Client Code</h4>
+<div class="paragraph">
+<p>The web client code is comprised of the classes and resources that are
+listed in the following table. The table also provides a cross-reference
+to the listing of each class or resource.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class or Resource</th>
+<th class="tableblock halign-left valign-top">Listing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HelloWorld</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkaki">Example 7-8</a><br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SimpleGreeter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkalf">Example 7-9</a><br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment descriptor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#gkaly">Example 7-10</a><br></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSACG00071"></a><a id="gkaki"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-8 Container Client Class</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">import components.SimpleGreeter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.annotation.Resource;
+
+
+@WebServlet(urlPatterns={"/hello"})
+public class HelloWorld extends HttpServlet {
+
+    @Resource(name="Simple")
+    SimpleGreeter greeter;
+
+    public void doGet(HttpServletRequest req, HttpServletResponse res)
+            throws IOException, ServletException {
+
+
+        PrintWriter pw = res.getWriter();
+        try {
+            pw.println("Injected service is " + greeter);
+            if (greeter!=null) {
+                pw.println("SimpleService says " + greeter.saySomething());
+                pw.println("&lt;br&gt;");
+            }
+                } catch(Exception e) {
+                e.printStackTrace();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00072"></a><a id="gkalf"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-9 Component for Container Client</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package components;
+
+import org.glassfish.examples.extension.greeter.Greeter;
+
+@Greeter(name="simple")
+public class SimpleGreeter {
+
+    public String saySomething() {
+        return "Bonjour";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00073"></a><a id="gkaly"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-10 Deployment Descriptor for Container Client</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app version="3.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation=
+    "http://xmlns.jcp.org/xml/ns/javaee
+    http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"&gt;
+&lt;/web-app&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="adding-configuration-data.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="session-persistence-modules.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+</body>
+</html>

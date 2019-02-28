@@ -33,7 +33,7 @@ $ git checkout -b issue_1234
 * Do the development in your branch.
 * Commit all the changes.
 ```
-$ git commit -m "my commit message"
+$ git commit -s -m "my commit message"
 ```
 * Push your changes in a remote branch of your fork.
 ```

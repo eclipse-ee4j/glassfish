@@ -191,10 +191,8 @@
                                 </goals>
                                 <configuration>
                                     <scmBranch>gh-pages</scmBranch>
-                                    <basedir>docs</basedir>
                                     <skipDeletedFiles>false</skipDeletedFiles>
                                     <checkinComment>Update docs</checkinComment>
-                                    <skipCheckin>true</skipCheckin>
                                 </configuration>
                             </execution>
                         </executions>

@@ -8,9 +8,9 @@ Eclipse GlassFish 5.1 is Java EE 8 Compatible.
 
 ## Latest News
 
-Jan 28, 2019 -- Eclipse GlassFish 5.1 is released
+### Sept 29, 2019 - Eclipse GlassFish 5.1 is released
 
-See the blog
+See the [press release](https://globenewswire.com/news-release/2019/01/29/1706637/0/en/Java-EE-8-Compatible-Eclipse-GlassFish-5-1-Released.html) and related blog posts ([here](https://dmitrykornilov.net/2019/01/29/eclipse-glassfish-5-1-is-released/) and [here](https://blog.payara.fish/glassfish-5.1-release-marks-major-milestone-for-java-ee-transfer)).
 
 ### Sept 28, 2017 - Introducing Eclipse Enterprise for Java
 

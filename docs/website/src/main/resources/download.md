@@ -9,4 +9,4 @@ Java EE has been contributed to the Eclipse Foundation.
 The Jakarta EE community is responsible for all evolution of the
 project formerly known as Java EE.
 If you are looking for details of the Java EE GlassFish project, you can
-[browse here](javaee.github.io/glassfish). 
+[browse here](https://javaee.github.io/glassfish). 

@@ -221,4 +221,5 @@ Control key, release it, and then press the subsequent keys.
 |> |Indicates menu item selection in a graphical user interface. |File >
 New > Templates |From the File menu, choose New. From the New submenu,
 choose Templates.
+|=======================================================================
 

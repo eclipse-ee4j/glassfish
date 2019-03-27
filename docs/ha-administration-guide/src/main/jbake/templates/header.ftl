@@ -13,6 +13,7 @@
   <tr>
   <td align="left" valign="top">
   <b>${content.title}</b><br />
+      <p class="beta">${config.status!}</p>
   </td>
   </tr>
 </table>

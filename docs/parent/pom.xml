@@ -32,16 +32,53 @@
         <site.output.dir>${project.build.directory}/staging/${project.artifactId}</site.output.dir>
         <maven.site.skip>true</maven.site.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <asciidoctor.maven.plugin.version>1.5.7.1</asciidoctor.maven.plugin.version>
+        <!-- XXX - jbake needs an older version than this -->
+        <asciidoctorj.version>1.6.2</asciidoctorj.version>
+        <asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
+        <jruby.version>9.2.6.0</jruby.version>
+        <!-- status: DRAFT, BETA, etc., or blank for final -->
+        <status>DRAFT</status>
+        <doc.pdf>${project.artifactId}.pdf</doc.pdf>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.glassfish.doc</groupId>
+                <artifactId>glassfish-doc-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-toc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>toc</goal>
+                        </goals>
+                        <configuration>
+                            <chapterPatterns>
+                                [0-9]+\s.*,Preface.*,Part\s.*
+                            </chapterPatterns>
+                            <ignoreTagPatterns>JEET.*</ignoreTagPatterns>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-book</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>book</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.blazebit</groupId>
                 <artifactId>jbake-maven-plugin</artifactId>
                 <version>1.0.0</version>
                 <configuration>
                     <outputDirectory>${site.output.dir}</outputDirectory>
+                    <properties>
+                        <status>${status}</status>
+                    </properties>
                 </configuration>
                 <executions>
                     <execution>
@@ -65,13 +102,69 @@
                     </dependency>
                 </dependencies>
             </plugin>
-	    <plugin>
-		<artifactId>maven-jar-plugin</artifactId>
-		<configuration>
-		    <finalName>${project.artifactId}</finalName>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.maven.plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>${jruby.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj</artifactId>
+                        <version>${asciidoctorj.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-pdf</artifactId>
+                        <version>${asciidoctorj.pdf.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <sourceDirectory>${project.build.directory}/book</sourceDirectory>
+                    <sourceDocumentName>book.adoc</sourceDocumentName>
+                    <!-- XXX - below depends on running jbake first -->
+                    <imagesDir>${project.build.directory}/staging/${project.artifactId}/</imagesDir>
+                    <backend>pdf</backend>
+                    <outputFile>${doc.pdf}</outputFile>
+                    <attributes>
+                        <!-- XXX - a kludge to allow theme to be shared -->
+                        <pdf-stylesdir>${project.basedir}/../parent/src/theme</pdf-stylesdir>
+                        <pdf-style>glassfish</pdf-style>
+                        <doctype>book</doctype>
+                        <status>${status}</status>
+                        <data-uri />
+                        <icons>font</icons>
+                        <pagenums />
+                        <toc />
+                        <icons>font</icons>
+                        <sectanchors>true</sectanchors>
+                        <idprefix />
+                        <idseparator>-</idseparator>
+                        <docinfo1>true</docinfo1>
+                        <embedAssets>true</embedAssets>
+                    </attributes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-pdf-doc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                                <goal>process-asciidoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <finalName>${project.artifactId}</finalName>
                     <classesDirectory>${project.build.directory}/staging</classesDirectory>
-		</configuration>
-	    </plugin>
-	</plugins>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

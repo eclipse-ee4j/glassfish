@@ -356,6 +356,7 @@ In configuration files, domain-dir is represented as follows:
 
 |instance-dir + |Represents the directory for a server instance.
 |domain-dir`/`instance-name
+|=======================================================================
 
 
 

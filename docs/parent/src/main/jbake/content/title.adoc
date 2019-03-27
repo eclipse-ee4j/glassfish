@@ -1,0 +1,6 @@
+type=page
+status=published
+title=Dummy
+~~~~~~
+= Dummy
+

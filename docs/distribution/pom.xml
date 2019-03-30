@@ -43,7 +43,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>get-dependencies</id>
+                        <id>get-html-dependencies</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>unpack-dependencies</goal>
@@ -52,10 +52,28 @@
                             <includeGroupIds>
                                 org.glassfish.docs
                             </includeGroupIds>
+                            <includeTypes>jar</includeTypes>
                             <excludes>META-INF/**</excludes>
                             <outputDirectory>
                                 ${project.build.directory}/classes
                             </outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>get-pdf-dependencies</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>
+                                org.glassfish.docs
+                            </includeGroupIds>
+                            <includeTypes>pdf</includeTypes>
+                            <outputDirectory>
+                                ${project.build.directory}/classes
+                            </outputDirectory>
+                            <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
                 </executions>
@@ -77,8 +95,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>add-on-component-development-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>administration-guide</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>administration-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -89,8 +121,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>application-deployment-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>application-development-guide</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>application-development-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -101,8 +147,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>deployment-planning-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>embedded-server-guide</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>embedded-server-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -113,8 +173,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>error-messages-reference</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>ha-administration-guide</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>ha-administration-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -125,8 +199,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>installation-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>performance-tuning-guide</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>performance-tuning-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -137,8 +225,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>quick-start-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>reference-manual</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>reference-manual</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -149,8 +251,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>release-notes</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>security-guide</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>security-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -161,8 +277,22 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.docs</groupId>
+            <artifactId>troubleshooting-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
             <artifactId>upgrade-guide</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.docs</groupId>
+            <artifactId>upgrade-guide</artifactId>
+            <version>${project.version}</version>
+            <type>pdf</type>
             <optional>true</optional>
         </dependency>
     </dependencies>

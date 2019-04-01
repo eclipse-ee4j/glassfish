@@ -13,6 +13,7 @@
   <tr>
   <td align="left" valign="top">
   <b>Eclipse GlassFish Server Application Deployment Guide, Release 5.1</b><br />
+      <p class="beta">DRAFT</p>
   </td>
   </tr>
 </table>
@@ -27,7 +28,7 @@
 	<tr>
 
 		<td align="left">
-		<a href="loe.html">
+		<a href="title.html">
 			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
 			<span style="position:relative;top:-2px;">Next</span>
 		</a>
@@ -46,3471 +47,3377 @@
 <div class="sect1">
 <h2 id="contents">Contents</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="list-of-examples"><a href="loe.html">List of Examples</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="list-of-figures"><a href="lof.html">List of Figures</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="list-of-tables"><a href="lot.html">List of Tables</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="title-and-copyright-information"><a href="title.html">Title and Copyright Information</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="preface"><a href="preface.html#sthref2">Preface</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="preface.html#ghpbz">GlassFish Server Documentation Set</a></p>
+<p><a href="title.html#eclipse-glassfish-server">Eclipse GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="__a_href_preface_html_gsdpg806_preface_a"><a href="preface.html#GSDPG806">Preface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="preface.html#GSDPG00053">GlassFish Server Documentation Set</a></p>
 </li>
 <li>
-<p><a href="preface.html#giprl">Related Documentation</a></p>
+<p><a href="preface.html#GSDPG00054">Related Documentation</a></p>
 </li>
 <li>
-<p><a href="preface.html#fwbkx">Typographic Conventions</a></p>
+<p><a href="preface.html#GSDPG00055">Typographic Conventions</a></p>
 </li>
 <li>
-<p><a href="preface.html#fquvc">Symbol Conventions</a></p>
+<p><a href="preface.html#GSDPG00056">Symbol Conventions</a></p>
 </li>
 <li>
-<p><a href="preface.html#ghpfg">Default Paths and File Names</a></p>
+<p><a href="preface.html#GSDPG00057">Default Paths and File Names</a></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="overview-of-glassfish-server-open-source-edition-5.0-application-deployment"><a href="overview.html#gihxo">1 Overview of Eclipse GlassFish Server 5.0 Application Deployment</a></h3>
+<h3 id="__a_href_overview_html_gsdpg00003_1_overview_of_glassfish_server_open_source_edition_5_0_application_deployment_a"><a href="overview.html#GSDPG00003">1 Overview of GlassFish Server Open Source Edition 5.0 Application Deployment</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="overview.html#gihzx">About Application Deployment</a></p>
+<p><a href="overview.html#GSDPG00061">About Application Deployment</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="overview.html#giptw">General Deployment Functionality</a></p>
+<p><a href="overview.html#GSDPG00319">General Deployment Functionality</a></p>
 </li>
 <li>
-<p><a href="overview.html#gihzc">Deployment Descriptors and Annotations</a></p>
+<p><a href="overview.html#GSDPG00320">Deployment Descriptors and Annotations</a></p>
 </li>
 <li>
-<p><a href="overview.html#gikhs">Modules and Applications</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="overview.html#beacv">Types of Modules</a></p>
+<p><a href="overview.html#GSDPG00321">Modules and Applications</a></p>
 </li>
 <li>
-<p><a href="overview.html#beacu">Module-Based Deployment</a></p>
+<p><a href="overview.html#GSDPG00322">Access to Shared Framework Classes</a></p>
 </li>
 <li>
-<p><a href="overview.html#beacw">Application-Based Deployment</a></p>
+<p><a href="overview.html#GSDPG00323">Naming Standards</a></p>
+</li>
+<li>
+<p><a href="overview.html#GSDPG00324">Module and Application Versions</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="overview.html#gijla">Access to Shared Framework Classes</a></p>
+<p><a href="overview.html#GSDPG00062">About Assembly and Deployment Events</a></p>
 </li>
 <li>
-<p><a href="overview.html#gihzk">Naming Standards</a></p>
+<p><a href="overview.html#GSDPG00063">About Deployment Tools</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="overview.html#gjjfg">Portable Naming</a></p>
+<p><a href="overview.html#GSDPG00325">Administration Console</a></p>
 </li>
 <li>
-<p><a href="overview.html#giidg">JNDI Naming</a></p>
+<p><a href="overview.html#GSDPG00326">The <code>asadmin</code> Utility</a></p>
 </li>
 <li>
-<p><a href="overview.html#beada">Directory Structure</a></p>
+<p><a href="overview.html#GSDPG00329">NetBeans IDE</a></p>
 </li>
 <li>
-<p><a href="overview.html#giiel">JSR 88 Naming</a></p>
+<p><a href="overview.html#GSDPG00330">Eclipse IDE</a></p>
+</li>
+<li>
+<p><a href="overview.html#GSDPG00331">JSR 88 Client</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="overview.html#gkhhv">Module and Application Versions</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="overview.html#gkhmg">Version Identifiers and Expressions</a></p>
-</li>
-<li>
-<p><a href="overview.html#gkhmm">Choosing the Enabled Version</a></p>
-</li>
-<li>
-<p><a href="overview.html#gkhob">Versioning Restrictions and Limitations</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="overview.html#giphm">About Assembly and Deployment Events</a></p>
-</li>
-<li>
-<p><a href="overview.html#giifh">About Deployment Tools</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="overview.html#giijz">Administration Console</a></p>
-</li>
-<li>
-<p><a href="overview.html#giijf">The <code>asadmin</code> Utility</a></p>
-</li>
-<li>
-<p><a href="overview.html#giijq">NetBeans IDE</a></p>
-</li>
-<li>
-<p><a href="overview.html#gikwq">Eclipse IDE</a></p>
-</li>
-<li>
-<p><a href="overview.html#beaee">JSR 88 Client</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="overview.html#gipud">Additional Information on Application
-Deployment</a></p>
+<p><a href="overview.html#GSDPG00064">Additional Information on Application Deployment</a></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="deploying-applications"><a href="deploying-applications.html#beact">2 Deploying Applications</a></h3>
+<h3 id="deploying-applications"><a href="deploying-applications.html#GSDPG00004">2 Deploying Applications</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="deploying-applications.html#gilfm">Deploying Applications and
-Modules</a></p>
+<p><a href="deploying-applications.html#GSDPG00065">Deploying Applications and Modules</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="deploying-applications.html#gijmq">To Deploy an Application or
-Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00033">To Deploy an Application or Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gijrc">To Change Targets for a
-Deployed Application or Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00034">To Change Targets for a Deployed Application or Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#giulr">To List Deployed Applications
-or Modules</a></p>
+<p><a href="deploying-applications.html#GSDPG00035">To List Deployed Applications or Modules</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gijmb">To Redeploy an Application or
-Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00036">To Redeploy an Application or Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#fvyje">To Disable an Application or
-Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00037">To Disable an Application or Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gijjy">To Enable an Application or
-Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00038">To Enable an Application or Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gijkl">To Undeploy an Application or
-Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00039">To Undeploy an Application or Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#fwakh">To Reload Changes to
-Applications or Modules Dynamically</a></p>
+<p><a href="deploying-applications.html#GSDPG00040">To Reload Changes to Applications or Modules Dynamically</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#fvxze">To Deploy an Application or
-Module Automatically</a></p>
+<p><a href="deploying-applications.html#GSDPG00041">To Deploy an Application or Module Automatically</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gijyb">To Deploy an Application or
-Module by Using a Deployment Plan</a></p>
+<p><a href="deploying-applications.html#GSDPG00042">To Deploy an Application or Module by Using a Deployment Plan</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gilcn">To Deploy an Application or
-Module in a Directory Format</a></p>
+<p><a href="deploying-applications.html#GSDPG00043">To Deploy an Application or Module in a Directory Format</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="deploying-applications.html#gjiwk">Modifying the Configuration of a
-Web Application or Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00066">Modifying the Configuration of a Web Application or Module</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="deploying-applications.html#giyce">To Set a Web Context Parameter</a></p>
+<p><a href="deploying-applications.html#GSDPG00044">To Set a Web Context Parameter</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#giycy">To Unset a Web Context
-Parameter</a></p>
+<p><a href="deploying-applications.html#GSDPG00045">To Unset a Web Context Parameter</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#giybo">To List Web Context Parameters</a></p>
+<p><a href="deploying-applications.html#GSDPG00046">To List Web Context Parameters</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#giyhc">To Set a Web Environment Entry</a></p>
+<p><a href="deploying-applications.html#GSDPG00047">To Set a Web Environment Entry</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#giyjr">To Unset a Web Environment
-Entry</a></p>
+<p><a href="deploying-applications.html#GSDPG00048">To Unset a Web Environment Entry</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#giyip">To List Web Environment
-Entries</a></p>
+<p><a href="deploying-applications.html#GSDPG00049">To List Web Environment Entries</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="deploying-applications.html#beaej">Web Module Deployment
-Guidelines</a></p>
+<p><a href="deploying-applications.html#GSDPG00067">Web Module Deployment Guidelines</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#beaek">EJB Module Deployment
-Guidelines</a></p>
+<p><a href="deploying-applications.html#GSDPG00068">EJB Module Deployment Guidelines</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gilxc">Deploying a Connector Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00069">Deploying a Connector Module</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="deploying-applications.html#fvynl">To Deploy and Configure a
-Stand-Alone Connector Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00050">To Deploy and Configure a Stand-Alone Connector Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#bealp">Redeploying a Stand-Alone
-Connector Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00332">Redeploying a Stand-Alone Connector Module</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#bealq">Deploying and Configuring an
-Embedded Resource Adapter</a></p>
+<p><a href="deploying-applications.html#GSDPG00333">Deploying and Configuring an Embedded Resource Adapter</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="deploying-applications.html#beaem">Assembling and Deploying an
-Application Client Module</a></p>
+<p><a href="deploying-applications.html#GSDPG00070">Assembling and Deploying an Application Client Module</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="deploying-applications.html#fvyal">To Assemble and Deploy an
-Application Client</a></p>
+<p><a href="deploying-applications.html#GSDPG00051">To Assemble and Deploy an Application Client</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#fwahd">To Prepare Another Machine for
-Running an Application Client</a></p>
+<p><a href="deploying-applications.html#GSDPG00052">To Prepare Another Machine for Running an Application Client</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gavpv">To Undeploy an Application
-Client</a></p>
+<p><a href="deploying-applications.html#GSDPG00334">To Undeploy an Application Client</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="deploying-applications.html#beael">Lifecycle Module Deployment
-Guidelines</a></p>
+<p><a href="deploying-applications.html#GSDPG00071">Lifecycle Module Deployment Guidelines</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gbiye">Web Service Deployment
-Guidelines</a></p>
+<p><a href="deploying-applications.html#GSDPG00072">Web Service Deployment Guidelines</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gkkmb">OSGi Bundle Deployment
-Guidelines</a></p>
+<p><a href="deploying-applications.html#GSDPG00073">OSGi Bundle Deployment Guidelines</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#gkoif">Transparent JDBC Connection Pool
-Reconfiguration</a></p>
+<p><a href="deploying-applications.html#GSDPG00074">Transparent JDBC Connection Pool Reconfiguration</a></p>
 </li>
 <li>
-<p><a href="deploying-applications.html#giydj">Application-Scoped Resources</a></p>
+<p><a href="deploying-applications.html#GSDPG00075">Application-Scoped Resources</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="asadmin-deployment-subcommands.html#GSDPG00005">A The <code>asadmin</code> Deployment Subcommands</a></p>
 </li>
+<li>
+<p><a href="dd-files.html#GSDPG00006">B GlassFish Server Deployment Descriptor Files</a></p>
+</li>
 </ul>
-</div>
 </div>
-<div class="sect2">
-<h3 id="a-the-asadmin-deployment-subcommands"><a href="asadmin-deployment-subcommands.html#gihzw">A The <code>asadmin</code> Deployment Subcommands</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="b-glassfish-server-deployment-descriptor-files"><a href="dd-files.html#giida">B GlassFish Server Deployment Descriptor Files</a></h3>
-<div class="ulist">
-<ul>
+</li>
 <li>
-<p><a href="dd-files.html#giiie">About the GlassFish Server Deployment
-Descriptors</a></p>
+<p><a href="dd-files.html#GSDPG00076">About the GlassFish Server Deployment Descriptors</a></p>
 </li>
 <li>
-<p><a href="dd-files.html#beaqk">The glassfish-application.xml File</a></p>
+<p><a href="dd-files.html#GSDPG00077">The glassfish-application.xml File</a></p>
 </li>
 <li>
-<p><a href="dd-files.html#beaql">The glassfish-web.xml File</a></p>
+<p><a href="dd-files.html#GSDPG00078">The glassfish-web.xml File</a></p>
 </li>
 <li>
-<p><a href="dd-files.html#beaqm">The glassfish-ejb-jar.xml File</a></p>
+<p><a href="dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a></p>
 </li>
 <li>
-<p><a href="dd-files.html#beaqn">The sun-cmp-mappings.xml File</a></p>
+<p><a href="dd-files.html#GSDPG00080">The sun-cmp-mappings.xml File</a></p>
 </li>
 <li>
-<p><a href="dd-files.html#beaqo">The glassfish-application-client.xml file</a></p>
+<p><a href="dd-files.html#GSDPG00081">The glassfish-application-client.xml file</a></p>
 </li>
 <li>
-<p><a href="dd-files.html#beaqp">The sun-acc.xml File</a></p>
+<p><a href="dd-files.html#GSDPG00082">The sun-acc.xml File</a></p>
 </li>
 <li>
-<p><a href="dd-files.html#giyhh">The glassfish-resources.xml File</a></p>
+<p><a href="dd-files.html#GSDPG00083">The glassfish-resources.xml File</a></p>
 </li>
+<li>
+<p><a href="dd-files.html#GSDPG00084">WebLogic Server Deployment Descriptor Support in GlassFish Server</a></p>
+<div class="ulist">
+<ul>
 <li>
-<p><a href="dd-files.html#gkiot">WebLogic Server Deployment Descriptor Support
-in GlassFish Server</a></p>
+<p><a href="dd-elements.html#GSDPG00007">C Elements of the GlassFish Server Deployment Descriptors</a></p>
 </li>
 </ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="c-elements-of-the-glassfish-server-deployment-descriptors"><a href="dd-elements.html#beaqi">C Elements of the GlassFish Server Deployment Descriptors</a></h3>
-<div class="ulist">
-<ul>
+</li>
 <li>
-<p><a href="dd-elements.html#beaqs"><code>activation-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00085"><code>activation-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyoe">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00335">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvynj">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00336">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaqt"><code>activation-config-property</code></a></p>
+<p><a href="dd-elements.html#GSDPG00086"><code>activation-config-property</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyne">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00337">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyns">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00338">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaqu"><code>activation-config-property-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00087"><code>activation-config-property-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvynm">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00339">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyok">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00340">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaqv"><code>activation-config-property-value</code></a></p>
+<p><a href="dd-elements.html#GSDPG00088"><code>activation-config-property-value</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyou">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00341">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyoz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00342">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyhw"><code>admin-object-resource</code></a></p>
+<p><a href="dd-elements.html#GSDPG00089"><code>admin-object-resource</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref11">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG840">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref12">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG841">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref15">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG843">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref18">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG845">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaqw"><code>as-context</code></a></p>
+<p><a href="dd-elements.html#GSDPG00090"><code>as-context</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyos">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00343">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyom">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00344">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gjizj"><code>archive-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00091"><code>archive-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gjizb">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00345">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gjizg">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00346">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaqx"><code>auth-method</code></a></p>
+<p><a href="dd-elements.html#GSDPG00092"><code>auth-method</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyow">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00347">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyop">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00348">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaqy"><code>auth-realm</code></a></p>
+<p><a href="dd-elements.html#GSDPG00093"><code>auth-realm</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyot">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00349">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyor">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00350">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyoy"><code>Attributes</code></a></p>
+<p><a href="dd-elements.html#GSDPG00351"><code>Attributes</code></a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyox">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00352">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyjv"><code>backend-principal</code></a></p>
+<p><a href="dd-elements.html#GSDPG00094"><code>backend-principal</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref22">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG849">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref23">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG850">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref24">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG851">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beara"><code>bean-cache</code></a></p>
+<p><a href="dd-elements.html#GSDPG00095"><code>bean-cache</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyoq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00353">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyon">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00354">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyoo">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00355">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearb"><code>bean-pool</code></a></p>
+<p><a href="dd-elements.html#GSDPG00096"><code>bean-pool</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvypc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00356">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypd">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00357">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypf">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00358">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beard"><code>cache</code></a></p>
+<p><a href="dd-elements.html#GSDPG00097"><code>cache</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvype">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00359">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypl">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00360">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypj">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00361">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypx">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00362">Properties</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyrn">Cache Class Names</a></p>
+<p><a href="dd-elements.html#GSDPG00363">Cache Class Names</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beare"><code>cache-helper</code></a></p>
+<p><a href="dd-elements.html#GSDPG00098"><code>cache-helper</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqy">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00364">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyru">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00365">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqu">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00366">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearf"><code>cache-helper-ref</code></a></p>
+<p><a href="dd-elements.html#GSDPG00099"><code>cache-helper-ref</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvypq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00367">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00368">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearg"><code>cache-idle-timeout-in-seconds</code></a></p>
+<p><a href="dd-elements.html#GSDPG00100"><code>cache-idle-timeout-in-seconds</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00369">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqo">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00370">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearh"><code>cache-mapping</code></a></p>
+<p><a href="dd-elements.html#GSDPG00101"><code>cache-mapping</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqi">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00371">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqn">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00372">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beari"><code>call-property</code></a></p>
+<p><a href="dd-elements.html#GSDPG00102"><code>call-property</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyri">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00373">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00374">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearj"><code>caller-propagation</code></a></p>
+<p><a href="dd-elements.html#GSDPG00103"><code>caller-propagation</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00375">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyrb">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00376">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beark"><code>cert-db</code></a></p>
+<p><a href="dd-elements.html#GSDPG00104"><code>cert-db</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqa">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00377">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyre">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00378">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyrr">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00379">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearl"><code>check-all-at-commit</code></a></p>
+<p><a href="dd-elements.html#GSDPG00105"><code>check-all-at-commit</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyrj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00380">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearm"><code>check-modified-at-commit</code></a></p>
+<p><a href="dd-elements.html#GSDPG00106"><code>check-modified-at-commit</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00381">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00382">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearn"><code>check-version-of-accessed-instances</code></a></p>
+<p><a href="dd-elements.html#GSDPG00107"><code>check-version-of-accessed-instances</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqt">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00383">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00384">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearo"><code>checkpoint-at-end-of-method</code></a></p>
+<p><a href="dd-elements.html#GSDPG00108"><code>checkpoint-at-end-of-method</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvypr">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00385">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqe">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00386">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearp"><code>checkpointed-methods</code></a></p>
+<p><a href="dd-elements.html#GSDPG00109"><code>checkpointed-methods</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyrk">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00387">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearq"><code>class-loader</code></a></p>
+<p><a href="dd-elements.html#GSDPG00110"><code>class-loader</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyrv">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00388">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyrh">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00389">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyrl">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00390">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gcfko">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00391">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearr"><code>client-container</code></a></p>
+<p><a href="dd-elements.html#GSDPG00111"><code>client-container</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvypv">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00392">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypk">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00393">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqq">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00394">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyrm">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00395">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bears"><code>client-credential</code></a></p>
+<p><a href="dd-elements.html#GSDPG00112"><code>client-credential</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyqk">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00396">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqd">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00397">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqv">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00398">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beart"><code>cmp</code></a></p>
+<p><a href="dd-elements.html#GSDPG00113"><code>cmp</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyrg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00399">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyqw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00400">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearu"><code>cmp-field-mapping</code></a></p>
+<p><a href="dd-elements.html#GSDPG00114"><code>cmp-field-mapping</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvypy">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00401">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyra">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00402">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearv"><code>cmp-resource</code></a></p>
+<p><a href="dd-elements.html#GSDPG00115"><code>cmp-resource</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvypz">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00403">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyrf">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00404">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearw"><code>cmr-field-mapping</code></a></p>
+<p><a href="dd-elements.html#GSDPG00116"><code>cmr-field-mapping</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyrc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00405">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvypu">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00406">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearx"><code>cmr-field-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00117"><code>cmr-field-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyrx">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00407">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyry">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00408">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beary"><code>cmt-timeout-in-seconds</code></a></p>
+<p><a href="dd-elements.html#GSDPG00118"><code>cmt-timeout-in-seconds</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvysf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00409">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysc">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00410">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bearz"><code>column-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00119"><code>column-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyse">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00411">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysb">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00412">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasa"><code>column-pair</code></a></p>
+<p><a href="dd-elements.html#GSDPG00120"><code>column-pair</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvysa">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00413">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysg">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00414">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasb"><code>commit-option</code></a></p>
+<p><a href="dd-elements.html#GSDPG00121"><code>commit-option</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyrz">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00415">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysd">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00416">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gjjak"><code>compatibility</code></a></p>
+<p><a href="dd-elements.html#GSDPG00122"><code>compatibility</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gjjaf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00417">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gjjag">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00418">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasc"><code>confidentiality</code></a></p>
+<p><a href="dd-elements.html#GSDPG00123"><code>confidentiality</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvysi">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00419">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysk">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00420">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giygu"><code>connector-connection-pool</code></a></p>
+<p><a href="dd-elements.html#GSDPG00124"><code>connector-connection-pool</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref53">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG879">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref54">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG880">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref57">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG882">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref60">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG884">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyhv"><code>connector-resource</code></a></p>
+<p><a href="dd-elements.html#GSDPG00125"><code>connector-resource</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref63">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG886">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref64">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG887">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref67">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG889">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasd"><code>consistency</code></a></p>
+<p><a href="dd-elements.html#GSDPG00126"><code>consistency</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvysj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00421">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysl">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00422">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#bease"><code>constraint-field</code></a></p>
+<p><a href="dd-elements.html#GSDPG00127"><code>constraint-field</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvysm">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00423">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyso">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00424">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysq">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00425">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasf"><code>constraint-field-value</code></a></p>
+<p><a href="dd-elements.html#GSDPG00128"><code>constraint-field-value</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyss">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00426">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyst">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00427">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysu">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00428">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasg"><code>context-root</code></a></p>
+<p><a href="dd-elements.html#GSDPG00129"><code>context-root</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvysx">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00429">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00430">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beash"><code>cookie-properties</code></a></p>
+<p><a href="dd-elements.html#GSDPG00130"><code>cookie-properties</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvysy">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00431">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvysz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00432">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyta">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00433">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasi"><code>create-tables-at-deploy</code></a></p>
+<p><a href="dd-elements.html#GSDPG00131"><code>create-tables-at-deploy</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00434">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytd">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00435">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyhr"><code>custom-resource</code></a></p>
+<p><a href="dd-elements.html#GSDPG00132"><code>custom-resource</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref76">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG897">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref77">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG898">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref80">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG900">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beask"><code>database-vendor-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00133"><code>database-vendor-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00436">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyti">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00437">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gaubj"><code>debugging-enabled</code></a></p>
+<p><a href="dd-elements.html#GSDPG00134"><code>debugging-enabled</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gaubf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00438">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gaube">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00439">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasl"><code>default</code></a></p>
+<p><a href="dd-elements.html#GSDPG00135"><code>default</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00440">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyth">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00441">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasm"><code>default-helper</code></a></p>
+<p><a href="dd-elements.html#GSDPG00136"><code>default-helper</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00442">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytk">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00443">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytp">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00444">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasn"><code>default-resource-principal</code></a></p>
+<p><a href="dd-elements.html#GSDPG00137"><code>default-resource-principal</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytl">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00445">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytn">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00446">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaso"><code>description</code></a></p>
+<p><a href="dd-elements.html#GSDPG00138"><code>description</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00447">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyts">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00448">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gkhtw"><code>disable-nonportable-jndi-names</code></a></p>
+<p><a href="dd-elements.html#GSDPG00139"><code>disable-nonportable-jndi-names</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gkhum">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00449">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gkhug">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00450">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasp"><code>dispatcher</code></a></p>
+<p><a href="dd-elements.html#GSDPG00140"><code>dispatcher</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytt">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00451">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00452">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasq"><code>drop-tables-at-undeploy</code></a></p>
+<p><a href="dd-elements.html#GSDPG00141"><code>drop-tables-at-undeploy</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvytu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00453">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytx">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00454">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beass"><code>ejb</code></a></p>
+<p><a href="dd-elements.html#GSDPG00142"><code>ejb</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyty">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00455">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00456">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyuf">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00457">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvytz">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00458">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beast"><code>ejb-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00143"><code>ejb-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyug">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00459">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyue">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00460">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasu"><code>ejb-ref</code></a></p>
+<p><a href="dd-elements.html#GSDPG00144"><code>ejb-ref</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyub">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00461">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyua">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00462">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasv"><code>ejb-ref-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00145"><code>ejb-ref-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyuh">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00463">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyuj">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00464">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gaubh"><code>eligible</code></a></p>
+<p><a href="dd-elements.html#GSDPG00146"><code>eligible</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gaubg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00465">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gauaz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00466">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasw"><code>endpoint-address-uri</code></a></p>
+<p><a href="dd-elements.html#GSDPG00147"><code>endpoint-address-uri</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyul">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00467">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyum">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00468">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyuk">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00469">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasx"><code>enterprise-beans</code></a></p>
+<p><a href="dd-elements.html#GSDPG00148"><code>enterprise-beans</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyun">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00470">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyuo">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00471">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyux">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00472">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasy"><code>entity-mapping</code></a></p>
+<p><a href="dd-elements.html#GSDPG00149"><code>entity-mapping</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyus">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00473">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyur">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00474">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beasz"><code>establish-trust-in-client</code></a></p>
+<p><a href="dd-elements.html#GSDPG00150"><code>establish-trust-in-client</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyuq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00475">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyuy">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00476">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beata"><code>establish-trust-in-target</code></a></p>
+<p><a href="dd-elements.html#GSDPG00151"><code>establish-trust-in-target</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyuu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00477">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyuv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00478">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyin"><code>external-jndi-resource</code></a></p>
+<p><a href="dd-elements.html#GSDPG00152"><code>external-jndi-resource</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref91">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG910">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref92">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG911">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref95">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG913">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatc"><code>fetched-with</code></a></p>
+<p><a href="dd-elements.html#GSDPG00153"><code>fetched-with</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyuw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00479">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyup">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00480">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatd"><code>field-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00154"><code>field-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcm">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00481">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00482">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beate"><code>finder</code></a></p>
+<p><a href="dd-elements.html#GSDPG00155"><code>finder</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzao">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00483">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdc">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00484">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatf"><code>flush-at-end-of-method</code></a></p>
+<p><a href="dd-elements.html#GSDPG00156"><code>flush-at-end-of-method</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00485">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyza">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00486">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beath"><code>gen-classes</code></a></p>
+<p><a href="dd-elements.html#GSDPG00157"><code>gen-classes</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyh">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00487">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzee">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00488">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxw"><code>glassfish-application</code></a></p>
+<p><a href="dd-elements.html#GSDPG00158"><code>glassfish-application</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhn">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00489">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgn">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00490">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxx"><code>glassfish-application-client</code></a></p>
+<p><a href="dd-elements.html#GSDPG00159"><code>glassfish-application-client</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00491">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzja">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00492">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaya"><code>glassfish-ejb-jar</code></a></p>
+<p><a href="dd-elements.html#GSDPG00160"><code>glassfish-ejb-jar</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00493">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00494">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayb"><code>glassfish-web-app</code></a></p>
+<p><a href="dd-elements.html#GSDPG00161"><code>glassfish-web-app</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00495">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhr">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00496">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzia">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00497">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgt">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00498">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giygy"><code>group-map</code></a></p>
+<p><a href="dd-elements.html#GSDPG00162"><code>group-map</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref108">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG925">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#giyid">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00499">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref109">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG926">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beati"><code>group-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00163"><code>group-name</code></a></p>
 <div class="ulist">
 <ul>
-<li>
-<p><a href="dd-elements.html#fvzak">Superelements</a></p>
-</li>
 <li>
-<p><a href="dd-elements.html#fvywm">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00500">Superelements</a></p>
 </li>
-<li>
-<p><a href="dd-elements.html#beatk"><code>http-method</code></a></p>
-<div class="ulist">
-<ul>
 <li>
-<p><a href="dd-elements.html#fvzbq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00501">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyyj">Subelements</a></p>
-</li>
-</ul>
-</div>
+<p><a href="dd-elements.html#GSDPG00502"><code>http-method</code></a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatm"><code>idempotent-url-pattern</code></a></p>
+<p><a href="dd-elements.html#GSDPG00164"><code>idempotent-url-pattern</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzaj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00503">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzea">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00504">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxx">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00505">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxy">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00506">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatn"><code>integrity</code></a></p>
+<p><a href="dd-elements.html#GSDPG00165"><code>integrity</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00507">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00508">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beato"><code>ior-security-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00166"><code>ior-security-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzbe">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00509">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00510">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatp"><code>is-cache-overflow-allowed</code></a></p>
+<p><a href="dd-elements.html#GSDPG00167"><code>is-cache-overflow-allowed</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00511">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatq"><code>is-one-one-cmp</code></a></p>
+<p><a href="dd-elements.html#GSDPG00168"><code>is-one-one-cmp</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyww">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00512">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatr"><code>is-read-only-bean</code></a></p>
+<p><a href="dd-elements.html#GSDPG00169"><code>is-read-only-bean</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzan">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00513">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvx">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00514">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatt"><code>java-method</code></a></p>
+<p><a href="dd-elements.html#GSDPG00170"><code>java-method</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00515">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvo">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00516">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gauax"><code>java-web-start-access</code></a></p>
+<p><a href="dd-elements.html#GSDPG00171"><code>java-web-start-access</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gauba">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00517">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gauav">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00518">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyil"><code>jdbc-connection-pool</code></a></p>
+<p><a href="dd-elements.html#GSDPG00172"><code>jdbc-connection-pool</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref116">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG932">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref117">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG933">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref120">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG935">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref123">GlassFish Server Properties</a></p>
+<p><a href="dd-elements.html#GSDPG937">GlassFish Server Properties</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref126">Database Properties</a></p>
+<p><a href="dd-elements.html#GSDPG939">Database Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyhm"><code>jdbc-resource</code></a></p>
+<p><a href="dd-elements.html#GSDPG00173"><code>jdbc-resource</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref129">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG941">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref130">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG942">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref133">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG944">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatu"><code>jms-durable-subscription-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00174"><code>jms-durable-subscription-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdb">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00519">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00520">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatv"><code>jms-max-messages-load</code></a></p>
+<p><a href="dd-elements.html#GSDPG00175"><code>jms-max-messages-load</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyzx">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00521">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00522">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatw"><code>jndi-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00176"><code>jndi-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyy">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00523">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00524">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gkhun"><code>jnlp-doc</code></a></p>
+<p><a href="dd-elements.html#GSDPG00177"><code>jnlp-doc</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gkhuj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00525">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gkhtm">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00526">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatx"><code>jsp-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00178"><code>jsp-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywi">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00527">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzcs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00528">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzf">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00529">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gkhtr"><code>keep-state</code></a></p>
+<p><a href="dd-elements.html#GSDPG00179"><code>keep-state</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gkhto">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00530">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gkhuk">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00531">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beatz"><code>key-field</code></a></p>
+<p><a href="dd-elements.html#GSDPG00180"><code>key-field</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvb">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00532">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzal">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00533">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdn">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00534">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaub"><code>level</code></a></p>
+<p><a href="dd-elements.html#GSDPG00181"><code>level</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00535">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00536">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauc"><code>local-home-impl</code></a></p>
+<p><a href="dd-elements.html#GSDPG00182"><code>local-home-impl</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyzo">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00537">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzah">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00538">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaud"><code>local-impl</code></a></p>
+<p><a href="dd-elements.html#GSDPG00183"><code>local-impl</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcr">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00539">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzai">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00540">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaue"><code>locale-charset-info</code></a></p>
+<p><a href="dd-elements.html#GSDPG00184"><code>locale-charset-info</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvm">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00541">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbi">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00542">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywh">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00543">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauf"><code>locale-charset-map</code></a></p>
+<p><a href="dd-elements.html#GSDPG00185"><code>locale-charset-map</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzbg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00544">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywg">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00545">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzn">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00546">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzct">Example Agents</a></p>
+<p><a href="dd-elements.html#GSDPG00547">Example Agents</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaug"><code>localpart</code></a></p>
+<p><a href="dd-elements.html#GSDPG00186"><code>localpart</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzad">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00548">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzb">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00549">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauh"><code>lock-when-loaded</code></a></p>
+<p><a href="dd-elements.html#GSDPG00187"><code>lock-when-loaded</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyze">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00550">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyyl">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00551">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaui"><code>lock-when-modified</code></a></p>
+<p><a href="dd-elements.html#GSDPG00188"><code>lock-when-modified</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00552">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauj"><code>log-service</code></a></p>
+<p><a href="dd-elements.html#GSDPG00189"><code>log-service</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyv">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00553">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywo">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00554">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzl">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00555">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauk"><code>login-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00190"><code>login-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywb">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00556">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxg">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00557">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyik"><code>mail-resource</code></a></p>
+<p><a href="dd-elements.html#GSDPG00191"><code>mail-resource</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref147">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG957">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref148">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG958">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref151">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG960">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref154">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG962">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaum"><code>manager-properties</code></a></p>
+<p><a href="dd-elements.html#GSDPG00192"><code>manager-properties</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00558">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzcq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00559">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdg">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00560">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaun"><code>mapping-properties</code></a></p>
+<p><a href="dd-elements.html#GSDPG00193"><code>mapping-properties</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywv">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00561">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauo"><code>max-cache-size</code></a></p>
+<p><a href="dd-elements.html#GSDPG00194"><code>max-cache-size</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyo">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00562">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbx">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00563">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaup"><code>max-pool-size</code></a></p>
+<p><a href="dd-elements.html#GSDPG00195"><code>max-pool-size</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00564">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxa">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00565">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauq"><code>max-wait-time-in-millis</code></a></p>
+<p><a href="dd-elements.html#GSDPG00196"><code>max-wait-time-in-millis</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyzg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00566">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaur"><code>mdb-connection-factory</code></a></p>
+<p><a href="dd-elements.html#GSDPG00197"><code>mdb-connection-factory</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyzj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00567">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxt">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00568">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaus"><code>mdb-resource-adapter</code></a></p>
+<p><a href="dd-elements.html#GSDPG00198"><code>mdb-resource-adapter</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdd">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00569">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyyx">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00570">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaut"><code>message</code></a></p>
+<p><a href="dd-elements.html#GSDPG00199"><code>message</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzci">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00571">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxc">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00572">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauu"><code>message-destination</code></a></p>
+<p><a href="dd-elements.html#GSDPG00200"><code>message-destination</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzaz">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00573">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxn">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00574">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauv"><code>message-destination-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00201"><code>message-destination-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00575">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbo">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00576">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gauao"><code>message-destination-ref</code></a></p>
+<p><a href="dd-elements.html#GSDPG00202"><code>message-destination-ref</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gauam">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00577">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gaual">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00578">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gauat"><code>message-destination-ref-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00203"><code>message-destination-ref-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gauaj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00579">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gauas">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00580">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauw"><code>message-security</code></a></p>
+<p><a href="dd-elements.html#GSDPG00204"><code>message-security</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzac">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00581">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyve">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00582">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaux"><code>message-security-binding</code></a></p>
+<p><a href="dd-elements.html#GSDPG00205"><code>message-security-binding</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzbc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00583">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00584">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbj">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00585">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauy"><code>message-security-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00206"><code>message-security-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyya">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00586">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzck">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00587">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvw">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00588">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beauz"><code>method</code></a></p>
+<p><a href="dd-elements.html#GSDPG00207"><code>method</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzae">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00589">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzay">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00590">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beava"><code>method-intf</code></a></p>
+<p><a href="dd-elements.html#GSDPG00208"><code>method-intf</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00591">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyyz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00592">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavb"><code>method-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00209"><code>method-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvp">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00593">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzcp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00594">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdr">Examples</a></p>
+<p><a href="dd-elements.html#GSDPG00595">Examples</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavc"><code>method-param</code></a></p>
+<p><a href="dd-elements.html#GSDPG00210"><code>method-param</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdl">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00596">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvj">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00597">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavd"><code>method-params</code></a></p>
+<p><a href="dd-elements.html#GSDPG00211"><code>method-params</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdt">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00598">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00599">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavf"><code>name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00212"><code>name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00600">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxe">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00601">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavg"><code>named-group</code></a></p>
+<p><a href="dd-elements.html#GSDPG00213"><code>named-group</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzds">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00602">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxr">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00603">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavh"><code>namespaceURI</code></a></p>
+<p><a href="dd-elements.html#GSDPG00214"><code>namespaceURI</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywa">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00604">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzc">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00605">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavi"><code>none</code></a></p>
+<p><a href="dd-elements.html#GSDPG00215"><code>none</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvv">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00606">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzaw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00607">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavk"><code>one-one-finders</code></a></p>
+<p><a href="dd-elements.html#GSDPG00216"><code>one-one-finders</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00608">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00609">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavl"><code>operation-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00217"><code>operation-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzas">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00610">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvt">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00611">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavn"><code>parameter-encoding</code></a></p>
+<p><a href="dd-elements.html#GSDPG00218"><code>parameter-encoding</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyzr">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00612">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbf">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00613">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxk">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00614">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavo"><code>pass-by-reference</code></a></p>
+<p><a href="dd-elements.html#GSDPG00219"><code>pass-by-reference</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzec">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00615">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywx">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00616">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavp"><code>password</code></a></p>
+<p><a href="dd-elements.html#GSDPG00220"><code>password</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvn">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00617">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00618">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gkkia"><code>per-request-load-balancing</code></a></p>
+<p><a href="dd-elements.html#GSDPG00221"><code>per-request-load-balancing</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gkklx">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00619">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gkkmq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00620">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavq"><code>pm-descriptors</code></a></p>
+<p><a href="dd-elements.html#GSDPG00222"><code>pm-descriptors</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzbh">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00621">Superelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavr"><code>pool-idle-timeout-in-seconds</code></a></p>
+<p><a href="dd-elements.html#GSDPG00223"><code>pool-idle-timeout-in-seconds</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzbm">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00622">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00623">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavs"><code>port-component-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00224"><code>port-component-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzbl">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00624">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyys">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00625">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavt"><code>port-info</code></a></p>
+<p><a href="dd-elements.html#GSDPG00225"><code>port-info</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdh">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00626">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyva">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00627">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavu"><code>prefetch-disabled</code></a></p>
+<p><a href="dd-elements.html#GSDPG00226"><code>prefetch-disabled</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyxl">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00628">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyyb">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00629">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavv"><code>principal</code></a></p>
+<p><a href="dd-elements.html#GSDPG00227"><code>principal</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvy">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00630">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbt">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00631">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyif"><code>principal-map</code></a></p>
+<p><a href="dd-elements.html#GSDPG00228"><code>principal-map</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref174">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG982">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#giyjg">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00632">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref175">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG983">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavw"><code>principal-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00229"><code>principal-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyws">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00633">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00634">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gatzl">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00635">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavx"><code>property</code> (with attributes)</a></p>
+<p><a href="dd-elements.html#GSDPG00230"><code>property</code> (with attributes)</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzeb">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00636">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00637">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvi">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00638">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzab">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00639">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavy"><code>property</code> (with subelements)</a></p>
+<p><a href="dd-elements.html#GSDPG00231"><code>property</code> (with subelements)</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcl">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00640">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzaf">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00641">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxz">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00642">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beavz"><code>provider-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00232"><code>provider-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcy">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00643">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzt">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00644">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywu">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00645">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawb"><code>query-filter</code></a></p>
+<p><a href="dd-elements.html#GSDPG00233"><code>query-filter</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdm">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00646">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzco">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00647">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawc"><code>query-method</code></a></p>
+<p><a href="dd-elements.html#GSDPG00234"><code>query-method</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyxo">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00648">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzm">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00649">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawd"><code>query-ordering</code></a></p>
+<p><a href="dd-elements.html#GSDPG00235"><code>query-ordering</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzef">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00650">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywd">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00651">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawe"><code>query-params</code></a></p>
+<p><a href="dd-elements.html#GSDPG00236"><code>query-params</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00652">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzax">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00653">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawf"><code>query-variables</code></a></p>
+<p><a href="dd-elements.html#GSDPG00237"><code>query-variables</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyyg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00654">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzce">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00655">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawh"><code>read-only</code></a></p>
+<p><a href="dd-elements.html#GSDPG00238"><code>read-only</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyzs">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00656">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzav">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00657">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawi"><code>realm</code></a></p>
+<p><a href="dd-elements.html#GSDPG00239"><code>realm</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzaa">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00658">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00659">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawj"><code>refresh-field</code></a></p>
+<p><a href="dd-elements.html#GSDPG00240"><code>refresh-field</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywt">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00660">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00661">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzbp">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00662">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawk"><code>refresh-period-in-seconds</code></a></p>
+<p><a href="dd-elements.html#GSDPG00241"><code>refresh-period-in-seconds</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcn">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00663">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxh">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00664">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawl"><code>removal-timeout-in-seconds</code></a></p>
+<p><a href="dd-elements.html#GSDPG00242"><code>removal-timeout-in-seconds</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzat">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00665">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzeg">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00666">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawm"><code>remote-home-impl</code></a></p>
+<p><a href="dd-elements.html#GSDPG00243"><code>remote-home-impl</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywr">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00667">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyyt">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00668">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawn"><code>remote-impl</code></a></p>
+<p><a href="dd-elements.html#GSDPG00244"><code>remote-impl</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyzi">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00669">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzag">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00670">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawo"><code>request-policy</code></a></p>
+<p><a href="dd-elements.html#GSDPG00245"><code>request-policy</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyxw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00671">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00672">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyvq">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00673">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawp"><code>request-protection</code></a></p>
+<p><a href="dd-elements.html#GSDPG00246"><code>request-protection</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcv">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00674">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzby">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00675">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzar">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00676">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawq"><code>required</code></a></p>
+<p><a href="dd-elements.html#GSDPG00247"><code>required</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00677">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywc">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00678">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawr"><code>res-ref-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00248"><code>res-ref-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvk">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00679">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyyp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00680">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaws"><code>resize-quantity</code></a></p>
+<p><a href="dd-elements.html#GSDPG00249"><code>resize-quantity</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyxb">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00681">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzcf">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00682">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyit"><code>resource-adapter-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00250"><code>resource-adapter-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref188">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG995">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref189">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG996">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref192">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG998">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref195">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG1000">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawt"><code>resource-adapter-mid</code></a></p>
+<p><a href="dd-elements.html#GSDPG00251"><code>resource-adapter-mid</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvd">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00683">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzed">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00684">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawu"><code>resource-env-ref</code></a></p>
+<p><a href="dd-elements.html#GSDPG00252"><code>resource-env-ref</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvyvr">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00685">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvywe">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00686">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzdf">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00687">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawv"><code>resource-env-ref-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00253"><code>resource-env-ref-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzau">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00688">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxj">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00689">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaww"><code>resource-ref</code></a></p>
+<p><a href="dd-elements.html#GSDPG00254"><code>resource-ref</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvywf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00690">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzz">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00691">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyzk">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00692">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyiy"><code>resources</code></a></p>
+<p><a href="dd-elements.html#GSDPG00255"><code>resources</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref198">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG1003">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref199">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG1004">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawx"><code>response-policy</code></a></p>
+<p><a href="dd-elements.html#GSDPG00256"><code>response-policy</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzcg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00693">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxm">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00694">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxf">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00695">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawy"><code>response-protection</code></a></p>
+<p><a href="dd-elements.html#GSDPG00257"><code>response-protection</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzdk">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00696">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvyxd">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00697">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzeh">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00698">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beawz"><code>role-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00258"><code>role-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzek">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00699">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzei">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00700">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxb"><code>sas-context</code></a></p>
+<p><a href="dd-elements.html#GSDPG00259"><code>sas-context</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzel">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00701">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfb">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00702">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxc"><code>schema</code></a></p>
+<p><a href="dd-elements.html#GSDPG00260"><code>schema</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfa">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00703">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzeq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00704">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzer">Examples</a></p>
+<p><a href="dd-elements.html#GSDPG00705">Examples</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxd"><code>schema-generator-properties</code></a></p>
+<p><a href="dd-elements.html#GSDPG00261"><code>schema-generator-properties</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzen">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00706">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzez">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00707">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzew">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00708">Properties</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzem">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00709">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxe"><code>secondary-table</code></a></p>
+<p><a href="dd-elements.html#GSDPG00262"><code>secondary-table</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzep">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00710">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzeo">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00711">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxf"><code>security</code></a></p>
+<p><a href="dd-elements.html#GSDPG00263"><code>security</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzes">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00712">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzeu">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00713">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyhy"><code>security-map</code></a></p>
+<p><a href="dd-elements.html#GSDPG00264"><code>security-map</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref210">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG1014">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref211">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG1015">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref214">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG1017">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxg"><code>security-role-mapping</code></a></p>
+<p><a href="dd-elements.html#GSDPG00265"><code>security-role-mapping</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00714">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfd">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00715">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxh"><code>service-endpoint-interface</code></a></p>
+<p><a href="dd-elements.html#GSDPG00266"><code>service-endpoint-interface</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfm">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00716">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfl">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00717">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxi"><code>service-impl-class</code></a></p>
+<p><a href="dd-elements.html#GSDPG00267"><code>service-impl-class</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfg">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00718">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfk">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00719">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxj"><code>service-qname</code></a></p>
+<p><a href="dd-elements.html#GSDPG00268"><code>service-qname</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfn">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00720">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzff">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00721">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxk"><code>service-ref</code></a></p>
+<p><a href="dd-elements.html#GSDPG00269"><code>service-ref</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfh">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00722">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhf">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00723">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxl"><code>service-ref-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00270"><code>service-ref-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfx">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00724">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzga">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00725">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxm"><code>servlet</code></a></p>
+<p><a href="dd-elements.html#GSDPG00271"><code>servlet</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgd">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00726">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00727">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxn"><code>servlet-impl-class</code></a></p>
+<p><a href="dd-elements.html#GSDPG00272"><code>servlet-impl-class</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhx">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00728">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00729">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxo"><code>servlet-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00273"><code>servlet-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhj">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00730">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzir">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00731">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxp"><code>session-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00274"><code>session-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzic">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00732">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfy">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00733">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxq"><code>session-manager</code></a></p>
+<p><a href="dd-elements.html#GSDPG00275"><code>session-manager</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgx">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00734">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzit">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00735">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgm">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00736">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxr"><code>session-properties</code></a></p>
+<p><a href="dd-elements.html#GSDPG00276"><code>session-properties</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzha">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00737">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgk">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00738">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzht">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00739">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxs"><code>ssl</code></a></p>
+<p><a href="dd-elements.html#GSDPG00277"><code>ssl</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzft">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00740">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgh">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00741">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzip">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00742">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxt"><code>steady-pool-size</code></a></p>
+<p><a href="dd-elements.html#GSDPG00278"><code>steady-pool-size</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvziq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00743">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvziy">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00744">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxu"><code>store-properties</code></a></p>
+<p><a href="dd-elements.html#GSDPG00279"><code>store-properties</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzie">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00745">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzid">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00746">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzho">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00747">Properties</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxv"><code>stub-property</code></a></p>
+<p><a href="dd-elements.html#GSDPG00280"><code>stub-property</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00748">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzij">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00749">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gawoa">Properties</a></p>
+<p><a href="dd-elements.html#GSDPG00750">Properties</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzji">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00751">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxy"><code>sun-cmp-mapping</code></a></p>
+<p><a href="dd-elements.html#GSDPG00281"><code>sun-cmp-mapping</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhh">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00752">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjg">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00753">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaxz"><code>sun-cmp-mappings</code></a></p>
+<p><a href="dd-elements.html#GSDPG00282"><code>sun-cmp-mappings</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzix">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00754">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjj">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00755">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayd"><code>table-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00283"><code>table-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzis">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00756">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjk">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00757">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaye"><code>target-server</code></a></p>
+<p><a href="dd-elements.html#GSDPG00284"><code>target-server</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgy">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00758">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhi">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00759">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfp">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00760">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayf"><code>tie-class</code></a></p>
+<p><a href="dd-elements.html#GSDPG00285"><code>tie-class</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgz">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00761">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00762">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayg"><code>timeout</code></a></p>
+<p><a href="dd-elements.html#GSDPG00286"><code>timeout</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhc">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00763">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvziv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00764">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhd">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00765">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayh"><code>transport-config</code></a></p>
+<p><a href="dd-elements.html#GSDPG00287"><code>transport-config</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzfo">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00766">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhv">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00767">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayi"><code>transport-guarantee</code></a></p>
+<p><a href="dd-elements.html#GSDPG00288"><code>transport-guarantee</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhb">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00768">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgl">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00769">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayk"><code>unique-id</code></a></p>
+<p><a href="dd-elements.html#GSDPG00289"><code>unique-id</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzig">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00770">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjc">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00771">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayl"><code>url-pattern</code></a></p>
+<p><a href="dd-elements.html#GSDPG00290"><code>url-pattern</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvziw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00772">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00773">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyiq"><code>user-group</code></a></p>
+<p><a href="dd-elements.html#GSDPG00291"><code>user-group</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref237">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG1039">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref238">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG1040">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beaym"><code>use-thread-pool-id</code></a></p>
+<p><a href="dd-elements.html#GSDPG00292"><code>use-thread-pool-id</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhz">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00774">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00775">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayo"><code>value</code></a></p>
+<p><a href="dd-elements.html#GSDPG00293"><code>value</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhq">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00776">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzhe">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00777">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gikqk"><code>valve</code></a></p>
+<p><a href="dd-elements.html#GSDPG00294"><code>valve</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#giksf">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00778">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gikvt">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00779">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gikuo">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG00780">Attributes</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#giksd">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00781">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gbgdw"><code>vendor</code></a></p>
+<p><a href="dd-elements.html#GSDPG00295"><code>vendor</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#gbgdu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00782">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#gbgcq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00783">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#gkkfd"><code>version-identifier</code></a></p>
+<p><a href="dd-elements.html#GSDPG00296"><code>version-identifier</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref241">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG1043">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref242">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG1044">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayp"><code>victim-selection-policy</code></a></p>
+<p><a href="dd-elements.html#GSDPG00297"><code>victim-selection-policy</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhu">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00784">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzfr">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00785">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgi">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00786">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayr"><code>web</code></a></p>
+<p><a href="dd-elements.html#GSDPG00298"><code>web</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzil">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00787">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzge">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00788">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beays"><code>web-uri</code></a></p>
+<p><a href="dd-elements.html#GSDPG00299"><code>web-uri</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzhk">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00789">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzik">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00790">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayt"><code>webservice-description</code></a></p>
+<p><a href="dd-elements.html#GSDPG00300"><code>webservice-description</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzjd">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00791">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgs">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00792">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayu"><code>webservice-description-name</code></a></p>
+<p><a href="dd-elements.html#GSDPG00301"><code>webservice-description-name</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzgp">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00793">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzgw">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00794">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayv"><code>webservice-endpoint</code></a></p>
+<p><a href="dd-elements.html#GSDPG00302"><code>webservice-endpoint</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzio">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00795">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjp">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00796">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#giyht"><code>work-security-map</code></a></p>
+<p><a href="dd-elements.html#GSDPG00303"><code>work-security-map</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#sthref246">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG1048">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#giyih">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00797">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#sthref249">Attributes</a></p>
+<p><a href="dd-elements.html#GSDPG1050">Attributes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayw"><code>wsdl-override</code></a></p>
+<p><a href="dd-elements.html#GSDPG00304"><code>wsdl-override</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzjl">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00798">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjq">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00799">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjt">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00800">Example</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayx"><code>wsdl-port</code></a></p>
+<p><a href="dd-elements.html#GSDPG00305"><code>wsdl-port</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzjo">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00801">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjm">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00802">Subelements</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="dd-elements.html#beayy"><code>wsdl-publish-location</code></a></p>
+<p><a href="dd-elements.html#GSDPG00306"><code>wsdl-publish-location</code></a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="dd-elements.html#fvzjw">Superelements</a></p>
+<p><a href="dd-elements.html#GSDPG00803">Superelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjr">Subelements</a></p>
+<p><a href="dd-elements.html#GSDPG00804">Subelements</a></p>
 </li>
 <li>
-<p><a href="dd-elements.html#fvzjn">Example</a></p>
+<p><a href="dd-elements.html#GSDPG00805">Example</a></p>
 </li>
 </ul>
 </div>
@@ -3532,7 +3439,7 @@ in GlassFish Server</a></p>
 	<tr>		
 
 		<td align="left">
-		<a href="loe.html">
+		<a href="title.html">
 			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
 			<span style="position:relative;top:-2px;">Next</span>
 		</a>
@@ -3548,9 +3455,11 @@ in GlassFish Server</a></p>
 </table>
 
 <span id="copyright">
-        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
         <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
 </span>
+
+<p align="center" class="beta">DRAFT</p>
 
 </body>
 </html>

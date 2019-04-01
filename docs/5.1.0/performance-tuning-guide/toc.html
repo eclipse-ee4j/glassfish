@@ -13,6 +13,7 @@
   <tr>
   <td align="left" valign="top">
   <b>Eclipse GlassFish Server Performance Tuning Guide, Release 5.1</b><br />
+      <p class="beta">DRAFT</p>
   </td>
   </tr>
 </table>
@@ -27,7 +28,7 @@
 	<tr>
 
 		<td align="left">
-		<a href="loe.html">
+		<a href="title.html">
 			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
 			<span style="position:relative;top:-2px;">Next</span>
 		</a>
@@ -46,344 +47,165 @@
 <div class="sect1">
 <h2 id="contents">Contents</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="list-of-examples"><a href="loe.html">List of Examples</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="list-of-figures"><a href="lof.html">List of Figures</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="list-of-tables"><a href="lot.html">List of Tables</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="title-and-copyright-information"><a href="title.html">Title and Copyright Information</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="preface"><a href="preface.html#pref">Preface</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="preface.html#gksfg">Oracle GlassFish Server Documentation Set</a></p>
+<p><a href="title.html#eclipse-glassfish-server">Eclipse GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="__a_href_preface_html_gsptg00002_preface_a"><a href="preface.html#GSPTG00002">Preface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="preface.html#GSPTG00043">Oracle GlassFish Server Documentation Set</a></p>
 </li>
 <li>
-<p><a href="preface.html#fwbkx">Typographic Conventions</a></p>
+<p><a href="preface.html#GSPTG00045">Typographic Conventions</a></p>
 </li>
 <li>
-<p><a href="preface.html#fquvc">Symbol Conventions</a></p>
+<p><a href="preface.html#GSPTG00046">Symbol Conventions</a></p>
 </li>
 <li>
-<p><a href="preface.html#ghpfg">Default Paths and File Names</a></p>
+<p><a href="preface.html#GSPTG00044">Default Paths and File Names</a></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="overview-of-glassfish-server-performance-tuning"><a href="overview.html#giekg">1 Overview of GlassFish Server Performance Tuning</a></h3>
+<h3 id="overview-of-glassfish-server-performance-tuning"><a href="overview.html#GSPTG00003">1 Overview of GlassFish Server Performance Tuning</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="overview.html#abear">Process Overview</a></p>
+<p><a href="overview.html#GSPTG00048">Process Overview</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="overview.html#abeas">Performance Tuning Sequence</a></p>
+<p><a href="overview.html#GSPTG00035">Performance Tuning Sequence</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="overview.html#abeat">Understanding Operational Requirements</a></p>
+<p><a href="overview.html#GSPTG00049">Understanding Operational Requirements</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="overview.html#abeau">Application Architecture</a></p>
+<p><a href="overview.html#GSPTG00154">Application Architecture</a></p>
 </li>
 <li>
-<p><a href="overview.html#abeav">Security Requirements</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="overview.html#abeaw">User Authentication and Authorization</a></p>
+<p><a href="overview.html#GSPTG00155">Security Requirements</a></p>
 </li>
 <li>
-<p><a href="overview.html#abeax">Encryption</a></p>
+<p><a href="overview.html#GSPTG00156">High Availability Clustering, Load Balancing, and Failover</a></p>
+</li>
+<li>
+<p><a href="overview.html#GSPTG00157">Hardware Resources</a></p>
+</li>
+<li>
+<p><a href="overview.html#GSPTG00158">Administration</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="overview.html#gkvjf">High Availability Clustering, Load Balancing,
-and Failover</a></p>
-</li>
-<li>
-<p><a href="overview.html#abeay">Hardware Resources</a></p>
-</li>
-<li>
-<p><a href="overview.html#abeaz">Administration</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="overview.html#abeba">General Tuning Concepts</a></p>
+<p><a href="overview.html#GSPTG00050">General Tuning Concepts</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="overview.html#abebb">Capacity Planning</a></p>
-<div class="ulist">
-<ul>
+<p><a href="overview.html#GSPTG00159">Capacity Planning</a></p>
+</li>
 <li>
-<p><a href="overview.html#gacmz">To Determine Capacity</a></p>
+<p><a href="overview.html#GSPTG00160">User Expectations</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="overview.html#abebc">User Expectations</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="overview.html#abebd">Further Information</a></p>
+<p><a href="overview.html#GSPTG00051">Further Information</a></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="tuning-your-application"><a href="tuning-apps.html#abebe">2 Tuning Your Application</a></h3>
+<h3 id="tuning-your-application"><a href="tuning-apps.html#GSPTG00004">2 Tuning Your Application</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-apps.html#abebf">Java Programming Guidelines</a></p>
+<p><a href="tuning-apps.html#GSPTG00052">Java Programming Guidelines</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-apps.html#abebg">Avoid Serialization and Deserialization</a></p>
+<p><a href="tuning-apps.html#GSPTG00161">Avoid Serialization and Deserialization</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebh">Use <code>StringBuilder</code> to Concatenate
-Strings</a></p>
+<p><a href="tuning-apps.html#GSPTG00162">Use <code>StringBuilder</code> to Concatenate Strings</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebi">Assign null to Variables That Are No
-Longer Needed</a></p>
+<p><a href="tuning-apps.html#GSPTG00163">Assign null to Variables That Are No Longer Needed</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebj">Declare Methods as final Only If
-Necessary</a></p>
+<p><a href="tuning-apps.html#GSPTG00164">Declare Methods as final Only If Necessary</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebk">Declare Constants as static final</a></p>
+<p><a href="tuning-apps.html#GSPTG00165">Declare Constants as static final</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebl">Avoid Finalizers</a></p>
+<p><a href="tuning-apps.html#GSPTG00166">Avoid Finalizers</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebm">Declare Method Arguments final</a></p>
+<p><a href="tuning-apps.html#GSPTG00167">Declare Method Arguments final</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebn">Synchronize Only When Necessary</a></p>
+<p><a href="tuning-apps.html#GSPTG00168">Synchronize Only When Necessary</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebo">Use DataHandlers for SOAP Attachments</a></p>
+<p><a href="tuning-apps.html#GSPTG00169">Use DataHandlers for SOAP Attachments</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebp">Java Server Page and Servlet Tuning</a></p>
+<p><a href="tuning-apps.html#GSPTG00053">Java Server Page and Servlet Tuning</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-apps.html#abebq">Suggested Coding Practices</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abebr">General Guidelines</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abebs">Avoid Shared Modified Class Variables</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abebt">HTTP Session Handling</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abebu">Configuration and Deployment Tips</a></p>
-</li>
-</ul>
-</div>
+<p><a href="tuning-apps.html#GSPTG00170">Suggested Coding Practices</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-apps.html#abebw">EJB Performance Tuning</a></p>
+<p><a href="tuning-apps.html#GSPTG00054">EJB Performance Tuning</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-apps.html#abebx">Goals</a></p>
+<p><a href="tuning-apps.html#GSPTG00171">Goals</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abeby">Monitoring EJB Components</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abebz">Monitoring Individual EJB Components</a></p>
-</li>
-</ul>
-</div>
+<p><a href="tuning-apps.html#GSPTG00172">Monitoring EJB Components</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abeca">General Guidelines</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abecb">Use High Performance Beans</a></p>
+<p><a href="tuning-apps.html#GSPTG00173">General Guidelines</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abecc">Use Caching</a></p>
+<p><a href="tuning-apps.html#GSPTG00174">Using Local and Remote Interfaces</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abecd">Use the Appropriate Stubs</a></p>
+<p><a href="tuning-apps.html#GSPTG00175">Improving Performance of EJB Transactions</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abece">Remove Unneeded Stateful Session Beans</a></p>
+<p><a href="tuning-apps.html#GSPTG00176">Using Special Techniques</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abecf">Cache and Pool Tuning Tips</a></p>
-</li>
-</ul>
-</div>
+<p><a href="tuning-apps.html#GSPTG00177">Tuning Tips for Specific Types of EJB Components</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abecg">Using Local and Remote Interfaces</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abech">Prefer Local Interfaces</a></p>
+<p><a href="tuning-apps.html#GSPTG00178">JDBC and Database Access</a></p>
 </li>
 <li>
-<p><a href="tuning-apps.html#abeci">Using Pass-By-Reference Semantics</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecj">Improving Performance of EJB Transactions</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abeck">Use Container-Managed Transactions</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecl">Do Not Encompass User Input Time</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecm">Identify Non-Transactional Methods</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecn">Use <code>TX_REQUIRED</code> for Long Transaction
-Chains</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abeco">Use Lowest Cost Database Locking</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecp">Use XA-Capable Data Sources Only When
-Needed</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecq">Configure JDBC Resources as One-Phase
-Commit Resources</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecr">Use the Least Expensive Transaction
-Attribute</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecs">Using Special Techniques</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abect">Version Consistency</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecu">Request Partitioning</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecv">Tuning Tips for Specific Types of EJB
-Components</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abecw">Entity Beans</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecx">Stateful Session Beans</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abecz">Stateless Session Beans</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abeda">Read-Only Entity Beans</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedc">Pre-Fetching Container Managed
-Relationship (CMR) Beans</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedd">JDBC and Database Access</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abede">Use JDBC Directly</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedf">Encapsulate Business Logic in Entity EJB
-Components</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedg">Close Connections</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedh">Minimize the Database Transaction
-Isolation Level</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedi">Tuning Message-Driven Beans</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-apps.html#abedj">Use <code>getConnection()</code></a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedk">Tune the Message-Driven Bean&#8217;s Pool Size</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedl">Cache Bean-Specific Resources</a></p>
-</li>
-<li>
-<p><a href="tuning-apps.html#abedm">Limit Use of JMS Connections</a></p>
-</li>
-</ul>
-</div>
+<p><a href="tuning-apps.html#GSPTG00179">Tuning Message-Driven Beans</a></p>
 </li>
 </ul>
 </div>
@@ -392,510 +214,302 @@ Isolation Level</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="tuning-the-glassfish-server"><a href="tuning-glassfish.html#abedn">3 Tuning the GlassFish Server</a></h3>
+<h3 id="tuning-the-glassfish-server"><a href="tuning-glassfish.html#GSPTG00005">3 Tuning the GlassFish Server</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#gkxwm">Using the GlassFish Server Performance
-Tuner</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00055">Using the GlassFish Server Performance Tuner</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abedo">Deployment Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00056">Deployment Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abedp">Disable Auto-Deployment</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00180">Disable Auto-Deployment</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abedq">Use Pre-compiled JavaServer Pages</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00181">Use Pre-compiled JavaServer Pages</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abedr">Disable Dynamic Application
-Reloading</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00182">Disable Dynamic Application Reloading</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeds">Logger Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00057">Logger Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abedt">General Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00183">General Settings</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abedu">Log Levels</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00184">Log Levels</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abedw">Web Container Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00058">Web Container Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abedx">Session Properties: Session Timeout</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00185">Session Properties: Session Timeout</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abedy">Manager Properties: Reap Interval</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00186">Manager Properties: Reap Interval</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abedz">Disable Dynamic JSP Reloading</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00187">Disable Dynamic JSP Reloading</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeea">EJB Container Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00059">EJB Container Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abeeb">Monitoring the EJB Container</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00188">Monitoring the EJB Container</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeec">Tuning the EJB Container</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abeed">Overview of EJB Pooling and Caching</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abeee">Tuning the EJB Pool</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abeeg">Tuning the EJB Cache</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abeei">Pool and Cache Settings for
-Individual EJB Components</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abeej">Commit Option</a></p>
-</li>
-</ul>
-</div>
+<p><a href="tuning-glassfish.html#GSPTG00189">Tuning the EJB Container</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeel">Java Message Service Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00060">Java Message Service Settings</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeem">Transaction Service Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00061">Transaction Service Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abeen">Monitoring the Transaction Service</a></p>
-<div class="ulist">
-<ul>
+<p><a href="tuning-glassfish.html#GSPTG00190">Monitoring the Transaction Service</a></p>
+</li>
 <li>
-<p><a href="tuning-glassfish.html#abeeo">Viewing Monitoring Information</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00191">Tuning the Transaction Service</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeep">Tuning the Transaction Service</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00062">HTTP Service Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abeeq">Disable Distributed Transaction
-Logging</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00192">Monitoring the HTTP Service</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeer">Recover On Restart (Automatic
-Recovery)</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abees">Keypoint Interval</a></p>
-</li>
-</ul>
-</div>
+<p><a href="tuning-glassfish.html#GSPTG00193">HTTP Service Access Logging</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abeet">HTTP Service Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00063">Network Listener Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abeeu">Monitoring the HTTP Service</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00194">General Settings</a></p>
+</li>
+<li>
+<p><a href="tuning-glassfish.html#GSPTG00195">HTTP Settings</a></p>
+</li>
+<li>
+<p><a href="tuning-glassfish.html#GSPTG00196">File Cache Settings</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="tuning-glassfish.html#GSPTG00064">Transport Settings</a></p>
+</li>
+<li>
+<p><a href="tuning-glassfish.html#GSPTG00065">Thread Pool Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abeew">DNS Cache Information (dns)</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00197">Max Thread Pool Size</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abefh">File Cache Information (file-cache)</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abefi">Keep Alive (keep-alive)</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abefg">Connection Queue</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00198">Min Thread Pool Size</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abefk">HTTP Service Access Logging</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abegk">Network Listener Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00066">ORB Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abegl">General Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00199">Overview</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#gkxjd">HTTP Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00200">How a Client Connects to the ORB</a></p>
+</li>
+<li>
+<p><a href="tuning-glassfish.html#GSPTG00201">Monitoring the ORB</a></p>
+</li>
+<li>
+<p><a href="tuning-glassfish.html#GSPTG00202">Tuning the ORB</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="tuning-glassfish.html#GSPTG00067">Resource Settings</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-glassfish.html#abeft">Max Connections</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00203">JDBC Connection Pool Settings</a></p>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#abegd">DNS Lookup Enabled</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abefu">Timeout</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abefq">Header Buffer Length</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00204">Connector Connection Pool Settings</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-glassfish.html#gkxit">File Cache Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abegf">Max File Count</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abegh">Max Age</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#gkxjt">Transport Settings</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehk">Thread Pool Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abefn">Max Thread Pool Size</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abefo">Min Thread Pool Size</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abegt">ORB Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abegu">Overview</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abegv">How a Client Connects to the ORB</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abegw">Monitoring the ORB</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abegx">Connection Statistics</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abegy">Thread Pools</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abegz">Tuning the ORB</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abeha">Tunable ORB Parameters</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehb">ORB Thread Pool Parameters</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehc">Client ORB Properties</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehg">Thread Pool Sizing</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehh">Examining IIOP Messages</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehp">Resource Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abehq">JDBC Connection Pool Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abehr">Monitoring JDBC Connection Pools</a></p>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehs">Tuning JDBC Connection Pools</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#abehy">Connector Connection Pool Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-glassfish.html#abehz">Transaction Support</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-glassfish.html#gkxvd">Load Balancer Settings</a></p>
+<p><a href="tuning-glassfish.html#GSPTG00068">Load Balancer Settings</a></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="tuning-the-java-runtime-system"><a href="tuning-java.html#abeia">4 Tuning the Java Runtime System</a></h3>
+<h3 id="tuning-the-java-runtime-system"><a href="tuning-java.html#GSPTG00006">4 Tuning the Java Runtime System</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-java.html#abeib">Java Virtual Machine Settings</a></p>
+<p><a href="tuning-java.html#GSPTG00069">Java Virtual Machine Settings</a></p>
 </li>
 <li>
-<p><a href="tuning-java.html#gfpzy">Start Options</a></p>
+<p><a href="tuning-java.html#GSPTG00070">Start Options</a></p>
 </li>
 <li>
-<p><a href="tuning-java.html#glaat">Tuning High Availability Persistence</a></p>
+<p><a href="tuning-java.html#GSPTG00071">Tuning High Availability Persistence</a></p>
 </li>
 <li>
-<p><a href="tuning-java.html#abeic">Managing Memory and Garbage Collection</a></p>
+<p><a href="tuning-java.html#GSPTG00072">Managing Memory and Garbage Collection</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-java.html#abeid">Tuning the Garbage Collector</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-java.html#abeie">Choosing the Garbage Collection
-Algorithm</a></p>
+<p><a href="tuning-java.html#GSPTG00205">Tuning the Garbage Collector</a></p>
 </li>
 <li>
-<p><a href="tuning-java.html#abeif">Additional Information</a></p>
+<p><a href="tuning-java.html#GSPTG00206">Tracing Garbage Collection</a></p>
+</li>
+<li>
+<p><a href="tuning-java.html#GSPTG00207">Other Garbage Collector Settings</a></p>
+</li>
+<li>
+<p><a href="tuning-java.html#GSPTG00208">Tuning the Java Heap</a></p>
+</li>
+<li>
+<p><a href="tuning-java.html#GSPTG00209">Rebasing DLLs on Windows</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-java.html#abeig">Tracing Garbage Collection</a></p>
-</li>
-<li>
-<p><a href="tuning-java.html#abeih">Other Garbage Collector Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-java.html#glgkm">Setting the Maximum Permanent Generation</a></p>
-</li>
-<li>
-<p><a href="tuning-java.html#glglk">Disabling Explicit Garbage Collection</a></p>
-</li>
-<li>
-<p><a href="tuning-java.html#glglr">Setting the Frequency of Full Garbage
-Collection</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-java.html#abeii">Tuning the Java Heap</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-java.html#abeij">Guidelines for Java Heap Sizing</a></p>
-</li>
-<li>
-<p><a href="tuning-java.html#abeik">Heap Tuning Parameters</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-java.html#abeio">Rebasing DLLs on Windows</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-java.html#gacmt">To rebase the GlassFish Server&#8217;s DLLs</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-java.html#abeiq">Further Information</a></p>
+<p><a href="tuning-java.html#GSPTG00073">Further Information</a></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="tuning-the-operating-system-and-platform"><a href="tuning-os.html#abeir">5 Tuning the Operating System and Platform</a></h3>
+<h3 id="tuning-the-operating-system-and-platform"><a href="tuning-os.html#GSPTG00007">5 Tuning the Operating System and Platform</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-os.html#abeis">Server Scaling</a></p>
+<p><a href="tuning-os.html#GSPTG00074">Server Scaling</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-os.html#abeit">Processors</a></p>
+<p><a href="tuning-os.html#GSPTG00210">Processors</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#abeiu">Memory</a></p>
+<p><a href="tuning-os.html#GSPTG00211">Memory</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#abeiv">Disk Space</a></p>
+<p><a href="tuning-os.html#GSPTG00212">Disk Space</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#abeiw">Networking</a></p>
+<p><a href="tuning-os.html#GSPTG00213">Networking</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#glglf">UDP Buffer Sizes</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-os.html#sthref13">To Determine an Optimal UDP Buffer Size</a></p>
-</li>
-<li>
-<p><a href="tuning-os.html#glglz">To Set the UDP Buffer Size on Linux
-Systems</a></p>
-</li>
-</ul>
-</div>
+<p><a href="tuning-os.html#GSPTG00214">UDP Buffer Sizes</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-os.html#gfpzp">Solaris 10 Platform-Specific Tuning
-Information</a></p>
+<p><a href="tuning-os.html#GSPTG00075">Solaris 10 Platform-Specific Tuning Information</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#abeix">Tuning for the Solaris OS</a></p>
+<p><a href="tuning-os.html#GSPTG00076">Tuning for the Solaris OS</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-os.html#abeiy">Tuning Parameters</a></p>
-<div class="ulist">
-<ul>
+<p><a href="tuning-os.html#GSPTG00215">Tuning Parameters</a></p>
+</li>
 <li>
-<p><a href="tuning-os.html#abeiz">Sizing the Connection Hash Table</a></p>
+<p><a href="tuning-os.html#GSPTG00216">File Descriptor Setting</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-os.html#abeja">File Descriptor Setting</a></p>
+<p><a href="tuning-os.html#GSPTG00077">Tuning for Solaris on x86</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="tuning-os.html#GSPTG00217">File Descriptors</a></p>
+</li>
+<li>
+<p><a href="tuning-os.html#GSPTG00218">IP Stack Settings</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-os.html#abeje">Tuning for Solaris on x86</a></p>
+<p><a href="tuning-os.html#GSPTG00078">Tuning for Linux platforms</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-os.html#abejg">File Descriptors</a></p>
+<p><a href="tuning-os.html#GSPTG00219">Startup Files</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#abejh">IP Stack Settings</a></p>
+<p><a href="tuning-os.html#GSPTG00220">File Descriptors</a></p>
+</li>
+<li>
+<p><a href="tuning-os.html#GSPTG00221">Virtual Memory</a></p>
+</li>
+<li>
+<p><a href="tuning-os.html#GSPTG00222">Network Interface</a></p>
+</li>
+<li>
+<p><a href="tuning-os.html#GSPTG00223">Disk I/O Settings</a></p>
+</li>
+<li>
+<p><a href="tuning-os.html#GSPTG00224">TCP/IP Settings</a></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><a href="tuning-os.html#abeji">Tuning for Linux platforms</a></p>
+<p><a href="tuning-os.html#GSPTG00079">Tuning UltraSPARC CMT-Based Systems</a></p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tuning-os.html#gkvjl">Startup Files</a></p>
+<p><a href="tuning-os.html#GSPTG00225">Tuning Operating System and TCP Settings</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#abejj">File Descriptors</a></p>
+<p><a href="tuning-os.html#GSPTG00226">Disk Configuration</a></p>
 </li>
 <li>
-<p><a href="tuning-os.html#abejk">Virtual Memory</a></p>
-</li>
-<li>
-<p><a href="tuning-os.html#abejl">Network Interface</a></p>
-</li>
-<li>
-<p><a href="tuning-os.html#abejm">Disk I/O Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-os.html#gaclw">To tune disk I/O performance for non SCSI
-disks</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-os.html#abejn">TCP/IP Settings</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-os.html#gacmd">To tune the TCP/IP settings</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><a href="tuning-os.html#gfpzh">Tuning UltraSPARC CMT-Based Systems</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tuning-os.html#gfpzv">Tuning Operating System and TCP Settings</a></p>
-</li>
-<li>
-<p><a href="tuning-os.html#gfpzm">Disk Configuration</a></p>
-</li>
-<li>
-<p><a href="tuning-os.html#gfpzk">Network Configuration</a></p>
+<p><a href="tuning-os.html#GSPTG00227">Network Configuration</a></p>
 </li>
 </ul>
 </div>
@@ -917,7 +531,7 @@ disks</a></p>
 	<tr>		
 
 		<td align="left">
-		<a href="loe.html">
+		<a href="title.html">
 			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
 			<span style="position:relative;top:-2px;">Next</span>
 		</a>
@@ -933,8 +547,11 @@ disks</a></p>
 </table>
 
 <span id="copyright">
-        <img src="/img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
         <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
 </span>
+
+<p align="center" class="beta">DRAFT</p>
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import org.glassfish.internal.api.RelativePathResolver;
 
+import java.beans.Introspector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,7 +57,11 @@ public class ConnectorConfigProperty extends EnvironmentProperty {
     */
 
     public ConnectorConfigProperty(String name, String value, String description, String type) {
-    	super(name, value, description, type);
+        super(asPropertyName(name), value, description, type);
+    }
+
+    private static String asPropertyName(String s) {
+        return Introspector.decapitalize(s);
     }
 
     public boolean isIgnore() {
@@ -129,5 +134,10 @@ public class ConnectorConfigProperty extends EnvironmentProperty {
 
     public void setSetSupportsDynamicUpdatesCalled(boolean setSupportsDynamicUpdatesCalled) {
         this.setSupportsDynamicUpdatesCalled = setSupportsDynamicUpdatesCalled;
+    }
+
+    @Override
+    public void setName(String n) {
+        super.setName(asPropertyName(n));
     }
 }

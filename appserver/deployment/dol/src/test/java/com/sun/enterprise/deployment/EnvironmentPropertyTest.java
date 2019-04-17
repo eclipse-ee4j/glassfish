@@ -3,6 +3,7 @@ package com.sun.enterprise.deployment;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class EnvironmentPropertyTest {
 
@@ -13,4 +14,10 @@ public class EnvironmentPropertyTest {
     assertEquals("value", ep.getValue());
   }
 
+  @Test
+  public void constructedEnvironmentPropertyShouldHaveValue() {
+    EnvironmentProperty ep = new EnvironmentProperty("name", "value", "description");
+
+    assertTrue(ep.hasAValue());
+  }
 }

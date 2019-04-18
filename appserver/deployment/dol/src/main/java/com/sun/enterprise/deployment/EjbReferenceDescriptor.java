@@ -82,19 +82,6 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
 	}
     }
 
-    /** 
-     * Construct an remote ejb reference to the given ejb descriptor 
-     * with the given name and descriptor of the reference.
-     *
-     * @param name the ejb-ref name as used in the referencing bean
-     * @param description optional description
-     * @param ejbDescriptor of the referenced bean
-     */
-    public EjbReferenceDescriptor(String name, String description, EjbDescriptor ejbDescriptor) {
-	super(name, "", description);
-	this.setEjbDescriptor(ejbDescriptor);
-    }
-    
     /**
      * constructs an local or remote ejb reference to the given ejb descriptor, 
      * the description and the name of the reference

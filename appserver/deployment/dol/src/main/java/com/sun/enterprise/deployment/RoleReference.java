@@ -51,8 +51,7 @@ public class RoleReference extends EnvironmentProperty implements
      * @param the environment property instance.
      */
     public RoleReference(EnvironmentProperty environmentProperty) {
-	super(environmentProperty.getName(), 
-		environmentProperty.getDescription(), "");
+	this(environmentProperty.getName(), environmentProperty.getDescription());
 	this.setValue(environmentProperty.getValue());
     }
     

@@ -66,19 +66,6 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty
     }
 
     /** 
-     * Construct an message destination reference 
-     * with the given name and descriptor of the reference.
-     *
-     * @param name the message-destination-ref name as used in 
-     * the referencing component
-     * @param optional description
-     */
-    public MessageDestinationReferenceDescriptor(String name, String desc) {
-	super(name, "", desc);
-        referencer = new MessageDestinationReferencerImpl(this);
-    }
-    
-    /** 
     * Constructs a reference in the extrernal state.
     */
     

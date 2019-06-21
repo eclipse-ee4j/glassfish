@@ -55,17 +55,6 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty
     private MessageDestinationReferencerImpl referencer;
     
     /** 
-    * copy constructor
-    */
-    public MessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor other) {
-	super(other);
-	referringBundle = other.referringBundle; // copy as-is
-	usage = other.usage; // immutable String
-	destinationType = other.destinationType; // immutable String
-        referencer = new MessageDestinationReferencerImpl(other.referencer);
-    }
-
-    /** 
     * Constructs a reference in the extrernal state.
     */
     

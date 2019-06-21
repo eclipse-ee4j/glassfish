@@ -71,17 +71,6 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     protected String lookupName;
 
     /** 
-    ** copy constructor.
-    */
-
-    public EnvironmentProperty(EnvironmentProperty other) {
-	super(other);
-	value = other.value;
-	type = other.type;
-	valueObject = other.valueObject;
-    }  
-				    
-    /** 
     ** Construct an environment property if type String and empty string value and no description.
     */
 

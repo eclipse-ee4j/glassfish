@@ -62,26 +62,6 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
      */
     private String lookupName=null;
 
-    /** 
-     * copy constructor 
-     *
-     * @param other handle to other EjbReferenceDescriptor to clone
-     */
-    public EjbReferenceDescriptor(EjbReferenceDescriptor other) {
-	super(other);
-	isLocal = other.isLocal; // boolean
-	refType = other.refType; // String
-	refHomeIntf = other.refHomeIntf; // String
-	refIntf = other.refIntf; // String
-	ejbLink = other.ejbLink; // String
-    lookupName = other.lookupName;
-	referringBundle = other.referringBundle; // copy as-is
-	ejbDescriptor = other.ejbDescriptor;
-	if (ejbDescriptor != null) { 
-            ejbDescriptor.addEjbReferencer(this); // ???
-	}
-    }
-
     /**
      * constructs an local or remote ejb reference to the given ejb descriptor, 
      * the description and the name of the reference

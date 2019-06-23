@@ -25,8 +25,8 @@ The default domain called 'domain1' is installed and preconfigured.
 The 'asadmin' command-line utility is used to control and manage GlassFish (start, stop, configure, deploy applications, etc).
 
 To start GlassFish, just go in the directory where GlassFish is located and type:
-        On Unix: glassfish5/glassfish/bin asadmin start-domain
-        On Windows: glassfish5\glassfish\bin asadmin start-domain
+        On Unix: glassfish5/glassfish/bin/asadmin start-domain
+        On Windows: glassfish5\glassfish\bin\asadmin start-domain
 
 After a few seconds, GlassFish will be up and ready to accept requests. The default 'domain1' domain is configured to listen on port 8080. In your browser, go to http://localhost:8080 to see the default landing page.
 

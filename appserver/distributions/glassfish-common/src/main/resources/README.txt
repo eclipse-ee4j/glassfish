@@ -37,8 +37,8 @@ To manage GlassFish, just go to web administration console: http://localhost:484
 =====================
 
 To stop GlassFish, just issue the following command :
-        On Unix: glassfish5/glassfish/bin asadmin stop-domain
-        On Windows: glassfish5\glassfish\bin asadmin stop-domain
+        On Unix: glassfish5/glassfish/bin/asadmin stop-domain
+        On Windows: glassfish5\glassfish\bin\asadmin stop-domain
 
 
 4. Where to go next?

@@ -128,13 +128,11 @@ public class RWLockDataStructure implements DataStructure {
         boolean removed = false;
         writeLock.lock();
         try {
-            removed = resources.remove(resource);
+            resources.remove(resource);
         } finally {
             writeLock.unlock();
         }
-        if(removed) {
-            handler.deleteResource(resource);
-        }
+        handler.deleteResource(resource);
     }
 
     /**

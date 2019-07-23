@@ -108,8 +108,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.batch</groupId>
-            <artifactId>javax.batch-api</artifactId>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

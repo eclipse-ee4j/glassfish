@@ -103,7 +103,7 @@
         <yasson.version>1.0.3</yasson.version>
         <concurrent-api.version>1.1.2</concurrent-api.version>
         <concurrent.version>1.1.1</concurrent.version>
-        <javax.batch-api.version>1.0.1</javax.batch-api.version>
+        <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
         <javax.management.j2ee-api.version>1.1.3</javax.management.j2ee-api.version>
@@ -271,14 +271,14 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>javax.batch</groupId>
-                                <artifactId>javax.batch-api</artifactId>
-                                <version>${javax.batch-api.version}</version>
+                                <groupId>jakarta.batch</groupId>
+                                <artifactId>jakarta.batch-api</artifactId>
+                                <version>${jakarta.batch-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
                             <specVersion>1.0</specVersion>
-			    <specImplVersion>${javax.batch-api.version}</specImplVersion>
+                            <specImplVersion>${jakarta.batch-api.version}</specImplVersion>
                             <apiPackage>javax.batch</apiPackage>
                         </spec>
                         <spec>
@@ -926,9 +926,9 @@
                 <version>2.0.4</version>
             </dependency>
             <dependency>
-                <groupId>javax.batch</groupId>
-                <artifactId>javax.batch-api</artifactId>
-                <version>${javax.batch-api.version}</version>
+                <groupId>jakarta.batch</groupId>
+                <artifactId>jakarta.batch-api</artifactId>
+                <version>${jakarta.batch-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibm.jbatch</groupId>

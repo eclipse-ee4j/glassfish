@@ -39,7 +39,7 @@
     </scm>
 
     <properties>
-        <jms-api.version>2.0.2</jms-api.version>
+        <jms-api.version>2.0.3</jms-api.version>
         <jsp-api.version>2.3.5</jsp-api.version>
         <jsp-impl.version>2.3.5</jsp-impl.version>
         <jstl-impl.version>1.2.6</jstl-impl.version>

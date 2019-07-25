@@ -84,7 +84,7 @@
         <slf4j.version>1.7.21</slf4j.version>
         <javax.validation.osgi.version>2.0.0</javax.validation.osgi.version>
         <management-api.version>1.1-rev-1</management-api.version>
-        <servlet-api.version>4.0.2</servlet-api.version>
+        <servlet-api.version>4.0.3</servlet-api.version>
         <grizzly.version>2.4.4</grizzly.version>
         <grizzly.npn.version>1.9</grizzly.npn.version>
         <jboss.logging.annotation.version>2.1.0.Final</jboss.logging.annotation.version>

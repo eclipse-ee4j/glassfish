@@ -100,8 +100,8 @@
         <jsonp-jaxrs.version>1.1.5</jsonp-jaxrs.version>
         <json.bind-api.version>1.0.1</json.bind-api.version>
         <yasson.version>1.0.3</yasson.version>
-        <concurrent-api.version>1.1.1</concurrent-api.version>
-        <concurrent.version>1.1.1</concurrent.version>
+        <concurrent-api.version>1.1.2</concurrent-api.version>
+        <concurrent.version>1.1.2</concurrent.version>
         <javax.batch-api.version>1.0.1</javax.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>

@@ -66,8 +66,8 @@
                             *; artifactId=hibernate-validator-cdi; inline=true
                         </Embed-Dependency>
                         <Export-Package>
-                            org.hibernate.validator.internal.cdi; version=${hibernate-validator.version},
-			    org.hibernate.validator.internal.cdi.interceptor; version=${hibernate-validator.version},
+                            org.hibernate.validator.cdi.internal; version=${hibernate-validator.version},
+			    org.hibernate.validator.cdi.internal.interceptor; version=${hibernate-validator.version},
                         </Export-Package>
 
                         <Import-Package>

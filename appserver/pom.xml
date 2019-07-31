@@ -43,21 +43,21 @@
         <jsp-api.version>2.3.5</jsp-api.version>
         <jsp-impl.version>2.3.5</jsp-impl.version>
         <jstl-impl.version>1.2.6</jstl-impl.version>
-        <jstl-api.version>1.2.4</jstl-api.version>
+        <jstl-api.version>1.2.5</jstl-api.version>
         <mojarra.version>2.3.9</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.16</woodstock.version>
-        <javax.ejb-api.version>3.2.5</javax.ejb-api.version>
+        <javax.ejb-api.version>3.2.6</javax.ejb-api.version>
         <jakarta.interceptor-api.version>1.2.5</jakarta.interceptor-api.version>
         <jakarta.xml.rpc-api.version>1.1.3</jakarta.xml.rpc-api.version>
         <javax.transaction-api.version>1.3.2</javax.transaction-api.version>
         <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
         <cdi-api.version>2.0</cdi-api.version>
         <javax.inject.version>1</javax.inject.version>
-        <jakarta.resource-api.version>1.7.3</jakarta.resource-api.version>
+        <jakarta.resource-api.version>1.7.4</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
         <jakarta.security.jacc-api.version>1.6.2</jakarta.security.jacc-api.version>
-        <jakarta.security.auth.message-api.version>1.1.2</jakarta.security.auth.message-api.version>
+        <jakarta.security.auth.message-api.version>1.1.3</jakarta.security.auth.message-api.version>
         <!-- Ensure that nucleus/pom.xml's javax.validation property is of same value as the one below -->
         <javax.validation-api.version>2.0.0.Final</javax.validation-api.version>
         <jakarta.security.enterprise-api.version>1.0.2</jakarta.security.enterprise-api.version>
@@ -95,10 +95,11 @@
         <wsdl4j.version>1.6.2</wsdl4j.version>
         <websocket-api.version>1.1.1</websocket-api.version>
         <tyrus.version>1.15</tyrus.version>
-        <jsonp-api.version>1.1.5</jsonp-api.version>
-        <jsonp-ri.version>1.1.5</jsonp-ri.version>
-        <jsonp-jaxrs.version>1.1.5</jsonp-jaxrs.version>
+        <jsonp-api.version>1.1.6</jsonp-api.version>
+        <jsonp-ri.version>1.1.6</jsonp-ri.version>
+        <jsonp-jaxrs.version>1.1.6</jsonp-jaxrs.version>
         <json.bind-api.version>1.0.2</json.bind-api.version>
+
         <yasson.version>1.0.3</yasson.version>
         <concurrent-api.version>1.1.1</concurrent-api.version>
         <concurrent.version>1.1.1</concurrent.version>

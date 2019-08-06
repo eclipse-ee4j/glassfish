@@ -1,0 +1,474 @@
+:imagesdir: images
+
+= Asciidoc Cheatsheet
+
+<<<
+
+Asciidoc is a rich text based markup language. A document written with Asciidoc can easily be converted to *HTML*, *_PDF_*, *Docbook*, *_Mobi_*, *Epub*, and *Odt* formats. This cheatsheet shows you the common features of Asciidoc Markup language.
+
+'''
+ 
+== [underline]#Basic formats#
+
+*Bold* , _İtalic_ , [underline]#Underscore# , To^p^ , Dow~n~
+
+'''
+
+== [underline]#Title levels#
+
+There are 6 Level titles as HTML. First one is for document title.
+
+[source,adoc]
+----
+= Level 1
+
+Content ...
+
+== Level 2
+
+Content ...
+
+=== Level 3
+
+Content ...
+
+==== Level 4
+
+Content ...
+
+===== Level 5
+
+Content ...
+----
+
+'''
+
+== [underline]#Lists#
+
+There are ordered, unordered, checked and labeled list elements.
+
+.Unordered list
+* deep 1
+** deep 2
+*** deep 3
+**** deep 4
+***** deep 5
+* deep 1
+
+.Ordered list
+. Order 1
+. Order 2
+.. Order 2a
+.. Order 2b
+. Order 3
+
+.Checked list
+- [*] checked
+- [x] checked
+- [ ] unchecked
+-     normal
+
+.Labeled list
+Elma:: Eski Türkçe'de "alma" diye bilinen adının, meyvenin rengi olan "al" (kırmızı)'dan geldiği bilinmektedir
+
+Armut:: Gülgiller (Rosaceae) familyasının Maloideae alt familyasında sınıflanan Pyrus cinsine ait ağaç nitelikli bitki türleriyle, bu türlerden bazılarının yenilebilir meyvelerinin ortak adı.
+
+'''
+
+== [underline]#Links#
+
+You can use links:
+
+http://asciidocfx.org - AsciidocFX
+
+http://asciidocfx.org[AsciidocFX]
+
+'''
+
+== [underline]#Images#
+
+You can declare images with `image::` prefix and `[]` suffix. Path may be _relative_ or _absolute_ .
+
+=== Basit
+
+image::https://kodedu.com/wp-content/uploads/2017/02/kodedu-logo-e1487527571657.png[]
+
+=== Detaylı
+
+image::https://kodedu.com/wp-content/uploads/2017/02/kodedu-logo-e1487527571657.png[caption="Şekil 1. ",title="kodedu.com",alt="kodedu.com"]
+
+'''
+
+== [underline]#Code higlighting#
+
+You can declare inline or block based codes with Asciidoc syntax.
+
+.Inline
+Reference code like `types` or `methods` inline.
+
+.Code block
+[source,java]
+----
+public interface Hello {
+
+    void hello();
+
+}
+----
+
+You can use numbered elements named `callouts` in Asciidoc.
+
+.Numbered code block
+[source,ruby]
+----
+require 'sinatra' // <1>
+
+get '/hi' do // <2>
+  "Hello World!" // <3>
+end
+----
+<1> Library import
+<2> URL mapping
+<3> Content for response
+
+'''
+
+== [underline]#Blocks#
+
+Sınırlandırılmış bloklar 4'er özel karakter ile sınırlandırılmış alanlardır.
+
+=== _Sidebar_ block
+
+.Başlık (opsiyonel)
+****
+Bu blok türünün adı *Sidebar* bloktur.
+****
+
+=== Example block
+
+.Başlık (opsiyonel)
+====
+Bu blok türünün adı *Example* bloktur.
+====
+
+ifdef::backend-html5[]
+=== Passthrough block
+
+++++
+Bu blok türünün adı <b>Passthrough</b> bloktur. Bu blok içerinde HTML elemanları kullanabilirsiniz.
+<br/>
+<br/>
+<u>Örneğin;</u>
+<br/><br/>
+<ul>
+    <li>Ali</li>
+    <li>Veli</li>
+    <li>Selami</li>
+</ul>
+++++
+endif::[]
+
+=== BlockquoteS block
+
+.Başlık (opsiyonel)
+[quote, Hakan Özler, AspectJ Ebook]
+____
+AspectJ dilinin kullandığı yapılar 3 kısımda toplanmıştır.
+
+Bunlar:: Ortak, Dinamik ve Statik crosscutting (enine kesen) bölümlerdir.
+
+Bu bölümler, içlerinde farklı bileşenleri toplayarak bizim mevcut *OOP* sistemimizi *AOP* mantığı ile harmanlamamıza imkan veriyorlar.
+____
+
+'''
+
+== [underline]#Uyarı blokları#
+
+Asciidoc işaretleme dilinde 5 tip uyarı (admonition) bloğu bulunmaktadır. Bu blokların kendine has ikonları bulunmaktadır.
+
+.Not bloğu
+[NOTE]
+====
+Burası bir not bloğu
+====
+
+.Önemli bloğu
+[IMPORTANT]
+====
+Burası bir önemli bloğu
+====
+
+.İpucu bloğu
+[TIP]
+====
+Burası bir ipucu bloğu
+====
+
+.Dikkat bloğu
+[CAUTION]
+====
+Burası bir dikkat bloğu
+====
+
+.Uyarı bloğu
+[WARNING]
+====
+Burası bir uyarı bloğu
+====
+
+////
+.Icon bloğu
+
+AsciidocFX ile http://fortawesome.github.io/Font-Awesome/icons/[FontAwesome] ikonlarını kullanabilirsiniz.
+
+icon:tags[] ruby, asciidoctor +
+icon:folder[] ruby, asciidoctor +
+icon:file[] ruby, asciidoctor +
+icon:facebook[] ruby, asciidoctor +
+icon:github[] ruby, asciidoctor +
+icon:twitter[] ruby, asciidoctor
+////
+
+'''
+== [underline]#Tablolar#
+
+Asciidoc ile hemen hemen tüm kompleks tablo yapılarını kurabilirsiniz.
+
+=== Basit bir tablo
+
+.Başlık (opsiyonel)
+[options="header,footer"]
+|=======================
+|Col 1|Col 2      |Col 3
+|1    |Item 1     |a
+|2    |Item 2     |b
+|3    |Item 3     |c
+|6    |Three items|d
+|=======================
+
+=== Kompleks bir tablo
+
+.Başlık (opsiyonel)
+|====
+|Date |Duration |Avg HR |Notes
+|22-Aug-08 .2+^.^|10:24 | 157 |
+Worked out MSHR (max sustainable
+heart rate) by going hard
+for this interval.
+|22-Aug-08 | 152 |
+Back-to-back with previous interval.
+|24-Aug-08 3+^|none
+|====
+
+== [underline]#AsciidocFX eklentileri#
+
+AsciidocFX metin editörü, *UML* diagramları, *matematiksel kompleks formüller* ve *JavaFX Chart* için üç özel eklentiye sahiptir.
+
+=== JavaFX Charts Extension
+
+JavaFX has 8 kind of Chart component and AsciidocFX supports all of them.
+
+==== Pie Chart
+
+[chart,pie,file="secim-2014-pie.png",opt="title=2014 YEREL SEÇİM SONUÇLARI"]
+--
+AKP,  45.6, orange
+CHP,  27.8,red
+MHP,  15.2
+BDP,  4.2
+SP,  2
+--
+
+==== Area Chart
+
+[chart,area,file="area-chart.png"]
+--
+//April
+1,  4
+3,  10
+6,  15
+9,  8
+12, 5
+
+//May
+1,  20
+3,  15
+6,  13
+9,  12
+12, 14
+--
+
+For other charts and available options, look at https://github.com/asciidocfx/AsciidocFX/wiki/Chart-Extension[Chart extension] wiki page!
+
+=== PlantUML Extension
+
+PlantUML metinsel olarak yazılan ifadelerle zengin UML diagramları oluşturmaya olanak tanıyan, Java bazlı bir teknolojidir. AsciidocFX gömülü olarak PlantUML desteklemektedir.
+
+.Başlık (opsiyonel)
+[uml,file="uml-diagram.png"]
+--
+abstract class AbstractList
+abstract AbstractCollection
+interface List
+interface Collection
+
+List <|-- AbstractList
+Collection <|-- AbstractCollection
+
+Collection <|- List
+AbstractCollection <|- AbstractList
+AbstractList <|-- ArrayList
+
+class ArrayList {
+  Object[] elementData
+  size()
+}
+
+enum TimeUnit {
+  DAYS
+  HOURS
+  MINUTES
+}
+
+annotation SuppressWarnings
+--
+
+.UML http://plantuml.sourceforge.net/ditaa.html
+[uml,file="ditaa-diagram.png"]
+--
+@startditaa
++--------+   +-------+    +-------+
+|        +---+ ditaa +--> |       |
+|  Text  |   +-------+    |diagram|
+|Document|   |!magic!|    |       |
+|     {d}|   |       |    |       |
++---+----+   +-------+    +-------+
+    :                         ^
+    |       Lots of work      |
+    +-------------------------+
+@endditaa
+--
+
+.UML http://plantuml.sourceforge.net/ditaa.html
+[uml,file="dot-diagram.png"]
+--
+@startdot
+digraph foo {
+  node [style=rounded]
+  node1 [shape=box]
+  node2 [fillcolor=yellow, style="rounded,filled", shape=diamond]
+  node3 [shape=record, label="{ a | b | c }"]
+
+  node1 -> node2 -> node3
+}
+@enddot
+--
+
+=== MathJAX Extension
+
+MathJAX matematiksel kompleks formüllerin, metinsel olarak ifade edildiği çeşitli dilleri (MathML, Tex, AsciiMath) görsel olarak çıktılayan bir teknolojidir. AsciidocFX gömülü olarak MathJAX desteklemektedir. AsciidocFX ile MathML ve Tex biçimlerinde kompleks formülleri PNG resmi olarak eşzamanlı olarak dökümanlarınızda kullanabilirsiniz.
+
+==== Tex ile formül örneği
+
+.Başlık (opsiyonel)
+[math,file="tex-formula.png"]
+--
+\begin{align}
+\dot{x} & = \sigma(y-x) \\
+\dot{y} & = \rho x - y - xz \\
+\dot{z} & = -\beta z + xyp
+\end{align}
+--
+
+==== MathML ile formül örneği
+
+.Başlık (opsiyonel)
+[math,file="mathml-formula.png"]
+--
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>x</mi>
+  <mo>=</mo>
+  <mrow>
+    <mfrac>
+      <mrow>
+        <mo>&#x2212;</mo>
+        <mi>b</mi>
+        <mo>&#xB1;</mo>
+        <msqrt>
+          <msup>
+            <mi>b</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>&#x2212;</mo>
+          <mn>4</mn>
+          <mi>a</mi>
+          <mi>c</mi>
+        </msqrt>
+      </mrow>
+      <mrow>
+        <mn>2</mn>
+        <mi>a</mi>
+      </mrow>
+    </mfrac>
+  </mrow>
+  <mtext>.</mtext>
+</math>
+--
+
+=== Filesystem Tree Viewers
+
+2 farklı yolla dosya sisteminin ağaç yapısını "tree" opsiyonu ile oluşturabilirsiniz.
+
+==== Birinci Yol
+
+
+.Filesystem Tree
+[tree,file="filesystem-tree-viewer.png"]
+--
+#booksample
+##asciidoctor.css
+##book.asc
+##chapter-01.asc
+##chapter-02.asc
+##chapter-03.asc
+##chapter-04.asc
+##chapter-05.asc
+##chapter-06.asc
+##images
+###kodcu.png
+###mathml-formula.png
+###tex-formula.png
+###uml-diagram.png
+--
+
+==== İkinci Yol
+
+.Filesystem Tree
+[tree,file="filesystem-tree-viewer-new.png"]
+--
+root
+|-- photos
+|   |-- camp.gif
+|   |-- festival.png
+|   `-- balloon.jpg
+|-- videos
+|   |-- car-video.avi
+|   |-- dance.mp4
+|   |-- dance01.mpg
+|   |-- another video.divx
+|   `-- school videos
+|       `-- firstday.flv
+|-- documents
+|   |-- jsfile.js
+|   |-- powerpoint.ppt
+|   |-- chapter-01.asc
+|   |-- archive-db.zip
+|   |-- .gitignore
+|   |-- README
+|   `-- configuration.conf
+`-- etc.
+--
+
+Döküman geliştirilmeye ve önerilere açıktır.
+
+Teşekkürler.

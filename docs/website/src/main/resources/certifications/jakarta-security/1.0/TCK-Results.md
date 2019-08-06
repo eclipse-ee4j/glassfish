@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Security.
 
-# Soteria 1.0.1, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Eclipse Soteria 1.0.1, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: Jakarta Security API 1.0.1 with Soteria 1.0.1
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Eclipse Soteria 1.0.1 provides Jakarta Security API 1.0.1
+  [Eclipse Soteria Project](https://github.com/eclipse-ee4j/soteria)
 - Specification Name, Version and download URL \
   [Jakarta Security 1.0](https://jakarta.ee/specifications/security/1.0)
 - TCK Version, digital SHA-256 fingerprint and download URL \

@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta RESTful Web Services.
 
-# Jersey 2.28, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Jersey 2.28, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: Jakarta RESTful Web Services API 2.1.3 with Jersey 2.28
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Jersey 2.28, provides Jakarta RESTful Web Services API 2.1.3
+  [Eclipse Jersey Project](https://github.com/eclipse-ee4j/jersey)
 - Specification Name, Version and download URL \
   [Jakarta RESTful Web Services 2.1](https://jakarta.ee/specifications/restful-ws/2.1)
 - TCK Version, digital SHA-256 fingerprint and download URL \

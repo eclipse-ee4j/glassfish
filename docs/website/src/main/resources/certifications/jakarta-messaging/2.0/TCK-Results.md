@@ -5,10 +5,10 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Messaging.
 
-# Eclipse Open MQ 5.1.4, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Eclipse Open MQ 5.1.4, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: Jakarta Messaging API 2.0.2, with Eclipse Open MQ 5.1.4
+  Eclipse GlassFish 5.1, includes: Eclipse Open MQ 5.4.1, which provides Jakarta Messaging API 2.0.2
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
   For reference, use imqbrokerd command from GlassFish distribution: glassfish5/mq (bin).
 - Specification Name, Version and download URL \

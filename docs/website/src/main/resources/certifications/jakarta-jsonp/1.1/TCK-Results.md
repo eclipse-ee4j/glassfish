@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta JSON Processing.
 
-# JSON Processing 1.1, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# JSON Processing 1.1.5, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: JSON Processing API 1.1.5, with JSON Processing Implementation 1.1.6
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  JSON Processing 1.1.5 Release 
+  [Eclipse JSON Processing Implementation](https://eclipse-ee4j.github.io/jsonp/)
 - Specification Name, Version and download URL \
   [Jakarta JSON Processing 1.1](https://jakarta.ee/specifications/jsonp/1.1/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

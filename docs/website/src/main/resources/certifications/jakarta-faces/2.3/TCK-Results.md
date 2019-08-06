@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Server Faces.
 
-# Mojarra 2.3.9, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Eclipse Mojarra 2.3.9, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: Jakarta Server Faces 2.3.1 with Mojarra 2.3.9
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Eclipse Mojarra 2.3.9, provides Jakarta Server Faces 2.3.1
+  [Eclipse Mojarra Project](https://github.com/eclipse-ee4j/mojarra)
 - Specification Name, Version and download URL \
   [Jakarta Server Faces, 2.3](https://jakarta.ee/specifications/faces/2.3)
 - TCK Version, digital SHA-256 fingerprint and download URL \

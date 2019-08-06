@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta JSON Binding.
 
-# JSON Binding 1.0, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Eclipse Yasson 1.0.1, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: JSON Binding API 1.0.1, with Yasson 1.0.3
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Eclipse Yasson 1.0.3 (includes JSON Binding 1.0.1)
+  [Eclipse Yasson 1.0.3 Release](https://github.com/eclipse-ee4j/yasson/releases/tag/1.0.3-RELEASE)
 - Specification Name, Version and download URL \
   [Jakarta JSON Binding 1.0](https://jakarta.ee/specifications/jsonb/1.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

@@ -5,7 +5,7 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Enterprise Web Services.
 
-# Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Eclipse GlassFish 5.1, Full Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
@@ -27,4 +27,4 @@ following is a summary of the TCK results for releases of Jakarta Enterprise Web
 
 Test results:
 
-[TCK results summary](https://eclipse-ee4j.github.io/glassfish/resources/certifications/jakarta-full-profile/TCK-Results.html)
+[TCK results summary](https://eclipse-ee4j.github.io/glassfoish/resources/certifications/jakarta-full-profile/TCK-Results.html)

@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Expression Language.
 
-# Java Expression Language, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Jakarta Expression Language 3.0.2, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: Expression Language RI (legacy name) 3.0.2 with Expression Language API 3.0.2
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Expression Language 3.0.2.
+  [Expression Language Implementation Project](https://github.com/eclipse-ee4j/el-ri)
 - Specification Name, Version and download URL \
   [Jakarta Expression Language 3.0](https://jakarta.ee/specifications/expression-language/3.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

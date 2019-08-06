@@ -5,15 +5,15 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Mail.
 
-# Jakarta Mail 1.6.4, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Jakarta Mail 1.6.3, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Eclipse GlassFish 5.1, includes: Jakarta Mail API 1.6.3, with Jakarta Mail 1.6.4
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Jakarta Mail 1.6.3
+  [Jakarta Mail Implementation](https://eclipse-ee4j.github.io/javamail/)
 - Specification Name, Version and download URL \
   [Jakarta Mail 1.6](https://jakarta.ee/specifications/mail/1.6)
 - TCK Version, digital SHA-256 fingerprint and download URL \
-*  [Jakarta Mail TCK 1.6](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-mail-tck-1.6.0.zip), SHA-256: `fb1a4195b6b91321bbdcc64683aec1e98939c9695679c720a1c7c5b14e4f8e56`
+  [Jakarta Mail TCK 1.6](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-mail-tck-1.6.0.zip), SHA-256: `fb1a4195b6b91321bbdcc64683aec1e98939c9695679c720a1c7c5b14e4f8e56`
 - Public URL of TCK Results Summary \
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements \

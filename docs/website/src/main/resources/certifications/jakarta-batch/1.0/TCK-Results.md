@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Batch.
 
-# Java Batch, as delivered in Eclipse GlassFish 5.1, Full Profile, Certification Request
+# JBatch Container 1.0.2 Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  Includes: Java Batch API JAR: 1.0.1; JBatch v. 1.0.2)
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  JBatch Container  1.0.2, provides Java Batch 1.0.1
+  [Java Batch Implementation Project](https://github.com/WASdev/standards.jsr352.jbatch)
 - Specification Name, Version and download URL \
   [Jakarta Batch 1.0](https://jakarta.ee/specifications/batch/2.3/)
 - TCK Version, digital SHA-256 fingerprint and download URL \
@@ -25,7 +25,7 @@ following is a summary of the TCK results for releases of Jakarta Batch.
   Linux Centos 7
 
 Test results:
-These are results from the jbatch stage of Jakarta EE Platform CTS
+These are results from the jbatch "stage" of Jakarta EE Platform CTS
 
 ```
 [javatest.batch] ********************************************************************************

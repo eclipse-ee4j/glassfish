@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Annotations.
 
-# 1.3.4 Certification Request
+# Jakarta Annotations 1.3.4 Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
-  Includes Jakarta Annotations (formerly caj.jar) 1.3.4.
+  Jakarta Annotations 1.3.4
+  [Jakarta Annotations Project](https://github.com/eclipse-ee4j/common-annotations-api)
 - Specification Name, Version and download URL \
   [Jakarta Annotations 1.3](https://jakarta.ee/specifications/annotations/1.3)
 - TCK Version, digital SHA-256 fingerprint and download URL \

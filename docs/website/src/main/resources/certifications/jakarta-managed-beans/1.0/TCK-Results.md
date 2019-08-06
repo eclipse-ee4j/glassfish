@@ -5,7 +5,7 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta Managed Beans.
 
-# Eclipse GlassFish 5.1, Full Profile, Certification Request
+# Eclipse GlassFish 5.1, Full Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)

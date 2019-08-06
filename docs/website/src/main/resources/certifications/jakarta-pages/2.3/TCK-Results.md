@@ -12,7 +12,7 @@ following is a summary of the TCK results for releases of Jakarta Server Pages.
 - Specification Name, Version and download URL \
   [Jakarta Server Pages 2.3](https://jakarta.ee/specifications/pages/2.3/)
 - TCK Version, digital SHA-256 fingerprint and download URL \
-  [Jakarta Server Pages TCK, 2.3](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-pages-tck-2.3.0.zip), SHA-256: ``
+  [Jakarta Server Pages TCK, 2.3](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-pages-tck-2.3.0.zip), SHA-256: `03694c1248e10e17e0a617ff5d37ca30230642c82dd5b76557654c49c62f3285`
 - Public URL of TCK Results Summary \
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements \

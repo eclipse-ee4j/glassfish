@@ -9,6 +9,7 @@ following is a summary of the TCK results for releases of Jakarta Management.
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Includes Management 1.1.3
 - Specification Name, Version and download URL \
   [Jakarta Management 1.1](https://jakarta.ee/specifications/management/1.1/)
 - TCK Version, digital SHA-256 fingerprint and download URL \
@@ -21,7 +22,7 @@ following is a summary of the TCK results for releases of Jakarta Management.
 - Java runtime used to run the implementation \
   Oracle JDK 1.8.0_191
 - Summary of the information for the certification environment, operating system, cloud, ... \
-  None
+  Linux Centos 7
 
 
 Test results:

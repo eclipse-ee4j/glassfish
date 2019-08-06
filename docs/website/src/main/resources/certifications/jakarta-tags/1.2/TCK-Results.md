@@ -3,12 +3,13 @@ TCK Results
 
 As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
-following is a summary of the TCK results for releases of Jakarta Jakarta Standard Tag Library.
+following is a summary of the TCK results for releases of Jakarta Standard Tag Library.
 
 # Eclipse GlassFish 5.1, Full Profile, Certification Request
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Includes Standard Tag Library 1.3.4
 - Specification Name, Version and download URL \
   [Jakarta Standard Tag Library 1.2](https://jakarta.ee/specifications/tags/1.2/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

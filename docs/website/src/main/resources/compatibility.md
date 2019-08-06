@@ -4,11 +4,11 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 ## Jakarta Platform, Full Profile
 
-* [Jakarta ](certifications/jakarta-full-profile/8.0/TCK-Results)
+* [Jakarta Platform, Full Profile 8.0](certifications/jakarta-full-profile/8.0/TCK-Results)
 
 ## Jakarta Platform, Web Profile
 
-* [Jakarta ](certifications/jakarta-web-profile/8.0/TCK-Results)
+* [Jakarta Platform, Web Profile 8.0](certifications/jakarta-web-profile/8.0/TCK-Results)
 
 ## Jakarta EE 8 Platform Specification
 

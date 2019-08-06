@@ -9,6 +9,7 @@ following is a summary of the TCK results for releases of Jakarta Authorization.
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Includes Authorization 1.6.1
 - Specification Name, Version and download URL \
   [Jakarta Authorization, 1.6](https://jakarta.ee/specifications/authorization/1.6/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

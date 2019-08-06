@@ -9,6 +9,7 @@ following is a summary of the TCK results for releases of Jakarta Interceptors.
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Includes Interceptors 1.2.3
 - Specification Name, Version and download URL \
   [Jakarta Interceptors 1.2](https://jakarta.ee/specifications/interceptors/1.2/)
 - TCK Version, digital SHA-256 fingerprint and download URL \
@@ -21,7 +22,7 @@ following is a summary of the TCK results for releases of Jakarta Interceptors.
 - Java runtime used to run the implementation \
   Oracle JDK 1.8.0_191
 - Summary of the information for the certification environment, operating system, cloud, ... \
-  None
+  Linux Centos 7
 
 
 Test results:

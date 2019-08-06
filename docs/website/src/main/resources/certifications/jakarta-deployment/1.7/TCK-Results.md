@@ -9,6 +9,7 @@ following is a summary of the TCK results for releases of Jakarta Deployment.
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Includes Deployment 1.7.1
 - Specification Name, Version and download URL \
   [Jakarta Deployment 1.7](https://jakarta.ee/specifications/deployment/1.7/)
 - TCK Version, digital SHA-256 fingerprint and download URL \
@@ -21,7 +22,7 @@ following is a summary of the TCK results for releases of Jakarta Deployment.
 - Java runtime used to run the implementation \
   Oracle JDK 1.8.0_191
 - Summary of the information for the certification environment, operating system, cloud, ... \
-  None
+  Linux Centos 7
 
 
 Test results:

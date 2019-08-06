@@ -9,6 +9,7 @@ following is a summary of the TCK results for releases of Jakarta XML RPC.
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Includes XML RPC 1.1.3
 - Specification Name, Version and download URL \
   [Jakarta XML RPC 1.1](https://jakarta.ee/specifications/xml-rpc/1.1/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

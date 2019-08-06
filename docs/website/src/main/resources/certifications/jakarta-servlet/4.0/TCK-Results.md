@@ -9,6 +9,7 @@ following is a summary of the TCK results for releases of Jakarta Servlet.
 
 - Product Name, Version and download URL (if applicable) \
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  Includes Servlet 4.0.2
 - Specification Name, Version and download URL \
   [Jakarta Servlet 4.0](https://jakarta.ee/specifications/servlet/4.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

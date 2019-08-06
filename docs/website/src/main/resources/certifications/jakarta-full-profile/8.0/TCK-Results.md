@@ -182,19 +182,10 @@ Stage Name: ejb30/lite/packaging
 Stage Name: ejb30/lite/singleton
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 230 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 220
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 230
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 10
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
-
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 10 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 10
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Includes: singleton_concurrency 125; singleton_dependson 20; singleton_lifecycle 85 (230 total tests)
 
 Stage Name: ejb30/lite/stateful
    [runcts] OUT => [javatest.batch] ********************************************************************************

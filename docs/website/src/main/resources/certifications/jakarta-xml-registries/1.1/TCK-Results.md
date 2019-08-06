@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta XML Registries.
 
-# Eclipse GlassFish 5.1, Full Profile, Certification Summary
+# Eclipse Jakarta Registries Implementation 1.0.9, Certification Summary
 
 - Product Name, Version and download URL (if applicable) \
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
-  Includes XML Registries 1.0.9
+  [Eclipse Jakarta Registries Implementation](https://github.com/eclipse-ee4j/jaxr-ri)
+  Includes Jakarta XML Registries 1.0.9
 - Specification Name, Version and download URL \
   [Jakarta XML Registries 1.0](https://jakarta.ee/specifications/xml-registries/1.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL \

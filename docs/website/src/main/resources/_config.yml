@@ -8,6 +8,7 @@ links:
   download: download
   source: https://github.com/eclipse-ee4j/glassfish
   mailinglist: https://accounts.eclipse.org/mailing-list/glassfish-dev
+  compatibility: compatibility
   #javadocs:
   docs: documentation
   #faq:

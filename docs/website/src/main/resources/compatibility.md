@@ -76,10 +76,6 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 * [Jakarta Messaging](certifications/jakarta-messaging/2.0/TCK-Results)
 
-### Jakarta Persistence
-
-* [Jakarta Persistence 2.2](certifications/jakarta-persistence/2.2/TCK-Results)
-
 ### Jakarta RESTful Web Services
 
 * [Jakarta RESTful Web Services 2.1](certifications/jakarta-restful-ws/2.1/TCK-Results)

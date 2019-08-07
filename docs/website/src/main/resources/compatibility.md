@@ -114,6 +114,7 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 ### Jakarta Transactions
 
+* [Jakarta Server Pages 2.3](certifications/jakarta-pages/2.3/TCK-Results)
 * [Jakarta Transactions 1.3](certifications/jakarta-transactions/1.3/TCK-Results)
 
 ### Jakarta WebSocket

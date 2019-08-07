@@ -24,10 +24,6 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 * [Jakarta Authorization 1.6](certifications/jakarta-authorization/1.6/TCK-Results)
 
-### Jakarta Batch
-
-* [Jakarta Batch 1.0](certifications/jakarta-batch/1.0/TCK-Results)
-
 ### Jakarta Concurrency
 
 * [Jakarta Concurrency 1.1](certifications/jakarta-concurrency/1.1/TCK-Results)
@@ -67,10 +63,6 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 ### Jakarta JSON Processing
 
 * [Jakarta JSON Processing 1.1](certifications/jakarta-jsonp/1.1/TCK-Results)
-
-### Jakarta Mail
-
-* [Jakarta Mail 1.6](certifications/jakarta-mail/1.6/TCK-Results)
 
 ### Jakarta Managed Beans
 

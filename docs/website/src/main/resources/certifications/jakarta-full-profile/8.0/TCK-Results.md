@@ -7,19 +7,19 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, F
 
 # Eclipse GlassFish 5.1 Full Profile Certification Summary
 
-- Product Name, Version and download URL (if applicable) \
+- Product Name, Version and download URL (if applicable): <br/>
 *  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
-- Specification Name, Version and download URL \
+- Specification Name, Version and download URL: <br/>
 *  [Jakarta EE Platform, Full Profile 8.0](https://jakarta.ee/specifications/jakartaee-full-profile/8.0)
-- TCK Version, digital SHA-256 fingerprint and download URL \
+- TCK Version, digital SHA-256 fingerprint and download URL: <br/>
 *  [Jakarta EE Platform CTS 8.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-jakartaeetck-8.0.0.zip), SHA-256: `847c80c9c80bea4682006f186292b68acdd0ce9b239d998856c3a379c3a7be50`
-- Public URL of TCK Results Summary \
+- Public URL of TCK Results Summary: <br/>
 *  [TCK results summary](TCK-Results.html)
-- Any Additional Specification Certification Requirements \
+- Any Additional Specification Certification Requirements: <br/>
 *  Jakarta CDI TCK; Jakarta Bean Validation TCK; Jakarta Dependency Injection TCK. TBD -- summary results, or links, here.
-- Java runtime used to run the implementation \
+- Java runtime used to run the implementation: <br/>
 **  Oracle JDK 1.8.0_191
-- Summary of the information for the certification environment, operating system, cloud, ... \
+- Summary of the information for the certification environment, operating system, cloud, ...: <br/>
 **  Apache Derby
 **  Linux, Centos 7.
 

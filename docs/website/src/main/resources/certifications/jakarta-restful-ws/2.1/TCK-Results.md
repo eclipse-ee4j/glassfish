@@ -7,20 +7,20 @@ following is a summary of the TCK results for releases of Jakarta RESTful Web Se
 
 # Jersey 2.28, Certification Summary
 
-- Product Name, Version and download URL (if applicable) \
+- Product Name, Version and download URL (if applicable): <br/>
   Jersey 2.28, provides Jakarta RESTful Web Services API 2.1.3
   [Eclipse Jersey Project](https://github.com/eclipse-ee4j/jersey)
-- Specification Name, Version and download URL \
+- Specification Name, Version and download URL: <br/>
   [Jakarta RESTful Web Services 2.1](https://jakarta.ee/specifications/restful-ws/2.1)
-- TCK Version, digital SHA-256 fingerprint and download URL \
+- TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta RESTful Web Services 2.1, TCK](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-restful-ws-tck-2.1.0.zip), SHA-256: `6a82879db285239d34444498bec640a4e8f757766177c974e984621b04cd25bc`
-- Public URL of TCK Results Summary \
+- Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
-- Any Additional Specification Certification Requirements \
+- Any Additional Specification Certification Requirements: <br/>
   None
-- Java runtime used to run the implementation \
+- Java runtime used to run the implementation: <br/>
   Oracle JDK 1.8.0_191
-- Summary of the information for the certification environment, operating system, cloud, ... \
+- Summary of the information for the certification environment, operating system, cloud, ...: <br/>
   Linux Centos 7
 
 Test results:

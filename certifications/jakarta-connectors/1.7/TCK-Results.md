@@ -7,21 +7,21 @@ following is a summary of the TCK results for releases of Jakarta Connectors.
 
 # 1.7 Certification Request
 
-- [x] Organization Name ("Organization") and, if applicable, URL\
+- [x] Organization Name ("Organization") and, if applicable, URL: <br/>
   Eclipse Foundation
-- [x] Product Name, Version and download URL (if applicable)\
+- [x] Product Name, Version and download URL (if applicable): <br/>
   [GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
-- [x] Specification Name, Version and download URL\
+- [x] Specification Name, Version and download URL: <br/>
    [Jakarta Connectors 1.7](https://jakarta.ee/specifications/concurrency/1.1/)
-- [x] TCK Version, digital SHA-256 fingerprint and download URL\
-  [Jakarta Connectors TCK 1.7.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-connectors-tck-1.7.0.zip), SHA-256: 98d71f91850e4231cdb74147b44798072cd4bffd81db3ab11d1128e24d92a03e
-- [x] Public URL of TCK Results Summary\
+- [x] TCK Version, digital SHA-256 fingerprint and download URL: <br/>
+  [Jakarta Connectors TCK 1.7.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-connectors-tck-1.7.0.zip), SHA-256: 6d5fe8c0fd3d8388a6aecf5431e0c8c50391464cd4c3be94d376654f46df687c
+- [x] Public URL of TCK Results Summary: <br/>
   [TCK results summary](https://eclipse-ee4j.github.io/glassfish/certifications/jakarta-connectors/1.7/TCK-Results)
-- [x] Any Additional Specification Certification Requirements\
+- [x] Any Additional Specification Certification Requirements: <br/>
   None
-- [x] Java runtime used to run the implementation\
+- [x] Java runtime used to run the implementation: <br/>
   Oracle JDK 1.8.0_191
-- [x] Summary of the information for the certification environment, operating system, cloud, ...\
+- [x] Summary of the information for the certification environment, operating system, cloud, ...: <br/>
   Linux
 - [x] By checking this box I acknowledge that the Organization I represent accepts the terms of the [EFTL](https://www.eclipse.org/legal/tck.php).
 - [x] By checking this box I attest that all TCK requirements have been met, including any compatibility rules.

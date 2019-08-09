@@ -56,14 +56,6 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 * [Jakarta Interceptors 1.2](certifications/jakarta-interceptors/1.2/TCK-Results)
 
-### Jakarta JSON Binding
-
-* [Jakarta JSON Binding 1.0](certifications/jakarta-jsonb/1.0/TCK-Results)
-
-### Jakarta JSON Processing
-
-* [Jakarta JSON Processing 1.1](certifications/jakarta-jsonp/1.1/TCK-Results)
-
 ### Jakarta Managed Beans
 
 * [Jakarta Managed Beans 1.0](certifications/jakarta-managed-beans/1.0/TCK-Results)
@@ -116,7 +108,3 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 ### Jakarta XML Registries
 
 * [Jakarta XML Registries 1.1](certifications/jakarta-xml-registries/1.1/TCK-Results)
-
-### Jakarta XML RPC
-
-* [Jakarta XML RPC 1.1](certifications/jakarta-xml-rpc/1.1/TCK-Results)

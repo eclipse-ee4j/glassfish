@@ -8,11 +8,10 @@ links:
   download: download
   source: https://github.com/eclipse-ee4j/glassfish
   mailinglist: https://accounts.eclipse.org/mailing-list/glassfish-dev
-  compatibility: compatibility
   #javadocs:
   docs: documentation
   #faq:
-  hide_issuetracker: true #set explicitly to 'true' if you don't want to have the issue tracker link displayed
+  hide_issuetracker: false #set explicitly to 'true' if you don't want to have the issue tracker link displayed
 
 include:
   - LICENSE.md

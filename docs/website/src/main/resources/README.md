@@ -2,9 +2,9 @@
 
 ## About
 
-Eclipse GlassFish is a Jakarta EE compatible implementation sponsored by
-the Eclipse Foundation.
-Eclipse GlassFish 5.1 is Java EE 8 Compatible.
+Eclipse GlassFish is a [Jakarta EE compatible implementation](compatibility)
+sponsored by the Eclipse Foundation.
+Eclipse GlassFish 5.1 is also Java EE 8 Compatible.
 
 ## Latest News
 

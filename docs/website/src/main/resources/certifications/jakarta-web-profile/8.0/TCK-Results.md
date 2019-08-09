@@ -7,20 +7,20 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, W
 
 # Eclipse GlassFish 5.1 Web Profile, Certification Summary
 
-- Product Name, Version and download URL (if applicable) \
+- Product Name, Version and download URL (if applicable): <br/>
   [Eclipse GlassFish 5.1, Web Profile](https://www.eclipse.org/downloads/download.php?file=/glassfish/web-5.1.0.zip)
-- Specification Name, Version and download URL \
+- Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, Web Profile 8.0](https://jakarta.ee/specifications/jakartaee-web-profile/8.0)
-- TCK Version, digital SHA-256 fingerprint and download URL \
-  [Jakarta EE Platform CTS 8.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-jakartaeetck-8.0.0.zip), SHA-256: `59c8a82c0aa66121b8892051f8d2336ea78f17bc277cbd5527280c6f30b3db5b`
-- Public URL of TCK Results Summary \
+- TCK Version, digital SHA-256 fingerprint and download URL: <br/>
+  [Jakarta EE Platform CTS 8.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-jakartaeetck-8.0.0.zip), SHA-256: `847c80c9c80bea4682006f186292b68acdd0ce9b239d998856c3a379c3a7be50`
+- Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
-- Any Additional Specification Certification Requirements \
+- Any Additional Specification Certification Requirements: <br/>
   Jakarta CDI TCK; Jakarta Bean Validation TCK; Jakarta Dependency Injection TCK. TBD -- summary results, or links, here.
-- Java runtime used to run the implementation \
+- Java runtime used to run the implementation: <br/>
   Oracle JDK 1.8.0_191
-- Summary of the information for the certification environment, operating system, cloud, ... \
-  Apache Derby \
+- Summary of the information for the certification environment, operating system, cloud, ...: <br/>
+  Apache Derby: <br/>
   Linux, Centos 7.
 
 

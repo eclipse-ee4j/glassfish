@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta Servlet.
 - Specification Name, Version and download URL \
   [Jakarta Servlet 4.0](https://jakarta.ee/specifications/servlet/4.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL \
-  [Jakarta Servlet TCK, 4.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-servlet-tck-4.0.0.zip), SHA-256: `548cd23ba27b1e2513ceacccd87793ff3bc5b29f5303d6c0b1ad7270e694d3b5`
+  [Jakarta Servlet TCK, 4.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-servlet-tck-4.0.0.zip), SHA-256: `b81fb95440b4b1a2c8cda3874449b364d807db2362af381afe5fd8ade503e797`
 - Public URL of TCK Results Summary \
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements \

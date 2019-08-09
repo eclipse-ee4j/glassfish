@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta XML Registries
 - Specification Name, Version and download URL \
   [Jakarta XML Registries 1.0](https://jakarta.ee/specifications/xml-registries/1.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL \
-  [Jakarta XML Registries TCK, 1.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-xml-registries-tck-1.0.0.zip), SHA-256: `44a64fd3895bc8245e76a48ec315f4821fb5a71f8011ff4e9043018bc6a13305`
+  [Jakarta XML Registries TCK, 1.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-xml-registries-tck-1.0.0.zip), SHA-256: `fbe1ac6f6fc66e36ce7d0d9778e4ca28976d0db98887b7d944322d864e8996f5`
 - Public URL of TCK Results Summary \
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements \

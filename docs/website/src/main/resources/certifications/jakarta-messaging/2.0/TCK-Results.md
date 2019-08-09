@@ -14,7 +14,7 @@ following is a summary of the TCK results for releases of Jakarta Messaging.
 - Specification Name, Version and download URL \
   [Jakarta Messaging 2.0](https://jakarta.ee/specifications/messaging/2.0)
 - TCK Version, digital SHA-256 fingerprint and download URL \
-*  [Jakarta Messaging 2.0, TCK](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-messaging-tck-2.0.0.zip), SHA-256: `e61ef110ced66f9f4160c703026a32251bdfeb04922a3bfe78f98f61cd67e7bf`
+*  [Jakarta Messaging 2.0, TCK](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-messaging-tck-2.0.0.zip), SHA-256: `fd175e1742a1c9e23dbc0aa0b8b881965fcead0336c121c2dac27a00a8fa113d`
 - Public URL of TCK Results Summary \
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements \

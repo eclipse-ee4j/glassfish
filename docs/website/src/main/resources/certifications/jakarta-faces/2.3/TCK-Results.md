@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta Server Faces.
 - Specification Name, Version and download URL: <br/>
   [Jakarta Server Faces, 2.3](https://jakarta.ee/specifications/faces/2.3)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-*  [Jakarta Server Faces 2.3, TCK](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-faces-tck-2.3.0.zip), SHA-256: `77375ad39f8b736034dbfd554152bbd3e3931a9c9ef1760049c60c5fa87a06d9`
+  [Jakarta Server Faces 2.3, TCK](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-faces-tck-2.3.0.zip), SHA-256: `77375ad39f8b736034dbfd554152bbd3e3931a9c9ef1760049c60c5fa87a06d9`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>

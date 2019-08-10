@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta Expression Lan
 - Specification Name, Version and download URL: <br/>
   [Jakarta Expression Language 3.0](https://jakarta.ee/specifications/expression-language/3.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-*  [Expression Language TCK 3.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-expression-language-tck-3.0.0.zip), SHA-256: `7af99b28c81c1f7eba1e241b20f3854289ae511c8446158671f32731c785504c`
+  [Expression Language TCK 3.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-expression-language-tck-3.0.0.zip), SHA-256: `7af99b28c81c1f7eba1e241b20f3854289ae511c8446158671f32731c785504c`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>

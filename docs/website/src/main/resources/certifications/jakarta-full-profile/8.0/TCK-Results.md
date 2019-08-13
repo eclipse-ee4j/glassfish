@@ -582,13 +582,13 @@ Stage Name: xa
    [runcts] OUT => [javatest.batch] ********************************************************************************
 ```
 
-Additionally, Jakarta EE 8 Specification requires the following TCKs:
+Additionally, Jakarta EE 8 Specification require the following TCKs:
 
 Jakarta Dependency Injection 1.0 TCK
 
 Download URL & SHA-256
 
-[jakarta.inject-tck-1.0-bin.zip](http://download.eclipse.org/ee4j/cdi/jakarta.inject-tck-1.0-bin.zip) \
+[jakarta.inject-tck-1.0-bin.zip](http://download.eclipse.org/ee4j/cdi/jakarta.inject-tck-1.0-bin.zip), <br/>
 SHA-256: `b679bac9b1057df894753892a880ba6ade530607dd811157106ed767aa26481f`
 
 TCK result summary:
@@ -602,7 +602,7 @@ Jakarta Contexts and Dependency Injection 2.0 TCK
 
 Download URL & SHA-256
 
-[cdi-tck-2.0.6-dist.zip](http://download.eclipse.org/ee4j/cdi/cdi-tck-2.0.6-dist.zip),
+[cdi-tck-2.0.6-dist.zip](http://download.eclipse.org/ee4j/cdi/cdi-tck-2.0.6-dist.zip), <br/>
 SHA-256:  `75e969a7a3b3c77332154a2008309aad821a923d8684139242048a7640762808`
 
 TCK Result Summary:
@@ -619,7 +619,7 @@ Jakarta Bean Validation 2.0 TCK
 
 Download URL & SHA-256
 
-[beanvalidation-tck-dist-2.0.5.zip][https://download.eclipse.org/jakartaee/bean-validation/2.0/beanvalidation-tck-dist-2.0.5.zip]
+[beanvalidation-tck-dist-2.0.5.zip](https://download.eclipse.org/jakartaee/bean-validation/2.0/beanvalidation-tck-dist-2.0.5.zip), <br/>
 SHA-256: `ebab3232311439dfc93559ca0dfa8cc230f51ab221cdc0a4901a8533f129f3ad`
 
 TCK Result Summary:

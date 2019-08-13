@@ -212,14 +212,6 @@ Stage Name: jaxrs
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
-Stage Name: jbatch
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 322 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 322
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
 Stage Name: jdbc
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 2462 tests.

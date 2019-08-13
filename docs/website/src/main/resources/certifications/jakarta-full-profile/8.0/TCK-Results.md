@@ -619,7 +619,7 @@ Jakarta Bean Validation 2.0 TCK
 
 Download URL & SHA-256
 
-[beanvalidation-tck-dist-2.0.5.zip]{https://download.eclipse.org/jakartaee/bean-validation/2.0/beanvalidation-tck-dist-2.0.5.zip]
+[beanvalidation-tck-dist-2.0.5.zip][https://download.eclipse.org/jakartaee/bean-validation/2.0/beanvalidation-tck-dist-2.0.5.zip]
 SHA-256: `ebab3232311439dfc93559ca0dfa8cc230f51ab221cdc0a4901a8533f129f3ad`
 
 TCK Result Summary:

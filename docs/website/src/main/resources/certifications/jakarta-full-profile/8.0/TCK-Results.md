@@ -582,7 +582,7 @@ Stage Name: xa
    [runcts] OUT => [javatest.batch] ********************************************************************************
 ```
 
-Additionally, Jakarta EE 8 Specification require the following TCKs:
+Additionally, Jakarta EE 8 Specification requires the following TCKs:
 
 Jakarta Dependency Injection 1.0 TCK
 

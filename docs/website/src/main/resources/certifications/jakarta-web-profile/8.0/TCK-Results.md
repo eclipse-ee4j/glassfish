@@ -16,11 +16,11 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, W
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>
-  Jakarta CDI TCK; Jakarta Bean Validation TCK; Jakarta Dependency Injection TCK. TBD -- summary results, or links, here.
+  None
 - Java runtime used to run the implementation: <br/>
   Oracle JDK 1.8.0_191
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
-  Apache Derby: <br/>
+  Apache Derby, <br/>
   Linux, Centos 7.
 
 

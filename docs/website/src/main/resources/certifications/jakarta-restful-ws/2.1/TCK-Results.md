@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta RESTful Web Se
 - Specification Name, Version and download URL: <br/>
   [Jakarta RESTful Web Services 2.1](https://jakarta.ee/specifications/restful-ws/2.1)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta RESTful Web Services 2.1, TCK](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-restful-ws-tck-2.1.0.zip), SHA-256: `6a82879db285239d34444498bec640a4e8f757766177c974e984621b04cd25bc`
+  [Jakarta RESTful Web Services 2.1, TCK](https://download.eclipse.org/jakartaee/restful-ws/2.1/eclipse-restful-ws-tck-2.1.0.zip), SHA-256: `6a82879db285239d34444498bec640a4e8f757766177c974e984621b04cd25bc`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>

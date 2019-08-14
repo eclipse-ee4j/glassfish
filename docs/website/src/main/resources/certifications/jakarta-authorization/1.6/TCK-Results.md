@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta Authorization.
 - Specification Name, Version and download URL: <br/>
   [Jakarta Authorization, 1.6](https://jakarta.ee/specifications/authorization/1.6/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Authorization TCK 1.5.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-authorization-tck-1.5.0.zip), SHA-256: `81373a045b7bb187989eafbf6c4be5b6f7f28d25cdbdae03e2fcf343889f77f2`
+  [Jakarta Authorization TCK 1.5.0](https://download.eclipse.org/jakartaee/authorization/1.5/eclipse-authorization-tck-1.5.0.zip), SHA-256: `81373a045b7bb187989eafbf6c4be5b6f7f28d25cdbdae03e2fcf343889f77f2`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>

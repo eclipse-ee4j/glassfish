@@ -21,14 +21,25 @@ following is a summary of the TCK results for releases of Jakarta XML Registries
 - Java runtime used to run the implementation: <br/>
   Oracle JDK 1.8.0_191
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
-  Linux Centos 7
+  Linux <br/>
+  Centos 7 <br/>
+  JWSDP 1.3, running on Java SE 1.4 (j2sdk-1_4_2_41-linux-i586.tar.gz)
 
 Test results:
 
+TCK Test Result
 ```
 [javatest.batch] ********************************************************************************
 [javatest.batch] Completed running 346 tests.
 [javatest.batch] Number of Tests Passed      = 346
+[javatest.batch] Number of Tests Failed      = 0
+[javatest.batch] Number of Tests with Errors = 0
+[javatest.batch] ********************************************************************************
+
+Signature Test Result
+[javatest.batch] ********************************************************************************
+[javatest.batch] Completed running 1 tests.
+[javatest.batch] Number of Tests Passed      = 1
 [javatest.batch] Number of Tests Failed      = 0
 [javatest.batch] Number of Tests with Errors = 0
 [javatest.batch] ********************************************************************************

@@ -16,11 +16,11 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, W
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>
-  Jakarta CDI TCK; Jakarta Bean Validation TCK; Jakarta Dependency Injection TCK. TBD -- summary results, or links, here.
+  None
 - Java runtime used to run the implementation: <br/>
   Oracle JDK 1.8.0_191
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
-  Apache Derby: <br/>
+  Apache Derby, <br/>
   Linux, Centos 7.
 
 
@@ -208,14 +208,6 @@ Stage Name: jaxrs
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 976 tests.
    [runcts] OUT => [javatest.batch] Number of Tests Passed      = 976
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jbatch
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 322 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 322
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************

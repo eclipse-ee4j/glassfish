@@ -16,7 +16,10 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, F
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>
-  Jakarta CDI TCK; Jakarta Bean Validation TCK; Jakarta Dependency Injection TCK. TBD -- summary results, or links, here.
+  Jakarta Dependency Injection 1.0 TCK <br/>
+  Jakarta Contexts and Dependency Injection 2.0 TCK <br/>
+  Jakarta Bean Validation 2.0 TCK <br/>
+  Jakarta Batch 1.0 TCK tests are included in Jakarta EE 8 CTS tests, See Stage Name: jbatch <br/>
 - Java runtime used to run the implementation: <br/>
   Oracle JDK 1.8.0_191
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
@@ -577,4 +580,59 @@ Stage Name: xa
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
+```
+
+Additionally, Jakarta EE 8 Specification requires the following TCKs:
+
+Jakarta Dependency Injection 1.0 TCK
+
+Download URL & SHA-256
+
+[jakarta.inject-tck-1.0-bin.zip](http://download.eclipse.org/ee4j/cdi/jakarta.inject-tck-1.0-bin.zip), <br/>
+SHA-256: `b679bac9b1057df894753892a880ba6ade530607dd811157106ed767aa26481f`
+
+TCK result summary:
+```
+    [junit] Testsuite: org.jboss.weld.atinject.tck.AtInjectTCK
+    [junit] Tests run: 50, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.14 sec
+```
+
+
+Jakarta Contexts and Dependency Injection 2.0 TCK
+
+Download URL & SHA-256
+
+[cdi-tck-2.0.6-dist.zip](http://download.eclipse.org/ee4j/cdi/cdi-tck-2.0.6-dist.zip), <br/>
+SHA-256:  `75e969a7a3b3c77332154a2008309aad821a923d8684139242048a7640762808`
+
+TCK Result Summary:
+```
+ [mvn.test] Tests run: 1809, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3,312.887 sec
+ [mvn.test] 
+ [mvn.test] Results :
+ [mvn.test] 
+ [mvn.test] Tests run: 1809, Failures: 0, Errors: 0, Skipped: 0
+```
+
+
+Jakarta Bean Validation 2.0 TCK
+
+Download URL & SHA-256
+
+[beanvalidation-tck-dist-2.0.5.zip](https://download.eclipse.org/jakartaee/bean-validation/2.0/beanvalidation-tck-dist-2.0.5.zip), <br/>
+SHA-256: `ebab3232311439dfc93559ca0dfa8cc230f51ab221cdc0a4901a8533f129f3ad`
+
+TCK Result Summary:
+```
+ [mvn.test] [INFO] -------------------------------------------------------
+ [mvn.test] [INFO]  T E S T S
+ [mvn.test] [INFO] -------------------------------------------------------
+ [mvn.test] [INFO] Running TestSuite
+ [mvn.test] [INFO] Tests run: 1043, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 718.379 s - in TestSuite
+ [mvn.test] [INFO] 
+ [mvn.test] [INFO] Results:
+ [mvn.test] [INFO] 
+ [mvn.test] [INFO] Tests run: 1043, Failures: 0, Errors: 0, Skipped: 0
+ [mvn.test] [INFO] 
+ [mvn.test] [INFO] 
 ```

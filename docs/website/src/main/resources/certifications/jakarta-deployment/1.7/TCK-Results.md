@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta Deployment.
 - Specification Name, Version and download URL: <br/>
   [Jakarta Deployment 1.7](https://jakarta.ee/specifications/deployment/1.7/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta EE Platform CTS 8.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-jakartaeetck-8.0.0.zip), SHA-256: `847c80c9c80bea4682006f186292b68acdd0ce9b239d998856c3a379c3a7be50`
+  [Jakarta EE Platform CTS 8.0](https://download.eclipse.org/jakartaee/full-profile/8/eclipse-jakartaeetck-8.0.0.zip), SHA-256: `847c80c9c80bea4682006f186292b68acdd0ce9b239d998856c3a379c3a7be50`
 - Public URL of TCK Results Summary: <br/>
   See Full Platform CTS for results. There is no stand-alone TCK for this specification.
   [TCK results summary](https://eclipse-ee4j.github.io/glassfish/certifications/jakarta-full-profile/8.0/TCK-Results)

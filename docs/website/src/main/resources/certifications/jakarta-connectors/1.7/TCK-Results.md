@@ -10,7 +10,7 @@ following is a summary of the TCK results for releases of Jakarta Connectors.
 - [x] Organization Name ("Organization") and, if applicable, URL: <br/>
   Eclipse Foundation
 - [x] Product Name, Version and download URL (if applicable): <br/>
-  [GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
 - [x] Specification Name, Version and download URL: <br/>
    [Jakarta Connectors 1.7](https://jakarta.ee/specifications/concurrency/1.1/)
 - [x] TCK Version, digital SHA-256 fingerprint and download URL: <br/>

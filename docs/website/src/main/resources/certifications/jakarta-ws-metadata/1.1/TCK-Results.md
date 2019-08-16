@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Web Services M
 # Eclipse GlassFish 5.1, Full Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [Eclipse GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
   Includes Web Services Metadata 1.1.1
 - Specification Name, Version and download URL: <br/>
   [Jakarta Web Services Metadata 1.1](https://jakarta.ee/specifications/ws-metadata/1.1/)

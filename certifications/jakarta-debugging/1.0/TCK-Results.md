@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Jakarta Debugg
 # Eclipse GlassFish 5.1 Certification Request
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [Eclipse GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
   This specification does not define an API. The TCK verifies required behavior.
 - Specification Name, Version and download URL: <br/>
   [Jakarta Jakarta Debugging Support for Other Languages 1.0](https://jakarta.ee/specifications/debugging/1.0/)

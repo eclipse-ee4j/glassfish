@@ -5,11 +5,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta XML Registries.
 
-# Eclipse Jakarta Registries Implementation 1.0.9, Certification Summary
+# Eclipse Jakarta Registries Implementation 1.0.10, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse Jakarta Registries Implementation](https://github.com/eclipse-ee4j/jaxr-ri)
-  Includes Jakarta XML Registries 1.0.9
+  [Eclipse Glassfish](https://github.com/eclipse-ee4j/glassfish)
+  Tested with Jakarta XML Registries 1.0.10
 - Specification Name, Version and download URL: <br/>
   [Jakarta XML Registries 1.0](https://jakarta.ee/specifications/xml-registries/1.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>

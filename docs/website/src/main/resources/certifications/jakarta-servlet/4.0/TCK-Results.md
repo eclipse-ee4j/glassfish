@@ -27,8 +27,8 @@ Test results:
 
 ```
 [javatest.batch] ********************************************************************************
-[javatest.batch] Completed running 1689 tests.
-[javatest.batch] Number of Tests Passed      = 1689
+[javatest.batch] Completed running 1690 tests.
+[javatest.batch] Number of Tests Passed      = 1690
 [javatest.batch] Number of Tests Failed      = 0
 [javatest.batch] Number of Tests with Errors = 0
 [javatest.batch] ********************************************************************************

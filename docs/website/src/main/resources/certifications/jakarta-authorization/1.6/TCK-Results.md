@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Authorization.
 # Eclipse Fish 5.1 Certification Request
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [Eclipse GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
   Includes Authorization 1.6.1
 - Specification Name, Version and download URL: <br/>
   [Jakarta Authorization, 1.6](https://jakarta.ee/specifications/authorization/1.6/)

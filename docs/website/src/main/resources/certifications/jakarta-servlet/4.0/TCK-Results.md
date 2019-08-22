@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Servlet.
 # Eclipse GlassFish 5.1, Full Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [Eclipse GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
   Includes Servlet 4.0.2
 - Specification Name, Version and download URL: <br/>
   [Jakarta Servlet 4.0](https://jakarta.ee/specifications/servlet/4.0/)
@@ -27,8 +27,8 @@ Test results:
 
 ```
 [javatest.batch] ********************************************************************************
-[javatest.batch] Completed running 1689 tests.
-[javatest.batch] Number of Tests Passed      = 1689
+[javatest.batch] Completed running 1690 tests.
+[javatest.batch] Number of Tests Passed      = 1690
 [javatest.batch] Number of Tests Failed      = 0
 [javatest.batch] Number of Tests with Errors = 0
 [javatest.batch] ********************************************************************************

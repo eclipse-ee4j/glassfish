@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta XML Registries
 # Eclipse Jakarta Registries Implementation 1.0.9, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse Jakarta Registries Implementation](https://github.com/eclipse-ee4j/jaxr-ri)
+  [Eclipse Glassfish](https://github.com/eclipse-ee4j/glassfish)
   Includes Jakarta XML Registries 1.0.9
 - Specification Name, Version and download URL: <br/>
   [Jakarta XML Registries 1.0](https://jakarta.ee/specifications/xml-registries/1.0/)

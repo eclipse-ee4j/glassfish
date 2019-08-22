@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Enterprise Bea
 # Eclipse GlassFish 5.1, Full Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [Eclipse GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
   Includes Jakarta Enterprise Beans 3.2.5
 - Specification Name, Version and download URL: <br/>
   [Jakarta Enterprise Beans 3.2](https://jakarta.ee/specifications/enterprise-beans/3.2/)

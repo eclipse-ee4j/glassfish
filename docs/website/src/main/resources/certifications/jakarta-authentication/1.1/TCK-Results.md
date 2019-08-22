@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Authentication
 # Eclipse GlassFish 5.1 Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [Eclipse GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
   Includes Authentication API, 1.1.2
 - Specification Name, Version and download URL: <br/>
   [Jakarta Authentication 1.1](https://jakarta.ee/specifications/authentication/1.1/)

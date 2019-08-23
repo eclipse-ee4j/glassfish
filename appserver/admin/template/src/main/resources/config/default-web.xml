@@ -311,7 +311,7 @@
         jakarta.persistence.jar
         jakarta.resource-api.jar
         jakarta.security.auth.message-api.jar
-        jakarta.security.jacc-api.jar
+        jakarta.authorization-api.jar
         jakarta.transaction-api.jar
         jakarta.xml.rpc-api.jar
         webservices-osgi.jar

@@ -9,11 +9,11 @@ following is a summary of the TCK results for releases of Jakarta Standard Tag L
 
 - Product Name, Version and download URL (if applicable): <br/>
   [Eclipse GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
-  Includes Standard Tag Library 1.3.4
+  Includes Standard Tag Library 1.2.6
 - Specification Name, Version and download URL: <br/>
   [Jakarta Standard Tag Library 1.2](https://jakarta.ee/specifications/tags/1.2/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Standard Tag Library 1.2](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-tags-tck-1.2.0.zip), SHA-256: `af8b39153c0f0cae36f85b8792b9c678791cf59b41bd124a53f5205cd0a83e6a`
+  [Jakarta Standard Tag Library 1.2](https://download.eclipse.org/jakartaee/tags/1.2/eclipse-tags-tck-1.2.0.zip), SHA-256: `af8b39153c0f0cae36f85b8792b9c678791cf59b41bd124a53f5205cd0a83e6a`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>

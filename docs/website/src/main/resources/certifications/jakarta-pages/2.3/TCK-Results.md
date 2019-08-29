@@ -10,11 +10,11 @@ following is a summary of the TCK results for releases of Jakarta Concurrency.
 - [x] Organization Name ("Organization") and, if applicable, URL: <br/>
   Eclipse Foundation
 - [x] Product Name, Version and download URL (if applicable): <br/>
-  [GlassFish 5.1](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
+  [GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
 - [x] Specification Name, Version and download URL: <br/>
    [Jakarta Server Pages 2.3](https://jakarta.ee/specifications/pages/2.3/)
 - [x] TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Server Pages TCK 2.3.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-pages-tck-2.3.0.zip), SHA-256: 38dc605251653f6ec69a6f3c3f5fb678f0e4305a9abd8a7e47781c1ebad0e7e8
+  [Jakarta Server Pages TCK 2.3.0](https://download.eclipse.org/jakartaee/pages/2.3/eclipse-pages-tck-2.3.0.zip), SHA-256: 38dc605251653f6ec69a6f3c3f5fb678f0e4305a9abd8a7e47781c1ebad0e7e8
 - [x] Public URL of TCK Results Summary: <br/>
   [TCK results summary](https://eclipse-ee4j.github.io/glassfish/certifications/jakarta-pages/2.3/TCK-Results)
 - [x] Any Additional Specification Certification Requirements: <br/>

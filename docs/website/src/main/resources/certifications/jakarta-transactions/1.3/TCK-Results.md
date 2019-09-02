@@ -13,7 +13,7 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
 - Specification Name, Version and download URL <br/>
   Jakarta Transactions 1.3 https://github.com/jakartaee/specifications/pull/25
 - TCK Version, digital SHA-256 fingerprint and download URL <br/>
-  eclipse-transactions-tck-1.3.0 76b80f10347804a38d5f12ea09a74356f8ea26298e97c8a525d7a9e3379f1fc5 http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee8-eftl/promoted/eclipse-transactions-tck-1.3.0.zip
+  eclipse-transactions-tck-1.3.0 76b80f10347804a38d5f12ea09a74356f8ea26298e97c8a525d7a9e3379f1fc5 https://download.eclipse.org/jakartaee/transactions/1.3/?d
 - Public URL of TCK Results Summary <br/>
   https://eclipse-ee4j.github.io/glassfish/certifications/jakarta-transactions/1.3/TCK-Results
 - Any Additional Specification Certification Requirements <br/>

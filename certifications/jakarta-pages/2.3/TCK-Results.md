@@ -29,7 +29,7 @@ following is a summary of the TCK results for releases of Jakarta Concurrency.
 Test results:
 
 ```
-[javatest.batch] Number of Tests Passed      = 703
+[javatest.batch] Number of Tests Passed      = 704
 [javatest.batch] Number of Tests Failed      = 0
 [javatest.batch] Number of Tests with Errors = 0
 [javatest.batch] ********************************************************************************
@@ -736,11 +736,12 @@ Test results:
 [javatest.batch] PASSED........com/sun/ts/tests/jsp/spec/tldres/URLClient.java#tldResourcePathWebXmlTest
 [javatest.batch] PASSED........com/sun/ts/tests/jsp/spec/tldres/URLClient.java#tldResPathAbsUriNotFoundTest
 [javatest.batch] PASSED........com/sun/ts/tests/jsp/spec/tldres/URLClient.java#tldResPathRelativeUriTest
+[javatest.batch] PASSED........com/sun/ts/tests/signaturetest/jsp/JSPSigTest.java#signatureTest
 [javatest.batch] 
-[javatest.batch] Aug 3, 2019 8:43:35 PM Finished executing all tests, wait for cleanup...
-[javatest.batch] Aug 3, 2019 8:43:35 PM Harness done with cleanup from test run.
-[javatest.batch] Total time = 1,220s
+[javatest.batch] Sep 2, 2019 10:20:19 AM Finished executing all tests, wait for cleanup...
+[javatest.batch] Sep 2, 2019 10:20:19 AM Harness done with cleanup from test run.
+[javatest.batch] Total time = 1,150s
 [javatest.batch] Setup time = 0s
 [javatest.batch] Cleanup time = 0s
-[javatest.batch] Test results: passed: 703
+[javatest.batch] Test results: passed: 704
 ```

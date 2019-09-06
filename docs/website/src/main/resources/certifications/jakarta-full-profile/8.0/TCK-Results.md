@@ -588,7 +588,7 @@ Jakarta Dependency Injection 1.0 TCK
 
 Download URL & SHA-256
 
-[jakarta.inject-tck-1.0-bin.zip](http://download.eclipse.org/ee4j/cdi/jakarta.inject-tck-1.0-bin.zip), <br/>
+[jakarta.inject-tck-1.0-bin.zip](https://download.eclipse.org/jakartaee/dependency-injection/1.0/jakarta.inject-tck-1.0-bin.zip), <br/>
 SHA-256: `b679bac9b1057df894753892a880ba6ade530607dd811157106ed767aa26481f`
 
 TCK result summary:
@@ -602,7 +602,7 @@ Jakarta Contexts and Dependency Injection 2.0 TCK
 
 Download URL & SHA-256
 
-[cdi-tck-2.0.6-dist.zip](http://download.eclipse.org/ee4j/cdi/cdi-tck-2.0.6-dist.zip), <br/>
+[cdi-tck-2.0.6-dist.zip](https://download.eclipse.org/jakartaee/cdi/2.0/cdi-tck-2.0.6-dist.zip), <br/>
 SHA-256:  `75e969a7a3b3c77332154a2008309aad821a923d8684139242048a7640762808`
 
 TCK Result Summary:

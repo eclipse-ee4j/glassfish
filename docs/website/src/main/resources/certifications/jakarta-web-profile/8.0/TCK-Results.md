@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, W
 # Eclipse GlassFish 5.1 Web Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1, Web Profile](https://www.eclipse.org/downloads/download.php?file=/glassfish/web-5.1.0.zip)
+  [Eclipse GlassFish 5.1, Web Profile](https://eclipse-ee4j.github.io/glassfish/download)
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, Web Profile 8.0](https://jakarta.ee/specifications/jakartaee-web-profile/8.0)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>

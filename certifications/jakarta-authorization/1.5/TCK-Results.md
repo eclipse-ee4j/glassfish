@@ -27,6 +27,7 @@ following is a summary of the TCK results for releases of Jakarta Authorization.
 Test results:
 
 ```
+
 [javatest.batch] ********************************************************************************
 [javatest.batch] Completed running 25 tests.
 [javatest.batch] Number of Tests Passed      = 25

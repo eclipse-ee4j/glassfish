@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, W
 # Eclipse GlassFish 5.1 Web Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 5.1, Web Profile](https://www.eclipse.org/downloads/download.php?file=/glassfish/web-5.1.0.zip)
+  [Eclipse GlassFish 5.1, Web Profile](https://eclipse-ee4j.github.io/glassfish/download)
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, Web Profile 8.0](https://jakarta.ee/specifications/jakartaee-web-profile/8.0)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
@@ -324,7 +324,7 @@ Jakarta Dependency Injection 1.0 TCK
 
 Download URL & SHA-256
 
-[jakarta.inject-tck-1.0-bin.zip](http://download.eclipse.org/ee4j/cdi/jakarta.inject-tck-1.0-bin.zip), <br/>
+[jakarta.inject-tck-1.0-bin.zip](https://download.eclipse.org/jakartaee/dependency-injection/1.0/jakarta.inject-tck-1.0-bin.zip), <br/>
 SHA-256: `b679bac9b1057df894753892a880ba6ade530607dd811157106ed767aa26481f`
 
 TCK result summary:
@@ -338,7 +338,7 @@ Jakarta Contexts and Dependency Injection 2.0 TCK
 
 Download URL & SHA-256
 
-[cdi-tck-2.0.6-dist.zip](http://download.eclipse.org/ee4j/cdi/cdi-tck-2.0.6-dist.zip), <br/>
+[cdi-tck-2.0.6-dist.zip](https://download.eclipse.org/jakartaee/cdi/2.0/cdi-tck-2.0.6-dist.zip), <br/>
 SHA-256:  `75e969a7a3b3c77332154a2008309aad821a923d8684139242048a7640762808`
 
 TCK Result Summary:

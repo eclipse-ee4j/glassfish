@@ -18,22 +18,26 @@ package org.glassfish.admin.cli;
 
 import com.sun.enterprise.admin.cli.AdminMain;
 import com.sun.enterprise.admin.cli.Environment;
+import com.sun.enterprise.admin.remote.Metrix;
 
 /**
  * The asadmin main program.
  */
 public class AsadminMain extends AdminMain {
 
-	public static void main(String[] args) {
 
-		Environment.setPrefix("AS_ADMIN_");
-		Environment.setShortPrefix("AS_");
-		int code = new AsadminMain().doMain(args);
-		System.exit(code);
+    public static void main(String[] args) {
+//        Metrix.event("START");
+        Environment.setPrefix("AS_ADMIN_");
+        Environment.setShortPrefix("AS_");
+        int code = new AsadminMain().doMain(args);
+//        Metrix.event("DONE");
+//        System.out.println("METRIX:");
+//        System.out.println(Metrix.getInstance().toString());
+        System.exit(code);
+    }
 
-	}
-
-	protected String getCommandName() {
-		return "asadmin";
-	}
+    protected String getCommandName() {
+        return "asadmin";
+    }
 }

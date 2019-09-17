@@ -40,4 +40,11 @@
             </resource>
         </resources>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>glassfish-corba-omgapi</artifactId>
+            <version>${glassfish-corba.version}</version>
+        </dependency>
+    </dependencies>
 </project>

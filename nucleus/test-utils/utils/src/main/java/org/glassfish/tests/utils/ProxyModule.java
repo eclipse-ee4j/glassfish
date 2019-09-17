@@ -16,7 +16,14 @@
 
 package org.glassfish.tests.utils;
 
-import com.sun.enterprise.module.*;
+import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModuleDependency;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModuleMetadata;
+import com.sun.enterprise.module.ModuleChangeListener;
+import com.sun.enterprise.module.ResolveError;
 
 import java.util.List;
 import java.io.PrintStream;

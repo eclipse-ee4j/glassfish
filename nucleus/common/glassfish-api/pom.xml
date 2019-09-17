@@ -84,12 +84,16 @@
             <groupId>org.glassfish.external</groupId>
             <artifactId>management-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>glassfish-corba-omgapi</artifactId>
+            <version>${glassfish-corba.version}</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
             <optional>true</optional>
-      </dependency>        
+      </dependency>
     </dependencies>
 </project>

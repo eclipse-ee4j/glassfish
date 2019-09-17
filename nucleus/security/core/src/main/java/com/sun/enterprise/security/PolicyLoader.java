@@ -131,14 +131,14 @@ public class PolicyLoader{
                 Object obj = javaPolicyClass.newInstance();
                 if (j2ee13) {
                     // Use JDK 1.3 classes if j2ee1 3 property being used
-                    if (!(obj instanceof javax.security.auth.Policy)) {
+                    if (!(obj instanceof java.security.Policy)) {
                         String msg = 
                             sm.getString("enterprise.security.plcyload.not13");
                         throw new RuntimeException(msg);
                     }
-                    javax.security.auth.Policy policy =
-                        (javax.security.auth.Policy)obj;
-                    javax.security.auth.Policy.setPolicy(policy);
+                    java.security.Policy policy =
+                        (java.security.Policy)obj;
+                    java.security.Policy.setPolicy(policy);
                     policy.refresh();
                     
                 } else {

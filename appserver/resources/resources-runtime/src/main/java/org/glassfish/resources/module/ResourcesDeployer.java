@@ -49,6 +49,7 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.api.ServiceLocator;
+import com.sun.enterprise.config.serverbeans.Module;
 import org.jvnet.hk2.config.*;
 
 import org.glassfish.api.event.EventListener;

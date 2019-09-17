@@ -29,6 +29,7 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.connectors.config.GroupMap;
 import org.glassfish.connectors.config.PrincipalMap;
 import org.glassfish.connectors.config.WorkSecurityMap;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;

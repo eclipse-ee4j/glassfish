@@ -21,6 +21,7 @@ import com.sun.logging.LogDomains;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.runlevel.RunLevel;
+import com.sun.enterprise.config.serverbeans.Module;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;

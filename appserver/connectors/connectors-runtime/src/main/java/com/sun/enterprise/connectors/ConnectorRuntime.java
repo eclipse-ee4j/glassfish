@@ -63,6 +63,7 @@ import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.types.Property;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import javax.inject.Inject;
 import javax.inject.Named;

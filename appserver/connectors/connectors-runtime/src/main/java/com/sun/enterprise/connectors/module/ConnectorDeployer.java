@@ -50,6 +50,7 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import javax.inject.Inject;
 import javax.validation.*;

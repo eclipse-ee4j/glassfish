@@ -28,6 +28,7 @@ import org.jvnet.hk2.config.types.Property;
 
 import com.sun.enterprise.config.serverbeans.*;
 import org.glassfish.api.deployment.DeployCommandParameters;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import java.beans.PropertyVetoException;
 import java.util.List;

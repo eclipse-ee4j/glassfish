@@ -26,6 +26,7 @@ import org.glassfish.connectors.config.WorkSecurityMap;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

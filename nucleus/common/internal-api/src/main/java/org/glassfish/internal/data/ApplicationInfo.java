@@ -424,7 +424,11 @@ public class ApplicationInfo extends ModuleInfo {
         // clean up the app level classloader
         if (appClassLoader != null) {
             try {
-                appServiceLocator.preDestroy(appClassLoader);
+                if (appServiceLocator != null) {
+                    appServiceLocator.preDestroy(appClassLoader);
+                } else {
+                    PreDestroy.class.cast(appClassLoader).preDestroy();
+                }
             }
             catch (Exception e) {
                 // Ignore, some failure in preDestroy

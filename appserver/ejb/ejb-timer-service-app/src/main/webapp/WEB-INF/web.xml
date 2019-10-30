@@ -18,12 +18,4 @@
 -->
 
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <servlet>
-        <servlet-name>TimerWelcomeServlet</servlet-name>
-        <servlet-class>com.sun.ejb.timers.TimerWelcomeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TimerWelcomeServlet</servlet-name>
-        <url-pattern>/timer/*</url-pattern>
-    </servlet-mapping>
-    </web-app>
+</web-app>

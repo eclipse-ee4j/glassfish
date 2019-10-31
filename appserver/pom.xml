@@ -976,6 +976,16 @@
                 <version>${derby.version}</version>
                 <type>zip</type>
            </dependency>
+           <dependency>
+               <groupId>jakarta.activation</groupId>
+               <artifactId>jakarta.activation-api</artifactId>
+               <version>${jakarta.activation-api.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>com.sun.activation</groupId>
+               <artifactId>jakarta.activation</artifactId>
+               <version>${jakarta.activation.version}</version>
+           </dependency>
       </dependencies>
     </dependencyManagement>
 

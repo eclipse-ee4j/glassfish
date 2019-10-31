@@ -255,20 +255,9 @@
                 <include>javaee.jar</include>
                 <include>appserv-rt.jar</include>
                 <include>gf-client.jar</include>
-            </includes>
-            <outputDirectory>${install.dir.name}/glassfish/lib</outputDirectory>
-        </fileSet>
-
-        <!-- modules/endorsed -->
-        <fileSet>
-            <directory>${temp.dir}</directory>
-            <includes>
-                <include>jakarta.annotation-api.jar</include>
-                <include>jakarta.xml.bind-api.jar</include>
-                <include>webservices-api-osgi.jar</include>
                 <include>grizzly-npn-bootstrap.jar</include>
             </includes>
-            <outputDirectory>${install.dir.name}/glassfish/modules/endorsed</outputDirectory>
+            <outputDirectory>${install.dir.name}/glassfish/lib</outputDirectory>
         </fileSet>
 
         <!-- felix -->
@@ -336,7 +325,6 @@
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>appserver-domain.jar</exclude>
-                <exclude>jakarta.annotation-api.jar</exclude>
                 <exclude>grizzly-npn-bootstrap.jar</exclude>
                 <exclude>cli-optional.jar</exclude>
                 <exclude>appserver-cli.jar</exclude>
@@ -352,8 +340,6 @@
                 <exclude>mejb.jar</exclude>
                 <exclude>weld-se-core.jar</exclude>
                 <exclude>weld-se-shaded.jar</exclude>
-                <exclude>jakarta.xml.bind-api.jar</exclude>
-                <exclude>webservices-api-osgi.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/glassfish/modules</outputDirectory>
         </fileSet>

@@ -273,7 +273,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      *         {@link String }
      */
     @Attribute
-    @Pattern(regexp="(read-uncommitted||read-committed|repeatable-read|serializable)")
+    @Pattern(regexp="(read-uncommitted|read-committed|repeatable-read|serializable)")
     String getTransactionIsolationLevel();
 
     /**

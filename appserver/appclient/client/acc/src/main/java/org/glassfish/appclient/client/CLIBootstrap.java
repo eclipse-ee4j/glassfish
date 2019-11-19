@@ -194,7 +194,7 @@ public class CLIBootstrap {
          * containing no double quote) or a non-quoted string (a string containing
          * no white space or quotes).
          */
-        final Pattern argPattern = Pattern.compile("\"([^\"]+)\"|([^\"\\s]+)");
+        final Pattern argPattern = Pattern.compile("\"((?:(?<!\\\\)(?:(?:\\\\\\\\)*\\\\)\"|[^\"])*)\"|([^\"\\s]+)");
 
         final Matcher matcher = argPattern.matcher(inputArgs);
         final List<String> argList = new ArrayList<String>();
@@ -256,7 +256,7 @@ public class CLIBootstrap {
 
         otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions);
 
-        arguments = new CommandLineElement(".*", Pattern.DOTALL);
+        arguments = new CommandLineArgument(".*", Pattern.DOTALL);
 
         initCommandLineElements();
     }
@@ -538,6 +538,27 @@ public class CLIBootstrap {
             }
             commandLine.append((useQuotes ? quoteSuppressTokenSubst(v) : v));
             return commandLine;
+        }
+    }
+
+    private class CommandLineArgument extends CommandLineElement {
+        CommandLineArgument(String patternString, int flags) {
+            super(patternString, flags);
+        }
+        @Override
+        StringBuilder format(final StringBuilder commandLine,
+                final boolean useQuotes, final String v) {
+            if (commandLine.length() > 0) {
+                commandLine.append(' ');
+            }
+            commandLine.append((useQuotes ? quoteCommandLineArgument(v) : v));
+            return commandLine;
+        }
+        private String quoteCommandLineArgument(String s) {
+            if(! OS.isWindows()) {
+                s = s.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
+            }
+            return "\"" + s + "\"";
         }
     }
 

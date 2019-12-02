@@ -49,6 +49,9 @@ class JvmOptions {
             else if (s.startsWith("-X")) {
                 addXProp(s);
             }
+            else if (s.startsWith("--")) {
+                addLongProp(s);
+            }
             else if (s.startsWith("-")) {
                 addPlainProp(s);
             }
@@ -95,7 +98,17 @@ class JvmOptions {
                 ss.add("-X" + entry.getKey());
             }
         }
-
+        entryIterator = longProps.entrySet().iterator();
+        while (entryIterator.hasNext()) {
+            Map.Entry<String, String> entry = entryIterator.next();
+            String value = entry.getValue();
+            if (value != null) {
+                ss.add("--" + entry.getKey() + "=" + value);
+            }
+            else {
+                ss.add("--" + entry.getKey());
+            }
+        }
         entryIterator = plainProps.entrySet().iterator();
         while (entryIterator.hasNext()) {
             Map.Entry<String, String> entry = entryIterator.next();
@@ -132,6 +145,12 @@ class JvmOptions {
 
     int getOsgiPort() {
         return osgiPort;
+    }
+
+    private void addLongProp(String s) {
+        s = s.substring(2);
+        CompoundNameValue nv = new CompoundNameValue(s);
+        longProps.put(nv.name, nv.value);
     }
 
     private void addPlainProp(String s) {
@@ -269,12 +288,16 @@ class JvmOptions {
             // already handled -- it is already set to -1
         }
     }
-    Map<String, String> sysProps = new HashMap<String, String>();
-    Map<String, String> xxProps = new HashMap<String, String>();
-    Map<String, String> xProps = new HashMap<String, String>();
-    Map<String, String> plainProps = new HashMap<String, String>();
+    Map<String, String> sysProps = new LinkedHashMap<String, String>();
+    Map<String, String> xxProps = new LinkedHashMap<String, String>();
+    Map<String, String> xProps = new LinkedHashMap<String, String>();
+    Map<String, String> longProps = new LinkedHashMap<String, String>();
+    Map<String, String> plainProps = new LinkedHashMap<String, String>();
     int osgiPort = -1;
 
+    // NameValue assumes that for a <name>=<value> pair, the <name> is always
+    // the portion of the string before the first equals sign. This also allows the <value> to
+    // contain one or more <key>=<value> pairs (if required).
     private static class NameValue {
 
         NameValue(String s) {
@@ -284,6 +307,39 @@ class JvmOptions {
                 name = s;
             }
             else {
+                name = s.substring(0, index);
+                if (index + 1 < s.length()) {
+                    value = s.substring(index + 1);
+                }
+            }
+        }
+        private String name;
+        private String value;
+    }
+
+    // For Java 9, options must also be supported of the forms:
+    //   <option>=<module[/package]>=<value>
+    //   <option> <module[/package]>=<value>
+    // These forms are now handled by CompoundNameValue, which combines <option> and <module[/package]>
+    // into a single <name> key.
+    private static class CompoundNameValue {
+
+        CompoundNameValue(String s) {
+            int index = Math.min(s.indexOf("="),s.indexOf(" "));
+            if (index < 0) {
+                name = s;
+            }
+            else {
+                int index2 = s.indexOf("=",index+1);
+                if (index2 >= 0) {
+                    // There is a later equals sign, which implies <option>=<module>=<value>
+                    // If the original match was a space, change it to an equals character instead
+                    // so that this is treated as a single argument in the output string.
+                    if (s.charAt(index) == ' ') {
+                        s = s.replaceFirst(" ","=");
+                    }
+                    index = index2;
+                }
                 name = s.substring(0, index);
                 if (index + 1 < s.length()) {
                     value = s.substring(index + 1);

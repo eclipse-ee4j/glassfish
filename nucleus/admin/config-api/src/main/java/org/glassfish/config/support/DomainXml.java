@@ -23,6 +23,7 @@ import com.sun.enterprise.module.bootstrap.EarlyLogHandler;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationCleanup;
@@ -45,11 +46,14 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
+import static org.glassfish.config.support.GrizzlyConfigSchemaMigrator.logger;
 
 /**
  * Locates and parses the portion of <tt>domain.xml</tt> that we care.
@@ -89,10 +93,44 @@ public abstract class DomainXml implements Populator {
 
         ServiceLocatorUtilities.addOneConstant(habitat, parentClassLoader, null, ClassLoader.class);
 
+        String instance = env.getInstanceName();
+        URL domainURL = null;
         try {
-            parseDomainXml(parser, getDomainXml(env), env.getInstanceName());
-        } catch (IOException e) {
-            throw new ConfigPopulatorException(localStrings.getLocalString("ConfigParsingFailed", "Failed to parse domain.xml"), e);
+            domainURL = getDomainXml(env);
+            parseDomainXml(parser, domainURL, instance);
+        } catch (NoBackupException ex) {
+            /* Both files do not exists or are empty */
+            throwParseError(ex);
+        } catch (Throwable ex) {
+            if (domainURL == null || isBackupFile(domainURL)) {
+                /* Already tried backup file */
+                throwParseError(ex);
+            }
+            /* Retry with backup file*/
+            try {
+                domainURL = getAlternativeDomainXml(env);
+                parseDomainXml(parser, getAlternativeDomainXml(env), instance);
+            } catch (Throwable e) {
+                e.addSuppressed(ex);
+                throwParseError(e);
+            }
+        }
+        if (isBackupFile(domainURL)) {
+            Lock writeLock = null;
+            try {
+                writeLock = configAccess.accessWrite();
+                File destination = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileName);
+                File backup = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
+                if (!destination.exists() || (destination.delete() && !destination.exists())) {
+                    FileUtils.renameFile(backup, destination);
+                }
+            } catch (IOException | TimeoutException e) {
+                /* We can safely ignore it as it is not so important */
+            } finally {
+                if (writeLock != null) {
+                    writeLock.unlock();
+                }
+            }
         }
 
         // run the upgrades...
@@ -119,6 +157,14 @@ public abstract class DomainXml implements Populator {
         }
 
         decorate();
+    }
+
+    protected boolean isBackupFile(URL url) {
+        return url.getPath().endsWith(ServerEnvironmentImpl.kConfigXMLFileNameBackup);
+    }
+
+    private void throwParseError(Throwable parent) {
+        throw new ConfigPopulatorException(localStrings.getLocalString("ConfigParsingFailed", "Failed to parse domain.xml"), parent);
     }
 
     protected void decorate() {
@@ -164,34 +210,47 @@ public abstract class DomainXml implements Populator {
         }
     }
 
+    private boolean checkDomainFile(File domainFile, Supplier<String> errorMessage) {
+        if (domainFile.exists() && domainFile.length() > 0) {
+            return true;
+        }
+        LogRecord lr = new LogRecord(Level.SEVERE, errorMessage.get());
+        lr.setLoggerName(getClass().getName());
+        EarlyLogHandler.earlyMessages.add(lr);
+        return false;
+    }
+
+    /**
+     * Determines the alternative location of the <tt>domain.xml</tt> file
+     */
+    protected URL getAlternativeDomainXml(ServerEnvironmentImpl env) throws IOException {
+        File domainXml = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
+        if (checkDomainFile(domainXml, () -> noBackupFile)) {
+            return domainXml.toURI().toURL();
+        }
+
+        throw new NoBackupException(env.getConfigDirPath());
+    }
+
+    private static class NoBackupException extends IOException {
+
+        private NoBackupException(File configDirectory) {
+            super(localStrings.getLocalString("NoUsableConfigFile",
+                    "No usable configuration file at {0}",
+                    configDirectory.getAbsolutePath()));
+        }
+
+    }
+
     /**
      * Determines the location of <tt>domain.xml</tt> to be parsed.
      */
     protected URL getDomainXml(ServerEnvironmentImpl env) throws IOException {
         File domainXml = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileName);
-        if (domainXml.exists() && domainXml.length() > 0) {
+        if (checkDomainFile(domainXml, () -> noConfigFile)) {
             return domainXml.toURI().toURL();
-        } else {
-
-            LogRecord lr = new LogRecord(Level.SEVERE, domainXml.getAbsolutePath() + noBackupFile
-            );
-            lr.setLoggerName(getClass().getName());
-            EarlyLogHandler.earlyMessages.add(lr);
-
-            domainXml = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
-            if (domainXml.exists() && domainXml.length() > 0) {
-                return domainXml.toURI().toURL();
-            }
-
-            lr = new LogRecord(Level.SEVERE,
-                    noBackupFile);
-            lr.setLoggerName(getClass().getName());
-            EarlyLogHandler.earlyMessages.add(lr);
-
         }
-        throw new IOException(localStrings.getLocalString("NoUsableConfigFile",
-                "No usable configuration file at {0}",
-                env.getConfigDirPath()));
+        return getAlternativeDomainXml(env);
     }
 
     /**

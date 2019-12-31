@@ -66,6 +66,9 @@ public final class LogCleanerUtil {
 
 
     public static String neutralizeForLog(String message){
+        if (message == null) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         for(int offset  = 0; offset < message.length(); ){
             final int point = message.codePointAt(offset);

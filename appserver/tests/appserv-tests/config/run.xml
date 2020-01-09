@@ -116,7 +116,7 @@
 <target name="stopDomain" depends="init-common">
     <echo message="run.xml:stopping domain..."/>
     <exec executable="${ASADMIN}" failonerror="true">
-        <arg line="stop-domain"/>
+        <arg line="stop-domain --kill=true"/>
     </exec>
 </target>
 

@@ -208,6 +208,7 @@ spec:
             checkout scm
             // do the build
             sh '''
+              alias mvn='mvn -Dmaven.repo.local=/home/jenkins/.m2/repository'
               bash -xe ./gfbuild.sh build_re_dev
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'

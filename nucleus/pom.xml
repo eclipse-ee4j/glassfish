@@ -67,6 +67,17 @@
           <archive>https://dev.eclipse.org/mhonarc/lists/glassfish-dev</archive>
         </mailingList>
     </mailingLists>
+    
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <modules>
         <module>parent</module>

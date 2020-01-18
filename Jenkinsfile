@@ -146,9 +146,6 @@ spec:
         items:
         - key: settings-security.xml
           path: settings-security.xml
-    - name: maven-repo-shared-storage
-      persistentVolumeClaim:
-       claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
   containers:
@@ -178,9 +175,7 @@ spec:
         mountPath: /home/jenkins/.m2/settings-security.xml
         subPath: settings-security.xml
         readOnly: true
-      - mountPath: "/home/jenkins/.m2/repository"
-        name: maven-repo-shared-storage
-      - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
+      - mountPath: /home/jenkins/.m2/repository
         name: maven-repo-local-storage
     resources:
       limits:

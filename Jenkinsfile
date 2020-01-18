@@ -209,7 +209,11 @@ spec:
             // do the build
             sh '''
               alias mvn='mvn -Dmaven.repo.local=/home/jenkins/.m2/repository'
-              bash -xe ./gfbuild.sh build_re_dev
+              
+              
+              printf "shopt -s expand_aliases\nalias mvn='mvn -Dmaven.repo.local=/home/jenkins/.m2/repository'\n./gfbuild.sh build_re_dev\n" > buildm2.sh && chmod +x buildm2.sh
+              
+              bash -xe ./buildm2.sh
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'
             junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'

@@ -121,7 +121,7 @@
     
     <condition property="dumpStack">
         <not>
-            <equals arg1="${app.state" arg2="0"/>
+            <equals arg1="${app.state}" arg2="0"/>
         </not>
     </condition>
     

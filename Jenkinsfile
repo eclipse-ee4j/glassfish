@@ -205,6 +205,10 @@ spec:
             sh '''
               echo Catting settings.xml
               cat /home/jenkins/.m2/settings.xml
+              
+              echo Maven version
+              mvn -v
+              
               bash -xe ./gfbuild.sh build_re_dev
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'

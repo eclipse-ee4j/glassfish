@@ -96,7 +96,7 @@
         <filterchain>
             <linecontains>
               <contains value="ASMain"/>
-	      <contains value="${env.S1AS_HOME}"/>
+	          <contains value="${env.S1AS_HOME}"/>
             </linecontains>
             <tokenfilter>
                 <replaceregex pattern="^(\d+) ASMain (.*)" replace="\1"/>
@@ -106,10 +106,21 @@
             <striplinebreaks/>
         </filterchain>
     </loadfile>
-    <echo>Dumping the thread stack for Appserver instance with PID - "${pid.out}"</echo>
-    <exec executable="${env.JAVA_HOME}/bin/jstack">
-        <arg value="${pid.out}"/>
-    </exec>
+    
+     <if>
+        <isset property="pid.out.file"/>
+        <then>
+             <echo>Dumping the thread stack for Appserver instance with PID - "${pid.out}"</echo>
+             <exec executable="${env.JAVA_HOME}/bin/jstack">
+                 <arg value="${pid.out}"/>
+             </exec>
+        </then>
+        <else>
+            <echo>Attempt to dump AS threads stack, but no Appserver instance with PID found in - "${pid.out.file}" </echo>
+        </else>
+    </if>
+    
+   
     <delete file="pid.out.file"/>
 </target>
 

@@ -115,9 +115,17 @@
 
 <target name="stopDomain" depends="init-common">
     <echo message="run.xml:stopping domain..."/>
-    <exec executable="${ASADMIN}" failonerror="true">
+    <exec executable="${ASADMIN}" resultproperty="app.state" failonerror="false">
         <arg line="stop-domain"/>
     </exec>
+    
+    <condition property="dumpStack">
+        <not>
+            <equals arg1="${app.state" arg2="0"/>
+        </not>
+    </condition>
+    
+    <antcall target="dumpThreadStack"/>
 </target>
 
 <target name="delete-domain-common" depends="init-common">

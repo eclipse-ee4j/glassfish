@@ -860,7 +860,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <antcall target="private-all">
         <param name="build" value="${testsRoot}/build"/>
     </antcall>
-    <exec executable="${ASADMIN}" failonerror="true">
+    <exec executable="${ASADMIN}" failonerror="false">
         <arg line="stop-domain"/>
     </exec>
     <antcall target="postTestsRun"/>
@@ -1039,8 +1039,9 @@ AS_ADMIN_MASTERPASSWORD=changeit
 
 <target name="restart.server">
     <echo message="Restarting server..."/>
-    <exec executable="${ASADMIN}" failonerror="true">
+    <exec executable="${ASADMIN}" failonerror=false>
         <arg line="stop-domain"/>
+        <arg line="--force"/>
     </exec>
     <antcall target="start-process">
       <param name="line" value="start-domain --user ${admin.user} --passwordfile ${passwordFile}"/>

@@ -18,6 +18,12 @@
 
 <property name="target-to-run" value="sqetests"/>
 
+<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+        <pathelement location="${env.APS_HOME}/devtests/cdi/lib/ant-contrib-1.0b3.jar" />
+    </classpath>
+</taskdef>
+
 <target name="runtest" depends="init-common">
     <record name="runtest.output" action="start" />
     <parallel>
@@ -119,7 +125,6 @@
             <echo>Attempt to dump AS threads stack, but no Appserver instance with PID found in - "${pid.out.file}" </echo>
         </else>
     </if>
-    
    
     <delete file="pid.out.file"/>
 </target>
@@ -175,20 +180,19 @@
 
 
 <target name="restart-instance-common">
-<echo message="Restarting remote server instance,until this gets fixed"/>
-	<exec executable="${ASADMIN}" failonerror="false">
-	<arg line="stop-instance"/>
-	<arg line="${as.props}"/>
-	<arg line="${appserver.instance.name}"/>
-</exec>
-
-<sleep seconds="30"/>
-	<exec executable="${ASADMIN}" failonerror="false">
-	<arg line="start-instance"/>
-	<arg line="${as.props}"/>
-	<arg line="${appserver.instance.name}"/>
-</exec>
-
+    <echo message="Restarting remote server instance,until this gets fixed"/>
+    	<exec executable="${ASADMIN}" failonerror="false">
+    	<arg line="stop-instance"/>
+    	<arg line="${as.props}"/>
+    	<arg line="${appserver.instance.name}"/>
+    </exec>
+    
+    <sleep seconds="30"/>
+    	<exec executable="${ASADMIN}" failonerror="false">
+    	<arg line="start-instance"/>
+    	<arg line="${as.props}"/>
+    	<arg line="${appserver.instance.name}"/>
+    </exec>
 </target>
 
 <macrodef name="run-test">

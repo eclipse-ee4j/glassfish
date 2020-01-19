@@ -34,7 +34,7 @@ run_test_id(){
 	if [[ ${1} = "ql_gf_full_profile_all" ]]; then
 		unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
 		cd ${WORKSPACE}/appserver/tests/quicklook/
-		mvn -Dglassfish.home=${S1AS_HOME} -Ptest_gd_security,report test | tee ${TEST_RUN_LOG}
+		mvn -Dmaven.repo.local=/home/jenkins/.m2/repository -Dglassfish.home=${S1AS_HOME} -Ptest_gd_security,report test | tee ${TEST_RUN_LOG}
 	elif [[ ${1} = "ql_gf_nucleus_all" || ${1} = "nucleus_admin_all" ]]; then
 		unzip_test_resources ${WORKSPACE}/bundles/nucleus-new.zip
 		if [[ ${1} = "ql_gf_nucleus_all" ]]; then
@@ -42,7 +42,7 @@ run_test_id(){
 		elif [[ ${1} = "nucleus_admin_all"  ]]; then
 			cd ${WORKSPACE}/nucleus/tests/admin
 		fi
-		mvn -Dmaven.test.failure.ignore=true -Dnucleus.home=${WORKSPACE}/nucleus clean test | tee ${TEST_RUN_LOG}
+		mvn -Dmaven.repo.local=/home/jenkins/.m2/repository -Dmaven.test.failure.ignore=true -Dnucleus.home=${WORKSPACE}/nucleus clean test | tee ${TEST_RUN_LOG}
 		if [[ ${1} = "ql_gf_nucleus_all" ]]; then
 			merge_junit_xmls ${WORKSPACE}/nucleus/tests/quicklook/target/surefire-reports/junitreports
 		elif [[ ${1} = "nucleus_admin_all"  ]]; then
@@ -52,9 +52,9 @@ run_test_id(){
     unzip_test_resources ${WORKSPACE}/bundles/web.zip
 		cd ${WORKSPACE}/appserver/tests/quicklook/
 		if [[ ${1} = "ql_gf_web_profile_all" ]]; then
-			mvn -Dglassfish.home=${S1AS_HOME} -Ptest_wd_security,report test | tee ${TEST_RUN_LOG}
+			mvn -Dmaven.repo.local=/home/jenkins/.m2/repository -Dglassfish.home=${S1AS_HOME} -Ptest_wd_security,report test | tee ${TEST_RUN_LOG}
 		elif [[ ${1} = "ql_gf_embedded_profile_all" ]]; then
-			mvn -Dglassfish.home=${S1AS_HOME} -Ptest_em,report test | tee ${TEST_RUN_LOG}
+			mvn -Dmaven.repo.local=/home/jenkins/.m2/repository -Dglassfish.home=${S1AS_HOME} -Ptest_em,report test | tee ${TEST_RUN_LOG}
 		fi
 	else
 		echo "Invalid Test Id"

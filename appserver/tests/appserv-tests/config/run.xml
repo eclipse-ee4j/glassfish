@@ -98,20 +98,6 @@
     <exec executable="${env.JAVA_HOME}/bin/jps" output="pid.out.file">
        <arg value="-v"/>
     </exec>
-    <loadfile srcfile="pid.out.file" property="pid.out">
-        <filterchain>
-            <linecontains>
-              <contains value="ASMain"/>
-	          <contains value="${env.S1AS_HOME}"/>
-            </linecontains>
-            <tokenfilter>
-                <replaceregex pattern="^(\d+) ASMain (.*)" replace="\1"/>
-                <trim/>
-                <ignoreblank/>
-            </tokenfilter>
-            <striplinebreaks/>
-        </filterchain>
-    </loadfile>
     
      <if>
         <isset property="pid.out.file"/>
@@ -122,7 +108,8 @@
              </exec>
         </then>
         <else>
-            <echo>Attempt to dump AS threads stack, but no Appserver instance with PID found in - "${pid.out.file}" </echo>
+            <loadfile srcfile="pid.out.file" property="jps.out"/>
+            <echo>Attempt to dump AS threads stack, but no Appserver instance with PID found in - "${jps.out}" </echo>
         </else>
     </if>
    

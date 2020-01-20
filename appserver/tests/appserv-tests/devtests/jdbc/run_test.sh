@@ -24,8 +24,8 @@ test_run(){
   ${S1AS_HOME}/bin/asadmin start-database
   cd ${APS_HOME}/devtests/jdbc
   ant ${TARGET} | tee ${TEST_RUN_LOG}
-  ${S1AS_HOME}/bin/asadmin stop-domain domain1
-  ${S1AS_HOME}/bin/asadmin stop-database
+  ${S1AS_HOME}/bin/asadmin stop-domain domain1 || true
+  ${S1AS_HOME}/bin/asadmin stop-database 
 }
 
 run_test_id(){

@@ -36,7 +36,7 @@ test_run(){
   echo "ANT_OPTS=${ANT_OPTS}"
   ant ${TARGET} | tee ${TEST_RUN_LOG}
   ${S1AS_HOME}/bin/asadmin stop-database
-  ${S1AS_HOME}/bin/asadmin stop-domain
+  ${S1AS_HOME}/bin/asadmin stop-domain || true
 }
 
 run_test_id(){

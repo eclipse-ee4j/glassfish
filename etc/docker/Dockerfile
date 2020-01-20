@@ -25,9 +25,9 @@ RUN chmod +x /etc/entrypoint.sh && \
     #
     # install takari extensions
     #
-    curl -O http://repo1.maven.org/maven2/io/takari/aether/takari-local-repository/0.11.2/takari-local-repository-0.11.2.jar && \
+    curl -O https://repo1.maven.org/maven2/io/takari/aether/takari-local-repository/0.11.2/takari-local-repository-0.11.2.jar && \
     mv takari-local-repository-*.jar /usr/share/maven/lib/ext/ && \
-    curl -O http://repo1.maven.org/maven2/io/takari/takari-filemanager/0.8.3/takari-filemanager-0.8.3.jar && \
+    curl -O https://repo1.maven.org/maven2/io/takari/takari-filemanager/0.8.3/takari-filemanager-0.8.3.jar && \
     mv takari-filemanager-*.jar /usr/share/maven/lib/ext/ && \
     #
     # install ant

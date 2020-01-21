@@ -208,9 +208,6 @@ spec:
             checkout scm
             // do the build
             sh '''
-              echo Catting settings.xml
-              cat /home/jenkins/.m2/settings.xml
-              
               echo Maven version
               mvn -v
               

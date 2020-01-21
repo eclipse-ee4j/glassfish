@@ -147,8 +147,8 @@ spec:
         - key: settings-security.xml
           path: settings-security.xml
     - name: maven-repo-shared-storage
-       persistentVolumeClaim:
-        claimName: glassfish-maven-repo-storage
+      persistentVolumeClaim:
+       claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
   containers:

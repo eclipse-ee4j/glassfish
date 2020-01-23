@@ -63,7 +63,7 @@ archive_bundles(){
 }
 
 dev_build(){
-  mvn -Dmaven.repo.local=/home/jenkins/.m2/repository -U clean install -Dmaven.test.failure.ignore=true -Pstaging
+  mvn -U clean install -Dmaven.test.failure.ignore=true -Pstaging ${MVN_EXTRA}
 }
 
 build_re_dev(){

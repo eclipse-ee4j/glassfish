@@ -134,6 +134,8 @@ kind: Pod
 metadata:
 spec:
   volumes:
+  	- name: "jenkins-home"
+      emptyDir: {}
     - name: settings-xml
       secret:
         secretName: m2-secret-dir
@@ -167,6 +169,9 @@ spec:
     tty: true
     imagePullPolicy: Always
     volumeMounts:
+      - mountPath: "/home/jenkins"
+        name: "jenkins-home"
+        readOnly: false
       - name: settings-xml
         mountPath: /home/jenkins/.m2/settings.xml
         subPath: settings.xml

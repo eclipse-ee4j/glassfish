@@ -182,6 +182,11 @@ spec:
         readOnly: true
       - mountPath: /home/jenkins/.m2/repository
         name: maven-repo-local-storage
+    env:
+      - name: "MAVEN_OPTS"
+        value: "-Duser.home=/home/jenkins"
+      - name: "MVN_EXTRA"
+        value: "--batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
     resources:
       limits:
         memory: "7Gi"
@@ -208,9 +213,6 @@ spec:
             checkout scm
             // do the build
             sh '''
-              echo Catting settings.xml
-              cat /home/jenkins/.m2/settings.xml
-              
               echo Maven version
               mvn -v
               

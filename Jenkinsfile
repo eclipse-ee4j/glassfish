@@ -134,6 +134,11 @@ kind: Pod
 metadata:
 spec:
   volumes:
+    - name: "jenkins-home"
+      emptyDir: {}
+    - name: maven-repo-shared-storage
+      persistentVolumeClaim:
+       claimName: glassfish-maven-repo-storage
     - name: settings-xml
       secret:
         secretName: m2-secret-dir
@@ -146,9 +151,6 @@ spec:
         items:
         - key: settings-security.xml
           path: settings-security.xml
-    - name: maven-repo-shared-storage
-      persistentVolumeClaim:
-       claimName: glassfish-maven-repo-storage
     - name: maven-repo-local-storage
       emptyDir: {}
   containers:
@@ -170,6 +172,11 @@ spec:
     tty: true
     imagePullPolicy: Always
     volumeMounts:
+      - mountPath: "/home/jenkins"
+        name: "jenkins-home"
+        readOnly: false
+      - mountPath: /home/jenkins/.m2/repository
+        name: maven-repo-shared-storage
       - name: settings-xml
         mountPath: /home/jenkins/.m2/settings.xml
         subPath: settings.xml
@@ -178,8 +185,6 @@ spec:
         mountPath: /home/jenkins/.m2/settings-security.xml
         subPath: settings-security.xml
         readOnly: true
-      - mountPath: /home/jenkins/.m2/repository
-        name: maven-repo-shared-storage
       - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
         name: maven-repo-local-storage
     env:

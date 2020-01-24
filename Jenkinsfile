@@ -134,7 +134,7 @@ kind: Pod
 metadata:
 spec:
   volumes:
-  	- name: "jenkins-home"
+    - name: "jenkins-home"
       emptyDir: {}
     - name: settings-xml
       secret:

@@ -243,6 +243,11 @@ public final class ProcessUtils {
                 System.out.println("ps -p for parent returned " + pm.getStdout());
             }
             
+            pm = new ProcessManager("ps", "-ef");
+            pm.setEcho(false);
+            pm.execute();
+            
+            System.out.println("ps -ef returned " + pm.getStdout());
         }
         
         

@@ -226,6 +226,23 @@ public final class ProcessUtils {
             pm.execute();
 
             System.out.println("ps -p returned " + pm.getStdout());
+            
+            pm = new ProcessManager("ps", "-o ppid=", "" + aPid);
+            pm.setEcho(false);
+            pm.execute();
+            
+            System.out.println("ps -o ppid= returned " + pm.getStdout());
+            
+            String ppid = pm.getStdout();
+            
+            if (ppid != null) {
+                pm = new ProcessManager("ps", "-p", "" + ppid.trim());
+                pm.setEcho(false);
+                pm.execute();
+
+                System.out.println("ps -p for parent returned " + pm.getStdout());
+            }
+            
         }
         
         

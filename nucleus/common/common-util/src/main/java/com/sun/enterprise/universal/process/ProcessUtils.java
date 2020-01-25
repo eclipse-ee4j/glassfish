@@ -220,6 +220,15 @@ public final class ProcessUtils {
         
         System.out.println("kill -0 returned " + retval);
         
+        if (retval == 0) {
+            pm = new ProcessManager("ps", "-p", "" + aPid);
+            pm.setEcho(false);
+            pm.execute();
+
+            System.out.println("ps -p returned " + pm.getStdout());
+        }
+        
+        
         return retval == 0 ? Boolean.TRUE : Boolean.FALSE;
     }
 

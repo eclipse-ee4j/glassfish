@@ -172,6 +172,13 @@ public class StopDomainCommand extends LocalDomainCommand {
             // use stdout because logger always appends a newline
             System.out.print(Strings.get("StopDomain.WaitDASDeath") + " ");
         }
+        
+        if (isLocal()) {
+            System.out.println("Server is local");
+            System.out.println("Server name:" + serverDirs.getServerName());
+        }
+        
+        
         long startWait = System.currentTimeMillis();
         boolean alive = true;
         int count = 0;

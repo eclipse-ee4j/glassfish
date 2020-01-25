@@ -70,6 +70,7 @@ public class StopDomainCommand extends StopServer implements AdminCommand {
             return;
         }
 
+        context.getLogger().warning("About to execute StopDomainCommand:doExecute");
         doExecute(habitat, env, force);
     }
 }

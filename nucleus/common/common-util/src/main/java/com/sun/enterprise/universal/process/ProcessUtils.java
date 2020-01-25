@@ -158,12 +158,14 @@ public final class ProcessUtils {
      */
     public static Boolean isProcessRunning(int aPid) {
         try {
-            if (OS.isWindowsForSure())
+            if (OS.isWindowsForSure()) {
                 return isProcessRunningWindows(aPid);
-            else
-                return isProcessRunningUnix(aPid);
+            }
+            
+            return isProcessRunningUnix(aPid);
         }
         catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -208,10 +210,16 @@ public final class ProcessUtils {
     }
 
     private static Boolean isProcessRunningUnix(int aPid) throws ProcessManagerException {
+        
+        System.out.println("isProcessRunningUnix - executing kill -0 " + aPid);
+        
         ProcessManager pm = new ProcessManager("kill", "-0", "" + aPid);
         pm.setEcho(false);
         pm.execute();
         int retval = pm.getExitValue();
+        
+        System.out.println("kill -0 returned " + retval);
+        
         return retval == 0 ? Boolean.TRUE : Boolean.FALSE;
     }
 

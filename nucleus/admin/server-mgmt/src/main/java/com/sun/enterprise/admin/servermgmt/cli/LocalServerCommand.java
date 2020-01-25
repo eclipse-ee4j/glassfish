@@ -339,8 +339,9 @@ public abstract class LocalServerCommand extends CLICommand {
     protected boolean isRunning() {
         int pp = getPrevPid();
 
-        if (pp < 0)
+        if (pp < 0) {
             return isRunningByCheckingForPidFile();
+        }
 
         Boolean b = ProcessUtils.isProcessRunning(pp);
 
@@ -395,11 +396,16 @@ public abstract class LocalServerCommand extends CLICommand {
     protected final int getPrevPid() {
         try {
             File prevPidFile = new File(getServerDirs().getPidFile().getPath() + ".prev");
+            
+            System.out.println("Trying to read: " + prevPidFile.getAbsolutePath());
 
             if (!prevPidFile.canRead())
                 return -1;
 
             String pids = FileUtils.readSmallFile(prevPidFile).trim();
+            
+            System.out.println("GlassFish PID read: " + pids);
+            
             return Integer.parseInt(pids);
         }
         catch (Exception ex) {
@@ -432,7 +438,11 @@ public abstract class LocalServerCommand extends CLICommand {
         File pf = getServerDirs().getPidFile();
 
         if (pf != null) {
-            return pf.exists();
+            System.out.println("Checking for Pid file " + pf.getAbsolutePath());
+            boolean pidFileExists = pf.exists();
+            System.out.println("Pid file exists : " + pidFileExists);
+            
+            return pidFileExists;
         }
         else
             return isRunning(programOpts.getHost(), // remote case
@@ -559,7 +569,7 @@ public abstract class LocalServerCommand extends CLICommand {
     ////////////////////////////////////////////////////////////////
     /// Section:  private variables
     ////////////////////////////////////////////////////////////////
-    private ServerDirs serverDirs;
+    protected ServerDirs serverDirs;
     private static final LocalStringsImpl strings =
             new LocalStringsImpl(LocalDomainCommand.class);
 }

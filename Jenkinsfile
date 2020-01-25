@@ -217,6 +217,10 @@ spec:
             sh '''
               whereis lsof
               
+              ls /usr
+              
+              ls /usr/sbin
+              
               /usr/sbin/lsof
             
               echo Maven version

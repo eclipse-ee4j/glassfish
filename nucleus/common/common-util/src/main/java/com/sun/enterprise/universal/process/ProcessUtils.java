@@ -249,11 +249,12 @@ public final class ProcessUtils {
             
             System.out.println("ps -ef returned " + pm.getStdout());
             
-            pm = new ProcessManager("lsof", "-p", "" + aPid);
+            // Linux and BSD, not OS X
+            pm = new ProcessManager("ls", "-l", "/proc/" + aPid + "/fd");
             pm.setEcho(false);
             pm.execute();
             
-            System.out.println("lsof -p " + aPid + " returned " + pm.getStdout());
+            System.out.println("ls -l /proc/" + aPid + "/fd returned " + pm.getStdout());
         }
         
         

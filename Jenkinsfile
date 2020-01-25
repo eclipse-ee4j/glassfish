@@ -215,14 +215,6 @@ spec:
             checkout scm
             // do the build
             sh '''
-              whereis lsof
-              
-              ls /usr
-              
-              ls /usr/sbin
-              
-              /usr/sbin/lsof
-            
               echo Maven version
               mvn -v
               

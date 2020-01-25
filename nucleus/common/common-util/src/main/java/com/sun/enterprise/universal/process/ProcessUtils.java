@@ -248,6 +248,12 @@ public final class ProcessUtils {
             pm.execute();
             
             System.out.println("ps -ef returned " + pm.getStdout());
+            
+            pm = new ProcessManager("lsof", "-p", "" + aPid);
+            pm.setEcho(false);
+            pm.execute();
+            
+            System.out.println("lsof -p " + aPid + " returned " + pm.getStdout());
         }
         
         

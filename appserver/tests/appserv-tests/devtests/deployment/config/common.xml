@@ -862,6 +862,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     </antcall>
     <exec executable="${ASADMIN}" failonerror="true">
         <arg line="stop-domain"/>
+        <arg value="--kill=true"/>
     </exec>
     <antcall target="postTestsRun"/>
     <record name="client.log" action="stop"/>
@@ -1041,6 +1042,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <echo message="Restarting server..."/>
     <exec executable="${ASADMIN}" failonerror="true">
         <arg line="stop-domain"/>
+        <arg value="--kill=true"/>
     </exec>
     <antcall target="start-process">
       <param name="line" value="start-domain --user ${admin.user} --passwordfile ${passwordFile}"/>

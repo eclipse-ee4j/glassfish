@@ -1826,6 +1826,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         <echo message="stopping server on unix ..."/>
         <exec executable="${env.S1AS_HOME}/bin/asadmin">
             <arg value="stop-domain"/>
+            <arg value="--kill=true"/>
         </exec>
         <sleep seconds="10"/>
     </target>

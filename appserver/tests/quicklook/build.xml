@@ -694,6 +694,7 @@
 <target name="stop-server-unix" if="isUnix">
      <exec executable="${glassfish.home}/bin/asadmin">
         <arg value="stop-domain"/>
+        <arg value="--kill=true"/>
     </exec>
 </target>
 

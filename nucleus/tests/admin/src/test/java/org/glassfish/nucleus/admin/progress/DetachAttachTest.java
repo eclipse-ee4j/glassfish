@@ -44,7 +44,7 @@ public class DetachAttachTest {
 
     @AfterTest
     public void cleanUp() throws Exception {
-        nadmin("stop-domain");
+        nadmin("stop-domain", "--kill=true");
         JobManagerTest.deleteJobsFile();
         //osgi-cache workaround
         File osgiCacheDir = new File(nucleusRoot, "domains"+File.separator+"domain1"+File.separator+"osgi-cache");

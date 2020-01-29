@@ -64,7 +64,7 @@ public class NucleusStartStopTest {
     @AfterSuite(alwaysRun = true)
     public void tearDown(ITestContext context) {
         try {
-            assertTrue(nadmin("stop-domain"));
+            assertTrue(nadmin("stop-domain", "--kill=true"));
         } finally {
             Collection<File> libs = (Collection<File>) context.getAttribute(TEST_LIBS_KEY);
             if (libs != null) {

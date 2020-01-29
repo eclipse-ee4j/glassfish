@@ -117,6 +117,7 @@
     <echo message="run.xml:stopping domain..."/>
     <exec executable="${ASADMIN}" failonerror="true">
         <arg line="stop-domain"/>
+        <arg value="--kill=true"/>
     </exec>
 </target>
 

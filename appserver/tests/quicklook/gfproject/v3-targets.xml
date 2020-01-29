@@ -62,7 +62,7 @@
 <target name="restart-server-unix" if="isUnix">
     <exec executable="${glassfish.home}/bin/asadmin" outputproperty="message1">
         <arg value="restart-domain"/>
-        <arg value="domain1"/>
+        <arg value="--kill=true"/>
     </exec>
     <echo message="${message1}"/>
 </target>
@@ -140,6 +140,7 @@
     <echo message="stopping server on unix ..."/>
     <exec executable="${glassfish.home}/bin/asadmin">        
         <arg value="stop-domain"/>
+        <arg value="--kill=true"/>
     </exec>
 </target>
 

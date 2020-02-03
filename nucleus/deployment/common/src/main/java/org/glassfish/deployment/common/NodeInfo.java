@@ -69,7 +69,7 @@ class NodeInfo
     }
 
     NodeInfo(byte[] classData) {
-        super(Opcodes.ASM6);
+        super(Opcodes.ASM7);
         ClassReader cr = new ClassReader(classData);
 
         cr.accept(this, ClassReader.SKIP_CODE);
@@ -117,7 +117,7 @@ class NodeInfo
     }
 
     NodeInfo(String className) {
-        super(Opcodes.ASM6);
+        super(Opcodes.ASM7);
         this.className = className;
     }
 

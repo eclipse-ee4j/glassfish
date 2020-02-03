@@ -236,9 +236,9 @@ public class EjbDeployer
         if (ejbBundle.containsCMPEntity()) {
             CMPService cmpService = cmpServiceProvider.get();
             if (cmpService == null) {
-                throw new RuntimeException("CMP Module is not available");
+                throw new RuntimeException("CMP HK2Module is not available");
             } else if (!cmpService.isReady()) {
-                throw new RuntimeException("CMP Module is not initialized");
+                throw new RuntimeException("CMP HK2Module is not initialized");
             }
         }
 

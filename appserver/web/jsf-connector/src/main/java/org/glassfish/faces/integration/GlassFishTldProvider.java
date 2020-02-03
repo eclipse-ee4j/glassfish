@@ -16,7 +16,7 @@
 
 package org.glassfish.faces.integration;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.util.net.JarURIPattern;
 import org.jvnet.hk2.annotations.Service;
@@ -107,7 +107,7 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
         }
 
         URI[] uris = null;
-        Module m = null;
+        HK2Module m = null;
         if (jsfImplClass != null) {
             m = registry.find(jsfImplClass);
         }

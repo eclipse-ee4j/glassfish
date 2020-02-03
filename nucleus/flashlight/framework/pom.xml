@@ -86,8 +86,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.external</groupId>
-            <artifactId>asm-all</artifactId>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
         </dependency>
     </dependencies>
     <build>

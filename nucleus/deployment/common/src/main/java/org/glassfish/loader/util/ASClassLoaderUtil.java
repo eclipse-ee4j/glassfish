@@ -16,7 +16,7 @@
 
 package org.glassfish.loader.util;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.util.io.FileUtils;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -70,7 +70,7 @@ public class ASClassLoaderUtil {
      * defined [if any] for the application
      *
      * @param habitat the habitat the application resides in.
-     * @param moduleId Module id of the module
+     * @param moduleId HK2Module id of the module
      * @param deploymentLibs libraries option passed through deployment
      * @return A <code>File.pathSeparator</code> separated list of classpaths
      *         for the passed in module, including the module specified
@@ -213,7 +213,7 @@ public class ASClassLoaderUtil {
                 final StringBuilder tmpString = new StringBuilder();
                 ModulesRegistry mr = habitat.getService(ModulesRegistry.class);
                 if (mr != null) {
-                    for (Module module : mr.getModules()) {
+                    for (HK2Module module : mr.getModules()) {
                         for (URI uri : module.getModuleDefinition().getLocations()) {
                             tmpString.append(uri.getPath());
                             tmpString.append(File.pathSeparator);

@@ -88,7 +88,6 @@
             resultproperty="result">
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${depltest.orbport}"/>
-            <jvmarg value="-Djava.endorsed.dirs=${inst}/lib/endorsed"/>
 
             <classpath>
                 <path location="${inst}/lib/j2ee.jar"/>

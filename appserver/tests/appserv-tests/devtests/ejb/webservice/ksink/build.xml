@@ -233,7 +233,6 @@
      <antcall target="build-standalone"/>
      <java fork="true" classname="com.sun.s1asdev.ejb.webservice.ksink.standalone.StandAloneClient"
           failonerror="true">
-      <jvmarg value="-Djava.endorsed.dirs=${env.S1AS_HOME}/lib/endorsed"/>
       <arg line="spellng http://${http.host}:${http.port}/ejb_webservice_ksink_GoogleServlet/GoogleSearch"/>
       <classpath>
         <pathelement location="${env.S1AS_HOME}/lib/j2ee.jar"/>

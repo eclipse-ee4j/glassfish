@@ -33,4 +33,4 @@ goto run
 set JAVA=java
 
 :run
-%JAVA% -Djava.endorsed.dirs="%~dp0..\modules\endorsed" -cp "%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jakarta.xml.rpc-api.jar;%~dp0..\modules\jaxb-osgi.jar;%~dp0..\modules\jakarta.mail.jar;%JAVA_HOME%/lib/tools.jar" com.sun.xml.rpc.tools.wsdeploy.Main %*
+%JAVA% -cp "%~dp0..\modules\jakarta.activation-api.jar;%~dp0..\modules\endorsed\jakarta.xml.bind-api.jar;%~dp0..\modules\endorsed\webservices-api-osgi.jar;%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jakarta.xml.rpc-api.jar;%~dp0..\modules\jaxb-osgi.jar;%~dp0..\modules\jakarta.mail.jar;%JAVA_HOME%/lib/tools.jar" com.sun.xml.rpc.tools.wsdeploy.Main %*

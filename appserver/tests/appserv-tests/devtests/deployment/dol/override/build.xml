@@ -41,7 +41,6 @@
                destdir="${build}"
                debug="on"
                failonerror="true">
-           <compilerarg line="-endorseddirs ${inst}/modules/endorsed"/>
            <classpath>
                 <path refid="gfv3.classpath"/>
             </classpath>
@@ -71,7 +70,6 @@
 -->
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-            <jvmarg value="-Djava.endorsed.dirs=${inst}/lib/endorsed"/>
             <jvmarg value="-Dcom.sun.aas.installRoot=${inst}"/>
             <jvmarg value="-Dwriteout.xml=true"/>
             <jvmarg value="-Djavax.enterprise.system.tools.deployment.org.glassfish.deployment.common=FINE"/>

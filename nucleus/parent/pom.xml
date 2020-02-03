@@ -187,7 +187,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.6.1</version>
                     <configuration>
-                        <compilerArgument>-Djava.endorsed.dirs=${project.build.directory}/endorsed</compilerArgument>
                         <source>1.8</source>
                         <target>1.8</target>
                         <excludes>

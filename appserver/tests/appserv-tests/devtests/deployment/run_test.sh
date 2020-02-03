@@ -51,7 +51,7 @@ test_run(){
 
   if [ -z "${DEPL_TARGET}" ]
   then
-      ${S1AS_HOME}/bin/asadmin stop-domain --kill=true
+      ${S1AS_HOME}/bin/asadmin stop-domain
   fi
    if [[ ${1} = "deployment_cluster_all" ]]; then
       cp -r ${APS_HOME}/devtests/deployment/server-logs/ ${WORKSPACE}/results/

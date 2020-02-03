@@ -39,7 +39,7 @@ public class JobManagerTest {
 
     @BeforeTest
     public void setUp() throws Exception {
-        nadmin("stop-domain", "--kill=true");
+        nadmin("stop-domain");
         //delete jobs.xml incase there were other jobs run
         deleteJobsFile();
         //osgi-cache workaround
@@ -52,14 +52,14 @@ public class JobManagerTest {
 
     @AfterTest
     public void cleanUp() throws Exception {
-        nadmin("stop-domain", "--kill=true");
+        nadmin("stop-domain");
         nadmin("start-domain");
 
     }
     
     @Test(enabled=true)
     public void noJobsTest() {
-        nadmin("stop-domain", "--kill=true");
+        nadmin("stop-domain");
         //delete jobs.xml incase there were other jobs run
         deleteJobsFile();
         nadmin("start-domain");
@@ -83,7 +83,7 @@ public class JobManagerTest {
         result = nadminWithOutput("list-jobs","1").out;
         assertTrue( result.contains(COMMAND1) && result.contains("COMPLETED"));
         //shutdown server
-        assertTrue( nadmin("stop-domain", "--kill=true"));
+        assertTrue( nadmin("stop-domain"));
         //restart
         assertTrue( nadmin("start-domain"));
         //check jobs
@@ -97,7 +97,7 @@ public class JobManagerTest {
        public void runDetachTest() {
            String result = null;
            //shutdown server
-           assertTrue( nadmin("stop-domain", "--kill=true"));
+           assertTrue( nadmin("stop-domain"));
 
            //delete the jobs file
            deleteJobsFile();
@@ -131,7 +131,7 @@ public class JobManagerTest {
            try {
                String result = null;
                //shutdown server
-               assertTrue( nadmin("stop-domain", "--kill=true"));
+               assertTrue( nadmin("stop-domain"));
 
                //delete the jobs file
                deleteJobsFile();
@@ -148,7 +148,7 @@ public class JobManagerTest {
                result = nadminWithOutput("list-jobs","1").out;
                assertTrue( result.contains(COMMAND1) );
                //shutdown server
-               assertTrue( nadmin("stop-domain", "--kill=true"));
+               assertTrue( nadmin("stop-domain"));
 
                //start server
                assertTrue( nadmin("start-domain"));

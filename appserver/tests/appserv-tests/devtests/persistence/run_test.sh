@@ -25,7 +25,7 @@ test_run(){
   cd ${APS_HOME}/devtests/persistence/tests/packaging
   ant ${TARGET} | tee ${TEST_RUN_LOG}
   ${S1AS_HOME}/bin/asadmin stop-database
-  ${S1AS_HOME}/bin/asadmin stop-domain --kill=true
+  ${S1AS_HOME}/bin/asadmin stop-domain
 }
 
 run_test_id(){

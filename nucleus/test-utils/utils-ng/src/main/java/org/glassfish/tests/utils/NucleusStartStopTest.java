@@ -30,7 +30,7 @@ public class NucleusStartStopTest {
     
     @AfterSuite
     public void tearDown() {
-        assertTrue(nadmin("stop-domain", "--kill=true"));
+        assertTrue(nadmin("stop-domain"));
     }
     
    

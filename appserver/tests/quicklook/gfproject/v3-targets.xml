@@ -60,23 +60,11 @@
 </target>
 
 <target name="restart-server-unix" if="isUnix">
-    <echo message="stopping domain on unix ..."/>
-    <exec executable="${glassfish.home}/bin/asadmin" resultproperty="ret1">
+    <exec executable="${glassfish.home}/bin/asadmin" outputproperty="message1">
         <arg value="restart-domain"/>
+        <arg value="domain1"/>
     </exec>
-        <condition property="cmd1failed" value="true">
-     <not>
-        <equals arg1="0" arg2="${ret1}"/>
-     </not>
-     </condition>
-     <exec executable="${glassfish.home}/bin/asadmin" xmlns:if="ant:if" if:true="${cmd1failed}">
-     <arg value="restart-domain"/>
-     <arg line="--kill=true"/>
-     </exec>
-     <exec executable="echo" xmlns:unless="ant:unless" unless:true="${cmd1failed}">
-     <arg value="${glassfish.home}/bin/asadmin"/>
-     </exec>
-     <echo message="Command restart-domain executed successfully with force."/>
+    <echo message="${message1}"/>
 </target>
 
 <target name="restart-server-windows" if="isWindows">
@@ -152,7 +140,6 @@
     <echo message="stopping server on unix ..."/>
     <exec executable="${glassfish.home}/bin/asadmin">        
         <arg value="stop-domain"/>
-        <arg value="--kill=true"/>
     </exec>
 </target>
 

@@ -18,7 +18,7 @@ package com.sun.enterprise.v3.server;
 
 
 import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleState;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
@@ -394,29 +394,29 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
             return;
         }
         
-        StringBuilder sb = new StringBuilder("Module Status Report Begins\n");
+        StringBuilder sb = new StringBuilder("HK2Module Status Report Begins\n");
         // first started :
 
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()== ModuleState.READY) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // then resolved
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()== ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // finally installed
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()!= ModuleState.READY && m.getState()!=ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }
-        sb.append("Module Status Report Ends");
+        sb.append("HK2Module Status Report Ends");
         logger.log(level, sb.toString());
     }
 

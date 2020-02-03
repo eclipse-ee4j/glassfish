@@ -39,7 +39,7 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.api.web.TldProvider;
 import org.glassfish.web.loader.LogFacade;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.util.net.JarURIPattern;
 
@@ -80,7 +80,7 @@ public class JerseyMvcTldProvider implements TldProvider, PostConstruct {
         final Class jerseyIncludeClass = org.glassfish.jersey.server.mvc.jsp.Include.class;
 
         URI[] uris = null;
-        Module m = null;
+        HK2Module m = null;
         if (jerseyIncludeClass != null) {
             m = registry.find(jerseyIncludeClass);
         }

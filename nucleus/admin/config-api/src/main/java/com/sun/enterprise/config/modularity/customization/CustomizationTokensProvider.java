@@ -155,7 +155,7 @@ public class CustomizationTokensProvider {
             }
         });
         if (fjars == null)
-            throw new IOException("No Jar Files in the Modules Directory!");
+            throw new IOException("No Jar Files in the HK2Modules Directory!");
         URL[] jars = new URL[fjars.length];
         for (int i = 0; i < fjars.length; i++)
             jars[i] = fjars[i].toURI().toURL();

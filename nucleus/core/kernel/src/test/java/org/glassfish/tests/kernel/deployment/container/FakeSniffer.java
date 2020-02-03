@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import java.util.Map;
 import java.io.IOException;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,7 +65,7 @@ public class FakeSniffer implements Sniffer {
         return "fake";
     }
 
-    public Module[] setup(String containerHome, Logger logger) throws IOException {
+    public HK2Module[] setup(String containerHome, Logger logger) throws IOException {
         return null;
     }
 

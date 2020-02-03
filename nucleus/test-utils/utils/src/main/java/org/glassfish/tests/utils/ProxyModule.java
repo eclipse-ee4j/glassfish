@@ -28,7 +28,7 @@ import java.io.PrintStream;
  * Time: 11:29:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProxyModule implements Module {
+public class ProxyModule implements HK2Module {
 
     final ClassLoader classLoader;
     final ModuleDefinition moduleDef;
@@ -90,15 +90,15 @@ public class ProxyModule implements Module {
         return classLoader;
     }
 
-    public List<Module> getImports() {
+    public List<HK2Module> getImports() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void addImport(Module module) {
+    public void addImport(HK2Module module) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Module addImport(ModuleDependency dependency) {
+    public HK2Module addImport(ModuleDependency dependency) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

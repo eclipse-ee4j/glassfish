@@ -134,6 +134,8 @@
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
         <jakarta.activation-api.version>1.2.1</jakarta.activation-api.version>
         <jakarta.activation.version>1.2.1</jakarta.activation.version>
+        <jaxws-api.version>2.3.1</jaxws-api.version>
+        <jakarta.jws-api.version>1.1.1</jakarta.jws-api.version>
     </properties>
 
     <build>

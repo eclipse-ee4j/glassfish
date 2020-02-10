@@ -166,7 +166,7 @@ spec:
         memory: "1Gi"
         cpu: "1"
   - name: glassfish-ci
-    image: rohitkujain/ee4jglassfish:tiny
+    image: ee4jglassfish/ci:tiny
     args:
     - cat
     tty: true

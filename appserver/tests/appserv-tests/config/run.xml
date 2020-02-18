@@ -109,8 +109,7 @@
         </then>
         <else>
             <loadfile srcfile="pid.out.file" property="jps.out"/>
-            <echo>Attempt to dump AS threads stack, but no Appserver instance with PID found.</echo>
-            <echo message="${jps.out}"/>
+            <echo>Attempt to dump AS threads stack, but no Appserver instance with PID found in - "${jps.out}" </echo>
         </else>
     </if>
    

@@ -213,7 +213,7 @@ public class DeploymentHandler {
             Map payload = new HashMap();
 
              //If we are redeploying a web app, we want to preserve context root.
-             String ctxRoot = valueMap.get("contextroot");
+             String ctxRoot = valueMap.get("contextRoot");
              if (ctxRoot != null){
                  payload.put("contextroot", ctxRoot);
              }

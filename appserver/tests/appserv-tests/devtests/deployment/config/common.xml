@@ -860,7 +860,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <antcall target="private-all">
         <param name="build" value="${testsRoot}/build"/>
     </antcall>
-    <exec executable="${ASADMIN}" failonerror="false">
+    <exec executable="${ASADMIN}" failonerror="true">
         <arg line="stop-domain"/>
     </exec>
     <antcall target="postTestsRun"/>
@@ -1131,7 +1131,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <antcall target="stopInstance"/>
     <antcall target="stopCluster"/>
     <echo message="Running... asadmin stop-domain"/>
-    <exec executable="${ASADMIN}" failonerror="false">
+    <exec executable="${ASADMIN}">
         <arg line="stop-domain ${testDomain}"/>
     </exec>
 </target>
@@ -1176,7 +1176,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 
 <target name="unsetupDomain">
     <echo message="Running... asadmin stop-domain"/>
-    <exec executable="${ASADMIN}" failonerror="false">
+    <exec executable="${ASADMIN}">
         <arg line="stop-domain ${testDomain}"/>
     </exec>
     <echo message="Running... asadmin delete-domain"/>

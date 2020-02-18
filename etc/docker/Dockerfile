@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM krallin/centos-tini
 
 ADD ./entrypoint.sh /etc/
 ADD ./jdk1.8.0_181 /usr/lib/jvm/jdk8
@@ -55,4 +55,4 @@ ENV HOME /home/jenkins
 WORKDIR /home/jenkins
 USER jenkins
 
-ENTRYPOINT [ "/etc/entrypoint.sh" ]
+ENTRYPOINT ["/usr/local/bin/tini", "--", "/etc/entrypoint.sh" ]

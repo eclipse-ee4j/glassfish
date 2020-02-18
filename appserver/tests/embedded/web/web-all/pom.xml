@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,13 +28,13 @@
     <!--<parent>-->
     <!--<groupId>org.glassfish</groupId>-->
     <!--<artifactId>glassfish-parent</artifactId>-->
-    <!--<version>5.1.0-SNAPSHOT</version>-->
+    <!--<version>6.0.0-SNAPSHOT</version>-->
     <!--</parent>-->
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests</groupId>
     <artifactId>web-all-embedded-test</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <name>Test for glassfish-embedded-web</name>
 
     <properties>
@@ -121,7 +121,7 @@
                 <dependency>
                     <groupId>org.glassfish.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
-                    <version>5.1.0-SNAPSHOT</version>
+                    <version>6.0.0-SNAPSHOT</version>
                 </dependency>                
             </dependencies>
         </profile>

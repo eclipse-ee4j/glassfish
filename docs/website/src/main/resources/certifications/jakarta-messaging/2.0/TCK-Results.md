@@ -10,7 +10,7 @@ following is a summary of the TCK results for releases of Jakarta Messaging.
 - Product Name, Version and download URL (if applicable): <br/>
   Eclipse GlassFish 5.1, includes: Eclipse Open MQ 5.4.1, which provides Jakarta Messaging API 2.0.2
   [Eclipse GlassFish 5.1](https://eclipse-ee4j.github.io/glassfish/download)
-  For reference, use imqbrokerd command from GlassFish distribution: glassfish5/mq (bin).
+  For reference, use imqbrokerd command from GlassFish distribution: glassfish6/mq (bin).
 - Specification Name, Version and download URL: <br/>
   [Jakarta Messaging 2.0](https://jakarta.ee/specifications/messaging/2.0)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>

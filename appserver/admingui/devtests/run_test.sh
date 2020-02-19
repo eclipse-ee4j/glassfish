@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 #
-# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,7 +64,7 @@ run_test_id(){
 
 post_test_run(){
   cp $TEST_RUN_LOG ${WORKSPACE}/results/ || true
-  cp ${WORKSPACE}/glassfish5/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
+  cp ${WORKSPACE}/glassfish6/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
   cp ${WORKSPACE}/appserver/admingui/devtests/target/surefire-reports/*.png ${WORKSPACE}/results/ || true
 }
 

@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 #
-# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@ test_run_sqe_smoke(){
   # CLEANUPS
   kill_clean `ps -ef |grep jre|grep -v grep|cut -f4,5 -d" "`
   kill_clean `jps |grep Main |grep -v grep |cut -f1 -d" "`
-  kill_clean `ps -ef | grep ${WORKSPACE}/glassfish5/glassfish|grep -v grep`
+  kill_clean `ps -ef | grep ${WORKSPACE}/glassfish6/glassfish|grep -v grep`
 
   curl --noproxy '*' ${INTERNAL_RELEASE_REPO}/com/oracle/glassfish/sqe-smoke/1.0/sqe-smoke-1.0.zip > bundles/sqe-smoke.zip
   unzip bundles/sqe-smoke.zip

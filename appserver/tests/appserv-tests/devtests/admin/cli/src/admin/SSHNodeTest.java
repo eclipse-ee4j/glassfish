@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  * In this case run the test like this:
  * #
  * ant -Dteststorun=sshnode -Dssh.host=adc2101159.us.oracle.com
- *    "-Dssh.installdir=/export/glassfish5" all
+ *    "-Dssh.installdir=/export/glassfish6" all
  *
  * If you want to use a different user for SSH login you can set ssh.user:
  *     -Dssh.user=hudson
@@ -328,6 +328,6 @@ public class SSHNodeTest extends SshBaseDevTest {
             prefix = "/var/tmp/devTests-" + thisHost;
         }
         String randomSuffix = Long.toHexString(Double.doubleToLongBits(Math.random()));
-        return prefix + "/" + "glassfish5-" + randomSuffix;
+        return prefix + "/" + "glassfish6-" + randomSuffix;
     }
 }

@@ -19,7 +19,7 @@ com.sun.jersey.api.container.ContainerException: exit_code: FAILURE, message: An
 
 Jun 05, 2017 3:50:22 PM org.jboss.arquillian.container.glassfish.managed_3_1.GlassFishServerControl$1 run
 WARNING: Forcing container shutdown
-Stopping container using command: [java, -jar, /media/sameerpandit/WLS/javaEE/tt/glassfish5/glassfish/../glassfish/modules/admin-cli.jar, stop-domain, -t]
+Stopping container using command: [java, -jar, /media/sameerpandit/WLS/javaEE/tt/glassfish6/glassfish/../glassfish/modules/admin-cli.jar, stop-domain, -t]
 ------------
 
 Resolve this by running the test with a fresh $S1AS_HOME.

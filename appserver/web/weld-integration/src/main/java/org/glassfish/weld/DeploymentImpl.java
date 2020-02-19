@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -579,7 +579,7 @@ public class DeploymentImpl implements CDI11Deployment {
     private void processBdasForAppLibs( ReadableArchive archive, DeploymentContext context ) {
         List<RootBeanDeploymentArchive> libBdas = new ArrayList<>();
         try {
-            // each appLib in context.getAppLibs is a URI of the form "file:/glassfish/runtime/trunk/glassfish5/glassfish/domains/domain1/lib/applibs/mylib.jar"
+            // each appLib in context.getAppLibs is a URI of the form "file:/glassfish/runtime/trunk/glassfish6/glassfish/domains/domain1/lib/applibs/mylib.jar"
             List<URI> appLibs = context.getAppLibs();
 
             Set<String> installedLibraries = InstalledLibrariesResolver.getInstalledLibraries(archive);

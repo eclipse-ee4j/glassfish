@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ import org.jvnet.hk2.config.TransactionFailure;
  * @author wnevins
  */
 public class PathsTest {
-    private static String SPECIFIED_INSTALL_DIR = "D:/glassfish5";
+    private static String SPECIFIED_INSTALL_DIR = "D:/glassfish6";
     private static String NODE_NAME = "thenode";
     private static String SPECIFIED_NODES_DIR = SPECIFIED_INSTALL_DIR + "/glassfish/mynodes";
     private static String SPECIFIED_NODE_DIR = SPECIFIED_NODES_DIR + "/" + NODE_NAME;

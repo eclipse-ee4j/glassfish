@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -179,7 +179,7 @@
     <!-- restore original EJB jar files -->
     <unzip src="${glassfish-zip-file}" dest="${tmp.gf.exploded.dir}"/>
     <copy todir="${glassfish.server.dir}/modules" overwrite="true">
-      <fileset dir="${tmp.gf.exploded.dir}/glassfish5/glassfish/modules/">
+      <fileset dir="${tmp.gf.exploded.dir}/glassfish6/glassfish/modules/">
         <include name="**/*.jar"/>
       </fileset>
     </copy>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -460,7 +460,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             warFile = new File(iRoot.replace('/', File.separatorChar));
             writeAdminServiceProp(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION, "${" + INSTALL_ROOT + "}/lib/install/applications/admingui.war");
         } else {
-            //For any non-absolute path, we start from the installation, ie glassfish5
+            //For any non-absolute path, we start from the installation, ie glassfish6
             //eg, v3 prelude upgrade, where the location property was "glassfish/lib..."
             String locValue = locProp.getValue();
             warFile = new File(locValue);

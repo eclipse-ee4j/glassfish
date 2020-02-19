@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -465,11 +465,11 @@
         <echo message="gfurl == ${gfurl}"/>
         <setproxy proxyhost=""/>
         <get verbose="${verbose}" src="${gfurl}" dest="${asinstall_dir}/glassfish.zip"/>
-        <delete dir="${asinstall_dir}/glassfish5" includeemptydirs="true"/>
+        <delete dir="${asinstall_dir}/glassfish6" includeemptydirs="true"/>
         <unzip src="${asinstall_dir}/glassfish.zip" dest="${asinstall_dir}"/>
-        <chmod perm="a+x" file="${asinstall_dir}/glassfish5/bin/asadmin"/>
-        <chmod perm="a+x" file="${asinstall_dir}/glassfish5/glassfish/bin/asadmin"/>
-        <chmod perm="a+x" file="${asinstall_dir}/glassfish5/glassfish/lib/nadmin"/>
+        <chmod perm="a+x" file="${asinstall_dir}/glassfish6/bin/asadmin"/>
+        <chmod perm="a+x" file="${asinstall_dir}/glassfish6/glassfish/bin/asadmin"/>
+        <chmod perm="a+x" file="${asinstall_dir}/glassfish6/glassfish/lib/nadmin"/>
     </target>
 
     <!--

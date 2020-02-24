@@ -17,6 +17,7 @@
 package com.sun.enterprise.tests.progress;
 
 import javax.inject.Inject;
+
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -27,7 +28,8 @@ import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-/** Example of other command execution with progress status support.
+/**
+ * Example of other command execution with progress status support.
  *
  * @author mmares
  */
@@ -35,45 +37,51 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("progress")
-@Progress(totalStepCount=40)
+@Progress(totalStepCount = 40)
 public class ProgressExecOtherCommand implements AdminCommand {
-    
+
     @Inject
     CommandRunner commandRunner;
-    
+
     @Override
     public void execute(AdminCommandContext context) {
-        ProgressStatus ps = context.getProgressStatus();
-        //Do some before logic
-        ps.progress("Preparing");
+        ProgressStatus progressStatus = context.getProgressStatus();
+
+        // Do some before logic
+        progressStatus.progress("Preparing");
         for (int i = 0; i < 10; i++) {
             doSomeLogic();
-            ps.progress(1);
+            progressStatus.progress(1);
         }
-        
-        //Execute other command
-        final CommandRunner.CommandInvocation commandInvocation = 
-                commandRunner.getCommandInvocation("progress-simple", 
-                    context.getActionReport().addSubActionsReport(), context.getSubject());
-        commandInvocation
-                //.subject(context.getSubject())
-                .progressStatusChild(ps.createChild("subcommand", 20)) //Number 20 is little bit tricky. Please see javadoc of ProgressStatus
-                .execute();
-        
-        //Do some after logic
-        ps.progress("Finishing outer command");
+
+        // Execute other command
+        commandRunner.getCommandInvocation(
+            "progress-simple",
+            context.getActionReport()
+                   .addSubActionsReport(),
+            context.getSubject())
+            .progressStatusChild(
+                 // Number 20 is little bit tricky. Please see javadoc of ProgressStatus
+                progressStatus.createChild("subcommand", 20))
+            .execute();
+
+        // Do some after logic
+        progressStatus.progress("Finishing outer command");
         for (int i = 0; i < 10; i++) {
             doSomeLogic();
-            ps.progress(1);
+            progressStatus.progress(1);
         }
-        ps.complete("Finished outer command");
+
+        progressStatus.complete("Finished outer command");
+        
+        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
-    
+
     private void doSomeLogic() {
         try {
             Thread.sleep(250L);
         } catch (Exception ex) {
         }
     }
-    
+
 }

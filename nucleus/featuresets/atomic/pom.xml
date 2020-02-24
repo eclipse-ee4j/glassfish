@@ -17,16 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>nucleus-featuresets</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>atomic</artifactId>
-    <name>Glassfish Nucleus Atomic Featureset</name>
     <packaging>pom</packaging>
+
+    <name>Glassfish Nucleus Atomic Featureset</name>
     <description>This pom defines the set of modules for GlassFish Nucleus Atomic distribution</description>
 
     <dependencies>
@@ -56,7 +59,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.gogo.runtime</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -66,7 +69,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.gogo.shell</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -76,7 +79,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.gogo.command</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -88,7 +91,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.fileinstall</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -99,7 +102,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.configadmin</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -109,7 +112,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.scr</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>

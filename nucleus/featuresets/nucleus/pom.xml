@@ -17,16 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>nucleus-featuresets</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>nucleus</artifactId>
-    <name>Glassfish Nucleus Featureset</name>
     <packaging>pom</packaging>
+
+    <name>Glassfish Nucleus Featureset</name>
     <description>This pom defines the set of modules for GlassFish Nucleus distribution</description>
 
     <dependencies>
@@ -53,18 +56,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <!-- TODO remove the pre-staging in those zips, just plain resources zip -->
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>nucleus-schemas</artifactId>
             <version>${project.version}</version>
+            <type>zip</type>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-            <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -211,6 +215,24 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-extra-jdk-packages</artifactId>
         </dependency>
 
         <!-- nucleus-corba-base -->

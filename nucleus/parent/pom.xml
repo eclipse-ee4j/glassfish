@@ -79,6 +79,7 @@
         <findbugs.version>3.0.3</findbugs.version>
         <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
 
+        <webservices.version>2.4.3</webservices.version>
         <glassfish-corba.version>4.2.0</glassfish-corba.version>
         <stax-api.version>1.0-2</stax-api.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -613,6 +614,11 @@
                 <type>pom</type>
             </dependency>
             <dependency>
+                <groupId>org.glassfish.metro</groupId>
+                <artifactId>webservices-extra-jdk-packages</artifactId>
+                <version>${webservices.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
@@ -655,11 +661,6 @@
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
                 <version>${osgi-resource-locator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.ws.rs</groupId>
-                <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${jax-rs-api.impl.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.xml.stream</groupId>
@@ -708,7 +709,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
-                <version>5.6.10</version>
+                <version>6.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -720,16 +721,36 @@
                 <artifactId>org.apache.felix.eventadmin</artifactId>
                 <version>1.4.10</version>
             </dependency>
-
+            
             <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-                <version>${jakarta.annotation-api.version}</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
                 <version>${jakarta.el-api.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>jakarta.ws.rs</groupId>
+                <artifactId>jakarta.ws.rs-api</artifactId>
+                <version>${jax-rs-api.impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jaxb-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-osgi</artifactId>
+                <version>2.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>${jakarta.annotation-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
@@ -861,11 +882,6 @@
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-launcher</artifactId>
                 <version>1.8.2</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.servlet</groupId>
-                <artifactId>jakarta.servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>

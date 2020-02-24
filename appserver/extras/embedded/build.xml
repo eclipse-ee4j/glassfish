@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -117,7 +117,7 @@
     <target name="addExtraRars" if="full.distribution">
 	<echo message="Adding additional rars"/>
 
-	<!-- Include property files i.e., glassfish5/mq/lib/props/broker/*.properties of mq.zip in jmsra.rar --> 
+	<!-- Include property files i.e., glassfish6/mq/lib/props/broker/*.properties of mq.zip in jmsra.rar --> 
         <unzip dest="${jardir}">
             <fileset dir="${zipdir}">
                 <include name="mq**.zip"/>
@@ -151,7 +151,7 @@
         <echo message="adding EJBTimer"/>
 	<copy file="${jardir}/glassfish/lib/install/applications/ejb-timer-service-app.war" todir= "${rootdir}/temp"/>
 <!--
-        <jar jarfile="${finaljar}" update="true"  basedir="${jardir}/glassfish5/glassfish/lib/install/applications" includes="ejb-timer-service-app.war"/>
+        <jar jarfile="${finaljar}" update="true"  basedir="${jardir}/glassfish6/glassfish/lib/install/applications" includes="ejb-timer-service-app.war"/>
 -->
    </target>
 

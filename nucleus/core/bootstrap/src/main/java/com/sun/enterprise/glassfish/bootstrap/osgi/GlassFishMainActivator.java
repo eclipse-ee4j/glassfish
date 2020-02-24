@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.AUTO_START_P
  * in an existing OSGi runtime. It expects install root and instance root
  * to be set via framework context properties called com.sun.aas.installRoot and com.sun.aas.instanceRoot
  * respectively. The former one refers to the directory where glassfish is installed.
- * (e.g., /tmp/glassfish5/glassfish)
+ * (e.g., /tmp/glassfish6/glassfish)
  * The latter one refers to the domain directory - this is a directory containing
  * configuration information and deployed applications, etc.
  * If instance root is not set, it defaults to $installRoot/domains/domain1/.

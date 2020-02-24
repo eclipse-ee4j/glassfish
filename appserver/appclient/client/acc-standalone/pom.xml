@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +17,7 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-    <!--
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"><!--
         This module builds the free-standing JAR file for the app client
         container which can be run without using an OSGi implementation.
 
@@ -34,25 +32,20 @@
         archiver but would augment the generated Class-Path with the extra JARs.
         Perhaps later.
     -->
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.appclient</groupId>
         <artifactId>client</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <artifactId>gf-client</artifactId>
     <packaging>glassfish-jar</packaging>
+
     <name>Client library (including ACC)</name>
 
-    <properties>
-        <classpath.file>${project.build.directory}/tmp/classpath.txt</classpath.file>
-        <!--
-            Property settings used for adding parts to the Class-Path used to
-            be defined here.  They are now in the fixup.xml file instead so
-            the pom is less changeable.
-        -->
-    </properties>
     <developers>
       <developer>
             <id>tjquinn</id>
@@ -65,6 +58,29 @@
             </roles>
         </developer>
     </developers>
+
+    <properties>
+        <classpath.file>${project.build.directory}/tmp/classpath.txt</classpath.file>
+        <!--
+            Property settings used for adding parts to the Class-Path used to
+            be defined here.  They are now in the fixup.xml file instead so
+            the pom is less changeable.
+        -->
+    </properties>
+
+    <dependencies>
+        <!--
+            We specify the ACC's OSGi JAR as a dependency.
+            The maven-jar-plugin will do the work of finding the transitive
+            closure of it and the modules on which it depends to build the
+            accurate Class-Path for the manifest.
+        -->
+        <dependency>
+            <groupId>org.glassfish.main.appclient</groupId>
+            <artifactId>gf-client-module</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+   </dependencies>
 
     <build>
         <plugins>
@@ -103,7 +119,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
+            <configuration>
 
               <!--
                   Includes only the agent class.  All the rest are in
@@ -157,18 +173,4 @@ this or the downstream JARs and so attempts to find things fail.
           </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <!--
-            We specify the ACC's OSGi JAR as a dependency.
-            The maven-jar-plugin will do the work of finding the transitive
-            closure of it and the modules on which it depends to build the
-            accurate Class-Path for the manifest.
-        -->
-        <dependency>
-            <groupId>org.glassfish.main.appclient</groupId>
-            <artifactId>gf-client-module</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-   </dependencies>
 </project>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -320,7 +320,7 @@ public class SystemPropertyConstants
     }
 
     /** Returns the component identifier associated with the INSTALL_ROOT.
-     *  For example if INSTALL_ROOT is /home/glassfish5/glassfish the
+     *  For example if INSTALL_ROOT is /home/glassfish6/glassfish the
      *  component name will "glassfish".
      * @return String representing the component identifier.
      */

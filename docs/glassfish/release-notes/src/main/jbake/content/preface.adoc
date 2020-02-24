@@ -286,22 +286,22 @@ Server. a|
 Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:
 
-user's-home-directory`/glassfish5/glassfish`
+user's-home-directory`/glassfish6/glassfish`
 
 Installations on the Windows operating system:
 
-SystemDrive`:\glassfish5\glassfish`
+SystemDrive`:\glassfish6\glassfish`
 
 |as-install-parent + |Represents the parent of the base installation
 directory for GlassFish Server. a|
 Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:
 
-user's-home-directory`/glassfish5`
+user's-home-directory`/glassfish6`
 
 Installations on the Windows operating system:
 
-SystemDrive`:\glassfish5`
+SystemDrive`:\glassfish6`
 
 |domain-root-dir + |Represents the directory in which a domain is
 created by default. |as-install`/domains/`

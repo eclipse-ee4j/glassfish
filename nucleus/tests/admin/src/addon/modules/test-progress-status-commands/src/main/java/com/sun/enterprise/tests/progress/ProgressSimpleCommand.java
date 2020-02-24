@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,8 +27,8 @@ import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-/** Basic progress status example.
- * Contains 10 steps 
+/**
+ * Basic progress status example. Contains 10 steps
  *
  * @author mmares
  */
@@ -38,42 +38,40 @@ import org.jvnet.hk2.annotations.Service;
 @I18n("progress")
 @ManagedJob
 @Progress
-//@RestEndpoints({
-//    @RestEndpoint(configBean=Domain.class,
-//        opType=RestEndpoint.OpType.GET, 
-//        path="progress", 
-//        description="SimpleProgress",
-//        useForAuthorization=true)
-//})
 public class ProgressSimpleCommand implements AdminCommand {
-    
-    @Param(name="nototalsteps", primary=false, optional=true, defaultValue="false")
+
+    @Param(name = "nototalsteps", primary = false, optional = true, defaultValue = "false")
     boolean noTotalSteps;
-    
+
     @Override
     public void execute(AdminCommandContext context) {
-        ProgressStatus ps = context.getProgressStatus();
+        ProgressStatus progressStatus = context.getProgressStatus();
+
         if (!noTotalSteps) {
-            ps.setTotalStepCount(10);
+            progressStatus.setTotalStepCount(10);
         }
-        ps.progress("Parsing");
+
+        progressStatus.progress("Parsing");
+
         doSomeLogic();
-        ps.progress(1, "Working on main part");
+        progressStatus.progress(1, "Working on main part");
         for (int i = 0; i < 7; i++) {
             doSomeLogic();
-            ps.progress(1);
+            progressStatus.progress(1);
         }
-        ps.progress(1, "Cleaning");
+
+        progressStatus.progress(1, "Cleaning");
         doSomeLogic();
-        ps.complete("Finished");
+        progressStatus.complete("Finished");
+
         context.getActionReport().appendMessage("All done");
     }
-    
+
     private void doSomeLogic() {
         try {
             Thread.sleep(500L);
         } catch (Exception ex) {
         }
     }
-    
+
 }

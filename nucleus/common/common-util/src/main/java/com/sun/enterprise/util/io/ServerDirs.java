@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,14 +32,14 @@ import com.sun.enterprise.util.ObjectAnalyzer;
  * 
  * examples:
  * DAS
- * domainDir = getServerDir() == C:/glassfish5/glassfish/domains/domain1
- * domainsDir = getServerParentDir() == C:/glassfish5/glassfish/domains
+ * domainDir = getServerDir() == C:/glassfish6/glassfish/domains/domain1
+ * domainsDir = getServerParentDir() == C:/glassfish6/glassfish/domains
  * grandparent-dir is meaningless
  * 
  * Instance
- * instanceDir = getServerDir() == C:/glassfish5/glassfish/nodes/mymachine/instance1
- * agentDir = getServerParentDir() == C:/glassfish5/glassfish/nodes/mymachine
- * agentsDir = getServerGrandParentDir() == C:/glassfish5/glassfish/nodes
+ * instanceDir = getServerDir() == C:/glassfish6/glassfish/nodes/mymachine/instance1
+ * agentDir = getServerParentDir() == C:/glassfish6/glassfish/nodes/mymachine
+ * agentsDir = getServerGrandParentDir() == C:/glassfish6/glassfish/nodes
  *
  * Currently in all cases the name of the serverDir is the name of the server --
  * by our definition.

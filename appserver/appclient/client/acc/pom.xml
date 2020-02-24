@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,17 +17,33 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.appclient</groupId>
         <artifactId>client</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <artifactId>gf-client-module</artifactId>
     <packaging>glassfish-jar</packaging>
-     <!-- the main artifact is the OSGi module JAR -->
+
+    <!-- the main artifact is the OSGi module JAR -->
     <name>Client OSGi module (including ACC)</name>
+
+    <developers>
+        <developer>
+            <id>tjquinn</id>
+            <name>Tim Quinn</name>
+            <url>http://blogs.sun.com/quinn</url>
+            <organization>Oracle, Inc.</organization>
+            <roles>
+                <role>lead</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
     <!--
         This module creates the app client container in three artifacts:
@@ -44,7 +60,6 @@
         to remote clients and expand it, resulting in a single self-contained
         directory which would contain all the required JARs.
     -->
-
     <properties>
         <extracted-dtd-root>temp</extracted-dtd-root>
         <extracted-dtd-top-level-directory>${extracted-dtd-root}/glassfish</extracted-dtd-top-level-directory>
@@ -53,113 +68,16 @@
 
         <standalone.classifier>lib</standalone.classifier>
         <acc.osgi.module.classifier>module</acc.osgi.module.classifier>
-<!--
-        <config-xsd-dir>src/main/resources</config-xsd-dir>
-        <config-xsd-file>sun-application-client-container_1_2.xsd</config-xsd-file>
--->
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
 
-    <developers>
-      <developer>
-            <id>tjquinn</id>
-            <name>Tim Quinn</name>
-            <url>http://blogs.sun.com/quinn</url>
-            <organization>Oracle, Inc.</organization>
-            <roles>
-		        <role>lead</role>
-                <role>developer</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                   <excludes>
-                    <exclude>**/.gitkeep_empty_dir</exclude>
-                </excludes>
-            </resource>
-            <!--
-                The next resource definition will include the DTDs and
-                schemas in the module so we can find them at runtime in the
-                client.  The dependency:unpack-dependency goal below will
-                by default deposit the unpacked contents into
-                target/dependency.  The .dtd and .xsd files are packaged into
-                their respective JARs in glassfish/lib, so we define that
-                combined directory as a resource
-                location so the .dtd and .xsd files will be packaged by default.
-                This is coordinated with the SaxParserHandlerBundled class
-                which resolves entities via the class path.
-            -->
-            <resource>
-                <directory>target/dependency/glassfish/lib/</directory>
-                <includes>
-                    <include>**/*.dtd</include>
-                    <include>**/*.xsd</include>
-                </includes>
-            </resource>
-        </resources>
-
-        <plugins>
-
-            <!--
-                Unpack the modules which contain the DTDs and schemas so
-                we can package them as resources.
-            -->
-            <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-dependency-plugin</artifactId>
-                 <executions>
-                   <execution>
-                     <id>unpack-dtds-and-schemas</id>
-                     <phase>generate-resources</phase>
-                     <goals>
-                       <goal>unpack-dependencies</goal>
-                     </goals>
-                     <configuration>
-                       <includeGroupIds>org.glassfish.main.deployment</includeGroupIds>
-                       <includeArtifactIds>appserver-schemas,appserver-dtds</includeArtifactIds>
-                       <includes>**/*.dtd,**/*.xsd</includes>
-                     </configuration>
-                   </execution>
-                  </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-
-                            <archive>
-
-                                <manifest>
-                                    <mainClass>org.glassfish.main.appclient.client.acc.AppClientCommand</mainClass>
-                                </manifest>
-                                <!--
-                                    It's discouraging to have to specify the class path
-                                    manually.  Ideally the plug-in would do this
-                                    for us, but the jar plug-in uses the name
-                                    of the modules including the version strings;
-                                    when the GlassFish modules are packaged into
-                                    the distributions the version strings are
-                                    stripped off.
-                                -->
-                            </archive>
-                        </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
-                <groupId>org.glassfish.hk2</groupId>
-                <artifactId>hk2-core</artifactId>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-core</artifactId>
         </dependency>
 
-        <!--
-            required for annotation processing support
-        -->
+        <!-- required for annotation processing support -->
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>common-util</artifactId>
@@ -171,27 +89,30 @@
             <artifactId>ejb-full-container</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--
-            We depend on the deployment/dtds and deployment/schemas modules
-            but only at build-time.  We extract the DTD and schema files and
-            add them to the module JAR so they will be accessible at tuntime
-            on the class path.  Because we don't really rely on the zip files
-            at runtime, we use scope "provided" for the dependencies.
-        -->
+        
+        <!-- 
+            We depend on the deployment/dtds and deployment/schemas modules 
+            but only at build-time. 
+            
+            We extract the DTD and schema files and add them 
+            to the module JAR so they will be accessible at tuntime on the class path. 
+            
+            Because we don't really rely on the zip files at runtime, we use scope "provided" 
+            for the dependencies. -->
         <dependency>
-            <scope>provided</scope>
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>appserver-dtds</artifactId>
-            <type>zip</type>
             <version>${project.version}</version>
+            <type>zip</type>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <scope>provided</scope>
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>appserver-schemas</artifactId>
-            <type>zip</type>
             <version>${project.version}</version>
+            <type>zip</type>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -201,26 +122,20 @@
             <artifactId>container-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--
-            Required for AnnotationDetector, AnnotationScanner, PersistenceUnitDescriptor
-        -->
+        <!-- Required for AnnotationDetector, AnnotationScanner, PersistenceUnitDescriptor -->
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>dol</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!--
-            Required for security.
-        -->
+        <!-- Required for security. -->
         <dependency>
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>appclient.security</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--
-            Required for ClientNamingConfigurator
-        -->
+        <!-- Required for ClientNamingConfigurator -->
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>glassfish-api</artifactId>
@@ -240,13 +155,13 @@
             <version>${project.version}</version>
         </dependency>
 
-	 <dependency>
+        <dependency>
             <groupId>org.glassfish.main.connectors</groupId>
             <artifactId>work-management</artifactId>
             <version>${project.version}</version>
         </dependency>
 
- 	<dependency>
+        <dependency>
             <groupId>org.glassfish.main.connectors</groupId>
             <artifactId>connectors-inbound-runtime</artifactId>
             <version>${project.version}</version>
@@ -266,21 +181,19 @@
         </dependency>
 
 
-        <!--
-            Ken C. reports that eight ORB-related modules are needed, but
-            the one "orb" module directly or indirectly depends on the others
-            so I have just included it here.
-        -->
+        <!-- Ken C. reports that eight ORB-related modules are needed, but 
+            the one "orb" module directly or indirectly depends on the others so I have 
+            just included it here. -->
         <dependency>
             <groupId>org.glassfish.corba</groupId>
             <artifactId>glassfish-corba-orb</artifactId>
         </dependency>
 
         <dependency>
-            <scope>runtime</scope>
             <groupId>org.glassfish.main.orb</groupId>
             <artifactId>orb-iiop</artifactId>
             <version>${project.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -295,83 +208,81 @@
             <version>${project.version}</version>
         </dependency>
 
-     <dependency>
-         <groupId>org.glassfish.main.transaction</groupId>
-         <artifactId>jts</artifactId>
-         <version>${project.version}</version>
-     </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.transaction</groupId>
+            <artifactId>jts</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-     <dependency>
-         <scope>runtime</scope>
-         <groupId>org.glassfish.main.jms</groupId>
-         <artifactId>jms-core</artifactId>
-         <version>${project.version}</version>
-     </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jms-core</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
-     <dependency>
-         <scope>runtime</scope>
-         <groupId>jakarta.jms</groupId>
-         <artifactId>jakarta.jms-api</artifactId>
-     </dependency>
+        <dependency>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
-     <!-- for EclipseLink support -->
-     <dependency>
-         <type>pom</type>
-         <scope>runtime</scope>
-         <groupId>org.glassfish.main.persistence</groupId>
-         <artifactId>eclipselink-wrapper</artifactId>
-         <version>${project.version}</version>
-     </dependency>
+        <!-- for EclipseLink support -->
+        <dependency>
+            <groupId>org.glassfish.main.persistence</groupId>
+            <artifactId>eclipselink-wrapper</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+        </dependency>
 
-     <dependency>
-         <groupId>org.glassfish.main.persistence</groupId>
-         <artifactId>jpa-container</artifactId>
-         <version>${project.version}</version>
-     </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence</groupId>
+            <artifactId>jpa-container</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-     <dependency>
-         <scope>runtime</scope>
-         <groupId>org.glassfish.main.persistence.cmp</groupId>
-         <artifactId>cmp-internal-api</artifactId>
-         <version>${project.version}</version>
-     </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-internal-api</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
-     <!-- explicit dependencies for endorsed JARs the ACC needs -->
+        <!-- explicit dependencies for endorsed JARs the ACC needs -->
 
-     <!-- endorsed: jakarta.annotation-api.jar -->
-     <dependency>
-         <groupId>jakarta.annotation</groupId>
-         <artifactId>jakarta.annotation-api</artifactId>
-     </dependency>
+        <!-- endorsed: jakarta.annotation-api.jar -->
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
 
-     <!-- endorsed: jakarta.xml.bind-api.jar -->
-     <dependency>
-         <groupId>jakarta.xml.bind</groupId>
-         <artifactId>jakarta.xml.bind-api</artifactId>
-     </dependency>
+        <!-- endorsed: jakarta.xml.bind-api.jar -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
 
-     <dependency>
-         <groupId>com.sun.xml.bind</groupId>
-         <artifactId>jaxb-osgi</artifactId>
-     </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+        </dependency>
 
-     <!-- endorsed: webservices-api-osgi.jar -->
-     <dependency>
-        <groupId>org.glassfish.metro</groupId>
-        <artifactId>webservices-api-osgi</artifactId>
-     </dependency>
+        <!-- endorsed: webservices-api-osgi.jar -->
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
+        </dependency>
 
-     <!-- end of endorsed JAR dependencies -->
+        <!-- end of endorsed JAR dependencies -->
 
-     <!-- JAXR -JSR-93 Support-->
-     <dependency>
-         <groupId>jakarta.xml.registry</groupId>
-         <artifactId>jakarta.xml.registry-api</artifactId>
-     </dependency>
+        <!-- JAXR -JSR-93 Support -->
+        <dependency>
+            <groupId>jakarta.xml.registry</groupId>
+            <artifactId>jakarta.xml.registry-api</artifactId>
+        </dependency>
 
-        <!--
-        This is needed because it provides the sniffer/detector/moduletype
-        -->
+        <!-- This is needed because it provides the sniffer/detector/moduletype -->
         <dependency>
             <groupId>org.glassfish.main.appclient.server</groupId>
             <artifactId>appclient-connector</artifactId>
@@ -379,46 +290,118 @@
             <scope>runtime</scope>
         </dependency>
 
-      <!--
-        The next two mail-related dependencies allow mail session look-up
-        and use from clients.
-      -->
-      <dependency>
-          <scope>runtime</scope>
-          <groupId>org.glassfish.main.resources</groupId>
-          <artifactId>javamail-connector</artifactId>
-          <version>${project.version}</version>
-      </dependency>
-      <dependency>
-          <scope>runtime</scope>
-          <groupId>org.glassfish.main.resources</groupId>
-          <artifactId>javamail-runtime</artifactId>
-          <version>${project.version}</version>
-      </dependency>
+        <!-- The next two mail-related dependencies allow mail session look-up 
+            and use from clients. -->
+        <dependency>
+            <groupId>org.glassfish.main.resources</groupId>
+            <artifactId>javamail-connector</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.resources</groupId>
+            <artifactId>javamail-runtime</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
-      <!-- as of EE 7, JSON needs to be available to clients -->
-      <dependency>
-        <scope>runtime</scope>
-        <groupId>org.glassfish</groupId>
-        <artifactId>jakarta.json</artifactId>
-      </dependency>
+        <!-- as of EE 7, JSON needs to be available to clients -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
-      <dependency>
-        <scope>runtime</scope>
-        <groupId>org.eclipse</groupId>
-        <artifactId>yasson</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
-      <!-- CDI support -->
-      <dependency>
-          <groupId>org.jboss.weld.se</groupId>
-          <artifactId>weld-se-shaded</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>javax.enterprise</groupId>
-          <artifactId>cdi-api</artifactId>
-          <scope>compile</scope>
-      </dependency>
+        <!-- CDI support -->
+        <dependency>
+            <groupId>org.jboss.weld.se</groupId>
+            <artifactId>weld-se-shaded</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/.gitkeep_empty_dir</exclude>
+                </excludes>
+            </resource>
+            
+            <!-- The next resource definition will include the DTDs and schemas 
+                in the module so we can find them at runtime in the client. 
+                
+                The dependency:unpack-dependency 
+                goal below will by default deposit the unpacked contents into target/dependency. 
+                The .dtd and .xsd files are packaged into their respective JARs in glassfish/lib, 
+                so we define that combined directory as a resource location so the .dtd and 
+                .xsd files will be packaged by default. 
+                
+                This is coordinated with the SaxParserHandlerBundled 
+                class which resolves entities via the class path. -->
+            <resource>
+                <directory>target/dependency/glassfish/lib/</directory>
+                <includes>
+                    <include>**/*.dtd</include>
+                    <include>**/*.xsd</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+
+            <!-- Unpack the modules which contain the DTDs and schemas so 
+                we can package them as resources. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-dtds-and-schemas</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.glassfish.main.deployment</includeGroupIds>
+                            <includeArtifactIds>appserver-schemas,appserver-dtds</includeArtifactIds>
+                            <includes>**/*.dtd,**/*.xsd</includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+
+                    <archive>
+
+                        <manifest>
+                            <mainClass>org.glassfish.main.appclient.client.acc.AppClientCommand</mainClass>
+                        </manifest>
+                        <!-- 
+                            It's discouraging to have to specify the class 
+                            path manually. 
+                            
+                            Ideally the plug-in would do this for us, but the jar plug-in 
+                            uses the name of the modules including the version strings; when the GlassFish 
+                            modules are packaged into the distributions the version strings are stripped 
+                            off. -->
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -95,11 +95,11 @@ as-install
 Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:
 
-user's-home-directory`/glassfish5/glassfish`
+user's-home-directory`/glassfish6/glassfish`
 
 Installations on the Windows operating system:
 
-SystemDrive`:\glassfish5\glassfish`
+SystemDrive`:\glassfish6\glassfish`
 
 a|
 as-install-parent
@@ -110,11 +110,11 @@ Server. a|
 Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:
 
-user's-home-directory`/glassfish5`
+user's-home-directory`/glassfish6`
 
 Installations on the Windows operating system:
 
-SystemDrive`:\glassfish5`
+SystemDrive`:\glassfish6`
 
 a|
 domain-root-dir

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import java.lang.annotation.Annotation;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import java.util.Map;
 
 /**
@@ -98,7 +98,7 @@ public interface Sniffer {
      * Sets up the container libraries so that any imported bundle from the
      * connector jar file will now be known to the module subsystem
      *
-     * This method returns a {@link Module}s for the module containing
+     * This method returns a {@link HK2Module}s for the module containing
      * the core implementation of the container. That means that this module
      * will be locked as long as there is at least one module loaded in the
      * associated container.
@@ -109,7 +109,7 @@ public interface Sniffer {
      *
      * @throws java.io.IOException exception if something goes sour
      */
-    public Module[] setup(String containerHome, Logger logger) throws IOException;
+    public HK2Module[] setup(String containerHome, Logger logger) throws IOException;
 
    /**
      * Tears down a container, remove all imported libraries from the module

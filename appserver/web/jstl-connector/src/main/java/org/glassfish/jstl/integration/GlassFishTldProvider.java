@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.util.net.JarURIPattern;
 import org.glassfish.api.web.TldProvider;
@@ -88,7 +88,7 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
         Class jstlImplClass = org.apache.taglibs.standard.Version.class;
 
         URI[] uris = null;
-        Module m = null;
+        HK2Module m = null;
         if (jstlImplClass != null) {
             m = registry.find(jstlImplClass);
         }

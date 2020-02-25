@@ -28,7 +28,7 @@ public class DocClassVisitor extends ClassVisitor {
     private boolean showDeprecated;
 
     public DocClassVisitor(final boolean showDep) {
-        super(Opcodes.ASM6);
+        super(Opcodes.ASM7);
         showDeprecated = showDep;
     }
 
@@ -106,7 +106,6 @@ public class DocClassVisitor extends ClassVisitor {
     public void visitEnd() {
     }
 
-    @Override
     public ModuleVisitor visitModule() {
         return null;
     }

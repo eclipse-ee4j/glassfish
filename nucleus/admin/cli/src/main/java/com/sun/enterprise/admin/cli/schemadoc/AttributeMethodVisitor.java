@@ -29,7 +29,7 @@ public class AttributeMethodVisitor extends EmptyVisitor {
     private boolean duckTyped;
 
     public AttributeMethodVisitor(ClassDef classDef, String method, String aggType) {
-        super(Opcodes.ASM6);
+        super(Opcodes.ASM7);
         def = classDef;
         name = method;
         type = aggType;

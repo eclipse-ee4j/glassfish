@@ -25,6 +25,7 @@
                         
 Import-Package: \
                         javax.rmi.CORBA, \
+                        org.objectweb.asm, \
                         *
                         
 DynamicImport-Package: \

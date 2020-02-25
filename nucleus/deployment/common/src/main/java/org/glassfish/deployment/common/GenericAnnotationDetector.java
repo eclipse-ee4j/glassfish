@@ -62,7 +62,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
     List<String> annotations = new ArrayList<String>();; 
 
     public GenericAnnotationDetector(Class[] annotationClasses) {
-        super(Opcodes.ASM6);
+        super(Opcodes.ASM7);
         if (annotationClasses != null) {
             for (Class annClass : annotationClasses) {
                 annotations.add(Type.getDescriptor(annClass));

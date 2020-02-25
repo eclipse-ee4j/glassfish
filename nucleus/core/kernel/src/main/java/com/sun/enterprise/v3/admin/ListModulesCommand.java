@@ -27,7 +27,7 @@ import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleState;
 
 import java.net.URI;
@@ -62,29 +62,29 @@ public class ListModulesCommand implements AdminCommand {
         top.setMessage("List Of Modules");
         top.setChildrenType("Module");
 
-        StringBuilder sb = new StringBuilder("Module Status Report Begins\n");
+        StringBuilder sb = new StringBuilder("HK2Module Status Report Begins\n");
         // first started :
 
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()== ModuleState.READY) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // then resolved
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()== ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // finally installed
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()!= ModuleState.READY && m.getState()!=ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }
-        sb.append("Module Status Report Ends");
+        sb.append("HK2Module Status Report Ends");
         ActionReport.MessagePart childPart = top.addChild();
         childPart.setMessage(sb.toString());
 

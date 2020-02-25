@@ -36,7 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 
 import org.glassfish.admingui.connector.TOC;
 import org.glassfish.admingui.connector.TOCItem;
@@ -61,7 +61,7 @@ public class ConsolePluginService {
 
 /*
     @Inject ModulesRegistry modulesRegistry;
-        for(Module m : modulesRegistry.getModules()) {
+        for(HK2Module m : modulesRegistry.getModules()) {
             url = m.getClassLoader().getResource(ConsoleProvider.DEFAULT_CONFIG_FILENAME);
             if(url!=null)
                 ; // TODO: parse url

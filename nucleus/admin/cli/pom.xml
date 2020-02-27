@@ -17,33 +17,35 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>nucleus-admin</artifactId>
         <version>6.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>admin-cli</artifactId>
     <packaging>glassfish-jar</packaging>
+
     <name>admin-cli</name>
 
     <developers>
-        <developer>
-            <id>bnevins</id>
-            <name>Byron Nevins</name>
-            <organization>Oracle, Inc.</organization>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
         <developer>
             <id>tmueller</id>
             <name>Tom Mueller</name>
             <organization>Oracle, Inc.</organization>
             <roles>
                 <role>lead</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>bnevins</id>
+            <name>Byron Nevins</name>
+            <organization>Oracle, Inc.</organization>
+            <roles>
                 <role>developer</role>
             </roles>
         </developer>
@@ -64,8 +66,50 @@
             </roles>
         </developer>
     </developers>
-    <build>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish.main.admin</groupId>
+            <artifactId>launcher</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.admin</groupId>
+            <artifactId>admin-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>simple-glassfish-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>common-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jvnet.mimepull</groupId>
+            <artifactId>mimepull</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -90,16 +134,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <mainClass>com.sun.enterprise.admin.cli.AdminMain</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <!-- adding bean-validator as explicit dependency
-                                 for admin cli as bean-validator repackaged module
-                                 is now part of nucleus/packager/external/bean-validator -->
+                            <!-- adding bean-validator as explicit dependency 
+                                for admin cli as bean-validator repackaged module is now part of nucleus/packager/external/bean-validator -->
                             <Class-Path>bean-validator.jar</Class-Path>
                         </manifestEntries>
                     </archive>
@@ -129,44 +171,4 @@
             </plugin>
         </plugins>
     </reporting>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.hk2</groupId>
-            <artifactId>hk2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>common-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.mimepull</groupId>
-            <artifactId>mimepull</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jettison</groupId>
-            <artifactId>jettison</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.admin</groupId>
-            <artifactId>launcher</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.admin</groupId>
-            <artifactId>admin-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>glassfish-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>simple-glassfish-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-     </dependencies>
 </project>

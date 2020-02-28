@@ -102,8 +102,10 @@
                                 <featureSetGroupIdIncludes>org.glassfish.main.featuresets</featureSetGroupIdIncludes>
                                 <stageDirectory>${temp.dir}</stageDirectory>
                                 <excludes>META-INF/maven/**</excludes>
-                                <copyTypes>jar</copyTypes>
+                                <copyTypes>jar,war</copyTypes>
                                 <unpackTypes>zip,rar,war</unpackTypes>
+                                <silent>true</silent>
+                                <copyExcludes>war</copyExcludes>
                                 <mappings>
                                     <mapping>
                                         <artifactId>org.apache.felix.main</artifactId>

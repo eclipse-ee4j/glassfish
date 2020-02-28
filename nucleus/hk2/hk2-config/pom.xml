@@ -82,8 +82,14 @@
                         <Import-Package>
                             javax.validation.*;resolution:=optional;version="${javax.validation.version}",
                             org.hibernate.validator.*;resolution:=optional;version="${hibernate-validator.version}",
+                            org.jvnet.tiger_types;version=${project.version},
                             *
                         </Import-Package>
+                        <_exportcontents>
+                            org.jvnet.hk2.config;version=${project.version},
+                            org.jvnet.hk2.config.provider;version=${project.version},
+                            org.jvnet.hk2.config.provider.annotations;version=${project.version}
+                        </_exportcontents>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

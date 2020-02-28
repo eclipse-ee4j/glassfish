@@ -20,7 +20,7 @@
 # be regularly imported. We have to exclude those manually.
 Import-Package: \
     !org.apache.felix.shell, \
-    !org.apache.felix.service.command,
+    !org.apache.felix.service.command, \
     *
 
 # shell packages resolved at runtime, whatever there is...

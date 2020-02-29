@@ -1456,11 +1456,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.xml.registry</groupId>
-            <artifactId>jakarta.xml.registry-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>stax2-api</artifactId>
             <optional>true</optional>

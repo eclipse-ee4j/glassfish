@@ -16,7 +16,7 @@
 
 package org.glassfish.internal.deployment;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleState;
 import com.sun.enterprise.module.ModulesRegistry;
 
@@ -128,7 +128,7 @@ public class DeploymentTracing {
             this.moduleName = moduleName;
         }
         void print(PrintStream ps) {
-            ps.println("Module " +  moduleName + " Mark " + mark.toString() + " at " + elapsedInMs());
+            ps.println("HK2Module " +  moduleName + " Mark " + mark.toString() + " at " + elapsedInMs());
         }
     }
 
@@ -166,10 +166,10 @@ public class DeploymentTracing {
         }
         int counter=0;
 
-        StringBuilder sb = new StringBuilder("Module Status Report Begins\n");
+        StringBuilder sb = new StringBuilder("HK2Module Status Report Begins\n");
         // first started :
 
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()== ModuleState.READY) {
                 sb.append(m).append("\n");
                 counter++;
@@ -179,7 +179,7 @@ public class DeploymentTracing {
         sb.append("\n");
         counter=0;
         // then resolved
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()== ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
                 counter++;
@@ -189,14 +189,14 @@ public class DeploymentTracing {
         sb.append("\n");
         counter=0;
         // finally installed
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if (m.getState()!= ModuleState.READY && m.getState()!=ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
                 counter++;
             }
         }
         sb.append("there were " + counter + " modules in INSTALLED state");
-        sb.append("Module Status Report Ends");
+        sb.append("HK2Module Status Report Ends");
         logger.log(level, sb.toString());
     }    
 }

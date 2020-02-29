@@ -32,7 +32,7 @@ import javax.enterprise.deploy.shared.ModuleType;
 import java.util.logging.Logger;
 import java.io.IOException;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import java.lang.annotation.Annotation;
 
 import javax.inject.Inject;
@@ -105,7 +105,7 @@ public class SecuritySniffer extends GenericSniffer {
      * @throws java.io.IOException exception if something goes sour
      */
     @Override
-     public Module[] setup(String containerHome, Logger logger) throws IOException {
+     public HK2Module[] setup(String containerHome, Logger logger) throws IOException {
         lifecycle = habitat.getServiceHandle(SecurityLifecycle.class);
         lifecycle.getService();
         return null;

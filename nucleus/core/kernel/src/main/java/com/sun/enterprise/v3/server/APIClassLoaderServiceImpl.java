@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleLifecycleListener;
 import com.sun.enterprise.module.ModuleState;
 import com.sun.enterprise.module.ModulesRegistry;
@@ -98,7 +98,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
         }
     };
     final static Logger logger = KernelLoggerInfo.getLogger();
-    private Module APIModule;
+    private HK2Module APIModule;
 
     public void postConstruct() {
         try {
@@ -173,20 +173,20 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
 
             // add a listener to manage blacklist in APIClassLoader
             mr.register(new ModuleLifecycleListener() {
-                public void moduleInstalled(Module module) {
+                public void moduleInstalled(HK2Module module) {
                     clearBlackList();
                 }
 
-                public void moduleResolved(Module module) {
+                public void moduleResolved(HK2Module module) {
                 }
 
-                public void moduleStarted(Module module) {
+                public void moduleStarted(HK2Module module) {
                 }
 
-                public void moduleStopped(Module module) {
+                public void moduleStopped(HK2Module module) {
                 }
 
-                public void moduleUpdated(Module module) {
+                public void moduleUpdated(HK2Module module) {
                     clearBlackList();
                 }
             });
@@ -214,7 +214,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                         c = apiModuleLoader.loadClass(name); // we ignore the resolution flag
                     } catch (ClassNotFoundException cnfe) {
                         // punch in. find the provider class, no matter where we are.
-                        Module m = mr.getProvidingModule(name);
+                        HK2Module m = mr.getProvidingModule(name);
                         if (m != null) {
                             if(select(m)) {
                                 return m.getClassLoader().loadClass(name); // abort search if we fail to load.
@@ -248,7 +248,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
          * @param m
          * @return
          */
-        private boolean select(Module m) {
+        private boolean select(HK2Module m) {
             ModuleState state = m.getState();
             return state.compareTo(punchInModuleState) >= 0 && state != ModuleState.ERROR;
         }
@@ -267,7 +267,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                 if (name.equals(MAILCAP)) {
                     // punch in for META-INF/mailcap files.
                     // see issue #8426
-                    for (Module m : mr.getModules()) {
+                    for (HK2Module m : mr.getModules()) {
                         if (!select(m)) continue;
                         if ((url = m.getClassLoader().getResource(name)) != null) {
                             return url;
@@ -280,7 +280,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                     String serviceName = name.substring(
                             META_INF_SERVICES.length());
 
-                    for( Module m : mr.getModules() ) {
+                    for( HK2Module m : mr.getModules() ) {
                         if (!select(m)) continue;
                         List<URL> list = m.getMetadata().getDescriptors(
                                 serviceName);
@@ -341,7 +341,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                 // now punch-ins for various cases that require special handling
                 if (name.equals(MAILCAP)) {
                      // punch in for META-INF/mailcap files. see issue #8426
-                    for (Module m : mr.getModules()) {
+                    for (HK2Module m : mr.getModules()) {
                         if (!select(m)) continue; // We don't look in unresolved modules
                         if (m == APIModule) continue; // we have already looked up resources in apiModuleLoader
                         enumerations.add(m.getClassLoader().getResources(name));
@@ -350,7 +350,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                     // punch in. find the service loader from any module
                     String serviceName = name.substring(META_INF_SERVICES.length());
                     List<URL> punchedInURLs = new ArrayList<URL>();
-                    for (Module m : mr.getModules()) {
+                    for (HK2Module m : mr.getModules()) {
                         if (!select(m)) continue; // We don't look in modules that don't meet punch in criteria
                         if (m == APIModule) continue; // we have already looked up resources in apiModuleLoader
                         punchedInURLs.addAll(m.getMetadata().getDescriptors(serviceName));

@@ -53,7 +53,7 @@ class ASMMethod extends MethodVisitor implements Method{
     public ASMMethod(
             ClassFile owningClass, String name, String descriptor, int access,
             String signature, String[] exceptions) {
-        super(Opcodes.ASM6);
+        super(Opcodes.ASM7);
         this.owningClass = new SoftReference<ClassFile>(owningClass);
         this.name = name;
         this.descriptor = descriptor;

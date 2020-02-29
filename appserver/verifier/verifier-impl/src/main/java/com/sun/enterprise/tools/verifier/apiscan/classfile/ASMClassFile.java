@@ -133,7 +133,7 @@ class ASMClassFile implements ClassFile {
         ASMClassFile cf;
 
         public MyVisitor(ASMClassFile cf) {
-            super(ASM6);
+            super(ASM7);
             this.cf = cf;
         }
 

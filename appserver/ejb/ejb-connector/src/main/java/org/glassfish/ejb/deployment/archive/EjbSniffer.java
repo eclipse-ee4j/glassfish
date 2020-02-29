@@ -17,7 +17,7 @@
 package org.glassfish.ejb.deployment.archive;
 
 import org.glassfish.internal.deployment.GenericSniffer;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleDefinition;
 import com.sun.enterprise.module.common_impl.DirectoryBasedRepository;
 import com.sun.enterprise.module.common_impl.AbstractModulesRegistryImpl;

@@ -95,7 +95,7 @@
         <javassist.version>3.22.0-GA</javassist.version>
         <jakarta.el.version>3.0.3</jakarta.el.version>
         <jakarta.el-api.version>3.0.2</jakarta.el-api.version>
-        <hk2.version>2.5.0</hk2.version>
+        <hk2.version>2.6.1</hk2.version>
         <hk2.plugin.version>2.5.0</hk2.plugin.version>
         <jboss.logging.version>3.3.1.Final</jboss.logging.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
@@ -112,7 +112,7 @@
         <jax-rs-api.impl.version>2.1.5</jax-rs-api.impl.version>
         <mimepull.version>1.9.11</mimepull.version>
         <glassfish-management-api.version>3.2.1</glassfish-management-api.version>
-        <asm.version>6.1_ALPHA</asm.version>
+        <asm.version>7.1</asm.version>
         <shoal.version>1.6.53</shoal.version>
         <ha-api.version>3.1.12</ha-api.version>
         <glassfishbuild.version>3.2.27</glassfishbuild.version>
@@ -972,8 +972,28 @@
                 <version>2.8</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.external</groupId>
-                <artifactId>asm-all</artifactId>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-analysis</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-util</artifactId>
                 <version>${asm.version}</version>
             </dependency>
             <dependency>

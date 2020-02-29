@@ -29,7 +29,7 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.api.ConnectorClassLoaderService;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.DeploymentContext;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 
 import java.net.URI;
 import java.net.MalformedURLException;

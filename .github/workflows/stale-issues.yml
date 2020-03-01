@@ -1,0 +1,18 @@
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/stale@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        stale-issue-message: 'This issue has been marked as inactive and old and will be closed in 7 days if there is no further activity. If you want the issue to remain open please add a comment'
+        days-before-stale: 365
+        days-before-close: 7

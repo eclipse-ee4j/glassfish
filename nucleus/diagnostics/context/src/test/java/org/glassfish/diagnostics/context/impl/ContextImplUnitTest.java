@@ -16,25 +16,21 @@
 
 package org.glassfish.diagnostics.context.impl;
 
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.Expectations;
-import mockit.integration.junit4.JMockit;
+import java.util.EnumSet;
 
 import org.glassfish.contextpropagation.Location;
 import org.glassfish.contextpropagation.PropagationMode;
 import org.glassfish.contextpropagation.View;
-
-import org.junit.Test;
 import org.junit.Assert;
-import org.junit.runner.RunWith;
 import org.junit.Ignore;
+import org.junit.Test;
 
-import java.util.EnumSet;
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import mockit.Verifications;
 
-@RunWith(JMockit.class)
 public class ContextImplUnitTest {
 
  /**

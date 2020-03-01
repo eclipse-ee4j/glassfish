@@ -63,8 +63,8 @@
         <jakarta.security.enterprise-api.version>1.0.2</jakarta.security.enterprise-api.version>
         <jakarta.security.enterprise.version>1.0.1</jakarta.security.enterprise.version>
 
-        <product.name>GlassFish Server Open Source Edition</product.name>
-        <brief_product_name>GlassFish Server</brief_product_name>
+        <product.name>Eclipse GlassFish</product.name>
+        <brief_product_name>GlassFish</brief_product_name>
         <abbrev_product_name>glassfish</abbrev_product_name>
         <admin_client_command_name>asadmin</admin_client_command_name>
         <default_domain_template>appserver-domain.jar</default_domain_template>

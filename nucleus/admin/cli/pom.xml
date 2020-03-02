@@ -100,7 +100,7 @@
                             <!-- adding bean-validator as explicit dependency
                                  for admin cli as bean-validator repackaged module
                                  is now part of nucleus/packager/external/bean-validator -->
-                            <Class-Path>bean-validator.jar</Class-Path>
+                            <Class-Path>bean-validator.jar endorsed/jakarta.annotation-api.jar endorsed/jakarta.xml.bind-api.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>

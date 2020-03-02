@@ -160,6 +160,16 @@ of COPY_LIB map constant.)
             <scope>test</scope>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jaxb-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
     </dependencies>
 </project>
 

@@ -204,7 +204,10 @@
         <jvm-options>-XX:NewRatio=2</jvm-options>
         <!-- Woodstox property needed to pass StAX TCK -->
         <jvm-options>-Dcom.ctc.wstx.returnNullForDefaultNamespace=true</jvm-options>
-        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-bootstrap.jar</jvm-options>
+        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/jakarta.annotation-api.jar</jvm-options>
+        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/jakarta.xml.bind-api.jar</jvm-options>
+        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/webservices-api-osgi.jar</jvm-options>
+        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/grizzly-npn-bootstrap.jar</jvm-options>
         <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
       </java-config>
@@ -386,7 +389,10 @@
              -->
              <jvm-options>-Dfelix.fileinstall.disableConfigSave=false</jvm-options>
              <!-- End of OSGi bundle configurations -->
-             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-bootstrap.jar</jvm-options>
+             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/jakarta.annotation-api.jar</jvm-options>
+             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/jakarta.xml.bind-api.jar</jvm-options>
+             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/webservices-api-osgi.jar</jvm-options>
+             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/grizzly-npn-bootstrap.jar</jvm-options>
              <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
         </java-config>

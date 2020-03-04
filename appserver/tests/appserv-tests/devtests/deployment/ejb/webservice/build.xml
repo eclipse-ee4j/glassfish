@@ -154,7 +154,6 @@
             output="${build}/${log.id}.output.log"
             resultproperty="result">
 
-            <jvmarg value="-Djava.endorsed.dirs=${inst}/lib/endorsed"/>
 
             <classpath>
                <path refid="gfv3.classpath"/>

@@ -134,6 +134,8 @@
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
         <jakarta.activation-api.version>1.2.1</jakarta.activation-api.version>
         <jakarta.activation.version>1.2.1</jakarta.activation.version>
+        <jaxws-api.version>2.3.1</jaxws-api.version>
+        <jakarta.jws-api.version>1.1.1</jakarta.jws-api.version>
     </properties>
 
     <build>
@@ -175,7 +177,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
+                    <version>1.8</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -187,7 +189,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.6.1</version>
                     <configuration>
-                        <compilerArgument>-Djava.endorsed.dirs=${project.build.directory}/endorsed</compilerArgument>
                         <source>1.8</source>
                         <target>1.8</target>
                         <excludes>
@@ -793,6 +794,11 @@
             <dependency>
                 <groupId>org.glassfish.corba</groupId>
                 <artifactId>glassfish-corba-internal-api</artifactId>
+                <version>${glassfish-corba.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.corba</groupId>
+                <artifactId>rmic</artifactId>
                 <version>${glassfish-corba.version}</version>
             </dependency>
             <dependency>

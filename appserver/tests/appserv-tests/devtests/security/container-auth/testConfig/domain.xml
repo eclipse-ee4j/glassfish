@@ -200,7 +200,6 @@ XXX CHARLIE
       <java-config classpath-suffix="${com.sun.aas.installRoot}/pointbase/lib/pbclient.jar${path.separator}${com.sun.aas.installRoot}/pointbase/lib/pbembedded.jar" debug-enabled="false" debug-options="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044" env-classpath-ignored="true" java-home="${com.sun.aas.javaRoot}" javac-options="-g" rmic-options="-iiop -poa -alwaysgenerate -keepgenerated -g" server-classpath="${com.sun.aas.javaRoot}/lib/tools.jar${path.separator}${com.sun.aas.installRoot}/lib/install/applications/jmsra/imqjmsra.jar${path.separator}${com.sun.aas.imqLib}/jaxm-api.jar${path.separator}${com.sun.aas.imqLib}/fscontext.jar${path.separator}${com.sun.aas.installRoot}/lib/ant/lib/ant.jar">
         <!-- various required jvm-options -->
         <jvm-options>-client</jvm-options>
-        <jvm-options>-Djava.endorsed.dirs=${com.sun.aas.installRoot}/lib/endorsed</jvm-options>
         <jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.server.gcInterval=3600000</jvm-options>

@@ -100,6 +100,7 @@
             <directory>${temp.dir}</directory>
             <includes>
                 <include>jakarta.annotation-api.jar</include>
+                <include>jakarta.xml.bind-api.jar</include>
                 <include>grizzly-npn-bootstrap.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/modules/endorsed</outputDirectory>
@@ -144,6 +145,7 @@
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>jakarta.annotation-api.jar</exclude>
                 <exclude>cluster-cli.jar</exclude>
+                <exclude>jakarta.xml.bind-api.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/modules</outputDirectory>
         </fileSet>

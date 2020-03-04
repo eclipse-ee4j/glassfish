@@ -117,7 +117,6 @@
             <sysproperty key="server" value="${appserver.instance.name}"/>
             <sysproperty key="java.library.path" value="${inst}/lib"/>
             <sysproperty key="com.sun.aas.configRoot" value="${inst}/config"/>
-            <sysproperty key="java.endorsed.dirs" value="${inst}/lib/endorsed"/>
 
             <arg line="${arg.list}" />
         </javaWithResult>
@@ -149,7 +148,6 @@
             <sysproperty key="server" value="${appserver.instance.name}"/>
             <sysproperty key="java.library.path" value="${inst}/lib"/>
             <sysproperty key="com.sun.aas.configRoot" value="${inst}/config"/>
-            <sysproperty key="java.endorsed.dirs" value="${inst}/lib/endorsed"/>
 -->
             <arg line="${arg.list}" />
         </java>

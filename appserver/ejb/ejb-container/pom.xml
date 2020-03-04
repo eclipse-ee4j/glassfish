@@ -225,5 +225,9 @@
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>rmic</artifactId>
+        </dependency>
     </dependencies>
 </project>

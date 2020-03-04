@@ -340,7 +340,6 @@
         <classfileset dir="${test.class.output}" includes="**/${testng.testclient}.class"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-	<jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
 	<jvmarg value="-DASADMIN=${ASADMIN}" />
     </testng>
 </target>
@@ -355,7 +354,6 @@
         <xmlfileset dir="." includes="testng.xml"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-	<jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
 	<jvmarg value="-DASADMIN=${ASADMIN}" />
 	<jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
     </testng>
@@ -374,7 +372,6 @@
         <classfileset dir="${test.class.output}" includes="**/${testng.testclient}.class"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-        <jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
         <jvmarg value="-DASADMIN=${ASADMIN}" />
     </testng>
 </target>
@@ -422,7 +419,6 @@
             <classfileset dir="${build.classes.home}" includes="**/${testng.testclient}.class"/>
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-            <jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
             <bootclasspath classpathref="boot.class.path"/>
 <sysproperty key="-Djava.endorsed.dirs" value="${glassfish.home}/modules/endorsed"/>
 
@@ -440,7 +436,6 @@
             <xmlfileset dir="." includes="testng.xml"/>
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-            <jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
             <bootclasspath classpathref="boot.class.path"/>
 <sysproperty key="-Djava.endorsed.dirs" value="${glassfish.home}/modules/endorsed"/>
 

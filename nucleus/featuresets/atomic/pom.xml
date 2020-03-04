@@ -109,6 +109,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- Felix SCR always needs to be deployed as 3 bundles since 2.0.12 -->
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.scr</artifactId>
@@ -118,6 +119,14 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.promise</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.function</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.osgi-platforms</groupId>

@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
+import org.apache.felix.service.command.Result;
 import org.apache.felix.shell.ShellService;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -256,12 +257,17 @@ public class OSGiShellCommand implements AdminCommand, PostConstruct {
                 };
 
                 CommandProcessor cp = (CommandProcessor) shell;
-                if(sessionOp == null) {
+                if (sessionOp == null) {
                     if("asadmin-osgi-shell".equals(cmdName)) {
                         out.println("gogo");
                     } else {
                         CommandSession session = cp.createSession(in, out, err);
-                        session.execute(cmd);
+                        Object result = session.execute(cmd);
+                        
+                        if (result instanceof String) {
+                            out.println(result.toString());
+                        }
+                        
                         session.close();
                     }
                 } else if("new".equals(sessionOp)) {
@@ -280,7 +286,12 @@ public class OSGiShellCommand implements AdminCommand, PostConstruct {
                 } else if("execute".equals(sessionOp)) {
                     RemoteCommandSession remote = sessions.get(sessionId);
                     CommandSession session = remote.attach(in, out, err);
-                    session.execute(cmd);
+                    Object result = session.execute(cmd);
+                    
+                    if (result instanceof String) {
+                        out.println(result.toString());
+                    }
+                    
                     remote.detach();
                 } else if("stop".equals(sessionOp)) {
                     RemoteCommandSession remote = sessions.remove(sessionId);

@@ -196,10 +196,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <forkMode>never</forkMode>
-                    <!--
-                    <parallel>classes</parallel>
-                    -->
+                    <forkCount>0</forkCount>
                 </configuration>
             </plugin>
             <plugin>

@@ -46,9 +46,6 @@
 
     <build>
         <plugins>
-            <!-- plugin> <artifactId>maven-surefire-plugin</artifactId> <configuration> 
-            <argLine> -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/0.999.15/jmockit-0.999.15.jar 
-            </argLine> <forkMode>always</forkMode> </configuration> </plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

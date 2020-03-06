@@ -80,7 +80,7 @@
         <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
 
         <webservices.version>2.4.3</webservices.version>
-        <glassfish-corba.version>4.2.1</glassfish-corba.version>
+        <glassfish-corba.version>4.2.0</glassfish-corba.version>
         <stax-api.version>1.0-2</stax-api.version>
         <slf4j.version>1.7.21</slf4j.version>
         <javax.validation.osgi.version>2.0.0</javax.validation.osgi.version>

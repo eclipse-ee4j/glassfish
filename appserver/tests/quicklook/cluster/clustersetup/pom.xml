@@ -79,7 +79,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <forkMode>none</forkMode>
+                    <forkCount>0</forkCount>
                 </configuration>
             </plugin>
         </plugins>

@@ -118,6 +118,8 @@
             <directory>${temp.dir}</directory>
             <includes>
                 <include>org.apache.felix.*.jar</include>
+                <include>org.osgi.util.function.jar</include>
+                <include>org.osgi.util.promise.jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.felix.bundlerepository.jar</exclude>

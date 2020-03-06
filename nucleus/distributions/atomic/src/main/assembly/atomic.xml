@@ -114,6 +114,8 @@
             <directory>${temp.dir}</directory>
             <includes>
                 <include>org.apache.felix.*.jar</include>
+                <include>org.osgi.util.function.jar</include>
+                <include>org.osgi.util.promise.jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.felix.bundlerepository.jar</exclude>
@@ -137,6 +139,8 @@
                 <exclude>org.apache.felix.gogo.runtime.jar</exclude>
                 <exclude>org.apache.felix.gogo.shell.jar</exclude>
                 <exclude>org.apache.felix.scr.jar</exclude>
+                <exclude>org.osgi.util.function.jar</exclude>
+                <exclude>org.osgi.util.promise.jar</exclude>
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>jakarta.annotation-api.jar</exclude>

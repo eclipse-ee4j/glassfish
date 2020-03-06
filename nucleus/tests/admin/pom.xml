@@ -148,12 +148,7 @@ of COPY_LIB map constant.)
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M4</version>
                 <configuration>
-                    
                     <properties>
-                        <property>
-                            <name>reporter</name>
-                            <value>listenReport.Reporter</value>
-                        </property>
                         <runOrder>alphabetical</runOrder>
                     </properties>
                 </configuration>

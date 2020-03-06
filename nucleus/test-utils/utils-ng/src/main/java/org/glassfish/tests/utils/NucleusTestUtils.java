@@ -129,7 +129,7 @@ public class NucleusTestUtils {
         if (!cmd.canExecute()) {
             cmd = new File(nucleusRoot, isWindows() ? "bin/asadmin.bat" : "bin/asadmin");
             if (!cmd.canExecute()) {
-                cmd = new File(nucleusRoot, isWindows() ? "bin/padmin.bat" : "bin/padmin");
+                cmd = new File(nucleusRoot, isWindows() ? "bin/nadmin.bat" : "bin/nadmin");
             }
         }
 
@@ -141,7 +141,7 @@ public class NucleusTestUtils {
         if (!cmd.canExecute()) {
             cmd = new File(nucleusRoot, isWindows() ? "bin/asadmin.bat" : "bin/asadmin");
             if (!cmd.canExecute()) {
-                cmd = new File(nucleusRoot, isWindows() ? "bin/padmin.bat" : "bin/padmin");
+                cmd = new File(nucleusRoot, isWindows() ? "bin/nadmin.bat" : "bin/nadmin");
             }
         }
 

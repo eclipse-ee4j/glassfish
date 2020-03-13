@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -894,19 +894,19 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <!-- ================================================================ -->
-<!-- Target to create/delete javamail resources  -->
+<!-- Target to create/delete mail resources  -->
 <!-- 
     Properties required: 
     mailhost
     fromaddress
     debug
     enabled
-    javamail.resource.name (e.g. mail/MySession)
+    mail.resource.name (e.g. mail/MySession)
 -->
 <!-- ================================================================ -->
-<target name="create-javamail-resource-common">
+<target name="create-mail-resource-common">
   <exec executable="${ASADMIN}">
-    <arg line="create-javamail-resource"/>
+    <arg line="create-mail-resource"/>
     <arg line="--port ${admin.port}"/>
     <arg line="--mailhost ${mailhost}"/>
     <arg line="--mailuser ${mailuser}"/>
@@ -919,17 +919,17 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
     <arg line="--enabled=${enabled}"/>
     <arg line="--target ${appserver.instance.name}"/>
     <arg line="${as.props}"/>
-    <arg line="${javamail.resource.name}"/>
+    <arg line="${mail.resource.name}"/>
   </exec>
 </target>
 
-<target name="delete-javamail-resource-common">
+<target name="delete-mail-resource-common">
   <exec executable="${ASADMIN}">
-    <arg line="delete-javamail-resource"/>
+    <arg line="delete-mail-resource"/>
     <arg line="--port ${admin.port}"/>
     <arg line="--target ${appserver.instance.name}"/>
     <arg line="${as.props}"/>
-    <arg line="${javamail.resource.name}"/>
+    <arg line="${mail.resource.name}"/>
   </exec>
 </target>
 

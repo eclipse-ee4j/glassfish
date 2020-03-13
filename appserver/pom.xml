@@ -176,9 +176,9 @@
                                 <version>${mail.version}</version>
                             </artifact>
                             <jarType>impl</jarType>
-                            <specVersion>1.6</specVersion>
-                            <implVersion>1.6.3</implVersion>
-                            <apiPackage>javax.mail</apiPackage>
+                            <specVersion>2.0</specVersion>
+                            <implVersion>2.0.0</implVersion>
+                            <apiPackage>jakarta.mail</apiPackage>
                             <implNamespace>com.sun.mail</implNamespace>
                         </spec>
                         <spec>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +22,11 @@ import java.security.PrivilegedAction;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Enumeration;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimePart;
-import javax.mail.internet.MimePartDataSource;
+import jakarta.mail.Session;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimePart;
+import jakarta.mail.internet.MimePartDataSource;
 import javax.naming.Name;
 import javax.naming.Context;
 import javax.naming.Reference;
@@ -34,7 +34,7 @@ import javax.naming.RefAddr;
 import javax.naming.spi.ObjectFactory;
 
 /**
- * Factory class that creates a JNDI named javamail MimePartDataSource
+ * Factory class that creates a JNDI named Jakarta Mail MimePartDataSource
  * object which can be used for sending email using SMTP.
  * <p>
  * Can be configured in the DefaultContext or Context scope
@@ -44,7 +44,7 @@ import javax.naming.spi.ObjectFactory;
  * <p>
  * <pre>
  * &lt;Resource name="mail/send" auth="CONTAINER"
- *           type="javax.mail.internet.MimePartDataSource"/>
+ *           type="jakarta.mail.internet.MimePartDataSource"/>
  * &lt;ResourceParams name="mail/send">
  *   &lt;parameter>&lt;name>factory&lt;/name>
  *     &lt;value>org.apache.naming.factory.SendMailFactory&lt;/value>
@@ -77,7 +77,7 @@ public class SendMailFactory implements ObjectFactory
 {
     // The class name for the javamail MimeMessageDataSource
     protected static final String DataSourceClassName =
-	"javax.mail.internet.MimePartDataSource";
+	"jakarta.mail.internet.MimePartDataSource";
 
     public Object getObjectInstance(Object RefObj, Name Nm, Context Ctx,
 				    Hashtable<?,?> Env) throws Exception 
@@ -85,7 +85,7 @@ public class SendMailFactory implements ObjectFactory
 	final Reference Ref = (Reference)RefObj;
 
 	// Creation of the DataSource is wrapped inside a doPrivileged
-	// so that javamail can read its default properties without
+	// so that Jakarta Mail can read its default properties without
 	// throwing Security Exceptions
 	if (Ref.getClassName().equals(DataSourceClassName)) {
 	    return AccessController.doPrivileged(

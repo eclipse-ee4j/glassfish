@@ -31,6 +31,6 @@
     <modules>
         <module>resources-connector</module>
         <module>resources-runtime</module>
-        <module>javamail</module>
+        <module>mail</module>
   </modules>
 </project>

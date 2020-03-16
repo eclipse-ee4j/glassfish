@@ -109,7 +109,7 @@
                           <fileSeparator>/</fileSeparator>
                           <prefix>../modules</prefix>
                           <stripVersion>true</stripVersion>
-                          <excludeArtifactIds>javax.json</excludeArtifactIds>
+                          <excludeArtifactIds>jakarta.json</excludeArtifactIds>
                           <excludeArtifactIds>javax.inject</excludeArtifactIds>
                       </configuration>
                   </execution>

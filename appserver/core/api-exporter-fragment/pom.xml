@@ -140,7 +140,7 @@ javax.imageio.spi; \
 javax.imageio.stream; \
 javax.interceptor; \
 javax.jms; \
-javax.json; \
+jakarta.json; \
 javax.json.bind; \
 javax.json.bind.adapter; \
 javax.json.bind.annotation; \

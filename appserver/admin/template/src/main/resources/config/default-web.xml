@@ -302,7 +302,8 @@
         jakarta.servlet.jsp.jar
         jspcaching-connector.jar
         web-glue.jar
-        bean-validator.jar
+        hibernate-validator.jar
+        validation.jar
         jakarta.ejb.jar
         jakarta.enterprise.deploy-api.jar
         jakarta.jms-api.jar

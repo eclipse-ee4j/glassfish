@@ -1,7 +1,7 @@
 GlassFish Server
 =================
 
-GlassFish is the reference implementation of Java EE.
+GlassFish is the reference implementation of Java EE. 
 
 Building
 --------

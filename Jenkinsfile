@@ -14,14 +14,30 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-// list of test ids
-def jobs = [
-    "deployment_all"
-]
-
-// the label is unique and identifies the pod descriptor and its resulting pods
+// The label is unique and identifies the pod descriptor and its resulting pods
 // without this, the agent could be using a pod created from a different descriptor
 env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
+
+// list of test ids
+def jobs = [
+  "deployment_all",
+  "ejb_group_1",
+  "ejb_group_2",
+  "ejb_group_3",
+  "ejb_web_all",
+  "cdi_all",
+  "ql_gf_full_profile_all",
+  "ql_gf_nucleus_all",
+  "ql_gf_web_profile_all",
+  "nucleus_admin_all",
+  "jdbc_all",
+  "batch_all",
+  "persistence_all",
+  "connector_group_1",
+  "connector_group_2",
+  "connector_group_3",
+  "connector_group_4"
+]
 
 def parallelStagesMap = jobs.collectEntries {
   ["${it}": generateStage(it)]
@@ -41,7 +57,7 @@ def generateStage(job) {
                       // run the test
                       unstash 'build-bundles'
                       try {
-                          retry(3) {
+                          retry(1) {
                               timeout(time: 2, unit: 'HOURS') {
                                 sh "./appserver/tests/gftest.sh run_test ${job}"
                               }
@@ -62,17 +78,23 @@ pipeline {
   options {
     // keep at most 50 builds
     buildDiscarder(logRotator(numToKeepStr: '50'))
+    
     // preserve the stashes to allow re-running a test stage
     preserveStashes()
+    
     // issue related to default 'implicit' checkout, disable it
     skipDefaultCheckout()
+    
     // abort pipeline if previous stage is unstable
     skipStagesAfterUnstable()
+    
     // show timestamps in logs
     timestamps()
+    
     // global timeout, abort after 6 hours
     timeout(time: 6, unit: 'HOURS')
   }
+  
   agent {
     kubernetes {
       label "${env.label}"
@@ -148,12 +170,14 @@ spec:
 """
     }
   }
+    
   environment {
     S1AS_HOME = "${WORKSPACE}/glassfish6/glassfish"
     APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
     TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
     GF_INTERNAL_ENV = credentials('gf-internal-env')
   }
+  
   stages {
     stage('build') {
       agent {
@@ -179,6 +203,7 @@ spec:
         }
       }
     }
+    
     stage('tests') {
       steps {
         script {

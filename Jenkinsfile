@@ -57,7 +57,7 @@ def generateStage(job) {
                       // run the test
                       unstash 'build-bundles'
                       try {
-                          retry(1) {
+                          retry(3) {
                               timeout(time: 2, unit: 'HOURS') {
                                 sh "./appserver/tests/gftest.sh run_test ${job}"
                               }

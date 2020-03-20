@@ -17,11 +17,10 @@
 package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.enterprise.concurrent.spi.TransactionHandle;
 import org.glassfish.enterprise.concurrent.spi.TransactionSetupProvider;
 
-import javax.enterprise.concurrent.ManagedTask;
+import jakarta.enterprise.concurrent.ManagedTask;
 import javax.transaction.InvalidTransactionException;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;

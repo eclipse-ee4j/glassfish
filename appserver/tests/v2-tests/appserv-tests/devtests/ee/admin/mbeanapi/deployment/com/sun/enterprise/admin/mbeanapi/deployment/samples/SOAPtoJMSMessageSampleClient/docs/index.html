@@ -135,7 +135,7 @@ Follow these steps to configure resources with Admin Console:
 <li>Add the following:
 <pre>
 JNDI-Name: jms/TopicConnectionFactory
-Type: javax.jms.TopicConnectionFactory
+Type: jakarta.jms.TopicConnectionFactory
 Resource: Select Enabled checkbox
 </pre>
 
@@ -145,7 +145,7 @@ Resource: Select Enabled checkbox
 <li>Add the following:
 <pre>
 JNDI-Name: jms/TestTopic
-Type: javax.jms.Topic
+Type: jakarta.jms.Topic
 Resource: Select Enabled checkbox
 </pre>
    
@@ -162,7 +162,7 @@ Configure connection factory::
 
 <pre>
 asadmin create-jms-resource --user <i>username</i> --password <i>password</i>
-  --restype javax.jms.TopicConnectionFactory
+  --restype jakarta.jms.TopicConnectionFactory
   jms/TopicConnectionFactory
 </pre>
 
@@ -170,7 +170,7 @@ asadmin create-jms-resource --user <i>username</i> --password <i>password</i>
 Configure destination(topic):
 
 <pre>asadmin create-jms-resource --user <i>username</i> --password <i>password</i>
-  --restype javax.jms.Topic --property Name=TestTopic
+  --restype jakarta.jms.Topic --property Name=TestTopic
   jms/TestTopic
 </pre>
 

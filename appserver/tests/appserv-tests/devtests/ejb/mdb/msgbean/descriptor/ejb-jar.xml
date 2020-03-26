@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,9 +24,9 @@
       <display-name>MDB_QUEUE_BMT</display-name>
       <ejb-name>MDB_QUEUE_BMT</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb.mdb.msgbean.MsgBean</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Bean</transaction-type>
-      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-type>jakarta.jms.Queue</message-destination-type>
       <env-entry>
         <env-entry-name>beanManagedTx</env-entry-name>
         <env-entry-type>java.lang.Boolean</env-entry-type>
@@ -35,14 +35,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyTopicConnectionFactory</res-ref-name>
-        <res-type>javax.jms.TopicConnectionFactory</res-type>
+        <res-type>jakarta.jms.TopicConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
@@ -61,9 +61,9 @@
       <display-name>MDB_QUEUE_CMT</display-name>
       <ejb-name>MDB_QUEUE_CMT</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb.mdb.msgbean.MsgBean</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Container</transaction-type>
-      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-type>jakarta.jms.Queue</message-destination-type>
       <env-entry>
         <env-entry-name>beanManagedTx</env-entry-name>
         <env-entry-type>java.lang.Boolean</env-entry-type>
@@ -72,14 +72,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyTopicConnectionFactory</res-ref-name>
-        <res-type>javax.jms.TopicConnectionFactory</res-type>
+        <res-type>jakarta.jms.TopicConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
@@ -95,9 +95,9 @@
       <display-name>operationtestqueue</display-name>
       <ejb-name>operationtestqueue</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb.mdb.msgbean.OperationTestMsgBean</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Bean</transaction-type>
-      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-type>jakarta.jms.Queue</message-destination-type>
       <env-entry>
         <env-entry-name>beanManagedTx</env-entry-name>
         <env-entry-type>java.lang.Boolean</env-entry-type>
@@ -113,9 +113,9 @@
       <display-name>operationtesttopic</display-name>
       <ejb-name>operationtesttopic</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb.mdb.msgbean.OperationTestMsgBean</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Bean</transaction-type>
-      <message-destination-type>javax.jms.Topic</message-destination-type>
+      <message-destination-type>jakarta.jms.Topic</message-destination-type>
       <env-entry>
         <env-entry-name>beanManagedTx</env-entry-name>
         <env-entry-type>java.lang.Boolean</env-entry-type>
@@ -131,9 +131,9 @@
       <display-name>MDB_TOPIC_CMT</display-name>
       <ejb-name>MDB_TOPIC_CMT</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb.mdb.msgbean.MsgBean</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Container</transaction-type>
-      <message-destination-type>javax.jms.Topic</message-destination-type>
+      <message-destination-type>jakarta.jms.Topic</message-destination-type>
       <env-entry>
         <env-entry-name>beanManagedTx</env-entry-name>
         <env-entry-type>java.lang.Boolean</env-entry-type>
@@ -142,14 +142,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyTopicConnectionFactory</res-ref-name>
-        <res-type>javax.jms.TopicConnectionFactory</res-type>
+        <res-type>jakarta.jms.TopicConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
@@ -165,9 +165,9 @@
       <display-name>MDB_QUEUE_CMTNS</display-name>
       <ejb-name>MDB_QUEUE_CMTNS</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb.mdb.msgbean.MsgBean</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Container</transaction-type>
-      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-type>jakarta.jms.Queue</message-destination-type>
       <env-entry>
         <env-entry-name>beanManagedTx</env-entry-name>
         <env-entry-type>java.lang.Boolean</env-entry-type>
@@ -176,14 +176,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyTopicConnectionFactory</res-ref-name>
-        <res-type>javax.jms.TopicConnectionFactory</res-type>
+        <res-type>jakarta.jms.TopicConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
@@ -199,9 +199,9 @@
       <display-name>MDB_TOPIC_BMT</display-name>
       <ejb-name>MDB_TOPIC_BMT</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb.mdb.msgbean.MsgBean</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Bean</transaction-type>
-      <message-destination-type>javax.jms.Topic</message-destination-type>
+      <message-destination-type>jakarta.jms.Topic</message-destination-type>
       <env-entry>
         <env-entry-name>beanManagedTx</env-entry-name>
         <env-entry-type>java.lang.Boolean</env-entry-type>
@@ -210,14 +210,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyTopicConnectionFactory</res-ref-name>
-        <res-type>javax.jms.TopicConnectionFactory</res-type>
+        <res-type>jakarta.jms.TopicConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
@@ -236,7 +236,7 @@
         <ejb-name>MDB_QUEUE_CMT</ejb-name>
         <method-name>onMessage</method-name>
         <method-params>
-          <method-param>javax.jms.Message</method-param>
+          <method-param>jakarta.jms.Message</method-param>
         </method-params>
       </method>
       <trans-attribute>Required</trans-attribute>
@@ -246,7 +246,7 @@
         <ejb-name>MDB_TOPIC_CMT</ejb-name>
         <method-name>onMessage</method-name>
         <method-params>
-          <method-param>javax.jms.Message</method-param>
+          <method-param>jakarta.jms.Message</method-param>
         </method-params>
       </method>
       <trans-attribute>Required</trans-attribute>
@@ -256,7 +256,7 @@
         <ejb-name>MDB_QUEUE_CMTNS</ejb-name>
         <method-name>onMessage</method-name>
         <method-params>
-          <method-param>javax.jms.Message</method-param>
+          <method-param>jakarta.jms.Message</method-param>
         </method-params>
       </method>
       <trans-attribute>NotSupported</trans-attribute>

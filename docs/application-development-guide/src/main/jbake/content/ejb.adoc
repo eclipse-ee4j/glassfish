@@ -1347,7 +1347,7 @@ to the message source. By default this value is 1; -1 disables this
 container protection.
 
 A message-driven bean's `onMessage` method can use the
-`javax.jms.Message.getJMSRedelivered` method to check whether a received
+`jakarta.jms.Message.getJMSRedelivered` method to check whether a received
 message is a redelivered message.
 
 

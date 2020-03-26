@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.mdb.client;
 import java.io.*;
 import java.util.*;
 import javax.ejb.EJBHome;
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.annotation.Resource;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -46,11 +46,11 @@ public class Client {
  
     //Target Queue
     @Resource(mappedName="java:app/jms/ejb_ejb30_hello_mdb_InQueue")
-    private static javax.jms.Queue msgBeanQueue;
+    private static jakarta.jms.Queue msgBeanQueue;
 
     //Reply Queue
     @Resource(mappedName="java:app/jms/ejb_ejb30_hello_mdb_OutQueue")
-    private static javax.jms.Queue clientQueue;
+    private static jakarta.jms.Queue clientQueue;
 
     private QueueConnection queueCon;
     private QueueSession queueSession;
@@ -98,7 +98,7 @@ public class Client {
         }
     }
 
-    public void sendMsgs(javax.jms.Queue queue, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, int num) 
         throws JMSException {
         for(int i = 0; i < num; i++) {
             Message message = queueSession.createTextMessage("foo #" + (i + 1));
@@ -113,7 +113,7 @@ public class Client {
 
     public void doTest(int num) 
         throws Exception {
-        sendMsgs((javax.jms.Queue) msgBeanQueue, num);
+        sendMsgs((jakarta.jms.Queue) msgBeanQueue, num);
         
 	//Now attempt to receive responses to our message
         System.out.println("Waiting for queue message");

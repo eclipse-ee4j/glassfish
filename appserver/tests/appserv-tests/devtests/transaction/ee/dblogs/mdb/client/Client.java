@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -59,9 +59,9 @@ public class Client extends ClientBase {
             asadmin("create-local-instance", "--cluster", CLUSTER_NAME, INSTANCE1_NAME);
             asadmin("create-local-instance", "--cluster", CLUSTER_NAME, INSTANCE2_NAME);
             System.out.println("Creating JMS resources");
-            asadmin("create-jms-resource", "--target", CLUSTER_NAME, "--restype", "javax.jms.QueueConnectionFactory", "jms/ejb_mdb_QCF");
+            asadmin("create-jms-resource", "--target", CLUSTER_NAME, "--restype", "jakarta.jms.QueueConnectionFactory", "jms/ejb_mdb_QCF");
             asadmin("create-jmsdest", "--target", CLUSTER_NAME, "--desttype", "ejb_mdb_Queue");
-            asadmin("create-jms-resource", "--target", CLUSTER_NAME, "--restype", "javax.jms.Queue", "--property", "imqDestinationName=ejb_mdb_Queue", "jms/ejb_mdb_Queue");
+            asadmin("create-jms-resource", "--target", CLUSTER_NAME, "--restype", "jakarta.jms.Queue", "--property", "imqDestinationName=ejb_mdb_Queue", "jms/ejb_mdb_Queue");
             System.out.println("Finished creating JMS resources");
 
             if (Boolean.getBoolean("enableShoalLogger")) {

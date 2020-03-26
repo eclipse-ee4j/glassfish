@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +16,10 @@
 
 package com.sun.s1peqe.ejb.mdb.simple.ejb;
 
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import javax.ejb.EJBException;
 import javax.ejb.MessageDrivenBean;
 import javax.ejb.MessageDrivenContext;
-import javax.ejb.CreateException;
 import javax.naming.*;
-import javax.jms.*;
+import jakarta.jms.*;
 import java.util.*;
 
 public class SimpleMessageBean implements MessageDrivenBean,

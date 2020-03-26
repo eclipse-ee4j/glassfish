@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,15 +31,15 @@ import javax.ejb.MessageDrivenContext;
 
 import javax.naming.InitialContext;
 
-import javax.jms.MessageListener;
-import javax.jms.Message;
-import javax.jms.Queue;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueConnection;
-import javax.jms.QueueSession;
-import javax.jms.QueueSender;
-import javax.jms.TextMessage;
-import javax.jms.Session;
+import jakarta.jms.MessageListener;
+import jakarta.jms.Message;
+import jakarta.jms.Queue;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.QueueSession;
+import jakarta.jms.QueueSender;
+import jakarta.jms.TextMessage;
+import jakarta.jms.Session;
 import javax.transaction.TransactionManager;
 import javax.transaction.Status;
 import javax.annotation.Resource;

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-create-jms-resource --restype javax.jms.QueueConnectionFactory jms/jdbcjmsauth_QCF1 
-create-jms-resource --restype javax.jms.QueueConnectionFactory jms/jdbcjmsauth_QCF2 
+create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/jdbcjmsauth_QCF1 
+create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/jdbcjmsauth_QCF2 
 
 quit

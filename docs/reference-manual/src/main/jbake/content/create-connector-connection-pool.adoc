@@ -244,7 +244,7 @@ This example creates a new connector connection pool named
 [source,oac_no_warn]
 ----
 asadmin> create-connector-connection-pool --raname jmsra 
---connectiondefinition javax.jms.QueueConnectionFactory --steadypoolsize 20 
+--connectiondefinition jakarta.jms.QueueConnectionFactory --steadypoolsize 20 
 --maxpoolsize 100 --poolresize 2 --maxwait 60000 jms/qConnPool
 Command create-connector-connection-pool executed successfully
 ----

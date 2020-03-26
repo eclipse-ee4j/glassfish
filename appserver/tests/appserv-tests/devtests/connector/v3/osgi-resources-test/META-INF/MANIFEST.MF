@@ -21,5 +21,5 @@ Bundle-Vendor: GlassFish Community
 Bundle-Version: 3.1.0.SNAPSHOT
 Bundle-Activator: org.glassfish.osgi_resources_test.ResourcesTestActivator
 Bundle-License: https://glassfish.dev.java.net/nonav/public/CDDL+GPL.html
-Import-Package: javax.sql,org.osgi.framework;version="1.5",org.osgi.service.jdbc;version="1.0",org.glassfish.api,org.glassfish.internal.api,org.glassfish.hk2.api,javax.security.auth,org.glassfish.api.admin,org.jvnet.hk2.component,javax.jms
+Import-Package: javax.sql,org.osgi.framework;version="1.5",org.osgi.service.jdbc;version="1.0",org.glassfish.api,org.glassfish.internal.api,org.glassfish.hk2.api,javax.security.auth,org.glassfish.api.admin,org.jvnet.hk2.component,jakarta.jms
 Bundle-DocURL: https://glassfish.dev.java.net

@@ -50,8 +50,8 @@
                         </goals>
                         <configuration>
                             <commands>
-                                <param>create-jms-resource --restype javax.jms.Queue --property imqDestinationName=TestQueue jms/TestQueue</param>
-                                <param>create-jms-resource --restype javax.jms.QueueConnectionFactory jms/TestQueueConnectionFactory</param>
+                                <param>create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=TestQueue jms/TestQueue</param>
+                                <param>create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/TestQueueConnectionFactory</param>
                             </commands>
                         </configuration>
                     </execution>

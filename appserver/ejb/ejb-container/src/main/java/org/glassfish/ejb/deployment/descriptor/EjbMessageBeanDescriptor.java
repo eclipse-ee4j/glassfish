@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     private static LocalStringManagerImpl localStrings =
 	    new LocalStringManagerImpl(EjbMessageBeanDescriptor.class); 
 
-    private String messageListenerType = "javax.jms.MessageListener";
+    private String messageListenerType = "jakarta.jms.MessageListener";
 
     // These are the method objects from the 
     // *message-bean implementation class* that implement the
@@ -415,12 +415,12 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
     public boolean hasQueueDest() {
         return ( (destinationType != null) && 
-                 (destinationType.equals("javax.jms.Queue")) );
+                 (destinationType.equals("jakarta.jms.Queue")) );
     }
 
     public boolean hasTopicDest() {
         return ( (destinationType != null) && 
-                 (destinationType.equals("javax.jms.Topic")) );
+                 (destinationType.equals("jakarta.jms.Topic")) );
     }
 
     public boolean hasDestinationType() {
@@ -454,12 +454,12 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
 
     public void setHasQueueDest() {
-        destinationType = "javax.jms.Queue";
+        destinationType = "jakarta.jms.Queue";
         setHasDurableSubscription(false);
     }
 
     public void setHasTopicDest() {
-        destinationType = "javax.jms.Topic";
+        destinationType = "jakarta.jms.Topic";
 
     }
     

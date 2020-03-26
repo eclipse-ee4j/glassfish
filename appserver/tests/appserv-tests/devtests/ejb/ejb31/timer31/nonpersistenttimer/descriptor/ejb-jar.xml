@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,9 +24,9 @@
     <message-driven>
       <ejb-name>msgbean_BMT</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb31.timer.nonpersistenttimer.MessageDrivenEJB</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Bean</transaction-type>
-      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-type>jakarta.jms.Queue</message-destination-type>
       <message-destination-link>TimerMDBQueue_BMT</message-destination-link>
       <env-entry>
         <env-entry-name>txmode</env-entry-name>
@@ -36,14 +36,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <message-destination-ref>       
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
-        <message-destination-type>javax.jms.Queue</message-destination-type>
+        <message-destination-type>jakarta.jms.Queue</message-destination-type>
         <message-destination-usage>ConsumesProduces</message-destination-usage>
         <message-destination-link>TimerQueue</message-destination-link>
       </message-destination-ref>
@@ -51,9 +51,9 @@
     <message-driven>
       <ejb-name>msgbean_CMT</ejb-name>
       <ejb-class>com.sun.s1asdev.ejb31.timer.nonpersistenttimer.MessageDrivenEJB</ejb-class>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Container</transaction-type>
-      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-type>jakarta.jms.Queue</message-destination-type>
       <message-destination-link>TimerMDBQueue_CMT</message-destination-link>
       <env-entry>
         <env-entry-name>txmode</env-entry-name>
@@ -63,14 +63,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <message-destination-ref>       
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
-        <message-destination-type>javax.jms.Queue</message-destination-type>
+        <message-destination-type>jakarta.jms.Queue</message-destination-type>
         <message-destination-usage>ConsumesProduces</message-destination-usage>
         <message-destination-link>TimerQueue</message-destination-link>
       </message-destination-ref>
@@ -92,14 +92,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <message-destination-ref>       
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
-        <message-destination-type>javax.jms.Queue</message-destination-type>
+        <message-destination-type>jakarta.jms.Queue</message-destination-type>
         <message-destination-usage>ConsumesProduces</message-destination-usage>
         <message-destination-link>TimerQueue</message-destination-link>
       </message-destination-ref>
@@ -124,14 +124,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <message-destination-ref>       
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
-        <message-destination-type>javax.jms.Queue</message-destination-type>
+        <message-destination-type>jakarta.jms.Queue</message-destination-type>
         <message-destination-usage>ConsumesProduces</message-destination-usage>
         <message-destination-link>TimerQueue</message-destination-link>
       </message-destination-ref>
@@ -156,14 +156,14 @@
       <resource-ref>
         <description>description</description>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <message-destination-ref>       
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
-        <message-destination-type>javax.jms.Queue</message-destination-type>
+        <message-destination-type>jakarta.jms.Queue</message-destination-type>
         <message-destination-usage>ConsumesProduces</message-destination-usage>
         <message-destination-link>TimerQueue</message-destination-link>
       </message-destination-ref>
@@ -211,7 +211,7 @@
         <ejb-name>msgbean_CMT</ejb-name>
         <method-name>onMessage</method-name>
         <method-params>
-          <method-param>javax.jms.Message</method-param>
+          <method-param>jakarta.jms.Message</method-param>
         </method-params>
       </method>
       <trans-attribute>Required</trans-attribute>

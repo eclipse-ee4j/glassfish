@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,9 +22,9 @@ import java.io.PrintWriter;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBs;
-import javax.jms.Destination;
-import javax.jms.JMSDestinationDefinition;
-import javax.jms.JMSDestinationDefinitions;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSDestinationDefinition;
+import jakarta.jms.JMSDestinationDefinitions;
 import javax.naming.InitialContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -45,7 +45,7 @@ import javax.transaction.UserTransaction;
                 @JMSDestinationDefinition(
                         description = "global-scope resource defined by @JMSDestinationDefinition",
                         name = "java:global/env/Servlet_ModByDD_JMSDestination",
-                        interfaceName = "javax.jms.Queue",
+                        interfaceName = "jakarta.jms.Queue",
                         resourceAdapter = "jmsra",
                         destinationName = "myPhysicalQueue"
                 ),
@@ -53,7 +53,7 @@ import javax.transaction.UserTransaction;
                 @JMSDestinationDefinition(
                         description = "global-scope resource defined by @JMSDestinationDefinition",
                         name = "java:global/env/Servlet_JMSDestination",
-                        interfaceName = "javax.jms.Queue",
+                        interfaceName = "jakarta.jms.Queue",
                         resourceAdapter = "jmsra",
                         destinationName = "myPhysicalQueue"
                 ),
@@ -61,7 +61,7 @@ import javax.transaction.UserTransaction;
                 @JMSDestinationDefinition(
                         description = "application-scope resource defined by @JMSDestinationDefinition",
                         name = "java:app/env/Servlet_JMSDestination",
-                        interfaceName = "javax.jms.Topic",
+                        interfaceName = "jakarta.jms.Topic",
                         resourceAdapter = "jmsra",
                         destinationName = "myPhysicalTopic"
                 ),
@@ -69,7 +69,7 @@ import javax.transaction.UserTransaction;
                 @JMSDestinationDefinition(
                         description = "module-scope resource defined by @JMSDestinationDefinition",
                         name = "java:module/env/Servlet_JMSDestination",
-                        interfaceName = "javax.jms.Topic",
+                        interfaceName = "jakarta.jms.Topic",
 //                        resourceAdapter = "jmsra",
                         destinationName = "myPhysicalTopic"
                 ),
@@ -77,7 +77,7 @@ import javax.transaction.UserTransaction;
                 @JMSDestinationDefinition(
                         description = "component-scope resource defined by @JMSDestinationDefinition",
                         name = "java:comp/env/Servlet_JMSDestination",
-                        interfaceName = "javax.jms.Queue",
+                        interfaceName = "jakarta.jms.Queue",
 //                        resourceAdapter = "jmsra",
                         destinationName = "myPhysicalQueue"
                 )

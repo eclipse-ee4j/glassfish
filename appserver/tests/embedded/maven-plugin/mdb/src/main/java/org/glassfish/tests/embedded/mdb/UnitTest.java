@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,12 +19,12 @@ package org.glassfish.tests.embedded.mdb;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.QueueSender;
+import jakarta.jms.QueueSession;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 import javax.naming.InitialContext;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +44,7 @@ public class UnitTest {
 
             QueueConnectionFactory qcf = (QueueConnectionFactory)
                     ic.lookup("jms/TestQueueConnectionFactory");
-            javax.jms.Queue queue = (javax.jms.Queue) ic.lookup("jms/TestQueue");
+            jakarta.jms.Queue queue = (jakarta.jms.Queue) ic.lookup("jms/TestQueue");
 
             queueConnection = qcf.createQueueConnection();
             queueConnection.start();

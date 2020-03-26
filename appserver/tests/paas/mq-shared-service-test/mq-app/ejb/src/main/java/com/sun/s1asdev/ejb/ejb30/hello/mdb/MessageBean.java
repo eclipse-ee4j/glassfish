@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.mdb;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
-import javax.jms.*;
+import jakarta.jms.*;
 
 //Messages received from InQueue
 @MessageDriven(mappedName="jms/ejb_ejb30_hello_mdb_InQueue")

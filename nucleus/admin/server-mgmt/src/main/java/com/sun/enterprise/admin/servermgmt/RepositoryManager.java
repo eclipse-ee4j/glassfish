@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,6 @@ import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
 import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.enterprise.admin.util.AdminConstants;
 import com.sun.enterprise.security.store.PasswordAdapter;
 
 //import com.sun.enterprise.admin.common.Status;
@@ -47,10 +46,9 @@ import com.sun.enterprise.util.zip.ZipFile;
 //iMQ imports
 //import com.sun.enterprise.jms.IASJmsUtil;
 //import com.sun.messaging.jmq.jmsspi.JMSAdmin;
-//import javax.jms.JMSException;
+//import jakarta.jms.JMSException;
 
 import com.sun.enterprise.util.SystemPropertyConstants;
-import org.glassfish.security.common.FileRealmHelper;
 //import com.sun.enterprise.util.ExecException;
 
 /**

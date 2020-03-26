@@ -2301,14 +2301,14 @@ Table C-37 `connector-connection-pool` Properties
 |Property |Default |Description
 |`AddressList` |none |Specifies a list of host/port combinations of the
 Message Queue software. For JMS resources of the Type
-`javax.jms.TopicConnectionFactory` or
-`javax.jms.QueueConnectionFactory`.
+`jakarta.jms.TopicConnectionFactory` or
+`jakarta.jms.QueueConnectionFactory`.
 
 |`ClientId` |none a|
 Specifies the JMS Client Identifier to be associated with a `Connection`
 created using the `createTopicConnection` method of the
 `TopicConnectionFactory` class. For JMS resources of the Type
-`javax.jms.TopicConnectionFactory` .
+`jakarta.jms.TopicConnectionFactory` .
 
 Durable subscription names are unique and only valid within the scope of
 a client identifier. To create or reactivate a durable subscriber, the
@@ -2319,13 +2319,13 @@ time.
 
 |`UserName` |`guest` |Specifies the user name for connecting to the
 Message Queue software. For JMS resources of the Type
-`javax.jms.TopicConnectionFactory` or
-`javax.jms.QueueConnectionFactory`.
+`jakarta.jms.TopicConnectionFactory` or
+`jakarta.jms.QueueConnectionFactory`.
 
 |`Password` |`guest` |Specifies the password for connecting to the
 Message Queue software. For JMS resources of the Type
-`javax.jms.TopicConnectionFactory` or
-`javax.jms.QueueConnectionFactory`.
+`jakarta.jms.TopicConnectionFactory` or
+`jakarta.jms.QueueConnectionFactory`.
 
 |`ReconnectAttempts` |`6` |Specifies the number of attempts to connect
 (or reconnect) for each address in the `imqAddressList` before the

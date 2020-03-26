@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,7 +49,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         sleep(1000);
         
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db")));
-        select1.selectByVisibleText("javax.jms.QueueConnectionFactory");
+        select1.selectByVisibleText("jakarta.jms.QueueConnectionFactory");
         waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
 
         clickAndWait("propertyForm:title:topButtons:nextButton");
@@ -114,7 +114,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         sleep(1000);
         
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db")));
-        select1.selectByVisibleText("javax.jms.QueueConnectionFactory");
+        select1.selectByVisibleText("jakarta.jms.QueueConnectionFactory");
         waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
 
         clickAndWait("propertyForm:title:topButtons:nextButton");
@@ -217,7 +217,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
 //        sleep(1000);
 //        
 //        Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db")));
-//        select1.selectByVisibleText("javax.jms.QueueConnectionFactory");
+//        select1.selectByVisibleText("jakarta.jms.QueueConnectionFactory");
 //        waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
 //
 //        clickAndWait("propertyForm:title:topButtons:nextButton");

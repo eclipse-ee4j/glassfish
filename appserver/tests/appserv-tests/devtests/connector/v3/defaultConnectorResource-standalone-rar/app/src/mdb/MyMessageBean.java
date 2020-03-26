@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,11 @@ import connector.MyMessageListener;
 
 import javax.ejb.*;
 import javax.naming.*;
-import java.io.*;
-import java.rmi.RemoteException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import javax.sql.*;
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.transaction.*;
 
 
@@ -66,7 +64,7 @@ public class MyMessageBean implements MessageDrivenBean,
     /**
      * onMessage method, declared as public (but not final or
      * static), with a return type of void, and with one argument
-     * of type javax.jms.Message.
+     * of type jakarta.jms.Message.
      * <p/>
      * Casts the incoming Message to a TextMessage and displays
      * the text.

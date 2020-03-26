@@ -2,7 +2,7 @@
 <!DOCTYPE project [
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -229,7 +229,7 @@
       -->
       <antcall target="create-connector-connpool-common">
         <param name="ra.name" value="jmsra"/>
-	<param name="connection.defname" value="javax.jms.QueueConnectionFactory"/>
+	<param name="connection.defname" value="jakarta.jms.QueueConnectionFactory"/>
 	<param name="extra-params" value="--matchconnections=false"/>
 	<param name="connector.conpool.name" value="jms-jdbc-res-1"/>
 	<param name="operand.props" value="--transactionsupport LocalTransaction"/>
@@ -241,7 +241,7 @@
       <exec executable="${ASADMIN}" failonerror="false">
         <arg line="create-admin-object"/>
 	<arg line="--target ${appserver.instance.name}"/>
-        <arg line="--restype javax.jms.Queue"/>
+        <arg line="--restype jakarta.jms.Queue"/>
 	<arg line="--raname jmsra"/>
         <arg line="${as.props}"/>
         <arg line="--property maxNumActiveConsumers=${activeconsumer.maxnum}"/>

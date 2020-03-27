@@ -14,14 +14,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-// list of test ids
-def jobs = [
-    "deployment_all"
-]
 
 // the label is unique and identifies the pod descriptor and its resulting pods
 // without this, the agent could be using a pod created from a different descriptor
 env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
+
+// list of test ids
+def jobs = [
+  "deployment_all",
+  "ejb_group_1",
+  "ejb_group_2",
+  "ejb_group_3",
+  "ejb_web_all",
+  "cdi_all",
+  "ql_gf_full_profile_all",
+  "ql_gf_nucleus_all",
+  "ql_gf_web_profile_all",
+  "nucleus_admin_all",
+  "jdbc_all",
+  "batch_all",
+  "persistence_all",
+  "connector_group_1",
+  "connector_group_2",
+  "connector_group_3",
+  "connector_group_4"
+]
 
 def parallelStagesMap = jobs.collectEntries {
   ["${it}": generateStage(it)]

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,7 +55,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     //START OF IASRI 4633229
     private static final String CONNECTOR_RESOURCE_TYPE = "javax.resource.cci.ConnectionFactory";    
     //END OF IASRI 4633229
-    private static final String MAIL_RESOURCE_TYPE = "javax.mail.Session";    
+    private static final String MAIL_RESOURCE_TYPE = "jakarta.mail.Session";    
 
     // start IASRI 4734197
     private static final String JDBC_RESOURCE_TYPE = "javax.sql.DataSource";    
@@ -266,8 +266,8 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     }
 
     /**
-     * Return true if this resource is to a JavaMail session object.
-     * @return true if the resource is a JavaMail session object.
+     * Return true if this resource is to a Jakarta Mail session object.
+     * @return true if the resource is a Jakarta Mail session object.
      */
     public boolean isMailResource() {
         //START OF IASRI 4650786

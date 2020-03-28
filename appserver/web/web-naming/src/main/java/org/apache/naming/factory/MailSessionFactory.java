@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ import java.security.PrivilegedAction;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
-import javax.mail.Session;
+import jakarta.mail.Session;
 import javax.naming.Name;
 import javax.naming.Context;
 import javax.naming.RefAddr;
@@ -30,10 +30,10 @@ import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 /**
- * <p>Factory class that creates a JNDI named JavaMail Session factory,
+ * <p>Factory class that creates a JNDI named Jakarta Mail Session factory,
  * which can be used for managing inbound and outbound electronic mail
- * messages via JavaMail APIs.  All messaging environment properties
- * described in the JavaMail Specification may be passed to the Session
+ * messages via Jakarta Mail APIs.  All messaging environment properties
+ * described in the Jakarta Mail Specification may be passed to the Session
  * factory; however the following properties are the most commonly used:</p>
  * <ul>
  * <li>
@@ -46,7 +46,7 @@ import javax.naming.spi.ObjectFactory;
  * configuration file.  An example of factory configuration is:</p>
  * <pre>
  * &lt;Resource name="mail/smtp" auth="CONTAINER"
- *           type="javax.mail.Session"/&gt;
+ *           type="jakarta.mail.Session"/&gt;
  * &lt;ResourceParams name="mail/smtp"&gt;
  *   &lt;parameter&gt;
  *     &lt;name&gt;factory&lt;/name&gt;
@@ -69,7 +69,7 @@ public class MailSessionFactory implements ObjectFactory {
     /**
      * The Java type for which this factory knows how to create objects.
      */
-    protected static final String factoryType = "javax.mail.Session";
+    protected static final String factoryType = "jakarta.mail.Session";
 
 
     /**
@@ -95,13 +95,13 @@ public class MailSessionFactory implements ObjectFactory {
         if (!ref.getClassName().equals(factoryType))
             return (null);
 
-        // Create a new Session inside a doPrivileged block, so that JavaMail
-        // can read its default properties without throwing Security
+        // Create a new Session inside a doPrivileged block, so that Jakarta
+        // Mail can read its default properties without throwing Security
         // exceptions
         return AccessController.doPrivileged( new PrivilegedAction<Session>() {
 		public Session run() {
 
-                    // Create the JavaMail properties we will use
+                    // Create the Jakarta Mail properties we will use
                     Properties props = new Properties();
                     props.put("mail.transport.protocol", "smtp");
                     props.put("mail.smtp.host", "localhost");

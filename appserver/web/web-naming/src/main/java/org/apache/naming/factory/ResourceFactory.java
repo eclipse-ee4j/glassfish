@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -113,13 +113,13 @@ public class ResourceFactory
                     } catch(Throwable t) {
 
                     }
-                } else if (ref.getClassName().equals("javax.mail.Session")) {
-                    String javaxMailSessionFactoryClassName =
-                        System.getProperty("javax.mail.Session.Factory",
+                } else if (ref.getClassName().equals("jakarta.mail.Session")) {
+                    String mailSessionFactoryClassName =
+                        System.getProperty("jakarta.mail.Session.Factory",
                                            "org.apache.naming.factory.MailSessionFactory");
                     try {
                         factory = (ObjectFactory) 
-                            Class.forName(javaxMailSessionFactoryClassName)
+                            Class.forName(mailSessionFactoryClassName)
                             .newInstance();
                     } catch(Throwable t) {
                     }

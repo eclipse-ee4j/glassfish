@@ -119,7 +119,8 @@
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.10</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
-        <mail.version>1.6.4</mail.version>
+        <mail.version>2.0.0-RC4</mail.version>
+        <activation.version>2.0.0-RC3</activation.version>
         <jakarta.annotation-api.version>1.3.4</jakarta.annotation-api.version>
         <copyright-plugin.version>1.50</copyright-plugin.version>
         <testng.version>7.1.0</testng.version>
@@ -824,6 +825,11 @@
                 <groupId>com.sun.mail</groupId>
                 <artifactId>jakarta.mail</artifactId>
                 <version>${mail.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.activation</groupId>
+                <artifactId>jakarta.activation</artifactId>
+                <version>${activation.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.pfl</groupId>

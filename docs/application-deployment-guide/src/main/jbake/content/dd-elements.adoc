@@ -6795,7 +6795,7 @@ authentication requests.
 `mail-resource`
 ~~~~~~~~~~~~~~~
 
-Defines a JavaMail (`javax.mail.Session`) resource.
+Defines a Jakarta Mail (`jakarta.mail.Session`) resource.
 
 [[GSDPG957]][[sthref147]]
 
@@ -6919,14 +6919,14 @@ Properties
 ^^^^^^^^^^
 
 You can set properties for the `mail-resource` element and then get
-these properties in a JavaMail `Session` object later. Every property
+these properties in a Jakarta Mail `Session` object later. Every property
 name must start with a `mail-` prefix. The GlassFish Server changes the
 dash (`-`) character to a period (`.`) in the name of the property, then
-saves the property to the `MailConfiguration` and JavaMail `Session`
+saves the property to the `MailConfiguration` and Jakarta Mail `Session`
 objects. If the name of the property doesn't start with `mail-`, the
 property is ignored.
 
-For example, to define the property `mail.password` in a JavaMail
+For example, to define the property `mail.password` in a Jakarta Mail
 Session object, first edit `glassfish-resources.xml` as follows:
 
 [source,oac_no_warn]
@@ -6938,7 +6938,7 @@ Session object, first edit `glassfish-resources.xml` as follows:
  ...
 ----
 
-After getting the JavaMail `Session` object, get the `mail.password`
+After getting the Jakarta Mail `Session` object, get the `mail.password`
 property to retrieve the value `adminadmin`, as follows:
 
 [source,oac_no_warn]
@@ -6946,9 +6946,9 @@ property to retrieve the value `adminadmin`, as follows:
 String password = session.getProperty("mail.password");
 ----
 
-For more information about JavaMail properties, see
-http://javamail.kenai.com/nonav/javadocs/index.html[JavaMail API
-Documentation] (`http://javamail.kenai.com/nonav/javadocs/index.html`).
+For more information about Jakarta Mail properties, see
+https://jakarta.ee/specifications/mail[Jakarta Mail API
+Documentation] (`https://jakarta.ee/specifications/mail`).
 
 [[beaum]][[GSDPG00192]][[manager-properties]]
 
@@ -9642,7 +9642,7 @@ a|
 link:#giyik[`mail-resource`]
 
 
- |zero or more |Defines a JavaMail resource.
+ |zero or more |Defines a Jakarta Mail resource.
 
 a|
 link:#giyhw[`admin-object-resource`]

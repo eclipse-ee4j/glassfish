@@ -425,7 +425,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      *
      * @Return list of elements names associated with this config instance
      */
-    public Set<String> getElementNames() {
+    public synchronized Set<String> getElementNames() {
         Set<String> names = new HashSet<String>();
         for (Child child : children) {
             names.add(child.name);
@@ -506,7 +506,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * @param name of the element
      * @return child element
      */
-    public Dom element(String name) {
+    public synchronized Dom element(String name) {
         
         List<Child> children = this.children; // fix the snapshot that we'll work with
 
@@ -664,7 +664,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     /**
      * Picks up one leaf-element value without variable expansion.
      */
-    public String rawLeafElement(String name) {
+    public synchronized String rawLeafElement(String name) {
         List<Child> children = this.children; // fix the snapshot that we'll work with
 
         int len = children.size();
@@ -753,7 +753,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * @return
      *      Can be empty but never null.
      */
-    public List<String> leafElements(String name) {
+    public synchronized List<String> leafElements(String name) {
         List<Child> children = this.children; // fix the snapshot that we'll work with
 
         final List<String> r = new ArrayList<String>();
@@ -773,7 +773,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * @return
      *      can be empty, but never null (even if such element name is not defined in the model.)
      */
-    public List<String> rawLeafElements(String name) {
+    public synchronized List<String> rawLeafElements(String name) {
         List<Child> children = this.children; // fix the snapshot that we'll work with
 
         final List<String> r = new ArrayList<String>();
@@ -789,7 +789,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     /**
      * Picks up one node-element value.
      */
-    public Dom nodeElement(String name) {
+    public synchronized Dom nodeElement(String name) {
         List<Child> children = this.children; // fix the snapshot that we'll work with
 
         int len = children.size();
@@ -829,7 +829,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     /**
      * Picks up all node-elements that have the given element name.
      */
-    public List<Dom> nodeElements(String elementName) {
+    public synchronized List<Dom> nodeElements(String elementName) {
         List<Child> children = this.children; // fix the snapshot that we'll work with
 
         final List<Dom> r = new ArrayList<Dom>();
@@ -850,7 +850,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      *
      * Used to implement {@code FromElement("*")}.
      */
-    public  List<Dom> domNodeByTypeElements(Class baseType) {
+    public synchronized List<Dom> domNodeByTypeElements(Class baseType) {
         List<Dom> r = new ArrayList<Dom>();
 
         int len = children.size();
@@ -879,7 +879,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         };
     }
 
-    public <T> T nodeByTypeElement(Class<T> baseType) {
+    public synchronized <T> T nodeByTypeElement(Class<T> baseType) {
         int len = children.size();
         for( int i=0; i<len; i++ ) {
             Child child = children.get(i);
@@ -933,7 +933,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * so that we can detect deadends that are statically known not to contain
      * the kind we are looking for, and use that to cut the search space.
      */
-    public Dom resolveReference(String key, String typeName) {
+    public synchronized Dom resolveReference(String key, String typeName) {
         String keyedAs = model.keyedAs;
         if(keyedAs!=null && keyedAs.equals(typeName) && getKey().equals(key))
             return this; // found it
@@ -1216,7 +1216,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     /**
      * Used by the parser to set a list of children.
      */
-    /*package*/ void setChildren(List<Child> children) {
+    /*package*/ synchronized void setChildren(List<Child> children) {
        this.children = children;
     }
 
@@ -1248,7 +1248,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      *
      * @return true if the element is empty, false otherwise
      */
-    private boolean isEmpty() {
+    private synchronized boolean isEmpty() {
         Map<String, String> attributesToWrite = attributesToWrite();
 
         if (!attributesToWrite.isEmpty()) {
@@ -1270,7 +1270,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * @param w
      *      Receives XML infoset stream.
      */
-    public void writeTo(String tagName, XMLStreamWriter w) throws XMLStreamException {
+    public synchronized void writeTo(String tagName, XMLStreamWriter w) throws XMLStreamException {
         if(tagName==null)
             tagName = model.tagName;
         if(tagName==null)

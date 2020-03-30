@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -291,7 +291,7 @@ public class ResourceHandler extends AbstractResourceHandler {
                 resourceType.getName().equals("javax.jms.QueueConnectionFactory") ||
                 resourceType.getName().equals("javax.jms.TopicConnectionFactory") ||
                 resourceType == webServiceContext ||
-                resourceType.getName().equals("javax.mail.Session") || 
+                resourceType.getName().equals("jakarta.mail.Session") || 
                 resourceType.getName().equals("java.net.URL") ||
                 resourceType.getName().equals("javax.resource.cci.ConnectionFactory") ||
                 resourceType == org.omg.CORBA_2_3.ORB.class || 

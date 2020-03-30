@@ -187,6 +187,16 @@ spec:
               echo Maven version
               mvn -v
               
+              echo settings.xml
+              
+              cat /home/jenkins/.m2/settings.xml
+              
+              
+              echo settings-security.xml
+              
+              cat /home/jenkins/.m2/settings-security.xml
+              
+              
               bash -xe ./gfbuild.sh build_re_dev
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'

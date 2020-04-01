@@ -64,7 +64,7 @@
                           <fileSeparator>/</fileSeparator>
                           <prefix>../../modules</prefix>
                           <stripVersion>true</stripVersion>
-                          <excludeArtifactIds>jsftemplating, javax.json, jakarta.json-api</excludeArtifactIds>
+                          <excludeArtifactIds>jsftemplating, jakarta.json, jakarta.json-api</excludeArtifactIds>
                       </configuration>
                   </execution>
               </executions>

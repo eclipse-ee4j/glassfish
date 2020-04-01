@@ -18,14 +18,14 @@ package com.sun.ejb;
 
 import java.rmi.Remote;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBObject;
-import javax.ejb.FinderException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBMetaData;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.FinderException;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -174,7 +174,7 @@ public interface Container {
      *          aborted and an EJBException should be propagated
      *          back to the application code.
      */
-    void preSelect() throws javax.ejb.EJBException;
+    void preSelect() throws jakarta.ejb.EJBException;
 
 
     /**

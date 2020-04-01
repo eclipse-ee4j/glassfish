@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,20 +22,18 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.AdminObject;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import javax.resource.spi.AdministeredObject;
-import javax.resource.spi.ResourceAdapterAssociation;
+import jakarta.resource.spi.AdministeredObject;
+import jakarta.resource.spi.ResourceAdapterAssociation;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.io.Externalizable;
 import java.io.Serializable;
 
 import org.glassfish.apf.*;
-import org.glassfish.apf.impl.AnnotationUtils;
 import org.glassfish.apf.impl.HandlerProcessingResultImpl;
 import org.jvnet.hk2.annotations.Service;
 

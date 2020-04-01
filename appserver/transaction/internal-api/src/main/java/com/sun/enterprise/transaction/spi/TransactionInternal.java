@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.transaction.spi;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 
 public interface TransactionInternal extends Transaction {
 

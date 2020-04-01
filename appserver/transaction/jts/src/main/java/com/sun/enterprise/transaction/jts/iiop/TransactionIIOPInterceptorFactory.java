@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,9 +26,7 @@ import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.CosTransactions.DefaultTransactionService;
 
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.api.admin.ProcessEnvironment;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
 import javax.inject.Inject;

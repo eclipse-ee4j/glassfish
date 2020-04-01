@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,7 @@
 package com.sun.jts.jta;
 
 import java.util.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import java.io.File;
 import org.omg.CosTransactions.*;
 import org.omg.CORBA.*;
@@ -26,8 +26,7 @@ import org.omg.CORBA.ORBPackage.InvalidName;
 import com.sun.jts.CosTransactions.*;
 import com.sun.jts.codegen.otsidl.*;
 
-import javax.transaction.SystemException;
-import javax.transaction.Synchronization;
+import jakarta.transaction.SystemException;
 import org.omg.CosTransactions.Status;
 import org.omg.CosTransactions.Current;
 import org.omg.CosTransactions.NoTransaction;
@@ -36,10 +35,9 @@ import org.omg.CosTransactions.HeuristicHazard;
 import com.sun.jts.CosTransactions.GlobalTID;
 
 import javax.transaction.xa.Xid;
-import javax.resource.spi.work.WorkException;
-import javax.resource.spi.work.WorkCompletedException;
+import jakarta.resource.spi.work.WorkException;
+import jakarta.resource.spi.work.WorkCompletedException;
 
-import javax.transaction.xa.XAException;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -107,16 +105,16 @@ public class TransactionManagerImpl implements TransactionManager {
 
     static private int JTAStatus[] =
     {
-        javax.transaction.Status.STATUS_ACTIVE,
-        javax.transaction.Status.STATUS_MARKED_ROLLBACK,
-        javax.transaction.Status.STATUS_PREPARED,
-        javax.transaction.Status.STATUS_COMMITTED,
-        javax.transaction.Status.STATUS_ROLLEDBACK,
-        javax.transaction.Status.STATUS_UNKNOWN,
-        javax.transaction.Status.STATUS_NO_TRANSACTION,
-        javax.transaction.Status.STATUS_PREPARING,
-        javax.transaction.Status.STATUS_COMMITTING,
-        javax.transaction.Status.STATUS_ROLLING_BACK
+        jakarta.transaction.Status.STATUS_ACTIVE,
+        jakarta.transaction.Status.STATUS_MARKED_ROLLBACK,
+        jakarta.transaction.Status.STATUS_PREPARED,
+        jakarta.transaction.Status.STATUS_COMMITTED,
+        jakarta.transaction.Status.STATUS_ROLLEDBACK,
+        jakarta.transaction.Status.STATUS_UNKNOWN,
+        jakarta.transaction.Status.STATUS_NO_TRANSACTION,
+        jakarta.transaction.Status.STATUS_PREPARING,
+        jakarta.transaction.Status.STATUS_COMMITTING,
+        jakarta.transaction.Status.STATUS_ROLLING_BACK
     };
 
     // static block to initialize statusMap
@@ -131,7 +129,7 @@ public class TransactionManagerImpl implements TransactionManager {
         directLookup = new int[maxStatus + 1];
         for (int i=0; i < directLookup.length; i++) {
             // initialize so that any unused slots point to 'unkown'.
-            directLookup[i] = javax.transaction.Status.STATUS_UNKNOWN;
+            directLookup[i] = jakarta.transaction.Status.STATUS_UNKNOWN;
         }
         for (int i=0; i < CosTransactionStatus.length; i++) {
             int statusVal = CosTransactionStatus[i].value();
@@ -226,7 +224,7 @@ public class TransactionManagerImpl implements TransactionManager {
     static public int mapStatus(Status status) {
         int statusVal = status.value();
         if (statusVal < 0 || statusVal > maxStatus) {
-            return javax.transaction.Status.STATUS_UNKNOWN;
+            return jakarta.transaction.Status.STATUS_UNKNOWN;
         } else {
             return directLookup[statusVal];
         }
@@ -630,7 +628,7 @@ public class TransactionManagerImpl implements TransactionManager {
      *
      * @return a <code>XATerminator</code> instance.
      */    
-    public static javax.resource.spi.XATerminator getXATerminator() {
+    public static jakarta.resource.spi.XATerminator getXATerminator() {
         return new XATerminatorImpl();
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,12 +19,8 @@ package com.sun.enterprise.connectors.connector.module;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
 import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.deployment.annotation.introspection.EjbComponentAnnotationScanner;
-import com.sun.enterprise.deployment.annotation.introspection.ResourceAdapterAnnotationScanner;
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.DeploymentUtils;
 
@@ -33,7 +29,6 @@ import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.annotation.Annotation;
@@ -56,7 +51,7 @@ public class ConnectorSniffer extends GenericSniffer {
     @Inject ServiceLocator locator;
 
     private static final Class[]  connectorAnnotations = new Class[] {
-            javax.resource.spi.Connector.class };
+            jakarta.resource.spi.Connector.class };
 
     public ConnectorSniffer() {
         super(ConnectorConstants.CONNECTOR_MODULE, "META-INF/ra.xml", null);

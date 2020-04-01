@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,6 @@ package com.sun.enterprise.deployment.annotation.impl;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.logging.Logger;
 import org.glassfish.apf.impl.AnnotationUtils;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.classmodel.reflect.*;
@@ -28,7 +27,6 @@ import org.glassfish.internal.deployment.AnnotationTypesProvider;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.deployment.common.GenericAnnotationDetector;
 import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 
@@ -157,8 +155,8 @@ public class AppClientScanner extends ModuleScanner<ApplicationClientDescriptor>
         if (ejbProvider != null)
             ejbAnnotations = ejbProvider.getAnnotationTypes();
         else
-            ejbAnnotations = new Class[] {javax.ejb.Stateful.class, javax.ejb.Stateless.class,
-                    javax.ejb.MessageDriven.class, javax.ejb.Singleton.class};
+            ejbAnnotations = new Class[] {jakarta.ejb.Stateful.class, jakarta.ejb.Stateless.class,
+                    jakarta.ejb.MessageDriven.class, jakarta.ejb.Singleton.class};
         Set<String> toBeRemoved = new HashSet<String>();
         ParsingContext context = classParser.getContext();
         for (Class ejbAnnotation: ejbAnnotations) {

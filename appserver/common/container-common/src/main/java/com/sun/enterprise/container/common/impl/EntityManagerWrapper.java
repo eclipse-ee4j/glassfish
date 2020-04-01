@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,13 +30,12 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.ejb.EJBException;
 import static javax.persistence.SynchronizationType.SYNCHRONIZED;
 import static javax.persistence.SynchronizationType.UNSYNCHRONIZED;
 import javax.persistence.criteria.*;
 import javax.persistence.*;
 import javax.persistence.metamodel.Metamodel;
-import javax.transaction.TransactionManager;
+import jakarta.transaction.TransactionManager;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

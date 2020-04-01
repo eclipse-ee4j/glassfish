@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,11 +24,11 @@ import com.sun.enterprise.deployment.AuthMechanism;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import javax.resource.spi.Connector;
-import javax.resource.spi.SecurityPermission;
-import javax.resource.spi.AuthenticationMechanism;
-import javax.resource.spi.TransactionSupport;
-import javax.resource.spi.work.WorkContext;
+import jakarta.resource.spi.Connector;
+import jakarta.resource.spi.SecurityPermission;
+import jakarta.resource.spi.AuthenticationMechanism;
+import jakarta.resource.spi.TransactionSupport;
+import jakarta.resource.spi.work.WorkContext;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.List;
@@ -247,7 +247,7 @@ public class ConnectorAnnotationHandler extends AbstractHandler {
     }
 
     public static boolean isResourceAdapterClass(Class claz){
-        return javax.resource.spi.ResourceAdapter.class.isAssignableFrom(claz);
+        return jakarta.resource.spi.ResourceAdapter.class.isAssignableFrom(claz);
     }
 
     public static String convertStringArrayToStringBuffer(String[] stringArray) {

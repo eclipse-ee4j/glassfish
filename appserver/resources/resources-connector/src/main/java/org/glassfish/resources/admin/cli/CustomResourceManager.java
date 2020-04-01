@@ -33,7 +33,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
 import javax.inject.Inject;
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;

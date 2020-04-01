@@ -225,6 +225,6 @@ public abstract class AbstractHandler implements AnnotationHandler {
      * @return an array of all connector type annotations
      */
     protected Class<? extends Annotation>[] getConnectorAnnotationTypes() {
-        return new Class[]{javax.resource.spi.Connector.class};
+        return new Class[]{jakarta.resource.spi.Connector.class};
     }
 }

@@ -18,7 +18,7 @@ package org.glassfish.ejb.api;
 
 
 import java.lang.reflect.Method;
-import javax.ejb.EJBContext;
+import jakarta.ejb.EJBContext;
 
 /**
  * This interface provides access to the exported portions of the

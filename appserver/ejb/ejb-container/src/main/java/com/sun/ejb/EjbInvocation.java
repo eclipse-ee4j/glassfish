@@ -24,14 +24,14 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.ResourceHandler;
 import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
 
-import javax.ejb.EJBContext;
-import javax.ejb.Timer;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.Timer;
 import javax.interceptor.InvocationContext;
 import com.sun.ejb.containers.interceptors.InterceptorUtil;
 import javax.naming.NameNotFoundException;
-import javax.transaction.Transaction;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.ws.WebServiceContext;
+import jakarta.transaction.Transaction;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.rmi.UnmarshalException;
@@ -195,7 +195,7 @@ public class EjbInvocation
      * loader that was active before message delivery began.
      */
     private ClassLoader originalContextClassLoader;
-
+    
     /**
      * Used for JACC PolicyContextHandlers. The handler can query the container
      * back for parameters on the ejb. This is set during the method invocation

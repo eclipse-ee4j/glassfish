@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,9 +50,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.SynchronizationType;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
 
 import com.sun.appserv.util.cache.CacheListener;
 import com.sun.ejb.ComponentContext;
@@ -2014,9 +2014,9 @@ public final class StatefulSessionContainer
                         getContainerSync(context.getTransaction());
                 cSync.registerForTxCheckpoint(
                         (SessionContextImpl) context);
-            } catch (javax.transaction.RollbackException rollEx) {
+            } catch (jakarta.transaction.RollbackException rollEx) {
                 _logger.log(Level.WARNING, CANNOT_REGISTER_BEAN_FOR_CHECKPOINTING, rollEx);
-            } catch (javax.transaction.SystemException sysEx) {
+            } catch (jakarta.transaction.SystemException sysEx) {
                 _logger.log(Level.WARNING, CANNOT_REGISTER_BEAN_FOR_CHECKPOINTING, sysEx);
             }
         }

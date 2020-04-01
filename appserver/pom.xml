@@ -47,13 +47,13 @@
         <mojarra.version>2.3.9</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.16</woodstock.version>
-        <javax.ejb-api.version>3.2.6</javax.ejb-api.version>
+        <javax.ejb-api.version>4.0.0-RC1</javax.ejb-api.version>
         <jakarta.interceptor-api.version>1.2.5</jakarta.interceptor-api.version>
-        <javax.transaction-api.version>1.3.3</javax.transaction-api.version>
+        <javax.transaction-api.version>2.0.0-RC1</javax.transaction-api.version>
         <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
         <cdi-api.version>2.0</cdi-api.version>
         <javax.inject.version>1</javax.inject.version>
-        <jakarta.resource-api.version>1.7.4</jakarta.resource-api.version>
+        <jakarta.resource-api.version>2.0.0-RC1</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
         <jakarta.authorization-api.version>1.5.0</jakarta.authorization-api.version>
         <jakarta.security.auth.message-api.version>1.1.3</jakarta.security.auth.message-api.version>

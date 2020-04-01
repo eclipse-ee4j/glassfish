@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.transaction;
 
-import javax.transaction.*;
-import javax.resource.spi.XATerminator;
+import jakarta.transaction.*;
+import jakarta.resource.spi.XATerminator;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
@@ -97,7 +97,7 @@ public class TransactionManagerHelper implements TransactionManager, Transaction
         
         try {
             tm.recreate(xid, timeout);
-        } catch (javax.resource.spi.work.WorkException ex) {
+        } catch (jakarta.resource.spi.work.WorkException ex) {
             throw new IllegalStateException(ex);
         }
         preInvokeTx(true);
@@ -109,7 +109,7 @@ public class TransactionManagerHelper implements TransactionManager, Transaction
         postInvokeTx(false, true);
         try {
             tm.release(xid);    
-        } catch (javax.resource.spi.work.WorkException ex) {
+        } catch (jakarta.resource.spi.work.WorkException ex) {
             throw new IllegalStateException(ex);
         }  finally { 
             if (tm instanceof JavaEETransactionManagerSimplified) {

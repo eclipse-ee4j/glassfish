@@ -319,13 +319,6 @@
             <optional>true</optional>
        </dependency>
         <dependency>
-            <groupId>org.glassfish.main.jaxr-ra</groupId>
-            <artifactId>jaxr-ra-rar</artifactId>
-            <version>${project.version}</version>
-            <type>rar</type>
-            <optional>true</optional>
-       </dependency>
-        <dependency>
             <groupId>org.glassfish.main.batch</groupId>
             <artifactId>glassfish-batch-commands</artifactId>
             <version>${project.version}</version>

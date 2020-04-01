@@ -24,8 +24,8 @@ import java.util.logging.Level;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.ejb.embeddable.EJBContainer;
-import javax.ejb.EJBException;
+import jakarta.ejb.embeddable.EJBContainer;
+import jakarta.ejb.EJBException;
 import jakarta.transaction.TransactionManager;
 
 import com.sun.logging.LogDomains;

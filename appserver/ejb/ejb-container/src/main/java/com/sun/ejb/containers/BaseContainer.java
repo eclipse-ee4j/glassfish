@@ -42,27 +42,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.ejb.AccessLocalException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBAccessException;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBTransactionRequiredException;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.FinderException;
-import javax.ejb.LockType;
-import javax.ejb.NoSuchEJBException;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.PostActivate;
-import javax.ejb.PrePassivate;
-import javax.ejb.RemoveException;
-import javax.ejb.TransactionRequiredLocalException;
-import javax.ejb.TransactionRolledbackLocalException;
+import jakarta.ejb.AccessLocalException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBAccessException;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBMetaData;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EJBTransactionRequiredException;
+import jakarta.ejb.EJBTransactionRolledbackException;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.LockType;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.PostActivate;
+import jakarta.ejb.PrePassivate;
+import jakarta.ejb.RemoveException;
+import jakarta.ejb.TransactionRequiredLocalException;
+import jakarta.ejb.TransactionRolledbackLocalException;
 import javax.interceptor.AroundConstruct;
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -2229,7 +2229,7 @@ public abstract class BaseContainer
     private void processEjbTimeoutMethod(Method method) throws Exception {
         Class[] params = method.getParameterTypes();
         if( (params.length == 0 || 
-            (params.length == 1 && params[0] == javax.ejb.Timer.class)) &&
+            (params.length == 1 && params[0] == jakarta.ejb.Timer.class)) &&
             (method.getReturnType() == Void.TYPE) ) {
             
             isTimedObject_ = true;
@@ -2422,7 +2422,7 @@ public abstract class BaseContainer
         if ( isRemote ) {
             ejbIntfMethods[ EJBHome_remove_Handle ] =
                 EJBHome.class.getMethod("remove",
-                                    new Class[]{javax.ejb.Handle.class});
+                                    new Class[]{jakarta.ejb.Handle.class});
             ejbIntfMethods[ EJBHome_remove_Pkey ] =
                 EJBHome.class.getMethod("remove",
                                         new Class[]{java.lang.Object.class});
@@ -2441,7 +2441,7 @@ public abstract class BaseContainer
                 EJBObject.class.getMethod("getHandle", NO_PARAMS);
             ejbIntfMethods[ EJBObject_isIdentical ] =
                 EJBObject.class.getMethod("isIdentical",
-            new Class[]{javax.ejb.EJBObject.class});
+            new Class[]{jakarta.ejb.EJBObject.class});
             
             if ( isStatelessSession ) {
                 if( hasRemoteHomeView ) {
@@ -2464,7 +2464,7 @@ public abstract class BaseContainer
                 EJBLocalObject.class.getMethod("remove", NO_PARAMS);
             ejbIntfMethods[ EJBLocalObject_isIdentical ] =
                 EJBLocalObject.class.getMethod("isIdentical",
-            new Class[]{javax.ejb.EJBLocalObject.class});
+            new Class[]{jakarta.ejb.EJBLocalObject.class});
             
             if ( isStatelessSession ) {
                 if( hasLocalHomeView ) {
@@ -3244,7 +3244,7 @@ public abstract class BaseContainer
         throws EJBException {
                                          
         Class homeIntfClazz = isLocal ? 
-            javax.ejb.EJBLocalHome.class : javax.ejb.EJBHome.class;
+            jakarta.ejb.EJBLocalHome.class : jakarta.ejb.EJBHome.class;
 
         Class methodClass  = invInfo.method.getDeclaringClass();
         Class[] paramTypes = invInfo.method.getParameterTypes();
@@ -3345,7 +3345,7 @@ public abstract class BaseContainer
         throws EJBException {
 
         Class ejbIntfClazz = isLocal ? 
-            javax.ejb.EJBLocalObject.class : javax.ejb.EJBObject.class;
+            jakarta.ejb.EJBLocalObject.class : jakarta.ejb.EJBObject.class;
 
         Class[] paramTypes = invInfo.method.getParameterTypes();
         String methodName  = invInfo.method.getName();
@@ -3554,7 +3554,7 @@ public abstract class BaseContainer
                 // container remove operations will work.  (needed for internal 299 contract)
                 addInvocationInfo(this.ejbIntfMethods[EJBLocalObject_remove],
                         MethodDescriptor.EJB_LOCAL,
-                        javax.ejb.EJBLocalObject.class);
+                        jakarta.ejb.EJBLocalObject.class);
             }
         }
     }
@@ -4114,7 +4114,7 @@ public abstract class BaseContainer
     protected void prepareEjbTimeoutParams(EjbInvocation inv, RuntimeTimerState timerState,
                            EJBTimerService timerService) {
         // Create a TimerWrapper for AroundTimeout and as a method argument.
-        javax.ejb.Timer timer  = new TimerWrapper(timerState.getTimerId(),
+        jakarta.ejb.Timer timer  = new TimerWrapper(timerState.getTimerId(),
                                             timerService);
         inv.timer = timer;
 

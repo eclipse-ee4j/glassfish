@@ -25,7 +25,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
 
 import com.sun.enterprise.container.common.spi.JCDIService;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import jakarta.transaction.Status;

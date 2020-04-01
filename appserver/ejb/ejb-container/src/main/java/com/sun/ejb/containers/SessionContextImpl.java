@@ -22,8 +22,8 @@ import com.sun.enterprise.container.common.impl.PhysicalEntityManagerWrapper;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import org.glassfish.api.invocation.ComponentInvocation;
 
-import javax.ejb.SessionContext;
-import javax.ejb.TimerService;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.TimerService;
 import javax.persistence.EntityManagerFactory;
 import java.util.*;
 
@@ -262,8 +262,8 @@ public final class SessionContextImpl
             // If call came through a home/local-home, this can only be a
             // create call.
             inEjbCreate = ((EjbInvocation)inv).isHome &&
-                (javax.ejb.EJBHome.class.isAssignableFrom(clientIntf) ||
-                 javax.ejb.EJBLocalHome.class.isAssignableFrom(clientIntf));
+                (jakarta.ejb.EJBHome.class.isAssignableFrom(clientIntf) ||
+                 jakarta.ejb.EJBLocalHome.class.isAssignableFrom(clientIntf));
         }
         return inEjbCreate;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,27 +16,23 @@
 
 package com.sun.ejb.containers;
 
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 
 import java.util.Date;
 import java.util.Collection;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import java.io.Serializable;
 
-import javax.ejb.EJBLocalObject;
-import javax.ejb.TimerService;
-import javax.ejb.Timer;
-import javax.ejb.TimerConfig;
-import javax.ejb.ScheduleExpression;
-import javax.ejb.EJBException;
-import javax.ejb.FinderException;
-import javax.ejb.CreateException;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerConfig;
+import jakarta.ejb.ScheduleExpression;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.CreateException;
 
-import javax.ejb.EntityContext;
+import jakarta.ejb.EntityContext;
 
 /*
  * EJBTimerServiceWrappers is the application-level representation
@@ -116,7 +112,7 @@ public class EJBTimerServiceWrapper implements TimerService {
 
     public Timer createSingleActionTimer(long duration, TimerConfig timerConfig) throws
                      java.lang.IllegalArgumentException, java.lang.IllegalStateException,
-                     javax.ejb.EJBException {
+                     jakarta.ejb.EJBException {
         checkCreateTimerCallPermission();
         checkDuration(duration);
 
@@ -126,7 +122,7 @@ public class EJBTimerServiceWrapper implements TimerService {
     public Timer createIntervalTimer(long initialDuration,
                      long intervalDuration, TimerConfig timerConfig) throws
                      java.lang.IllegalArgumentException, java.lang.IllegalStateException,
-                     javax.ejb.EJBException {
+                     jakarta.ejb.EJBException {
         checkCreateTimerCallPermission();
         checkInitialDuration(initialDuration);
 
@@ -136,7 +132,7 @@ public class EJBTimerServiceWrapper implements TimerService {
     public Timer createSingleActionTimer(Date initialExpiration,
                      TimerConfig timerConfig) throws
                      java.lang.IllegalArgumentException, java.lang.IllegalStateException,
-                     javax.ejb.EJBException {
+                     jakarta.ejb.EJBException {
         checkCreateTimerCallPermission();
         checkExpiration(initialExpiration);
 
@@ -146,7 +142,7 @@ public class EJBTimerServiceWrapper implements TimerService {
     public Timer createIntervalTimer(Date initialExpiration,
                      long intervalDuration, TimerConfig timerConfig) throws
                      java.lang.IllegalArgumentException, java.lang.IllegalStateException,
-                     javax.ejb.EJBException {
+                     jakarta.ejb.EJBException {
         checkCreateTimerCallPermission();
         checkExpiration(initialExpiration);
 
@@ -156,7 +152,7 @@ public class EJBTimerServiceWrapper implements TimerService {
     public Timer createCalendarTimer(ScheduleExpression schedule,
                   TimerConfig timerConfig) throws
                      java.lang.IllegalArgumentException, java.lang.IllegalStateException,
-                     javax.ejb.EJBException {
+                     jakarta.ejb.EJBException {
         checkCreateTimerCallPermission();
         checkScheduleExpression(schedule);
 
@@ -165,7 +161,7 @@ public class EJBTimerServiceWrapper implements TimerService {
 
     public Timer createCalendarTimer(ScheduleExpression schedule) throws
                      java.lang.IllegalArgumentException, java.lang.IllegalStateException,
-                     javax.ejb.EJBException {
+                     jakarta.ejb.EJBException {
         checkCreateTimerCallPermission();
         checkScheduleExpression(schedule);
 

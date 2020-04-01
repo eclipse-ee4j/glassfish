@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,8 +52,8 @@ public class SecuritySniffer extends GenericSniffer {
     
     @SuppressWarnings("unchecked")
     private static final Class<? extends Annotation>[] ejbAnnotations = new Class[]{
-        javax.ejb.Stateless.class, javax.ejb.Stateful.class,
-        javax.ejb.MessageDriven.class, javax.ejb.Singleton.class
+        jakarta.ejb.Stateless.class, jakarta.ejb.Stateful.class,
+        jakarta.ejb.MessageDriven.class, jakarta.ejb.Singleton.class
     };
 
     public SecuritySniffer() {

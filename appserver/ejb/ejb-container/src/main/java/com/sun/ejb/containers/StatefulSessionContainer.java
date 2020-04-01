@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,16 +35,11 @@ import java.util.Set;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.ConcurrentAccessException;
-import javax.ejb.ConcurrentAccessTimeoutException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
-import javax.ejb.IllegalLoopbackException;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.RemoveException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionSynchronization;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContextType;
@@ -85,7 +79,6 @@ import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.util.Utility;
-import com.sun.logging.LogDomains;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -101,7 +94,14 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 
 import static com.sun.ejb.containers.EJBContextImpl.BeanState;
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import static javax.persistence.SynchronizationType.*;
+import jakarta.ejb.ConcurrentAccessException;
+import jakarta.ejb.ConcurrentAccessTimeoutException;
+import jakarta.ejb.IllegalLoopbackException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionSynchronization;
+import java.util.HashMap;
+import static javax.persistence.SynchronizationType.SYNCHRONIZED;
+import org.glassfish.ejb.LogFacade;
 
 /**
  * This class provides container functionality specific to stateful
@@ -1174,8 +1174,8 @@ public final class StatefulSessionContainer
         // javax.ejb.EJBHome, javax.ejb.EJBObject, javax.ejb.EJBLocalHome,
         // javax.ejb.EJBLocalObject
         Class declaringClass = removeMethod.getDeclaringClass();
-        ejbInv.isHome = ((declaringClass == javax.ejb.EJBHome.class) ||
-                (declaringClass == javax.ejb.EJBLocalHome.class));
+        ejbInv.isHome = ((declaringClass == jakarta.ejb.EJBHome.class) ||
+                (declaringClass == jakarta.ejb.EJBLocalHome.class));
 
         try {
             preInvoke(ejbInv);

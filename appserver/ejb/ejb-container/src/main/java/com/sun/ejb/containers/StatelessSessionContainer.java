@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.RemoveException;
-import javax.ejb.SessionBean;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
+import jakarta.ejb.SessionBean;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transaction;
 

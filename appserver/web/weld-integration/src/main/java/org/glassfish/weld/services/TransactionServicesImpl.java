@@ -16,13 +16,13 @@
 
 package org.glassfish.weld.services;
 
-import static javax.transaction.Status.*;
+import static jakarta.transaction.Status.*;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;

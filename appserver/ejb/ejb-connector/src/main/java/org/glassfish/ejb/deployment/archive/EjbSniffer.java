@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,6 @@
 package org.glassfish.ejb.deployment.archive;
 
 import org.glassfish.internal.deployment.GenericSniffer;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleDefinition;
-import com.sun.enterprise.module.common_impl.DirectoryBasedRepository;
-import com.sun.enterprise.module.common_impl.AbstractModulesRegistryImpl;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.ArchiveType;
@@ -32,9 +28,6 @@ import javax.enterprise.deploy.shared.ModuleType;
 import javax.inject.Singleton;
 
 import java.io.IOException;
-import java.io.File;
-import java.util.logging.Logger;
-import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.annotation.Annotation;
@@ -51,8 +44,8 @@ public class EjbSniffer  extends GenericSniffer {
     @Inject EjbType ejbType;
 
     private static final Class[]  ejbAnnotations = new Class[] {
-            javax.ejb.Stateless.class, javax.ejb.Stateful.class,
-            javax.ejb.MessageDriven.class, javax.ejb.Singleton.class };
+            jakarta.ejb.Stateless.class, jakarta.ejb.Stateful.class,
+            jakarta.ejb.MessageDriven.class, jakarta.ejb.Singleton.class };
 
     public EjbSniffer() {
         this("ejb", "META-INF/ejb-jar.xml", null);

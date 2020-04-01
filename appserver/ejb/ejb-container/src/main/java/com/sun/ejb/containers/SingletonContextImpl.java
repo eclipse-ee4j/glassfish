@@ -17,7 +17,7 @@
 package com.sun.ejb.containers;
 
 
-import javax.ejb.TimerService;
+import jakarta.ejb.TimerService;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Status;
 import javax.naming.InitialContext;

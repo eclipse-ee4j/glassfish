@@ -101,7 +101,7 @@
         <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
-	      <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
+        <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
         <easymock.version>3.5</easymock.version>
 	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,10 +18,10 @@ package com.sun.ejb.containers;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import javax.ejb.ConcurrentAccessException;
-import javax.ejb.ConcurrentAccessTimeoutException;
-import javax.ejb.IllegalLoopbackException;
-import javax.ejb.LockType;
+import jakarta.ejb.ConcurrentAccessException;
+import jakarta.ejb.ConcurrentAccessTimeoutException;
+import jakarta.ejb.IllegalLoopbackException;
+import jakarta.ejb.LockType;
 
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.EjbInvocation;

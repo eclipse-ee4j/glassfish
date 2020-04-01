@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +39,6 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.api.naming.GlassfishNamingManager;
 
 import com.sun.enterprise.container.common.spi.util.GlassFishOutputStreamHandler;
-import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 
 /**

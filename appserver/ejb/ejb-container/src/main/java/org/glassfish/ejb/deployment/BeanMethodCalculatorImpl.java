@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -144,7 +144,7 @@ final public class BeanMethodCalculatorImpl {
             
 	    // Session Beans
             if (ejbDescriptor.isRemoteInterfacesSupported()) {                
-                Collection disallowedMethods = extractDisallowedMethodsFor(javax.ejb.EJBObject.class, sessionBeanMethodsDisallowed);
+                Collection disallowedMethods = extractDisallowedMethodsFor(jakarta.ejb.EJBObject.class, sessionBeanMethodsDisallowed);
                 Collection potentials = getTransactionMethodsFor(loader, ejbDescriptor.getRemoteClassName() , disallowedMethods);
                 transformAndAdd(potentials, MethodDescriptor.EJB_REMOTE, methods);
             }
@@ -164,7 +164,7 @@ final public class BeanMethodCalculatorImpl {
             }
 
             if (ejbDescriptor.isLocalInterfacesSupported()) {
-                Collection disallowedMethods = extractDisallowedMethodsFor(javax.ejb.EJBLocalObject.class, sessionLocalBeanMethodsDisallowed);
+                Collection disallowedMethods = extractDisallowedMethodsFor(jakarta.ejb.EJBLocalObject.class, sessionLocalBeanMethodsDisallowed);
                 Collection potentials = getTransactionMethodsFor(loader, ejbDescriptor.getLocalClassName() , disallowedMethods);
                 transformAndAdd(potentials, MethodDescriptor.EJB_LOCAL, methods);
                 
@@ -230,12 +230,12 @@ final public class BeanMethodCalculatorImpl {
             if (homeIntf!=null) {                
  
                 Class home = loader.loadClass(homeIntf);
-                Collection potentials = getTransactionMethodsFor(javax.ejb.EJBHome.class, home);
+                Collection potentials = getTransactionMethodsFor(jakarta.ejb.EJBHome.class, home);
                 transformAndAdd(potentials, MethodDescriptor.EJB_HOME, methods);
                 
                 String remoteIntf = ejbDescriptor.getRemoteClassName();                
                 Class remote = loader.loadClass(remoteIntf);
-                potentials = getTransactionMethodsFor(javax.ejb.EJBObject.class, remote);
+                potentials = getTransactionMethodsFor(jakarta.ejb.EJBObject.class, remote);
                 transformAndAdd(potentials, MethodDescriptor.EJB_REMOTE, methods);
             } 
             
@@ -243,12 +243,12 @@ final public class BeanMethodCalculatorImpl {
             String localHomeIntf = ejbDescriptor.getLocalHomeClassName();
             if (localHomeIntf!=null) { 
                 Class home = loader.loadClass(localHomeIntf);
-                Collection potentials = getTransactionMethodsFor(javax.ejb.EJBLocalHome.class, home);
+                Collection potentials = getTransactionMethodsFor(jakarta.ejb.EJBLocalHome.class, home);
                 transformAndAdd(potentials, MethodDescriptor.EJB_LOCALHOME, methods);
                 
                 String remoteIntf = ejbDescriptor.getLocalClassName();                
                 Class remote = loader.loadClass(remoteIntf);
-                potentials = getTransactionMethodsFor(javax.ejb.EJBLocalObject.class, remote);
+                potentials = getTransactionMethodsFor(jakarta.ejb.EJBLocalObject.class, remote);
                 transformAndAdd(potentials, MethodDescriptor.EJB_LOCAL, methods);                
             }
         }
@@ -341,10 +341,10 @@ final public class BeanMethodCalculatorImpl {
      protected Map getDisallowedMethodsNames() {
          if (disallowedMethodsPerInterface==null) {
             disallowedMethodsPerInterface = new Hashtable();
-            disallowedMethodsPerInterface.put(javax.ejb.EJBHome.class, entityBeanHomeMethodsDisallowed);
-            disallowedMethodsPerInterface.put(javax.ejb.EJBObject.class, entityBeanRemoteMethodsDisallowed);
-            disallowedMethodsPerInterface.put(javax.ejb.EJBLocalHome.class, entityBeanLocalHomeMethodsDisallowed);
-            disallowedMethodsPerInterface.put(javax.ejb.EJBLocalObject.class, entityBeanLocalInterfaceMethodsDisallowed);
+            disallowedMethodsPerInterface.put(jakarta.ejb.EJBHome.class, entityBeanHomeMethodsDisallowed);
+            disallowedMethodsPerInterface.put(jakarta.ejb.EJBObject.class, entityBeanRemoteMethodsDisallowed);
+            disallowedMethodsPerInterface.put(jakarta.ejb.EJBLocalHome.class, entityBeanLocalHomeMethodsDisallowed);
+            disallowedMethodsPerInterface.put(jakarta.ejb.EJBLocalObject.class, entityBeanLocalInterfaceMethodsDisallowed);
          } 
          return disallowedMethodsPerInterface;
      }

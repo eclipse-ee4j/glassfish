@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEntityException;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.TransactionRolledbackLocalException;
-import javax.ejb.TransactionRequiredLocalException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEntityException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.TransactionRolledbackLocalException;
+import jakarta.ejb.TransactionRequiredLocalException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;

@@ -22,10 +22,9 @@ import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 
-import javax.ejb.SessionContext;
-import javax.ejb.TimerService;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.TimerService;
 import jakarta.transaction.UserTransaction;
-import javax.xml.rpc.handler.MessageContext;
 import com.sun.ejb.EJBUtils;
 
 /**
@@ -85,11 +84,6 @@ public abstract class AbstractSessionContextImpl
             throw new IllegalStateException("Operation not allowed");
 
         return ((BaseContainer) getContainer()).getUserTransaction();
-    }
-
-    public MessageContext getMessageContext() {
-        //no jax-rpc anymore
-        return null;
     }
 
     public <T> T getBusinessObject(Class<T> businessInterface)

@@ -40,7 +40,6 @@ import jakarta.transaction.Synchronization;
 import java.util.Timer;
 import java.util.Vector;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.logging.Logger;
 import org.glassfish.ejb.config.EjbContainer;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;

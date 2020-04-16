@@ -23,8 +23,8 @@ package helpers;
 
 import com.sun.appserv.web.cache.*;
 import java.util.Map;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class MyCacheHelper implements CacheHelper {
 

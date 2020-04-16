@@ -21,8 +21,8 @@ import java.io.*;
 import java.net.*;
 import javax.ejb.EJB;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class EjbTest extends HttpServlet {
 

@@ -17,7 +17,7 @@
 package myfilter;
 
 import java.io.*;
-import javax.servlet.*;
+import jakarta.servlet.*;
 import javax.naming.*;
 import javax.annotation.*;
 import javax.sql.DataSource;

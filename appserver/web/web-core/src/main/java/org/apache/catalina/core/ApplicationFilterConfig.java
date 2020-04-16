@@ -23,10 +23,10 @@ import org.apache.catalina.LogFacade;
 import org.apache.catalina.deploy.FilterDef;
 import org.apache.catalina.security.SecurityUtil;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 
 
 /**
- * Implementation of a <code>javax.servlet.FilterConfig</code> useful in
+ * Implementation of a <code>jakarta.servlet.FilterConfig</code> useful in
  * managing the filter instances instantiated when a web application
  * is first started.
  *
@@ -61,7 +61,7 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
      *  constructed
      *
      * @exception ClassCastException if the specified class does not implement
-     *  the <code>javax.servlet.Filter</code> interface
+     *  the <code>jakarta.servlet.Filter</code> interface
      * @exception ClassNotFoundException if the filter class cannot be found
      * @exception IllegalAccessException if the filter class cannot be
      *  publicly instantiated
@@ -303,7 +303,7 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
      * @param filterDef The new filter definition
      *
      * @exception ClassCastException if the specified class does not implement
-     *  the <code>javax.servlet.Filter</code> interface
+     *  the <code>jakarta.servlet.Filter</code> interface
      * @exception ClassNotFoundException if the filter class cannot be found
      * @exception IllegalAccessException if the filter class cannot be
      *  publicly instantiated

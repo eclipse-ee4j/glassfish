@@ -1467,7 +1467,7 @@ a probable memory leak. ::
   Action: Resolve the situation described in the message, if necessary.
 
 [[sthref344]]AS-WEB-CORE-00083 Not allowed to call this
-javax.servlet.ServletContext method from a ServletContextListener that
+jakarta.servlet.ServletContext method from a ServletContextListener that
 was neither declared in the application's deployment descriptor nor
 annotated with WebListener ::
   Cause: As described in the message. +

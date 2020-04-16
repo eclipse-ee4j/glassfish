@@ -191,10 +191,10 @@ The tag element may have several subelements defining:
 name              The unique action name
 
 tag-class         The tag handler class implementing
-                  javax.servlet.jsp.tagext.Tag
+                  jakarta.servlet.jsp.tagext.Tag
 
 tei-class         An optional subclass of
-                  javax.servlet.jsp.tagext.TagExtraInfo
+                  jakarta.servlet.jsp.tagext.TagExtraInfo
 
 body-content      The body content type
 
@@ -230,7 +230,7 @@ the request time semantics for this tag. (required)
 <!ELEMENT tag-class (#PCDATA) >
 
 <!--
-Defines the subclass of javax.servlet.jsp.tagext.TagExtraInfo for
+Defines the subclass of jakarta.servlet.jsp.tagext.TagExtraInfo for
 this tag. (optional)
 
 If this is not given, the class is not consulted at translation time.

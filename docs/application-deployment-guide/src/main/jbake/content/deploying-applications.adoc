@@ -929,12 +929,12 @@ Example 2-22 Setting a Servlet Context-Initialization Parameter for a
 Web Application
 
 This example sets the servlet context-initialization parameter
-javax.faces.STATE_SAVING_METHOD of the web application `basic-ezcomp` to
+jakarta.faces.STATE_SAVING_METHOD of the web application `basic-ezcomp` to
 client.
 
 [source,oac_no_warn]
 ----
-asadmin> set-web-context-param --name=javax.faces.STATE_SAVING_METHOD
+asadmin> set-web-context-param --name=jakarta.faces.STATE_SAVING_METHOD
 --description="The location where the application?s state is preserved"
 --value=client basic-ezcomp
 Command set-web-context-param executed successfully.
@@ -993,12 +993,12 @@ Example 2-23 Unsetting a Servlet Context-Initialization Parameter for a
 Web Application
 
 This example unsets the servlet context-initialization parameter
-javax.faces.STATE_SAVING_METHOD of the web application `basic-ezcomp`.
+jakarta.faces.STATE_SAVING_METHOD of the web application `basic-ezcomp`.
 
 [source,oac_no_warn]
 ----
 asadmin> unset-web-context-param
---name=javax.faces.STATE_SAVING_METHOD basic-ezcomp
+--name=jakarta.faces.STATE_SAVING_METHOD basic-ezcomp
 Command unset-web-context-param executed successfully.
 ----
 
@@ -1043,15 +1043,15 @@ Application
 This example lists all servlet context-initialization parameters of the
 web application `basic-ezcomp` that have been set by using the
 `set-web-context-param` subcommand. Because no description was specified
-when the javax.faces.PROJECT_STAGE parameter was set, null is displayed
+when the jakarta.faces.PROJECT_STAGE parameter was set, null is displayed
 instead of a description for this parameter.
 
 [source,oac_no_warn]
 ----
 asadmin> list-web-context-param basic-ezcomp
-javax.faces.STATE_SAVING_METHOD = client ignoreDescriptorItem=false
+jakarta.faces.STATE_SAVING_METHOD = client ignoreDescriptorItem=false
 //The location where the application's state is preserved
-javax.faces.PROJECT_STAGE = null ignoreDescriptorItem=true //null
+jakarta.faces.PROJECT_STAGE = null ignoreDescriptorItem=true //null
 Command list-web-context-param executed successfully.
 ----
 

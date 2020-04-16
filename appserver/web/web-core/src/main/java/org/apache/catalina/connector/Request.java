@@ -41,29 +41,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterChain;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletRequestAttributeEvent;
-import javax.servlet.ServletRequestAttributeListener;
-import javax.servlet.ServletResponse;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.Part;
-import javax.servlet.http.PushBuilder;
-import javax.servlet.http.WebConnection;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestAttributeEvent;
+import jakarta.servlet.ServletRequestAttributeListener;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
+import jakarta.servlet.http.PushBuilder;
+import jakarta.servlet.http.WebConnection;
 
 import com.sun.appserv.ProxyHandler;
-import javax.servlet.http.MappingMatch;
+import jakarta.servlet.http.MappingMatch;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import org.apache.catalina.Context;
@@ -105,7 +105,7 @@ import org.glassfish.grizzly.http2.Http2Stream;
 import org.glassfish.grizzly.memory.Buffers;
 import org.glassfish.grizzly.utils.Charsets;
 import org.glassfish.web.valve.GlassFishValve;
-import javax.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.HttpServletMapping;
 import static com.sun.logging.LogCleanerUtil.getSafeHeaderValue;
 
 /**
@@ -2991,8 +2991,8 @@ public class Request
      * @exception ServletException if the given <tt>clazz</tt> fails to be
      * instantiated
      *
-     * @see javax.servlet.http.HttpUpgradeHandler
-     * @see javax.servlet.http.WebConnection
+     * @see jakarta.servlet.http.HttpUpgradeHandler
+     * @see jakarta.servlet.http.WebConnection
      *
      * @since Servlet 3.1
      */

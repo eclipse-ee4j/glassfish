@@ -44,7 +44,7 @@
 
 [#|2012-10-19T15:27:26.370-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674846370;_LevelValue=800;|this.makeModuleFor(org.glassfish.main.web.glue, null) returned OSGiModuleImpl:: Bundle = [org.glassfish.main.web.glue [190]], State = [READY]|#]
 
-[#|2012-10-19T15:27:26.371-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674846371;_LevelValue=800;|this.makeModuleFor(org.glassfish.web.javax.servlet.jsp, null) returned OSGiModuleImpl:: Bundle = [org.glassfish.web.javax.servlet.jsp [163]], State = [READY]|#]
+[#|2012-10-19T15:27:26.371-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674846371;_LevelValue=800;|this.makeModuleFor(org.glassfish.web.jakarta.servlet.jsp, null) returned OSGiModuleImpl:: Bundle = [org.glassfish.web.jakarta.servlet.jsp [163]], State = [READY]|#]
 
 [#|2012-10-19T15:27:26.372-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674846372;_LevelValue=800;|this.makeModuleFor(org.glassfish.web.javax.el, null) returned OSGiModuleImpl:: Bundle = [org.glassfish.web.javax.el [116]], State = [READY]|#]
 
@@ -66,7 +66,7 @@
 
 [#|2012-10-19T15:27:28.301-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848301;_LevelValue=800;|this.makeModuleFor(jakarta.servlet-api, 3.0.99.b02) returned OSGiModuleImpl:: Bundle = [jakarta.servlet-api [118]], State = [READY]|#]
 
-[#|2012-10-19T15:27:28.301-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848301;_LevelValue=800;|this.makeModuleFor(javax.servlet.jsp-api, 2.2.1) returned OSGiModuleImpl:: Bundle = [javax.servlet.jsp-api [124]], State = [READY]|#]
+[#|2012-10-19T15:27:28.301-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848301;_LevelValue=800;|this.makeModuleFor(jakarta.servlet.jsp-api, 2.2.1) returned OSGiModuleImpl:: Bundle = [jakarta.servlet.jsp-api [124]], State = [READY]|#]
 
 [#|2012-10-19T15:27:28.302-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848302;_LevelValue=800;|this.makeModuleFor(javax.el-api, 2.2.4) returned OSGiModuleImpl:: Bundle = [javax.el-api [111]], State = [READY]|#]
 
@@ -102,7 +102,7 @@
 
 [#|2012-10-19T15:27:28.318-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848318;_LevelValue=800;|this.makeModuleFor(org.glassfish.main.admingui.console-web-plugin, 4.0.0.SNAPSHOT) returned OSGiModuleImpl:: Bundle = [org.glassfish.main.admingui.console-web-plugin [48]], State = [READY]|#]
 
-[#|2012-10-19T15:27:28.393-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848393;_LevelValue=800;|Snifer org.glassfish.web.sniffer.WebSniffer@1ccb7 set up following modules: [OSGiModuleImpl:: Bundle = [org.glassfish.main.web.glue [190]], State = [READY], OSGiModuleImpl:: Bundle = [org.glassfish.web.javax.servlet.jsp [163]], State = [READY], OSGiModuleImpl:: Bundle = [org.glassfish.web.javax.el [116]], State = [READY]]|#]
+[#|2012-10-19T15:27:28.393-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848393;_LevelValue=800;|Snifer org.glassfish.web.sniffer.WebSniffer@1ccb7 set up following modules: [OSGiModuleImpl:: Bundle = [org.glassfish.main.web.glue [190]], State = [READY], OSGiModuleImpl:: Bundle = [org.glassfish.web.jakarta.servlet.jsp [163]], State = [READY], OSGiModuleImpl:: Bundle = [org.glassfish.web.javax.el [116]], State = [READY]]|#]
 
 [#|2012-10-19T15:27:28.963-0400|INFO|44.0|javax.enterprise.web|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674848963;_LevelValue=800;_MessageID=AS-WEB-00022;|Created HTTP listener http-listener-1 on host/port 0.0.0.0:8080|#]
 
@@ -142,7 +142,7 @@
 
 [#|2012-10-19T15:27:30.727-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674850727;_LevelValue=800;|this.makeModuleFor(jakarta.servlet-api, 3.0.99.b02) returned OSGiModuleImpl:: Bundle = [jakarta.servlet-api [118]], State = [READY]|#]
 
-[#|2012-10-19T15:27:30.727-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674850727;_LevelValue=800;|this.makeModuleFor(javax.servlet.jsp-api, 2.2.1) returned OSGiModuleImpl:: Bundle = [javax.servlet.jsp-api [124]], State = [READY]|#]
+[#|2012-10-19T15:27:30.727-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674850727;_LevelValue=800;|this.makeModuleFor(jakarta.servlet.jsp-api, 2.2.1) returned OSGiModuleImpl:: Bundle = [jakarta.servlet.jsp-api [124]], State = [READY]|#]
 
 [#|2012-10-19T15:27:30.728-0400|INFO|44.0|null|_ThreadID=72;_ThreadName=Thread-12;_TimeMillis=1350674850728;_LevelValue=800;|this.makeModuleFor(javax.el-api, 2.2.4) returned OSGiModuleImpl:: Bundle = [javax.el-api [111]], State = [READY]|#]
 
@@ -244,11 +244,11 @@
 java.lang.Exception
 	at org.apache.jsp.hello_jsp._jspService(hello_jsp.java:71)
 	at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:111)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:790)
 	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:411)
 	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:473)
 	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:377)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:790)
 	at org.apache.catalina.core.StandardWrapper.service(StandardWrapper.java:1593)
 	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:285)
 	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:175)

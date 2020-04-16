@@ -16,8 +16,8 @@
 
 package taglib;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.*;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.*;
 
 public class MyTag extends TagSupport {
 

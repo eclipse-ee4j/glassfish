@@ -16,8 +16,8 @@
 
 package client;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -30,12 +30,12 @@ public class Client extends HttpServlet {
 	   //static OneWay port;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
 	    PrintWriter out=null;
             try {
                 System.out.println(" Service is :" + service);

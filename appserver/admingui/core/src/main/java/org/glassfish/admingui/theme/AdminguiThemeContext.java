@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Enumeration;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 
 
 /**

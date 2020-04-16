@@ -17,10 +17,10 @@
 package org.glassfish.tests.paas.basicdbteardownsql;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -50,7 +50,7 @@ public class DbConnectionDetailsServlet extends HttpServlet{
      * @param request  The servlet request we are processing
      * @param response The servlet response we are producing
      * @throws java.io.IOException      if an input/output error occurs
-     * @throws javax.servlet.ServletException if a servlet error occurs
+     * @throws jakarta.servlet.ServletException if a servlet error occurs
      */
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)

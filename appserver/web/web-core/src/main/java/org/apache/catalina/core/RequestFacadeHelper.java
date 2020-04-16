@@ -25,7 +25,7 @@ import org.apache.catalina.connector.SessionTracker;
 
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 /**
  * This class exposes some of the functionality of

@@ -217,7 +217,7 @@ public abstract class AbstractHandler implements AnnotationHandler {
      * @return an array of all web types annotation
      */
     protected Class<? extends Annotation>[] getWebAnnotationTypes() {
-        return new Class[]{javax.servlet.annotation.WebServlet.class};
+        return new Class[]{jakarta.servlet.annotation.WebServlet.class};
     }
 
     /**

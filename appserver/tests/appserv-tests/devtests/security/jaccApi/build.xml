@@ -61,17 +61,17 @@
       <ant dir="prog-auth" target="all"/>
     </target>
     <target name="run-test" depends="init-common">
-        <java classname="javax.security.jacc.Test" fork="yes"
+        <java classname="jakarta.security.jacc.Test" fork="yes"
             classpath="${s1astest.classpath}"/>
     </target>
 
     <target name="run-pcftests" depends="init-common">
-        <property name="ISPCF" value="-Djavax.security.jacc.PolicyConfigurationFactory.provider=com.sun.s1asdev.security.jaccapi.DummyPolicyConfigurationFactory"/>
-        <property name="NOTPCF" value="-Djavax.security.jacc.PolicyConfigurationFactory.provider=javax.security.jacc.PolicyContextException"/>
+        <property name="ISPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=com.sun.s1asdev.security.jaccapi.DummyPolicyConfigurationFactory"/>
+        <property name="NOTPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=jakarta.security.jacc.PolicyContextException"/>
         <property name="PFL" value="-Djava.security.policy=${basedir}/config/java.policy"/>
         <property name="PFL2" value="-Djava.security.policy=${basedir}/config/java.policy2"/>
 
-        <java classname="javax.security.jacc.TestPCF" fork="yes"
+        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
             <jvmarg value="${PFL2}"/>
@@ -79,7 +79,7 @@
             <arg value="java.lang.ClassNotFoundException"/>
         </java>
 
-        <java classname="javax.security.jacc.TestPCF" fork="yes"
+        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
             <jvmarg value="${NOTPCF}"/>
@@ -88,16 +88,16 @@
             <arg value="java.lang.ClassCastException"/>
         </java>
 
-        <java classname="javax.security.jacc.TestPCF" fork="yes"
+        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
             <jvmarg value="${ISPCF}"/>
             <jvmarg value="${PFL2}"/>
             <arg value="true"/>
-            <arg value="javax.security.jacc.PolicyContextException"/>
+            <arg value="jakarta.security.jacc.PolicyContextException"/>
         </java>
 
-        <java classname="javax.security.jacc.TestPCF" fork="yes"
+        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
             <jvmarg value="${NOTPCF}"/>
@@ -106,7 +106,7 @@
             <arg value="java.lang.ClassCastException"/>
         </java>
 
-        <java classname="javax.security.jacc.TestPCF" fork="yes"
+        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
             <jvmarg value="${ISPCF}"/>
@@ -116,21 +116,21 @@
     </target>
 
     <target name="run-ejbtests" depends="init-common">
-        <java classname="javax.security.jacc.TestEJBPerms" fork="yes"
+        <java classname="jakarta.security.jacc.TestEJBPerms" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-Ddebug=${debug}"/>
         </java>
     </target>
 
     <target name="run-urltests" depends="init-common">
-        <java classname="javax.security.jacc.TestURLPattern" fork="yes"
+        <java classname="jakarta.security.jacc.TestURLPattern" fork="yes"
             classpath="${s1astest.classpath}"/>
-        <java classname="javax.security.jacc.TestURLPatternSpec" fork="yes"
+        <java classname="jakarta.security.jacc.TestURLPatternSpec" fork="yes"
             classpath="${s1astest.classpath}"/>
     </target>
 
     <target name="run-webtests" depends="init-common">
-        <java classname="javax.security.jacc.TestWebPerms" fork="yes"
+        <java classname="jakarta.security.jacc.TestWebPerms" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-Ddebug=${debug}"/>
         </java>

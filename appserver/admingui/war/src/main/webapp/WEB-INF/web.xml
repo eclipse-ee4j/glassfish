@@ -43,11 +43,11 @@
         <param-value>true</param-value>
     </context-param>
     <context-param>
-        <param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
+        <param-name>jakarta.faces.VALIDATE_EMPTY_FIELDS</param-name>
         <param-value>false</param-value>
     </context-param>
     <context-param>
-        <param-name>javax.faces.validator.DISABLE_DEFAULT_BEAN_VALIDATOR</param-name>
+        <param-name>jakarta.faces.validator.DISABLE_DEFAULT_BEAN_VALIDATOR</param-name>
         <param-value>true</param-value>
     </context-param>
 
@@ -65,7 +65,7 @@
     </filter-mapping>
     <servlet>
         <servlet-name>FacesServlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
@@ -129,7 +129,7 @@
         <welcome-file>/index.jsf</welcome-file>
     </welcome-file-list>
     <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <exception-type>jakarta.faces.application.ViewExpiredException</exception-type>
         <location>/</location>
     </error-page>
 

@@ -17,9 +17,9 @@
 package test;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+import jakarta.servlet.http.*;
 
 @WebServlet(urlPatterns={"/test2"}, asyncSupported=true)
 public class TestServlet2 extends HttpServlet implements AsyncListener {

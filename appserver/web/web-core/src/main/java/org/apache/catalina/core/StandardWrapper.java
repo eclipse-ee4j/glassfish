@@ -30,16 +30,16 @@ import java.text.MessageFormat;
 import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.ObjectName;
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.SingleThreadModel;
-import javax.servlet.UnavailableException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.SingleThreadModel;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import org.apache.catalina.Container;
@@ -722,7 +722,7 @@ public class StandardWrapper
 	
         loadServletClass();
 
-        if (!javax.servlet.http.HttpServlet.class.isAssignableFrom(
+        if (!jakarta.servlet.http.HttpServlet.class.isAssignableFrom(
                                                         servletClass)) {
             return DEFAULT_SERVLET_METHODS;
         }
@@ -1966,7 +1966,7 @@ public class StandardWrapper
 
     private Method[] getAllDeclaredMethods(Class<?> c) {
 
-        if (c.equals(javax.servlet.http.HttpServlet.class)) {
+        if (c.equals(jakarta.servlet.http.HttpServlet.class)) {
             return null;
         }
 

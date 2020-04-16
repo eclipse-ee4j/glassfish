@@ -228,7 +228,7 @@
           configuration resource file located at "WEB-INF/faces-config.xml".
           The presence of this attribute on any application configuration
           resource other than the one located at "WEB-INF/faces-config.xml",
-          including any files named using the javax.faces.CONFIG_FILES
+          including any files named using the jakarta.faces.CONFIG_FILES
           attribute, must be ignored.
           
           If metadata-complete is set to "true", the JavaServer Faces
@@ -500,7 +500,7 @@
             <![CDATA[
             <p> The "el-resolver" element contains the fully
             qualified class name of the concrete
-            javax.el.ELResolver implementation class
+            jakarta.el.ELResolver implementation class
             that will be used during the processing of
             EL expressions.</p>
             
@@ -578,7 +578,7 @@
             <![CDATA[
             <p class="changed_added_2_3">The "search-expression-handler"
             element contains the fully qualified class name of the
-            concrete javax.faces.component.search.SearchExpressionHandler
+            concrete jakarta.faces.component.search.SearchExpressionHandler
             implementation class that will be used for processing of a
             search expression.</p>
             
@@ -593,7 +593,7 @@
             <![CDATA[
             <p class="changed_added_2_3"> The "search-keyword-resolver"
             element contains the fully qualified class name of the
-            concrete javax.faces.component.search.SearchKeywordResolver
+            concrete jakarta.faces.component.search.SearchKeywordResolver
             implementation class that will be used during the processing
             of a search expression keyword.</p>
             

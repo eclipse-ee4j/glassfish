@@ -19,7 +19,7 @@ package endpoint;
 import javax.jws.WebService;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 

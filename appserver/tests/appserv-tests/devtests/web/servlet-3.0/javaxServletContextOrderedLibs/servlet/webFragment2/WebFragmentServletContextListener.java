@@ -17,7 +17,7 @@
 package webFragment2;
 
 import java.util.*;
-import javax.servlet.*;
+import jakarta.servlet.*;
 
 public class WebFragmentServletContextListener
         implements ServletContextListener {

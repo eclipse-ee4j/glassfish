@@ -112,7 +112,7 @@ public final class SecurityClassLoad {
     
     private final static void loadJavaxPackage(ClassLoader loader)
         throws Exception {
-        loader.loadClass("javax.servlet.http.Cookie");
+        loader.loadClass("jakarta.servlet.http.Cookie");
     }
     
 

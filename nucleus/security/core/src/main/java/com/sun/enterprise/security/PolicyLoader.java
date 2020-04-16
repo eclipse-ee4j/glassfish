@@ -59,11 +59,11 @@ public class PolicyLoader{
     private static StringManager sm = StringManager.getManager(PolicyLoader.class);
 
     private static final String POLICY_PROVIDER_14 = 
-        "javax.security.jacc.policy.provider";
+        "jakarta.security.jacc.policy.provider";
     private static final String POLICY_PROVIDER_13 = 
-        "javax.security.jacc.auth.policy.provider";
+        "jakarta.security.jacc.auth.policy.provider";
     private static final String POLICY_CONF_FACTORY = 
-        "javax.security.jacc.PolicyConfigurationFactory.provider";
+        "jakarta.security.jacc.PolicyConfigurationFactory.provider";
     private static final String POLICY_PROP_PREFIX =
         "com.sun.enterprise.jaccprovider.property.";
     private boolean isPolicyInstalled = false;
@@ -72,11 +72,11 @@ public class PolicyLoader{
     /**
      * Attempts to install the policy-provider. The policy-provider
      * element in domain.xml is consulted for the class to use. Note
-     * that if the javax.security.jacc.policy.provider system property
+     * that if the jakarta.security.jacc.policy.provider system property
      * is set it will override the domain.xml configuration. This will
      * normally not be the case in S1AS.
      *
-     * <P>The J2EE 1.3 property javax.security.jacc.auth.policy.provider is
+     * <P>The J2EE 1.3 property jakarta.security.jacc.auth.policy.provider is
      * checked as a last resort. It should not be set in J2EE 1.4.
      *
      */

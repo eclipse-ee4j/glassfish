@@ -19,9 +19,9 @@ package test;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.MultipartConfig;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.MultipartConfig;
 
 @MultipartConfig(maxFileSize=20480)
 public class ServletTest extends HttpServlet {

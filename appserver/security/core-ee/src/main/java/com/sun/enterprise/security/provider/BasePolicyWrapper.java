@@ -29,7 +29,7 @@ package com.sun.enterprise.security.provider;
 //import sun.security.provider.PolicyFile;
 import sun.security.util.PropertyExpander;
 import java.security.*;
-import javax.security.jacc.*;
+import jakarta.security.jacc.*;
 import javax.management.MBeanPermission;
 import java.io.File;
 import java.net.URI;
@@ -47,7 +47,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
  * Although this Policy provider is implemented using another Policy class,
  * this class is not a "delegating Policy provider" as defined by JACC, and
  * as such it SHOULD not be configured using the JACC system property
- * javax.security.jacc.policy.provider.
+ * jakarta.security.jacc.policy.provider.
  * @author Harpreet Singh (harpreet.singh@sun.com)  
  * @author Jean-Francois Arcand
  * @author Ron Monzillo
@@ -56,7 +56,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 public class BasePolicyWrapper extends java.security.Policy {
 
     private static final String FACTORY_NAME = 
-	"javax.security.jacc.PolicyConfigurationFactory.provider";
+	"jakarta.security.jacc.PolicyConfigurationFactory.provider";
     private static final String myFactoryName = 
             "com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl";
     // this is the jdk policy file instance

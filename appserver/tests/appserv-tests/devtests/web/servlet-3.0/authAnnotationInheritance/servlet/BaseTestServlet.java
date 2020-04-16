@@ -17,13 +17,13 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.annotation.HttpMethodConstraint;
-import javax.servlet.annotation.ServletSecurity;
-import static javax.servlet.annotation.ServletSecurity.EmptyRoleSemantic.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.annotation.HttpMethodConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
+import static jakarta.servlet.annotation.ServletSecurity.EmptyRoleSemantic.*;
 
 @ServletSecurity(httpMethodConstraints={
         @HttpMethodConstraint(value="POST", rolesAllowed={ "javaee" }),

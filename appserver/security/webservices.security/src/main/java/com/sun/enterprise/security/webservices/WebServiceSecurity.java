@@ -33,7 +33,7 @@ import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 import java.security.Principal;
 import javax.security.auth.Subject;
 import javax.xml.soap.SOAPMessage;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.logging.*;
 

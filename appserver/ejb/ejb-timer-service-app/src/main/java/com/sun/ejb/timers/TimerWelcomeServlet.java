@@ -25,9 +25,9 @@ import java.io.*;
 import java.net.*;
 import java.util.Set;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 import javax.ejb.*;
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 
 import org.glassfish.ejb.persistent.timer.TimerLocal;
 import com.sun.ejb.containers.EJBTimerService;

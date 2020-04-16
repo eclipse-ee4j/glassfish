@@ -25,10 +25,10 @@ import components.components.GraphComponent;
 import components.model.Graph;
 import components.model.Node;
 
-import javax.faces.FacesException;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
+import jakarta.faces.FacesException;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
 
 import java.io.IOException;
 import java.util.Iterator;

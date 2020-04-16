@@ -224,7 +224,7 @@
       <description>
         Value binding expression pointing at (a) a DataModel instance,
         (b) an array of objects, (c) a List of objects, (d) a
-        java.sql.ResultSet (or RowSet), (d) a javax.servlet.jsp.jstl.sql.Result
+        java.sql.ResultSet (or RowSet), (d) a jakarta.servlet.jsp.jstl.sql.Result
         object, or (e) a JavaBean (which will be treated as a one-row dataset).
       </description>
     </attribute>

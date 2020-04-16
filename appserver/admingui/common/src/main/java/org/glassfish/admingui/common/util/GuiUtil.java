@@ -26,7 +26,7 @@ package org.glassfish.admingui.common.util;
 
 import com.sun.jsftemplating.resource.ResourceBundleManager;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 // FIXME: 7-31-08 -- FIX by importing woodstock api's:
 //import com.sun.webui.jsf.model.Option;
 
@@ -49,10 +49,10 @@ import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 import java.io.File;
 
 import java.io.UnsupportedEncodingException;
-import javax.faces.context.ExternalContext;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.faces.context.ExternalContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.glassfish.admingui.common.security.AdminConsoleAuthModule;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -128,7 +128,7 @@ public class GuiUtil {
         }
 
         Object request = externalCtx.getRequest();
-        if (request instanceof javax.servlet.ServletRequest){
+        if (request instanceof jakarta.servlet.ServletRequest){
             ServletRequest srequest = (ServletRequest) request;
             sessionMap.put("hostName", srequest.getServerName());
             String restServerName = (String) sessionMap.get(AdminConsoleAuthModule.REST_SERVER_NAME);

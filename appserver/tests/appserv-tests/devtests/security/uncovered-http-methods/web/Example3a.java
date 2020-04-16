@@ -16,9 +16,9 @@
 
 package org.glassfish.jacc.test.uncoveredmethods;
 
-import javax.servlet.annotation.HttpMethodConstraint;
-import javax.servlet.annotation.ServletSecurity;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.HttpMethodConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet(urlPatterns = {"/Example3a"})
 @ServletSecurity(httpMethodConstraints = {

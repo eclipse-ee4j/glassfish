@@ -28,9 +28,9 @@ import java.util.logging.*;
 import com.sun.logging.LogDomains;
 import java.security.Principal;
 import java.util.ArrayList;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.PolicyContextException;
-import javax.security.jacc.PolicyContextHandler;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContextHandler;
 
 import org.jvnet.hk2.annotations.Service;
 import javax.inject.Singleton;
@@ -94,7 +94,7 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
             // synchronize access to the pool.
             try {
                 wsManager = new WebSecurityManager(wbd);
-            } catch (javax.security.jacc.PolicyContextException e) {
+            } catch (jakarta.security.jacc.PolicyContextException e) {
                 logger.log(Level.FINE, "[Web-Security] FATAl Exception. Unable to create WebSecurityManager: " + e.getMessage());
                 throw new RuntimeException(e);
             }
@@ -140,7 +140,7 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
             // synchronize access to the pool.
             try {
                 wsManager = new WebSecurityManager(wbd, context);
-            } catch (javax.security.jacc.PolicyContextException e) {
+            } catch (jakarta.security.jacc.PolicyContextException e) {
                 logger.log(Level.FINE, "[Web-Security] FATAl Exception. Unable to create WebSecurityManager: " + e.getMessage());
                 throw new RuntimeException(e);
             }
@@ -277,7 +277,7 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
                     addManagerToApp(ctxId, null, appName, manager);
                     probeProvider.securityManagerCreationEvent(ctxId);
                  }
-             } catch (javax.security.jacc.PolicyContextException e) {
+             } catch (jakarta.security.jacc.PolicyContextException e) {
                  logger.log(Level.FINE, "[Web-Security] FATAL Exception. Unable to create WebSecurityManager: " + e.getMessage());
                  throw new RuntimeException(e);
              }

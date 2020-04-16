@@ -16,8 +16,8 @@
 
 package org.glassfish.webservices;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 import com.sun.xml.rpc.spi.JaxRpcObjectFactory;
 import com.sun.xml.rpc.spi.runtime.ServletDelegate;

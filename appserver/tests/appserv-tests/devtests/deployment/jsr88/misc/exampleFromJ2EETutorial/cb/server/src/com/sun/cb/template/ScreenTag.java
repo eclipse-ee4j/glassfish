@@ -15,8 +15,8 @@
  */
 
 package template;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-import javax.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.tagext.SimpleTagSupport;
+import jakarta.servlet.jsp.PageContext;
 import java.util.*;
 
 public class ScreenTag extends SimpleTagSupport {

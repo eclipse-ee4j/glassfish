@@ -18,12 +18,12 @@ package test;
 
 import java.io.IOException;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.WebConnection;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.WebConnection;
 
 public class EchoHttpUpgradeHandler implements HttpUpgradeHandler {
     private String delimiter = "\\";

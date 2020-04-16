@@ -16,8 +16,8 @@
 
 package myclient;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.Serializable;
 import java.io.PrintWriter;
 import java.rmi.RemoteException; 
@@ -32,18 +32,18 @@ public class FindInterestServletClient extends HttpServlet
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
-                throws javax.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            this.resp = resp;
            doPost(req, resp);
     }
                                                                                 
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
        try{
            this.resp = resp;
            calculateInterest();
        }catch(Exception e) {
-          throw new javax.servlet.ServletException(e);
+          throw new jakarta.servlet.ServletException(e);
        }
 
     }

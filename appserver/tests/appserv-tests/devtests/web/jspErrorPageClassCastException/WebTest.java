@@ -29,7 +29,7 @@ public class WebTest {
         = "jsp-error-page-class-cast-exception";
 
     private static final String EXPECTED
-        = "javax.servlet.jsp.JspException: java.lang.Throwable: "
+        = "jakarta.servlet.jsp.JspException: java.lang.Throwable: "
             + "The cake fell in the mud";
 
     private static SimpleReporterAdapter stat

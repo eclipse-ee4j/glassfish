@@ -16,8 +16,8 @@
 
 package client;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.InitialContext;
 import javax.transaction.UserTransaction;
 import java.io.IOException;
@@ -31,12 +31,12 @@ public class Client extends HttpServlet {
        @WebServiceRef(name="sun-web.serviceref/calculator") CalculatorService service;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
 	    UserTransaction ut = null;
             try {
 		ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");

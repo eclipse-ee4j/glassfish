@@ -21,9 +21,9 @@
 package components.renderkit;
 
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.render.Renderer;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.render.Renderer;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -70,17 +70,17 @@ public abstract class BaseRenderer extends Renderer {
         // verify the required Class is loadable
         // PENDING(edburns): Find a way to do this once per ServletContext.
         if (null == Thread.currentThread().getContextClassLoader().
-            getResource("javax.servlet.jsp.jstl.fmt.LocalizationContext")) {
+            getResource("jakarta.servlet.jsp.jstl.fmt.LocalizationContext")) {
             Object[] params = {
-                "javax.servlet.jsp.jstl.fmt.LocalizationContext"
+                "jakarta.servlet.jsp.jstl.fmt.LocalizationContext"
             };
             throw new MissingResourceException("Can't load JSTL classes",
                                                bundleName, key);
         }
 
         // verify there is a ResourceBundle in scoped namescape.
-        javax.servlet.jsp.jstl.fmt.LocalizationContext locCtx = null;
-        if (null == (locCtx = (javax.servlet.jsp.jstl.fmt.LocalizationContext)
+        jakarta.servlet.jsp.jstl.fmt.LocalizationContext locCtx = null;
+        if (null == (locCtx = (jakarta.servlet.jsp.jstl.fmt.LocalizationContext)
             (Util.getValueBinding(bundleName)).getValue(context)) ||
             null == (bundle = locCtx.getResourceBundle())) {
             throw new MissingResourceException("Can't load ResourceBundle ",

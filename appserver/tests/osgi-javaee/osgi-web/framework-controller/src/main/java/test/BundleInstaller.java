@@ -21,7 +21,7 @@
 
 package test;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

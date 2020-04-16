@@ -21,7 +21,7 @@ import java.util.Enumeration;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 @RequestScoped
 public class HttpParams {

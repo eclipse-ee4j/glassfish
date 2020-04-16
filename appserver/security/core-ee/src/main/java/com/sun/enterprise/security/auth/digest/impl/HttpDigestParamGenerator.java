@@ -55,9 +55,9 @@ public final class HttpDigestParamGenerator extends DigestParameterGenerator {
 
 
     public com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter[] generateParameters(AlgorithmParameterSpec param) throws InvalidAlgorithmParameterException {
-        javax.servlet.ServletInputStream sis = null;
+        jakarta.servlet.ServletInputStream sis = null;
 
-        javax.servlet.http.HttpServletRequest request = null;
+        jakarta.servlet.http.HttpServletRequest request = null;
         if (param instanceof com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl) {
             request = ((com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl) param).getValue();
         } else {

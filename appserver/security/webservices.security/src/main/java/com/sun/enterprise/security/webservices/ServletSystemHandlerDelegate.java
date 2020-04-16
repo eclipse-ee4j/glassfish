@@ -89,19 +89,19 @@ public class ServletSystemHandlerDelegate implements SystemHandlerDelegate {
     * com.sun.xml.rpc.server.http.MessageContextProperties.HTTP_SERVLET_REQUEST
     * <br>
     * This property must be
-    * set to the javax.servlet.http.HttpServletRequest object containing the 
+    * set to the jakarta.servlet.http.HttpServletRequest object containing the
     * JAXRPC invocation.
     * <p>
     * com.sun.xml.rpc.server.http.MessageContextProperties.HTTP_SERVLET_RESPONSE
     * <br>
     * This property must be
-    * set to the javax.servlet.http.HttpServletResponse object corresponding to
+    * set to the jakarta.servlet.http.HttpServletResponse object corresponding to
     * the JAXRPC invocation.
     * <p>
     * com.sun.xml.rpc.server.MessageContextProperties.HTTP_SERVLET_CONTEXT
     * <br>
     * This property must be
-    * set to the javax.servlet.ServletContext object corresponding to web application
+    * set to the jakarta.servlet.ServletContext object corresponding to web application
     * in which the JAXRPC servlet is running.
     * @param messageContext the SOAPMessageContext object containing the request
     * message and the properties described above.

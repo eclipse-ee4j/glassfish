@@ -13,8 +13,8 @@ package samples.i18n.simple.servlet;
 import java.io.*;
 import java.util.*;
 import java.text.DateFormat;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 /**
  * This is a simple servlet that demonstrates some of most commonly used i18n features of

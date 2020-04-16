@@ -20,10 +20,10 @@
 
 package components.taglib;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIData;
-import javax.faces.el.ValueBinding;
-import javax.faces.webapp.UIComponentTag;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIData;
+import jakarta.faces.el.ValueBinding;
+import jakarta.faces.webapp.UIComponentTag;
 
 /**
  * <p>DataRepeaterTag is the tag handler class for a <code>UIData</code>
@@ -80,7 +80,7 @@ public class DataRepeaterTag extends UIComponentTag {
 
 
     public String getComponentType() {
-        return ("javax.faces.Data");
+        return ("jakarta.faces.Data");
     }
 
 

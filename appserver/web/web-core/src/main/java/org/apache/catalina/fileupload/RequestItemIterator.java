@@ -22,8 +22,8 @@ package org.apache.catalina.fileupload;
 
 import org.apache.catalina.Globals;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;

@@ -23,10 +23,10 @@ package demo.model;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIData;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIData;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
 import java.util.ArrayList;
 import java.util.List;

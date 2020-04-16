@@ -16,7 +16,7 @@
 
 --%>
 
-<%@ page import="javax.servlet.http.Part" %>
+<%@ page import="jakarta.servlet.http.Part" %>
 
 Beginning
 <%

@@ -19,8 +19,8 @@ package test;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.jms.*;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 public class JSPTagServletContextListener implements ServletContextListener {
 //    @Resource(mappedName = "jms/jms_unit_test_Queue")

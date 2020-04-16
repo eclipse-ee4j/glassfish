@@ -40,23 +40,23 @@
 
     <properties>
         <jms-api.version>2.0.3</jms-api.version>
-        <jsp-api.version>2.3.5</jsp-api.version>
-        <jsp-impl.version>2.3.5</jsp-impl.version>
-        <jstl-impl.version>1.2.6</jstl-impl.version>
-        <jstl-api.version>1.2.5</jstl-api.version>
-        <mojarra.version>2.3.9</mojarra.version>
+        <jsp-api.version>3.0.0-M1</jsp-api.version>
+        <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
+        <jstl-impl.version>2.0.0-SNAPSHOT</jstl-impl.version>
+        <jstl-api.version>2.0.0-RC1</jstl-api.version>
+        <mojarra.version>3.0.0-RC1</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.16</woodstock.version>
         <javax.ejb-api.version>3.2.6</javax.ejb-api.version>
         <jakarta.interceptor-api.version>1.2.5</jakarta.interceptor-api.version>
         <jakarta.xml.rpc-api.version>1.1.3</jakarta.xml.rpc-api.version>
         <javax.transaction-api.version>1.3.3</javax.transaction-api.version>
-        <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
+        <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>
         <cdi-api.version>2.0</cdi-api.version>
         <javax.inject.version>1</javax.inject.version>
         <jakarta.resource-api.version>1.7.4</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
-        <jakarta.authorization-api.version>1.5.0</jakarta.authorization-api.version>
+        <jakarta.authorization-api.version>2.0.0-RC1</jakarta.authorization-api.version>
         <jakarta.security.auth.message-api.version>1.1.3</jakarta.security.auth.message-api.version>
         <!-- Ensure that nucleus/pom.xml's javax.validation property is of same value as the one below -->
         <javax.validation-api.version>2.0.0.Final</javax.validation-api.version>
@@ -254,7 +254,7 @@
                             <jarType>api</jarType>
                             <specVersion>1.2</specVersion>
                             <specImplVersion>${jstl-impl.version}</specImplVersion>
-                            <apiPackage>javax.servlet.jsp.jstl</apiPackage>
+                            <apiPackage>jakarta.servlet.jsp.jstl</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -446,7 +446,7 @@
                             <jarType>api</jarType>
                             <specVersion>2.3</specVersion>
                             <specImplVersion>2.3.1</specImplVersion>
-                            <apiPackage>javax.servlet.jsp</apiPackage>
+                            <apiPackage>jakarta.servlet.jsp</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -564,8 +564,8 @@
                 <version>${jakarta.authorization-api.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -734,8 +734,8 @@
 
                 <exclusions>
                     <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

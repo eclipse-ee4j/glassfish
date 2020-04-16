@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.embedded.jsftest;
 
-import javax.faces.bean.ManagedBean;
+import jakarta.faces.bean.ManagedBean;
 
 /**
  * @author bhavanishankar@java.net

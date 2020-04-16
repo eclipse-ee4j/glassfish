@@ -16,7 +16,7 @@
 
 package taglib;
 
-import javax.servlet.jsp.tagext.*;
+import jakarta.servlet.jsp.tagext.*;
 
 public class MyExtraInfo extends TagExtraInfo {
 

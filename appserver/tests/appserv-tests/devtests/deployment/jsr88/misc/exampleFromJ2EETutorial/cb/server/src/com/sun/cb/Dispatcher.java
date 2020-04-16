@@ -16,8 +16,8 @@
 
 package com.sun.cb;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.util.*;
 import java.math.BigDecimal;
 

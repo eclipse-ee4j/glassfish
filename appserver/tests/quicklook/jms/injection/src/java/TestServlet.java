@@ -22,8 +22,8 @@ import java.net.*;
 import javax.ejb.EJB;
 import javax.naming.*;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class TestServlet extends HttpServlet {
 

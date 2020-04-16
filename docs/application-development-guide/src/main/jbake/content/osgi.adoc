@@ -386,7 +386,7 @@ Then the OSGi metadata for the WAB as specified in
   Bundle-SymbolicName: com.acme.foo
   Bundle-Version: 1.0
   Bundle-Name: Foo Web Application Bundle Version 1.0
-  Import-Package: javax.servlet; javax.servlet.http, version=[3.0, 4.0, 5.0)
+  Import-Package: jakarta.servlet; jakarta.servlet.http, version=[3.0, 4.0, 5.0)
   Bundle-ClassPath: WEB-INF/classes, WEB-INF/lib/lib1.jar, WEB-INF/lib/lib2.jar
   Web-ContextPath: /foo
 ----

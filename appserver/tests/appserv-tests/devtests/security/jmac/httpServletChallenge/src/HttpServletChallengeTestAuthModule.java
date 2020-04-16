@@ -30,9 +30,9 @@ import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.PasswordValidationCallback;
 import javax.security.auth.message.module.ServerAuthModule;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 import sun.misc.BASE64Decoder;
@@ -114,7 +114,7 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
                 if (secondPhase) {
                     System.out.println(" for second level");
                     request.setAttribute("MY_NAME", getClass().getName());
-                    messageInfo.getMap().put("javax.servlet.http.authType", "MC");
+                    messageInfo.getMap().put("jakarta.servlet.http.authType", "MC");
                     return AuthStatus.SUCCESS;
                 } else {
                     System.out.println(" for first level");

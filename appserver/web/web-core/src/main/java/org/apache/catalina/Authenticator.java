@@ -20,7 +20,7 @@ package org.apache.catalina;
 
 import org.apache.catalina.HttpRequest;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 /**
  * An <b>Authenticator</b> is a component (usually a Valve or Container) that

@@ -11,8 +11,8 @@
 package samples.i18n.simple.servlet;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 /**
  * Simple filter to set the character encoding to be used to parse the request.

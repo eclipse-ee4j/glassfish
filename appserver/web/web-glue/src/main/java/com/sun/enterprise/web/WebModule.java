@@ -65,12 +65,12 @@ import org.jvnet.hk2.config.types.Property;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RunAs;
-import javax.servlet.*;
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.ServletSecurity;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.*;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.ServletSecurity;
+import jakarta.servlet.http.HttpSession;
 import java.io.*;
 import java.lang.ClassLoader;
 import java.lang.Object;
@@ -2275,7 +2275,7 @@ class V3WebappLoader extends WebappLoader {
 }
 
 /**
- * Implementation of javax.servlet.ServletRegistration whose addMapping also
+ * Implementation of jakarta.servlet.ServletRegistration whose addMapping also
  * updates the WebBundleDescriptor from the deployment backend.
  */
 class WebServletRegistrationImpl extends ServletRegistrationImpl {

@@ -20,8 +20,8 @@ import java.io.*;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.jms.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class TestServlet extends HttpServlet {
     @Resource(mappedName = "jms/jms_unit_test_Queue")

@@ -39,8 +39,8 @@ import com.sun.xml.rpc.spi.runtime.ServletSecondDelegate;
 import com.sun.xml.rpc.spi.runtime.SystemHandlerDelegate;
 import java.text.MessageFormat;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.xml.ws.WebServiceException;
 import java.util.*;
 import java.util.logging.Logger;

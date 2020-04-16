@@ -19,9 +19,9 @@
 <%@ page contentType="text/plain" %>
 
 <%
-if (request.getAttribute("javax.servlet.include.query_string") == null){
+if (request.getAttribute("jakarta.servlet.include.query_string") == null){
     throw new Exception("Missing request attribute " +
-        "javax.servlet.include.query_string");
+        "jakarta.servlet.include.query_string");
 }
 %>
 

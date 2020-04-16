@@ -16,9 +16,9 @@
 
 import java.io.*;
 
-import javax.servlet.*;
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+import jakarta.servlet.http.*;
 
 @WebServlet(name="hello", urlPatterns="/hello")
 public class TestServlet extends HttpServlet {

@@ -43,10 +43,10 @@ import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessageInfo;
 import javax.security.auth.message.config.ServerAuthConfig;
 import javax.security.auth.message.config.ServerAuthContext;
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import sun.security.x509.X500Name;
 
@@ -102,9 +102,9 @@ import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.util.net.NetUtils;
 
 import javax.inject.Inject;
-import javax.security.jacc.PolicyContext;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;

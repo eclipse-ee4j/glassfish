@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 
 public class MyServletContextListener
         implements ServletContextListener {

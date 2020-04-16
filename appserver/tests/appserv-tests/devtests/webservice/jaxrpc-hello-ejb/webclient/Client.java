@@ -16,14 +16,14 @@
 
 package client;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.naming.InitialContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.xml.rpc.Stub;
 import helloservice.*;
 
@@ -32,12 +32,12 @@ public class Client extends HttpServlet {
 
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
            String targetEndpointAddress = "http://HTTP_HOST:HTTP_PORT/hello-jaxrpc-ejb/hello";//?wsdl
             InitialContext ic = new InitialContext();

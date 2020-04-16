@@ -18,9 +18,9 @@ package samples.ejb.installed_libraries_embedded.servlet;
 
 import java.io.*;
 import java.util.*; 
-import javax.servlet.*; 
+import jakarta.servlet.*;
 import javax.naming.*; 
-import javax.servlet.http.*; 
+import jakarta.servlet.http.*;
 import javax.ejb.*; 
 
 import samples.ejb.installed_libraries_embedded.ejb.*;

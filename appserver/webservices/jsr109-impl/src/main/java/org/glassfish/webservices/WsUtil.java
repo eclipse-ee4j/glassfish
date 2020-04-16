@@ -32,7 +32,7 @@ import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.MessageContext;
 import javax.xml.rpc.ServiceFactory;
@@ -65,7 +65,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.web.deployment.util.WebServerInfo;
 import org.glassfish.web.deployment.util.VirtualServerInfo;

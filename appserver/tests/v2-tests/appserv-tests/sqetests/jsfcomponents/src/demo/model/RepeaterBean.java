@@ -21,11 +21,11 @@
 package demo.model;
 
 
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIData;
-import javax.faces.component.UIInput;
-import javax.faces.component.UISelectBoolean;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIData;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.component.UISelectBoolean;
+import jakarta.faces.context.FacesContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;

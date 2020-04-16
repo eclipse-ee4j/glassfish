@@ -17,9 +17,9 @@
 package test;
 
 import java.io.IOException;
-import javax.servlet.AsyncContext;
-import javax.servlet.AsyncEvent;
-import javax.servlet.AsyncListener;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.AsyncEvent;
+import jakarta.servlet.AsyncListener;
 
 public class AsyncListenerImpl implements AsyncListener {
     private String path = null;

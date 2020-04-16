@@ -20,7 +20,7 @@ import java.io.*;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.jms.*;
-import javax.servlet.*;
+import jakarta.servlet.*;
 import javax.naming.*;
 import javax.annotation.*;
 

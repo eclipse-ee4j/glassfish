@@ -20,7 +20,7 @@ import com.sun.enterprise.deployment.OrderedSet;
 import org.glassfish.deployment.common.Descriptor;
 
 import java.util.Set;
-import javax.servlet.descriptor.JspPropertyGroupDescriptor;
+import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
 
 /**
  */

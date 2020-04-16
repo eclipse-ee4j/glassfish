@@ -17,8 +17,8 @@
 package com.sun.cb;
 
 import javax.xml.soap.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 import javax.xml.transform.*;
 

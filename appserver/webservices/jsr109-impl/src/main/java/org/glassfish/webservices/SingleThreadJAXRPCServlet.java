@@ -16,7 +16,7 @@
 
 package org.glassfish.webservices;
 
-import javax.servlet.SingleThreadModel;
+import jakarta.servlet.SingleThreadModel;
 
 /**
  * Single-threaded JAXRPC Servlet

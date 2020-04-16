@@ -22,11 +22,11 @@ import java.util.logging.Logger;
 
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.InjectionTarget;
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionListener;
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.http.HttpSessionListener;
 
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -60,7 +60,7 @@ import org.jboss.weld.security.spi.SecurityServices;
 import org.jboss.weld.serialization.spi.ProxyServices;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import javax.inject.Inject;
-import javax.servlet.jsp.tagext.JspTag;
+import jakarta.servlet.jsp.tagext.JspTag;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;

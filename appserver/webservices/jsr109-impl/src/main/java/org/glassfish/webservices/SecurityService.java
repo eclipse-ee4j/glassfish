@@ -21,7 +21,7 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.web.WebModule;
 import com.sun.xml.rpc.spi.runtime.SystemHandlerDelegate;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import com.sun.xml.rpc.spi.runtime.SOAPMessageContext;
 import com.sun.xml.rpc.spi.runtime.StreamingHandler;
 import com.sun.xml.ws.assembler.ClientPipelineHook;

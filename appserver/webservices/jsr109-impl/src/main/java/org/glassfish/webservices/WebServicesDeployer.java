@@ -51,7 +51,7 @@ import org.xml.sax.SAXParseException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.servlet.SingleThreadModel;
+import jakarta.servlet.SingleThreadModel;
 import java.io.*;
 import java.net.*;
 import java.nio.channels.FileChannel;

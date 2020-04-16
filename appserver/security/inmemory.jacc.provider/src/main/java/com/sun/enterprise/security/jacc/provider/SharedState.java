@@ -23,8 +23,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
 
 /**
  * 
@@ -137,11 +137,11 @@ public class SharedState {
      * and idempotent. 
      * @param id
      * @param otherId
-     * @throws javax.security.jacc.PolicyContextException If otherID 
+     * @throws jakarta.security.jacc.PolicyContextException If otherID
      * equals receiverID. no relationship is formed.
      */
     static void link(String id, String otherId)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
 
         wLock.lock();
         try {

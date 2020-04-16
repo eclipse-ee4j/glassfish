@@ -18,10 +18,10 @@ package org.glassfish.weld;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.jsp.JspApplicationContext;
-import javax.servlet.jsp.JspFactory;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.jsp.JspApplicationContext;
+import jakarta.servlet.jsp.JspFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

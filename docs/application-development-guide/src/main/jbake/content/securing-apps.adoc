@@ -1784,12 +1784,12 @@ signatures:
 [source,oac_no_warn]
 ----
 public java.lang.Boolean login(String user, String password, 
-    javax.servlet.http.HttpServletRequest request, 
-    javax.servlet.http.HttpServletResponse response)
+    jakarta.servlet.http.HttpServletRequest request,
+    jakarta.servlet.http.HttpServletResponse response)
 
 public java.lang.Boolean login(String user, String password, 
-    String realm, javax.servlet.http.HttpServletRequest request, 
-    javax.servlet.http.HttpServletResponse response, boolean errors) 
+    String realm, jakarta.servlet.http.HttpServletRequest request,
+    jakarta.servlet.http.HttpServletResponse response, boolean errors)
     throws java.lang.Exception
 ----
 
@@ -2113,8 +2113,8 @@ import javax.security.enterprise.authentication.mechanism.http.HttpMessageContex
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
  
 import static javax.security.enterprise.identitystore.CredentialValidationResult.Status.VALID;
  
@@ -2305,8 +2305,8 @@ package tip.sam;
    import javax.security.auth.message.callback.GroupPrincipalCallback;
    import javax.security.auth.message.callback.PasswordValidationCallback;
    import javax.security.auth.message.module.ServerAuthModule;
-   import javax.servlet.http.HttpServletRequest;
-   import javax.servlet.http.HttpServletResponse;
+   import jakarta.servlet.http.HttpServletRequest;
+   import jakarta.servlet.http.HttpServletResponse;
    import org.apache.catalina.util.Base64;
 
    public class MySam implements ServerAuthModule {
@@ -2467,7 +2467,7 @@ package tip.sam;
    }
 
    private static final String AUTH_TYPE_INFO_KEY =
-           "javax.servlet.http.authType";
+           "jakarta.servlet.http.authType";
 
    // distinguish the caller principal
    // and assign default groups

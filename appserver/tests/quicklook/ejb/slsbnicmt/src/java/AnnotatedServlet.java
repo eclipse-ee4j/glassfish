@@ -18,8 +18,8 @@ package slsbnicmt;
 
 import java.io.*;
 import java.net.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.ejb.EJB;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;

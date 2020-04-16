@@ -27,8 +27,8 @@ import javax.security.enterprise.authentication.mechanism.http.HttpMessageContex
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.stream.*;
 import java.util.List;
 import java.util.ArrayList;

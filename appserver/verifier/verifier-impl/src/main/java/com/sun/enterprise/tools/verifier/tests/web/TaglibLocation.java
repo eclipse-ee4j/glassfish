@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.tools.verifier.tests.web;
 
-import javax.servlet.descriptor.*;
+import jakarta.servlet.descriptor.*;
 import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.tools.verifier.*;
 import com.sun.enterprise.tools.verifier.tests.*;

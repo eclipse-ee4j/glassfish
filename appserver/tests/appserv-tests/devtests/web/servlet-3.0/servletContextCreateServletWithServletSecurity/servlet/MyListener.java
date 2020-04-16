@@ -16,11 +16,11 @@
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.annotation.ServletSecurity.EmptyRoleSemantic;
-import javax.servlet.annotation.ServletSecurity.TransportGuarantee;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.ServletSecurity.EmptyRoleSemantic;
+import jakarta.servlet.annotation.ServletSecurity.TransportGuarantee;
 
-@javax.servlet.annotation.WebListener
+@jakarta.servlet.annotation.WebListener
 public class MyListener implements ServletContextListener {
 
     /**

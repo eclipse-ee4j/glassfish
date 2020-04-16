@@ -19,7 +19,7 @@ package com.sun.enterprise.tools.verifier.tests.web;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import javax.servlet.descriptor.*;
+import jakarta.servlet.descriptor.*;
 
 import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;

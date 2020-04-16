@@ -20,7 +20,7 @@ import com.sun.enterprise.tools.verifier.Result;
 
 /** 
  * Filter class must implement a valid interface.
- * Verify that the Filter class implements the javax.servlet.Filter interface
+ * Verify that the Filter class implements the jakarta.servlet.Filter interface
  *
  * @author Jerome Dochez
  * @version 1.0
@@ -41,6 +41,6 @@ public class FilterClassImplementsValidInterface extends FilterClass implements 
         if (filterClass==null) {
             return false;
         }
-        return testImplementationOf(filterClass, "javax.servlet.Filter", result);
+        return testImplementationOf(filterClass, "jakarta.servlet.Filter", result);
     }
 }

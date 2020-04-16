@@ -31,7 +31,7 @@ import com.sun.enterprise.security.web.integration.WebSecurityManager;
 public class HttpServletHelper extends ConfigHelper {
     private String realmName = null;
 
-    public static final String AUTH_TYPE = "javax.servlet.http.authType";
+    public static final String AUTH_TYPE = "jakarta.servlet.http.authType";
 
     public HttpServletHelper(String appContext, Map map,
             CallbackHandler cbh, String realmName,

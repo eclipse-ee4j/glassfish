@@ -16,10 +16,10 @@
 
 import java.io.*;
 import java.net.*;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.SessionCookieConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.SessionCookieConfig;
 
 public class MyListener implements ServletContextListener {
 

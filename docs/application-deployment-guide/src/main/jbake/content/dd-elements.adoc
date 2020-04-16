@@ -2710,7 +2710,7 @@ Specifies session cookie properties.
 
 If cookie settings are defined declaratively in the `web.xml` file, the
 cookie properties defined here take precedence. If cookie settings are
-defined programmatically using `javax.servlet.SessionCookieConfig`
+defined programmatically using `jakarta.servlet.SessionCookieConfig`
 methods, those cookie settings take precedence over the cookie
 properties defined here.
 
@@ -4961,7 +4961,7 @@ or
 domain-dir`/generated/`module-name
 
  |Specifies a temporary directory for use by this web module. This value
-is used to construct the value of the `javax.servlet.context.``tempdir`
+is used to construct the value of the `jakarta.servlet.context.``tempdir`
 context attribute. Compiled JSP files are also placed in this directory.
 
 |`useResponseCTForHeaders` |`false` |If `true`, response headers are

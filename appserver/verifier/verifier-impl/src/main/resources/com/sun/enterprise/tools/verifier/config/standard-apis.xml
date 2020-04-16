@@ -413,7 +413,7 @@ The above command must not print any exceptions.
     <!-- Now the API refs-->
     
     <api name_version="JSTL_1.2">
-        <classes package="javax.servlet.jsp.jstl.core">
+        <classes package="jakarta.servlet.jsp.jstl.core">
             <!--interface list-->
             LoopTag
             LoopTagStatus
@@ -426,18 +426,18 @@ The above command must not print any exceptions.
             LoopTagSupport
             StringTokenValueExpression
         </classes>
-        <classes package="javax.servlet.jsp.jstl.fmt">
+        <classes package="jakarta.servlet.jsp.jstl.fmt">
             LocaleSupport
             LocalizationContext
         </classes>
-        <classes package="javax.servlet.jsp.jstl.sql">
+        <classes package="jakarta.servlet.jsp.jstl.sql">
             <!--interface list-->
             Result
             SQLExecutionTag
             <!--class list-->
             ResultSupport
         </classes>
-        <classes package="javax.servlet.jsp.jstl.tlv">
+        <classes package="jakarta.servlet.jsp.jstl.tlv">
             PermittedTaglibsTLV
             ScriptFreeTLV
         </classes>
@@ -450,7 +450,7 @@ The above command must not print any exceptions.
             <!--exception-->
             FacesException
         </classes>
-        <classes package="javax.faces.application">
+        <classes package="jakarta.faces.application">
             <!--class list-->
             Application
             ApplicationFactory
@@ -465,7 +465,7 @@ The above command must not print any exceptions.
             <!--exception-->
             ViewExpiredException
         </classes>
-        <classes package="javax.faces.component">
+        <classes package="jakarta.faces.component">
             <!--interface list-->
             ActionSource
             ActionSource2
@@ -495,7 +495,7 @@ The above command must not print any exceptions.
             UISelectOne
             UIViewRoot                       
         </classes>
-        <classes package="javax.faces.component.html">
+        <classes package="jakarta.faces.component.html">
             <!--class list-->
             HtmlColumn
             HtmlCommandButton
@@ -523,7 +523,7 @@ The above command must not print any exceptions.
             HtmlSelectOneMenu
             HtmlSelectOneRadio
         </classes>
-        <classes package="javax.faces.context">
+        <classes package="jakarta.faces.context">
             <!--class list-->
             ExternalContext
             FacesContext
@@ -532,7 +532,7 @@ The above command must not print any exceptions.
             ResponseWriter
             ResponseWriterWrapper       
        </classes>
-       <classes package="javax.faces.convert">
+       <classes package="jakarta.faces.convert">
             <!--interface list-->
             Converter
             <!--class list-->
@@ -551,7 +551,7 @@ The above command must not print any exceptions.
             <!--exception-->
             ConverterException            
        </classes>
-       <classes package="javax.faces.el">
+       <classes package="jakarta.faces.el">
             <!--class list-->
             PropertyResolver
             MethodBinding
@@ -563,7 +563,7 @@ The above command must not print any exceptions.
             PropertyNotFoundException
             ReferenceSyntaxException            
       </classes>
-      <classes package="javax.faces.event ">
+      <classes package="jakarta.faces.event ">
             <!--interface list-->
             ActionListener
             FacesListener
@@ -580,12 +580,12 @@ The above command must not print any exceptions.
             <!--exception-->
             AbortProcessingException
       </classes>
-      <classes package="javax.faces.lifecycle">
+      <classes package="jakarta.faces.lifecycle">
             <!--class list-->
             Lifecycle
             LifecycleFactory
       </classes>
-      <classes package="javax.faces.model">
+      <classes package="jakarta.faces.model">
             <!--interface list-->
             DataModelListener
             <!--class list-->
@@ -599,14 +599,14 @@ The above command must not print any exceptions.
             SelectItem
             SelectItemGroup            
       </classes>
-      <classes package="javax.faces.render">
+      <classes package="jakarta.faces.render">
             <!--class list-->
             Renderer
             RenderKit
             RenderKitFactory
             ResponseStateManager
       </classes>
-      <classes package="javax.faces.validator">
+      <classes package="jakarta.faces.validator">
             <!--interface list-->
             Validator
             <!--class list-->
@@ -617,7 +617,7 @@ The above command must not print any exceptions.
             <!--exception-->
             ValidatorException
       </classes>
-      <classes package="javax.faces.webapp">
+      <classes package="jakarta.faces.webapp">
             <!--interface list-->
             
             <!--class list-->
@@ -1056,7 +1056,7 @@ The above command must not print any exceptions.
     </api>
     
     <api name_version="Servlet_2.2">
-        <classes package="javax.servlet">
+        <classes package="jakarta.servlet">
             RequestDispatcher
             Servlet
             ServletConfig
@@ -1070,7 +1070,7 @@ The above command must not print any exceptions.
             ServletException
             UnavailableException
         </classes>
-        <classes package="javax.servlet.http">
+        <classes package="jakarta.servlet.http">
             Cookie
             HttpServletRequest
             HttpServletResponse
@@ -1085,7 +1085,7 @@ The above command must not print any exceptions.
 
     <api name_version="Servlet_2.3">
         <api_ref api_name_version="Servlet_2.2"/>
-        <classes package="javax.servlet">
+        <classes package="jakarta.servlet">
             Filter
             FilterChain
             FilterConfig
@@ -1096,7 +1096,7 @@ The above command must not print any exceptions.
             ServletRequestWrapper
             ServletResponseWrapper
         </classes>
-        <classes package="javax.servlet.http">
+        <classes package="jakarta.servlet.http">
             HttpSessionActivationListener
             HttpSessionAttributeListener
             HttpSessionListener
@@ -1108,7 +1108,7 @@ The above command must not print any exceptions.
     
     <api name_version="Servlet_2.4">
         <api_ref api_name_version="Servlet_2.3"/>
-        <classes package="javax.servlet">
+        <classes package="jakarta.servlet">
             ServletRequestAttributeListener
             ServletRequestListener
             ServletRequestAttributeEvent
@@ -1122,7 +1122,7 @@ The above command must not print any exceptions.
     
     <!-- taken from J2EE 1.2.1 api specs-->
     <api name_version="JSP_1.1">
-        <classes package="javax.servlet.jsp">
+        <classes package="jakarta.servlet.jsp">
             <!--Interfaces -->
             HttpJspPage
             JspPage
@@ -1135,7 +1135,7 @@ The above command must not print any exceptions.
             JspException
             JspTagException
         </classes>
-        <classes package="javax.servlet.jsp.tagext">
+        <classes package="jakarta.servlet.jsp.tagext">
             <!-- Interfaces -->
             BodyTag
             Tag
@@ -1155,7 +1155,7 @@ The above command must not print any exceptions.
     <!-- taken from J2EE 1.3 api javadocs-->
     <api name_version="JSP_1.2">
         <api_ref api_name_version="JSP_1.1"/>
-        <classes package="javax.servlet.jsp.tagext">
+        <classes package="jakarta.servlet.jsp.tagext">
             IterationTag
             TryCatchFinally
             PageData
@@ -1167,13 +1167,13 @@ The above command must not print any exceptions.
     
     <api name_version="JSP_2.0">
         <api_ref api_name_version="JSP_1.2"/>
-        <classes package="javax.servlet.jsp">
+        <classes package="jakarta.servlet.jsp">
             ErrorData
             JspContext
             <!-- Exceptions -->
             SkipPageException
         </classes>
-        <classes package="javax.servlet.jsp.tagext">
+        <classes package="jakarta.servlet.jsp.tagext">
             DynamicAttributes
             JspTag
             SimpleTag
@@ -1183,7 +1183,7 @@ The above command must not print any exceptions.
             TagAdapter
             TagFileInfo
         </classes>
-        <classes package="javax.servlet.jsp.el">
+        <classes package="jakarta.servlet.jsp.el">
             <!-- Interfaces -->
             FunctionMapper
             VariableResolver
@@ -1198,16 +1198,16 @@ The above command must not print any exceptions.
     
     <api name_version="JSP_2.1">
         <api_ref api_name_version="JSP_2.0"/>
-        <classes package="javax.servlet.jsp.el">
+        <classes package="jakarta.servlet.jsp.el">
             <!-- Classes -->
             ImplicitObjectELResolver
             ScopedAttributeELResolver
         </classes>
-        <classes package="javax.servlet.jsp">
+        <classes package="jakarta.servlet.jsp">
             <!--interfaces-->
             JspApplicationContext
         </classes>
-        <classes package="javax.servlet.jsp.tagext">
+        <classes package="jakarta.servlet.jsp.tagext">
             <!--interfaces-->
             JspIdConsumer        
         </classes>
@@ -1920,7 +1920,7 @@ The above command must not print any exceptions.
         </packages>
     </api>
     <api name_version="JACC_1.0">
-        <classes package="javax.security.jacc">
+        <classes package="jakarta.security.jacc">
             <!-- interfaces -->
             PolicyConfiguration
             PolicyContextHandler

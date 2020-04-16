@@ -19,15 +19,15 @@ package com.sun.enterprise.tools.verifier.tests.web;
 import com.sun.enterprise.tools.verifier.tests.web.WebTest;
 import java.util.*;
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.tools.verifier.*;
 import com.sun.enterprise.tools.verifier.tests.*;
 
 /** 
  * Servlet Interface test.
- * Servlets must implement the javax.servlet.Servlet interface 
+ * Servlets must implement the jakarta.servlet.Servlet interface
  * either directly or indirectly through GenericServlet or HttpServlet
  */
 public class ServletInterface extends WebTest implements WebCheck { 
@@ -36,7 +36,7 @@ public class ServletInterface extends WebTest implements WebCheck {
       
     /**
      * Servlet Interface test.
-     * Servlets must implement the javax.servlet.Servlet interface 
+     * Servlets must implement the jakarta.servlet.Servlet interface
      * either directly or indirectly through GenericServlet or HttpServlet
      * 
      * @param descriptor the Web deployment descriptor
@@ -80,14 +80,14 @@ public class ServletInterface extends WebTest implements WebCheck {
 				  new Object[] {servletClassName}));
                     notPassOrFail = false;
                 }
-		else if (isImplementorOf(c, "javax.servlet.Servlet")) {
+		else if (isImplementorOf(c, "jakarta.servlet.Servlet")) {
 		    result.addGoodDetails(smh.getLocalString
 				       ("tests.componentNameConstructor",
 					"For [ {0} ]",
 					new Object[] {compName.toString()}));
 		    result.addGoodDetails(smh.getLocalString
 					  (getClass().getName() + ".passed",
-					   "Servlet class [ {0} ] directly or indirectly implements javax.servlet.Servlet",
+					   "Servlet class [ {0} ] directly or indirectly implements jakarta.servlet.Servlet",
 					   new Object[] {servletClassName}));	    
                     notPassOrFail = false;
 		} else {
@@ -98,7 +98,7 @@ public class ServletInterface extends WebTest implements WebCheck {
 					new Object[] {compName.toString()}));
 		    result.addErrorDetails(smh.getLocalString
 					   (getClass().getName() + ".failed",
-					    "Error: Servlet class [ {0} ] does not directly or indirectly implement javax.servlet.Servlet",
+					    "Error: Servlet class [ {0} ] does not directly or indirectly implement jakarta.servlet.Servlet",
 					    new Object[] {servletClassName}));
                     notPassOrFail = false;
 		}                       

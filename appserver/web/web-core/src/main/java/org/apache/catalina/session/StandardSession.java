@@ -28,8 +28,8 @@ import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.util.Enumerator;
 import org.apache.tomcat.util.security.PrivilegedSetTccl;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.*;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.*;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.security.AccessController;

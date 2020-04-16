@@ -21,7 +21,7 @@ import com.sun.xml.ws.api.server.ResourceInjector;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.api.server.Module;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import com.sun.xml.ws.transport.http.servlet.ServletModule;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.enterprise.deployment.WebServiceEndpoint;

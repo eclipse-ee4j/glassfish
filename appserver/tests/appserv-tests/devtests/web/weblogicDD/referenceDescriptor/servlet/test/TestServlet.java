@@ -22,9 +22,9 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.jms.Queue;
 import javax.naming.InitialContext;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
 import javax.sql.DataSource;
 
 @WebServlet("/mytest")

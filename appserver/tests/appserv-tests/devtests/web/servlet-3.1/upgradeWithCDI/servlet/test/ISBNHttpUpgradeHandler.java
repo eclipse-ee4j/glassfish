@@ -18,9 +18,9 @@ package test;
 
 import javax.inject.Inject;
 import javax.naming.InitialContext;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.WebConnection;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.WebConnection;
 
 /**
  * The protocol is as follows:

@@ -369,7 +369,7 @@
                             
                             The "el-resolver" element contains the fully
                             qualified class name of the concrete
-                            javax.el.ELResolver implementation class
+                            jakarta.el.ELResolver implementation class
                             that will be used during the processing of
                             EL expressions.
                             

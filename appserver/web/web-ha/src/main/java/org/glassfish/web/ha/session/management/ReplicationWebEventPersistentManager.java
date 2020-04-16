@@ -40,8 +40,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.PerLookup;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -143,9 +143,9 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
     }
     
     private Session getSession(ServletRequest request) {
-        javax.servlet.http.HttpServletRequest httpReq =
-            (javax.servlet.http.HttpServletRequest) request;
-        javax.servlet.http.HttpSession httpSess = httpReq.getSession(false);
+        jakarta.servlet.http.HttpServletRequest httpReq =
+            (jakarta.servlet.http.HttpServletRequest) request;
+        jakarta.servlet.http.HttpSession httpSess = httpReq.getSession(false);
         if(httpSess == null) {
             return null;
         }

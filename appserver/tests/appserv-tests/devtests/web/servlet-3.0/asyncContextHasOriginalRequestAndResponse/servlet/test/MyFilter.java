@@ -17,9 +17,9 @@
 package test;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 @WebFilter(urlPatterns = {"/test"}, asyncSupported = true)
 public class MyFilter implements Filter {

@@ -12,9 +12,9 @@ package samples.i18n.simple.servlet;
 
 
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 
 import java.util.*;
 

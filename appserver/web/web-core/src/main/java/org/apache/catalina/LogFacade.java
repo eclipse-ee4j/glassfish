@@ -558,7 +558,7 @@ public class LogFacade {
     public static final String NULL_RESPONSE_OBJECT = prefix + "00082";
 
     @LogMessageInfo(
-        message = "Not allowed to call this javax.servlet.ServletContext method from a ServletContextListener that was neither declared in the application's deployment descriptor nor annotated with WebListener",
+        message = "Not allowed to call this jakarta.servlet.ServletContext method from a ServletContextListener that was neither declared in the application's deployment descriptor nor annotated with WebListener",
         level = "INFO"
     )
     public static final String UNSUPPORTED_OPERATION_EXCEPTION = prefix + "00083";

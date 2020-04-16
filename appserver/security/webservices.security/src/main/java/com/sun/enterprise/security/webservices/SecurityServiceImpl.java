@@ -29,7 +29,7 @@ import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.HandlerInfo;
 import org.glassfish.webservices.Ejb2RuntimeEndpointInfo;
@@ -60,7 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import javax.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContext;
 import javax.xml.soap.SOAPMessage;
 
 /**

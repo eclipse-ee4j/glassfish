@@ -270,7 +270,7 @@ Follow these guidelines when using HTTP sessions:
 
 * Create sessions sparingly. Session creation is not free. If a session
 is not required, do not create one.
-* Use `javax.servlet.http.HttpSession.invalidate()` to release sessions
+* Use `jakarta.servlet.http.HttpSession.invalidate()` to release sessions
 when they are no longer needed.
 * Keep session size small, to reduce response times. If possible, keep
 session size below 7 kilobytes.

@@ -20,8 +20,8 @@ import java.io.*;
 import javax.annotation.Resource;
 import javax.annotation.Resources;
 import javax.naming.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.sql.DataSource;
 
 @Resource(name="myDataSource4", type=DataSource.class)

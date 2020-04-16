@@ -36,8 +36,8 @@ import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.Subject;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.ietf.jgss.Oid;
 import org.ietf.jgss.GSSContext;
@@ -69,10 +69,10 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
         "assign.groups";
 
     private static String POLICY_CONTEXT_OPTIONS_KEY = 
-        "javax.security.jacc.PolicyContext";
+        "jakarta.security.jacc.PolicyContext";
 
     public static final String AUTH_TYPE_INFO_KEY = 
-        "javax.servlet.http.authType";
+        "jakarta.servlet.http.authType";
 
     private static String IS_MANDATORY_INFO_KEY = 
         "javax.security.auth.message.MessagePolicy.isMandatory";
@@ -87,8 +87,8 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
 
     private static Class[] supportedMessageTypes = new Class[] 
     { 
-	javax.servlet.http.HttpServletRequest.class,
-	javax.servlet.http.HttpServletResponse.class 
+	jakarta.servlet.http.HttpServletRequest.class,
+	jakarta.servlet.http.HttpServletResponse.class
     };            
     
     private MessagePolicy requestPolicy;

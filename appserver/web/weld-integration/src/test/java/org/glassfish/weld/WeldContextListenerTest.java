@@ -26,11 +26,11 @@ import static org.easymock.EasyMock.*;
 import org.jboss.weld.module.web.el.WeldELContextListener;
 import org.junit.Test;
 
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
+import jakarta.el.ELResolver;
+import jakarta.el.ExpressionFactory;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.jsp.JspApplicationContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.jsp.JspApplicationContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

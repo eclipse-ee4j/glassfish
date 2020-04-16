@@ -27,7 +27,7 @@ import java.util.logging.Level;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;

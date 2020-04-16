@@ -40,56 +40,28 @@ def jobs = [
   "connector_group_4"
 ]
 
-def parallelStagesMap = jobs.collectEntries {
-  ["${it}": generateStage(it)]
-}
-
-def generateStage(job) {
-    return {
-        podTemplate(label: env.label) {
-            node(label) {
-                stage("${job}") {
-                    container('glassfish-ci') {
-                      // do the scm checkout
-                      retry(10) {
-                        sleep 60
-                        checkout scm
-                      }
-                      // run the test
-                      unstash 'build-bundles'
-                      try {
-                          retry(3) {
-                              timeout(time: 2, unit: 'HOURS') {
-                                sh "./appserver/tests/gftest.sh run_test ${job}"
-                              }
-                          }
-                      } finally {
-                        // archive what we can...
-                        archiveArtifacts artifacts: "${job}-results.tar.gz"
-                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
-                      }
-                    }
-                }
-            }
-        }
-    }
-}
-
 pipeline {
+  
   options {
     // keep at most 50 builds
     buildDiscarder(logRotator(numToKeepStr: '50'))
+    
     // preserve the stashes to allow re-running a test stage
     preserveStashes()
+    
     // issue related to default 'implicit' checkout, disable it
     skipDefaultCheckout()
+    
     // abort pipeline if previous stage is unstable
     skipStagesAfterUnstable()
+    
     // show timestamps in logs
     timestamps()
+    
     // global timeout, abort after 6 hours
     timeout(time: 6, unit: 'HOURS')
   }
+  
   agent {
     kubernetes {
       label "${env.label}"
@@ -132,17 +104,18 @@ spec:
         memory: "1Gi"
         cpu: "1"
   - name: glassfish-ci
-    image: ee4jglassfish/ci:tini-jdk-8.181
+    # Docker image defined in this project in [glassfish]/etc/docker/Dockerfile
+    image: ee4jglassfish/ci:tini-jdk-8.181 
     args:
     - cat
     tty: true
     imagePullPolicy: Always
     volumeMounts:
-      - mountPath: "/home/jenkins"
-        name: "jenkins-home"
+      - name: "jenkins-home"
+        mountPath: "/home/jenkins"
         readOnly: false
-      - mountPath: /home/jenkins/.m2/repository
-        name: maven-repo-shared-storage
+      - name: maven-repo-shared-storage 
+        mountPath: /home/jenkins/.m2/repository
       - name: settings-xml
         mountPath: /home/jenkins/.m2/settings.xml
         subPath: settings.xml
@@ -151,8 +124,8 @@ spec:
         mountPath: /home/jenkins/.m2/settings-security.xml
         subPath: settings-security.xml
         readOnly: true
-      - mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
-        name: maven-repo-local-storage
+      - name: maven-repo-local-storage
+        mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
     env:
       - name: "MAVEN_OPTS"
         value: "-Duser.home=/home/jenkins"
@@ -165,12 +138,14 @@ spec:
 """
     }
   }
+  
   environment {
     S1AS_HOME = "${WORKSPACE}/glassfish6/glassfish"
     APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
     TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
     GF_INTERNAL_ENV = credentials('gf-internal-env')
   }
+  
   stages {
     stage('build') {
       agent {
@@ -181,21 +156,20 @@ spec:
       steps {
         container('glassfish-ci') {
           timeout(time: 1, unit: 'HOURS') {
+            
+            // do the scm checkout
             checkout scm
+            
             // do the build
             sh '''
               echo Maven version
               mvn -v
               
-              echo settings.xml
+              echo User
+              id
               
-              cat /home/jenkins/.m2/settings.xml
-              
-              
-              echo settings-security.xml
-              
-              cat /home/jenkins/.m2/settings-security.xml
-              
+              echo Uname
+              uname -a
               
               bash -xe ./gfbuild.sh build_re_dev
             '''
@@ -206,6 +180,7 @@ spec:
         }
       }
     }
+    
     stage('tests') {
       steps {
         script {
@@ -214,4 +189,41 @@ spec:
       }
     }
   }
+}
+
+def parallelStagesMap = jobs.collectEntries {
+  ["${it}": generateStage(it)]
+}
+
+def generateStage(job) {
+    return {
+        podTemplate(label: env.label) {
+            node(label) {
+                stage("${job}") {
+                    container('glassfish-ci') {
+                      // do the scm checkout
+                      retry(10) {
+                        sleep 60
+                        checkout scm
+                      }
+                      
+                      // run the test
+                      unstash 'build-bundles'
+                      
+                      try {
+                          retry(3) {
+                              timeout(time: 2, unit: 'HOURS') {
+                                sh "./appserver/tests/gftest.sh run_test ${job}"
+                              }
+                          }
+                      } finally {
+                        // archive what we can...
+                        archiveArtifacts artifacts: "${job}-results.tar.gz"
+                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
+                      }
+                    }
+                }
+            }
+        }
+    }
 }

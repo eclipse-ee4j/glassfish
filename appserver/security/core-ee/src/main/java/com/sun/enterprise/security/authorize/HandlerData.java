@@ -17,7 +17,7 @@
 package com.sun.enterprise.security.authorize;
 
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.sun.enterprise.security.ee.PermissionCacheFactory;
 import com.sun.enterprise.security.SecurityContext;

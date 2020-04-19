@@ -17,7 +17,7 @@
 
 package org.apache.catalina.util;
 
-import javax.servlet.ServletOutputStream;
+import jakarta.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;

@@ -19,9 +19,9 @@ package org.glassfish.web.deployment.descriptor;
 import org.glassfish.deployment.common.Descriptor;
 
 import java.util.*;
-import javax.servlet.descriptor.JspConfigDescriptor;
-import javax.servlet.descriptor.JspPropertyGroupDescriptor;
-import javax.servlet.descriptor.TaglibDescriptor;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
+import jakarta.servlet.descriptor.TaglibDescriptor;
 
 /**
  * This is a descriptor for the taglib config used in a web application.

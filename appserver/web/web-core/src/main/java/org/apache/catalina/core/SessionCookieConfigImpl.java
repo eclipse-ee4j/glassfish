@@ -22,7 +22,7 @@ import org.apache.catalina.LogFacade;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-import javax.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionCookieConfig;
 
 /**
  * Class that may be used to configure various properties of cookies 

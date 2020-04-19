@@ -20,11 +20,11 @@ import java.security.*;
 import java.io.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletRequestWrapper;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import com.sun.enterprise.security.web.integration.WebPrincipal;
 import org.apache.catalina.Session;

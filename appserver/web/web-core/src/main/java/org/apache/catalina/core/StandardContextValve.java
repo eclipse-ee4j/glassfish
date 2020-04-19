@@ -22,8 +22,8 @@ import org.apache.catalina.*;
 import org.apache.catalina.valves.ValveBase;
 import org.glassfish.web.valve.GlassFishValve;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.glassfish.grizzly.http.util.DataChunk;
 // END GlassFish 1343

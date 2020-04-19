@@ -25,9 +25,9 @@ import org.apache.catalina.connector.RequestFacade;
 import org.apache.catalina.connector.ResponseFacade;
 import org.apache.catalina.util.InstanceSupport;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.text.MessageFormat;
-import javax.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.HttpServletMapping;
 
 
 import static org.apache.catalina.InstanceEvent.EventType.AFTER_DISPATCH_EVENT;
@@ -53,8 +53,8 @@ import org.glassfish.grizzly.http.util.MessageBytes;
  * from this resource.  This implementation allows application level servlets
  * to wrap the request and/or response objects that are passed on to the
  * called resource, as long as the wrapping classes extend
- * <code>javax.servlet.ServletRequestWrapper</code> and
- * <code>javax.servlet.ServletResponseWrapper</code>.
+ * <code>jakarta.servlet.ServletRequestWrapper</code> and
+ * <code>jakarta.servlet.ServletResponseWrapper</code>.
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.16 $ $Date: 2007/02/26 22:57:08 $

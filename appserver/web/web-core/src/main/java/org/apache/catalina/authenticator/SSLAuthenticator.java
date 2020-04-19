@@ -24,8 +24,8 @@ import org.apache.catalina.HttpResponse;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.deploy.LoginConfig;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 import java.security.cert.X509Certificate;

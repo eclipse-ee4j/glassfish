@@ -17,10 +17,10 @@
 package com.sun.enterprise.security.web.integration;
 
 import java.util.*;
-import javax.security.jacc.PolicyConfiguration;
-import javax.security.jacc.WebResourcePermission;
-import javax.security.jacc.WebRoleRefPermission;
-import javax.security.jacc.WebUserDataPermission;
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebRoleRefPermission;
+import jakarta.security.jacc.WebUserDataPermission;
 
 import java.util.logging.*; 
 import com.sun.logging.LogDomains;
@@ -440,11 +440,11 @@ public class WebPermissionUtil {
      * config must be in open state when this method is called
      * @param pc
      * @param wbd
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      */
     public static void removePolicyStatements(PolicyConfiguration pc,
             WebBundleDescriptor wbd)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
 
         pc.removeUncheckedPolicy();
         pc.removeExcludedPolicy();
@@ -460,7 +460,7 @@ public class WebPermissionUtil {
     
     public static void processConstraints(WebBundleDescriptor wbd,
 					  PolicyConfiguration pc)
-    throws javax.security.jacc.PolicyContextException 
+    throws jakarta.security.jacc.PolicyContextException 
     {
 	if (logger.isLoggable(Level.FINE)){
 	    logger.entering("WebPermissionUtil", "processConstraints");
@@ -556,7 +556,7 @@ public class WebPermissionUtil {
       
     public static void createWebRoleRefPermission(WebBundleDescriptor wbd, 
 						  PolicyConfiguration pc)
-	throws javax.security.jacc.PolicyContextException 
+	throws jakarta.security.jacc.PolicyContextException 
     {
 	if (logger.isLoggable(Level.FINE)){
 	    logger.entering("WebPermissionUtil", "createWebRoleRefPermission");
@@ -662,7 +662,7 @@ public class WebPermissionUtil {
      * JACC MR8 add WebRoleRefPermission for the any authenticated user role '**'
      */
     private static void addAnyAuthenticatedUserRoleRef(PolicyConfiguration pc, String name)
-    		throws javax.security.jacc.PolicyContextException {
+    		throws jakarta.security.jacc.PolicyContextException {
     	String action = "**";
     	WebRoleRefPermission wrrp = new WebRoleRefPermission(name, action);
     	pc.addToRole(action ,wrrp);

@@ -24,8 +24,8 @@ import java.util.WeakHashMap;
 import java.util.Collections;
 import java.net.URL;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.security.jacc.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.security.jacc.*;
 
 import java.util.logging.*; 
 

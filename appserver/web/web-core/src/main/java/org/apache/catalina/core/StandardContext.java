@@ -47,13 +47,13 @@ import javax.management.*;
 import javax.naming.Binding;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-import javax.servlet.*;
-import javax.servlet.descriptor.JspConfigDescriptor;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionIdListener;
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.*;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionAttributeListener;
+import jakarta.servlet.http.HttpSessionIdListener;
+import jakarta.servlet.http.HttpSessionListener;
+import jakarta.servlet.http.HttpUpgradeHandler;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
@@ -65,7 +65,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-import javax.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.HttpServletMapping;
 import org.apache.catalina.connector.MappingImpl;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.MessageBytes;
@@ -689,7 +689,7 @@ public class StandardContext
 
     /**
      * The list of ordered libs, which is used as the value of the
-     * ServletContext attribute with name javax.servlet.context.orderedLibs
+     * ServletContext attribute with name jakarta.servlet.context.orderedLibs
      */
     private List<String> orderedLibs;
 
@@ -7481,7 +7481,7 @@ public class StandardContext
 
     /**
      * Sets the list of ordered libs, which will be used as the value of the
-     * ServletContext attribute with name javax.servlet.context.orderedLibs
+     * ServletContext attribute with name jakarta.servlet.context.orderedLibs
      */
     public void setOrderedLibs(List<String> orderedLibs) {
         this.orderedLibs = orderedLibs;

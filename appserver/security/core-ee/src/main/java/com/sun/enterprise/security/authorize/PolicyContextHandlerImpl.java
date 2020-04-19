@@ -17,7 +17,7 @@
 package com.sun.enterprise.security.authorize;
 
 import java.security.SecurityPermission;
-import javax.security.jacc.PolicyContextHandler;
+import jakarta.security.jacc.PolicyContextHandler;
 
 /**
  * This class is created by the container and handed over to the 
@@ -28,8 +28,7 @@ import javax.security.jacc.PolicyContextHandler;
  */
 public class PolicyContextHandlerImpl implements PolicyContextHandler {
 
-    public static final String HTTP_SERVLET_REQUEST =
-        "javax.servlet.http.HttpServletRequest";
+    public static final String HTTP_SERVLET_REQUEST = "jakarta.servlet.http.HttpServletRequest";
     public static final String SOAP_MESSAGE = "jakarta.xml.soap.SOAPMessage";
     public static final String ENTERPRISE_BEAN = "javax.ejb.EnterpriseBean";
     public static final String EJB_ARGUMENTS = "javax.ejb.arguments";

@@ -17,7 +17,7 @@
 package org.glassfish.web.deployment.descriptor;
 
 import java.io.Serializable;
-import javax.servlet.descriptor.TaglibDescriptor;
+import jakarta.servlet.descriptor.TaglibDescriptor;
 
 /** 
  * This descriptor represent the information about a tag library used in a 

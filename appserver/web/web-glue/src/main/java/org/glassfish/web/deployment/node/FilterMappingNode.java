@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
-import javax.servlet.DispatcherType;
+import jakarta.servlet.DispatcherType;
 
 
 /**

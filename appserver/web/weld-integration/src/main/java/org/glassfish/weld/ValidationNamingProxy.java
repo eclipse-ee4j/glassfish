@@ -24,14 +24,13 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
-import org.glassfish.api.naming.NamespacePrefixes;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.naming.NamingException;

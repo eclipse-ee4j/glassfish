@@ -276,12 +276,6 @@
 
         <!-- end of endorsed JAR dependencies -->
 
-        <!-- JAXR -JSR-93 Support -->
-        <dependency>
-            <groupId>jakarta.xml.registry</groupId>
-            <artifactId>jakarta.xml.registry-api</artifactId>
-        </dependency>
-
         <!-- This is needed because it provides the sniffer/detector/moduletype -->
         <dependency>
             <groupId>org.glassfish.main.appclient.server</groupId>
@@ -294,13 +288,13 @@
             and use from clients. -->
         <dependency>
             <groupId>org.glassfish.main.resources</groupId>
-            <artifactId>javamail-connector</artifactId>
+            <artifactId>mail-connector</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.resources</groupId>
-            <artifactId>javamail-runtime</artifactId>
+            <artifactId>mail-runtime</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>

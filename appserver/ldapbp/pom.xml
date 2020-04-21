@@ -29,6 +29,7 @@
     </parent>
     <groupId>org.glassfish.main.ldapbp</groupId>
     <artifactId>ldapbp</artifactId>
+    <packaging>glassfish-jar</packaging>
 
     <name>LDAP Booster Pack</name>
       

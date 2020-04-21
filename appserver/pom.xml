@@ -83,7 +83,6 @@
         <woodstox.version>5.1.0</woodstox.version>
         <jaxb.version>2.3.2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
-        <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>
         <jakarta-persistence-api.version>2.2.3</jakarta-persistence-api.version>
         <dbschema.version>6.7</dbschema.version>
@@ -94,8 +93,8 @@
         <wsdl4j.version>1.5.0</wsdl4j.version>
         <websocket-api.version>1.1.1</websocket-api.version>
         <tyrus.version>1.15</tyrus.version>
-        <jsonp-api.version>1.1.6</jsonp-api.version>
-        <jsonp-ri.version>1.1.6</jsonp-ri.version>
+        <jsonp-api.version>2.0.0-RC2</jsonp-api.version>
+        <jsonp-ri.version>2.0.0-RC2</jsonp-ri.version>
         <jsonp-jaxrs.version>1.1.6</jsonp-jaxrs.version>
         <json.bind-api.version>1.0.2</json.bind-api.version>
 
@@ -105,8 +104,7 @@
         <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
-        <javax.management.j2ee-api.version>1.1.3</javax.management.j2ee-api.version>
-	<jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
+	      <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
         <easymock.version>3.5</easymock.version>
 	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
 
@@ -115,8 +113,7 @@
     <modules>
         <module>common</module>
         <module>libpam4j</module>
-	    <module>jaxr-ra</module>
-	    <module>ldapbp</module>
+        <module>ldapbp</module>
         <module>ha</module>
         <module>deployment</module>
         <module>admin</module>
@@ -176,9 +173,9 @@
                                 <version>${mail.version}</version>
                             </artifact>
                             <jarType>impl</jarType>
-                            <specVersion>1.6</specVersion>
-                            <implVersion>1.6.3</implVersion>
-                            <apiPackage>javax.mail</apiPackage>
+                            <specVersion>2.0</specVersion>
+                            <implVersion>2.0.0</implVersion>
+                            <apiPackage>jakarta.mail</apiPackage>
                             <implNamespace>com.sun.mail</implNamespace>
                         </spec>
                         <spec>
@@ -191,7 +188,7 @@
                             <jarType>impl</jarType>
                             <specVersion>1.1</specVersion>
                             <implVersion>${jsonp-ri.version}</implVersion>
-                            <apiPackage>javax.json</apiPackage>
+                            <apiPackage>jakarta.json</apiPackage>
                             <implNamespace>org.glassfish</implNamespace>
                         </spec>
                         <spec>
@@ -390,18 +387,6 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>jakarta.xml.registry</groupId>
-                                <artifactId>jakarta.xml.registry-api</artifactId>
-                                <version>${jakarta.xml.registry-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.0</specVersion>
-                            <specImplVersion>${jakarta.xml.registry-api.version}</specImplVersion>
-                            <apiPackage>javax.xml.registry</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
                                 <groupId>jakarta.xml.rpc</groupId>
                                 <artifactId>jakarta.xml.rpc-api</artifactId>
                                 <version>${jakarta.xml.rpc-api.version}</version>
@@ -423,18 +408,6 @@
                             <specVersion>1.6</specVersion>
                             <specImplVersion>1.6</specImplVersion>
                             <apiPackage>javax.enterprise.deploy</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.management.j2ee</groupId>
-                                <artifactId>jakarta.management.j2ee-api</artifactId>
-                                <version>${javax.management.j2ee-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.1</specVersion>
-                            <specImplVersion>${javax.management.j2ee-api.version}</specImplVersion>
-                            <apiPackage>javax.management.j2ee</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -655,11 +628,6 @@
                 <version>${jaxb.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.xml.registry</groupId>
-                <artifactId>jakarta.xml.registry-api</artifactId>
-                <version>${jakarta.xml.registry-api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
                 <version>${stax2-api.version}</version>
@@ -823,11 +791,6 @@
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.management.j2ee</groupId>
-                <artifactId>jakarta.management.j2ee-api</artifactId>
-                <version>${javax.management.j2ee-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>

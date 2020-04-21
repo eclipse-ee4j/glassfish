@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Using the JavaMail API</title>
+    <title>Using the Jakarta Mail API</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/style.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/96c4d89611.js"></script>
@@ -12,7 +12,7 @@
 <table id="doc-title" cellspacing="0" cellpadding="0">
   <tr>
   <td align="left" valign="top">
-  <b>Using the JavaMail API</b><br />
+  <b>Using the Jakarta Mail API</b><br />
       <p class="beta">DRAFT</p>
   </td>
   </tr>
@@ -52,10 +52,10 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-javamail-api">18 Using the JavaMail API</h2>
+<h2 id="using-the-jakarta-mail-api">18 Using the Jakarta Mail API</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter describes how to use the JavaMail API, which provides a set
+<p>This chapter describes how to use the Jakarta Mail API, which provides a set
 of abstract classes defining objects that comprise a mail system.</p>
 </div>
 <div class="paragraph">
@@ -64,22 +64,22 @@ of abstract classes defining objects that comprise a mail system.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#beaox">Introducing JavaMail</a></p>
+<p><a href="#beaox">Introducing Jakarta Mail</a></p>
 </li>
 <li>
-<p><a href="#beaoy">Creating a JavaMail Session</a></p>
+<p><a href="#beaoy">Creating a Jakarta Mail Session</a></p>
 </li>
 <li>
-<p><a href="#beaoz">JavaMail Session Properties</a></p>
+<p><a href="#beaoz">Jakarta Mail Session Properties</a></p>
 </li>
 <li>
-<p><a href="#beapa">Looking Up a JavaMail Session</a></p>
+<p><a href="#beapa">Looking Up a Jakarta Mail Session</a></p>
 </li>
 <li>
-<p><a href="#fwfiy">Sending and Reading Messages Using JavaMail</a></p>
+<p><a href="#fwfiy">Sending and Reading Messages Using Jakarta Mail</a></p>
 </li>
 <li>
-<p><a href="#gkpfg">Using Application-Scoped JavaMail Resources</a></p>
+<p><a href="#gkpfg">Using Application-Scoped Jakarta Mail Resources</a></p>
 </li>
 </ul>
 </div>
@@ -91,7 +91,7 @@ of abstract classes defining objects that comprise a mail system.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>JavaMail resources are supported only in the full OracleGlassFish
+<p>Jakarta Mail resources are supported only in the full Eclipse GlassFish
 Server, not in the Web Profile.</p>
 </div>
 </td>
@@ -99,22 +99,22 @@ Server, not in the Web Profile.</p>
 </table>
 </div>
 <div class="paragraph">
-<p><a id="beaox"></a><a id="GSDVG00200"></a><a id="introducing-javamail"></a></p>
+<p><a id="beaox"></a><a id="GSDVG00200"></a><a id="introducing-jakarta-mail"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_introducing_javamail">Introducing JavaMail</h3>
+<h3 id="_introducing_jakarta_mail">Introducing Jakarta Mail</h3>
 <div class="paragraph">
-<p>The JavaMail API defines classes such as <code>Message</code>, <code>Store</code>, and
+<p>The Jakarta Mail API defines classes such as <code>Message</code>, <code>Store</code>, and
 <code>Transport</code>. The API can be extended and can be subclassed to provide
 new protocols and to add functionality when necessary. In addition, the
 API provides concrete subclasses of the abstract classes. These
 subclasses, including <code>MimeMessage</code> and <code>MimeBodyPart</code>, implement widely
 used Internet mail protocols and conform to the RFC822 and RFC2045
-specifications. The JavaMail API includes support for the IMAP4, POP3,
+specifications. The Jakarta Mail API includes support for the IMAP4, POP3,
 and SMTP protocols.</p>
 </div>
 <div class="paragraph">
-<p>The JavaMail architectural components are as follows:</p>
+<p>The Jakarta Mail architectural components are as follows:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -128,56 +128,57 @@ support.</p>
 layer using the RFC822 and MIME internet standards.</p>
 </li>
 <li>
-<p>JavaMail uses the JavaBeans Activation Framework (JAF) to encapsulate
+<p>Jakarta Mail uses the JavaBeans Activation Framework (JAF) to encapsulate
 message data and to handle commands intended to interact with that data.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>For more information, see "<a href="../administration-guide/javamail.html#GSADG00019">Administering the JavaMail
-Service</a>" in GlassFish Server Open Source Edition Administration Guide
-and the JavaMail specification at
-<code>http://www.oracle.com/technetwork/java/javamail/index.html</code>.</p>
+<p>For more information, see
+"<a href="../administration-guide/mail.html#GSADG00019">Administering the Jakarta Mail Service</a>"
+in GlassFish Server Administration Guide
+and the Jakarta Mail specification at
+<code>https://jakarta.ee/specifications/mail</code>.</p>
 </div>
 <div class="paragraph">
-<p><a id="beaoy"></a><a id="GSDVG00201"></a><a id="creating-a-javamail-session"></a></p>
+<p><a id="beaoy"></a><a id="GSDVG00201"></a><a id="creating-a-jakarta-mail-session"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_creating_a_javamail_session">Creating a JavaMail Session</h3>
+<h3 id="_creating_a_jakarta_mail_session">Creating a Jakarta Mail Session</h3>
 <div class="paragraph">
-<p>You can create a JavaMail session in the following ways:</p>
+<p>You can create a Jakarta Mail session in the following ways:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>In the Administration Console, open the Resources component and select
-JavaMail Sessions. For details, click the Help button in the
+Jakarta Mail Sessions. For details, click the Help button in the
 Administration Console.</p>
 </li>
 <li>
-<p>Use the <code>asadmin create-javamail-resource</code> command. For details, see
-the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+<p>Use the <code>asadmin create-mail-resource</code> command. For details, see
+the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Reference Manual</a>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><a id="beaoz"></a><a id="GSDVG00202"></a><a id="javamail-session-properties"></a></p>
+<p><a id="beaoz"></a><a id="GSDVG00202"></a><a id="jakarta-mail-session-properties"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_javamail_session_properties">JavaMail Session Properties</h3>
+<h3 id="_jakarta_mail_session_properties">Jakarta Mail Session Properties</h3>
 <div class="paragraph">
-<p>You can set properties for a JavaMail <code>Session</code> object. Every property
+<p>You can set properties for a Jakarta Mail <code>Session</code> object. Every property
 name must start with a <code>mail-</code> prefix. The GlassFish Server changes the
 dash (<code>-</code>) character to a period (<code>.</code>) in the name of the property and
-saves the property to the <code>MailConfiguration</code> and JavaMail <code>Session</code>
+saves the property to the <code>MailConfiguration</code> and Jakarta Mail <code>Session</code>
 objects. If the name of the property doesn&#8217;t start with <code>mail-</code>, the
 property is ignored.</p>
 </div>
 <div class="paragraph">
 <p>For example, if you want to define the property <code>mail.from</code> in a
-JavaMail <code>Session</code> object, first define the property as follows:</p>
+Jakarta Mail <code>Session</code> object, first define the property as follows:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -190,22 +191,22 @@ JavaMail <code>Session</code> object, first define the property as follows:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p><a id="beapa"></a><a id="GSDVG00203"></a><a id="looking-up-a-javamail-session"></a></p>
+<p><a id="beapa"></a><a id="GSDVG00203"></a><a id="looking-up-a-jakarta-mail-session"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_looking_up_a_javamail_session">Looking Up a JavaMail Session</h3>
+<h3 id="_looking_up_a_jakarta_mail_session">Looking Up a Jakarta Mail Session</h3>
 <div class="paragraph">
 <p>The standard Java Naming and Directory Interface (JNDI) subcontext for
-JavaMail sessions is <code>java:comp/env/mail</code>.</p>
+Jakarta Mail sessions is <code>java:comp/env/mail</code>.</p>
 </div>
 <div class="paragraph">
-<p>Registering JavaMail sessions in the <code>mail</code> naming subcontext of a JNDI
+<p>Registering Jakarta Mail sessions in the <code>mail</code> naming subcontext of a JNDI
 namespace, or in one of its child subcontexts, is standard. The JNDI
 namespace is hierarchical, like a file system&#8217;s directory structure, so
-it is easy to find and nest references. A JavaMail session is bound to a
+it is easy to find and nest references. A Jakarta Mail session is bound to a
 logical JNDI name. The name identifies a subcontext, <code>mail</code>, of the root
-context, and a logical name. To change the JavaMail session, you can
+context, and a logical name. To change the Jakarta Mail session, you can
 change its entry in the JNDI namespace without having to modify the
 application.</p>
 </div>
@@ -224,29 +225,29 @@ Session session = (Session)ic.lookup(snName);</code></pre>
 the Java Naming and Directory Interface</a>.</p>
 </div>
 <div class="paragraph">
-<p><a id="fwfiy"></a><a id="GSDVG00204"></a><a id="sending-and-reading-messages-using-javamail"></a></p>
+<p><a id="fwfiy"></a><a id="GSDVG00204"></a><a id="sending-and-reading-messages-using-jakarta-mail"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_sending_and_reading_messages_using_javamail">Sending and Reading Messages Using JavaMail</h3>
+<h3 id="_sending_and_reading_messages_using_jakarta_mail">Sending and Reading Messages Using Jakarta Mail</h3>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#beapb">To Send a Message Using JavaMail</a></p>
+<p><a href="#beapb">To Send a Message Using Jakarta Mail</a></p>
 </li>
 <li>
-<p><a href="#beapc">To Read a Message Using JavaMail</a></p>
+<p><a href="#beapc">To Read a Message Using Jakarta Mail</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><a id="beapb"></a><a id="GSDVG00079"></a><a id="to-send-a-message-using-javamail"></a></p>
+<p><a id="beapb"></a><a id="GSDVG00079"></a><a id="to-send-a-message-using-jakarta-mail"></a></p>
 </div>
 <div class="sect3">
-<h4 id="_to_send_a_message_using_javamail">To Send a Message Using JavaMail</h4>
+<h4 id="_to_send_a_message_using_jakarta_mail">To Send a Message Using Jakarta Mail</h4>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -257,16 +258,16 @@ the Java Naming and Directory Interface</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre>import java.util.*;
-import javax.activation.*;
-import javax.mail.*;
-import javax.mail.internet.*;
+import jakarta.activation.*;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import javax.naming.*;</pre>
 </div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Look up the JavaMail session.<br></p>
+<p>Look up the Jakarta Mail session.<br></p>
 </li>
 </ol>
 </div>
@@ -278,8 +279,8 @@ Session session = (Session)ic.lookup(snName);</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>For more information, see <a href="#beapa">Looking Up a JavaMail Session</a>.
-3.  Override the JavaMail session properties if necessary.<br>
+<p>For more information, see <a href="#beapa">Looking Up a Jakarta Mail Session</a>.
+3.  Override the Jakarta Mail session properties if necessary.<br>
 For example:<br></p>
 </div>
 <div class="listingblock">
@@ -321,11 +322,11 @@ msg.setText(msgTxt);</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><a id="beapc"></a><a id="GSDVG00080"></a><a id="to-read-a-message-using-javamail"></a></p>
+<p><a id="beapc"></a><a id="GSDVG00080"></a><a id="to-read-a-message-using-jakarta-mail"></a></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_to_read_a_message_using_javamail">To Read a Message Using JavaMail</h4>
+<h4 id="_to_read_a_message_using_jakarta_mail">To Read a Message Using Jakarta Mail</h4>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -336,16 +337,16 @@ msg.setText(msgTxt);</pre>
 <div class="listingblock">
 <div class="content">
 <pre>import java.util.*;
-import javax.activation.*;
-import javax.mail.*;
-import javax.mail.internet.*;
+import jakarta.activation.*;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import javax.naming.*;</pre>
 </div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Look up the JavaMail session.<br></p>
+<p>Look up the Jakarta Mail session.<br></p>
 </li>
 </ol>
 </div>
@@ -353,12 +354,12 @@ import javax.naming.*;</pre>
 <div class="content">
 <pre>InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
-Session session = (javax.mail.Session)ic.lookup(snName);</pre>
+Session session = (jakarta.mail.Session)ic.lookup(snName);</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>For more information, see <a href="#beapa">Looking Up a JavaMail Session</a>.
-3.  Override the JavaMail session properties if necessary.<br>
+<p>For more information, see <a href="#beapa">Looking Up a Jakarta Mail Session</a>.
+3.  Override the Jakarta Mail session properties if necessary.<br>
 For example:<br></p>
 </div>
 <div class="listingblock">
@@ -408,14 +409,14 @@ messages on the server) into an array.<br></p>
 </div>
 </div>
 <div class="paragraph">
-<p><a id="gkpfg"></a><a id="GSDVG00205"></a><a id="using-application-scoped-javamail-resources"></a></p>
+<p><a id="gkpfg"></a><a id="GSDVG00205"></a><a id="using-application-scoped-jakarta-mail-resources"></a></p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_using_application_scoped_javamail_resources">Using Application-Scoped JavaMail Resources</h3>
+<h3 id="_using_application_scoped_jakarta_mail_resources">Using Application-Scoped Jakarta Mail Resources</h3>
 <div class="paragraph">
-<p>You can define an application-scoped JavaMail or other resource for an
+<p>You can define an application-scoped Jakarta Mail or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a <code>glassfish-resources.xml</code>
 deployment descriptor file. For details, see

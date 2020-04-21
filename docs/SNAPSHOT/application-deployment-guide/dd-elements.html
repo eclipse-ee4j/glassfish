@@ -9698,7 +9698,7 @@ authentication requests.</p></td>
 <div class="sect2">
 <h3 id="__code_mail_resource_code"><code>mail-resource</code></h3>
 <div class="paragraph">
-<p>Defines a JavaMail (<code>javax.mail.Session</code>) resource.</p>
+<p>Defines a Jakarta Mail (<code>jakarta.mail.Session</code>) resource.</p>
 </div>
 <div class="paragraph">
 <p><a id="GSDPG957"></a><a id="sthref147"></a></p>
@@ -9901,15 +9901,15 @@ enabled at runtime.</p></td>
 <h4 id="properties-9">Properties</h4>
 <div class="paragraph">
 <p>You can set properties for the <code>mail-resource</code> element and then get
-these properties in a JavaMail <code>Session</code> object later. Every property
+these properties in a Jakarta Mail <code>Session</code> object later. Every property
 name must start with a <code>mail-</code> prefix. The GlassFish Server changes the
 dash (<code>-</code>) character to a period (<code>.</code>) in the name of the property, then
-saves the property to the <code>MailConfiguration</code> and JavaMail <code>Session</code>
+saves the property to the <code>MailConfiguration</code> and Jakarta Mail <code>Session</code>
 objects. If the name of the property doesn&#8217;t start with <code>mail-</code>, the
 property is ignored.</p>
 </div>
 <div class="paragraph">
-<p>For example, to define the property <code>mail.password</code> in a JavaMail
+<p>For example, to define the property <code>mail.password</code> in a Jakarta Mail
 Session object, first edit <code>glassfish-resources.xml</code> as follows:</p>
 </div>
 <div class="listingblock">
@@ -9922,7 +9922,7 @@ Session object, first edit <code>glassfish-resources.xml</code> as follows:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>After getting the JavaMail <code>Session</code> object, get the <code>mail.password</code>
+<p>After getting the Jakarta Mail <code>Session</code> object, get the <code>mail.password</code>
 property to retrieve the value <code>adminadmin</code>, as follows:</p>
 </div>
 <div class="listingblock">
@@ -9931,9 +9931,9 @@ property to retrieve the value <code>adminadmin</code>, as follows:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For more information about JavaMail properties, see
-<a href="http://javamail.kenai.com/nonav/javadocs/index.html">JavaMail API
-Documentation</a> (<code>http://javamail.kenai.com/nonav/javadocs/index.html</code>).</p>
+<p>For more information about Jakarta Mail properties, see
+<a href="https://jakarta.ee/specifications/mail">Jakarta Mail API
+Documentation</a> (<code>https://jakarta.ee/specifications/mail</code>).</p>
 </div>
 <div class="paragraph">
 <p><a id="beaum"></a><a id="GSDPG00192"></a><a id="manager-properties"></a></p>
@@ -13720,7 +13720,7 @@ repository.</p></td>
 <p><a href="#giyik"><code>mail-resource</code></a></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">zero or more</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines a JavaMail resource.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines a Jakarta Mail resource.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">

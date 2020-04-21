@@ -27,9 +27,9 @@
     </parent>
     <artifactId>glassfish-parent</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish Appserver Parent Project</name>
+    <name>Eclipse GlassFish Parent Project</name>
 
-    <description>Glassfish Appserver Parent Project</description>
+    <description>Eclipse GlassFish Parent Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <scm>
@@ -99,8 +99,8 @@
         <json.bind-api.version>1.0.2</json.bind-api.version>
 
         <yasson.version>1.0.3</yasson.version>
-        <concurrent-api.version>1.1.2</concurrent-api.version>
-        <concurrent.version>1.1.1</concurrent.version>
+        <concurrent-api.version>2.0.0-RC1</concurrent-api.version>
+        <concurrent.version>2.0.0-RC1</concurrent.version>
         <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>

@@ -40,6 +40,43 @@ def jobs = [
   "connector_group_4"
 ]
 
+def parallelStagesMap = jobs.collectEntries {
+  ["${it}": generateStage(it)]
+}
+
+def generateStage(job) {
+    return {
+        podTemplate(label: env.label) {
+            node(label) {
+                stage("${job}") {
+                    container('glassfish-ci') {
+                      // do the scm checkout
+                      retry(10) {
+                        sleep 60
+                        checkout scm
+                      }
+                      
+                      // run the test
+                      unstash 'build-bundles'
+                      
+                      try {
+                          retry(3) {
+                              timeout(time: 2, unit: 'HOURS') {
+                                sh "./appserver/tests/gftest.sh run_test ${job}"
+                              }
+                          }
+                      } finally {
+                        // archive what we can...
+                        archiveArtifacts artifacts: "${job}-results.tar.gz"
+                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
+                      }
+                    }
+                }
+            }
+        }
+    }
+}
+
 pipeline {
   
   options {
@@ -191,39 +228,4 @@ spec:
   }
 }
 
-def parallelStagesMap = jobs.collectEntries {
-  ["${it}": generateStage(it)]
-}
 
-def generateStage(job) {
-    return {
-        podTemplate(label: env.label) {
-            node(label) {
-                stage("${job}") {
-                    container('glassfish-ci') {
-                      // do the scm checkout
-                      retry(10) {
-                        sleep 60
-                        checkout scm
-                      }
-                      
-                      // run the test
-                      unstash 'build-bundles'
-                      
-                      try {
-                          retry(3) {
-                              timeout(time: 2, unit: 'HOURS') {
-                                sh "./appserver/tests/gftest.sh run_test ${job}"
-                              }
-                          }
-                      } finally {
-                        // archive what we can...
-                        archiveArtifacts artifacts: "${job}-results.tar.gz"
-                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
-                      }
-                    }
-                }
-            }
-        }
-    }
-}

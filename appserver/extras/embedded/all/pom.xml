@@ -510,11 +510,6 @@
             <artifactId>jakarta.enterprise.concurrent</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>jakarta.xml.rpc</groupId>
-            <artifactId>jakarta.xml.rpc-api</artifactId>
-            <optional>true</optional>
-        </dependency>
         <!-- glassfish-corba -->
         <dependency>
             <groupId>org.glassfish.corba</groupId>

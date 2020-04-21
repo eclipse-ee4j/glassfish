@@ -470,13 +470,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>mejb-frag</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            <optional>true</optional>
-       </dependency>
-        <dependency>
             <groupId>org.glassfish.main.jaxr-ra</groupId>
             <artifactId>jaxr-ra-rar</artifactId>
             <version>${project.version}</version>

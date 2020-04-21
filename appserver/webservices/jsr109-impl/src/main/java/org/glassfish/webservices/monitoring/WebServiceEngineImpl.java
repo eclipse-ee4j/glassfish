@@ -85,15 +85,6 @@ public final class WebServiceEngineImpl implements WebServiceEngine {
         return newEndpoint;
     }
     
-    public EndpointImpl createHandler(com.sun.xml.rpc.spi.runtime.SystemHandlerDelegate parent,
-        WebServiceEndpoint endpointDesc)  {
-
-        EndpointImpl newEndpoint = createHandler(endpointDesc);
-        if (newEndpoint instanceof JAXRPCEndpointImpl)
-            JAXRPCEndpointImpl.class.cast(newEndpoint).setParent(parent);
-        return newEndpoint;
-    }
-
     @Override
     public Endpoint getEndpoint(String uri) {    
         return endpoints.get(uri);
@@ -174,15 +165,7 @@ public final class WebServiceEngineImpl implements WebServiceEngine {
                 endpointType = EndpointType.SERVLET_ENDPOINT;
             }
 
-            EndpointImpl newEndpoint;
-            // At this point, we can depend on presence of mapping file to distinguish between JAXRPC and JAXWS
-            // service
-            if(endpoint.getWebService().hasMappingFile()) {
-                newEndpoint = new JAXRPCEndpointImpl(endpointURL, endpointType);
-            } else {
-                newEndpoint = new JAXWSEndpointImpl(endpointURL, endpointType);
-            }
-
+            EndpointImpl newEndpoint = new JAXWSEndpointImpl(endpointURL, endpointType);
             newEndpoint.setDescriptor(endpoint);
             return newEndpoint;
         
@@ -204,35 +187,6 @@ public final class WebServiceEngineImpl implements WebServiceEngine {
             return null;
         
         return globalMessageListener.preProcessRequest(endpoint);
-    }
-    
-    /**
-     * Callback when a web service request is received on
-     * the endpoint.
-     * @param messageID returned by preProcessRequest call
-     * @param context the jaxrpc message trace, transport dependent.
-     */
-    public void processRequest(String messageID, com.sun.xml.rpc.spi.runtime.SOAPMessageContext context,
-            TransportInfo info) {
-
-        if (globalMessageListener==null)
-            return;
-
-        globalMessageListener.processRequest(messageID, context, info);
-    }
-
-    /**
-     * Callback when a web service response is received on the
-     * endpoint.
-     * @param messageID returned by the preProcessRequest call
-     * @param context jaxrpc message context
-     */
-    public void processResponse(String messageID, com.sun.xml.rpc.spi.runtime.SOAPMessageContext context) {
-
-        if (globalMessageListener==null)
-            return;
-
-        globalMessageListener.processResponse(messageID, context);
     }
     
     /** 

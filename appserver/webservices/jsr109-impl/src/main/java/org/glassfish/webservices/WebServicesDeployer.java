@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -139,16 +139,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer,Web
             Thread.currentThread().setContextClassLoader(newCl);
             WebServicesDescriptor wsDesc = bundle.getWebServices();
             for (WebService ws : wsDesc.getWebServices()) {
-                if ((new WsUtil()).isJAXWSbasedService(ws)){
                     setupJaxWSServiceForDeployment(dc, ws);
-                } else {
-                    JAXRPCCodeGenFacade facade= habitat.getService(JAXRPCCodeGenFacade.class);
-                    if (facade != null) {
-                        facade.run(habitat, dc, moduleCP, false);
-                    }  else {
-                        throw new DeploymentException(rb.getString(LogUtils.JAXRPC_CODEGEN_FAIL)) ;
-                    }
-                }
             }
             doWebServicesDeployment(app,dc);
             Thread.currentThread().setContextClassLoader(oldCl);
@@ -596,7 +587,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer,Web
             // For JAXWS services, we rely on JAXWS RI to do WSL gen and publishing
             // For JAXRPC we do it here in 109
             //however it is needed for file publishing for jaxws
-            if(wsUtil.isJAXWSbasedService(next) && (!next.hasFilePublishing())) {
+            if(!next.hasFilePublishing()) {
                 for(WebServiceEndpoint wsep : next.getEndpoints()) {
                     URL finalWsdlURL = wsep.composeFinalWsdlUrl(wsUtil.getWebServerInfoForDAS().getWebServerRootURL(wsep.isSecure()));
                     Set<ServiceReferenceDescriptor> serviceRefs = new HashSet<ServiceReferenceDescriptor>();
@@ -694,26 +685,9 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer,Web
 
             }
 
-            String servletImplClass = nextEndpoint.getServletImplClass();
-            try {
-                Class servletImplClazz  = cl.loadClass(servletImplClass);
-                String containerServlet;
-                if(wsutil.isJAXWSbasedService(nextEndpoint.getWebService())) {
-                    containerServlet = "org.glassfish.webservices.JAXWSServlet";
-                    addWSServletContextListener(webBunDesc);
-                } else {
-                    containerServlet =
-                    SingleThreadModel.class.isAssignableFrom(servletImplClazz) ?
-                    "org.glassfish.webservices.SingleThreadJAXRPCServlet" :
-                        "org.glassfish.webservices.JAXRPCServlet";
-                }
-                webComp.setWebComponentImplementation(containerServlet);
-
-            } catch(ClassNotFoundException cex) {
-                throw new DeploymentException( format(rb.getString(
-                        LogUtils.DEPLOYMENT_BACKEND_CANNOT_FIND_SERVLET),
-                        nextEndpoint.getEndpointName()));
-            }
+            String containerServlet = "org.glassfish.webservices.JAXWSServlet";
+            addWSServletContextListener(webBunDesc);
+            webComp.setWebComponentImplementation(containerServlet);
 
             /**
              * Now trying to figure the address from <code>com.sun.enterprise.webservice.WsUtil.java</code>

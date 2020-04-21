@@ -97,21 +97,8 @@ public abstract class AbstractSessionContextImpl
     }
 
     public MessageContext getMessageContext() {
-        InvocationManager invManager = EjbContainerUtilImpl.getInstance().getInvocationManager();
-        try {
-            ComponentInvocation inv = invManager.getCurrentInvocation();
-
-            if ((inv != null) && isWebServiceInvocation(inv)) {
-                return ((EjbInvocation) inv).messageContext;
-            } else {
-                throw new IllegalStateException("Attempt to access " +
-                        "MessageContext outside of a web service invocation");
-            }
-        } catch (Exception e) {
-            IllegalStateException ise = new IllegalStateException();
-            ise.initCause(e);
-            throw ise;
-        }
+        //no jax-rpc anymore
+        return null;
     }
 
     public <T> T getBusinessObject(Class<T> businessInterface)

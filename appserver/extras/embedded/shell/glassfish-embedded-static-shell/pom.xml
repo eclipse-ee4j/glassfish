@@ -312,13 +312,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.jaxr-ra</groupId>
-            <artifactId>jaxr-ra-rar</artifactId>
-            <version>${project.version}</version>
-            <type>rar</type>
-            <optional>true</optional>
-       </dependency>
-        <dependency>
             <groupId>org.glassfish.main.batch</groupId>
             <artifactId>glassfish-batch-commands</artifactId>
             <version>${project.version}</version>
@@ -1465,11 +1458,6 @@
             <artifactId>metro-fragments</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.registry</groupId>
-            <artifactId>jakarta.xml.registry-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

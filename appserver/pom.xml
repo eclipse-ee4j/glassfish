@@ -83,7 +83,6 @@
         <woodstox.version>5.1.0</woodstox.version>
         <jaxb.version>2.3.2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
-        <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>
         <jakarta-persistence-api.version>2.2.3</jakarta-persistence-api.version>
         <dbschema.version>6.7</dbschema.version>
@@ -105,7 +104,7 @@
         <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
-	    <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
+	      <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
         <easymock.version>3.5</easymock.version>
 	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
 
@@ -114,8 +113,7 @@
     <modules>
         <module>common</module>
         <module>libpam4j</module>
-	    <module>jaxr-ra</module>
-	    <module>ldapbp</module>
+        <module>ldapbp</module>
         <module>ha</module>
         <module>deployment</module>
         <module>admin</module>
@@ -389,18 +387,6 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>jakarta.xml.registry</groupId>
-                                <artifactId>jakarta.xml.registry-api</artifactId>
-                                <version>${jakarta.xml.registry-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.0</specVersion>
-                            <specImplVersion>${jakarta.xml.registry-api.version}</specImplVersion>
-                            <apiPackage>javax.xml.registry</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
                                 <groupId>jakarta.xml.rpc</groupId>
                                 <artifactId>jakarta.xml.rpc-api</artifactId>
                                 <version>${jakarta.xml.rpc-api.version}</version>
@@ -640,11 +626,6 @@
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-osgi</artifactId>
                 <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.registry</groupId>
-                <artifactId>jakarta.xml.registry-api</artifactId>
-                <version>${jakarta.xml.registry-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>

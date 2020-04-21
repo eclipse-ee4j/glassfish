@@ -43,7 +43,6 @@ kill_process(){
 
 test_init(){
   printf "\n%s \n\n" "===== V2 DEVTESTS INIT ====="
-  
   # workaround for OSGI timestamp issue
   find ${S1AS_HOME} -type f | xargs touch > /dev/null
   echo S1AS_HOME is ${S1AS_HOME}
@@ -56,16 +55,11 @@ test_init(){
 
 zip_test_results(){
   printf "\n%s \n\n" "===== ZIP THE TESTS RESULTS ====="
-  
   zip -r ${WORKSPACE}/results.zip ${WORKSPACE}/results > /dev/nul
 }
 
 unzip_test_resources(){
   printf "\n%s \n\n" "===== UNZIP TEST RESOURCES ====="
-  previousPath="$(pwd -P)"
-  
-  cd ${WORKSPACE}
-    
   for i in "${@}"; do
     if [[ ${i} == *.zip* ]]; then
       unzip -o ${i}
@@ -73,13 +67,10 @@ unzip_test_resources(){
       tar --overwrite -xf ${i}
     fi
   done
-  
-  cd $previousPath
 }
 
 copy_test_artifacts(){
   printf "\n%s \n\n" "===== COPY TEST ARTIFACTS ====="
-  
   mkdir -p ${WORKSPACE}/results/junitreports
   tar -cvf ${WORKSPACE}/results/domainArchive.tar.gz ${S1AS_HOME}/domains
   cp ${S1AS_HOME}/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
@@ -92,7 +83,6 @@ copy_test_artifacts(){
 
 generate_junit_report(){
   printf "\n%s \n\n" "===== GENERATE JUNIT REPORT ====="
-  
   TD=${APS_HOME}/test_resultsValid.xml
   JUD=${APS_HOME}/test_results_junit.xml
   TESTSUITE_NAME=${1}
@@ -165,7 +155,6 @@ change_junit_report_class_names(){
 
 check_successful_run(){
   printf "\n%s \n\n" "===== CHECK SUCCESSFUL RUN ====="
-  
   FILE=${APS_HOME}/test_results.html
   if [ -f ${FILE} ]; then
     echo "File ${FILE} exists.Test build successful"

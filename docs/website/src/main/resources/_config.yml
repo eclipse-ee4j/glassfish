@@ -1,4 +1,6 @@
-remote_theme: jakartaee/jekyll-theme-jakarta-ee
+github: [metadata]
+
+remote_theme: eclipsefdn/jekyll-theme-eclipsefdn
 
 title: [Eclipse GlassFish]
 description: [Open Source Jakarta EE Platform Implementation]

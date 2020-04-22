@@ -728,15 +728,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.bean-validator</groupId>
-            <artifactId>bean-validator</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.bean-validator-cdi</groupId>
-            <artifactId>bean-validator-cdi</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator-cdi</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

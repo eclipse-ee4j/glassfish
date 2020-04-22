@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.webservices;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
-import com.sun.xml.rpc.spi.runtime.Handler;
 
 /**
  * This class stores information for EjbRuntimeInfo
@@ -40,22 +39,12 @@ public class AdapterInvocationInfo {
      */
     private  ServletAdapter adapter;
 
-    /**
-     * This has the JAXRPC handler stored for alter use
-     * @param handler
-     */
-    private Handler handler;
-
     public void setAdapter(ServletAdapter adapter) {
         this.adapter = adapter;
     }
 
     public void setInv(ComponentInvocation inv) {
         this.inv = inv;
-    }
-
-    public void setHandler(Handler h) {
-        this.handler = h;
     }
 
     public ServletAdapter getAdapter() {
@@ -66,7 +55,4 @@ public class AdapterInvocationInfo {
         return inv;
     }
 
-    public Handler getHandler() {
-        return handler;
-    }
 }

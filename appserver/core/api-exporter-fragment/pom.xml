@@ -140,7 +140,7 @@ javax.imageio.spi; \
 javax.imageio.stream; \
 javax.interceptor; \
 javax.jms; \
-javax.json; \
+jakarta.json; \
 javax.json.bind; \
 javax.json.bind.adapter; \
 javax.json.bind.annotation; \
@@ -290,13 +290,6 @@ javax.xml.namespace; \
 javax.xml.parsers; \
 javax.xml.registry; \
 javax.xml.registry.infomodel; \
-javax.xml.rpc; \
-javax.xml.rpc.encoding; \
-javax.xml.rpc.handler; \
-javax.xml.rpc.handler.soap; \
-javax.xml.rpc.holders; \
-javax.xml.rpc.server; \
-javax.xml.rpc.soap; \
 javax.xml.soap; \
 javax.xml.stream; \
 javax.xml.stream.events; \

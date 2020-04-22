@@ -64,7 +64,7 @@
                           <fileSeparator>/</fileSeparator>
                           <prefix>../../modules</prefix>
                           <stripVersion>true</stripVersion>
-                          <excludeArtifactIds>jsftemplating, javax.json, jakarta.json-api</excludeArtifactIds>
+                          <excludeArtifactIds>jsftemplating, jakarta.json, jakarta.json-api</excludeArtifactIds>
                       </configuration>
                   </execution>
               </executions>
@@ -312,20 +312,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>mejb-frag</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            <optional>true</optional>
-       </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jaxr-ra</groupId>
-            <artifactId>jaxr-ra-rar</artifactId>
-            <version>${project.version}</version>
-            <type>rar</type>
-            <optional>true</optional>
-       </dependency>
-        <dependency>
             <groupId>org.glassfish.main.batch</groupId>
             <artifactId>glassfish-batch-commands</artifactId>
             <version>${project.version}</version>
@@ -357,11 +343,6 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.enterprise.concurrent</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.rpc</groupId>
-            <artifactId>jakarta.xml.rpc-api</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-corba -->
@@ -1470,11 +1451,6 @@
             <artifactId>metro-fragments</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.registry</groupId>
-            <artifactId>jakarta.xml.registry-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

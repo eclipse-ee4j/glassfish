@@ -328,8 +328,10 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public Dom(Dom source, Dom parent) {
         this(source.getHabitat(), source.document, parent, source.model);
         List<Child> newChildren = new ArrayList<Child>();
-        for (Child child : source.children) {
-            newChildren.add(child.deepCopy(this));
+        synchronized (source) {
+            for (Child child : source.children) {
+                newChildren.add(child.deepCopy(this));
+            }
         }
         setChildren(newChildren);
         attributes.putAll(source.attributes);
@@ -1270,7 +1272,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * @param w
      *      Receives XML infoset stream.
      */
-    public synchronized void writeTo(String tagName, XMLStreamWriter w) throws XMLStreamException {
+    public void writeTo(String tagName, XMLStreamWriter w) throws XMLStreamException {
         if(tagName==null)
             tagName = model.tagName;
         if(tagName==null)
@@ -1289,7 +1291,10 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             w.writeAttribute(attributeToWrite.getKey(), attributeToWrite.getValue());
         }
 
-        List<Child> localChildren = new ArrayList<Child>(children);
+        List<Child> localChildren;
+        synchronized(this) {
+            localChildren = new ArrayList<Child>(children);
+        }
         for (Child c : localChildren)
             c.writeTo(w);
 

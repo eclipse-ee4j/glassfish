@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,12 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import java.lang.String;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.management.j2ee.Management;
-import javax.management.j2ee.ManagementHome;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
@@ -254,20 +251,6 @@ public abstract class J2EEManagedObjectImplBase extends AMXImplBase {
         
         final Set<String> types = SetUtil.newStringSet(args);
         return getChildrenAsStrings(types);
-    }
-
-    public final Management getMEJB() {
-        Management mejb = null;
-        try {
-            final Context ic = new InitialContext();
-            final String ejbName = System.getProperty("mejb.name", "ejb/mgmt/MEJB");
-            final Object objref = ic.lookup(ejbName);
-            final ManagementHome home = (ManagementHome) PortableRemoteObject.narrow(objref, ManagementHome.class);
-            mejb = home.create();
-        } catch (Exception ex) {
-            throw new RuntimeException("Can't find MEJB", ex);
-        }
-        return mejb;
     }
 
 }

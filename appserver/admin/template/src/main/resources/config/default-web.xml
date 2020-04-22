@@ -314,7 +314,6 @@
         jakarta.security.auth.message-api.jar
         jakarta.authorization-api.jar
         jakarta.transaction-api.jar
-        jakarta.xml.rpc-api.jar
         webservices-osgi.jar
         weld-osgi-bundle.jar
         jersey-mvc-jsp.jar

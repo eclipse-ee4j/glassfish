@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
-import javax.xml.rpc.ServiceFactory;
 import javax.xml.ws.soap.MTOMFeature;
 import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.WebServiceFeature;
@@ -99,17 +98,8 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
 
             resolvePortComponentLinks(desc);
 
-            javax.xml.rpc.Service serviceDelegate = null;
             javax.xml.ws.Service jaxwsDelegate = null;
             Object injValue = null;
-
-            if( desc.hasGeneratedServiceInterface() || desc.hasWsdlFile() ) {
-
-                String serviceImplName  = desc.getServiceImplClassName();
-                if(serviceImplName != null) {
-                    Class serviceImplClass  = cl.loadClass(serviceImplName);
-                    serviceDelegate = (javax.xml.rpc.Service) serviceImplClass.newInstance();
-                } else {
 
                     // The target is probably a post JAXRPC-1.1- based service;
                     // If Service Interface class is set, check if it is indeed a subclass of Service
@@ -170,20 +160,7 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
                                         desc.getServiceName());
                         jaxwsDelegate = new JAXWSServiceDelegate(desc, svc, cl);
                     }
-                }
-
-                if( desc.hasHandlers() ) {
-                    // We need the service's ports to configure the
-                    // handler chain (since service-ref handler chain can
-                    // optionally specify handler-port association)
-                    // so create a configured service and call getPorts
-
-                    javax.xml.rpc.Service configuredService =
-                            wsUtil.createConfiguredService(desc);
-                    Iterator ports = configuredService.getPorts();
-                    wsUtil.configureHandlerChain
-                            (desc, serviceDelegate, ports, cl);
-                }
+                
 
                 // check if this is a post 1.1 web service
                 if(javax.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass)) {
@@ -213,29 +190,7 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
 
                 }
 
-            } else {
-                // Generic service interface / no WSDL
-                QName serviceName = desc.getServiceName();
-                if( serviceName == null ) {
-                    // ServiceFactory API requires a service-name.
-                    // However, 109 does not allow getServiceName() to be
-                    // called, so it's ok to use a dummy value.
-                    serviceName = new QName("urn:noservice", "servicename");
-                }
-                ServiceFactory serviceFac = ServiceFactory.newInstance();
-                serviceDelegate = serviceFac.createService(serviceName);
-            }
-
-            // Create a proxy for the service object.
-            // Get a proxy only in jaxrpc case because in jaxws the service class is not
-            // an interface any more
-            InvocationHandler handler = null;
-            if(serviceDelegate != null) {
-
-                handler = new ServiceInvocationHandler(desc, serviceDelegate, cl);
-                returnObj = Proxy.newProxyInstance
-                        (cl, new Class[] { serviceInterfaceClass }, handler);
-            } else if(jaxwsDelegate != null) {
+            if(jaxwsDelegate != null) {
                 returnObj = jaxwsDelegate;
             } else if(injValue != null) {
                 returnObj = injValue;

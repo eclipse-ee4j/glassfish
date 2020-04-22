@@ -204,12 +204,6 @@
      </dependency>
      <dependency>
          <groupId>org.glassfish.main.deployment</groupId>
-         <artifactId>deployment-client</artifactId>
-         <version>${project.version}</version>
-         <optional>true</optional>
-     </dependency>
-     <dependency>
-         <groupId>org.glassfish.main.deployment</groupId>
          <artifactId>dol</artifactId>
          <version>${project.version}</version>
          <optional>true</optional>

@@ -16,3 +16,4 @@ nb-configuration.xml
 appserver/appclient/client/acc-config/temp/
 appserver/security/jaspic-provider-framework/auth.conf
 appserver/tests/appserv-tests/devtests/web/JSESSIONID
+/bundles/

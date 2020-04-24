@@ -774,7 +774,7 @@
     failonerror="false"
     jvm="${JAVA}"
     classname="${classname}"
-    classpath="${classpath}"
+    classpath="${inst}/lib/gf-client.jar:${classpath}"
     output="${outputLog}"
     append="yes"
     resultproperty="result">

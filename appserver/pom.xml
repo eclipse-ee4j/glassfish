@@ -48,16 +48,18 @@
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.16</woodstock.version>
         <javax.ejb-api.version>4.0.0-RC1</javax.ejb-api.version>
-        <jakarta.interceptor-api.version>1.2.5</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
         <javax.transaction-api.version>2.0.0-RC1</javax.transaction-api.version>
-        <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
+        <jakarta.faces-api.version>3.0.0-RC1</jakarta.faces-api.version>
         <cdi-api.version>3.0.0-M2</cdi-api.version>
-        <javax.inject.version>1</javax.inject.version>
+        <javax.inject.version>2.0.0-RC3</javax.inject.version>
         <jakarta.resource-api.version>2.0.0-RC1</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
         <jakarta.authorization-api.version>2.0.0-RC1</jakarta.authorization-api.version>
-        <jakarta.security.auth.message-api.version>1.1.3</jakarta.security.auth.message-api.version>
-        <jakarta.security.enterprise-api.version>1.0.2</jakarta.security.enterprise-api.version>
+        <jakarta.security.auth.message-api.version>2.0.0-RC1</jakarta.security.auth.message-api.version>
+        <!-- Ensure that nucleus/pom.xml's javax.validation property is of same value as the one below -->
+        <jakarta.validation-api.version>3.0.0-M1</jakarta.validation-api.version>
+        <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>
         <jakarta.security.enterprise.version>1.0.1</jakarta.security.enterprise.version>
 
         <product.name>Eclipse GlassFish</product.name>
@@ -81,7 +83,7 @@
         <jaxb.version>3.0.0-M2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>
-        <jakarta-persistence-api.version>2.2.3</jakarta-persistence-api.version>
+        <jakarta-persistence-api.version>3.0.0-RC2</jakarta-persistence-api.version>
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
         <mq.version>6.0.0-M1</mq.version>
@@ -92,7 +94,11 @@
         <tyrus.version>2.0.0-M1</tyrus.version>
         <jsonp-api.version>2.0.0-RC2</jsonp-api.version>
         <jsonp-ri.version>2.0.0-RC2</jsonp-ri.version>
+<<<<<<< HEAD
         <jsonp-jaxrs.version>1.1.6</jsonp-jaxrs.version>
+=======
+        <jsonp-jaxrs.version>2.0.0-RC2</jsonp-jaxrs.version>
+>>>>>>> Updated to latest jakarta apis
         <json.bind-api.version>2.0.0-RC1</json.bind-api.version>
 
         <yasson.version>2.0.0-M1</yasson.version>

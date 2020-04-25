@@ -16,8 +16,8 @@
 
 package org.glassfish.weld.jsf;
 
-import javax.el.ELContextListener;
-import javax.el.ExpressionFactory;
+import jakarta.el.ELContextListener;
+import jakarta.el.ExpressionFactory;
 import jakarta.enterprise.inject.spi.BeanManager;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationWrapper;

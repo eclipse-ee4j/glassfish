@@ -67,7 +67,7 @@ public class NonModuleInjectionServices implements InjectionServices {
         }
     }
 
-    public <T> void registerInjectionTarget(javax.enterprise.inject.spi.InjectionTarget<T> injectionTarget, AnnotatedType<T> annotatedType) {
+    public <T> void registerInjectionTarget(jakarta.enterprise.inject.spi.InjectionTarget<T> injectionTarget, AnnotatedType<T> annotatedType) {
     }
 
     public void cleanup() {

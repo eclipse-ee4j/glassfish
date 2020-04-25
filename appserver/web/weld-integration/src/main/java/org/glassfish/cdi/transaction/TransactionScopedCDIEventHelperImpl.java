@@ -20,7 +20,7 @@ import jakarta.enterprise.context.Destroyed;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.transaction.TransactionScoped;
+import jakarta.transaction.TransactionScoped;
 
 /**
  * @author <a href="mailto:arjav.desai@oracle.com">Arjav Desai</a>

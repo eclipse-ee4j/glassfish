@@ -51,7 +51,6 @@ import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Environments;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
-import org.jboss.weld.bootstrap.spi.BootstrapConfiguration;
 import org.jboss.weld.bootstrap.spi.EEModuleDescriptor;
 import org.jboss.weld.bootstrap.spi.helpers.EEModuleDescriptorImpl;
 import org.jboss.weld.ejb.spi.EjbServices;
@@ -301,9 +300,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
        }
     }
     private String getDeploymentErrorMsgPrefix( Throwable t ) {
-        if ( t instanceof javax.enterprise.inject.spi.DefinitionException ) {
+        if ( t instanceof jakarta.enterprise.inject.spi.DefinitionException ) {
             return "CDI definition failure:";
-        } else if ( t instanceof javax.enterprise.inject.spi.DeploymentException ) {
+        } else if ( t instanceof jakarta.enterprise.inject.spi.DeploymentException ) {
             return "CDI deployment failure:";
         } else {
             Throwable cause = t.getCause();
@@ -463,8 +462,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             ProxyServices proxyServices = new ProxyServicesImpl(services);
             deploymentImpl.getServices().add(ProxyServices.class, proxyServices);
 
-            BootstrapConfigurationImpl bootstrapConfiguration = new BootstrapConfigurationImpl();
-            deploymentImpl.getServices().add(BootstrapConfiguration.class, bootstrapConfiguration);
         
             addWeldListenerToAllWars(context);
         } else {

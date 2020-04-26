@@ -75,9 +75,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.eclipse.persistence</groupId>
-                                    <artifactId>jakarta.persistence</artifactId>
-                                    <includes>javax/persistence/orm*.xsd, javax/persistence/persistence*.xsd</includes>
+                                    <groupId>jakarta.persistence</groupId>
+                                    <artifactId>jakarta.persistence-api</artifactId>
+                                    <includes>jakarta/persistence/orm*.xsd, jakarta/persistence/persistence*.xsd</includes>
                                     <outputDirectory>${jpa.schema.temp.location}</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
@@ -94,7 +94,7 @@
                         <configuration>
                             <tasks>
                               <copy todir="${project.build.outputDirectory}/glassfish/lib/schemas" flatten="true">
-                                    <fileset dir="${jpa.schema.temp.location}/javax/persistence" />
+                                    <fileset dir="${jpa.schema.temp.location}/jakarta/persistence" />
                                 </copy>
                             </tasks>
                         </configuration>

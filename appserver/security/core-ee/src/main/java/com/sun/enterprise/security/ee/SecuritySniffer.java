@@ -27,8 +27,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.enterprise.deploy.shared.ModuleType;
-
 import java.util.logging.Logger;
 import java.io.IOException;
 
@@ -151,8 +149,8 @@ public class SecuritySniffer extends GenericSniffer {
      *
      */
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals(ModuleType.WAR.toString()) ||
-            archiveType.toString().equals(ModuleType.EJB.toString())) {
+        if (archiveType.toString().equals("war") ||
+            archiveType.toString().equals("ejb")) {
             return true;
         }
         return false;

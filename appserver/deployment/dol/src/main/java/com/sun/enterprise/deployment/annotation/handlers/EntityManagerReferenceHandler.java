@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,9 +24,8 @@ import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext
 import org.glassfish.apf.*;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceProperty;
-import java.lang.annotation.Annotation;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceProperty;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

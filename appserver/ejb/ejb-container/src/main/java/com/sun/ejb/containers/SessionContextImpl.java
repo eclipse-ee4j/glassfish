@@ -24,7 +24,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
 
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.TimerService;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.*;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;

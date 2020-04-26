@@ -26,10 +26,10 @@ import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.persistence.common.DatabaseConstants;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.spi.ClassTransformer;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;

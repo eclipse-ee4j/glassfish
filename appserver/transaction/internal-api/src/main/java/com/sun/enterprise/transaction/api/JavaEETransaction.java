@@ -18,7 +18,7 @@ package com.sun.enterprise.transaction.api;
 
 import org.jvnet.hk2.annotations.Contract;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.transaction.Transaction;
 import java.util.Set;
 

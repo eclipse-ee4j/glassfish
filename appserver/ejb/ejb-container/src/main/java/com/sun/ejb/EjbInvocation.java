@@ -26,7 +26,7 @@ import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
 
 import jakarta.ejb.EJBContext;
 import jakarta.ejb.Timer;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import com.sun.ejb.containers.interceptors.InterceptorUtil;
 import javax.naming.NameNotFoundException;
 import jakarta.xml.soap.SOAPMessage;

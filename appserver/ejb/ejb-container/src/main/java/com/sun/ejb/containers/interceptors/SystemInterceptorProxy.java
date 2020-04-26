@@ -16,12 +16,12 @@
 
 package com.sun.ejb.containers.interceptors;
 
-import javax.interceptor.AroundConstruct;
-import javax.interceptor.AroundInvoke;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.interceptor.AroundTimeout;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundConstruct;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.AroundTimeout;
+import jakarta.interceptor.InvocationContext;
 import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;

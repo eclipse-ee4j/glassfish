@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@
  */
  
 package com.sun.jdo.api.persistence.support;
-import javax.transaction.*;
+import jakarta.transaction.*;
 
 /** The JDO Transaction interface is a sub-interface of the PersistenceManager
  * that deals with options and completion of transactions under user control.

@@ -39,7 +39,7 @@ import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 import java.util.Properties;
 
 @ExecuteOn({RuntimeType.DAS})

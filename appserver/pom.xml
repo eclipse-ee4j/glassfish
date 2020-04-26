@@ -94,11 +94,7 @@
         <tyrus.version>2.0.0-M1</tyrus.version>
         <jsonp-api.version>2.0.0-RC2</jsonp-api.version>
         <jsonp-ri.version>2.0.0-RC2</jsonp-ri.version>
-<<<<<<< HEAD
-        <jsonp-jaxrs.version>1.1.6</jsonp-jaxrs.version>
-=======
         <jsonp-jaxrs.version>2.0.0-RC2</jsonp-jaxrs.version>
->>>>>>> Updated to latest jakarta apis
         <json.bind-api.version>2.0.0-RC1</json.bind-api.version>
 
         <yasson.version>2.0.0-M1</yasson.version>

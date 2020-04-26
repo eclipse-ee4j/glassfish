@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,12 +30,12 @@ import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ConfigProperty;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.ResourceAdapterAssociation;
-import javax.resource.spi.ResourceAllocationException;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ResourceAdapterAssociation;
+import jakarta.resource.spi.ResourceAllocationException;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.sql.PooledConnection;
 import java.io.Externalizable;
 import java.io.IOException;
@@ -57,8 +57,8 @@ import java.util.logging.Logger;
  * @version 1.0, 02/08/03
  */
 
-public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi.ManagedConnectionFactory,
-        javax.resource.spi.ValidatingManagedConnectionFactory, 
+public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.spi.ManagedConnectionFactory,
+        jakarta.resource.spi.ValidatingManagedConnectionFactory, 
         MCFLifecycleListener, ResourceAdapterAssociation,
         java.io.Serializable, Externalizable {
 
@@ -66,7 +66,7 @@ public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi
     protected transient DataSourceObjectBuilder dsObjBuilder;
 
     protected java.io.PrintWriter logWriter = null;
-    protected transient javax.resource.spi.ResourceAdapter ra = null;
+    protected transient jakarta.resource.spi.ResourceAdapter ra = null;
 
     private static Logger _logger;
     protected boolean statementWrapping;
@@ -78,7 +78,7 @@ public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi
         _logger = LogDomains.getLogger(ManagedConnectionFactoryImpl.class, LogDomains.RSR_LOGGER);
     }
 
-    protected javax.resource.spi.LazyEnlistableConnectionManager cm_;
+    protected jakarta.resource.spi.LazyEnlistableConnectionManager cm_;
     protected boolean isLazyCm_;
     private int statementCacheSize = 0;
     private String statementCacheType = null;
@@ -109,13 +109,13 @@ public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi
      * @param cxManager <code>ConnectionManager</code> passed by the application server
      * @return Generic JDBC Connector implementation of <code>javax.sql.DataSource</code>
      */
-    public Object createConnectionFactory(javax.resource.spi.ConnectionManager cxManager) {
+    public Object createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager) {
         logFine("In createConnectionFactory(javax.resource.spi.ConnectionManager cxManager)");
 
         javax.sql.DataSource cf = jdbcObjectsFactory.getDataSourceInstance(this, cxManager);
 
-        if (cxManager instanceof javax.resource.spi.LazyEnlistableConnectionManager) {
-            cm_ = (javax.resource.spi.LazyEnlistableConnectionManager) cxManager;
+        if (cxManager instanceof jakarta.resource.spi.LazyEnlistableConnectionManager) {
+            cm_ = (jakarta.resource.spi.LazyEnlistableConnectionManager) cxManager;
             isLazyCm_ = true;
         }
         return cf;
@@ -138,7 +138,7 @@ public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi
      * @throws ResourceException if there is an error in allocating the
      *                           physical connection
      */
-    public abstract javax.resource.spi.ManagedConnection createManagedConnection
+    public abstract jakarta.resource.spi.ManagedConnection createManagedConnection
             (javax.security.auth.Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException;
 
     /**
@@ -168,7 +168,7 @@ public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi
      * @return <code>ResourceAdapterImpl</code> associated with this <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>setResourceAdapter</code>
      */
-    public javax.resource.spi.ResourceAdapter getResourceAdapter() {
+    public jakarta.resource.spi.ResourceAdapter getResourceAdapter() {
         logFine("In getResourceAdapter");
         return ra;
     }
@@ -198,7 +198,7 @@ public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi
      *                           parameter or the <code>Set</code> of <code>ManagedConnection</code>
      *                           objects passed by the application server
      */
-    public javax.resource.spi.ManagedConnection matchManagedConnections(
+    public jakarta.resource.spi.ManagedConnection matchManagedConnections(
             java.util.Set connectionSet, javax.security.auth.Subject subject, ConnectionRequestInfo cxRequestInfo)
             throws ResourceException {
         logFine("In matchManagedConnections");
@@ -657,7 +657,7 @@ public abstract class ManagedConnectionFactoryImpl implements javax.resource.spi
      *           <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>getResourceAdapter</code>
      */
-    public void setResourceAdapter(javax.resource.spi.ResourceAdapter ra) {
+    public void setResourceAdapter(jakarta.resource.spi.ResourceAdapter ra) {
         this.ra = ra;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
 import java.util.ResourceBundle;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;

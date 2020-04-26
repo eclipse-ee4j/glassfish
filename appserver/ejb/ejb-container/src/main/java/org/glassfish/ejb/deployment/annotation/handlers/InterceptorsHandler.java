@@ -24,9 +24,9 @@ import java.util.HashSet;
 import java.util.Set;
 import jakarta.ejb.PostActivate;
 import jakarta.ejb.PrePassivate;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.AroundTimeout;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.AroundTimeout;
+import jakarta.interceptor.Interceptors;
 
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
@@ -47,7 +47,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 
 /**
- * This handler is responsible for handling javax.ejb.Interceptors
+ * This handler is responsible for handling jakarta.ejb.Interceptors
  *
  */
 @Service

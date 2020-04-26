@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.IOException;
-import javax.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.MessagePolicy;
 
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import org.jvnet.hk2.config.types.Property;
@@ -34,7 +34,6 @@ import com.sun.enterprise.config.serverbeans.RequestPolicy;
 import com.sun.enterprise.config.serverbeans.ResponsePolicy;
 
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.common.Util;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 
 import com.sun.logging.LogDomains;

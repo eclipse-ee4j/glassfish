@@ -34,11 +34,19 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.*;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+<<<<<<< HEAD
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import jakarta.xml.ws.WebServiceRef;
+=======
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceUnit;
+import javax.xml.ws.WebServiceRef;
+>>>>>>> Got a lot further, Now blocked on compiling due to Woodstock needs to be moved to the jakarta namespace
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -61,7 +69,7 @@ public class InjectionServicesImpl implements InjectionServices {
 
     private boolean isInterceptor( Class beanClass ) {
       HashSet<String> annos = new HashSet<>();
-      annos.add( javax.interceptor.Interceptor.class.getName() );
+      annos.add( jakarta.interceptor.Interceptor.class.getName() );
       boolean res = false;
       while ( ! res && beanClass != Object.class ) {
         res = WeldUtils.hasValidAnnotation( beanClass, annos, null );

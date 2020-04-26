@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@ import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 
-import javax.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.ResourceAdapter;
 import javax.management.AttributeList;
 import javax.management.Attribute;
 import java.util.logging.Logger;
@@ -42,7 +42,6 @@ import java.io.PrintWriter;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.config.support.TargetType;
 import org.glassfish.config.support.CommandTarget;
 
 public abstract class JMSDestination {

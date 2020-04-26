@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020jakarta Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,9 +27,15 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
+<<<<<<< HEAD
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import javax.interceptor.InvocationContext;
+=======
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import jakarta.interceptor.InvocationContext;
+>>>>>>> Got a lot further, Now blocked on compiling due to Woodstock needs to be moved to the jakarta namespace
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;

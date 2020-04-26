@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,21 +28,21 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.CreateException;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBObject;
-import javax.ejb.EntityBean;
-import javax.ejb.FinderException;
-import javax.ejb.NoSuchEntityException;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.RemoveException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EntityBean;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.NoSuchEntityException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
 
 import org.glassfish.flashlight.provider.ProbeProviderFactory; 
 
@@ -891,7 +891,7 @@ public class EntityContainer
      * Called from CMP PersistentManager
      */
     public void preSelect() 
-      throws javax.ejb.EJBException {
+      throws jakarta.ejb.EJBException {
 	// if the ejbSelect is being invoked with the client's transaction,
         // call ejbStore on all dirty bean instances associated with that
         // transaction. This ensures that the select results will include
@@ -1104,8 +1104,8 @@ public class EntityContainer
         // javax.ejb.EJBHome, javax.ejb.EJBObject, javax.ejb.EJBLocalHome,
         // javax.ejb.EJBLocalObject
         Class declaringClass = removeMethod.getDeclaringClass();
-        i.isHome = ( (declaringClass == javax.ejb.EJBHome.class) ||
-                     (declaringClass == javax.ejb.EJBLocalHome.class) );
+        i.isHome = ( (declaringClass == jakarta.ejb.EJBHome.class) ||
+                     (declaringClass == jakarta.ejb.EJBLocalHome.class) );
 
         try {
             preInvoke(i);

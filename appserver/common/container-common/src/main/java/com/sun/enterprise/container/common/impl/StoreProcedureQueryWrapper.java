@@ -17,7 +17,7 @@
 package com.sun.enterprise.container.common.impl;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 

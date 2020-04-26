@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 
 /**
@@ -55,7 +55,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * @param cxRequestInfo Connection Request Information
      */
     public ConnectionHolder40(Connection con, ManagedConnectionImpl mc,
-                              javax.resource.spi.ConnectionRequestInfo cxRequestInfo,
+                              jakarta.resource.spi.ConnectionRequestInfo cxRequestInfo,
                               boolean jdbc30Connection) {
         super(con, mc, cxRequestInfo);
         this.jdbc30Connection = jdbc30Connection;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,12 +40,9 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.PerLookup;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 /**
@@ -143,9 +140,9 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
     }
     
     private Session getSession(ServletRequest request) {
-        javax.servlet.http.HttpServletRequest httpReq =
-            (javax.servlet.http.HttpServletRequest) request;
-        javax.servlet.http.HttpSession httpSess = httpReq.getSession(false);
+        jakarta.servlet.http.HttpServletRequest httpReq =
+            (jakarta.servlet.http.HttpServletRequest) request;
+        jakarta.servlet.http.HttpSession httpSess = httpReq.getSession(false);
         if(httpSess == null) {
             return null;
         }

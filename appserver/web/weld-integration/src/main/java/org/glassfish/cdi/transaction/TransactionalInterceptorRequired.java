@@ -17,16 +17,16 @@
 package org.glassfish.cdi.transaction;
 
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Status;
 import jakarta.transaction.TransactionalException;
 import java.util.logging.Logger;
 
 /**
  * Transactional annotation Interceptor class for Required transaction type,
- * ie javax.transaction.Transactional.TxType.REQUIRED
+ * ie jakarta.transaction.Transactional.TxType.REQUIRED
  * If called outside a transaction context, a new JTA transaction will begin,
  * the managed bean method execution will then continue inside this transaction context,
  * and the transaction will be committed.

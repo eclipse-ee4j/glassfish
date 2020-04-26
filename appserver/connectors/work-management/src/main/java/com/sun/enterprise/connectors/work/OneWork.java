@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,8 @@ package com.sun.enterprise.connectors.work;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.resource.spi.work.Work;
+import jakarta.resource.spi.work.Work;
 import org.glassfish.logging.annotation.LogMessageInfo;
-import com.sun.enterprise.connectors.work.context.WorkContextHandlerImpl;
 
 /**
  * Represents one piece of work that will be submitted to the workqueue.

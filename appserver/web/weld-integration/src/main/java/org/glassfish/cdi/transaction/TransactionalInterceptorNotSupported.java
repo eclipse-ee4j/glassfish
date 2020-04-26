@@ -17,16 +17,16 @@
 package org.glassfish.cdi.transaction;
 
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionalException;
 import java.util.logging.Logger;
 
 /**
  * Transactional annotation Interceptor class for NotSupported transaction type,
- * ie javax.transaction.Transactional.TxType.NOT_SUPPORTED
+ * ie jakarta.transaction.Transactional.TxType.NOT_SUPPORTED
  * If called outside a transaction context, managed bean method execution will then
  * continue outside a transaction context.
  * If called inside a transaction context, the current transaction context will be suspended,

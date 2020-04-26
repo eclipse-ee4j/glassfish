@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.admingui.common.servlet;
 
-import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.common.util.InputValidationUtil;
 
 import java.io.IOException;
@@ -26,14 +25,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 
@@ -302,7 +301,7 @@ public class DownloadServlet extends HttpServlet {
       }
 
       try (InputStream stream = new BufferedInputStream(in)) {
-        javax.servlet.ServletOutputStream out = resp.getOutputStream();
+        jakarta.servlet.ServletOutputStream out = resp.getOutputStream();
 
         // Write the header
         writeHeader(source, context);

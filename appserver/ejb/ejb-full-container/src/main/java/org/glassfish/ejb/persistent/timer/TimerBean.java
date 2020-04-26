@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,15 +28,15 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
-import javax.ejb.TimerConfig;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TimerConfig;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.PersistenceContext;
 
 import jakarta.annotation.Resource;
 import jakarta.annotation.PreDestroy;

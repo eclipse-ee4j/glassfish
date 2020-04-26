@@ -21,7 +21,7 @@ import java.util.logging.*;
 
 import jakarta.transaction.*;
 import javax.transaction.xa.*;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 
 import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.i18n.StringManager;

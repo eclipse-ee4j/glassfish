@@ -40,10 +40,10 @@ import jakarta.ejb.EJBException;
 import jakarta.ejb.EJBObject;
 import jakarta.ejb.NoSuchObjectLocalException;
 import jakarta.ejb.RemoveException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.SynchronizationType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.SynchronizationType;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
@@ -100,7 +100,7 @@ import jakarta.ejb.IllegalLoopbackException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionSynchronization;
 import java.util.HashMap;
-import static javax.persistence.SynchronizationType.SYNCHRONIZED;
+import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
 import org.glassfish.ejb.LogFacade;
 
 /**

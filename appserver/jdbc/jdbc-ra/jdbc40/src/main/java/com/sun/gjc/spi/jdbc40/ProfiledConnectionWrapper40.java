@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,7 +49,7 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
      * @param cxRequestInfo  Connection Request Info
      */
     public ProfiledConnectionWrapper40(Connection con, ManagedConnectionImpl mc,
-            javax.resource.spi.ConnectionRequestInfo cxRequestInfo,
+            jakarta.resource.spi.ConnectionRequestInfo cxRequestInfo,
             boolean jdbc30Connection, SQLTraceDelegator delegator) {
         super(con, mc, cxRequestInfo, jdbc30Connection);
         this.sqlTraceDelegator = delegator;

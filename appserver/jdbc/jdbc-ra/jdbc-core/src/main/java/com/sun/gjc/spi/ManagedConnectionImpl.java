@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,11 +27,11 @@ import com.sun.gjc.util.StatementLeakDetector;
 import com.sun.logging.LogDomains;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import javax.resource.NotSupportedException;
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionEvent;
-import javax.resource.spi.ConnectionEventListener;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.NotSupportedException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionEvent;
+import jakarta.resource.spi.ConnectionEventListener;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import javax.sql.PooledConnection;
 import javax.sql.XAConnection;
@@ -53,9 +53,9 @@ import java.util.logging.Logger;
  * @author Evani Sai Surya Kiran
  * @version 1.0, 02/07/22
  */
-public class ManagedConnectionImpl implements javax.resource.spi.ManagedConnection,
-        javax.resource.spi.LazyEnlistableManagedConnection,
-        javax.resource.spi.DissociatableManagedConnection {
+public class ManagedConnectionImpl implements jakarta.resource.spi.ManagedConnection,
+        jakarta.resource.spi.LazyEnlistableManagedConnection,
+        jakarta.resource.spi.DissociatableManagedConnection {
 
     public static final int ISNOTAPOOLEDCONNECTION = 0;
     public static final int ISPOOLEDCONNECTION = 1;
@@ -72,7 +72,7 @@ public class ManagedConnectionImpl implements javax.resource.spi.ManagedConnecti
     protected Hashtable connectionHandles;
     protected PrintWriter logWriter;
     protected PasswordCredential passwdCredential;
-    private javax.resource.spi.ManagedConnectionFactory mcf = null;
+    private jakarta.resource.spi.ManagedConnectionFactory mcf = null;
     protected XAResource xar = null;
 
     protected ConnectionHolder myLogicalConnection = null;
@@ -143,7 +143,7 @@ public class ManagedConnectionImpl implements javax.resource.spi.ManagedConnecti
      */
     public ManagedConnectionImpl(PooledConnection pooledConn, java.sql.Connection sqlConn,
                              PasswordCredential passwdCred, 
-                             javax.resource.spi.ManagedConnectionFactory mcf,
+                             jakarta.resource.spi.ManagedConnectionFactory mcf,
                              PoolInfo poolInfo,
                              int statementCacheSize, String statementCacheType,
                              SQLTraceDelegator delegator,
@@ -413,7 +413,7 @@ public class ManagedConnectionImpl implements javax.resource.spi.ManagedConnecti
      *                           if there is a mismatch between the
      *                           password credentials or reauthentication is requested
      */
-    public Object getConnection(Subject sub, javax.resource.spi.ConnectionRequestInfo cxReqInfo)
+    public Object getConnection(Subject sub, jakarta.resource.spi.ConnectionRequestInfo cxReqInfo)
             throws ResourceException {
         logFine("In getConnection");
         checkIfValid();
@@ -502,7 +502,7 @@ public class ManagedConnectionImpl implements javax.resource.spi.ManagedConnecti
      * @return <code>LocalTransactionImpl</code> instance
      * @throws ResourceException if the physical connection is not valid
      */
-    public javax.resource.spi.LocalTransaction getLocalTransaction() throws ResourceException {
+    public jakarta.resource.spi.LocalTransaction getLocalTransaction() throws ResourceException {
         logFine("In getLocalTransaction");
         checkIfValid();
         return new com.sun.gjc.spi.LocalTransactionImpl(this);
@@ -530,7 +530,7 @@ public class ManagedConnectionImpl implements javax.resource.spi.ManagedConnecti
      * @return <code>ManagedConnectionMetaData</code> instance
      * @throws ResourceException if the physical connection is not valid
      */
-    public javax.resource.spi.ManagedConnectionMetaData getMetaData() throws ResourceException {
+    public jakarta.resource.spi.ManagedConnectionMetaData getMetaData() throws ResourceException {
         logFine("In getMetaData");
         checkIfValid();
 
@@ -877,7 +877,7 @@ public class ManagedConnectionImpl implements javax.resource.spi.ManagedConnecti
         markedForRemoval = flag;
     }
 
-    public javax.resource.spi.ManagedConnectionFactory getMcf() {
+    public jakarta.resource.spi.ManagedConnectionFactory getMcf() {
         return mcf;
     }
 

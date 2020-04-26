@@ -43,7 +43,7 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.enterprise.inject.Stereotype;
 import javax.inject.Scope;
 import javax.inject.Singleton;
-import javax.interceptor.Interceptor;
+import jakarta.interceptor.Interceptor;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;

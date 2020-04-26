@@ -20,7 +20,7 @@ import com.sun.enterprise.container.common.spi.util.CallFlowAgent;
 import com.sun.enterprise.container.common.spi.util.EntityManagerQueryMethod;
 import com.sun.enterprise.container.common.impl.util.DummyCallFlowAgentImpl;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 
 /**

@@ -79,7 +79,7 @@
         <findbugs.version>3.0.3</findbugs.version>
         <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
 
-        <webservices.version>3.0.0-M1</webservices.version>
+        <webservices.version>3.0.0-alpha1</webservices.version>
         <glassfish-corba.version>4.2.0</glassfish-corba.version>
         <stax-api.version>1.0-2</stax-api.version>
         <slf4j.version>1.7.21</slf4j.version>

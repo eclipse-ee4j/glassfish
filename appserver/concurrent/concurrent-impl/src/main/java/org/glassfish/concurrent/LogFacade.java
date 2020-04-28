@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class LogFacade {
 
     @LoggerInfo(subsystem = "GlassFish-Concurrency", description = "GlassFish Concurrency Logger", publish = true)
-    private static final String LOGGER_NAME = "javax.enterprise.concurrent";
+    private static final String LOGGER_NAME = "jakarta.enterprise.concurrent";
 
     @LogMessagesResourceBundle
     private static final String LOGGER_RB = "org.glassfish.concurrent.LogMessages";

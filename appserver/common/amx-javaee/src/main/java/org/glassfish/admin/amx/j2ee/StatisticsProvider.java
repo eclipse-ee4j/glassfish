@@ -15,20 +15,10 @@
  */
 
 package org.glassfish.admin.amx.j2ee;
-
-import javax.management.j2ee.statistics.Stats;
-import org.glassfish.admin.amx.annotation.ManagedAttribute;
-
 /**
 	Defines access to Stats.
  */
 public interface StatisticsProvider
 {
-	/**
-		Return a Stats object
-		
-		@return the Stats object or null if not available
-	 */
- 	@ManagedAttribute
-	public Stats		getStats();
+
 }

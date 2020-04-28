@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package com.sun.ejb;
 
-//XXX: import javax.xml.rpc.handler.MessageContext;
 /* HARRY : JACC Changes */
 
 import com.sun.ejb.containers.*;
@@ -31,7 +30,6 @@ import javax.interceptor.InvocationContext;
 import com.sun.ejb.containers.interceptors.InterceptorUtil;
 import javax.naming.NameNotFoundException;
 import javax.transaction.Transaction;
-import javax.xml.rpc.handler.MessageContext;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceContext;
 import java.lang.reflect.Constructor;
@@ -197,14 +195,7 @@ public class EjbInvocation
      * loader that was active before message delivery began.
      */
     private ClassLoader originalContextClassLoader;
-    
-    /**
-     * Used for web service invocations to hold SOAP message context.
-     * EJBs can access message context through SessionContext.
-     */
-	/* HARRY: JACC Related Changes */
-     public MessageContext messageContext;
-    
+
     /**
      * Used for JACC PolicyContextHandlers. The handler can query the container
      * back for parameters on the ejb. This is set during the method invocation
@@ -248,10 +239,6 @@ public class EjbInvocation
 
     private boolean wasCancelCalled = false;
 
-    /**
-     * Used by container within JAXRPC handler processing code.
-     */
-    private Object webServiceTie;
     private Method webServiceMethod;
 
     // True if lock is currently held for this invocation
@@ -684,24 +671,12 @@ public class EjbInvocation
        return getEjbSecurityManager().isCallerInRole(role);
    } 
 
-    public void setWebServiceTie(Object tie) {
-        webServiceTie = tie;
-    }
-
-    public Object getWebServiceTie() {
-        return webServiceTie;
-    }
-
     public void setWebServiceMethod(Method method) {
         webServiceMethod = method;
     }
 
     public Method getWebServiceMethod() {
         return webServiceMethod;
-    }
-
-    public void setMessageContext(MessageContext msgContext) {
-       messageContext = msgContext;
     }
 
    public ResourceHandler getResourceHandler() {

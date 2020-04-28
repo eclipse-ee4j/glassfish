@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.wss.gartner;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @WebService(targetNamespace="http://gartner.wss.security.s1asdev.sun.com")
 public class PingServlet {

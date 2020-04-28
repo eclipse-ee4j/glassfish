@@ -10,14 +10,14 @@
 
 package samples.jms.soaptojms;
 
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.Name;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPPart;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.AttachmentPart;
+import jakarta.xml.soap.Name;
 
 import java.net.URL;
 import javax.activation.DataHandler;
@@ -41,7 +41,7 @@ import java.io.*;
  * This example shows how to use the MessageTransformer utility to send SOAP
  * messages with JMS.
  * <p>
- * SOAP messages are constructed with javax.xml.soap API.  The messages
+ * SOAP messages are constructed with jakarta.xml.soap API.  The messages
  * are converted with MessageTransformer utility to convert SOAP to JMS
  * message types.  The JMS messages are then published to the JMS topics.
  */

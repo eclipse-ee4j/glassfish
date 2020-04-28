@@ -18,7 +18,7 @@ package wls_dd.service_endpoint_address.client;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 
 /**
  * @author Rama Pulavarthi

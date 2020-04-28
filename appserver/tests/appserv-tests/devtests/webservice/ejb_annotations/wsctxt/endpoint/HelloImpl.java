@@ -16,10 +16,10 @@
 
 package endpoint;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 import javax.ejb.Stateless;
 import javax.annotation.Resource;
-import javax.xml.ws.WebServiceContext;
+import jakarta.xml.ws.WebServiceContext;
 import javax.ejb.SessionContext;
 
 @WebService
@@ -34,7 +34,7 @@ public class HelloImpl {
 	System.out.println("EJB WSCTXT wsc = " + ejbsc);
 	if(ejbsc != null) {
 System.out.println(ejbsc.getMessageContext());
-if (ejbsc.getMessageContext() instanceof javax.xml.ws.handler.MessageContext){
+if (ejbsc.getMessageContext() instanceof jakarta.xml.ws.handler.MessageContext){
 System.out.println("YYYYY" +ejbsc.getMessageContext().getClass());
 }
 else {

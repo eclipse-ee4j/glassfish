@@ -523,7 +523,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
         // for @WebService on bean class
         boolean canDoWebServiceAnnCheck = false;
         try {
-            canDoWebServiceAnnCheck = (provider.getType("javax.jws.WebService") != null);
+            canDoWebServiceAnnCheck = (provider.getType("jakarta.jws.WebService") != null);
 
         } catch(Exception e) {
             log(Level.FINE, ainfo, e.getMessage());
@@ -533,7 +533,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             (clientInterfaces.size() == 0) &&
             !ejbDesc.hasWebServiceEndpointInterface() &&
             ( !canDoWebServiceAnnCheck ||
-              (ejbClass.getAnnotation(javax.jws.WebService.class) == null) ) ) {
+              (ejbClass.getAnnotation(jakarta.jws.WebService.class) == null) ) ) {
             ejbDesc.setLocalBean(true);
         }
         

@@ -273,7 +273,7 @@ public class ResourceHandler extends AbstractResourceHandler {
 
             WSDolSupport support  = wSDolSupportProvider.get(); 
             if (support!=null) {
-                webServiceContext = support.getType("javax.xml.ws.WebServiceContext");
+                webServiceContext = support.getType("jakarta.xml.ws.WebServiceContext");
             }
         }   catch(Exception e) {
             // we don't care, either we don't have the class, ot the bundled is not installed

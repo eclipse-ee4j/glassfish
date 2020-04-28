@@ -10,9 +10,9 @@
 
 package samples.jms.soaptojms;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.AttachmentPart;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.AttachmentPart;
 
 import com.sun.messaging.xml.MessageTransformer;
 import jakarta.jms.TopicConnectionFactory;

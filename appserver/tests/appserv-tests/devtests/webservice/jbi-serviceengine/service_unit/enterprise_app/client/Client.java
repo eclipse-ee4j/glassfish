@@ -16,8 +16,8 @@
 
 package client;
 
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.Service;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.Service;
 import entapp.ejb.*;
 import entapp.web.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

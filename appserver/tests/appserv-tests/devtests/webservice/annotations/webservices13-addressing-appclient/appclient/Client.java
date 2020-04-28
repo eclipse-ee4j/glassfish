@@ -16,10 +16,10 @@
 
 package client;
 
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.soap.*;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.soap.*;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

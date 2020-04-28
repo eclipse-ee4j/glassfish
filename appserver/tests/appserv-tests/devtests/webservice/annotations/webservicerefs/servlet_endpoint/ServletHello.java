@@ -16,7 +16,7 @@
 
 package servlet_endpoint;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @WebService
 public class ServletHello {

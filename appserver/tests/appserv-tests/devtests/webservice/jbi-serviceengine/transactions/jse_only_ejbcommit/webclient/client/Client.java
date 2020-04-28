@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import javax.sql.DataSource;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 import endpoint.ejb.*;
 
 public class Client extends HttpServlet {

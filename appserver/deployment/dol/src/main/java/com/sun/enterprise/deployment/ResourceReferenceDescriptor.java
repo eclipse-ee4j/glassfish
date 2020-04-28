@@ -64,7 +64,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     private static final String ORB_RESOURCE_TYPE = "org.omg.CORBA.ORB";
 
     private static final String WEBSERVICE_CONTEXT_TYPE =
-        "javax.xml.ws.WebServiceContext";
+        "jakarta.xml.ws.WebServiceContext";
 
     // change field name from type to rType since it's error-prone 
     // to use the same field name as its super class

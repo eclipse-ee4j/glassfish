@@ -742,11 +742,11 @@ public class CompositeUtil {
                 ifaceNames);
 
         // Add @XmlRootElement
-        classWriter.visitAnnotation("Ljavax/xml/bind/annotation/XmlRootElement;", true).visitEnd();
+        classWriter.visitAnnotation("Ljakarta/xml/bind/annotation/XmlRootElement;", true).visitEnd();
 
         // Add @XmlAccessType
-        AnnotationVisitor annotation = classWriter.visitAnnotation("Ljavax/xml/bind/annotation/XmlAccessorType;", true);
-        annotation.visitEnum("value", "Ljavax/xml/bind/annotation/XmlAccessType;", "FIELD");
+        AnnotationVisitor annotation = classWriter.visitAnnotation("Ljakarta/xml/bind/annotation/XmlAccessorType;", true);
+        annotation.visitEnum("value", "Ljakarta/xml/bind/annotation/XmlAccessType;", "FIELD");
         annotation.visitEnd();
     }
 
@@ -839,7 +839,7 @@ public class CompositeUtil {
     private void createField(ClassWriter cw, String name, Class<?> type) {
         String internalType = getInternalTypeString(type);
         FieldVisitor field = cw.visitField(ACC_PRIVATE, getPropertyName(name), internalType, null, null);
-        field.visitAnnotation("Ljavax/xml/bind/annotation/XmlAttribute;", true).visitEnd();
+        field.visitAnnotation("Ljakarta/xml/bind/annotation/XmlAttribute;", true).visitEnd();
         field.visitEnd();
     }
 

@@ -17,7 +17,7 @@
 package ejb;
 
 import javax.ejb.Stateless;
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 
 import endpoint.WebServiceEJBService;
 import endpoint.WebServiceEJB;

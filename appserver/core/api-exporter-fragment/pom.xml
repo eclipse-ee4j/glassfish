@@ -151,6 +151,8 @@ javax.json.spi; \
 javax.json.stream; \
 javax.jws; \
 javax.jws.soap; \
+jakarta.jws; \
+jakarta.jws.soap; \
 javax.lang.model; \
 javax.lang.model.element; \
 javax.lang.model.type; \
@@ -279,6 +281,12 @@ javax.xml.bind.annotation.adapters; \
 javax.xml.bind.attachment; \
 javax.xml.bind.helpers; \
 javax.xml.bind.util; \
+jakarta.xml.bind; \
+jakarta.xml.bind.annotation; \
+jakarta.xml.bind.annotation.adapters; \
+jakarta.xml.bind.attachment; \
+jakarta.xml.bind.helpers; \
+jakarta.xml.bind.util; \
 javax.xml.crypto; \
 javax.xml.crypto.dom; \
 javax.xml.crypto.dsig; \
@@ -288,9 +296,8 @@ javax.xml.crypto.dsig.spec; \
 javax.xml.datatype; \
 javax.xml.namespace; \
 javax.xml.parsers; \
-javax.xml.registry; \
-javax.xml.registry.infomodel; \
 javax.xml.soap; \
+jakarta.xml.soap; \
 javax.xml.stream; \
 javax.xml.stream.events; \
 javax.xml.stream.util; \
@@ -308,6 +315,14 @@ javax.xml.ws.soap; \
 javax.xml.ws.spi; \
 javax.xml.ws.spi.http; \
 javax.xml.ws.wsaddressing; \
+jakarta.xml.ws; \
+jakarta.xml.ws.handler; \
+jakarta.xml.ws.handler.soap; \
+jakarta.xml.ws.http; \
+jakarta.xml.ws.soap; \
+jakarta.xml.ws.spi; \
+jakarta.xml.ws.spi.http; \
+jakarta.xml.ws.wsaddressing; \
 javax.xml.xpath; \
 org.ietf.jgss; \
 org.omg.CORBA; \

@@ -25,7 +25,7 @@ import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.SessionContext;
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 import com.sun.s1asdev.security.wss.roles2.ejb.SfulLocal;
 

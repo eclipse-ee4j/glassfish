@@ -18,11 +18,11 @@ package endpoint;
 
 import java.util.Map;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 import javax.ejb.Stateless;
 
 import javax.annotation.Resource;
-import javax.xml.ws.WebServiceContext;
+import jakarta.xml.ws.WebServiceContext;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
@@ -46,8 +46,8 @@ public class HelloEJB implements Hello {
             //remove once bug is fixed
             Exception e = new Exception();
             e.printStackTrace();
-            if (invCtx.getContextData() instanceof javax.xml.ws.handler.MessageContext){
-                System.out.println("ContextDataMap is an instance of javax.xml.ws.handler.MessageContext ");
+            if (invCtx.getContextData() instanceof jakarta.xml.ws.handler.MessageContext){
+                System.out.println("ContextDataMap is an instance of jakarta.xml.ws.handler.MessageContext ");
 
                 return invCtx.proceed();
            } else {

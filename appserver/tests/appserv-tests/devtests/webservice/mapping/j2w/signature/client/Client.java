@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.*;
 import javax.naming.*;
 import javax.xml.rpc.Stub;
-import javax.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPElement;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import java.util.GregorianCalendar;
 

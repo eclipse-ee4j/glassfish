@@ -21,16 +21,16 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
-import javax.xml.ws.soap.*;
+import jakarta.xml.ws.*;
+import jakarta.xml.ws.soap.*;
 
 public class Client extends HttpServlet {
 
-        @javax.xml.ws.WebServiceRef(name="foo/bar" )
+        @jakarta.xml.ws.WebServiceRef(name="foo/bar" )
         @Addressing 
         SubtractNumbersService service;
 
-        @javax.xml.ws.WebServiceRef(lookup="java:comp/env/foo/bar")
+        @jakarta.xml.ws.WebServiceRef(lookup="java:comp/env/foo/bar")
         SubtractNumbersService service2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 

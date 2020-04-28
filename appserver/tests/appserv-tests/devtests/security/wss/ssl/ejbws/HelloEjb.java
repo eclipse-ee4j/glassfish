@@ -17,7 +17,7 @@
 package com.sun.s1asdev.security.wss.ssl.ejbws;
 
 import javax.ejb.Stateless;
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @Stateless
 @WebService(targetNamespace="http://ejbws.ssl.wss.security.s1asdev.sun.com", serviceName="WssSslEjbService")

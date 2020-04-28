@@ -16,9 +16,9 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.jws.Oneway;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.jws.Oneway;
 
 @WebService
 public class Hello {

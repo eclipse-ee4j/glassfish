@@ -17,7 +17,7 @@
 package org.glassfish.webservices;
 
 
-import javax.xml.ws.http.HTTPBinding;
+import jakarta.xml.ws.http.HTTPBinding;
 
 import com.sun.xml.ws.api.pipe.Pipe;
 import com.sun.xml.ws.assembler.ServerPipelineHook;

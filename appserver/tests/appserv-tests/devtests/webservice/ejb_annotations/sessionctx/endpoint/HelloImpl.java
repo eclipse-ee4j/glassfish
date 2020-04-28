@@ -16,10 +16,10 @@
 
 package endpoint;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 import javax.ejb.Stateless;
 import javax.annotation.Resource;
-import javax.xml.ws.WebServiceContext;
+import jakarta.xml.ws.WebServiceContext;
 import javax.ejb.SessionContext;
 import java.security.Principal;
 

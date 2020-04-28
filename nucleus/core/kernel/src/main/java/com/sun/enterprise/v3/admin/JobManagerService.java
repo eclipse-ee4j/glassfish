@@ -38,9 +38,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 
 import org.glassfish.api.admin.*;
 import org.glassfish.api.admin.progress.JobInfo;
@@ -53,7 +53,7 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.Marshaller;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandState.State;
 

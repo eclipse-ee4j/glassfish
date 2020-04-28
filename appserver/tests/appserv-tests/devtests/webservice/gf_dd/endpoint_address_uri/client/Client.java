@@ -18,7 +18,7 @@ package gf_dd.endpoint_address_uri.client;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 
 /**
  * @author Rama Pulavarthi

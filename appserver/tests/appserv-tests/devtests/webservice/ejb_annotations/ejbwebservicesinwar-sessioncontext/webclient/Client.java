@@ -21,11 +21,11 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 public class Client extends HttpServlet {
 
-        @javax.xml.ws.WebServiceRef(HelloService.class)
+        @jakarta.xml.ws.WebServiceRef(HelloService.class)
         Hello hiport;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 

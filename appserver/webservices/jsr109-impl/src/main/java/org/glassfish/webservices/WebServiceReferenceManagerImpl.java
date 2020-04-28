@@ -32,12 +32,12 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
-import javax.xml.ws.soap.MTOMFeature;
-import javax.xml.ws.soap.AddressingFeature;
-import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.RespectBindingFeature;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.spi.WebServiceFeatureAnnotation;
+import jakarta.xml.ws.soap.MTOMFeature;
+import jakarta.xml.ws.soap.AddressingFeature;
+import jakarta.xml.ws.WebServiceFeature;
+import jakarta.xml.ws.RespectBindingFeature;
+import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.spi.WebServiceFeatureAnnotation;
 import java.io.*;
 import java.lang.reflect.*;
 import java.lang.annotation.Annotation;
@@ -52,8 +52,8 @@ import java.net.URL;
 
 /**
  * This class acts as a service to resolve the
- * </code>javax.xml.ws.WebServiceRef</code> references
- * and also <code>javax.xml.ws.WebServiceContext</code>
+ * </code>jakarta.xml.ws.WebServiceRef</code> references
+ * and also <code>jakarta.xml.ws.WebServiceContext</code>
  * Whenever a lookup is done from GlassfishNamingManagerImpl
  * these methods are invoked to resolve the references
  *
@@ -98,15 +98,15 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
 
             resolvePortComponentLinks(desc);
 
-            javax.xml.ws.Service jaxwsDelegate = null;
+            jakarta.xml.ws.Service jaxwsDelegate = null;
             Object injValue = null;
 
                     // The target is probably a post JAXRPC-1.1- based service;
                     // If Service Interface class is set, check if it is indeed a subclass of Service
-                    // initiateInstance should not be called if the user has given javax.xml.ws.Service itself
+                    // initiateInstance should not be called if the user has given jakarta.xml.ws.Service itself
                     // as the interface through DD
-                    if(javax.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass) &&
-                            !javax.xml.ws.Service.class.equals(serviceInterfaceClass) ) {
+                    if(jakarta.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass) &&
+                            !jakarta.xml.ws.Service.class.equals(serviceInterfaceClass) ) {
                         // OK - the interface class is indeed the generated service class; get an instance
                         injValue = initiateInstance(serviceInterfaceClass, desc);
                     } else {
@@ -155,23 +155,23 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
                     if(injValue == null) {
                         // Here create the service with WSDL (overridden wsdl if wsdl-override is present)
                         // so that JAXWS runtime uses this wsdl @ runtime
-                        javax.xml.ws.Service svc =
-                                javax.xml.ws.Service.create((new WsUtil()).privilegedGetServiceRefWsdl(desc),
+                        jakarta.xml.ws.Service svc =
+                                jakarta.xml.ws.Service.create((new WsUtil()).privilegedGetServiceRefWsdl(desc),
                                         desc.getServiceName());
                         jaxwsDelegate = new JAXWSServiceDelegate(desc, svc, cl);
                     }
                 
 
                 // check if this is a post 1.1 web service
-                if(javax.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass)) {
+                if(jakarta.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass)) {
                     // This is a JAXWS based webservice client;
                     // process handlers and mtom setting
                     // moved test for handlers into wsUtil, in case
                     // we have to add system handler
 
-                    javax.xml.ws.Service service =
+                    jakarta.xml.ws.Service service =
                             (injValue != null ?
-                                    (javax.xml.ws.Service) injValue : jaxwsDelegate);
+                                    (jakarta.xml.ws.Service) injValue : jaxwsDelegate);
 
                     if (service != null) {
                         // Now configure client side handlers

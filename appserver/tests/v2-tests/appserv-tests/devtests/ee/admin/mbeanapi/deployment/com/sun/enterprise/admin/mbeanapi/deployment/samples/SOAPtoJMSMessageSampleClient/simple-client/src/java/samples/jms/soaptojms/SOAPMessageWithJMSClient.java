@@ -10,6 +10,24 @@
 
 package samples.jms.soaptojms;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.AttachmentPart;
+
+import com.sun.messaging.xml.MessageTransformer;
+import jakarta.jms.TopicConnectionFactory;
+
+import jakarta.jms.MessageListener;
+import jakarta.jms.TopicConnection;
+import jakarta.jms.TopicSession;
+import jakarta.jms.Message;
+import jakarta.jms.Session;
+import jakarta.jms.Topic;
+import jakarta.jms.JMSException;
+import jakarta.jms.TopicSubscriber;
+
+import java.util.Iterator;
+
 /**
  * This sample program shows a JMS message listener can use the MessageTransformer
  * utility to convert JMS messages back to SOAP messages.

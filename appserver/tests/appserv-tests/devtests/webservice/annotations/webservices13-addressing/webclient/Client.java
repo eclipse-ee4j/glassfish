@@ -21,12 +21,12 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
-import javax.xml.ws.soap.*;
+import jakarta.xml.ws.*;
+import jakarta.xml.ws.soap.*;
 
 public class Client extends HttpServlet {
 
-        @javax.xml.ws.WebServiceRef(SubtractNumbersService.class)
+        @jakarta.xml.ws.WebServiceRef(SubtractNumbersService.class)
        //@Addressing (required = true,enabled=true ,responses=AddressingFeature.Responses.NON_ANONYMOUS)
         //@Addressing 
         SubtractNumbersImpl port;

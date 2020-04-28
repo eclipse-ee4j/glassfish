@@ -16,13 +16,13 @@
 
 package client;
 
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.Service;
-import javax.xml.ws.BindingProvider;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.Service;
+import jakarta.xml.ws.BindingProvider;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 import service.web.example.calculator.*;
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 public class SOAPWebConsumer {
     @WebServiceRef(wsdlLocation="http://localhost:8080/rpc-literal-bundled-wsdl-bc-consumer-se-provider/webservice/CalculatorService?WSDL")

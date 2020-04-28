@@ -170,7 +170,7 @@ public class InjectionPointHelper {
                 className.equals("javax.annotation.Resource") ||
                 className.equals("javax.persistence.PersistenceContext") ||
                 className.equals("javax.persistence.PersistenceUnit") ||
-                className.equals("javax.xml.ws.WebServiceRef") ) {
+                className.equals("jakarta.xml.ws.WebServiceRef") ) {
                 envAnnotation = next;
                 break;
             }

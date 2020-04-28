@@ -18,7 +18,7 @@ package com.sun.s1asdev.security.wss.roles.ejbws2;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @Stateless
 @WebService(targetNamespace="http://ejbws2.roles.wss.security.s1asdev.sun.com", serviceName="WssRolesEjb2Service")

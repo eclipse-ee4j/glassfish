@@ -218,13 +218,13 @@ spec:
       }
     }
     
-    stage('tests') {
-      steps {
-        script {
-          // parallel parallelStagesMap
-        }
-      }
-    }
+//    stage('tests') {
+//      steps {
+//        script {
+//          parallel parallelStagesMap
+//        }
+//      }
+//    }
   }
 }
 

@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.annotation.*;
+import jakarta.annotation.*
 import javax.ejb.*;
 
 @javax.servlet.annotation.WebServlet(urlPatterns = "/TestServlet")

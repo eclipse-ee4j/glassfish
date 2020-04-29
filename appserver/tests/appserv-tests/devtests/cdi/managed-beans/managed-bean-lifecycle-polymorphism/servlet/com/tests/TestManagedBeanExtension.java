@@ -17,19 +17,19 @@
 package com.tests;
 
 @javax.enterprise.inject.Alternative
-@javax.annotation.ManagedBean
+@jakarta.annotation.ManagedBean
 public class TestManagedBeanExtension extends TestManagedBean {
 
     public static final String TOSTRING_EXT = "TestManagedBeanExtension";
 
-    @javax.annotation.PostConstruct
+    @jakarta.annotation.PostConstruct
     public void init() {
         postConstructCount++;
         postConstructMessage += TOSTRING_EXT + "#PostConstruct";
         System.out.println(postConstructMessage);
     }
 
-    @javax.annotation.PreDestroy
+    @jakarta.annotation.PreDestroy
     public void destroy() {
         preDestroyCount++;
         preDestroyMessage += TOSTRING_EXT + "#PreDestroy";

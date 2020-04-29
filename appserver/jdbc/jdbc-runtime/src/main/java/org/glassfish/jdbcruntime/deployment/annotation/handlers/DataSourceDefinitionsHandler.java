@@ -22,8 +22,8 @@ import org.glassfish.apf.*;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.apf.impl.HandlerProcessingResultImpl;
 
-import javax.annotation.sql.DataSourceDefinitions;
-import javax.annotation.sql.DataSourceDefinition;
+import jakarta.annotation.sql.DataSourceDefinitions;
+import jakarta.annotation.sql.DataSourceDefinition;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.HashSet;

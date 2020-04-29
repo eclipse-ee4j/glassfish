@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 public class InterceptorD {
 

@@ -21,8 +21,8 @@ import java.util.*;
 import java.sql.*;
 import javax.ejb.EJB;
 import javax.transaction.UserTransaction;
-import javax.annotation.*;
-import javax.annotation.sql.*;
+import jakarta.annotation.*
+import jakarta.annotation.sql.*;
 import javax.sql.DataSource;
 import com.sun.s1asdev.ejb.ejb30.persistence.tx_propagation.*;
 

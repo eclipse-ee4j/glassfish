@@ -19,8 +19,8 @@ package endpoint;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PostConstruct;
 import javax.xml.namespace.QName;
 import jakarta.xml.ws.handler.MessageContext;
 import jakarta.xml.ws.handler.soap.SOAPHandler;

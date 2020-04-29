@@ -20,9 +20,9 @@ import javax.ejb.Stateful;
 import javax.ejb.*;
 import javax.interceptor.Interceptors;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 
 @Stateful
 public class StatefulBean {

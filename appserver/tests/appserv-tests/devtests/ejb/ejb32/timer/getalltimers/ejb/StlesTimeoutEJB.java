@@ -17,7 +17,7 @@
 package com.acme.ejb32.timer.getalltimers;
 
 import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import java.util.Map;
 import java.util.Set;

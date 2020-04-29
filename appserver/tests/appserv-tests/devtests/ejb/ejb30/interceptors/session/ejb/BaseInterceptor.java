@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.ejb.PrePassivate;
 import javax.ejb.PostActivate;
 

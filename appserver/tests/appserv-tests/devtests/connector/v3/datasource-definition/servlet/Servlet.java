@@ -23,8 +23,8 @@ import javax.naming.*;
 import javax.ejb.EJB;
 import javax.ejb.EJBs;
 import javax.ejb.EJBException;
-import javax.annotation.Resource;
-import javax.annotation.Resources;
+import jakarta.annotation.Resource;
+import jakarta.annotation.Resources;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import javax.servlet.*;
@@ -34,7 +34,7 @@ import javax.servlet.http.*;
 import javax.transaction.UserTransaction;
 
 
-import javax.annotation.sql.*;
+import jakarta.annotation.sql.*;
 
 @EJB(name = "helloStateless3", beanInterface = Hello.class)
 @EJBs({@EJB(name = "helloStateless4", beanName = "HelloEJB",

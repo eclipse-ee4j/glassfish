@@ -38,8 +38,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.PersistenceContext;
 
-import javax.annotation.Resource;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PreDestroy;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.sql.Connection;

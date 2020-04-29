@@ -21,7 +21,7 @@ import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 import javax.ejb.EJBException;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @Interceptors({
 	com.sun.s1asdev.ejb.ejb30.interceptors.session.BaseInterceptor.class,

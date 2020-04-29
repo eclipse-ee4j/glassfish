@@ -17,7 +17,7 @@
 package gf;
 
 import javax.ejb.Stateless;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import jakarta.jms.QueueConnectionFactory;
 import jakarta.jms.Queue;
 

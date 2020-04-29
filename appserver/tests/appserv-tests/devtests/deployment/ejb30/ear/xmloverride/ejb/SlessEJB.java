@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.deployment.ejb30.ear.xmloverride;
 
-import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.RolesAllowed;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 

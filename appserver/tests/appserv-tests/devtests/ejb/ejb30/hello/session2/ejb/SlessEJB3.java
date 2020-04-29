@@ -20,9 +20,9 @@ import javax.ejb.Stateless;
 import javax.ejb.Remote;
 import javax.ejb.EJB;
 import javax.ejb.EJBContext;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.ejb.SessionContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import java.util.Collection;
 import java.util.Iterator;

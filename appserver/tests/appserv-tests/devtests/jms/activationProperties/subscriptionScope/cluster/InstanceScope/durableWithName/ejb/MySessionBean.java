@@ -17,7 +17,7 @@
 package org.glassfish.test.jms.activationproperties.ejb;
 
 import java.util.logging.Logger;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.*;
 import javax.inject.Inject;
 import jakarta.jms.*;

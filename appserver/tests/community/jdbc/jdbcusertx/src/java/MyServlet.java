@@ -24,7 +24,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import myapp.test.SimpleTest;
 import myapp.util.HtmlUtil;
 

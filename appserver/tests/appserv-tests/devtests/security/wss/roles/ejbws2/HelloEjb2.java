@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.wss.roles.ejbws2;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import jakarta.jws.WebService;
 

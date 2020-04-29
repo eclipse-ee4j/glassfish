@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.ejb1.scoped;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 import javax.enterprise.context.ApplicationScoped;
 
 /**

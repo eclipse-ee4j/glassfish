@@ -24,7 +24,7 @@ import org.glassfish.apf.*;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AccessibleObject;

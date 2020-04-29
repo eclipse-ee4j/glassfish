@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 
 @Stateless

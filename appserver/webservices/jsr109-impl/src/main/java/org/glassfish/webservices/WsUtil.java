@@ -1355,7 +1355,7 @@ public class WsUtil {
      * Calls @PostConstruct method in the implementor
      */
     public void doPostConstruct(Class impl, Object implObj) {
-        invokeServiceMethod(javax.annotation.PostConstruct.class, impl,
+        invokeServiceMethod(jakarta.annotation.PostConstruct.class, impl,
                 implObj);
     }
     
@@ -1367,7 +1367,7 @@ public class WsUtil {
         try {
             Class impl = Class.forName(ep.getServletImplClass(),
                                 true, loader);
-            invokeServiceMethod(javax.annotation.PreDestroy.class, impl,
+            invokeServiceMethod(jakarta.annotation.PreDestroy.class, impl,
                     impl.newInstance());
         } catch (Throwable ex) {
             String msg = MessageFormat.format(
@@ -1389,7 +1389,7 @@ public class WsUtil {
                 try {
                     Class handlerClass = Class.forName(thisHandler.getHandlerClass(),
                                             true, loader);
-                    invokeServiceMethod(javax.annotation.PreDestroy.class, handlerClass,
+                    invokeServiceMethod(jakarta.annotation.PreDestroy.class, handlerClass,
                             handlerClass.newInstance());
                 } catch (Throwable ex) {
                     String msg = MessageFormat.format(

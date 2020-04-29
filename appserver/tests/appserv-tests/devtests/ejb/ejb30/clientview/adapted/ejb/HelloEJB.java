@@ -21,8 +21,8 @@ import javax.naming.*;
 import java.util.*;
 import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
-import javax.annotation.Resource;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PostConstruct;
 
 @Stateful
 @Remote({Hello.class})

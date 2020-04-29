@@ -63,8 +63,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.types.Property;
 
 
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RunAs;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
 import javax.servlet.*;
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpUpgradeHandler;

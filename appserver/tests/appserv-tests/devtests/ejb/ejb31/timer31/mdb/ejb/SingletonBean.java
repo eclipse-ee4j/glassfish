@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*
 import org.omg.CORBA.ORB;
 
 @Singleton

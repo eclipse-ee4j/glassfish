@@ -16,10 +16,10 @@
 
 package com.acme;
 
-import javax.annotation.*;
+import jakarta.annotation.*
 
 import javax.ejb.EJB;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.omg.CORBA.ORB;
 
 @ManagedBean("somemanagedbean")

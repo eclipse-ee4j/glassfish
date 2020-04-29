@@ -25,7 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.EntityManager;
 import javax.naming.InitialContext;
-import javax.annotation.sql.*;
+import jakarta.annotation.sql.*;
 import javax.sql.DataSource;
 import java.sql.Connection;
 

@@ -19,19 +19,19 @@ package com.sun.s1asdev.ejb.ejb30.hello.session2;
 import javax.ejb.Stateful;
 import javax.ejb.Remote;
 import javax.ejb.EJB;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.interceptor.Interceptors;
 import javax.ejb.EJBs;
 import javax.ejb.Remove;
 import javax.ejb.SessionSynchronization;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import javax.ejb.EJBException;
 import javax.ejb.SessionContext;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.naming.InitialContext;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.transaction.UserTransaction;
 
 import java.util.Collection;

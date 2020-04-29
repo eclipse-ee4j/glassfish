@@ -17,9 +17,9 @@
 package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 
 import javax.ejb.*;
-import javax.annotation.Resource;
-import javax.annotation.PreDestroy;
-import javax.annotation.security.DenyAll;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.security.DenyAll;
 
 @Stateful
 @AccessTimeout(0)

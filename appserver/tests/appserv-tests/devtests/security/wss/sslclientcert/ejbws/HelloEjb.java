@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.wss.sslclientcert.ejbws;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import jakarta.jws.WebService;

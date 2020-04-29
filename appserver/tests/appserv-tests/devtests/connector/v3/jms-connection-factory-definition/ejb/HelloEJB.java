@@ -19,8 +19,8 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;

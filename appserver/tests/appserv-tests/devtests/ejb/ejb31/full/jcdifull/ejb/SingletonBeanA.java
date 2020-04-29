@@ -17,7 +17,7 @@
 package com.acme;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*
 import javax.interceptor.*;
 
 import javax.inject.Inject;

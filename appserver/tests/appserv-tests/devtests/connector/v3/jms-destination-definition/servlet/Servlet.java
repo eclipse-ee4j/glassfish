@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBs;
 import jakarta.jms.Destination;

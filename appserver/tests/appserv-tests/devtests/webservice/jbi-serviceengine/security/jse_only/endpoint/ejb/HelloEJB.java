@@ -21,7 +21,7 @@ import jakarta.jws.WebService;
 import jakarta.xml.ws.WebServiceRef;
 import javax.ejb.Stateless;
 import javax.ejb.SessionContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @WebService(endpointInterface="endpoint.ejb.Hello", targetNamespace="http://endpoint/ejb")
 @Stateless

@@ -17,7 +17,7 @@
 package endpoint;
 
 import jakarta.jws.WebService;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import jakarta.xml.ws.WebServiceContext;
 import javax.servlet.ServletContext;
 import jakarta.xml.ws.WebServiceContext;

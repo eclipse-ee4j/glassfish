@@ -17,7 +17,7 @@
 package org.glassfish.test.jms.jmsxdeliverycount.ejb;
 
 import java.util.logging.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.*;
 import javax.inject.Inject;
 import jakarta.jms.*;

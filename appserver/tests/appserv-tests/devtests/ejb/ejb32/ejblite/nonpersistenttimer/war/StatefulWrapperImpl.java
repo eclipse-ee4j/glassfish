@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)

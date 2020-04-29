@@ -18,7 +18,7 @@ package org.glassfish.jacc.test.mr8;
 
 import java.security.Principal;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 

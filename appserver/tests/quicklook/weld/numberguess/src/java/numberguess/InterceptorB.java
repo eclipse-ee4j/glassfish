@@ -19,7 +19,7 @@ package numberguess;
 import java.io.Serializable;
 
 import javax.interceptor.*;
-import javax.annotation.*;
+import jakarta.annotation.*
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;

@@ -16,7 +16,7 @@
 
 package org.glassfish.test.authpropagation;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;

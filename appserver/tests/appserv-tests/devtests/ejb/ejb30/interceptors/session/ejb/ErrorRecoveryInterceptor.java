@@ -22,7 +22,7 @@ import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*
 
 public class ErrorRecoveryInterceptor {
 

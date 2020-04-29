@@ -72,6 +72,9 @@ javax.annotation; \
 javax.annotation.processing; \
 javax.annotation.security; \
 javax.annotation.sql; \
+jakarta.annotation; \
+jakarta.annotation.security; \
+jakarta.annotation.sql; \
 javax.batch.api; \
 javax.batch.api.chunk; \
 javax.batch.api.chunk.listener; \

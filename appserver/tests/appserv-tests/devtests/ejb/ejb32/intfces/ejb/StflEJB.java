@@ -16,7 +16,7 @@
 
 package ejb32.intrfaces;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;

@@ -20,7 +20,7 @@
  */
 package com.oracle.jms.test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;

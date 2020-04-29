@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.simpleMultiRoleMapping.ejb;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 

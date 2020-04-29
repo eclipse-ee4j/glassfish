@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.examples.jersey_cdi.resources;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import jakarta.ws.rs.GET;

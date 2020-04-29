@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session2;
 import javax.ejb.Stateless;
 import javax.ejb.Remote;
 import javax.ejb.EJBException;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.ejb.SessionBean;
 import javax.ejb.CreateException;
 import javax.ejb.SessionContext;

@@ -121,7 +121,7 @@
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
         <mail.version>2.0.0-RC4</mail.version>
         <activation.version>2.0.0-RC3</activation.version>
-        <jakarta.annotation-api.version>1.3.4</jakarta.annotation-api.version>
+        <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>
         <copyright-plugin.version>1.50</copyright-plugin.version>
         <testng.version>7.1.0</testng.version>
         <jdk.version>1.7.0-09</jdk.version>

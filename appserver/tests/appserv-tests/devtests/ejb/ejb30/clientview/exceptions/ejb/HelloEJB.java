@@ -22,12 +22,12 @@ import java.util.*;
 import javax.rmi.PortableRemoteObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.transaction.TransactionRolledbackException;
 import static javax.transaction.Status.*;
 import javax.transaction.TransactionRequiredException;
 import javax.transaction.UserTransaction;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @Stateful
 @Remote({Hello.class})

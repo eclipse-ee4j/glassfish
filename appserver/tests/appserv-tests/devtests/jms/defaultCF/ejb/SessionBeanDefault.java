@@ -16,7 +16,7 @@
 
 package org.glassfish.test.jms.defaultcf.ejb;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.*;
 import jakarta.jms.*;
 import javax.naming.InitialContext;

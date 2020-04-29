@@ -19,9 +19,9 @@ package org.glassfish.jersey.examples.jersey_cdi.resources;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.Resource;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 
 import jakarta.ws.rs.GET;

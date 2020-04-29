@@ -17,12 +17,12 @@
 package myfilter;
 
 import java.io.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.inject.Inject;
 import jakarta.jms.*;
 import javax.servlet.*;
 import javax.naming.*;
-import javax.annotation.*;
+import jakarta.annotation.*
 
 public class MyFilter implements Filter {
     @Resource(mappedName = "jms/jms_unit_test_Queue")

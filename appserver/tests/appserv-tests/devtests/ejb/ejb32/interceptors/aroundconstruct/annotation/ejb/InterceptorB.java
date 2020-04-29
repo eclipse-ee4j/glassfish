@@ -19,8 +19,8 @@ package com.acme;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.AroundConstruct;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 public class InterceptorB {
 

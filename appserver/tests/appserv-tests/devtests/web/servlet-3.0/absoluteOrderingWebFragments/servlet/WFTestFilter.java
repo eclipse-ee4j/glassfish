@@ -19,7 +19,7 @@ package wftest;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

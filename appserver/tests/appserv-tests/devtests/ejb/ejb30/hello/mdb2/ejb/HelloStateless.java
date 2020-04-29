@@ -19,8 +19,8 @@ package com.sun.s1asdev.ejb.ejb30.hello.mdb2;
 import javax.ejb.Stateless;
 import javax.ejb.TimerService;
 import javax.ejb.Local;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import javax.ejb.EJBException;
 
 @Local({Hello1.class})

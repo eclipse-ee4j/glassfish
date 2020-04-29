@@ -31,7 +31,7 @@ import javax.inject.Provider;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
- * This handler is responsible for handling the javax.annotation.Resource
+ * This handler is responsible for handling the jakarta.annotation.Resource
  * annotation.
  */
 @Service

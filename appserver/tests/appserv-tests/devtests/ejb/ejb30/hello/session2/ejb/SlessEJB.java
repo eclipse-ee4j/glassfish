@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session2;
 import javax.ejb.Stateless;
 import javax.ejb.Remote;
 import javax.ejb.SessionContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import javax.ejb.EJB;
 import javax.ejb.RemoteHome;

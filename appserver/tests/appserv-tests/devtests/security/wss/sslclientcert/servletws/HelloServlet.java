@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.wss.sslclientcert.servletws;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import jakarta.jws.WebService;
 import jakarta.xml.ws.WebServiceContext;
 

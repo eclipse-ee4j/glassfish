@@ -18,7 +18,7 @@ package endpoint;
 
 import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.SessionContext;
 import jakarta.xml.ws.WebServiceContext;
 

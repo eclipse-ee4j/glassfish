@@ -31,7 +31,7 @@ public class SimpleEjb { //implements Simple {
         return "hello";
     }
 
-    @javax.annotation.PreDestroy
+    @jakarta.annotation.PreDestroy
     private void onDestroy() {
         x.add("=====destroyed=====");
     }

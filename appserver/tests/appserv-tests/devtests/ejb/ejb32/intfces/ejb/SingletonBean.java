@@ -17,7 +17,7 @@
 package ejb32.intrfaces;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*
 
 /*
     SingletonBean exposes remote interfaces St1 and St2

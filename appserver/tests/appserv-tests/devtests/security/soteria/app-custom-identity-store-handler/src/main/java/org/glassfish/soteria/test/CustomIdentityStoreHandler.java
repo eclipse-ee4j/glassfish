@@ -16,8 +16,8 @@
 
 package org.glassfish.soteria.test;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Priority;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.security.enterprise.CallerPrincipal;

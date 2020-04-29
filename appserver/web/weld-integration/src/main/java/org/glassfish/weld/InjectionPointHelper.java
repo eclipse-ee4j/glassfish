@@ -167,7 +167,7 @@ public class InjectionPointHelper {
 
             String className = next.annotationType().getName();
             if( className.equals("javax.ejb.EJB") ||
-                className.equals("javax.annotation.Resource") ||
+                className.equals("jakarta.annotation.Resource") ||
                 className.equals("javax.persistence.PersistenceContext") ||
                 className.equals("javax.persistence.PersistenceUnit") ||
                 className.equals("jakarta.xml.ws.WebServiceRef") ) {

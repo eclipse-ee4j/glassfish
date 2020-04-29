@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 import java.lang.reflect.Constructor;
 import org.glassfish.api.admin.ProcessEnvironment;
 

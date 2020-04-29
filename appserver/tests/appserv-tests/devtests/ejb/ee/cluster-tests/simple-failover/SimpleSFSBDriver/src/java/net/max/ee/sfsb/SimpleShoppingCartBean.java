@@ -24,7 +24,7 @@ package net.max.ee.sfsb;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import javax.ejb.LocalBean;
 import javax.ejb.Remove;
 import javax.ejb.Stateful;

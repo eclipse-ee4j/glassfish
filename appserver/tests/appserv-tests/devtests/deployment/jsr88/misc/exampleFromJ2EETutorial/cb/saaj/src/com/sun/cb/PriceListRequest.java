@@ -16,7 +16,7 @@
 
 package com.sun.cb;
 
-import javax.xml.soap.*;
+import jakarta.xml.soap.*;
 import java.util.*;
 import java.math.BigDecimal;
 

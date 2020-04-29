@@ -38,8 +38,8 @@ import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
 import org.glassfish.ejb.api.EjbEndpointFacade;
 
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.handler.Handler;
+import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.handler.Handler;
 
 /**
  * This class acts as a registry of all the webservice EJB end points

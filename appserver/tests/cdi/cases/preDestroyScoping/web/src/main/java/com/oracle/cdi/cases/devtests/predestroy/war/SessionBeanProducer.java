@@ -17,8 +17,8 @@
 package com.oracle.cdi.cases.devtests.predestroy.war;
 
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;

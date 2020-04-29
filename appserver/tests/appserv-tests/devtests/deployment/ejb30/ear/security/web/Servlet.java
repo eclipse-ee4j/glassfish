@@ -19,7 +19,7 @@ package com.sun.s1asdev.deployment.ejb30.ear.security;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.annotation.security.RunAs;
+import jakarta.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

@@ -16,7 +16,7 @@
 
 package gf;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.net.URL;
 
 public class TestServlet {

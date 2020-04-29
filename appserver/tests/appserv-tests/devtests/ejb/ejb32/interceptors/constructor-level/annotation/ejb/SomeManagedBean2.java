@@ -16,10 +16,10 @@
 
 package com.acme;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 import javax.ejb.EJB;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.interceptor.ExcludeClassInterceptors;
 import javax.interceptor.Interceptors;
 import org.omg.CORBA.ORB;

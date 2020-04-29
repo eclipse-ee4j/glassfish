@@ -18,7 +18,7 @@ package endpoint;
 
 import javax.jws.WebService;
 import javax.jws.WebMethod;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @WebService(
         name="Hello",

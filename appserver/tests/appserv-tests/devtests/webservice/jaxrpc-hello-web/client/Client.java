@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.Stub;
 import helloservice.*;
 import javax.xml.rpc.Service;
-import javax.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPElement;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 */

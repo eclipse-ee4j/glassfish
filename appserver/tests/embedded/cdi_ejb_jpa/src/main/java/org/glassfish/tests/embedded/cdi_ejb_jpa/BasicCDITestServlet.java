@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.annotation.sql.DataSourceDefinition;
+import jakarta.annotation.sql.DataSourceDefinition;
 
 @WebServlet(name = "BasicCDITestServlet",
 urlPatterns = "/BasicCDITestServlet")

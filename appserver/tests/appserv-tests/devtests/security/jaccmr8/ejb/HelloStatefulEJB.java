@@ -18,10 +18,10 @@ package org.glassfish.jacc.test.mr8;
 
 import java.security.Principal;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RolesAllowed;
 
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;

@@ -18,7 +18,7 @@ package org.glassfish.admingui.common.util;
 
 import org.w3c.dom.*;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;

@@ -18,7 +18,7 @@ package endpoint;
 
 import java.math.BigInteger;
 import java.util.*;
-import javax.jws.*;
+import jakarta.jws.*;
 import javax.ejb.*;
 import javax.persistence.*;
 

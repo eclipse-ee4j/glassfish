@@ -16,7 +16,7 @@
 
 package gf;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 public class TestServlet {
     @Resource(name="integer", mappedName="java:comp/env/myValue1")

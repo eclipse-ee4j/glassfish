@@ -18,7 +18,7 @@ package ejb32.methodintf;
 
 import javax.ejb.*;
 import javax.interceptor.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 @Stateful
 public class StfulEJB implements St {

@@ -17,8 +17,8 @@
 package com.sun.s1asdev.ejb.ejb30.clientview.core;
 
 import javax.ejb.*;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 public class SfulEJB implements SessionBean
 {

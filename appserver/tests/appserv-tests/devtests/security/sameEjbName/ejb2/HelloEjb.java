@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.sameEjbName.ejb2;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 

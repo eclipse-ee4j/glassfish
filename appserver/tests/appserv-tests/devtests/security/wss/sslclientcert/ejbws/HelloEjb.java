@@ -16,11 +16,11 @@
 
 package com.sun.s1asdev.security.wss.sslclientcert.ejbws;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceContext;
+import jakarta.jws.WebService;
+import jakarta.xml.ws.WebServiceContext;
 
 @Stateless
 @WebService(targetNamespace="http://ejbws.sslclientcert.wss.security.s1asdev.sun.com", serviceName="WssSslClientCertEjbService")

@@ -21,7 +21,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 import service.web.example.calculator.*;
 
 public class Client extends HttpServlet {

@@ -24,7 +24,7 @@ import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 import javax.ejb.EJBException;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 public abstract class DummyBaseEJB
 {

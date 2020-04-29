@@ -14,9 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
-import javax.annotation.security.RunAs;
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RunAs;
 import javax.ejb.EJBContext;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;

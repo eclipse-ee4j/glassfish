@@ -379,7 +379,7 @@ public class AppClientContainer {
 
         //This is required for us to enable interrupt jaxws service
         //creation calls
-        System.setProperty("javax.xml.ws.spi.Provider",
+        System.setProperty("jakarta.xml.ws.spi.Provider",
                            "com.sun.enterprise.webservice.spi.ProviderImpl");
         //InjectionManager's injectClass will be called from getMainMethod
 

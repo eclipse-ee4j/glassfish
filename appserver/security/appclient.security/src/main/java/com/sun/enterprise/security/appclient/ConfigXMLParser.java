@@ -30,15 +30,15 @@ import java.io.IOException;
 import com.sun.logging.LogDomains;
 
 import java.util.List;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import org.glassfish.appclient.client.acc.config.*;
 import sun.security.util.PropertyExpander;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import javax.security.auth.message.MessagePolicy;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
 import org.glassfish.internal.api.Globals;
 
 

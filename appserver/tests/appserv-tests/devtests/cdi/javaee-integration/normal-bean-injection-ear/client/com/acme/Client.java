@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

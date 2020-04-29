@@ -20,7 +20,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 
-@HandlesTypes(javax.jws.WebService.class)
+@HandlesTypes(jakarta.jws.WebService.class)
 public class SharedLib4ServContInit implements ServletContainerInitializer {
     public SharedLib4ServContInit() {
 	System.out.println("SHARED LIB 4 CONST");

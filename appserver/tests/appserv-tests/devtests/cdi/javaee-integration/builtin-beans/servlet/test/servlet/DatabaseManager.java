@@ -16,7 +16,7 @@
 
 package test.servlet;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 

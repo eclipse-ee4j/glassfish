@@ -16,7 +16,7 @@
 
 package test.ejb;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBContext;
 import javax.ejb.Remote;

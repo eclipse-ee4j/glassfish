@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.Schedule;
 import javax.ejb.ScheduleExpression;
 import javax.ejb.Schedules;

@@ -17,7 +17,7 @@
 package ejb32.intrfaces;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 /*
     SingletonBean1 exposes local interface St6. St5 isn't business interface

@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
         urlPatterns={"/myurl"},
         initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
 public class TestServlet extends HttpServlet {
-    @javax.annotation.Resource TestManagedBean testResource;
+    @jakarta.annotation.Resource TestManagedBean testResource;
 
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {

@@ -16,7 +16,7 @@
 
 package test.ejb.session;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;

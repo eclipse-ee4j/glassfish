@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
 import javax.ejb.Stateful;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @Stateful public class HelloStatefulEJB implements HelloStateful {
 

@@ -18,7 +18,7 @@ package org.glassfish.soteria.test;
 
 import java.io.IOException;
 
-import javax.annotation.security.DeclareRoles;
+import jakarta.annotation.security.DeclareRoles;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
 import javax.servlet.ServletException;

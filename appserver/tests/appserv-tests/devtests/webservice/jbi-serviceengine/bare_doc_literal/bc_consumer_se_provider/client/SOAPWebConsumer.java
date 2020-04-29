@@ -16,9 +16,9 @@
 
 package client;
 
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.Service;
-import javax.xml.ws.BindingProvider;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.Service;
+import jakarta.xml.ws.BindingProvider;
 import com.example.calculator.CalculatorService;
 import com.example.calculator.Calculator;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -57,7 +57,7 @@ public class SOAPWebConsumer {
 
 	} catch(Exception e) {
 		//e.printStackTrace();
-		if(e instanceof javax.xml.ws.soap.SOAPFaultException) 
+		if(e instanceof jakarta.xml.ws.soap.SOAPFaultException) 
                 	stat.addStatus(testId, stat.FAIL);
 		else {
 	        	stat.addStatus(testId, stat.FAIL);

@@ -22,7 +22,7 @@ import javax.interceptor.InvocationContext;
 import javax.ejb.PrePassivate;
 import javax.ejb.PostActivate;
 import javax.ejb.EJB;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.SessionContext;
 
 public class LifecycleCallbackInterceptor {

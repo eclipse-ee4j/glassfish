@@ -16,8 +16,8 @@
 
 package numberguess;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 

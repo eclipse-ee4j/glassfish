@@ -25,7 +25,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.Local;
 import javax.ejb.Remote;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;

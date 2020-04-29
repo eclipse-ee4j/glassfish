@@ -383,7 +383,7 @@ public class Main {
 //
 //            //This is required for us to enable interrupt jaxws service
 //            //creation calls
-//            System.setProperty("javax.xml.ws.spi.Provider",
+//            System.setProperty("jakarta.xml.ws.spi.Provider",
 //                               "com.sun.enterprise.webservice.spi.ProviderImpl");
 //
 //            // Inject the application client's injectable resources.  This

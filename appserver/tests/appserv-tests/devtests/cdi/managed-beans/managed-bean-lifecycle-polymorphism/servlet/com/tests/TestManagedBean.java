@@ -17,7 +17,7 @@
 package com.tests;
 
 
-@javax.annotation.ManagedBean
+@jakarta.annotation.ManagedBean
 public class TestManagedBean {
 
     public static final String TOSTRING = "TestManagedBean";
@@ -30,14 +30,14 @@ public class TestManagedBean {
 
     protected String preDestroyMessage = "";
 
-    @javax.annotation.PostConstruct
+    @jakarta.annotation.PostConstruct
     public void init() {
         postConstructCount++;
         postConstructMessage += TOSTRING + "#PostConstruct";
         System.out.println(postConstructMessage);
     }
 
-    @javax.annotation.PreDestroy
+    @jakarta.annotation.PreDestroy
     public void destroy() {
         preDestroyCount++;
         preDestroyMessage += TOSTRING + "#PreDestroy";

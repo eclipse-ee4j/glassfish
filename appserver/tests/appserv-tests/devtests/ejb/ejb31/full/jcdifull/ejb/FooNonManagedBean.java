@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 import org.omg.CORBA.ORB;
 
 import javax.transaction.UserTransaction;

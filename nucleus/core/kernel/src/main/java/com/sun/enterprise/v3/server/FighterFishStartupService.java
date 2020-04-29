@@ -19,8 +19,8 @@ package com.sun.enterprise.v3.server;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.glassfish.api.StartupRunLevel;

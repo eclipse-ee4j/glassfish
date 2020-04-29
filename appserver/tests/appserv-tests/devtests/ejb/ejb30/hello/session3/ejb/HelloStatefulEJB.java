@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
 import javax.ejb.Stateful;
 import javax.ejb.AccessTimeout;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;

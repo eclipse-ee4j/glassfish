@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  *
  * @author Paul Parkinson
  */
-@javax.annotation.Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
+@jakarta.annotation.Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
 @Interceptor
 @javax.transaction.Transactional(javax.transaction.Transactional.TxType.REQUIRES_NEW)
 public class TransactionalInterceptorRequiresNew extends TransactionalInterceptorBase {

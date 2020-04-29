@@ -16,7 +16,7 @@
 
 package test.ejb;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.Stateless;
 
 @Stateless

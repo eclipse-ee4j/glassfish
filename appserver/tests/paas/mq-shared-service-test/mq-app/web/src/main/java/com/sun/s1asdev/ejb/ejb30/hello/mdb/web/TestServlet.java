@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 import jakarta.jms.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 //@WebServlet(name="testServlet", urlPatterns={"/mdbtest"}, initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") })

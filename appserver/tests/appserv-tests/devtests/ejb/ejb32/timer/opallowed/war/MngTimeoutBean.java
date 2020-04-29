@@ -16,7 +16,7 @@
 
 package com.acme.ejb32.timer.opallowed;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 import javax.ejb.EJB;
 import javax.ejb.Timer;
 import javax.ejb.TimerHandle;

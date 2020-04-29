@@ -24,7 +24,7 @@ import javax.resource.ConnectionFactoryDefinition;
 import javax.resource.cci.Connection;
 import javax.resource.cci.ConnectionFactory;
 import javax.resource.spi.TransactionSupport.TransactionSupportLevel;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @ConnectionFactoryDefinitions(
      value = {
@@ -78,7 +78,7 @@ import javax.annotation.Resource;
 @Stateless
 public class HelloEJB implements Hello {
 
-    @javax.annotation.Resource(name="java:comp/env/HelloEJB_Annotation_ConnectionFactory")
+    @jakarta.annotation.Resource(name="java:comp/env/HelloEJB_Annotation_ConnectionFactory")
     ConnectionFactory cf;
     
     public void hello() {

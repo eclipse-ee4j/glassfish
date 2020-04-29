@@ -18,7 +18,7 @@ package wftest;
 
 import java.io.*;
 import java.util.Enumeration;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;

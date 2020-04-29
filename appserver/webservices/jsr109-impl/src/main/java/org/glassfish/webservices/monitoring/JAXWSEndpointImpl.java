@@ -18,7 +18,7 @@ package org.glassfish.webservices.monitoring;
 
 import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.handler.MessageContext;
+import jakarta.xml.ws.handler.MessageContext;
 
 import org.glassfish.webservices.SOAPMessageContext;
 

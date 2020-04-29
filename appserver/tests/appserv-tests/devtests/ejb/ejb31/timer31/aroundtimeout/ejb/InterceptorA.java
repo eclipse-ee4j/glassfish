@@ -18,10 +18,10 @@ package com.sun.s1asdev.ejb.ejb31.aroundtimeout;
 
 import javax.interceptor.AroundTimeout;
 import javax.interceptor.InvocationContext;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.naming.InitialContext;
 import javax.ejb.SessionContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 public class InterceptorA {
 

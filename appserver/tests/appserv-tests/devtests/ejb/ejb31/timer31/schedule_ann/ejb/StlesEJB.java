@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb31.timer.schedule_ann;
 
 import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import java.util.Map;
 import java.util.Set;

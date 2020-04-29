@@ -139,6 +139,14 @@
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
+        <!--
+            TODO: does this really belong here?
+            InjectionServicesImpl needs jakarta.xml.ws.WebServiceRef
+        -->
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>

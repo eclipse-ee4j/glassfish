@@ -16,7 +16,7 @@
 
 package com.acme.ejb32.timer.getalltimers;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.Schedule;
 import javax.ejb.Schedules;
 import javax.ejb.Singleton;

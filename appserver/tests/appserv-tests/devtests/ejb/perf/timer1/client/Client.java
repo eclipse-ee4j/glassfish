@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.perf.timer1;
 
 import jakarta.jms.*;
 import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

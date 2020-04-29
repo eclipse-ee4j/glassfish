@@ -18,8 +18,8 @@ package sahoo.hybridapp.example1.impl;
 
 import sahoo.hybridapp.example1.UserAuthService;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.sql.DataSource;
 import java.sql.Connection;

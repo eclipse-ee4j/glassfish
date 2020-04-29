@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 public class OverridingMethodsInterceptor
 	extends BaseLevel2Interceptor {

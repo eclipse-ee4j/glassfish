@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import jakarta.mail.MailSessionDefinition;
 import jakarta.mail.MailSessionDefinitions;
 import javax.ejb.EJB;

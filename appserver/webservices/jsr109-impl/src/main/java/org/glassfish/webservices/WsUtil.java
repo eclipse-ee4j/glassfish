@@ -41,10 +41,10 @@ import java.net.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.xml.parsers.*;
-import javax.xml.ws.soap.SOAPBinding;
-import javax.xml.ws.handler.Handler;
-import javax.xml.ws.http.HTTPBinding;
-import javax.xml.soap.*;
+import jakarta.xml.ws.soap.SOAPBinding;
+import jakarta.xml.ws.handler.Handler;
+import jakarta.xml.ws.http.HTTPBinding;
+import jakarta.xml.soap.*;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -870,9 +870,9 @@ public class WsUtil {
         } else {
             String protocol;
             if (SOAPBinding.SOAP12HTTP_BINDING.equals(binding)) {
-                protocol = javax.xml.soap.SOAPConstants.SOAP_1_2_PROTOCOL;
+                protocol = jakarta.xml.soap.SOAPConstants.SOAP_1_2_PROTOCOL;
             } else {
-                protocol = javax.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
+                protocol = jakarta.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
             }
             SOAPMessage fault = WsUtil.getSOAPFault(protocol, faultString);
             
@@ -890,7 +890,7 @@ public class WsUtil {
     public static SOAPMessage getSOAPFault(String protocol, String faultString) {
 
         if (protocol==null) {
-            protocol = javax.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
+            protocol = jakarta.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
         }
         try {
             MessageFactory factory = MessageFactory.newInstance(protocol);
@@ -1355,7 +1355,7 @@ public class WsUtil {
      * Calls @PostConstruct method in the implementor
      */
     public void doPostConstruct(Class impl, Object implObj) {
-        invokeServiceMethod(javax.annotation.PostConstruct.class, impl,
+        invokeServiceMethod(jakarta.annotation.PostConstruct.class, impl,
                 implObj);
     }
     
@@ -1367,7 +1367,7 @@ public class WsUtil {
         try {
             Class impl = Class.forName(ep.getServletImplClass(),
                                 true, loader);
-            invokeServiceMethod(javax.annotation.PreDestroy.class, impl,
+            invokeServiceMethod(jakarta.annotation.PreDestroy.class, impl,
                     impl.newInstance());
         } catch (Throwable ex) {
             String msg = MessageFormat.format(
@@ -1389,7 +1389,7 @@ public class WsUtil {
                 try {
                     Class handlerClass = Class.forName(thisHandler.getHandlerClass(),
                                             true, loader);
-                    invokeServiceMethod(javax.annotation.PreDestroy.class, handlerClass,
+                    invokeServiceMethod(jakarta.annotation.PreDestroy.class, handlerClass,
                             handlerClass.newInstance());
                 } catch (Throwable ex) {
                     String msg = MessageFormat.format(
@@ -1558,12 +1558,12 @@ public class WsUtil {
         // set final list of handler in RuntimeEndpointInfo
         bindingObj.setHandlerChain(finalHandlerList);
         // Set soap roles for soap bindings only
-        if(bindingObj instanceof javax.xml.ws.soap.SOAPBinding) {
-            ((javax.xml.ws.soap.SOAPBinding)bindingObj).setRoles(roles);
+        if(bindingObj instanceof jakarta.xml.ws.soap.SOAPBinding) {
+            ((jakarta.xml.ws.soap.SOAPBinding)bindingObj).setRoles(roles);
         }        
     }
 
-    public void configureJAXWSClientHandlers(javax.xml.ws.Service svcClass, ServiceReferenceDescriptor desc) {
+    public void configureJAXWSClientHandlers(jakarta.xml.ws.Service svcClass, ServiceReferenceDescriptor desc) {
 
         // Create a resolver and get all ports for the Service
 
@@ -1634,7 +1634,7 @@ public class WsUtil {
                 // Now you have the handler list; Set it in resolver;
                 // one set for each protocol
                 for(Iterator<String> s = protocols.iterator(); s.hasNext();) {
-                    javax.xml.ws.handler.PortInfo portInfo;
+                    jakarta.xml.ws.handler.PortInfo portInfo;
                     portInfo = new PortInfoImpl(BindingID.parse(s.next()),
                                     nextPort, desc.getServiceName());
                     resolver.setHandlerChain(portInfo, handlerInfo);

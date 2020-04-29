@@ -19,7 +19,7 @@ package com.sun.enterprise.v3.admin.cluster;
 import java.io.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import javax.xml.bind.*;
+import jakarta.xml.bind.*;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
 import org.glassfish.api.admin.*;

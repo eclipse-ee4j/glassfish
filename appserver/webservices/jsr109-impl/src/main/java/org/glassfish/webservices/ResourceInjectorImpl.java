@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.invocation.ComponentInvocation;

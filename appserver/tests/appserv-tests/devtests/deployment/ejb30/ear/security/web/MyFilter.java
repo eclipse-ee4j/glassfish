@@ -18,8 +18,8 @@ package com.sun.s1asdev.deployment.ejb30.ear.security;
 
 import java.io.IOException;
 
-import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.DeclareRoles;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

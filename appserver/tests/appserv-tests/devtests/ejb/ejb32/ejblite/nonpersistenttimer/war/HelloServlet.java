@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.naming.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @WebServlet(urlPatterns="/HelloServlet", loadOnStartup=1)
 public class HelloServlet extends HttpServlet {

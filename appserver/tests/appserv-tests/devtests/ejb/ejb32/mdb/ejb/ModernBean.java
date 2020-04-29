@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb32.mdb.ejb;
 import com.sun.s1asdev.ejb.ejb32.mdb.ra.Command;
 import com.sun.s1asdev.ejb.ejb32.mdb.ra.CommandListener;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.ejb.MessageDrivenContext;

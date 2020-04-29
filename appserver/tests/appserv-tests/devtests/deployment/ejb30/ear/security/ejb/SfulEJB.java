@@ -16,11 +16,11 @@
 
 package com.sun.s1asdev.deployment.ejb30.ear.security;
 
-import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import javax.annotation.security.RunAs;
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.SessionContext;

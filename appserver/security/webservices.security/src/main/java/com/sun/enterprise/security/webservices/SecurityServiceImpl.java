@@ -21,7 +21,7 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.security.web.integration.WebPrincipal;
 import com.sun.web.security.RealmAdapter;
-import com.sun.xml.ws.assembler.ClientPipelineHook;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.security.jacc.PolicyContext;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPMessage;
 
 /**
  *

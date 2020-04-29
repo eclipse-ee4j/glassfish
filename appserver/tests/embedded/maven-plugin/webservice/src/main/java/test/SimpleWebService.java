@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.jws.*;
+import jakarta.jws.*;
 
 @WebService
 public class SimpleWebService {

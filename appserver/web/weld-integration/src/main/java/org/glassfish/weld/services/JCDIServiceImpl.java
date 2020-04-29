@@ -37,8 +37,8 @@ import org.jboss.weld.contexts.WeldCreationalContext;
 import org.jboss.weld.manager.api.WeldManager;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.Dependent;

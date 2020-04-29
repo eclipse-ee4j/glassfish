@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;

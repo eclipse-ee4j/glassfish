@@ -18,7 +18,7 @@ package test;
 
 import java.io.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJB;
 import jakarta.jms.Queue;
 import javax.naming.InitialContext;

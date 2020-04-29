@@ -96,7 +96,7 @@ public class ServerAuthConfig extends BaseAuthConfig {
     }
 
     public ServerAuthContext getAuthContext
-	(javax.xml.ws.handler.soap.SOAPMessageContext context) {
+	(jakarta.xml.ws.handler.soap.SOAPMessageContext context) {
 	return (ServerAuthContext) getContext(context);
     }
 

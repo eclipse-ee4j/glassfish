@@ -27,7 +27,7 @@ import java.io.*;
 
 import javax.persistence.*;
 import javax.transaction.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 import entity.*;
 

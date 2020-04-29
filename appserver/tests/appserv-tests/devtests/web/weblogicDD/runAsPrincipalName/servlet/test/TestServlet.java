@@ -17,7 +17,7 @@
 package test;
 
 import java.io.*;
-import javax.annotation.security.RunAs;
+import jakarta.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.servlet.*;
 import javax.servlet.http.*;

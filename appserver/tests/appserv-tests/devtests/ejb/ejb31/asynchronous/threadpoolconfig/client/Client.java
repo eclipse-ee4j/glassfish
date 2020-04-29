@@ -17,7 +17,7 @@
 package test;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 import javax.naming.*;
 import java.util.concurrent.*;
 import java.util.*;

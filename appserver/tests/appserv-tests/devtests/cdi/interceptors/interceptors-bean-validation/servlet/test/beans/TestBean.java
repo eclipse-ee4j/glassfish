@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 
 import javax.validation.constraints.NotNull;

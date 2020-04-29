@@ -18,8 +18,8 @@ package com.sun.ejb.containers.interceptors;
 
 import javax.interceptor.AroundConstruct;
 import javax.interceptor.AroundInvoke;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.interceptor.AroundTimeout;
 import javax.interceptor.InvocationContext;
 import com.sun.enterprise.deployment.InterceptorDescriptor;

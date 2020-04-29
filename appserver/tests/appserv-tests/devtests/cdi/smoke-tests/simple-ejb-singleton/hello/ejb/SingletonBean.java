@@ -17,7 +17,7 @@
 package com.acme;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 import org.omg.CORBA.ORB;
 
 import javax.naming.InitialContext;

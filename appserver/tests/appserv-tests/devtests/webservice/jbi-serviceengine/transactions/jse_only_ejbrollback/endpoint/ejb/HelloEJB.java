@@ -16,13 +16,13 @@
 
 package endpoint.ejb;
 
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceRef;
+import jakarta.jws.WebService;
+import jakarta.xml.ws.WebServiceRef;
 import javax.ejb.Stateless;
 import javax.ejb.SessionContext;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.sql.*;
 import javax.sql.DataSource;
 

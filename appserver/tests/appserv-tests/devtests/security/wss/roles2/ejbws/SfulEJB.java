@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.security.wss.roles2.ejb;
 
-import javax.annotation.security.RolesAllowed;
-import javax.annotation.security.RunAs;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateful;

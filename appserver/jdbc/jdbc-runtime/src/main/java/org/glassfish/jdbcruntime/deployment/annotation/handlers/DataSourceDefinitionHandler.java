@@ -27,7 +27,7 @@ import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.annotation.sql.DataSourceDefinition;
+import jakarta.annotation.sql.DataSourceDefinition;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.AroundTimeout;
 import javax.interceptor.Interceptor;

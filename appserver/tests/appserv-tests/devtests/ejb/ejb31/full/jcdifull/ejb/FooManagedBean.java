@@ -18,10 +18,10 @@ package com.acme;
 
 import javax.interceptor.Interceptors;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.ManagedBean;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 
 import org.omg.CORBA.ORB;
 

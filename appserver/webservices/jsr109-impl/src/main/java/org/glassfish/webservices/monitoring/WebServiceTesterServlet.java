@@ -25,7 +25,7 @@ package org.glassfish.webservices.monitoring;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.tools.ws.spi.WSToolsObjectFactory;
-import com.sun.xml.bind.api.JAXBRIContext;
+import org.glassfish.jaxb.runtime.api.JAXBRIContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,8 +37,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebEndpoint;
+import jakarta.xml.ws.Service;
+import jakarta.xml.ws.WebEndpoint;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -136,7 +136,7 @@ public class WebServiceTesterServlet extends HttpServlet {
         // For now support Tester servlet for JAXWS based services only
         try {
             Class seiClass = Thread.currentThread().getContextClassLoader().loadClass(seiClassName);
-            if(seiClass.getAnnotation(javax.jws.WebService.class) == null) {
+            if(seiClass.getAnnotation(jakarta.jws.WebService.class) == null) {
                 testerNotSupportedError(myEndpoint.getDescriptor().getServiceName(), out);
                 return;
             }
@@ -299,7 +299,7 @@ public class WebServiceTesterServlet extends HttpServlet {
                            "<h4>SOAP Request</h4>"));
                     dumpMessage(listener.getRequest(), out);
                 }
-                if (toInvoke.getAnnotation(javax.jws.Oneway.class) == null &&
+                if (toInvoke.getAnnotation(jakarta.jws.Oneway.class) == null &&
                         listener.getRespose() != null) {
                     // let's print the SOAP request
                     out.print(localStrings.getLocalString(

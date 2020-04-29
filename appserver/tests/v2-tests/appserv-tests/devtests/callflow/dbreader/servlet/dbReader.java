@@ -25,7 +25,7 @@ package com.sun.enterprise.admin.monitor.callflow;
 import java.io.*;
 import java.net.*;
 import java.sql.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

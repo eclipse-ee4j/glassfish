@@ -22,7 +22,7 @@ import javax.ejb.Stateless;
 public class SlessEJB implements Sless
 {
 
-    @javax.annotation.Resource javax.ejb.TimerService ts;
+    @jakarta.annotation.Resource javax.ejb.TimerService ts;
 
     public String hello() {
         System.out.println("In SlessEJB:hello()");

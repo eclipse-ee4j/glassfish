@@ -128,7 +128,7 @@ elements have `mapped-name` subelements: `resource-ref`,
 `message-destination-ref`, `session`, `message-driven`, and `entity`.
 3.  A global JNDI name assigned in a `mappedName` attribute of an
 annotation has the third highest precedence. The following annotations
-have `mappedName` attributes: `@javax.annotation.Resource`,
+have `mappedName` attributes: `@jakarta.annotation.Resource`,
 `@javax.ejb.EJB`, `@javax.ejb.Stateless`, `@javax.ejb.Singleton`,
 `@javax.ejb.Stateful`, and `@javax.ejb.MessageDriven`.
 4.  In most cases, a default global JNDI name is assigned (and recorded

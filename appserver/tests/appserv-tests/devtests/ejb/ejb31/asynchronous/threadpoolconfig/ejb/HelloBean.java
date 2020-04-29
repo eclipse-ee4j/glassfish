@@ -17,7 +17,7 @@
 package test;
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import java.util.concurrent.*;
 
 @Singleton

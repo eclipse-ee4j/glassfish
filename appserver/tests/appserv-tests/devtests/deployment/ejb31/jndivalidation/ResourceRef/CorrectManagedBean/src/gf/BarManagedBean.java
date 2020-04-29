@@ -16,7 +16,7 @@
 
 package gf;
 
-import jakarta.annotation.*
+import jakarta.annotation.*;
 
 @ManagedBean("barmanagedbean")
 public class BarManagedBean {

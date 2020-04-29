@@ -16,7 +16,7 @@
 
 package test.web;
 
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import jakarta.jms.Queue;
 
 @ManagedBean("barmanagedbean")

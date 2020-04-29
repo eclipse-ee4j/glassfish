@@ -17,7 +17,7 @@
 package com.acme;
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import javax.interceptor.ExcludeClassInterceptors;
 import javax.interceptor.ExcludeDefaultInterceptors;
 import javax.interceptor.Interceptors;

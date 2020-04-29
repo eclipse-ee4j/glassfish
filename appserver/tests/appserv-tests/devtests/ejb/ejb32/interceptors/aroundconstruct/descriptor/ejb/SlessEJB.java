@@ -18,7 +18,7 @@ package com.acme;
 
 import javax.ejb.*;
 import javax.interceptor.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 
 @Stateless
 public class SlessEJB extends BaseBean implements Sless {

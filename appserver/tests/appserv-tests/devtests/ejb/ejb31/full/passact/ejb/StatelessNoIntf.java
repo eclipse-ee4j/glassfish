@@ -17,7 +17,7 @@
 package com.acme;
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import java.util.concurrent.Future;
 
 @Stateless

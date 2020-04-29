@@ -18,7 +18,7 @@ package com.acme;
 
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 
 import javax.naming.InitialContext;
 

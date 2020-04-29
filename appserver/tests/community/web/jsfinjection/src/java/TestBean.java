@@ -15,7 +15,7 @@
  */
 
 package jsfinjection;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import javax.sql.DataSource;
 
 public class TestBean {

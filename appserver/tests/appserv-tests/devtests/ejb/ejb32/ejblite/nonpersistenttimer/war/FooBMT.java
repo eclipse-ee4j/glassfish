@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb32.ejblite.timer;
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)

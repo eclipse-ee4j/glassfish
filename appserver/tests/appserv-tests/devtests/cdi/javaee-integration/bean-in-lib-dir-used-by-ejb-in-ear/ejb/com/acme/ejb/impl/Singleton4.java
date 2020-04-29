@@ -17,7 +17,7 @@
 package com.acme.ejb.impl;
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 
 
 @Singleton

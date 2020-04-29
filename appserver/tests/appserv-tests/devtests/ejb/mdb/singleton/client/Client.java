@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.mdb.singleton.client;
 import java.util.*;
 import javax.naming.*;
 import jakarta.jms.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import javax.ejb.*;
 import com.sun.s1asdev.ejb.mdb.singleton.FooRemoteIF;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

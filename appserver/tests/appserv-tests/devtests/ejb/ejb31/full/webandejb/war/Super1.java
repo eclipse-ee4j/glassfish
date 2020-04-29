@@ -17,7 +17,7 @@
 package com.acme;
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import java.util.concurrent.TimeUnit;
 
 @AccessTimeout(value=9876544, unit=TimeUnit.HOURS)

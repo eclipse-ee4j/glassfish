@@ -23,7 +23,7 @@ import jakarta.annotation.PreDestroy;
 
 import java.util.concurrent.TimeUnit;
 
-import jakarta.annotation.*
+import jakarta.annotation.*;
 
 @Startup
 @Singleton

@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import javax.interceptor.Interceptors;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;

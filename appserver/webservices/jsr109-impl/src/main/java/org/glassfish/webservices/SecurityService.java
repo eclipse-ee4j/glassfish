@@ -20,7 +20,7 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.web.WebModule;
 import javax.servlet.http.HttpServletRequest;
-import com.sun.xml.ws.assembler.ClientPipelineHook;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 import java.security.Principal;
 import org.jvnet.hk2.annotations.Contract;
 

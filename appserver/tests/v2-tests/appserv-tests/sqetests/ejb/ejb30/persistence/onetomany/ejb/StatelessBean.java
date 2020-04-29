@@ -18,7 +18,7 @@ package pe.ejb.ejb30.persistence.toplinksample.ejb;
 
 import javax.ejb.*;
 import javax.persistence.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import javax.sql.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import pe.ejb.ejb30.persistence.toplinksample.ejb.*;

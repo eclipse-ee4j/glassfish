@@ -17,7 +17,7 @@
 package com.acme;
 
 import javax.ejb.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 
 @Stateless
 public class SLSB implements Hello2 {

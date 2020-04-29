@@ -20,7 +20,7 @@ package org.glassfish.webservices;
 import jakarta.xml.ws.http.HTTPBinding;
 
 import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.assembler.ServerPipelineHook;
+import com.sun.xml.ws.assembler.metro.ServerPipelineHook;
 import com.sun.xml.ws.api.pipe.ServerPipeAssemblerContext;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;

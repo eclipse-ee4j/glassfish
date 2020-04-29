@@ -18,7 +18,7 @@ package ejb32.methodintf;
 
 import javax.ejb.*;
 import javax.interceptor.*;
-import jakarta.annotation.*
+import jakarta.annotation.*;
 import javax.naming.InitialContext;
 
 @Singleton

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.*;
 import jakarta.jms.*;
 

@@ -16,7 +16,7 @@
 
 package endpoint.jaxws;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @WebService(
 targetNamespace="http://endpoint/jaxws")

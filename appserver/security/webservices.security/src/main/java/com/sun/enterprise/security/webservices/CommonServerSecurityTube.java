@@ -29,7 +29,7 @@ import javax.security.auth.message.config.*;
 import javax.security.auth.message.AuthException;
 import javax.security.auth.message.AuthStatus;
 
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;

@@ -25,7 +25,7 @@ import java.sql.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 
-import javax.annotation.sql.*;
+import jakarta.annotation.sql.*;
 
 
 @DataSourceDefinitions(

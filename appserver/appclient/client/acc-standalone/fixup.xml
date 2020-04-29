@@ -54,9 +54,6 @@
             <!-- replace incorrect entries ../modules/x.jar for JARs that will actually reside in the
                  endorsed subdirectory with ../modules/endorsed/x.jar                -->
 
-            <replacefilter token="../modules/jakarta.annotation-api.jar" value="../modules/endorsed/jakarta.annotation-api.jar"/>
-            <replacefilter token="../modules/jakarta.xml.bind-api.jar" value="../modules/endorsed/jakarta.xml.bind-api.jar"/>
-            <replacefilter token="../modules/webservices-api-osgi.jar" value="../modules/endorsed/webservices-api-osgi.jar"/>
             <replacefilter token="../modules/weld-se-shaded.jar" value="../lib/appclient/weld-se-shaded.jar"/>
 
             <!--

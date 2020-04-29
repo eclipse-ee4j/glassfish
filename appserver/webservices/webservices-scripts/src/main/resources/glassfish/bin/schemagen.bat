@@ -33,4 +33,4 @@ goto run
 set JAVA=java
 
 :run
-%JAVA% -Djava.endorsed.dirs="%~dp0..\modules\endorsed" -cp "%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jaxb-osgi.jar" com.sun.tools.jxc.SchemaGeneratorFacade %*
+%JAVA% -cp "%~dp0..\modules\webservices-api-osgi.jar;%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jakarta.xml.bind-api.jar;%~dp0..\modules\jaxb-osgi.jar" com.sun.tools.jxc.SchemaGeneratorFacade %*

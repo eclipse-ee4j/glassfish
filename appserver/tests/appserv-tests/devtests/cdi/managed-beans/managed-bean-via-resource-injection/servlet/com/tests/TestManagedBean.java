@@ -18,7 +18,7 @@ package com.tests;
 
 //Simple TestBean to test CDI. 
 //This bean implements Serializable as it needs to be placed into a Stateful Bean
-@javax.annotation.ManagedBean
+@jakarta.annotation.ManagedBean
 public class TestManagedBean {
     boolean postConstructCalled = false;
 
@@ -28,7 +28,7 @@ public class TestManagedBean {
     public TestManagedBean() {
     }
 
-    @javax.annotation.PostConstruct
+    @jakarta.annotation.PostConstruct
     public void init() {
         System.out.println("In ManagedBean:: PostConstruct");
         postConstructCalled = true;

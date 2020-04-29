@@ -17,7 +17,7 @@
 package test.web;
 
 import java.io.IOException;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

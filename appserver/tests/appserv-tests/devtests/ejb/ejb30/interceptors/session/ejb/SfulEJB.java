@@ -26,7 +26,7 @@ import javax.interceptor.Interceptors;
 
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 
 @Stateful

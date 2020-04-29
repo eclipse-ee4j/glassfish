@@ -24,13 +24,13 @@ import javax.interceptor.AroundTimeout;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.Interceptors;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.MessageDrivenContext;
 import jakarta.jms.MessageListener;
 import jakarta.jms.Message;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.security.*;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.security.*;
 import javax.ejb.EJBException;
 
 @Interceptors(InterceptorA.class)

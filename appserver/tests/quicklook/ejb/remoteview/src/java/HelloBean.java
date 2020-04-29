@@ -17,7 +17,7 @@
 package remoteview;
 
 import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 import java.util.concurrent.Future;
 
 @Stateless(mappedName="HH")

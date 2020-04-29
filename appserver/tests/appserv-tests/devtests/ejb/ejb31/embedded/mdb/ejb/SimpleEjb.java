@@ -18,7 +18,7 @@ package org.glassfish.tests.ejb.mdb;
 
 import javax.ejb.Singleton;
 import jakarta.jms.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 /**

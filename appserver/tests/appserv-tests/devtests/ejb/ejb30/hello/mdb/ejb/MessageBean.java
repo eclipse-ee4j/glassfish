@@ -34,7 +34,7 @@ import jakarta.jms.QueueSender;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @javax.interceptor.Interceptors(InterceptorA.class)
 @TransactionManagement(TransactionManagementType.BEAN)

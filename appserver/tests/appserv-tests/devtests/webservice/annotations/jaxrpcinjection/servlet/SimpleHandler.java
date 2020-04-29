@@ -19,7 +19,7 @@ package servlet;
 import java.util.Date;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 public class SimpleHandler extends GenericHandler {
     

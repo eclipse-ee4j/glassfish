@@ -31,7 +31,7 @@ import jakarta.jms.QueueSender;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @TransactionManagement(TransactionManagementType.BEAN)
 @MessageDriven(mappedName="jms/ejb_ejb30_hello_mdb_InQueue", description="mymessagedriven bean description")

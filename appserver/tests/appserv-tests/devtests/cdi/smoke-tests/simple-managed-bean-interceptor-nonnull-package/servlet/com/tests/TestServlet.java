@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
         initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
 public class TestServlet extends HttpServlet {
     @javax.inject.Inject TestManagedBean tb1;
-    @javax.annotation.Resource TestManagedBean tb;
+    @jakarta.annotation.Resource TestManagedBean tb;
 
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {

@@ -27,7 +27,7 @@ import org.glassfish.devtest.ejb31.singleton.multimodule.servlet.LocalInitTracke
 import javax.ejb.Singleton;
 import javax.ejb.EJB;
 import javax.ejb.DependsOn;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  *

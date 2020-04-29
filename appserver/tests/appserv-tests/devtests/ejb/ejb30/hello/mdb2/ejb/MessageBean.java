@@ -42,7 +42,7 @@ import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
 import javax.transaction.TransactionManager;
 import javax.transaction.Status;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import java.util.Collection;
 

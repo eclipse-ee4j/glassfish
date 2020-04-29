@@ -16,7 +16,7 @@
 
 package client;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.naming.InitialContext;
@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import javax.sql.DataSource;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 import endpoint.ejb.*;
 
 public class Client extends HttpServlet {

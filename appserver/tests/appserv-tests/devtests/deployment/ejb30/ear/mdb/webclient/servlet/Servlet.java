@@ -20,7 +20,7 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import jakarta.jms.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 public class Servlet extends HttpServlet {
 

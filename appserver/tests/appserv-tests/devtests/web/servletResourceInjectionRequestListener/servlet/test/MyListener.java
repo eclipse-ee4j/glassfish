@@ -22,8 +22,8 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.ServletRequestEvent;
 
 import javax.naming.*;
-import javax.annotation.Resource;
-import javax.annotation.Resources;
+import jakarta.annotation.Resource;
+import jakarta.annotation.Resources;
 import javax.sql.DataSource;
 
 @Resource(name="myDataSource4", type=DataSource.class)

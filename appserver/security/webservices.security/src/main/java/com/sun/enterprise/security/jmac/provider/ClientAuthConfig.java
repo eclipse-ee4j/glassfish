@@ -23,7 +23,7 @@ import javax.security.auth.callback.CallbackHandler;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPMessage;
 
 /**
  * This class is the client container's interface to the AuthConfig subsystem
@@ -97,7 +97,7 @@ public class ClientAuthConfig extends BaseAuthConfig {
     }
 
     public ClientAuthContext getAuthContext
-	(javax.xml.ws.handler.soap.SOAPMessageContext context) {
+	(jakarta.xml.ws.handler.soap.SOAPMessageContext context) {
 	return (ClientAuthContext) getContext(context);
     }
 

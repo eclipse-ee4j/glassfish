@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 @WebServlet(urlPatterns={"/hello"})

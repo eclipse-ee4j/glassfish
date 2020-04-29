@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import servlet_endpoint.ServletHelloService;
 import servlet_endpoint.ServletHello;

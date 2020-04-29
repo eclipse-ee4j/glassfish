@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSDestinationDefinition;

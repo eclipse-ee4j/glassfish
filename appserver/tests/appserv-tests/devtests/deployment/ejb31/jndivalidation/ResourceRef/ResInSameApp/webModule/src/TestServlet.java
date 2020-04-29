@@ -16,7 +16,7 @@
 
 package test.web;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import jakarta.jms.Queue;
 
 public class TestServlet {

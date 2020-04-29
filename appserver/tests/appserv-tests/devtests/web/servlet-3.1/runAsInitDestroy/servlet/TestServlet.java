@@ -17,7 +17,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.annotation.security.RunAs;
+import jakarta.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

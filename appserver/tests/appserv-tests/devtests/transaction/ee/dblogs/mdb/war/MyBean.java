@@ -26,7 +26,7 @@ import javax.ejb.*;
 import jakarta.jms.*;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  *

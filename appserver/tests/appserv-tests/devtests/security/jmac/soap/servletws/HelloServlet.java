@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.jmac.soap.servletws;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @WebService(targetNamespace="http://servletws.soap.jmac.security.s1asdev.sun.com", serviceName="JmacSoapServletService")
 public class HelloServlet {

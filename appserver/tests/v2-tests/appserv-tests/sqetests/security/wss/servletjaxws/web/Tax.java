@@ -17,8 +17,8 @@
 package com.sun.appserv.sqe.security.wss.annotations;
 
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
 
 /**
  * FedTax WebService endpoint using the Java EE 5 annotations. 

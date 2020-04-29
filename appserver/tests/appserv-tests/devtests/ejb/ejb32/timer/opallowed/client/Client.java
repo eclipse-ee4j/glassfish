@@ -16,7 +16,7 @@
 
 package com.acme.ejb32.timer.opallowed;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.*;
 import javax.naming.*;
 

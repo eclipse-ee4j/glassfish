@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.cdi.hello.mdb.client;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJB;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSException;

@@ -20,9 +20,9 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.AsyncHandler;
-import javax.xml.ws.Response;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.AsyncHandler;
+import jakarta.xml.ws.Response;
 
 import endpoint.*;
 

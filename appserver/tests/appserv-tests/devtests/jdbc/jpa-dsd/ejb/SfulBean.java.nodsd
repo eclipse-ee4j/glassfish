@@ -28,7 +28,7 @@ import javax.ejb.EJB;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityNotFoundException;
-import javax.annotation.sql.*;
+import jakarta.annotation.sql.*;
 
 import javax.persistence.EntityManager;
 

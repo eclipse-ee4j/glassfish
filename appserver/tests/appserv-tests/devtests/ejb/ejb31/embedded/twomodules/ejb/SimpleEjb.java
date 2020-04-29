@@ -21,8 +21,8 @@ import java.util.Date;
 
 import javax.ejb.Stateless;
 import javax.ejb.EJB;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.DenyAll;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;

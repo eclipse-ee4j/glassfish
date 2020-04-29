@@ -21,8 +21,8 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import javax.annotation.Resource;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 public class MyTag extends TagSupport {

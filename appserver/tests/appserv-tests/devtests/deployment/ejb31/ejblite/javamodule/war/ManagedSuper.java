@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 import javax.ejb.EJB;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 
 import javax.interceptor.*;

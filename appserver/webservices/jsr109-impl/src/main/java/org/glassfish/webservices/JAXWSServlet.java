@@ -31,8 +31,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.http.HTTPBinding;
+import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.http.HTTPBinding;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -142,7 +142,8 @@ public class JAXWSServlet extends HttpServlet {
         try {
             ServletAdapter targetEndpoint = (ServletAdapter) getEndpointFor(request);
             if (targetEndpoint != null) {
-                targetEndpoint.handle(getServletContext(), request, response);
+                logger.log(Level.SEVERE, "!!! TODO: UNCOMMENT LINE BELLOW !!! ({0})", JAXWSServlet.class.getName());
+//                targetEndpoint.handle(getServletContext(), request, response);
             } else {
                 throw new ServletException("Service not found");
             }
@@ -203,7 +204,8 @@ public class JAXWSServlet extends HttpServlet {
         try {
             ServletAdapter targetEndpoint = (ServletAdapter) getEndpointFor(request);
             if (targetEndpoint != null && wsdlExposed) {
-                targetEndpoint.publishWSDL(getServletContext(), request, response);
+                logger.log(Level.SEVERE, "!!! TODO: UNCOMMENT LINE BELLOW !!! ({0})", JAXWSServlet.class.getName());
+//                targetEndpoint.publishWSDL(getServletContext(), request, response);
             } else {
                 String message =
                         "Invalid wsdl request " + request.getRequestURL();

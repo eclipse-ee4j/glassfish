@@ -20,7 +20,7 @@ import org.glassfish.soteria.SecurityContextImpl;
 import javax.security.enterprise.SecurityContext;
 import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.HttpConstraint;
-import javax.annotation.security.DeclareRoles;
+import jakarta.annotation.security.DeclareRoles;
 import javax.inject.Inject;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;

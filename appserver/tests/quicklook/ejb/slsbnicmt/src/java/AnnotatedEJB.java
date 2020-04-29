@@ -16,7 +16,7 @@
 
 package slsbnicmt;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import javax.transaction.*;

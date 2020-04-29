@@ -36,6 +36,10 @@ Import-Package: \
                         javax.xml.ws;resolution:=optional, \
                         javax.xml.ws.handler;resolution:=optional, \
                         javax.jws;resolution:=optional, \
+                        jakarta.xml.soap;resolution:=optional, \
+                        jakarta.xml.ws;resolution:=optional, \
+                        jakarta.xml.ws.handler;resolution:=optional, \
+                        jakarta.jws;resolution:=optional, \
                         org.glassfish.apf.context, \
                         org.glassfish.ejb.deployment.archive, \
                         *

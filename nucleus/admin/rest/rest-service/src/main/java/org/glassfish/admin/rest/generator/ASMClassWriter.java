@@ -70,7 +70,7 @@ public class ASMClassWriter implements ClassWriter, Opcodes {
 
         if (resourcePath != null) {
             RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (1)", resourcePath);
-            AnnotationVisitor av0 = cw.visitAnnotation("Ljavax/ws/rs/Path;", true);
+            AnnotationVisitor av0 = cw.visitAnnotation("Ljakarta.ws.rs/Path;", true);
             av0.visit("value", "/" + resourcePath + "/");
             av0.visitEnd();
         }
@@ -96,7 +96,7 @@ public class ASMClassWriter implements ClassWriter, Opcodes {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "get" + resourceClassName, "()L" + completeName + ";", null, null);
 
         RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (2)", mappingPath);
-        AnnotationVisitor av0 = mv.visitAnnotation("Ljavax/ws/rs/Path;", true);
+        AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta.ws.rs/Path;", true);
         av0.visit("value", mappingPath + "/");
         av0.visitEnd();
 
@@ -172,7 +172,7 @@ public class ASMClassWriter implements ClassWriter, Opcodes {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "get" + commandResourceClassName, "()L" + generatedPath + commandResourceClassName + ";", null, null);
 
         RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (3)", resourcePath);
-        AnnotationVisitor av0 = mv.visitAnnotation("Ljavax/ws/rs/Path;", true);
+        AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta.ws.rs/Path;", true);
         av0.visit("value", resourcePath + "/");
         av0.visitEnd();
 
@@ -327,7 +327,7 @@ public class ASMClassWriter implements ClassWriter, Opcodes {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, methodName, "()L"+ childClass + ";", null, null);
 
         RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (4)", path);
-        AnnotationVisitor av0 = mv.visitAnnotation("Ljavax/ws/rs/Path;", true);
+        AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta.ws.rs/Path;", true);
         av0.visit("value", path + "/");
         av0.visitEnd();
 
@@ -355,12 +355,12 @@ public class ASMClassWriter implements ClassWriter, Opcodes {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "get" + childResourceClassName , "(Ljava/lang/String;)L" + generatedPath + childResourceClassName + ";", null, null);
 
         RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (5)", keyAttributeName);
-        AnnotationVisitor av0 = mv.visitAnnotation("Ljavax/ws/rs/Path;", true);
+        AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta.ws.rs/Path;", true);
         av0.visit("value", "{" + keyAttributeName + "}/");
         av0.visitEnd();
 
 
-        av0 = mv.visitParameterAnnotation(0, "Ljavax/ws/rs/PathParam;", true);
+        av0 = mv.visitParameterAnnotation(0, "Ljakarta.ws.rs/PathParam;", true);
         av0.visit("value", keyAttributeName);
         av0.visitEnd();
 

@@ -20,7 +20,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-import javax.xml.soap.*;
+import jakarta.xml.soap.*;
 
 public class TestOrderRequest {
     public static void main(String [] args) {    

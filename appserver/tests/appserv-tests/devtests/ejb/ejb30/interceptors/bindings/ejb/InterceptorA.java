@@ -18,10 +18,10 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.naming.InitialContext;
 import javax.ejb.SessionContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 public class InterceptorA {
 

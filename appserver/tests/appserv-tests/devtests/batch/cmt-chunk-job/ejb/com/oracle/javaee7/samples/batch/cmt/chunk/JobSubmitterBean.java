@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import javax.inject.Inject;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import javax.batch.operations.JobOperator;
 import javax.batch.runtime.BatchRuntime;

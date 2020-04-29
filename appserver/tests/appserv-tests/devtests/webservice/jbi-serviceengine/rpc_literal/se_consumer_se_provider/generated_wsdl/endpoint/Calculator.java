@@ -16,12 +16,12 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.jws.Oneway;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.jws.Oneway;
 import common.IncomeTaxDetails;
 import java.util.Hashtable;
-import javax.jws.soap.SOAPBinding;
+import jakarta.jws.soap.SOAPBinding;
 
 @WebService(
     name="Calculator",

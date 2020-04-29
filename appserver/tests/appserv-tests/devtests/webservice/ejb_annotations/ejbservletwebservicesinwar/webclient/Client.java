@@ -22,14 +22,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import ejbclient.*;
 import webclient.*;
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 public class Client extends HttpServlet {
 
-        @javax.xml.ws.WebServiceRef(ejbclient.HelloEjbService.class)
+        @jakarta.xml.ws.WebServiceRef(ejbclient.HelloEjbService.class)
         ejbclient.Hello hiport1;
 
-    @javax.xml.ws.WebServiceRef(webclient.HelloService.class)
+    @jakarta.xml.ws.WebServiceRef(webclient.HelloService.class)
             webclient.Hello hiport2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 

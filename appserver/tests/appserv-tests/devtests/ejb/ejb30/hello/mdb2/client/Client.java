@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.mdb2.client;
 
 import javax.naming.*;
 import jakarta.jms.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

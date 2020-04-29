@@ -25,7 +25,8 @@ import java.rmi.RemoteException;
 
 import javax.naming.*;
 import javax.sql.*;
-import javax.annotation.Resource;
+
+import jakarta.annotation.Resource;
 import jakarta.validation.*;
 
 @Stateless

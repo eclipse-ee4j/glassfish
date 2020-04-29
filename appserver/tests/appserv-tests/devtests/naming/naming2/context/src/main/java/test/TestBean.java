@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.*;
 import javax.naming.*;
 import java.util.Properties;

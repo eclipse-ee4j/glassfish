@@ -216,7 +216,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
             <exclusions>
@@ -233,7 +233,7 @@
         <dependency>
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-extra-jdk-packages</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!-- nucleus-corba-base -->
         <dependency>

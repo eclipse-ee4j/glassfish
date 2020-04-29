@@ -16,7 +16,7 @@
 
 package org.glassfish.test.jms.annotation.ejb;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import jakarta.jms.Connection;

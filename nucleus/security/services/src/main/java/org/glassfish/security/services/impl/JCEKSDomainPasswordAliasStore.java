@@ -20,7 +20,7 @@ import com.sun.enterprise.security.store.DomainScopedPasswordAliasStore;
 import com.sun.enterprise.security.store.IdentityManagement;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import java.io.File;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.glassfish.hk2.api.PerLookup;

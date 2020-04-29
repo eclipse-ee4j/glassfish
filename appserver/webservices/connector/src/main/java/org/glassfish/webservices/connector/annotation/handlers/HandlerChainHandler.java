@@ -17,10 +17,10 @@
 package org.glassfish.webservices.connector.annotation.handlers;
 
 
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceProvider;
-import javax.xml.ws.WebServiceRef;
-import javax.jws.HandlerChain;
+import jakarta.jws.WebService;
+import jakarta.xml.ws.WebServiceProvider;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.jws.HandlerChain;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
@@ -66,7 +66,7 @@ import org.w3c.dom.NodeList;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler takes care of the javax.jws.HandlerChain
+ * This handler takes care of the jakarta.jws.HandlerChain
  *
  * @author Jerome Dochez
  */

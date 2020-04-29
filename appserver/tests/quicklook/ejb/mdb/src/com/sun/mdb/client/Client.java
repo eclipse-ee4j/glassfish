@@ -17,7 +17,7 @@
 package com.sun.mdb.client;
 
 import jakarta.jms.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.naming.InitialContext;
 
 public class Client {

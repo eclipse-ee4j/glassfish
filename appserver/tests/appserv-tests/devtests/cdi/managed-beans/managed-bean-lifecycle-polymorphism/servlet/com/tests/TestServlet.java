@@ -19,8 +19,8 @@ package com.tests;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.annotation.Generated;
-import javax.annotation.Resource;
+import jakarta.annotation.Generated;
+import jakarta.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;

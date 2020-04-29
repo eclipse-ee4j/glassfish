@@ -16,7 +16,7 @@
 
 package org.glassfish.test.jms.injection.ejb;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;

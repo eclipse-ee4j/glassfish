@@ -17,8 +17,8 @@
 package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 
 import javax.ejb.*;
-import javax.annotation.Resource;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PreDestroy;
 
 @Stateful
 @Remote({SfulRemoteBusiness.class, SfulRemoteBusiness2.class})

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.security.wss.gartner.client;
 
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.BindingProvider;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.BindingProvider;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

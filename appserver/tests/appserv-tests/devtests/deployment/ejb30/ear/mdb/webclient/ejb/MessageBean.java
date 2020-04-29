@@ -33,7 +33,7 @@ import jakarta.jms.QueueSender;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @TransactionManagement(TransactionManagementType.BEAN)
 @MessageDriven(activationConfig={ @ActivationConfigProperty(propertyName="destinationType", propertyValue="jakarta.jms.Queue") })

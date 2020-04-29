@@ -20,7 +20,7 @@ import javax.servlet.http.*;
 import java.io.PrintWriter;
 import java.security.Principal;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 import endpoint.ejb.*;
 

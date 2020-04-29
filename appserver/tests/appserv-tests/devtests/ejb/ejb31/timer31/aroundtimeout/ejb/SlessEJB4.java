@@ -27,7 +27,7 @@ import javax.interceptor.ExcludeDefaultInterceptors;
 import javax.interceptor.ExcludeClassInterceptors;
 import javax.interceptor.InvocationContext;
 import javax.naming.InitialContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 // Exclude default aroundtimeout, but re-add one of them at class-level
 @Stateless

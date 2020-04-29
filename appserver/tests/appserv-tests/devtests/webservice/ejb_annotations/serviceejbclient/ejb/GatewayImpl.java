@@ -16,11 +16,11 @@
 
 package ejb;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
 import javax.ejb.Stateless;
 
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 

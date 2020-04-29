@@ -17,7 +17,7 @@
 package ejb31.timer.methodintf;
 
 import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Stateless
 public class StlesEJB implements Stles {

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.ejb.Stateless;
-import javax.annotation.sql.DataSourceDefinition;
+import jakarta.annotation.sql.DataSourceDefinition;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;

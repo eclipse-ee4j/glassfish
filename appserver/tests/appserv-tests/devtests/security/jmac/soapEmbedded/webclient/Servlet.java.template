@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 
 import com.sun.s1asdev.security.jmac.soapembedded.ejbws.HelloEjb;
 import com.sun.s1asdev.security.jmac.soapembedded.ejbws.JmacSoapEmbeddedEjbService;

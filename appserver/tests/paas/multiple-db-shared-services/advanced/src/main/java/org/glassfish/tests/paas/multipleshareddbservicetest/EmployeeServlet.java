@@ -29,7 +29,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.DatabaseMetaData;
 import java.util.Enumeration;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 public final class EmployeeServlet extends HttpServlet {

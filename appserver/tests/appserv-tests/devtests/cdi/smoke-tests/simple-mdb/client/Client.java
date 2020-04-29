@@ -19,7 +19,7 @@ import java.io.*;
 import java.util.*;
 import javax.ejb.EJBHome;
 import jakarta.jms.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.naming.InitialContext;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

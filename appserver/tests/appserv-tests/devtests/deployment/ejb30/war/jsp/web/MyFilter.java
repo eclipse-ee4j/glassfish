@@ -18,7 +18,7 @@ package com.sun.s1asdev.deployment.ejb30.web.jsp;
 
 import java.io.IOException;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

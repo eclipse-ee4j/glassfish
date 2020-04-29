@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 
 import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.transaction.TransactionManager;
 import javax.transaction.Status;
 import javax.naming.InitialContext;

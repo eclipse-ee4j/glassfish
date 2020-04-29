@@ -16,11 +16,11 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.annotation.Resource;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.annotation.Resource;
 import javax.ejb.SessionContext;
-import javax.xml.ws.WebServiceContext;
+import jakarta.xml.ws.WebServiceContext;
 
 
 @javax.ejb.Stateless

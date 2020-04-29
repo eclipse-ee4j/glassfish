@@ -19,9 +19,9 @@ package com.acme;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 
 import javax.ejb.Singleton;
 import javax.ejb.Startup;

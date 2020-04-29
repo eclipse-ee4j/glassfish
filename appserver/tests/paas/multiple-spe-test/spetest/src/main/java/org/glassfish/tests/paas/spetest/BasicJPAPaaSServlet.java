@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.paas.spetest;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;

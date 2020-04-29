@@ -25,12 +25,12 @@ import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * This handler is responsible for handling javax.annotation.PostConstruct 
+ * This handler is responsible for handling jakarta.annotation.PostConstruct 
  *
  */
 @Service

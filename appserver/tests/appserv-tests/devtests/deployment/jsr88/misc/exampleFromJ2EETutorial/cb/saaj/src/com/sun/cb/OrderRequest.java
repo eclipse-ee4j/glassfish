@@ -22,7 +22,7 @@ import java.util.*;
 import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
 
-import javax.xml.soap.*;
+import jakarta.xml.soap.*;
 
 public class OrderRequest {
     String url;

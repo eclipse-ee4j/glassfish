@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.mdb2;
 import javax.ejb.Stateful;
 import javax.ejb.Local;
 import javax.ejb.Remove;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.ejb.SessionContext;

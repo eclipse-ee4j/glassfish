@@ -16,8 +16,8 @@
 
 package client;
 
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.BindingProvider;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.BindingProvider;
 
 import endpoint.jaxws.HelloEJBService;
 import endpoint.jaxws.Hello;

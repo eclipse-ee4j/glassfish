@@ -17,7 +17,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.annotation.security.PermitAll;
+import jakarta.annotation.security.PermitAll;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.HttpMethodConstraint;

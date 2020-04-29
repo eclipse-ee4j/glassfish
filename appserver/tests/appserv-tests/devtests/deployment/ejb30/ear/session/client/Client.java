@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session.client;
 
 import java.io.*;
 import java.util.*;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.ejb.EJB;
 import com.sun.s1asdev.ejb.ejb30.hello.session.*;
 

@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DatabaseMetaData;
 import java.util.Enumeration;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 public final class CustomDBNameServlet extends HttpServlet {

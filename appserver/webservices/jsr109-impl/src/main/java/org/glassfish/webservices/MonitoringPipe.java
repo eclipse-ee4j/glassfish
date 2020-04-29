@@ -21,7 +21,7 @@ import org.glassfish.webservices.monitoring.*;
 import javax.xml.namespace.QName;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.http.HTTPBinding;
+import jakarta.xml.ws.http.HTTPBinding;
 
 import com.sun.xml.ws.api.pipe.Pipe;
 import com.sun.xml.ws.api.message.Message;
@@ -88,9 +88,9 @@ public class MonitoringPipe extends AbstractFilterPipeImpl {
         }
         SOAPMessageContext ctxt = new SOAPMessageContextImpl(request);
         HttpServletRequest httpRequest =
-                (HttpServletRequest) request.get(javax.xml.ws.handler.MessageContext.SERVLET_REQUEST);
+                (HttpServletRequest) request.get(jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST);
         HttpServletResponse httpResponse =
-                (HttpServletResponse) request.get(javax.xml.ws.handler.MessageContext.SERVLET_RESPONSE);
+                (HttpServletResponse) request.get(jakarta.xml.ws.handler.MessageContext.SERVLET_RESPONSE);
 
         String messageId=null;
 

@@ -1238,11 +1238,12 @@
         </dependency>
 
        <!-- glassfish-jersey -->
-        <dependency>
+        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
+<!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
@@ -1273,11 +1274,12 @@
             <artifactId>jersey-container-servlet-core</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
+        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
+<!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-processing</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-mvc</artifactId>

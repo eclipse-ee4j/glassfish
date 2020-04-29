@@ -24,7 +24,7 @@ import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessageInfo;
 import javax.security.auth.message.MessagePolicy;
 import javax.security.auth.message.module.ServerAuthModule;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPMessage;
 
 public class SOAPDefaultTestServerAuthModule implements ServerAuthModule {
     private CallbackHandler handler = null;

@@ -27,9 +27,9 @@
     </parent>
     <artifactId>glassfish-parent</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish Appserver Parent Project</name>
+    <name>Eclipse GlassFish Parent Project</name>
 
-    <description>Glassfish Appserver Parent Project</description>
+    <description>Eclipse GlassFish Parent Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <scm>
@@ -49,7 +49,6 @@
         <woodstock.version>4.0.2.16</woodstock.version>
         <javax.ejb-api.version>3.2.6</javax.ejb-api.version>
         <jakarta.interceptor-api.version>1.2.5</jakarta.interceptor-api.version>
-        <jakarta.xml.rpc-api.version>1.1.3</jakarta.xml.rpc-api.version>
         <javax.transaction-api.version>1.3.3</javax.transaction-api.version>
         <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
         <cdi-api.version>2.0</cdi-api.version>
@@ -83,12 +82,11 @@
         <woodstox.version>5.1.0</woodstox.version>
         <jaxb.version>2.3.2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
-        <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>
         <jakarta-persistence-api.version>2.2.3</jakarta-persistence-api.version>
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
-        <mq.version>5.1.4</mq.version>
+        <mq.version>6.0.0-M1</mq.version>
         <derby.version>10.13.1.3</derby.version>
         <weld.version>3.0.0.Final</weld.version>
         <wsdl4j.version>1.5.0</wsdl4j.version>
@@ -100,13 +98,12 @@
         <json.bind-api.version>1.0.2</json.bind-api.version>
 
         <yasson.version>1.0.3</yasson.version>
-        <concurrent-api.version>1.1.2</concurrent-api.version>
-        <concurrent.version>1.1.1</concurrent.version>
+        <concurrent-api.version>2.0.0-RC1</concurrent-api.version>
+        <concurrent.version>2.0.0-RC1</concurrent.version>
         <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>
         <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
-        <javax.management.j2ee-api.version>1.1.3</javax.management.j2ee-api.version>
-	    <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
+	      <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
         <easymock.version>3.5</easymock.version>
 	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
 
@@ -115,8 +112,7 @@
     <modules>
         <module>common</module>
         <module>libpam4j</module>
-	    <module>jaxr-ra</module>
-	    <module>ldapbp</module>
+        <module>ldapbp</module>
         <module>ha</module>
         <module>deployment</module>
         <module>admin</module>
@@ -390,30 +386,6 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>jakarta.xml.registry</groupId>
-                                <artifactId>jakarta.xml.registry-api</artifactId>
-                                <version>${jakarta.xml.registry-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.0</specVersion>
-                            <specImplVersion>${jakarta.xml.registry-api.version}</specImplVersion>
-                            <apiPackage>javax.xml.registry</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.xml.rpc</groupId>
-                                <artifactId>jakarta.xml.rpc-api</artifactId>
-                                <version>${jakarta.xml.rpc-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.1</specVersion>
-                            <specImplVersion>${jakarta.xml.rpc-api.version}</specImplVersion>
-                            <apiPackage>javax.xml.rpc</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
                                 <groupId>jakarta.enterprise.deploy</groupId>
                                 <artifactId>jakarta.enterprise.deploy-api</artifactId>
                                 <version>${javax.enterprise.deploy-api.version}</version>
@@ -423,18 +395,6 @@
                             <specVersion>1.6</specVersion>
                             <specImplVersion>1.6</specImplVersion>
                             <apiPackage>javax.enterprise.deploy</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.management.j2ee</groupId>
-                                <artifactId>jakarta.management.j2ee-api</artifactId>
-                                <version>${javax.management.j2ee-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.1</specVersion>
-                            <specImplVersion>${javax.management.j2ee-api.version}</specImplVersion>
-                            <apiPackage>javax.management.j2ee</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -526,11 +486,6 @@
                 <groupId>javax.transaction.cdi</groupId>
                 <artifactId>javax.transaction.cdi-api</artifactId>
                 <version>${javax.transaction.cdi-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.rpc</groupId>
-                <artifactId>jakarta.xml.rpc-api</artifactId>
-                <version>${jakarta.xml.rpc-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.faces</groupId>
@@ -653,11 +608,6 @@
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-osgi</artifactId>
                 <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.registry</groupId>
-                <artifactId>jakarta.xml.registry-api</artifactId>
-                <version>${jakarta.xml.registry-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
@@ -823,11 +773,6 @@
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.management.j2ee</groupId>
-                <artifactId>jakarta.management.j2ee-api</artifactId>
-                <version>${javax.management.j2ee-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>

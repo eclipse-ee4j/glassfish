@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,20 +34,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import javax.servlet.http.*;
 import javax.xml.namespace.QName;
-import javax.xml.rpc.handler.MessageContext;
-import javax.xml.rpc.ServiceFactory;
-import javax.xml.rpc.handler.soap.SOAPMessageContext;
-import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.rpc.handler.HandlerInfo;
-import javax.xml.rpc.handler.HandlerRegistry;
-import com.sun.xml.rpc.spi.JaxRpcObjectFactory;
-import com.sun.xml.rpc.spi.model.Model;
-import com.sun.xml.rpc.spi.model.ModelProperties;
-import com.sun.xml.rpc.spi.model.Port;
-import com.sun.xml.rpc.spi.model.Service;
-import com.sun.xml.rpc.spi.runtime.SOAPConstants;
-import com.sun.xml.rpc.spi.runtime.StreamingHandler;
-import com.sun.xml.rpc.spi.runtime.Tie;
 
 
 import java.util.*;
@@ -122,19 +108,10 @@ public class WsUtil {
         config = WebServiceContractImpl.getInstance().getConfig();
     }
 
-    // @@@ These are jaxrpc-implementation specific MessageContextProperties
-    // that should be added to jaxrpc spi
-    private static final String ONE_WAY_OPERATION =
-        "com.sun.xml.rpc.server.OneWayOperation";
-    private static final String CLIENT_BAD_REQUEST =
-        "com.sun.xml.rpc.server.http.ClientBadRequest";
-    
     private static final String SECURITY_POLICY_NAMESPACE_URI = 
             "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy";
 
     private static final Logger logger = LogUtils.getLogger();
-
-    private JaxRpcObjectFactory rpcFactory;
 
 
     /**
@@ -604,30 +581,6 @@ public class WsUtil {
         return;
     }
 
-    public HandlerInfo createHandlerInfo(WebServiceHandler handler,
-                                         ClassLoader loader) 
-        throws Exception {
-
-        QName[] headers = new QName[handler.getSoapHeaders().size()];
-        int i = 0;
-        for(Iterator iter = handler.getSoapHeaders().iterator();
-            iter.hasNext();) {
-            headers[i] = (QName) iter.next();
-            i++;
-        }
-
-        Map properties = new HashMap();
-        for(Iterator iter = handler.getInitParams().iterator(); 
-            iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor) 
-                iter.next();
-            properties.put(next.getName(), next.getValue());
-        }
-
-        Class handlerClass = loader.loadClass(handler.getHandlerClass());
-        return new HandlerInfo(handlerClass, properties, headers);
-    }
-
    /**
      * Accessing wsdl URL might involve file system access, so wrap
      * operation in a doPrivileged block.
@@ -689,188 +642,6 @@ public class WsUtil {
             throw e;
         }
         return wsdlFileURL;
-    }
-
-    public boolean isJAXWSbasedService(WebService ws) {
-
-        if(ws.isJaxWSBased() != null) {
-            //already verified
-            return ws.isJaxWSBased();
-        }
-
-        boolean jaxwsEndPtFound = false;
-        boolean jaxrpcEndPtFound = false;
-
-        String declaredType = ws.getType();
-        if(declaredType != null) {
-            if(declaredType.equals("JAXWS")) {
-                jaxwsEndPtFound = true;
-            } else if(declaredType.equals("JAXRPC")) {
-                jaxrpcEndPtFound = true;
-            } else {
-                logger.log(Level.SEVERE, LogUtils.WS_TYPE_ERROR, new Object[] {ws.getDescription(), declaredType});
-            }
-        }
-        //Verify that all the endpoints are of the same type 
-        for (WebServiceEndpoint endpoint : ws.getEndpoints()) {
-            if (endpoint.getLinkName() == null) {
-                String msg = MessageFormat.format(
-                        logger.getResourceBundle().getString(LogUtils.UNRESOLVED_LINK),
-                        new Object[] {endpoint.getEndpointName(), endpoint.getLinkName()});
-                    logger.log(Level.SEVERE, msg);
-                    throw new RuntimeException(msg);
-            }
-            String implClassName = null;
-            if (endpoint.implementedByEjbComponent()) {
-                if (endpoint.getEjbComponentImpl() != null) {
-                    implClassName = endpoint.getEjbComponentImpl().getEjbClassName();
-                }
-            } else {
-                if (endpoint.getWebComponentImpl() != null) {
-                    implClassName = endpoint.getWebComponentImpl().getWebComponentImplementation();
-                }
-            }
-            if (implClassName == null || "".equals(implClassName.trim())) {
-                String msg = MessageFormat.format(
-                        logger.getResourceBundle().getString(LogUtils.MISSING_IMPLEMENTATION_CLASS),
-                        endpoint.getEndpointName());
-                logger.log(Level.SEVERE, msg);
-                throw new RuntimeException(msg);
-            }
-            Class implClass;
-            try {
-                implClass = Thread.currentThread().getContextClassLoader().loadClass(implClassName);
-            } catch(Exception e) {
-                String msg = MessageFormat.format(
-                        logger.getResourceBundle().getString(LogUtils.CANNOT_LOAD_IMPLCLASS),
-                        implClassName);
-                logger.log(Level.SEVERE, msg);
-                throw new RuntimeException(msg);
-            }
-            if (implClass!=null) {
-                if(implClass.getAnnotation(javax.xml.ws.WebServiceProvider.class) != null) {
-                    // if we already found a jaxrpcendpoint, flag error since we do not support jaxws+jaxrpc endpoint
-                    // in the same service
-                    if(jaxrpcEndPtFound) {
-                        logger.log(Level.SEVERE, LogUtils.JAXWS_JAXRPC_ERROR, implClassName);
-                        continue;
-                    }
-                    //This is a JAXWS endpoint with @WebServiceProvider
-                    //Do not run wsgen for this endpoint
-                    jaxwsEndPtFound = true;
-                    continue;
-                }
-                if(implClass.getAnnotation(javax.jws.WebService.class) != null) {
-                    // if we already found a jaxrpcendpoint, flag error since we do not support jaxws+jaxrpc endpoint
-                    // in the same service
-                    if(jaxrpcEndPtFound) {
-                        logger.log(Level.SEVERE, LogUtils.JAXWS_JAXRPC_ERROR, implClassName);
-                        continue;
-                    }
-                    // This is a JAXWS endpoint with @WebService;
-                    jaxwsEndPtFound = true;
-                    continue;
-                }
-                if (JAXWSServlet.class.isAssignableFrom(implClass)) {
-                     // if we already found a jaxrpcendpoint, flag error since we do not support jaxws+jaxrpc endpoint
-                    // in the same service
-                    if(jaxrpcEndPtFound) {
-                        logger.log(Level.SEVERE, LogUtils.JAXWS_JAXRPC_ERROR, implClassName);
-                        continue;
-                    }
-                    // This is a JAXWS endpoint with @WebService;
-                    jaxwsEndPtFound = true;
-                    continue;
-                } else {
-                    // this is a jaxrpc endpoint
-                    // if we already found a jaxws endpoint, flag error since we do not support jaxws+jaxrpc endpoint
-                    // in the same service
-                    if(jaxwsEndPtFound) {
-                        logger.log(Level.SEVERE, LogUtils.JAXWS_JAXRPC_ERROR, implClassName);
-                        continue;
-                    }
-                    // Set spec version to 1.1 to indicate later the wscompile should be run
-                    // We do this here so that jaxrpc endpoint having J2EE1.4 or JavaEE5
-                    // descriptors will work properly
-                    jaxrpcEndPtFound = true;
-                    ws.getWebServicesDescriptor().setSpecVersion("1.1");
-                }
-            }
-        }
-
-        if(jaxwsEndPtFound) {
-            ws.setJaxWSBased(true);
-            ws.setType("JAX-WS");
-        } else {
-            ws.setJaxWSBased(false);
-            ws.setType("JAX-RPC");
-        }
-        return jaxwsEndPtFound;
-    }
-
-    public javax.xml.rpc.Service createConfiguredService
-        (ServiceReferenceDescriptor desc) throws Exception {
-        
-        final ServiceReferenceDescriptor serviceRef = desc;
-        javax.xml.rpc.Service service = null;
-        try {
-
-            // Configured service can be created with any kind of URL.
-            // Since resolving it might require file system access,
-            // do operation in a doPrivivileged block.  JAXRPC RI should
-            // probably have the doPrivileged as well.
-
-            final URL wsdlFileURL = privilegedGetServiceRefWsdl(serviceRef);
-            final QName serviceName = serviceRef.getServiceName();
-            final ServiceFactory serviceFactory = ServiceFactory.newInstance();
-
-            service = (javax.xml.rpc.Service) 
-                java.security.AccessController.doPrivileged
-                (new java.security.PrivilegedExceptionAction() {
-                        public java.lang.Object run() throws Exception {
-                            return serviceFactory.createService
-                                (wsdlFileURL, serviceName);
-                        }
-                    });
-
-        } catch(PrivilegedActionException pae) {
-            logger.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, pae);
-            Exception e = new Exception();
-            e.initCause(pae.getCause());
-            throw e;
-        }
-
-        return service;
-    }
-
-    public void configureHandlerChain(ServiceReferenceDescriptor serviceRef,
-                                      javax.xml.rpc.Service service, 
-                                      Iterator ports, ClassLoader loader)
-        throws Exception {
-
-        if( !serviceRef.hasHandlers() ) {
-            return;
-        }
-        
-        HandlerRegistry registry = service.getHandlerRegistry();
-        
-        while(ports.hasNext()) {
-            QName nextPort = (QName) ports.next();
-
-            List handlerChain = registry.getHandlerChain(nextPort);
-
-            for(Iterator iter = serviceRef.getHandlers().iterator();
-                iter.hasNext();) {
-                WebServiceHandler nextHandler = (WebServiceHandler) iter.next();
-                Collection portNames = nextHandler.getPortNames();
-                if( portNames.isEmpty() || 
-                    portNames.contains(nextPort.getLocalPart()) ) {
-                    HandlerInfo handlerInfo = 
-                        createHandlerInfo(nextHandler, loader);
-                    handlerChain.add(handlerInfo);
-                }
-            }
-        }
     }
 
     /**
@@ -1030,34 +801,6 @@ public class WsUtil {
         return templates;
     }
 
-    /**
-     * @return Set of service endpoint interface class names supported by
-     * a generated service interface.
-     *
-     * @return Collection of String class names
-     */
-    public Collection getSEIsFromGeneratedService
-        (Class generatedServiceInterface) throws Exception {
-
-        Collection seis = new HashSet();
-
-        Method[] declaredMethods =
-            generatedServiceInterface.getDeclaredMethods();
-
-        // Use naming convention from jaxrpc spec to derive SEI class name.
-        for(int i = 0; i < declaredMethods.length; i++) {
-            Method next = declaredMethods[i];
-            Class returnType = next.getReturnType();
-            if( next.getName().startsWith("get") &&
-                (next.getDeclaringClass() != javax.xml.rpc.Service.class) &&
-                java.rmi.Remote.class.isAssignableFrom(returnType) ) {
-                seis.add(returnType.getName());
-            }
-        }
-
-        return seis;
-    }
-
    /* *//**
      * Called from client side deployment object on receipt of final
      * wsdl from server.  
@@ -1100,205 +843,7 @@ public class WsUtil {
         }
         return finalWsdlFile;
     }
-
-    *//**
-     * Find a Port object within the JAXRPC Model.
-     */
-    public Port getPortFromModel(Model model, QName portName) {
-        
-        for(Iterator serviceIter = model.getServices(); serviceIter.hasNext();){
-            Service next = (Service) serviceIter.next();
-            for(Iterator portIter = next.getPorts(); portIter.hasNext();) {
-                Port nextPort = (Port) portIter.next();
-                if( portsEqual(nextPort, portName) ) {
-                    return nextPort;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Find a Service in which a particular port is defined.  Assumes port
-     * QName is unique within a WSDL.
-     */
-    public Service getServiceForPort(Model model, QName thePortName) {
-
-        for(Iterator serviceIter = model.getServices(); 
-            serviceIter.hasNext();) {
-            Service nextService = (Service) serviceIter.next();
-            for(Iterator portIter = nextService.getPorts(); 
-                portIter.hasNext();) {
-                
-                Port nextPort = (Port) portIter.next();
-                if( portsEqual(nextPort, thePortName) ) {
-                    return nextService;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Logic for matching a port qname with a Port object from 
-     * the JAXRPC-RI Model.
-     */
-    public boolean portsEqual(Port port, QName candidatePortName) {
-
-        boolean equal = false;
-
-        // Better to use Port object's WSDL_PORT property for port
-        // QName than Port.getName().  If that returns null, use
-        // Port.getName().
-        QName portPropertyName = (QName) port.getProperty
-            (ModelProperties.PROPERTY_WSDL_PORT_NAME);
-
-        if( portPropertyName != null ) {
-            equal = candidatePortName.equals(portPropertyName);
-        } else {
-            equal = candidatePortName.equals(port.getName());
-        }
-
-        return equal;
-    }
-
-    // Return collection of Port objects
-    public Collection getAllPorts(Model model) {
-        Collection ports = new HashSet();
-        for(Iterator serviceIter = model.getServices(); 
-            serviceIter.hasNext();) {
-            Service next = (Service) serviceIter.next();
-            ports.addAll(next.getPortsList());
-        }
-        return ports;
-    }
-
-    /**
-     *@return a method object representing the target of a web service 
-     * invocation
-     */
-    public Method getInvMethod(Tie webServiceTie, MessageContext context) 
-        throws Exception {
-
-        // Use tie to get Method from SOAP message inv.webServiceTie
-
-        SOAPMessageContext soapMsgContext = (SOAPMessageContext) context;
-        SOAPMessage message = soapMsgContext.getMessage();
-
-        if (!(webServiceTie instanceof StreamingHandler)) {
-            throw new IllegalArgumentException(webServiceTie + "is not instance of StreamingHandler.");
-        }
-
-        StreamingHandler streamingHandler = (StreamingHandler) webServiceTie;
-        int opcode = streamingHandler.getOpcodeForRequestMessage(message);
-        return streamingHandler.getMethodForOpcode(opcode);
-    }
-
-    /**
-     * Convenience method for throwing a SOAP fault exception.  
-     */
-    public void throwSOAPFaultException(String faultString, MessageContext msgContext) {
-        
-        SOAPMessage soapMessage = 
-                ((SOAPMessageContext)msgContext).getMessage();
-        throwSOAPFaultException(faultString, soapMessage);
-        
-    }
-    
-    public void throwSOAPFaultException(String faultString,
-                                        SOAPMessage soapMessage) 
-        throws SOAPFaultException {
-
-        SOAPFaultException sfe = null;
-
-        try {
-
-            SOAPPart sp = soapMessage.getSOAPPart();
-            SOAPEnvelope se = sp.getEnvelope();
-
-            // Consume the request
-            SOAPBody sb = se.getBody();
-
-            // Access the child elements of body
-            Iterator iter = sb.getChildElements();
-
-            // Response should only include the fault, so remove
-            // any request body nodes.
-            if (iter.hasNext()) {
-                SOAPBodyElement requestBody = (SOAPBodyElement)iter.next();
-                // detach this node from the tree
-                requestBody.detachNode();
-            }
-
-
-            SOAPFault soapFault = sb.addFault();
-
-            se.setEncodingStyle(SOAPConstants.URI_ENCODING);
-
-            String faultActor = "http://schemas.xmlsoap.org/soap/actor/next";
-            QName faultCode = SOAPConstants.FAULT_CODE_SERVER;
-
-            soapFault.setFaultCode("env:" + faultCode.getLocalPart());
-            soapFault.setFaultString(faultString);
-            soapFault.setFaultActor(faultActor);
-
-            sfe = new SOAPFaultException(faultCode, faultActor, faultString,
-                                         null);
-        } catch(SOAPException se) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, LogUtils.EXCEPTION_THROWN, se);
-            }
-        }
-
-        if( sfe != null ) {
-            throw sfe;
-        }
-    }
-
-
-    void writeReply(HttpServletResponse response, 
-       com.sun.xml.rpc.spi.runtime.SOAPMessageContext messageContext) 
-        throws IOException, SOAPException
-    {
-
-        // In case of a one-way operation, send no reply or fault.
-        if (isMessageContextPropertySet(messageContext, ONE_WAY_OPERATION)) {
-            return;
-        }
-          
-        SOAPMessage reply = messageContext.getMessage();
-        int statusCode = 0;
-        if (messageContext.isFailure()) {
-            
-            if (isMessageContextPropertySet(messageContext,   
-                                            CLIENT_BAD_REQUEST)) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST); 
-                setContentTypeAndFlush(response);
-                return;
-                
-            } else {
-              response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
-            
-        } else {           
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-        
-        OutputStream os = response.getOutputStream();
-        String[] headers = reply.getMimeHeaders().getHeader("Content-Type");
-        if (headers != null && headers.length > 0) {
-            response.setContentType(headers[0]);
-        } else {
-            response.setContentType("text/xml");
-        }
-
-        putHeaders(reply.getMimeHeaders(), response);
-        
-        reply.writeTo(os);
-        os.flush();
-              
-    }
+ */
 
     private static void putHeaders(MimeHeaders headers, 
                                    HttpServletResponse response) {
@@ -1429,21 +974,6 @@ public class WsUtil {
                 return true;
             }
         }
-        return false;
-    }
-
-    boolean isMessageContextPropertySet
-        (com.sun.xml.rpc.spi.runtime.SOAPMessageContext messageContext, 
-         String property){
-        
-        Object prop =  messageContext.getProperty(property);
-        if (prop != null) {
-            if ( (prop instanceof String) &&
-                 ((String)prop).equalsIgnoreCase("true") ) {
-                return true;
-            }
-        }
-
         return false;
     }
 

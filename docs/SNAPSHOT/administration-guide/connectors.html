@@ -319,13 +319,13 @@ Pool</a>.</p>
 </div>
 <div class="paragraph">
 <p>This example creates the new <code>jms/qConnPool</code> pool for the
-<code>javax.jms.QueueConnectionFactory</code> connector module.</p>
+<code>jakarta.jms.QueueConnectionFactory</code> connector module.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-connector-connection-pool --steadypoolsize 20 --maxpoolsize 100
 --poolresize 2 --maxwait 60000 --raname jmsra --connectiondefinition
-javax.jms.QueueConnectionFactory jms/qConnPool
+jakarta.jms.QueueConnectionFactory jms/qConnPool
 
 Command create-connector-connection-pool executed successfully</code></pre>
 </div>
@@ -1613,13 +1613,13 @@ a Domain</a>.</p>
 <p>Example 12-20 Creating an Administered Object</p>
 </div>
 <div class="paragraph">
-<p>For this example, the <code>javax.jms.Queue</code> resource type is obtained from
+<p>For this example, the <code>jakarta.jms.Queue</code> resource type is obtained from
 the <code>ra.xml</code> file. The JNDI name of the new administered object is
 <code>jms/samplequeue</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-admin-object --restype javax.jms.Queue --raname jmsra
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-admin-object --restype jakarta.jms.Queue --raname jmsra
 --description "sample administered object" --property Name=sample_jmsqueue jms/samplequeue
 Command create-admin-object executed successfully</code></pre>
 </div>

@@ -102,7 +102,7 @@ Administration Guide.</p>
 </div>
 <div class="paragraph">
 <p>In addition, the as-install`/modules/webservices-osgi.jar` and
-as-install`/modules/endorsed/webservices-api-osgi.jar` files must be in
+as-install`/modules/webservices-api-osgi.jar` files must be in
 the classpath of your web services application. IDEs such as NetBeans
 and Eclipse do this automatically.</p>
 </div>
@@ -361,7 +361,7 @@ For example:<br></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>import javax.xml.ws.WebServiceFeature;
+<pre>import jakarta.xml.ws.WebServiceFeature;
 import org.jvnet.ws.databinding.DatabindingModeFeature;
 import com.sun.xml.ws.db.toplink.JAXBContextFactory;
 ...
@@ -379,7 +379,7 @@ using the <code>@DatabindingMode</code> annotation. For example:<br></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>import javax.jws.WebService;
+<pre>import jakarta.jws.WebService;
 import org.jvnet.ws.databinding.DatabindingMode;
 import com.sun.xml.ws.db.toplink.JAXBContextFactory;
 ...

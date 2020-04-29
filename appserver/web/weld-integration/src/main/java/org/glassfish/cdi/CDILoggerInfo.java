@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,7 @@ package org.glassfish.cdi;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
-
 import java.util.logging.Logger;
-
-import static java.util.logging.Level.FINE;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
@@ -189,7 +186,7 @@ public class CDILoggerInfo {
                      level = "WARNING")
     public static final String WELD_BOOTSTRAP_SHUTDOWN_EXCEPTION = CDI_LOGMSG_PREFIX + "-00036";
 
-    @LogMessageInfo( message = "javax.jms.MessageListener Class available, so need to fire PIT events to MDBs",
+    @LogMessageInfo( message = "jakarta.jms.MessageListener Class available, so need to fire PIT events to MDBs",
                      level = "FINE")
     public static final String JMS_MESSAGElISTENER_AVAILABLE = CDI_LOGMSG_PREFIX + "-00037";
 

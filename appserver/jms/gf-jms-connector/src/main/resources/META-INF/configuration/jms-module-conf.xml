@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,7 @@
     <config-bundle location="domain/resources" replace-if-exist="false">
         <configuration-element config-bean-class-name="org.glassfish.connectors.config.ConnectorConnectionPool">
 <![CDATA[
-    <connector-connection-pool name="jms/__defaultConnectionFactory-Connection-Pool" max-pool-size="250" steady-pool-size="1" resource-adapter-name="jmsra" connection-definition-name="javax.jms.ConnectionFactory">
+    <connector-connection-pool name="jms/__defaultConnectionFactory-Connection-Pool" max-pool-size="250" steady-pool-size="1" resource-adapter-name="jmsra" connection-definition-name="jakarta.jms.ConnectionFactory">
     </connector-connection-pool>
 ]]>
         </configuration-element>

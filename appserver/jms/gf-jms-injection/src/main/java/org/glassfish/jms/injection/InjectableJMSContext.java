@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,11 +24,11 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSConnectionFactory;
-import javax.jms.JMSContext;
-import javax.jms.JMSPasswordCredential;
-import javax.jms.JMSSessionMode;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSConnectionFactory;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSPasswordCredential;
+import jakarta.jms.JMSSessionMode;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.transaction.Transaction;

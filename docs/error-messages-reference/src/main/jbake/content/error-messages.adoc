@@ -4802,7 +4802,7 @@ HttpSessionListener, or HttpSessionAttributeListener interfaces ::
   Cause: As described in the message. +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref1154]]AS-CDI-00037 javax.jms.MessageListener Class available, so need to fire PIT events to MDBs ::
+[[sthref1154]]AS-CDI-00037 jakarta.jms.MessageListener Class available, so need to fire PIT events to MDBs ::
   Cause: As described in the message. +
   Action: Resolve the situation described in the message, if necessary.
 

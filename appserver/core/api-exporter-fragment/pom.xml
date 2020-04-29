@@ -139,8 +139,8 @@ javax.imageio.plugins.jpeg; \
 javax.imageio.spi; \
 javax.imageio.stream; \
 javax.interceptor; \
-javax.jms; \
 jakarta.json; \
+jakarta.jms; \
 javax.json.bind; \
 javax.json.bind.adapter; \
 javax.json.bind.annotation; \

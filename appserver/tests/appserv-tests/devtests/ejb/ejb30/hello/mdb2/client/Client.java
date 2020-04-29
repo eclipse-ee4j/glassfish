@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb2.client;
 
-import java.io.*;
-import java.util.*;
-import javax.ejb.EJBHome;
 import javax.naming.*;
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.annotation.Resource;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -50,7 +47,7 @@ public class Client {
     private QueueSession queueSession;
     private QueueSender queueSender;
     private QueueReceiver queueReceiver;
-    private javax.jms.Queue clientQueue;
+    private jakarta.jms.Queue clientQueue;
 
 
     private int numMessages = 2;
@@ -85,7 +82,7 @@ public class Client {
         // Producer will be specified when actual msg is sent.
         queueSender = queueSession.createSender(null);        
 
-        clientQueue = (javax.jms.Queue)
+        clientQueue = (jakarta.jms.Queue)
 	    context.lookup("java:comp/env/jms/MsgBeanClientQueue");
 
         queueReceiver = queueSession.createReceiver(clientQueue);
@@ -104,7 +101,7 @@ public class Client {
         }
     }
 
-    public void sendMsgs(javax.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue + 
@@ -124,7 +121,7 @@ public class Client {
 
         message.setBooleanProperty("flag", true);
         message.setIntProperty("num", 2);
-        sendMsgs((javax.jms.Queue) dest, message, num);
+        sendMsgs((jakarta.jms.Queue) dest, message, num);
 
         System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);

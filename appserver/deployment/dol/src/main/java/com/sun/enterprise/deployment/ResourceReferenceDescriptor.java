@@ -302,8 +302,8 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     public boolean isJMSConnectionFactory() {
         String myType = this.getType();
         return 
-            ( myType.equals("javax.jms.QueueConnectionFactory") ||
-              myType.equals("javax.jms.TopicConnectionFactory") );
+            ( myType.equals("jakarta.jms.QueueConnectionFactory") ||
+              myType.equals("jakarta.jms.TopicConnectionFactory") );
     }
     
     /**

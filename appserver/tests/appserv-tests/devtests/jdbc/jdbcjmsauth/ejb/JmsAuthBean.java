@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,10 @@ package com.sun.s1asdev.jdbc.jdbcjmsauth.ejb;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
 import javax.ejb.CreateException;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueConnection;
-import javax.jms.QueueSession;
-import javax.jms.Session;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.QueueSession;
+import jakarta.jms.Session;
 import javax.naming.InitialContext;
 
 public class JmsAuthBean implements SessionBean {

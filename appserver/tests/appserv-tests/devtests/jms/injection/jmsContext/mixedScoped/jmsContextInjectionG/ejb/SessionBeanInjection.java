@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,15 +19,8 @@ package org.glassfish.test.jms.injection.ejb;
 import javax.annotation.Resource;
 import javax.ejb.*;
 import javax.inject.Inject;
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.transaction.UserTransaction;
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
-import javax.transaction.RollbackException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import java.lang.SecurityException;
-import java.lang.IllegalStateException;
 
 
 /**

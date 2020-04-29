@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.*;
 import java.util.*;
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.annotation.Resource;
 
 
@@ -43,11 +43,11 @@ public class TestServlet extends HttpServlet {
     
     //Target Queue
     @Resource(mappedName="jms/ejb_ejb30_hello_mdb_InQueue")
-    private javax.jms.Queue msgBeanQueue;
+    private jakarta.jms.Queue msgBeanQueue;
 
     //Reply Queue
     @Resource(mappedName="jms/ejb_ejb30_hello_mdb_OutQueue")
-    private javax.jms.Queue clientQueue;
+    private jakarta.jms.Queue clientQueue;
 
     private QueueConnection queueCon;
     private QueueSession queueSession;
@@ -106,7 +106,7 @@ public class TestServlet extends HttpServlet {
             t.printStackTrace();
         }
     }
-  public void sendMsgs(javax.jms.Queue queue, int num)
+  public void sendMsgs(jakarta.jms.Queue queue, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
             Message message = queueSession.createTextMessage("foo #" + (i + 1));
@@ -121,7 +121,7 @@ public class TestServlet extends HttpServlet {
 
     public void doTest(int num)
         throws Exception {
-        sendMsgs((javax.jms.Queue) msgBeanQueue, num);
+        sendMsgs((jakarta.jms.Queue) msgBeanQueue, num);
 
         //Now attempt to receive responses to our message
         System.out.println("Waiting for queue message");

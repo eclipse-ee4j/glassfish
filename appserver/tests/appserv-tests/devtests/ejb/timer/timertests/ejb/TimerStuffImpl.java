@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,14 +24,14 @@ import java.util.Date;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.ejb.*;
-import javax.jms.JMSException;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueConnection;
-import javax.jms.Queue;
-import javax.jms.QueueSession;
-import javax.jms.QueueSender;
-import javax.jms.QueueReceiver;
-import javax.jms.TextMessage;
+import jakarta.jms.JMSException;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.Queue;
+import jakarta.jms.QueueSession;
+import jakarta.jms.QueueSender;
+import jakarta.jms.QueueReceiver;
+import jakarta.jms.TextMessage;
 
 public class TimerStuffImpl implements TimerStuff {
     

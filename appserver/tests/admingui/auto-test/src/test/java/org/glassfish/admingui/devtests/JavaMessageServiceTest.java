@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -163,7 +163,7 @@ public class JavaMessageServiceTest extends BaseSeleniumTestClass {
 //        setFieldValue("jmsPhysDestForm:propertySheet:propertSectionTextField:maxBytesPerMsgProp:maxBytesPerMsg", maxMessageSize);
 //        setFieldValue("jmsPhysDestForm:propertySheet:propertSectionTextField:maxTotalMsgBytesProp:maxTotalMsgBytes", maxTotalMemory);
 //        Select select = new Select(driver.findElement(By.id("jmsPhysDestForm:propertySheet:propertSectionTextField:typeProp:type")));
-//        select.selectByVisibleText("javax.jms.Queue");
+//        select.selectByVisibleText("jakarta.jms.Queue");
 //        setFieldValue("jmsPhysDestForm:propertySheet:propertSectionTextField:maxNumProducersProp:maxNumProducers", maxProducers);
 //        setFieldValue("jmsPhysDestForm:propertySheet:propertSectionTextField:consumerFlowLimitProp:consumerFlowLimit", consumerFlowLimit);
 //        Select select1 = new Select(driver.findElement(By.id("jmsPhysDestForm:propertySheet:propertSectionTextField:useDmqProp:useDmq")));

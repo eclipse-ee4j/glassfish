@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -85,11 +85,11 @@ public class CreateJMSResource implements AdminCommand {
     Domain domain;
     //ConnectorConnectionPool[] connPools;
 
-    private static final String QUEUE = "javax.jms.Queue";
-    private static final String TOPIC = "javax.jms.Topic";
-    private static final String QUEUE_CF = "javax.jms.QueueConnectionFactory";
-    private static final String TOPIC_CF = "javax.jms.TopicConnectionFactory";
-    private static final String UNIFIED_CF = "javax.jms.ConnectionFactory";
+    private static final String QUEUE = "jakarta.jms.Queue";
+    private static final String TOPIC = "jakarta.jms.Topic";
+    private static final String QUEUE_CF = "jakarta.jms.QueueConnectionFactory";
+    private static final String TOPIC_CF = "jakarta.jms.TopicConnectionFactory";
+    private static final String UNIFIED_CF = "jakarta.jms.ConnectionFactory";
     private static final String DEFAULT_JMS_ADAPTER = "jmsra";
     private static final String DEFAULT_OPERAND="DEFAULT";
     private static final String JNDINAME_APPENDER="-Connection-Pool";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -9,24 +9,6 @@
  */
 
 package samples.jms.soaptojms;
-
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.AttachmentPart;
-
-import com.sun.messaging.xml.MessageTransformer;
-import javax.jms.TopicConnectionFactory;
-
-import javax.jms.MessageListener;
-import javax.jms.TopicConnection;
-import javax.jms.TopicSession;
-import javax.jms.Message;
-import javax.jms.Session;
-import javax.jms.Topic;
-import javax.jms.JMSException;
-import javax.jms.TopicSubscriber;
-
-import java.util.Iterator;
 
 /**
  * This sample program shows a JMS message listener can use the MessageTransformer

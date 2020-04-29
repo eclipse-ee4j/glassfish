@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -15,10 +15,10 @@ import java.net.URL;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalHome;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.Queue;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.Topic;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.Queue;
+import jakarta.jms.TopicConnectionFactory;
+import jakarta.jms.Topic;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;

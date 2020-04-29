@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,11 +19,10 @@ package com.sun.s1peqe.loadbalancing.client;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
-import javax.jms.*;
+import jakarta.jms.*;
 import java.util.*;
 import com.sun.s1peqe.ejb.bmp.enroller.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
-import com.sun.enterprise.naming.impl.SerialContext;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ORBLocator;
 
@@ -140,12 +139,12 @@ public class EnrollerClient {
 	    System.out.println("Looking up JMS Resource Refs ==>");
 	    System.out.println("Creating new Context 2..");
 	    Context initial1 = new InitialContext();            	    
-	    javax.jms.Queue queue = (javax.jms.Queue) initial1.lookup(queueString);
+	    jakarta.jms.Queue queue = (jakarta.jms.Queue) initial1.lookup(queueString);
 	    System.out.println("looked up " + queueString);
 
 	    System.out.println("Creating new Context 3...");
 	    Context initial2 = new InitialContext();
-	    javax.jms.QueueConnectionFactory queueConnectionFactory = 
+	    jakarta.jms.QueueConnectionFactory queueConnectionFactory = 
 	      (QueueConnectionFactory)
 	      initial2.lookup("jms/QCFactory");
 	    System.out.println("Looked up jms/QCFactory");

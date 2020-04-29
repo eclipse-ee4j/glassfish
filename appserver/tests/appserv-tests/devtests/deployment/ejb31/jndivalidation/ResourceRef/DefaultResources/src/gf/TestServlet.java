@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,7 @@ import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.jms.ConnectionFactory;
+import jakarta.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 import javax.transaction.TransactionSynchronizationRegistry;

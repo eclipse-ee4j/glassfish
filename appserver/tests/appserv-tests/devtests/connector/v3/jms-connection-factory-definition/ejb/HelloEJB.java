@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,10 +22,10 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSConnectionFactoryDefinition;
-import javax.jms.JMSConnectionFactoryDefinitions;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSConnectionFactoryDefinition;
+import jakarta.jms.JMSConnectionFactoryDefinitions;
 import javax.naming.InitialContext;
 
 @JMSConnectionFactoryDefinitions(
@@ -33,7 +33,7 @@ import javax.naming.InitialContext;
                 @JMSConnectionFactoryDefinition(
                         description = "global-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:global/env/HelloEJB_ModByDD_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -44,7 +44,7 @@ import javax.naming.InitialContext;
                 @JMSConnectionFactoryDefinition(
                         description = "global-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:global/env/HelloEJB_Annotation_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -55,7 +55,7 @@ import javax.naming.InitialContext;
                 @JMSConnectionFactoryDefinition(
                         description = "application-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:app/env/HelloEJB_Annotation_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -66,7 +66,7 @@ import javax.naming.InitialContext;
                 @JMSConnectionFactoryDefinition(
                         description = "module-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:module/env/HelloEJB_Annotation_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -77,7 +77,7 @@ import javax.naming.InitialContext;
                 @JMSConnectionFactoryDefinition(
                         description = "component-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:comp/env/HelloEJB_Annotation_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",

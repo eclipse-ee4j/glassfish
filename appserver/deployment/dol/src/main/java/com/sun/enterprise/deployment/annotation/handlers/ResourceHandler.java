@@ -278,8 +278,8 @@ public class ResourceHandler extends AbstractResourceHandler {
         }   catch(Exception e) {
             // we don't care, either we don't have the class, ot the bundled is not installed
         }
-        if (resourceType.getName().equals("javax.jms.Queue") ||
-                resourceType.getName().equals("javax.jms.Topic")) {
+        if (resourceType.getName().equals("jakarta.jms.Queue") ||
+                resourceType.getName().equals("jakarta.jms.Topic")) {
             return getMessageDestinationReferenceDescriptors(
                                                     logicalName, rcContexts);
         } else if (envEntryTypes.containsKey(resourceType) ||
@@ -287,18 +287,18 @@ public class ResourceHandler extends AbstractResourceHandler {
             return getEnvironmentPropertyDescriptors(logicalName, rcContexts,
                                                     resourceAn);
         } else if (resourceType == javax.sql.DataSource.class ||
-                resourceType.getName().equals("javax.jms.ConnectionFactory") ||
-                resourceType.getName().equals("javax.jms.QueueConnectionFactory") ||
-                resourceType.getName().equals("javax.jms.TopicConnectionFactory") ||
+                resourceType.getName().equals("jakarta.jms.ConnectionFactory") ||
+                resourceType.getName().equals("jakarta.jms.QueueConnectionFactory") ||
+                resourceType.getName().equals("jakarta.jms.TopicConnectionFactory") ||
                 resourceType == webServiceContext ||
                 resourceType.getName().equals("jakarta.mail.Session") || 
                 resourceType.getName().equals("java.net.URL") ||
                 resourceType.getName().equals("javax.resource.cci.ConnectionFactory") ||
                 resourceType == org.omg.CORBA_2_3.ORB.class || 
                 resourceType == org.omg.CORBA.ORB.class || 
-                resourceType.getName().equals("javax.jms.XAConnectionFactory") ||
-                resourceType.getName().equals("javax.jms.XAQueueConnectionFactory") ||
-                resourceType.getName().equals("javax.jms.XATopicConnectionFactory") || 
+                resourceType.getName().equals("jakarta.jms.XAConnectionFactory") ||
+                resourceType.getName().equals("jakarta.jms.XAQueueConnectionFactory") ||
+                resourceType.getName().equals("jakarta.jms.XATopicConnectionFactory") || 
                 DOLUtils.isRAConnectionFactory(habitat, resourceType.getName(), ((ResourceContainerContextImpl)rcContexts[0]).getAppFromDescriptor()) ) {
             return getResourceReferenceDescriptors(logicalName, rcContexts);
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -199,7 +199,7 @@ public final class ConnectorMessageBeanClient
     /**
      * derive the resource-adapter-mid in the following order <br/>
      * a) specified in the glassfish-ejb-jar / sun-ejb-jar descriptor<br/>
-     * b) jms-ra message-listener of type javax.jms.MessageListener<br/>
+     * b) jms-ra message-listener of type jakarta.jms.MessageListener<br/>
      * c) Check the resource-adapters supporting the message-listener-type and
      * if there is only one use it, otherwise fail.<br/>
      * @param descriptor_ EJB Descriptor
@@ -214,7 +214,7 @@ public final class ConnectorMessageBeanClient
 
         if (resourceAdapterMid == null) {
             String messageListener = descriptor_.getMessageListenerType();
-            //DOL of MDB descriptor has default value as "javax.jms.MessageListener" which
+            //DOL of MDB descriptor has default value as "jakarta.jms.MessageListener" which
             //will take care of the case when the message-listener-type is not specified in the DD
             if(ConnectorConstants.JMS_MESSAGE_LISTENER.equals(messageListener)){
                 resourceAdapterMid = ConnectorRuntime.DEFAULT_JMS_ADAPTER;
@@ -266,7 +266,7 @@ public final class ConnectorMessageBeanClient
     private MessageListener getMessageListener(ConnectorDescriptor desc) {
         String msgListenerType = getDescriptor().getMessageListenerType();
         if (msgListenerType == null || "".equals(msgListenerType))
-            msgListenerType = "javax.jms.MessageListener";
+            msgListenerType = "jakarta.jms.MessageListener";
 
         Iterator i =
                 desc.getInboundResourceAdapter().getMessageListeners().iterator();

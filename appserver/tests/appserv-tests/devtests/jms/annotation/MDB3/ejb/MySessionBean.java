@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,24 +21,24 @@ import javax.annotation.Resource;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSConnectionFactory;
-import javax.jms.JMSContext;
-import javax.jms.JMSDestinationDefinition;
-import javax.jms.JMSProducer;
-import javax.jms.JMSSessionMode;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSConnectionFactory;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSDestinationDefinition;
+import jakarta.jms.JMSProducer;
+import jakarta.jms.JMSSessionMode;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Queue;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 
 @JMSDestinationDefinition(
     description = "global-scope result queue defined by @JMSDestinationDefinition",
     name = "java:global/env/annotation_resultQueue",
-    interfaceName = "javax.jms.Queue",
+    interfaceName = "jakarta.jms.Queue",
     resourceAdapter = "jmsra",
     destinationName = "myPhysicalResultQueue"
 )

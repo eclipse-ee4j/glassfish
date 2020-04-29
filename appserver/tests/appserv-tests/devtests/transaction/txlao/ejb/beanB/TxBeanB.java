@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,19 +25,18 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import java.util.Enumeration;
 import java.rmi.RemoteException;
 import java.util.*;
 
-import javax.jms.Queue;
-import javax.jms.Message;
-import javax.jms.TextMessage;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.JMSException;
-import javax.jms.QueueReceiver;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
+import jakarta.jms.Queue;
+import jakarta.jms.Message;
+import jakarta.jms.TextMessage;
+import jakarta.jms.QueueSender;
+import jakarta.jms.QueueSession;
+import jakarta.jms.JMSException;
+import jakarta.jms.QueueReceiver;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.QueueConnectionFactory;
 
 
 public class TxBeanB implements SessionBean {

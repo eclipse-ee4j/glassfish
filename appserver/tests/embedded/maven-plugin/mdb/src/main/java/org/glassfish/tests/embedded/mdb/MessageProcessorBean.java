@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,9 @@ package org.glassfish.tests.embedded.mdb;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
+import jakarta.jms.TextMessage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.logging.Level;
@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 @MessageDriven(mappedName = "jms/TestQueue", activationConfig = {
         @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue")
 })
 public class MessageProcessorBean implements MessageListener {
 

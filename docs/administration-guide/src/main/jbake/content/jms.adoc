@@ -685,7 +685,7 @@ a Domain].
 Example 17-5 Creating a JMS Connection Factory
 
 This example creates a connection factory resource of type
-`javax.jms.ConnectionFactory` whose JNDI name is
+`jakarta.jms.ConnectionFactory` whose JNDI name is
 `jms/DurableConnectionFactory`. The `ClientId` property sets a client ID
 on the connection factory so that it can be used for durable
 subscriptions. The JNDI name for a JMS resource customarily includes the
@@ -693,7 +693,7 @@ subscriptions. The JNDI name for a JMS resource customarily includes the
 
 [source,oac_no_warn]
 ----
-asadmin> create-jms-resource --restype javax.jms.ConnectionFactory
+asadmin> create-jms-resource --restype jakarta.jms.ConnectionFactory
 --description "connection factory for durable subscriptions"
 --property ClientId=MyID jms/DurableConnectionFactory
 Command create-jms-resource executed successfully.
@@ -709,7 +709,7 @@ This example creates a destination resource whose JNDI name is
 
 [source,oac_no_warn]
 ----
-asadmin> create-jms-resource --restype javax.jms.Queue 
+asadmin> create-jms-resource --restype jakarta.jms.Queue 
 --property Name=PhysicalQueue jms/MyQueue
 Command create-jms-resource executed successfully.
 ----
@@ -761,7 +761,7 @@ This example lists the resources for the resource type `javax`.
 
 [source,oac_no_warn]
 ----
-asadmin> list-jms-resources --restype javax.jms.TopicConnectionFactory 
+asadmin> list-jms-resources --restype jakarta.jms.TopicConnectionFactory 
 jms/DurableTopicConnectionFactory 
 jms/TopicConnectionFactory 
 Command list-jms-resources executed successfully.
@@ -1182,37 +1182,37 @@ supports XA transactions.
 (Synchronous) when consuming messages.
 
 |`QueueConnectionFactoryClassName` |A valid class name |None |Class name
-of `javax.jms.QueueConnectionFactory` implementation of the JMS client.
+of `jakarta.jms.QueueConnectionFactory` implementation of the JMS client.
 This class must be made available on the application server classpath.
 Used if `ProviderIntegrationMode` is `javabean`.
 
 |`TopicConnectionFactoryClassName` |A valid class name |None |Class name
-of `javax.jms.TopicConnectionFactory` implementation of the JMS client.
+of `jakarta.jms.TopicConnectionFactory` implementation of the JMS client.
 This class must be made available on the application server classpath.
 Used if `ProviderIntegrationMode` is specified as `javabean`.
 
 |`XAConnectionFactoryClassName` |A valid class name |None |Class name of
-`javax.jms.ConnectionFactory` implementation of the JMS client. This
+`jakarta.jms.ConnectionFactory` implementation of the JMS client. This
 class must be made available on the application server classpath. Used
 if `ProviderIntegrationMode` is specified as `javabean`.
 
 |`XAQueueConnectionFactoryClassName` |A valid class name |None |Class
-name of `javax.jms.``XAQueueConnectionFactory` implementation of the JMS
+name of `jakarta.jms.``XAQueueConnectionFactory` implementation of the JMS
 client. This class must be made available on the application server
 classpath. Used if `ProviderIntegrationMode` is specified as `javabean`.
 
 |`XATopicConnectionFactoryClassName` |A valid class name |None |Class
-name of `javax.jms.``XATopicConnectionFactory` implementation of the JMS
+name of `jakarta.jms.``XATopicConnectionFactory` implementation of the JMS
 client. This class must be made available on the application server
 classpath. Used if `ProviderIntegrationMode` is `javabean`.
 
 |`TopicClassName` |A valid class name |None |Class Name of
-`javax.jms.Topic` implementation of the JMS client. This class must be
+`jakarta.jms.Topic` implementation of the JMS client. This class must be
 made available on the application server classpath. Used if
 `ProviderIntegrationMode` is `javabean`.
 
 |`QueueClassName` |A valid class name |None |Class Name of
-`javax.jms.Queue` implementation of the JMS client. This class must be
+`jakarta.jms.Queue` implementation of the JMS client. This class must be
 made available on the application server classpath. Used if
 `ProviderIntegrationMode` is specified as a `javabean`.
 
@@ -1360,7 +1360,7 @@ destination created in JMS provider. This destination will be used by
 resource adapter to create a connection to receive messages from. Used
 only if `ProviderIntegrationMode` is configured as `jndi`.
 
-|`DestinationType` |`javax.jms.Queue` or `javax.jms.Topic` |Null |Type
+|`DestinationType` |`jakarta.jms.Queue` or `jakarta.jms.Topic` |Null |Type
 of the destination the MDB will listen to.
 
 |`DestinationProperties` |Name-value pairs separated by comma |None
@@ -1609,7 +1609,7 @@ as follows:
         <ejb-name>SimpleMessageEJB</ejb-name>
         <method-name>onMessage</method-name>
         <method-params>
-          <method-param>javax.jms.Message</method-param>
+          <method-param>jakarta.jms.Message</method-param>
         </method-params>
       </method>
       <trans-attribute>NotSupported</trans-attribute>
@@ -1748,11 +1748,11 @@ with `<resource-env-ref>` elements, as follows: +
       . . .
       <resource-env-ref>
         <resource-env-ref-name>jms/QCFactory</resource-env-ref-name>
-        <resource-env-ref-type>javax.jms.QueueConnectionFactory</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.jms.QueueConnectionFactory</resource-env-ref-type>
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>jms/outboundQueue</resource-env-ref-name>
-        <resource-env-ref-type>javax.jms.Queue</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.jms.Queue</resource-env-ref-type>
       </resource-env-ref>
 ----
 3.  Create a Connector Connection Pool and Connector Resource by
@@ -1764,7 +1764,7 @@ the WebLogic JNDI store. +
 [source,oac_no_warn]
 ----
 asadmin create-connector-connection-pool --host localhost --port 4848
-   --raname genericra --connectiondefinition javax.jms.QueueConnectionFactory 
+   --raname genericra --connectiondefinition jakarta.jms.QueueConnectionFactory 
    --target server --transactionsupport LocalTransaction
    --property ConnectionFactoryJndiName=jms/WLOutboundQueueFactory
      qcpool
@@ -1777,7 +1777,7 @@ GlassFish Server and its corresponding connection pool.
 * The connection pool has the JNDI name `jms/WLoutboundQueueFactory` and
 obtains connections from a connection pool named `qcpool`.
 * The connection pool `qcpool` uses the resource adapter `genericra` and
-contains objects of type `javax.jms.QueueConnectionFactory`.
+contains objects of type `jakarta.jms.QueueConnectionFactory`.
 * The `transactionsupport` argument is set to `LocalTransaction`, which
 specifies that the connection will be used in local transactions only.
 You can also specify `NoTransaction`. However, the default setting of
@@ -1804,12 +1804,12 @@ line: +
 [source,oac_no_warn]
 ----
 asadmin create-admin-object --host localhost --port 4848 --target server 
-    --restype javax.jms.Queue --property DestinationJndiName=jms/WLOutboundQueue 
+    --restype jakarta.jms.Queue --property DestinationJndiName=jms/WLOutboundQueue 
     --raname genericra jms/outboundQueue
 ----
 This `asadmin` command creates a destination in GlassFish Server.
 * The destination has the JNDI name `jms/outboundQueue`, uses the
-resource adapter `genericra`, and is of type `javax.jms.Queue`.
+resource adapter `genericra`, and is of type `jakarta.jms.Queue`.
 * The destination is configured with the properties specified using the
 `properties` argument; multiple properties are configured as a
 colon-separated list of name-value pairs. Only one property is
@@ -2111,7 +2111,7 @@ destination in the GlassFish Server JNDI store. This destination should
 be configured to refer to the physical destination in the WebLogic JNDI
 store.
 
-|`DestinationType` |`javax.jms.Queue` or `javax.jms.Topic` |Null
+|`DestinationType` |`jakarta.jms.Queue` or `jakarta.jms.Topic` |Null
 |Specifies whether the configured `DestinationJndiName` refers to a
 queue or topic.
 
@@ -2535,7 +2535,7 @@ The following `asadmin` command creates a Connection Pool called
 [source,oac_no_warn]
 ----
      asadmin create-connector-connection-pool -- raname genericra connectiondefinition
-            javax.jms.QueueConnectionFactory --transactionsupport  XATransaction 
+            jakarta.jms.QueueConnectionFactory --transactionsupport  XATransaction 
             --property ConnectionFactoryJndiName=QCF mypool
 ----
 The following `asadmin` command creates a Connection Pool called
@@ -2543,7 +2543,7 @@ The following `asadmin` command creates a Connection Pool called
 [source,oac_no_warn]
 ----
      asadmin create-connector-connection-pool 
-            -- raname genericra connectiondefinition javax.jms.TopicConnectionFactory 
+            -- raname genericra connectiondefinition jakarta.jms.TopicConnectionFactory 
             --transactionsupport  XATransaction
             --property ConnectionFactoryJndiName=XATCF mypool2
 ----
@@ -2563,20 +2563,20 @@ The following `asadmin` command creates a connector resource named
 3.  Create the JMS destination resources as administered objects. +
 In the image above, `jms/MyQueue` (pointing to `GenericJMSRA` and
 `TQueue`) is created in GlassFish Server. +
-The following `asadmin` command creates a `javax.jms.Queue` administered
+The following `asadmin` command creates a `jakarta.jms.Queue` administered
 object and binds it to the GlassFish Server JNDI tree at `jms/MyQueue`
 and points to the `jms/TQueue` created in WebSphere MQ. +
 [source,oac_no_warn]
 ----
-     asadmin create-admin-object --raname genericra --restype javax.jms.Queue 
+     asadmin create-admin-object --raname genericra --restype jakarta.jms.Queue 
             --property DestinationJndiName=TQueue jms/MyQueue
 ----
-The following `asadmin` command creates a `javax.jms.Topic` administered
+The following `asadmin` command creates a `jakarta.jms.Topic` administered
 object and binds it to the GlassFish Server JNDI tree at `jms/MyTopic`
 and points to the `jms/TTopic` created in WebSphere MQ. +
 [source,oac_no_warn]
 ----
-     asadmin create-admin-object --raname genericra --restype javax.jms.Topic 
+     asadmin create-admin-object --raname genericra --restype jakarta.jms.Topic 
             --property DestinationJndiName=TTopic jms/MyTopic
 ----
 

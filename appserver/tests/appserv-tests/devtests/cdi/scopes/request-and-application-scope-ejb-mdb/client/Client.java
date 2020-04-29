@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,16 +18,16 @@ package com.sun.s1asdev.cdi.hello.mdb.client;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueReceiver;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.QueueReceiver;
+import jakarta.jms.QueueSender;
+import jakarta.jms.QueueSession;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 import javax.naming.InitialContext;
 
 import test.ejb.session.HelloSless;
@@ -56,10 +56,10 @@ public class Client {
     private static QueueConnectionFactory queueConFactory;
 
     @Resource(name = "MsgBeanQueue", mappedName = "jms/cdi_hello_mdb_InQueue")
-    private static javax.jms.Queue msgBeanQueue;
+    private static jakarta.jms.Queue msgBeanQueue;
 
     @Resource(name = "ClientQueue", mappedName = "foo")
-    private static javax.jms.Queue clientQueue;
+    private static jakarta.jms.Queue clientQueue;
 
     private QueueConnection queueCon;
     private QueueSession queueSession;
@@ -87,11 +87,11 @@ public class Client {
 
                 System.out.println("Java SE mode...");
                 InitialContext ic = new InitialContext();
-                queueConFactory = (javax.jms.QueueConnectionFactory) ic
+                queueConFactory = (jakarta.jms.QueueConnectionFactory) ic
                         .lookup("jms/cdi_hello_mdb_QCF");
-                msgBeanQueue = (javax.jms.Queue) ic
+                msgBeanQueue = (jakarta.jms.Queue) ic
                         .lookup("jms/cdi_hello_mdb_InQueue");
-                clientQueue = (javax.jms.Queue) ic
+                clientQueue = (jakarta.jms.Queue) ic
                         .lookup("jms/cdi_hello_mdb_OutQueue");
 
             }
@@ -127,7 +127,7 @@ public class Client {
         }
     }
 
-    private void sendMsgs(javax.jms.Queue queue, Message msg, int num)
+    private void sendMsgs(jakarta.jms.Queue queue, Message msg, int num)
             throws JMSException {
         for (int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue
@@ -146,7 +146,7 @@ public class Client {
 
         message.setBooleanProperty("flag", true);
         message.setIntProperty("num", 2);
-        sendMsgs((javax.jms.Queue) dest, message, num);
+        sendMsgs((jakarta.jms.Queue) dest, message, num);
         
         System.out.println("remote bean:" + helloStatelessRemoteBean);
         String response = helloStatelessRemoteBean.hello();

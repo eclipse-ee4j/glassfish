@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -73,7 +73,7 @@ public class ASEjbRRefJndiName extends ASEjbResRef {
                 }
                     /* else  //Fix for bug id 5018617
                     {
-                        if(type.indexOf("javax.jms")>-1) //jms resource
+                        if(type.indexOf("jakarta.jms")>-1) //jms resource
                         {
                             if(refJndiName.startsWith("jms/")) {
                                 addGoodDetails(result, compName);

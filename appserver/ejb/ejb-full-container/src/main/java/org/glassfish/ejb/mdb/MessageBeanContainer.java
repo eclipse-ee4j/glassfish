@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.ejb.mdb;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -689,7 +688,7 @@ public final class MessageBeanContainer extends BaseContainer implements
     /**
      * @param method
      *            One of the methods used to deliver messages, e.g. onMessage
-     *            method for javax.jms.MessageListener. Note that if the
+     *            method for jakarta.jms.MessageListener. Note that if the
      *            <code>method</code> is not one of the methods for message
      *            delivery, the behavior of this method is not defined.
      */
@@ -1205,7 +1204,7 @@ public final class MessageBeanContainer extends BaseContainer implements
                 // any restrictions on what kind of exceptions can be thrown.
                 // This was not the case in J2EE 1.3, since JMS message driven
                 // beans could only implement
-                // void javax.jms.MessageListener.onMessage() , which does
+                // void jakarta.jms.MessageListener.onMessage() , which does
                 // not declare any exceptions.
                 // 
                 // In the J2EE 1.3 implementation, exceptions were only

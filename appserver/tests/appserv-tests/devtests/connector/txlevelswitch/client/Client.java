@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import java.io.*;
 import com.sun.s1asdev.connector.txlevelswitch.test1.ejb.SimpleSessionHome;
 import com.sun.s1asdev.connector.txlevelswitch.test1.ejb.SimpleSession;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
-import javax.jms.*;
+import jakarta.jms.*;
 
 public class Client {
     
@@ -71,7 +71,7 @@ public class Client {
 		System.out.println(" After Lookup of QCF");
 	        
 		System.out.println(" Before lookup of Q");
-		javax.jms.Queue queue = (javax.jms.Queue) ic.lookup("jms/SampleQueue");
+		jakarta.jms.Queue queue = (jakarta.jms.Queue) ic.lookup("jms/SampleQueue");
 		System.out.println(" After lookup of Q");
 		System.out.println(" Before createQueueConnection");
 		QueueConnection qConn = qcf.createQueueConnection("guest", "guest");
@@ -113,7 +113,7 @@ public class Client {
 		System.out.println(" After Lookup of QCF");
 	        
 		System.out.println(" Before lookup of Q");
-		javax.jms.Queue queue = (javax.jms.Queue) ic.lookup("jms/SampleQueue");
+		jakarta.jms.Queue queue = (jakarta.jms.Queue) ic.lookup("jms/SampleQueue");
 		System.out.println(" After lookup of Q");
 		System.out.println(" Before createQueueConnection");
 		QueueConnection qConn = qcf.createQueueConnection("guest", "guest");

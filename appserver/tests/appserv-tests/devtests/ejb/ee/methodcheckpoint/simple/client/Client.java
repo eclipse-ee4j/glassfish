@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +16,10 @@
 
 package com.sun.s1asdev.ejb.ee.methodcheckpoint.simple.client;
 
-import java.util.ArrayList;
-
-import java.io.Serializable;
 import javax.naming.*;
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.ejb.*;
 import javax.rmi.PortableRemoteObject;
-import java.rmi.NoSuchObjectException;
 
 import com.sun.s1asdev.ejb.ee.ejb.SFSBHome;
 import com.sun.s1asdev.ejb.ee.ejb.SFSB;

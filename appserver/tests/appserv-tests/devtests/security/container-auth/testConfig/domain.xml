@@ -2,7 +2,7 @@
 <!DOCTYPE domain PUBLIC "-//Sun Microsystems Inc.//DTD Application Server 8.0 Domain//EN" "http://www.sun.com/software/appserver/dtds/sun-domain_1_1.dtd">
 <!--
 
-    Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2004, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,13 +42,13 @@
     <jdbc-resource enabled="true" jndi-name="jdbc/s1qeDB" object-type="user" pool-name="jdbc-pointbase-pool"/>
     <jdbc-resource enabled="true" jndi-name="jdbc/ejb-subclassing" object-type="user" pool-name="ejb-subclassing-pool"/>
     <persistence-manager-factory-resource enabled="true" factory-class="com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerFactoryImpl" jdbc-resource-jndi-name="jdbc/s1qeDB" jndi-name="jdo/s1qePM" object-type="user"/>
-    <admin-object-resource enabled="true" jndi-name="jms/SampleQueue" object-type="user" res-adapter="jmsra" res-type="javax.jms.Queue">
+    <admin-object-resource enabled="true" jndi-name="jms/SampleQueue" object-type="user" res-adapter="jmsra" res-type="jakarta.jms.Queue">
       <property name="Name" value="Queue"/>
     </admin-object-resource>
-    <admin-object-resource enabled="true" jndi-name="jms/adminQueue" object-type="user" res-adapter="jmsra" res-type="javax.jms.Queue">
+    <admin-object-resource enabled="true" jndi-name="jms/adminQueue" object-type="user" res-adapter="jmsra" res-type="jakarta.jms.Queue">
       <property name="Name" value="adminQueue"/>
     </admin-object-resource>
-    <admin-object-resource enabled="true" jndi-name="jms/MyQueue" object-type="user" res-adapter="jmsra" res-type="javax.jms.Queue">
+    <admin-object-resource enabled="true" jndi-name="jms/MyQueue" object-type="user" res-adapter="jmsra" res-type="jakarta.jms.Queue">
       <property name="Name" value="MyQueue"/>
     </admin-object-resource>
     <connector-resource enabled="true" jndi-name="jms/QCFactory" object-type="user" pool-name="__SYSTEM/pools/jms/QCFactory"/>
@@ -79,9 +79,9 @@
       <property name="User" value="DBUSER"/>
       <property name="Password" value="DBPASSWORD"/>
     </jdbc-connection-pool>
-    <connector-connection-pool connection-definition-name="javax.jms.QueueConnectionFactory" fail-all-connections="false" idle-timeout-in-seconds="300" max-pool-size="250" max-wait-time-in-millis="60000" name="__SYSTEM/pools/jms/QCFactory" pool-resize-quantity="2" resource-adapter-name="jmsra" steady-pool-size="1"/>
-    <connector-connection-pool connection-definition-name="javax.jms.QueueConnectionFactory" fail-all-connections="false" idle-timeout-in-seconds="300" max-pool-size="250" max-wait-time-in-millis="60000" name="__SYSTEM/pools/jms/QueueConnectionFactory" pool-resize-quantity="2" resource-adapter-name="jmsra" steady-pool-size="1"/>
-    <connector-connection-pool connection-definition-name="javax.jms.QueueConnectionFactory" fail-all-connections="false" idle-timeout-in-seconds="300" max-pool-size="250" max-wait-time-in-millis="60000" name="__SYSTEM/pools/jms/MyQueueConnectionFactory" pool-resize-quantity="2" resource-adapter-name="jmsra" steady-pool-size="1"/>
+    <connector-connection-pool connection-definition-name="jakarta.jms.QueueConnectionFactory" fail-all-connections="false" idle-timeout-in-seconds="300" max-pool-size="250" max-wait-time-in-millis="60000" name="__SYSTEM/pools/jms/QCFactory" pool-resize-quantity="2" resource-adapter-name="jmsra" steady-pool-size="1"/>
+    <connector-connection-pool connection-definition-name="jakarta.jms.QueueConnectionFactory" fail-all-connections="false" idle-timeout-in-seconds="300" max-pool-size="250" max-wait-time-in-millis="60000" name="__SYSTEM/pools/jms/QueueConnectionFactory" pool-resize-quantity="2" resource-adapter-name="jmsra" steady-pool-size="1"/>
+    <connector-connection-pool connection-definition-name="jakarta.jms.QueueConnectionFactory" fail-all-connections="false" idle-timeout-in-seconds="300" max-pool-size="250" max-wait-time-in-millis="60000" name="__SYSTEM/pools/jms/MyQueueConnectionFactory" pool-resize-quantity="2" resource-adapter-name="jmsra" steady-pool-size="1"/>
   </resources>
   <configs>
     <config dynamic-reconfiguration-enabled="true" name="server-config">

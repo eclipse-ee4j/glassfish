@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,8 @@
 
 package com.sun.s1asdev.ejb.mdb.msgbean.client;
 
-import java.io.*;
-import java.util.*;
-import javax.ejb.EJBHome;
 import javax.naming.*;
-import javax.rmi.PortableRemoteObject;
-import org.omg.CORBA.ORB;
-import java.sql.*;
-import javax.sql.*;
-import javax.jms.*;
+import jakarta.jms.*;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -51,7 +44,7 @@ public class HelloClient {
     private QueueSession queueSession;
     private QueueSender queueSender;
     private QueueReceiver queueReceiver;
-    private javax.jms.Queue clientQueue;
+    private jakarta.jms.Queue clientQueue;
 
 
     private TopicConnection topicCon;
@@ -213,7 +206,7 @@ public class HelloClient {
         // Producer will be specified when actual msg is sent.
         queueSender = queueSession.createSender(null);        
 
-        clientQueue = (javax.jms.Queue) 
+        clientQueue = (jakarta.jms.Queue) 
             context.lookup("java:comp/env/jms/client_queue");
 
         queueReceiver = queueSession.createReceiver(clientQueue);
@@ -256,7 +249,7 @@ public class HelloClient {
         }
     }
 
-    public void sendMsgs(javax.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue);
@@ -333,7 +326,7 @@ public class HelloClient {
         try {
             Destination dest = (Destination) context.lookup(destName);
             
-            boolean pointToPoint = dest instanceof javax.jms.Queue;
+            boolean pointToPoint = dest instanceof jakarta.jms.Queue;
             
             System.out.println("Beginning test : " + testName);
             
@@ -353,7 +346,7 @@ public class HelloClient {
                 if( expectReply ) {
                     message.setJMSReplyTo(clientQueue);
                 }
-                sendMsgs((javax.jms.Queue) dest, message, numIter);
+                sendMsgs((jakarta.jms.Queue) dest, message, numIter);
             } else {
                 Message message = 
                     topicSession.createTextMessage(destName);

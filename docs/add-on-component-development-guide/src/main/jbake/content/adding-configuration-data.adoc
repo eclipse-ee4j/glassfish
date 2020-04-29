@@ -339,11 +339,11 @@ data. JSR 303 defines a metadata model and API for the validation of
 JavaBeans components.
 
 To validate an attribute of an element, annotate the attribute's getter
-method with the annotation in the `javax.validation.constraints` package
+method with the annotation in the `jakarta.validation.constraints` package
 that performs the validation that you require. The following table lists
 commonly used annotations for validating GlassFish Server configuration
 data. For the complete list of annotations, see the
-http://download.oracle.com/docs/cd/E17410_01/javaee/6/api/javax/validation/constraints/package-summary.html[`javax.validation.constraints`
+http://download.oracle.com/docs/cd/E17410_01/javaee/6/api/javax/validation/constraints/package-summary.html[`jakarta.validation.constraints`
 package summary]
 (`http://docs.oracle.com/javaee/7/api/javax/validation/constraints/package-summary.html`).
 
@@ -355,22 +355,22 @@ Configuration Data
 [width="100%",cols="<37%,<63%",options="header",]
 |=======================================================================
 |Validation |Annotation
-|Not null |`javax.validation.constraints.NotNull`
+|Not null |`jakarta.validation.constraints.NotNull`
 
-|Null |`javax.validation.constraints.Null`
+|Null |`jakarta.validation.constraints.Null`
 
 |Minimum value a|
-`javax.validation.constraints.Min`
+`jakarta.validation.constraints.Min`
 
 Set the `value` element of this annotation to the minimum allowed value.
 
 |Maximum value a|
-`javax.validation.constraints.Max`
+`jakarta.validation.constraints.Max`
 
 Set the `value` element of this annotation to the maximum allowed value.
 
 |Regular expression matching a|
-`javax.validation.constraints.Pattern`
+`jakarta.validation.constraints.Pattern`
 
 Set the `regexp` element of this annotation to the regular expression
 that is to be matched.
@@ -389,8 +389,8 @@ must be a positive integer.
 [source,oac_no_warn]
 ----
 ...
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 ...
 @Min(value=1)
 @Max(value=Integer.MAX_VALUE)
@@ -408,7 +408,7 @@ non-whitespace characters.
 
 [source,oac_no_warn]
 ----
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 ...
 @Pattern(regexp="^[\\S]*$")
 String getClassname();
@@ -780,9 +780,9 @@ import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Element;
 import org.glassfish.api.admin.config.Container;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Max;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 
 import java.beans.PropertyVetoException;
 
@@ -832,8 +832,8 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Attribute;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 
 import java.beans.PropertyVetoException;
 

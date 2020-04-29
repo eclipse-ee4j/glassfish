@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,8 +30,8 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 
-import javax.validation.*;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.*;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 import org.jvnet.hk2.config.ConfigModel.Property;
 
@@ -862,7 +862,7 @@ private class ProtectedList extends AbstractList {
                             return null;  
                         }
                     });
-                    return new javax.validation.Path() {
+                    return new jakarta.validation.Path() {
                         @Override
                         public Iterator<Node> iterator() {
                             return nodes.iterator();

@@ -30,8 +30,8 @@ import jakarta.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 import javax.transaction.TransactionSynchronizationRegistry;
-import javax.validation.ValidatorFactory;
-import javax.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.Validator;
 
 import org.omg.CORBA.ORB;
 

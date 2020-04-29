@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,14 +37,14 @@ import org.glassfish.api.admin.config.Named;
 import org.glassfish.api.admin.config.ReferenceContainer;
 
 import javax.inject.Inject;
-import javax.validation.Payload;
+import jakarta.validation.Payload;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * A cluster defines a homogeneous set of server instances that share the same

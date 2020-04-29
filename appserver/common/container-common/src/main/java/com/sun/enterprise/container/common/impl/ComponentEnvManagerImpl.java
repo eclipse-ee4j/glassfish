@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@ import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
-import javax.validation.*;
+import jakarta.validation.*;
 import java.net.MalformedURLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

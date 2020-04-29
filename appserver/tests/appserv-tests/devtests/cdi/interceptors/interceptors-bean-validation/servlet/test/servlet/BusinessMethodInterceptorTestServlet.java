@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,7 +60,7 @@ public class BusinessMethodInterceptorTestServlet extends HttpServlet {
             msg += "; Expected ConstraintViolationException not thrown ";
         } catch (Exception e) {
             // Expected exception
-            if (!"javax.validation.ConstraintViolationException".equals(e.getClass().getName())) {
+            if (!"jakarta.validation.ConstraintViolationException".equals(e.getClass().getName())) {
                 msg += "; Unexpected exception: " + e.getClass().getName();
             }
         }

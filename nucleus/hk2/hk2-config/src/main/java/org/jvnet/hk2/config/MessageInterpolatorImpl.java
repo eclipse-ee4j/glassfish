@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,9 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.validation.MessageInterpolator;
-import javax.validation.Payload;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.MessageInterpolator;
+import jakarta.validation.Payload;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 /*
  * Custom MessageInterpolatorImpl for HK2

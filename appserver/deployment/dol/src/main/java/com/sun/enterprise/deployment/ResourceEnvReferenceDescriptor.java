@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,8 +37,8 @@ public class ResourceEnvReferenceDescriptor extends EnvironmentProperty implemen
     private static final String EJB_CTX_TYPE ="javax.ejb.EJBContext";
     private static final String EJB_TIMER_SERVICE_TYPE
         = "javax.ejb.TimerService";
-    private static final String VALIDATION_VALIDATOR ="javax.validation.Validator";
-    private static final String VALIDATION_VALIDATOR_FACTORY ="javax.validation.ValidatorFactory";
+    private static final String VALIDATION_VALIDATOR ="jakarta.validation.Validator";
+    private static final String VALIDATION_VALIDATOR_FACTORY ="jakarta.validation.ValidatorFactory";
 
     private static final String CDI_BEAN_MANAGER_TYPE = "javax.enterprise.inject.spi.BeanManager";
 

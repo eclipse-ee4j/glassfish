@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,8 @@ import org.jvnet.hk2.config.*;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import javax.validation.Payload;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
 import java.beans.PropertyVetoException;
 import java.util.List;
 

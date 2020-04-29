@@ -24,7 +24,7 @@ import org.glassfish.jersey.examples.jersey_cdi.resources.inherited.ResourceC;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  *

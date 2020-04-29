@@ -346,7 +346,7 @@
                             <jarType>api</jarType>
                             <specVersion>${jax-rs-api.spec.version}</specVersion>
                             <specImplVersion>${jax-rs-api.impl.version}</specImplVersion>
-                            <apiPackage>javax.ws.rs</apiPackage>
+                            <apiPackage>jakarta.ws.rs</apiPackage>
                         </spec>
                         <spec>
                             <artifact>

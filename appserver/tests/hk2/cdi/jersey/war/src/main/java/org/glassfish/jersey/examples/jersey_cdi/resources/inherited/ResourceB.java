@@ -17,7 +17,7 @@
 package org.glassfish.jersey.examples.jersey_cdi.resources.inherited;
 
 import javax.enterprise.context.RequestScoped;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 /**
  *

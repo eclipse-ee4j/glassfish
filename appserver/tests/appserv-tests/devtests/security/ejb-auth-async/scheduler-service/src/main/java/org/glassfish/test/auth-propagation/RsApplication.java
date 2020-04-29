@@ -16,8 +16,8 @@
 
 package org.glassfish.test.authpropagation;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 
 @ApplicationPath("rs")
 public class RsApplication extends Application {

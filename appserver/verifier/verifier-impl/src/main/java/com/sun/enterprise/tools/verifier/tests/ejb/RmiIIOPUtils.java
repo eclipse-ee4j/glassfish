@@ -121,9 +121,9 @@ public class RmiIIOPUtils {
 		    //if (interfaces[i].getName().equals("java.rmi.Remote")) {
 		    if ((interfaces[i].getName().equals("java.rmi.Remote")) ||
 			//hack until i can ask hans why loop doesn't continue up past
-			// javax.ejb.EJBHome
-			(interfaces[i].getName().equals("javax.ejb.EJBObject")) ||
-			(interfaces[i].getName().equals("javax.ejb.EJBHome"))) {
+			// jakarta.ejb.EJBHome
+			(interfaces[i].getName().equals("jakarta.ejb.EJBObject")) ||
+			(interfaces[i].getName().equals("jakarta.ejb.EJBHome"))) {
 			validInterface = true;
 			break;
 		    }

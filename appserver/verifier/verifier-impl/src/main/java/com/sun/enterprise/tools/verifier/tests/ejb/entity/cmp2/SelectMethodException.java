@@ -23,7 +23,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
 import java.lang.reflect.Method;
 
 /**
- * Select methods must throw the javax.ejb.FinderException
+ * Select methods must throw the jakarta.ejb.FinderException
  *
  * @author  Jerome Dochez
  * @version 
@@ -43,14 +43,14 @@ public class SelectMethodException extends SelectMethodTest {
      */
     protected boolean runIndividualSelectTest(Method m, EjbCMPEntityDescriptor descriptor, Result result) {
         ComponentNameConstructor compName = getVerifierContext().getComponentNameConstructor();
-        if (methodThrowException(m, "javax.ejb.FinderException")) {
+        if (methodThrowException(m, "jakarta.ejb.FinderException")) {
 	    result.addGoodDetails(smh.getLocalString
 				       ("tests.componentNameConstructor",
 					"For [ {0} ]",
 					new Object[] {compName.toString()}));
             result.addGoodDetails(smh.getLocalString
     		("com.sun.enterprise.tools.verifier.tests.ejb.entity.cmp2.SelectMethodException.passed",
-                "[ {0} ] throws the javax.ejb.FinderException",
+                "[ {0} ] throws the jakarta.ejb.FinderException",
 		new Object[] {m.getName()}));                                                       
             return true;
         } else {
@@ -60,7 +60,7 @@ public class SelectMethodException extends SelectMethodTest {
 					new Object[] {compName.toString()}));
             result.addErrorDetails(smh.getLocalString
 	        ("com.sun.enterprise.tools.verifier.tests.ejb.entity.cmp2.SelectMethodException.failed",
-                "Error : [ {0} ] does not throw the javax.ejb.FinderException",
+                "Error : [ {0} ] does not throw the jakarta.ejb.FinderException",
 		new Object[] {m.getName()}));                                                    
             return false;            
         }

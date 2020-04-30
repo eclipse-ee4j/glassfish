@@ -37,7 +37,7 @@ public class EntityBeanExtendsSerializableClass extends EjbTest implements EjbCh
      * The interfaces/classes that the entity bean implements must be 
      * serializable directly or indirectly.
      * Ejb 2.1 says that "The bean class that uses the timer service must 
-     * implement the javax.ejb.TimedObject interface."
+     * implement the jakarta.ejb.TimedObject interface."
      * @param descriptor the Enterprise Java Bean deployment descriptor
      * @return <code>Result</code> the results for this assertion
      */
@@ -163,7 +163,7 @@ public class EntityBeanExtendsSerializableClass extends EjbTest implements EjbCh
     }
 
     public static boolean isTimedObject(Class serClass) {
-        if (javax.ejb.TimedObject.class.isAssignableFrom(serClass))
+        if (jakarta.ejb.TimedObject.class.isAssignableFrom(serClass))
             return true;
         else
             return false;

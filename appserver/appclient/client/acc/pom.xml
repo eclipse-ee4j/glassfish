@@ -323,6 +323,10 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>jakarta.authorization</groupId>
+            <artifactId>jakarta.authorization-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

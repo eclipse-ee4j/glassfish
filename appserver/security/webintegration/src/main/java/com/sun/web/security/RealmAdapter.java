@@ -130,8 +130,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     public static final String SECURITY_CONTEXT = "SecurityContext";
     public static final String BASIC = "BASIC";
     public static final String FORM = "FORM";
-    private static final String SERVER_AUTH_CONTEXT = "__javax.security.auth.message.ServerAuthContext";
-    private static final String MESSAGE_INFO = "__javax.security.auth.message.MessageInfo";
+    private static final String SERVER_AUTH_CONTEXT = "__jakarta.security.auth.message.ServerAuthContext";
+    private static final String MESSAGE_INFO = "__jakarta.security.auth.message.MessageInfo";
     private static final WebSecurityDeployerProbeProvider websecurityProbeProvider = new WebSecurityDeployerProbeProvider();
 
     // name of system property that can be used to define 

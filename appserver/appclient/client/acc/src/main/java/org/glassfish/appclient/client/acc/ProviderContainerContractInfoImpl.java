@@ -26,8 +26,8 @@ import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.Collection;
 import java.util.HashSet;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.spi.ClassTransformer;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
 import jakarta.validation.ValidatorFactory;
 
 import org.glassfish.api.deployment.DeploymentContext;

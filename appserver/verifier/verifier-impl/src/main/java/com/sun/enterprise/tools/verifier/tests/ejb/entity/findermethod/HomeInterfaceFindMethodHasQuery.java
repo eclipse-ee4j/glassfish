@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 
 /** 
  * Entity beans home interface find<METHOD> method throws 
- * javax.ejb.FinderException test.
+ * jakarta.ejb.FinderException test.
  * 
  * The following are the requirements for the enterprise Bean's home interface 
  * find<METHOD> signature: 
@@ -48,7 +48,7 @@ public class HomeInterfaceFindMethodHasQuery extends EjbTest implements EjbCheck
 
     /**
      * Entity beans home interface find<METHOD> method throws 
-     * javax.ejb.FinderException test.
+     * jakarta.ejb.FinderException test.
      * 
      * The following are the requirements for the enterprise Bean's home interface 
      * find<METHOD> signature: 
@@ -120,7 +120,7 @@ public class HomeInterfaceFindMethodHasQuery extends EjbTest implements EjbCheck
     private boolean commonToBothInterfaces(String home, EjbDescriptor descriptor, String methodIntf) {
         boolean oneFailed = false;
 	// RULE: Entity home interface are only allowed to have find<METHOD> 
-	//       methods which must throw javax.ejb.FinderException
+	//       methods which must throw jakarta.ejb.FinderException
 	try {
 	    PersistenceDescriptor pers = ((EjbCMPEntityDescriptor)descriptor).getPersistenceDescriptor();
 

@@ -31,6 +31,6 @@ public class RemoteHomeMethodModifiers extends HomeMethodModifiers {
 	return descriptor.getHomeClassName();
     }
     protected String getSuperInterface() {
-	return "javax.ejb.EJBHome";
+	return "jakarta.ejb.EJBHome";
     }
 }

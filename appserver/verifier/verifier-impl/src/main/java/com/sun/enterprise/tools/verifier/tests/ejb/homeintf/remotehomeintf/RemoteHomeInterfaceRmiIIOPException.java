@@ -80,6 +80,6 @@ public class RemoteHomeInterfaceRmiIIOPException extends HomeMethodTest {
     }
 
     protected String getSuperInterface() {
-	return "javax.ejb.EJBHome";
+	return "jakarta.ejb.EJBHome";
     }
 }

@@ -32,7 +32,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessageInfo;
 import javax.xml.namespace.QName;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.Name;

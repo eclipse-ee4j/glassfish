@@ -35,7 +35,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JAASServletAuthConfigProvider extends JAASAuthConfigProvider {
 
     private static final String HTTP_SERVLET_LAYER = "HttpServlet";
-    private static final String MANDATORY_KEY = "javax.security.auth.message.MessagePolicy.isMandatory";
+    private static final String MANDATORY_KEY = "jakarta.security.auth.message.MessagePolicy.isMandatory";
     private static final String MANDATORY_AUTH_CONTEXT_ID = "mandatory";
     private static final String OPTIONAL_AUTH_CONTEXT_ID = "optional";
     private static final Class[] moduleTypes = new Class[] {ServerAuthModule.class};

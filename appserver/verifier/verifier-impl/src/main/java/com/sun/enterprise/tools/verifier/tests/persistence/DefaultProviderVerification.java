@@ -23,11 +23,11 @@ import com.sun.enterprise.tools.verifier.persistence.AVKPersistenceUnitInfoImpl;
 import com.sun.enterprise.tools.verifier.tests.VerifierCheck;
 import com.sun.enterprise.tools.verifier.tests.VerifierTest;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceException;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceException;
 
-import javax.persistence.spi.PersistenceProvider;
-import javax.persistence.spi.PersistenceUnitInfo;
+import jakarta.persistence.spi.PersistenceProvider;
+import jakarta.persistence.spi.PersistenceUnitInfo;
 import java.util.logging.Level;
 import java.util.Properties;
 

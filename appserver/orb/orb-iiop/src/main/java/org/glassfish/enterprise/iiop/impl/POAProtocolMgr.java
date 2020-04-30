@@ -34,9 +34,9 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 
 import com.sun.enterprise.util.Utility;
 
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.TransactionRolledbackLocalException;
-import javax.ejb.TransactionRequiredLocalException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.TransactionRolledbackLocalException;
+import jakarta.ejb.TransactionRequiredLocalException;
 
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.Servant;
@@ -319,7 +319,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
             mappedException = new OBJECT_NOT_EXIST(MAPEXCEPTION_CODE,
                 CompletionStatus.COMPLETED_MAYBE);
         } else if ( exception instanceof java.rmi.AccessException
-            || exception instanceof javax.ejb.AccessLocalException )
+            || exception instanceof jakarta.ejb.AccessLocalException )
         {
             mappedException = new NO_PERMISSION(MAPEXCEPTION_CODE,
                 CompletionStatus.COMPLETED_MAYBE);

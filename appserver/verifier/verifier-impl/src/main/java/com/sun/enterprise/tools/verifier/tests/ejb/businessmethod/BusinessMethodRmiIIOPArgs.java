@@ -82,7 +82,7 @@ public class BusinessMethodRmiIIOPArgs extends EjbTest implements EjbCheck {
             
             for (Method remoteMethod : intfClass.getMethods()) {
                 // we don't test the EJB methods
-                if (remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBObject")) 
+                if (remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBObject")) 
                     continue;
                 
                 Class beanClass = Class.forName(descriptor.getEjbClassName(), 

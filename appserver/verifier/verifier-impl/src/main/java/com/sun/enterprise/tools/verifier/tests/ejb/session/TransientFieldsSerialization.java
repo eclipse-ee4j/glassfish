@@ -80,14 +80,14 @@ public class TransientFieldsSerialization extends EjbTest implements EjbCheck {
                         // can't do anything with environment JNDI naming context and
                         // any its subcontexts
                         //sg133765: do we need to do something for business interface
-                        if ((fc.getName().equals("javax.ejb.SessionContext")) ||
+                        if ((fc.getName().equals("jakarta.ejb.SessionContext")) ||
                                 (fc.getName().equals("javax.transaction.UserTransaction")) ||
                                 (fc.getName().equals(descriptor.getRemoteClassName())) ||
                                 (fc.getName().equals(descriptor.getHomeClassName()))||
                                 (fc.getName().equals(descriptor.getLocalClassName())) ||
                                 (fc.getName().equals(descriptor.getLocalHomeClassName())) ||
-                                (isEjb30 && fc.getName().equals("javax.ejb.EntityManager")) ||
-                                (isEjb30 && fc.getName().equals("javax.ejb.EntityManagerFactory"))) {
+                                (isEjb30 && fc.getName().equals("jakarta.ejb.EntityManager")) ||
+                                (isEjb30 && fc.getName().equals("jakarta.ejb.EntityManagerFactory"))) {
 
                             result.failed(smh.getLocalString
                                     ("tests.componentNameConstructor",

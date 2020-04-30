@@ -21,8 +21,8 @@ import com.sun.enterprise.tools.verifier.Result;
 import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import java.util.Set;
-import javax.servlet.Servlet;
-import javax.servlet.SingleThreadModel;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.SingleThreadModel;
 
 /**
  * Assertion

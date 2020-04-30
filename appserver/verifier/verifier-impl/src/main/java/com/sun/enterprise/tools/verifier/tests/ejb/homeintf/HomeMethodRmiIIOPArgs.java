@@ -81,7 +81,7 @@ ComponentNameConstructor compName = getVerifierContext().getComponentNameConstru
 		for (Method remoteMethod : rc.getMethods()) {
 
                     // we don't test the EJB methods
-                    if (remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBHome")) 
+                    if (remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBHome")) 
                         continue;
 		    if (remoteMethod.getName().startsWith("create") || 
 			remoteMethod.getName().startsWith("find") || 

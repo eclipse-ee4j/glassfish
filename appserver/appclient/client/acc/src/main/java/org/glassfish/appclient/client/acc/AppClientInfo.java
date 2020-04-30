@@ -46,7 +46,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXParseException;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 
 /**
  *Represents information about the app client, regardless of what type of

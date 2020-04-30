@@ -221,7 +221,7 @@ public class TransactionDemarcationType extends EjbTest implements EjbCheck {
 					    } else {
 						String[] paramList = methodDescriptor.getParameterClassNames();
 						if(Array.getLength(paramList) == 1) {
-						    if (paramList[0].equals("javax.ejb.EJBObject")) {
+						    if (paramList[0].equals("jakarta.ejb.EJBObject")) {
 							//style 3
 							oneFailed = true;
 							addErrorDetails(result, compName);

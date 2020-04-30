@@ -41,10 +41,10 @@
     <properties>
         <jms-api.version>3.0.0-RC1</jms-api.version>
         <jsp-api.version>3.0.0-M1</jsp-api.version>
-        <jsp-impl.version>3.0.0-M1</jsp-impl.version>
-        <jstl-impl.version>2.0.0-RC1</jstl-impl.version>
+        <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
+        <jstl-impl.version>2.0.0-SNAPSHOT</jstl-impl.version>
         <jstl-api.version>2.0.0-RC1</jstl-api.version>
-        <mojarra.version>2.3.9</mojarra.version>
+        <mojarra.version>3.0.0-RC1</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>5.0-SNAPSHOT</woodstock.version>
         <javax.ejb-api.version>4.0.0-RC1</javax.ejb-api.version>
@@ -82,7 +82,7 @@
         <woodstox.version>5.1.0</woodstox.version>
         <jaxb.version>3.0.0-M2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
-        <eclipselink.version>2.7.4</eclipselink.version>
+        <eclipselink.version>3.0.0-M1</eclipselink.version>
         <jakarta-persistence-api.version>3.0.0-RC2</jakarta-persistence-api.version>
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
@@ -533,6 +533,11 @@
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.faces</artifactId>
                 <version>${mojarra.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>

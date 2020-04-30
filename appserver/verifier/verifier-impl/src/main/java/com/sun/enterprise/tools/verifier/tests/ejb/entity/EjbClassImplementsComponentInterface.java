@@ -97,7 +97,7 @@ public class EjbClassImplementsComponentInterface extends EjbTest implements Ejb
 						  new Object[] {compName.toString()}));
 			result.warning(smh.getLocalString
 				       (getClass().getName() + ".warning",
-					"Warning: [ {0} ] class implments the enterprise Bean's remote interface [ {1} ].  It is recommended that the enterprise bean class not implement the remote interface to prevent inadvertent passing of this as a method argument or result.  The class must provide no-op implementations of the methods defined in the javax.ejb.EJBObject interface.",
+					"Warning: [ {0} ] class implments the enterprise Bean's remote interface [ {1} ].  It is recommended that the enterprise bean class not implement the remote interface to prevent inadvertent passing of this as a method argument or result.  The class must provide no-op implementations of the methods defined in the jakarta.ejb.EJBObject interface.",
 					new Object[] {descriptor.getEjbClassName(),rc.getName()}));
 			foundOne = true;
 			break;
@@ -118,9 +118,9 @@ public class EjbClassImplementsComponentInterface extends EjbTest implements Ejb
 	    } else {
 		// if the class implements the enterprise Bean's remote interface, 
 		// the class must provide no-op implementations of the methods 
-		// defined in the javax.ejb.EJBObject interface. 
+		// defined in the jakarta.ejb.EJBObject interface. 
 		
-		// i can check all methods defined within javax.ejb.EJBObject 
+		// i can check all methods defined within jakarta.ejb.EJBObject 
 		// interface, but i can't tell whether they are no-ops
 		// do nothing 
 	    }

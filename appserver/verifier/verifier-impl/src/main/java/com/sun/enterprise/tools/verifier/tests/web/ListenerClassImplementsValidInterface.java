@@ -45,22 +45,22 @@ public class ListenerClassImplementsValidInterface extends ListenerClass impleme
             return false;
         }
         
-	validInterface = isImplementorOf(clazz,"javax.servlet.ServletContextAttributeListener");
+	validInterface = isImplementorOf(clazz,"jakarta.servlet.ServletContextAttributeListener");
 	if (validInterface != true) {
-	    validInterface = isImplementorOf(clazz,"javax.servlet.ServletContextListener");
+	    validInterface = isImplementorOf(clazz,"jakarta.servlet.ServletContextListener");
 	}
 	if (validInterface != true) {
-	    validInterface = isImplementorOf(clazz,"javax.servlet.http.HttpSessionAttributeListener");
+	    validInterface = isImplementorOf(clazz,"jakarta.servlet.http.HttpSessionAttributeListener");
 	}
 	if (validInterface != true) {
-	    validInterface = isImplementorOf(clazz,"javax.servlet.http.HttpSessionListener");
+	    validInterface = isImplementorOf(clazz,"jakarta.servlet.http.HttpSessionListener");
 	}
     if (validInterface != true) {
-	    validInterface = isImplementorOf(clazz,"javax.servlet.ServletRequestAttributeListener");
+	    validInterface = isImplementorOf(clazz,"jakarta.servlet.ServletRequestAttributeListener");
 	}if (validInterface != true) {
-	    validInterface = isImplementorOf(clazz,"javax.servlet.ServletRequestListener");
+	    validInterface = isImplementorOf(clazz,"jakarta.servlet.ServletRequestListener");
 	}if (validInterface != true) {
-	    validInterface = isImplementorOf(clazz,"javax.servlet.http.HttpSessionBindingListener");
+	    validInterface = isImplementorOf(clazz,"jakarta.servlet.http.HttpSessionBindingListener");
 	}
 
          if (validInterface) {
@@ -71,7 +71,7 @@ public class ListenerClassImplementsValidInterface extends ListenerClass impleme
          } else if (!validInterface){
              result.addErrorDetails(smh.getLocalString
                 (getClass().getName() + ".failed",
-                 "Error: Listener class [ {0} ] does not implement one or more of the following valid interface.\n javax.servlet.ServletContextAttributeListener, javax.servlet.ServletContextListener, javax.servlet.http.HttpSessionAttributeListener, javax.servlet.http.HttpSessionListener",
+                 "Error: Listener class [ {0} ] does not implement one or more of the following valid interface.\n jakarta.servlet.ServletContextAttributeListener, jakarta.servlet.ServletContextListener, jakarta.servlet.http.HttpSessionAttributeListener, jakarta.servlet.http.HttpSessionListener",
                   new Object[] {clazz.getName()}));
 	 }
 	    	                     

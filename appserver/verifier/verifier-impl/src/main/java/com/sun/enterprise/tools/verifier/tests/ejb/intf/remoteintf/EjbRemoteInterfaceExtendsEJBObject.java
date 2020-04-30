@@ -32,7 +32,7 @@ public class EjbRemoteInterfaceExtendsEJBObject extends ExtendsRightInterface {
     }
     
     protected String getSuperInterface() {
-        return "javax.ejb.EJBObject";
+        return "jakarta.ejb.EJBObject";
     }
     
     protected String getInterfaceType() {

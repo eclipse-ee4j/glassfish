@@ -25,8 +25,8 @@ import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import java.util.Set;
 
 /**
- * A business interface must not extend javax.ejb.EJBObject or 
- * javax.ejb.EJBLocalObject.
+ * A business interface must not extend jakarta.ejb.EJBObject or 
+ * jakarta.ejb.EJBLocalObject.
  * 
  * @author Vikas Awasthi
  */
@@ -45,13 +45,13 @@ public class BusinessIntfInheritance extends EjbTest {
                 Class c = Class.forName(remoteOrLocalIntf, 
                                         false, 
                                         getVerifierContext().getClassLoader());
-                if(javax.ejb.EJBObject.class.isAssignableFrom(c) ||
-                        javax.ejb.EJBLocalObject.class.isAssignableFrom(c)) {
+                if(jakarta.ejb.EJBObject.class.isAssignableFrom(c) ||
+                        jakarta.ejb.EJBLocalObject.class.isAssignableFrom(c)) {
                     addErrorDetails(result, compName);
                     result.failed(smh.getLocalString
                                     (getClass().getName() + ".failed",
-                                    "[ {0} ] extends either javax.ejb.EJBObject " +
-                                    "or javax.ejb.EJBLocalObject.",
+                                    "[ {0} ] extends either jakarta.ejb.EJBObject " +
+                                    "or jakarta.ejb.EJBLocalObject.",
                                     new Object[] {remoteOrLocalIntf}));
                 }
             } catch (ClassNotFoundException e) {

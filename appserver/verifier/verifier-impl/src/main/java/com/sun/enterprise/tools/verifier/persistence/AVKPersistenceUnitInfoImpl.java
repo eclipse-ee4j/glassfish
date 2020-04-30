@@ -19,8 +19,8 @@ package com.sun.enterprise.tools.verifier.persistence;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 
 import javax.sql.DataSource;
-import javax.persistence.spi.ClassTransformer;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.EntityManagerFactory;
 import javax.naming.NamingException;
 import jakarta.validation.ValidatorFactory;
 
@@ -31,7 +31,7 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
 
 /**
- * This class implements {@link javax.persistence.spi.PersistenceUnitInfo}
+ * This class implements {@link jakarta.persistence.spi.PersistenceUnitInfo}
  * It inherits most of the implementation from its super class, except the
  * implementation that depends on runtime environment. See the details of methods
  * overridden in this class.

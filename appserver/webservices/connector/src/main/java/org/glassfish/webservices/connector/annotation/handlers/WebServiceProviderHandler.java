@@ -42,8 +42,8 @@ import com.sun.enterprise.deployment.annotation.context.EjbsContext;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.util.logging.Level;
-import javax.ejb.Singleton;
-import javax.ejb.Stateless;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Stateless;
 
 import javax.xml.namespace.QName;
 
@@ -77,7 +77,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {
-        /*Class dependencies[] = { javax.ejb.Stateless.class };
+        /*Class dependencies[] = { jakarta.ejb.Stateless.class };
         return dependencies;*/
         return getEjbAndWebAnnotationTypes();
     }
@@ -129,7 +129,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
         
         try {
             // let's see the type of web service we are dealing with...
-            if ((ejbProvider != null) && ejbProvider.getType("javax.ejb.Stateless") != null) {
+            if ((ejbProvider != null) && ejbProvider.getType("jakarta.ejb.Stateless") != null) {
                 // this is an ejb !
                 if (annCtx instanceof EjbContext) {
                     EjbContext ctx = (EjbContext) annCtx;
@@ -360,7 +360,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
      *
      */
     private boolean ignoreWebserviceAnnotations(AnnotatedElement annElem, AnnotatedElementHandler annCtx) {
-        javax.ejb.Stateless stateless = annElem.getAnnotation(javax.ejb.Stateless.class);
+        jakarta.ejb.Stateless stateless = annElem.getAnnotation(jakarta.ejb.Stateless.class);
         jakarta.xml.ws.WebServiceProvider webservice = annElem.getAnnotation(jakarta.xml.ws.WebServiceProvider.class);
         if ((stateless != null) && (webservice != null)
                 && ((annCtx instanceof WebBundleContext) || (annCtx instanceof WebComponentContext))) {
@@ -372,7 +372,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
     private String getEjbName(AnnotatedElement annElem) {
         Stateless stateless = null;
         try {
-            stateless = annElem.getAnnotation(javax.ejb.Stateless.class);
+            stateless = annElem.getAnnotation(jakarta.ejb.Stateless.class);
         } catch (Exception e) {
             if (logger.isLoggable(Level.FINE)) {
                 //This can happen in the web.zip installation where there is no ejb
@@ -382,7 +382,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
         }
         Singleton singleton = null;
         try {
-            singleton = annElem.getAnnotation(javax.ejb.Singleton.class);
+            singleton = annElem.getAnnotation(jakarta.ejb.Singleton.class);
         } catch (Exception e) {
             if (logger.isLoggable(Level.FINE)) {
                 //This can happen in the web.zip installation where there is no ejb

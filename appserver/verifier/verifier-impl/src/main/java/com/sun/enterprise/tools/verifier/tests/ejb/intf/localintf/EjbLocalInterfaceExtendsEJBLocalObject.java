@@ -33,7 +33,7 @@ public class EjbLocalInterfaceExtendsEJBLocalObject extends ExtendsRightInterfac
     }
     
     protected String getSuperInterface() {
-        return "javax.ejb.EJBLocalObject";
+        return "jakarta.ejb.EJBLocalObject";
     }
     
     protected String getInterfaceType() {

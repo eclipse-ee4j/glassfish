@@ -108,7 +108,7 @@ abstract public class HomeMethodTest extends EjbTest  {
                     methodName.startsWith("remove")) 
                     continue;
                 
-                Method m = getMethod(javax.ejb.EJBHome.class, methodName, 
+                Method m = getMethod(jakarta.ejb.EJBHome.class, methodName, 
                                      method.getParameterTypes());
                 if (m!=null) {
                     // this is an EJBHome method...

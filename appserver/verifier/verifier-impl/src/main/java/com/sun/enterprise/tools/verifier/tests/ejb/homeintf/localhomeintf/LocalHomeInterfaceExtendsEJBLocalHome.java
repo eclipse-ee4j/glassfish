@@ -30,6 +30,6 @@ public class LocalHomeInterfaceExtendsEJBLocalHome extends HomeInterfaceExtendsR
 	return descriptor.getLocalHomeClassName();
     }
      protected String getSuperInterface() {
-	 return "javax.ejb.EJBLocalHome";
+	 return "jakarta.ejb.EJBLocalHome";
     }
 }

@@ -49,7 +49,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import javax.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContext;
 import jakarta.xml.soap.SOAPMessage;
 
 /**

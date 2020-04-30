@@ -511,11 +511,11 @@ JavaBeans components.</p>
 </div>
 <div class="paragraph">
 <p>To validate an attribute of an element, annotate the attribute&#8217;s getter
-method with the annotation in the <code>javax.validation.constraints</code> package
+method with the annotation in the <code>jakarta.validation.constraints</code> package
 that performs the validation that you require. The following table lists
 commonly used annotations for validating GlassFish Server configuration
 data. For the complete list of annotations, see the
-<a href="http://download.oracle.com/docs/cd/E17410_01/javaee/6/api/javax/validation/constraints/package-summary.html"><code>javax.validation.constraints</code>
+<a href="http://download.oracle.com/docs/cd/E17410_01/javaee/6/api/javax/validation/constraints/package-summary.html"><code>jakarta.validation.constraints</code>
 package summary</a>
 (<code>http://docs.oracle.com/javaee/7/api/javax/validation/constraints/package-summary.html</code>).</p>
 </div>
@@ -540,16 +540,16 @@ Configuration Data</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not null</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>javax.validation.constraints.NotNull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jakarta.validation.constraints.NotNull</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Null</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>javax.validation.constraints.Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jakarta.validation.constraints.Null</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Minimum value</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>javax.validation.constraints.Min</code></p>
+<p><code>jakarta.validation.constraints.Min</code></p>
 </div>
 <div class="paragraph">
 <p>Set the <code>value</code> element of this annotation to the minimum allowed value.</p>
@@ -558,7 +558,7 @@ Configuration Data</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maximum value</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>javax.validation.constraints.Max</code></p>
+<p><code>jakarta.validation.constraints.Max</code></p>
 </div>
 <div class="paragraph">
 <p>Set the <code>value</code> element of this annotation to the maximum allowed value.</p>
@@ -567,7 +567,7 @@ Configuration Data</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Regular expression matching</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>javax.validation.constraints.Pattern</code></p>
+<p><code>jakarta.validation.constraints.Pattern</code></p>
 </div>
 <div class="paragraph">
 <p>Set the <code>regexp</code> element of this annotation to the regular expression
@@ -589,8 +589,8 @@ must be a positive integer.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">...
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 ...
 @Min(value=1)
 @Max(value=Integer.MAX_VALUE)
@@ -610,7 +610,7 @@ non-whitespace characters.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">import javax.validation.constraints.Pattern;
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">import jakarta.validation.constraints.Pattern;
 ...
 @Pattern(regexp="^[\\S]*$")
 String getClassname();
@@ -1139,9 +1139,9 @@ import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Element;
 import org.glassfish.api.admin.config.Container;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Max;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 
 import java.beans.PropertyVetoException;
 
@@ -1193,8 +1193,8 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Attribute;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 
 import java.beans.PropertyVetoException;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,13 +27,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Configuration;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorContext;
-import javax.validation.ValidatorFactory;
-import javax.validation.bootstrap.GenericBootstrap;
+import jakarta.validation.Configuration;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.bootstrap.GenericBootstrap;
 
 public class BVIntegrationTestServlet extends HttpServlet {
 
@@ -45,13 +45,13 @@ public class BVIntegrationTestServlet extends HttpServlet {
 "      <default-package>integration_test_servlet</default-package>\n" +
 "      <bean class=\"Person\" ignore-annotations=\"true\">\n" +
 "          <field name=\"firstName\" ignore-annotations=\"true\">\n" +
-"              <constraint annotation=\"javax.validation.constraints.NotNull\" />\n" +
+"              <constraint annotation=\"jakarta.validation.constraints.NotNull\" />\n" +
 "          </field>\n" +
 "          <field name=\"lastName\" ignore-annotations=\"true\">\n" +
-"              <constraint annotation=\"javax.validation.constraints.NotNull\" />\n" +
+"              <constraint annotation=\"jakarta.validation.constraints.NotNull\" />\n" +
 "          </field>\n" +
 "          <getter name=\"listOfString\"  ignore-annotations=\"true\">\n" +
-"              <constraint annotation=\"javax.validation.constraints.NotNull\" />\n" +
+"              <constraint annotation=\"jakarta.validation.constraints.NotNull\" />\n" +
 "          </getter>\n" +
 "      </bean>\n" +
 "</constraint-mappings>\n";
@@ -63,7 +63,7 @@ public class BVIntegrationTestServlet extends HttpServlet {
         resp.setContentType("text/html");
         out.print("<html><head><title>SimpleBVServlet</title></head><body>");
         
-        javax.validation.Validator beanValidator = configureValidation(req, resp);
+        jakarta.validation.Validator beanValidator = configureValidation(req, resp);
 
         out.print("<h1>");
         out.print("Validating person class using validateValue with valid property");

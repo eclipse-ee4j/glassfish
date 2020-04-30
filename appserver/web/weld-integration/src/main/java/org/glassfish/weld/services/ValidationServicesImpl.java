@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +16,12 @@
 
 package org.glassfish.weld.services;
 
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 
 import org.jboss.weld.validation.spi.ValidationServices;
 
-public class ValidationServicesImpl implements ValidationServices {
+public class ValidationServicesImpl /* implements ValidationServices TMP */ {
 
     private final ValidatorFactory validatorFactory;
 

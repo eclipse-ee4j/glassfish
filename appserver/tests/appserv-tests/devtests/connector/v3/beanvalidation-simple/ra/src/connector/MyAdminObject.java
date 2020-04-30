@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package connector;
 
-import javax.validation.constraints.*;
-import javax.validation.*;
+import jakarta.validation.constraints.*;
+import jakarta.validation.*;
 import javax.resource.spi.*;
 import javax.resource.ResourceException;
 import javax.naming.InitialContext;
@@ -119,7 +119,7 @@ public class MyAdminObject implements java.io.Serializable, ResourceAdapterAssoc
                  System.out.println("testRA : no violations found");
              }
 
-        }catch(javax.validation.ConstraintViolationException cve){
+        }catch(jakarta.validation.ConstraintViolationException cve){
           System.out.println("testRA : violations found");
           validationFailure = true;
         }catch(Exception ne){

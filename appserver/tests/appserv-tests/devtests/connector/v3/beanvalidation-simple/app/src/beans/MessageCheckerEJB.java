@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,8 +25,9 @@ import java.rmi.RemoteException;
 
 import javax.naming.*;
 import javax.sql.*;
+
 import jakarta.annotation.Resource;
-import javax.validation.*;
+import jakarta.validation.*;
 
 @Stateless
 public class MessageCheckerEJB implements SessionBean {
@@ -53,7 +54,7 @@ public class MessageCheckerEJB implements SessionBean {
     private void initialize(){
         try{
         InitialContext ic = new InitialContext();
-        validatorFactory = (javax.validation.ValidatorFactory)ic.lookup(
+        validatorFactory = (jakarta.validation.ValidatorFactory)ic.lookup(
                "java:comp/env/ValidatorFactory");
         System.out.println("Bean Validator Factory : " + validatorFactory);
         }catch(Exception e){
@@ -62,7 +63,7 @@ public class MessageCheckerEJB implements SessionBean {
 
         try{
         InitialContext ic = new InitialContext();
-        beanValidator = (javax.validation.Validator)ic.lookup(
+        beanValidator = (jakarta.validation.Validator)ic.lookup(
                "java:comp/env/Validator");
         System.out.println("Bean Validator : " + beanValidator);
         }catch(Exception e){
@@ -166,15 +167,7 @@ public class MessageCheckerEJB implements SessionBean {
             user = (String) ic.lookup("java:comp/env/user");
             password = (String) ic.lookup("java:comp/env/password");
 	    Controls = (MyAdminObject) ic.lookup("java:comp/env/eis/testAdmin");
-	    //System.out.println("CALLING INITILIZE");
 	    Controls.initialize();
-	    //System.out.println("CALLED INITILIZE" + Controls);
-
-/*
-            beanValidator = (javax.validation.Validator)ic.lookup(
-                   "java:comp/env/Validator");
-*/
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -184,7 +177,7 @@ public class MessageCheckerEJB implements SessionBean {
     private boolean isConstraintViolationException(Throwable t, String jndiName){
        boolean result = false;
             if(t != null){
-            	if(t instanceof javax.validation.ConstraintViolationException){
+            	if(t instanceof jakarta.validation.ConstraintViolationException){
                         System.out.println("Found Constraint Violation for resource ["+jndiName+"]" + t.getMessage());
                  	result = true;
             	}else{

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,10 +31,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.Payload;
-import javax.validation.constraints.Pattern;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Pattern;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
@@ -200,7 +200,7 @@ public class GetHabitatInfo implements AdminCommand {
      */
     @Retention(RUNTIME)
     @Target({TYPE})
-    @javax.validation.Constraint(validatedBy = GetHabitatInfo.Validator.class)
+    @jakarta.validation.Constraint(validatedBy = GetHabitatInfo.Validator.class)
     public static @interface Constraint {
         String message() default "The contract argument is test but started is true.";
         Class<?>[] groups() default {};

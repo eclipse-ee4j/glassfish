@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,7 @@ import javax.resource.spi.*;
 import javax.resource.spi.work.WorkManager;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.*;
 
 

@@ -167,7 +167,7 @@ spec:
       - name: "MAVEN_OPTS"
         value: "-Duser.home=/home/jenkins"
       - name: "MVN_EXTRA"
-        value: "--batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+        value: "--batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -DskipTests"
     resources:
       limits:
         memory: "7Gi"
@@ -210,21 +210,21 @@ spec:
               
               bash -xe ./gfbuild.sh build_re_dev
             '''
-            archiveArtifacts artifacts: 'bundles/*.zip'
-            junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
+            // archiveArtifacts artifacts: 'bundles/*.zip'
+            // junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
             stash includes: 'bundles/*', name: 'build-bundles'
           }
         }
       }
     }
     
-    stage('tests') {
-      steps {
-        script {
-          parallel parallelStagesMap
-        }
-      }
-    }
+//    stage('tests') {
+//      steps {
+//        script {
+//          parallel parallelStagesMap
+//        }
+//      }
+//    }
   }
 }
 

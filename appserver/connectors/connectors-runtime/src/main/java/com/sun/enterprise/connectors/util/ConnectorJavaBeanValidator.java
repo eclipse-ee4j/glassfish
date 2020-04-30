@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package com.sun.enterprise.connectors.util;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.validation.*;
-import javax.validation.metadata.BeanDescriptor;
+import jakarta.validation.*;
+import jakarta.validation.metadata.BeanDescriptor;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.logging.Logger;

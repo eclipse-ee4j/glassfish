@@ -270,8 +270,8 @@ jakarta.validation.groups; \
 jakarta.validation.metadata; \
 jakarta.validation.spi; \
 jakarta.validation.valueextraction; \
-javax.websocket; \
-javax.websocket.server; \
+jakarta.websocket; \
+jakarta.websocket.server; \
 javax.ws.rs; \
 javax.ws.rs.client; \
 javax.ws.rs.container; \

@@ -88,8 +88,8 @@
         <derby.version>10.13.1.3</derby.version>
         <weld.version>3.0.0.Final</weld.version>
         <wsdl4j.version>1.5.0</wsdl4j.version>
-        <websocket-api.version>1.1.1</websocket-api.version>
-        <tyrus.version>1.15</tyrus.version>
+        <websocket-api.version>2.0.0-M1</websocket-api.version>
+        <tyrus.version>2.0.0-M1</tyrus.version>
         <jsonp-api.version>2.0.0-RC2</jsonp-api.version>
         <jsonp-ri.version>2.0.0-RC2</jsonp-ri.version>
         <jsonp-jaxrs.version>1.1.6</jsonp-jaxrs.version>
@@ -330,9 +330,9 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>1.0</specVersion>
+                            <specVersion>2.0</specVersion>
                             <specImplVersion>${websocket-api.version}</specImplVersion>
-                            <apiPackage>javax.websocket</apiPackage>
+                            <apiPackage>jakarta.websocket</apiPackage>
                         </spec>
                         <spec>
                             <artifact>

@@ -93,9 +93,9 @@
         <jsonp-api.version>2.0.0-RC2</jsonp-api.version>
         <jsonp-ri.version>2.0.0-RC2</jsonp-ri.version>
         <jsonp-jaxrs.version>1.1.6</jsonp-jaxrs.version>
-        <json.bind-api.version>1.0.2</json.bind-api.version>
+        <json.bind-api.version>2.0.0-RC1</json.bind-api.version>
 
-        <yasson.version>1.0.3</yasson.version>
+        <yasson.version>2.0.0-M1</yasson.version>
         <concurrent-api.version>2.0.0-RC1</concurrent-api.version>
         <concurrent.version>2.0.0-RC1</concurrent.version>
         <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>

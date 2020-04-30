@@ -46,7 +46,7 @@
         <jstl-api.version>2.0.0-RC1</jstl-api.version>
         <mojarra.version>2.3.9</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>4.0.2.16</woodstock.version>
+        <woodstock.version>5.0-SNAPSHOT</woodstock.version>
         <javax.ejb-api.version>4.0.0-RC1</javax.ejb-api.version>
         <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
         <javax.transaction-api.version>2.0.0-RC1</javax.transaction-api.version>
@@ -78,7 +78,7 @@
         <javaee.version_qualifier>-b${build.id}</javaee.version_qualifier>
         <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
 
-        <jsftemplating.version>2.1.4</jsftemplating.version>
+        <jsftemplating.version>2.1.5-SNAPSHOT</jsftemplating.version>
         <woodstox.version>5.1.0</woodstox.version>
         <jaxb.version>3.0.0-M2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
@@ -664,12 +664,12 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
-                <artifactId>webui-jsf</artifactId>
+                <artifactId>woodstock-webui-jsf</artifactId>
                 <version>${woodstock.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
-                <artifactId>webui-jsf-suntheme</artifactId>
+                <artifactId>woodstock-webui-jsf-suntheme</artifactId>
                 <version>${woodstock.version}</version>
             </dependency>
             <dependency>

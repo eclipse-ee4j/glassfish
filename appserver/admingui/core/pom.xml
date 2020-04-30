@@ -69,11 +69,11 @@
         <!-- Woodstock dependency -->
         <dependency>
             <groupId>org.glassfish.woodstock</groupId>
-            <artifactId>webui-jsf-suntheme</artifactId>
+            <artifactId>woodstock-webui-jsf-suntheme</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.woodstock</groupId>
-            <artifactId>webui-jsf</artifactId>
+            <artifactId>woodstock-webui-jsf</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.faces.extensions</groupId>

@@ -117,7 +117,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.woodstock</groupId>
-            <artifactId>webui-jsf-suntheme</artifactId>
+            <artifactId>woodstock-webui-jsf-suntheme</artifactId>
             <scope>provided</scope>
         </dependency>
 

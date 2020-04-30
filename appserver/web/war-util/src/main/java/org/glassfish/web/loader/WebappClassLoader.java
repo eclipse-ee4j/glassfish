@@ -653,7 +653,7 @@ public class WebappClassLoader
     public void setUseMyFaces(boolean useMyFaces) {
         this.useMyFaces = useMyFaces;
         if (useMyFaces) {
-            addOverridablePackage("javax.faces");
+            addOverridablePackage("jakarta.faces");
             addOverridablePackage("com.sun.faces");
         }
     }
@@ -3326,7 +3326,7 @@ public class WebappClassLoader
     private boolean isResourceDelegate(String name) {
         return (delegate
                 || (name.startsWith("javax") &&
-                    (!name.startsWith("javax.faces") || !useMyFaces))
+                    (!name.startsWith("jakarta.faces") || !useMyFaces))
                 || name.startsWith("sun")
                 || (name.startsWith("com/sun/faces") &&
                     !name.startsWith("com/sun/faces/extensions") &&

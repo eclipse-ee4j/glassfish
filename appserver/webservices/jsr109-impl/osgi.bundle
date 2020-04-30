@@ -17,10 +17,10 @@
 -exportcontents: \
                         org.glassfish.webservices; \
                         org.glassfish.webservices.config; \
+                        org.glassfish.webservices.deployment; \
                         org.glassfish.webservices.monitoring; version=${project.osgi.version}
 Import-Package: \
                        com.sun.enterprise.deployment.*, \
-                       com.sun.enterprise.deployment.annotation.*, \
                        com.sun.enterprise.config.serverbeans, \
                        javax.ejb;resolution:=optional, \
                        * 

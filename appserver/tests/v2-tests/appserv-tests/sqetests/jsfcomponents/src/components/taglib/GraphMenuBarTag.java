@@ -24,12 +24,12 @@ package components.taglib;
 import components.components.GraphComponent;
 import components.model.Graph;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
-import javax.faces.webapp.UIComponentTag;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.el.MethodBinding;
+import jakarta.faces.el.ValueBinding;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.webapp.UIComponentTag;
 
 
 /**
@@ -134,7 +134,7 @@ public class GraphMenuBarTag extends UIComponentTag {
                 graphComponent.setActionListener(mb);
             } else {
                 Object params [] = {actionListener};
-                throw new javax.faces.FacesException();
+                throw new jakarta.faces.FacesException();
             }
         }
         // if the attributes are values set them directly on the component, if

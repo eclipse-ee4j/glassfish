@@ -27,15 +27,9 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
-<<<<<<< HEAD
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.interceptor.InvocationContext;
-=======
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import jakarta.interceptor.InvocationContext;
->>>>>>> Got a lot further, Now blocked on compiling due to Woodstock needs to be moved to the jakarta namespace
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;

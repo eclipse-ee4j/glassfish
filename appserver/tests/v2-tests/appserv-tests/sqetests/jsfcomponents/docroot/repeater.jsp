@@ -181,7 +181,7 @@
 <h1>How to Use this Component</h1>
 
 <p>This tag uses the standard <code>UIData</code> component, coupled with
-a custom <em>javax.faces.render.Renderer</em> implementation
+a custom <em>jakarta.faces.render.Renderer</em> implementation
 (<a href="ShowSource.jsp?filename=/src/components/renderkit/RepeaterRenderer.java">RepeaterRenderer.java</a>)
 that takes advantage of the fact that <code>UIData</code> automatically manages
 the iteration of the rows in the underlying data model.  At the same time, this
@@ -250,7 +250,7 @@ behavior of the default implementation.</p>
   <td>
     <p>Value reference expression pointing at one of the following:</p>
     <ul>
-    <li>An instance of <em>javax.faces.model.DataModel</em>.</li>
+    <li>An instance of <em>jakarta.faces.model.DataModel</em>.</li>
     <li>An array of JavaBeans.</li>
     <li>A <em>List</em> of JavaBeans.</li>
     <li>An instance of <em>java.sql.ResultSet</em> (or RowSet).</li>

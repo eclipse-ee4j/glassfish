@@ -26,8 +26,8 @@ import components.model.Graph;
 import components.model.Node;
 import components.renderkit.Util;
 
-import javax.faces.context.FacesContext;
-import javax.faces.webapp.UIComponentBodyTag;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.webapp.UIComponentBodyTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.TagSupport;

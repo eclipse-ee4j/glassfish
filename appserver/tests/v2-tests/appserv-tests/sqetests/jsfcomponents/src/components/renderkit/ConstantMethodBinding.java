@@ -22,9 +22,9 @@
 
 package components.renderkit;
 
-import javax.faces.component.StateHolder;
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
+import jakarta.faces.component.StateHolder;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.el.MethodBinding;
 
 public class ConstantMethodBinding extends MethodBinding
     implements StateHolder {

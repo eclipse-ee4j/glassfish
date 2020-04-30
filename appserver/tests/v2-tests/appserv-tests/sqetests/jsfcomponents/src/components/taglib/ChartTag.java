@@ -17,11 +17,11 @@
 package components.taglib;
 
 import components.components.ChartComponent;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
 
-import javax.faces.el.ValueBinding;
-import javax.faces.webapp.UIComponentTag;
+import jakarta.faces.el.ValueBinding;
+import jakarta.faces.webapp.UIComponentTag;
 
 
 /**

@@ -26,7 +26,7 @@ package org.glassfish.admingui.common.util;
 
 import com.sun.jsftemplating.resource.ResourceBundleManager;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 // FIXME: 7-31-08 -- FIX by importing woodstock api's:
 //import com.sun.webui.jsf.model.Option;
 
@@ -48,7 +48,7 @@ import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 import java.io.File;
 
 import java.io.UnsupportedEncodingException;
-import javax.faces.context.ExternalContext;
+import jakarta.faces.context.ExternalContext;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;

@@ -18,10 +18,7 @@ package org.glassfish.sse.impl;
 
 import org.glassfish.sse.api.ServerSentEventHandler;
 
-<<<<<<< HEAD
-=======
 import jakarta.enterprise.context.spi.CreationalContext;
->>>>>>> Got a lot further, Now blocked on compiling due to Woodstock needs to be moved to the jakarta namespace
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.enterprise.context.spi.CreationalContext;

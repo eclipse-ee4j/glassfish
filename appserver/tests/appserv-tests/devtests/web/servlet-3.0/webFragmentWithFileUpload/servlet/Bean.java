@@ -18,7 +18,7 @@ package fileupload;
 
 import java.io.IOException;
 import java.util.Scanner;
-import javax.faces.bean.ManagedBean;
+import jakarta.faces.bean.ManagedBean;
 import javax.servlet.http.Part;
 
 @ManagedBean

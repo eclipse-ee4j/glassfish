@@ -47,10 +47,10 @@ import java.util.logging.Logger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletResponse;
 import org.glassfish.admingui.common.tree.FilterTreeEvent;
 

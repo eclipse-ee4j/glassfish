@@ -21,8 +21,8 @@
 package com.oracle.jms.test;
 
 import jakarta.annotation.Resource;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.faces.bean.ManagedBean;
+import jakarta.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import jakarta.jms.*;
 import javax.ejb.*;

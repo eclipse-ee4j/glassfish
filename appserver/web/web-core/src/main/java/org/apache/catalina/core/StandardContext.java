@@ -2164,7 +2164,7 @@ public class StandardContext
             }
         }
 
-        if ("javax.faces.webapp.FacesServlet".equals(
+        if ("jakarta.faces.webapp.FacesServlet".equals(
                 wrapper.getServletClassName())) {
             isJsfApplication = true;
         }

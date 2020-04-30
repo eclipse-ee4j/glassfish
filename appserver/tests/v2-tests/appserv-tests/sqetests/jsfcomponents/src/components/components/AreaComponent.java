@@ -19,8 +19,8 @@ package components.components;
 
 import components.model.ImageArea;
 
-import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.context.FacesContext;
 
 import java.io.IOException;
 

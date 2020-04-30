@@ -19,7 +19,7 @@ package org.glassfish.admingui.common.plugin;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 import jakarta.servlet.ServletContext;
 
 //import static com.sun.enterprise.web.Constants.HABITAT_ATTRIBUTE;

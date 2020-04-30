@@ -213,7 +213,7 @@
                             <jarType>impl</jarType>
                             <specVersion>2.2</specVersion>
                             <implVersion>${mojarra.version}</implVersion>
-                            <apiPackage>javax.faces</apiPackage>
+                            <apiPackage>jakarta.faces</apiPackage>
                             <implNamespace>org.glassfish</implNamespace>
                         </spec>
                         <spec>
@@ -533,11 +533,6 @@
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.faces</artifactId>
                 <version>${mojarra.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.persistence</groupId>
-                <artifactId>jakarta.persistence</artifactId>
-                <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>

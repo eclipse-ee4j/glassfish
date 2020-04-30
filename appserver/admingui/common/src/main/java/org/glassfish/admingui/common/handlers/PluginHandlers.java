@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
 import jakarta.servlet.ServletContext;
 
 import org.glassfish.admingui.common.factories.NavigationNodeFactory;

@@ -58,7 +58,7 @@ import java.util.StringTokenizer;
 import java.util.Map;
 import java.util.logging.Level;
 
-import javax.faces.component.UIViewRoot;
+import jakarta.faces.component.UIViewRoot;
 
 /**
  *

@@ -26,7 +26,7 @@ import jakarta.ejb.*;
 import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

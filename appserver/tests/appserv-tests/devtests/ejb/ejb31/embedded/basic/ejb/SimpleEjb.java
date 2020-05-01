@@ -21,9 +21,9 @@ import java.util.Date;
 
 import jakarta.ejb.Stateless;
 
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 /**
  * @author Jerome Dochez

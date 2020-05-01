@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import jakarta.ejb.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @author Jerome Dochez

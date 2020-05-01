@@ -34,7 +34,7 @@ import java.util.logging.Level;
 
 /**
  * This handler is responsible for handling the 
- * javax.persistence.PersistenceUnit annotation.
+ * jakarta.persistence.PersistenceUnit annotation.
  *
  */
 @Service

@@ -19,10 +19,10 @@ package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.extendedscope_cro
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.Stateful;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.SynchronizationType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.SynchronizationType;
 
 @Stateful
 public class TC2SfsbWithSynchPC implements Tester{

@@ -20,11 +20,11 @@ package oracle.toplink.essentials.testing.models.cmp3.advanced;
 
 import java.util.*;
 import java.io.Serializable;
-import javax.persistence.*;
-import static javax.persistence.GenerationType.*;
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.InheritanceType.*;
-import static javax.persistence.FetchType.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.GenerationType.*;
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.InheritanceType.*;
+import static jakarta.persistence.FetchType.*;
 
 /**
  * Bean class: ProjectBean

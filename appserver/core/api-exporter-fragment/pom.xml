@@ -186,10 +186,10 @@ javax.naming.ldap; \
 javax.naming.spi; \
 javax.net; \
 javax.net.ssl; \
-javax.persistence; \
-javax.persistence.criteria; \
-javax.persistence.metamodel; \
-javax.persistence.spi; \
+jakarta.persistence; \
+jakarta.persistence.criteria; \
+jakarta.persistence.metamodel; \
+jakarta.persistence.spi; \
 javax.print; \
 javax.print.attribute; \
 javax.print.attribute.standard; \

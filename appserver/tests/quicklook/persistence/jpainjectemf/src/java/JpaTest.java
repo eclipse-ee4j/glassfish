@@ -16,7 +16,7 @@
 
 package myapp;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import javax.transaction.*;
 import java.io.*;
 

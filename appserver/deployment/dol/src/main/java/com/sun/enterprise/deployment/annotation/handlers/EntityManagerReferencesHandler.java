@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * This handler is responsible for handling the 
- * javax.persistence.PersistenceContexts annotation.
+ * jakarta.persistence.PersistenceContexts annotation.
  *
  */
 @Service

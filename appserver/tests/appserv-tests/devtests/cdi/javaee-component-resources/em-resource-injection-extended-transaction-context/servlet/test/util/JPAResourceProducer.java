@@ -18,9 +18,9 @@ package test.util;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
 
 @Singleton
 public class JPAResourceProducer {

@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Wrapper class for javax.persistence.StoredProcedyreQyery objects returned from
+ * Wrapper class for jakarta.persistence.StoredProcedyreQyery objects returned from
  * non-transactional access of a container-managed transactional
  * EntityManager.
  *

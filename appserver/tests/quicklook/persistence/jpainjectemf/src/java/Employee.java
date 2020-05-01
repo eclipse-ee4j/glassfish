@@ -16,7 +16,7 @@
 
 package myapp;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="EMPLOYEE")

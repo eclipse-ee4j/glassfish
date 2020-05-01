@@ -24,9 +24,9 @@ import jakarta.ejb.EJB;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.DenyAll;
 
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 /**
  * @author Jerome Dochez

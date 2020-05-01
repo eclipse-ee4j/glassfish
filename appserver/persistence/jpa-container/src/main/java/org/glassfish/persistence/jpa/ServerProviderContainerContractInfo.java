@@ -66,7 +66,7 @@ public class ServerProviderContainerContractInfo extends ProviderContainerContra
        @Override
        public void addTransformer(final ClassTransformer transformer) {
            // Bridge between java.lang.instrument.ClassFileTransformer that DeploymentContext accepts
-           // and javax.persistence.spi.ClassTransformer that JPA supplies.
+           // and jakarta.persistence.spi.ClassTransformer that JPA supplies.
            deploymentContext.addTransformer(new ClassFileTransformer() {
                public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
                                        ProtectionDomain protectionDomain, byte[] classfileBuffer)

@@ -18,8 +18,8 @@ package org.glassfish.tests.paas.basicjpa;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,23 +29,23 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 //import javax.management.*;
-import static javax.persistence.CascadeType.ALL;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import static javax.persistence.TemporalType.TIMESTAMP;
-import javax.persistence.Transient;
-import javax.persistence.EntityManager;
+import static jakarta.persistence.CascadeType.ALL;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import static jakarta.persistence.TemporalType.TIMESTAMP;
+import jakarta.persistence.Transient;
+import jakarta.persistence.EntityManager;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 
-import javax.persistence.EntityTransaction;
+import jakarta.persistence.EntityTransaction;
 
-import javax.persistence.Persistence;
+import jakarta.persistence.Persistence;
 
 
 
@@ -54,7 +54,7 @@ import java.util.Iterator;
 
 import java.util.List;
 import jakarta.annotation.Resource;
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 import javax.transaction.UserTransaction;
 
 /**

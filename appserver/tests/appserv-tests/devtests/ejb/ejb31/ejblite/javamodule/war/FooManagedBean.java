@@ -20,8 +20,8 @@ import jakarta.annotation.*;
 
 import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
 import javax.interceptor.Interceptors;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;

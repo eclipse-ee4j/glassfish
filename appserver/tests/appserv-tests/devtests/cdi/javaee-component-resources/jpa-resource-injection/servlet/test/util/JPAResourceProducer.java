@@ -18,8 +18,8 @@ package test.util;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 
 import test.beans.artifacts.TestDatabase;
 

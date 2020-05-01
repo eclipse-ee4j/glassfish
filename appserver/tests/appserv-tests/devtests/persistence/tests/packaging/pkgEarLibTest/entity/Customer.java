@@ -17,8 +17,8 @@
 package entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import static javax.persistence.CascadeType.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.CascadeType.*;
 
 import java.util.Collection;
 import java.util.ArrayList;

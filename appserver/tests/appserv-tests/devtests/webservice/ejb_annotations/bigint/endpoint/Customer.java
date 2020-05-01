@@ -17,7 +17,7 @@
 package endpoint;
 
 import java.math.BigInteger;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity public class Customer implements java.io.Serializable {
     BigInteger bigInteger;

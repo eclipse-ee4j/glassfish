@@ -21,7 +21,7 @@ import javax.servlet.http.*;
 import java.util.*;
 import java.io.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import javax.transaction.*;
 import jakarta.annotation.*;
 

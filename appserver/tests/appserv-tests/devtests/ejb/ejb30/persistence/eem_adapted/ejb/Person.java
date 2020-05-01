@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.persistence.eem_adapted;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
 
 @Entity
 @Table(name = "EJB30_PERSISTENCE_EEM_ADAPTED_PERSON")

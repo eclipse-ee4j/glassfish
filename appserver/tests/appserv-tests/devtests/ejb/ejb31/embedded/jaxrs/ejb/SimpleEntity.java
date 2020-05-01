@@ -22,9 +22,9 @@
 
 package org.glassfish.tests.ejb.sample;
 
-import javax.persistence.*;
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.*;
 
 @Entity
 @NamedQueries({

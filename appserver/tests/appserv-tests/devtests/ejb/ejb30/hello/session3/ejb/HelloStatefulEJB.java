@@ -20,9 +20,9 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.AccessTimeout;
 import jakarta.annotation.PostConstruct;
 
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.EntityManager;
 
 @AccessTimeout(0)
 @Stateful public class HelloStatefulEJB implements HelloStateful {

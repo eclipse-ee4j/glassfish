@@ -19,9 +19,9 @@ package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.rollback_notclear
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionManagement;
 import jakarta.ejb.TransactionManagementType;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.SynchronizationType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.SynchronizationType;
 import javax.transaction.UserTransaction;
 
 @Stateless

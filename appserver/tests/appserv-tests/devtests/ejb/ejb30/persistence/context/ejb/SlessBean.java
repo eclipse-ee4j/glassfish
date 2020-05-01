@@ -20,11 +20,11 @@ import java.util.Vector;
 import java.util.List;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.EJBException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceProperty;
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.Query;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceProperty;
+import jakarta.persistence.TransactionRequiredException;
+import jakarta.persistence.Query;
+import jakarta.persistence.EntityManager;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 

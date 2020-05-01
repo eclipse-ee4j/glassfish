@@ -62,7 +62,7 @@ public class EntityManagerReferenceDescriptor extends
     }
 
     public String getInjectResourceType() {
-        return "javax.persistence.EntityManager";
+        return "jakarta.persistence.EntityManager";
     }
 
     public void setInjectResourceType(String resourceType) {

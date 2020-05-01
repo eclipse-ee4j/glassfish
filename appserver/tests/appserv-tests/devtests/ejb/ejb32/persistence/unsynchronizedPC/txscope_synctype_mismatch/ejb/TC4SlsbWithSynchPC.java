@@ -18,9 +18,9 @@ package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.txscope_synctype_
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.SynchronizationType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.SynchronizationType;
 
 @Stateless
 public class TC4SlsbWithSynchPC implements Tester{

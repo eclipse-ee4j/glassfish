@@ -17,7 +17,7 @@
 package test.ejb;
 
 import jakarta.ejb.Stateless;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import javax.inject.Inject;
 
 @Stateless

@@ -18,7 +18,7 @@
 
 package oracle.toplink.essentials.testing.models.cmp3.advanced;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Local interface for the large project bean.

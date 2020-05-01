@@ -29,8 +29,8 @@ import java.util.logging.Logger;
 import jakarta.annotation.Resource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

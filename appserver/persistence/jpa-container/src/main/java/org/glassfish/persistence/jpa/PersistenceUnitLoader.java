@@ -65,10 +65,10 @@ public class PersistenceUnitLoader {
     private static final String ECLIPSELINK_WEAVING_PROPERTY = "eclipselink.weaving"; // NOI18N
 
     /** Name of property used to specify validation mode */
-    private static final String VALIDATION_MODE_PROPERTY = "javax.persistence.validation.mode";
+    private static final String VALIDATION_MODE_PROPERTY = "jakarta.persistence.validation.mode";
 
     /** Name of property used to specify validator factory */
-    private static final String VALIDATOR_FACTORY = "javax.persistence.validation.factory";
+    private static final String VALIDATOR_FACTORY = "jakarta.persistence.validation.factory";
 
     private static final String DISABLE_UPGRADE_FROM_TOPLINK_ESSENTIALS = "org.glassfish.persistence.jpa.disable.upgrade.from.toplink.essentials";
 

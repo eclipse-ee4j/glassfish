@@ -31,6 +31,7 @@
     <name>GlassFish Common modules</name>  
     <modules>
     	<module>stats77</module>
+    	<module>amx-javaee</module>
         <module>glassfish-ee-api</module>
         <module>annotation-framework</module>
         <module>container-common</module>

@@ -20,7 +20,7 @@ import java.math.BigInteger;
 import java.util.*;
 import jakarta.jws.*;
 import jakarta.ejb.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Stateless
 @WebService

@@ -21,8 +21,8 @@ import jakarta.annotation.*;
 import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
 import org.omg.CORBA.ORB;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
 
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;

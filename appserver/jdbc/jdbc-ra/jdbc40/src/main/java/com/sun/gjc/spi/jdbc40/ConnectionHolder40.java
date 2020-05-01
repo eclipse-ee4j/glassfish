@@ -360,7 +360,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * 
      * @return true if the client info properties are supported, false otherwise
      *
-     * @throws javax.resource.ResourceException if the access to connection is failed.
+     * @throws jakarta.resource.ResourceException if the access to connection is failed.
      *
      * @throws java.sql.SQLException if the database server returns an error when retrieving 
      *                               a list of the client info properties.

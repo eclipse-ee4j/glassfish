@@ -16,7 +16,7 @@
 
 package connector;
 
-import javax.resource.spi.work.SecurityContext;
+import jakarta.resource.spi.work.SecurityContext;
 import javax.security.auth.Subject;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.callback.CallbackHandler;

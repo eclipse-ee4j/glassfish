@@ -19,8 +19,8 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 import jakarta.ejb.Stateless;
 
 import javax.naming.InitialContext;
-import javax.resource.AdministeredObjectDefinitions;
-import javax.resource.AdministeredObjectDefinition;
+import jakarta.resource.AdministeredObjectDefinitions;
+import jakarta.resource.AdministeredObjectDefinition;
 
 @AdministeredObjectDefinitions(
      value = {

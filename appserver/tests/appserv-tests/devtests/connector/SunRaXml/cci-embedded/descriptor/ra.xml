@@ -26,9 +26,9 @@
     <version>1.0</version>
     <resourceadapter>
         <managedconnectionfactory-class>com.sun.connector.cciblackbox.CciLocalTxManagedConnectionFactory</managedconnectionfactory-class>
-        <connectionfactory-interface>javax.resource.cci.ConnectionFactory</connectionfactory-interface>
+        <connectionfactory-interface>jakarta.resource.cci.ConnectionFactory</connectionfactory-interface>
         <connectionfactory-impl-class>com.sun.connector.cciblackbox.CciConnectionFactory</connectionfactory-impl-class>
-        <connection-interface>javax.resource.cci.Connection</connection-interface>
+        <connection-interface>jakarta.resource.cci.Connection</connection-interface>
         <connection-impl-class>com.sun.connector.cciblackbox.CciConnection</connection-impl-class>
         <transaction-support>LocalTransaction</transaction-support>
         <config-property>
@@ -38,7 +38,7 @@
         </config-property>
         <authentication-mechanism>
             <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
-            <credential-interface>javax.resource.security.PasswordCredential</credential-interface>
+            <credential-interface>jakarta.resource.security.PasswordCredential</credential-interface>
         </authentication-mechanism>
         <reauthentication-support>false</reauthentication-support>
     </resourceadapter>

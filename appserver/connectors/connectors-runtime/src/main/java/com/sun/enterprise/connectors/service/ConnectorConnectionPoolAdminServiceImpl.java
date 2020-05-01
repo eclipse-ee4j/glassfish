@@ -433,7 +433,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @param mcf
      * @param prin
      * @return
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      */
     protected Subject getDefaultSubject(PoolInfo poolInfo, ManagedConnectionFactory mcf,
             ResourcePrincipal prin) throws ResourceException {
@@ -471,7 +471,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @param mcf
      * @param defaultSubject
      * @return
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      */
     protected ManagedConnection getManagedConnection(ManagedConnectionFactory mcf, 
             Subject defaultSubject, ConnectionRequestInfo cReqInfo) throws ResourceException {
@@ -491,7 +491,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * pool name.
      * @param poolName
      * @return
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      *//*
 
     protected ManagedConnectionFactory getManagedConnectionFactory(String poolName) 

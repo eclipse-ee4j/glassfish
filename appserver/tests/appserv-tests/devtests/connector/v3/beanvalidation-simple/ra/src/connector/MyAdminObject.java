@@ -18,8 +18,8 @@ package connector;
 
 import jakarta.validation.constraints.*;
 import jakarta.validation.*;
-import javax.resource.spi.*;
-import javax.resource.ResourceException;
+import jakarta.resource.spi.*;
+import jakarta.resource.ResourceException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Set;

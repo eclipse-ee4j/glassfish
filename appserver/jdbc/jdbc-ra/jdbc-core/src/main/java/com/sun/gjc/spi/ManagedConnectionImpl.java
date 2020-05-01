@@ -409,7 +409,7 @@ public class ManagedConnectionImpl implements jakarta.resource.spi.ManagedConnec
      * @return Connection    the connection handle <code>Object</code>
      * @throws ResourceException if there is an error in allocating the
      *                           physical connection from the pooled connection
-     * @throws javax.resource.spi.SecurityException
+     * @throws jakarta.resource.spi.SecurityException
      *                           if there is a mismatch between the
      *                           password credentials or reauthentication is requested
      */
@@ -422,7 +422,7 @@ public class ManagedConnectionImpl implements jakarta.resource.spi.ManagedConnec
          PasswordCredential passwdCred = SecurityUtils.getPasswordCredential(this.mcf, sub, cxRequestInfo);
 
          if(SecurityUtils.isPasswordCredentialEqual(this.passwdCredential, passwdCred) == false) {
-         throw new javax.resource.spi.SecurityException("Re-authentication not supported");
+         throw new jakarta.resource.spi.SecurityException("Re-authentication not supported");
          }
          **/
 

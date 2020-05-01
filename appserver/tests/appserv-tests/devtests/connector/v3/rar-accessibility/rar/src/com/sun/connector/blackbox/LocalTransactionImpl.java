@@ -16,9 +16,9 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.EISSystemException;
-import javax.resource.spi.LocalTransaction;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.EISSystemException;
+import jakarta.resource.spi.LocalTransaction;
 import java.sql.Connection;
 import java.sql.SQLException;
 

@@ -18,14 +18,14 @@ package connector;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.resource.spi.UnavailableException;
-import javax.resource.spi.work.Work;
-import javax.resource.spi.work.WorkManager;
-import javax.resource.spi.work.ExecutionContext;
-import javax.resource.spi.*;
-import javax.resource.*;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.spi.UnavailableException;
+import jakarta.resource.spi.work.Work;
+import jakarta.resource.spi.work.WorkManager;
+import jakarta.resource.spi.work.ExecutionContext;
+import jakarta.resource.spi.*;
+import jakarta.resource.*;
 
 /**
  *

@@ -18,11 +18,11 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
 import jakarta.ejb.Stateful;
 import jakarta.annotation.PostConstruct;
-import javax.resource.ConnectionFactoryDefinitions;
-import javax.resource.ConnectionFactoryDefinition;
-import javax.resource.cci.Connection;
-import javax.resource.cci.ConnectionFactory;
-import javax.resource.spi.TransactionSupport.TransactionSupportLevel;
+import jakarta.resource.ConnectionFactoryDefinitions;
+import jakarta.resource.ConnectionFactoryDefinition;
+import jakarta.resource.cci.Connection;
+import jakarta.resource.cci.ConnectionFactory;
+import jakarta.resource.spi.TransactionSupport.TransactionSupportLevel;
 
 import javax.naming.*;
 
@@ -31,7 +31,7 @@ import javax.naming.*;
                 @ConnectionFactoryDefinition(
                         description="global-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:global/env/HelloStatefulEJB_ModByDD_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "#cfd-ra",
                         properties = {"testName=foo"}
                 ),
@@ -39,7 +39,7 @@ import javax.naming.*;
                 @ConnectionFactoryDefinition(
                         description="global-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:global/env/HelloStatefulEJB_Annotation_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "#cfd-ra",
                         transactionSupport = TransactionSupportLevel.LocalTransaction,
                         maxPoolSize = 16,
@@ -50,7 +50,7 @@ import javax.naming.*;
                 @ConnectionFactoryDefinition(
                         description="application-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:app/env/HelloStatefulEJB_Annotation_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "#cfd-ra",
                         transactionSupport = TransactionSupportLevel.XATransaction,
                         maxPoolSize = 16,
@@ -61,7 +61,7 @@ import javax.naming.*;
                 @ConnectionFactoryDefinition(
                         description="module-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:module/env/HelloStatefulEJB_Annotation_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "#cfd-ra",
                         properties = {"testName=foo"}
                 ),
@@ -69,7 +69,7 @@ import javax.naming.*;
                 @ConnectionFactoryDefinition(
                         description="component-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:comp/env/HelloStatefulEJB_Annotation_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "#cfd-ra",
                         properties = {"testName=foo"}
                 )

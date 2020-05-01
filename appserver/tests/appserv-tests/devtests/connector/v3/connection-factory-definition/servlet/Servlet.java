@@ -18,11 +18,11 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
 import java.io.*;
 
-import javax.resource.ConnectionFactoryDefinitions;
-import javax.resource.ConnectionFactoryDefinition;
-import javax.resource.cci.Connection;
-import javax.resource.cci.ConnectionFactory;
-import javax.resource.spi.TransactionSupport.TransactionSupportLevel;
+import jakarta.resource.ConnectionFactoryDefinitions;
+import jakarta.resource.ConnectionFactoryDefinition;
+import jakarta.resource.cci.Connection;
+import jakarta.resource.cci.ConnectionFactory;
+import jakarta.resource.spi.TransactionSupport.TransactionSupportLevel;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -44,7 +44,7 @@ import javax.transaction.UserTransaction;
                 @ConnectionFactoryDefinition(
                         description="global-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:global/env/Servlet_ModByDD_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "cfd-ra",
                         properties = {"testName=foo"}
                 ),
@@ -52,7 +52,7 @@ import javax.transaction.UserTransaction;
                 @ConnectionFactoryDefinition(
                         description="global-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:global/env/Servlet_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "cfd-ra",
                         transactionSupport = TransactionSupportLevel.LocalTransaction,
                         maxPoolSize = 16,
@@ -63,7 +63,7 @@ import javax.transaction.UserTransaction;
                 @ConnectionFactoryDefinition(
                         description="application-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:app/env/Servlet_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "cfd-ra",
                         transactionSupport = TransactionSupportLevel.XATransaction,
                         maxPoolSize = 16,
@@ -74,7 +74,7 @@ import javax.transaction.UserTransaction;
                 @ConnectionFactoryDefinition(
                         description="module-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:module/env/Servlet_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "cfd-ra",
                         properties = {"testName=foo"}
                 ),
@@ -82,7 +82,7 @@ import javax.transaction.UserTransaction;
                 @ConnectionFactoryDefinition(
                         description="component-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:comp/env/Servlet_ConnectionFactory",
-                        interfaceName = "javax.resource.cci.ConnectionFactory",
+                        interfaceName = "jakarta.resource.cci.ConnectionFactory",
                         resourceAdapter = "cfd-ra",
                         properties = {"testName=foo"}
                 )

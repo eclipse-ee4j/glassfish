@@ -173,9 +173,9 @@ public final class ConnectionPoolObjectsUtils {
 
     /**
      * Return the interger representation container transaction support value equivalent to
-     * the javax.resource.spi.TransactionSupport enum value.
+     * the jakarta.resource.spi.TransactionSupport enum value.
      *
-     * @param mcfTS javax.resource.spi.TransactionSupport
+     * @param mcfTS jakarta.resource.spi.TransactionSupport
      * @return container equivalent value
      */
     public static int convertSpecTxSupportToContainerTxSupport(

@@ -291,7 +291,7 @@ public class ResourceHandler extends AbstractResourceHandler {
                 resourceType == webServiceContext ||
                 resourceType.getName().equals("jakarta.mail.Session") || 
                 resourceType.getName().equals("java.net.URL") ||
-                resourceType.getName().equals("javax.resource.cci.ConnectionFactory") ||
+                resourceType.getName().equals("jakarta.resource.cci.ConnectionFactory") ||
                 resourceType == org.omg.CORBA_2_3.ORB.class || 
                 resourceType == org.omg.CORBA.ORB.class || 
                 resourceType.getName().equals("jakarta.jms.XAConnectionFactory") ||

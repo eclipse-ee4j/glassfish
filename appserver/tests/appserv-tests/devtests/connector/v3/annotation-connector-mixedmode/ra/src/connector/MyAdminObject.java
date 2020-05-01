@@ -16,8 +16,8 @@
 
 package connector;
 
-import javax.resource.spi.AdministeredObject;
-import javax.resource.spi.ConfigProperty;
+import jakarta.resource.spi.AdministeredObject;
+import jakarta.resource.spi.ConfigProperty;
 
 @AdministeredObject(
         adminObjectInterfaces = {connector.MyAdminObject.class}

@@ -29,7 +29,7 @@ import com.sun.enterprise.tools.verifier.tests.connector.ConnectorCheck;
 
 /**
  * verify the declared ManagedConnectionFactory implements the 
- * javax.resource.spi.ManagedConnectionFactory interface
+ * jakarta.resource.spi.ManagedConnectionFactory interface
  *
  * @author  Jerome Dochez
  * @version 
@@ -66,7 +66,7 @@ public class ManagedConnectionFactoryImplementation
                "Resource Adapter does not provide outbound communication"));
           return result;
         }
-        testImplementationOf(descriptor, "javax.resource.spi.ManagedConnectionFactory", result);
+        testImplementationOf(descriptor, "jakarta.resource.spi.ManagedConnectionFactory", result);
         return result;
     }
 }

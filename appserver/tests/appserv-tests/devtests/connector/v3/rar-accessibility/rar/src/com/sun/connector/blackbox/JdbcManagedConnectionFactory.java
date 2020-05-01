@@ -20,9 +20,9 @@ import com.sun.logging.LogDomains;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.resource.ResourceException;
-import javax.resource.spi.*;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.*;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
@@ -109,7 +109,7 @@ public class JdbcManagedConnectionFactory
                 _logger.severe("@@@@@@ Sending ResourceErrorOccured event");
                 count = 0;
                 ((JdbcManagedConnection) obj).sendEvent(
-                        javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED,
+                        jakarta.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED,
                         null);
             }
             if (obj instanceof JdbcManagedConnection) {

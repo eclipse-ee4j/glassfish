@@ -18,9 +18,9 @@ package com.sun.jdbcra.spi;
 
 import javax.naming.*;
 import javax.sql.*;
-import javax.resource.spi.Activation;
-import javax.resource.spi.AdministeredObject;
-import javax.resource.spi.ConfigProperty;
+import jakarta.resource.spi.Activation;
+import jakarta.resource.spi.AdministeredObject;
+import jakarta.resource.spi.ConfigProperty;
 import java.sql.*;
 // import javax.sql.DataSource;
 @AdministeredObject(

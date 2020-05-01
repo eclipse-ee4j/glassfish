@@ -67,7 +67,7 @@ public class ConnectionFactoryInterfaceExistence extends ConnectionFactoryTest i
               (getClass().getName() + ".nonexist",
                "Error: The deployment descriptor for the resource adapter do not define a connectionfactory-interface"));        
         }*/        
-        isClassLoadable("javax.resource.cci.ConnectionFactory", result); 
+        isClassLoadable("jakarta.resource.cci.ConnectionFactory", result); 
       }
       else
       {

@@ -16,9 +16,9 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.*;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.*;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import java.io.PrintWriter;
 import java.io.Serializable;

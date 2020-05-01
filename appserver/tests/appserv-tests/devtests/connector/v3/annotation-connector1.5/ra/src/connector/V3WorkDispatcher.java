@@ -16,11 +16,11 @@
 
 package connector;
 
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.work.ExecutionContext;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.BootstrapContext;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.work.ExecutionContext;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
 
 public class V3WorkDispatcher extends WorkDispatcher {
     public V3WorkDispatcher(String id, BootstrapContext ctx, MessageEndpointFactory factory, ActivationSpec spec) {

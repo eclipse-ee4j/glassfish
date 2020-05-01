@@ -110,7 +110,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
      * @return Generic JDBC Connector implementation of <code>javax.sql.DataSource</code>
      */
     public Object createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager) {
-        logFine("In createConnectionFactory(javax.resource.spi.ConnectionManager cxManager)");
+        logFine("In createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager)");
 
         javax.sql.DataSource cf = jdbcObjectsFactory.getDataSourceInstance(this, cxManager);
 

@@ -122,12 +122,12 @@ public class ResourceHandle implements
         supportsXAResource = supportsXA;
 
         if (resource instanceof
-                javax.resource.spi.LazyEnlistableManagedConnection) {
+                jakarta.resource.spi.LazyEnlistableManagedConnection) {
             supportsLazyEnlistment_ = true;
         }
 
         if (resource instanceof
-                javax.resource.spi.DissociatableManagedConnection) {
+                jakarta.resource.spi.DissociatableManagedConnection) {
             supportsLazyAssoc_ = true;
         }
     } */

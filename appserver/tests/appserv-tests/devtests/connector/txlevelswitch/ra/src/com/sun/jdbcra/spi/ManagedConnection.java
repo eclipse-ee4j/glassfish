@@ -16,8 +16,8 @@
 
 package com.sun.jdbcra.spi;
 
-import javax.resource.spi.*;
-import javax.resource.*;
+import jakarta.resource.spi.*;
+import jakarta.resource.*;
 import javax.security.auth.Subject;
 import java.io.PrintWriter;
 import javax.transaction.xa.XAResource;
@@ -28,8 +28,8 @@ import javax.sql.PooledConnection;
 import javax.sql.XAConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.resource.NotSupportedException;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.NotSupportedException;
+import jakarta.resource.spi.security.PasswordCredential;
 import com.sun.jdbcra.spi.ConnectionRequestInfo;
 import com.sun.jdbcra.spi.LocalTransaction;
 import com.sun.jdbcra.spi.ManagedConnectionMetaData;
@@ -44,7 +44,7 @@ import java.util.logging.Level;
  * @version	1.0, 02/07/22
  * @author	Evani Sai Surya Kiran
  */
-public class ManagedConnection implements javax.resource.spi.ManagedConnection {
+public class ManagedConnection implements jakarta.resource.spi.ManagedConnection {
 
     public static final int ISNOTAPOOLEDCONNECTION = 0;
     public static final int ISPOOLEDCONNECTION = 1;
@@ -59,7 +59,7 @@ public class ManagedConnection implements javax.resource.spi.ManagedConnection {
     private Hashtable connectionHandles;
     private PrintWriter logWriter;
     private PasswordCredential passwdCredential;
-    private javax.resource.spi.ManagedConnectionFactory mcf = null;
+    private jakarta.resource.spi.ManagedConnectionFactory mcf = null;
     private XAResource xar = null;
     public ConnectionHolder activeConnectionHandle;
     
@@ -100,7 +100,7 @@ public class ManagedConnection implements javax.resource.spi.ManagedConnection {
      *					object passed
      */
     public ManagedConnection(PooledConnection pooledConn, java.sql.Connection sqlConn, 
-        PasswordCredential passwdCred, javax.resource.spi.ManagedConnectionFactory mcf) throws ResourceException {
+        PasswordCredential passwdCred, jakarta.resource.spi.ManagedConnectionFactory mcf) throws ResourceException {
         if(pooledConn == null && sqlConn == null) {
             throw new ResourceException("Connection object cannot be null");
         }
@@ -276,7 +276,7 @@ public class ManagedConnection implements javax.resource.spi.ManagedConnection {
      * @throws	SecurityException	if there is a mismatch between the
      *        	                 	password credentials or reauthentication is requested
      */
-    public Object getConnection(Subject sub, javax.resource.spi.ConnectionRequestInfo cxReqInfo) 
+    public Object getConnection(Subject sub, jakarta.resource.spi.ConnectionRequestInfo cxReqInfo) 
         throws ResourceException {
         if(logWriter != null) {
             logWriter.println("In getConnection");
@@ -286,7 +286,7 @@ public class ManagedConnection implements javax.resource.spi.ManagedConnection {
         PasswordCredential passwdCred = SecurityUtils.getPasswordCredential(this.mcf, sub, cxRequestInfo);
             
         if(SecurityUtils.isPasswordCredentialEqual(this.passwdCredential, passwdCred) == false) {
-            throw new javax.resource.spi.SecurityException("Re-authentication not supported");
+            throw new jakarta.resource.spi.SecurityException("Re-authentication not supported");
         }
         
         //GJCINT
@@ -324,7 +324,7 @@ public class ManagedConnection implements javax.resource.spi.ManagedConnection {
      * @return	<code>LocalTransaction</code> instance
      * @throws	ResourceException	if the physical connection is not valid
      */
-    public javax.resource.spi.LocalTransaction getLocalTransaction() throws ResourceException {
+    public jakarta.resource.spi.LocalTransaction getLocalTransaction() throws ResourceException {
         if(logWriter != null) {
             logWriter.println("In getLocalTransaction");
         }
@@ -356,7 +356,7 @@ public class ManagedConnection implements javax.resource.spi.ManagedConnection {
      * @return	<code>ManagedConnectionMetaData</code> instance
      * @throws	ResourceException	if the physical connection is not valid
      */
-    public javax.resource.spi.ManagedConnectionMetaData getMetaData() throws ResourceException {
+    public jakarta.resource.spi.ManagedConnectionMetaData getMetaData() throws ResourceException {
         if(logWriter != null) {
                 logWriter.println("In getMetaData");
         }

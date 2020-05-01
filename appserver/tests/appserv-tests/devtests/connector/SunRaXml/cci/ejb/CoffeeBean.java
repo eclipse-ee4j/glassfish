@@ -19,8 +19,8 @@ package com.sun.s1peqe.connector.cci;
 import java.math.BigDecimal;
 import java.util.*;
 import jakarta.ejb.*;
-import javax.resource.cci.*;
-import javax.resource.ResourceException;
+import jakarta.resource.cci.*;
+import jakarta.resource.ResourceException;
 import javax.naming.*;
 import com.sun.connector.cciblackbox.*;
 
@@ -41,7 +41,7 @@ public class CoffeeBean implements SessionBean {
             Context ic = new InitialContext();
             user = (String) ic.lookup("java:comp/env/user");
             password = (String) ic.lookup("java:comp/env/password");
-            cf = (javax.resource.cci.ConnectionFactory) ic.lookup("java:comp/env/eis/CCIEIS");
+            cf = (jakarta.resource.cci.ConnectionFactory) ic.lookup("java:comp/env/eis/CCIEIS");
         } catch (NamingException ex) {
             ex.printStackTrace();
         }

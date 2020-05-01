@@ -32,7 +32,7 @@ import com.sun.enterprise.tools.verifier.tests.connector.ConnectorCheck;
 
 /**
  * Test that the implementation class for  
- * javax.resource.cci.ConnectionFactory provides a default constructor 
+ * jakarta.resource.cci.ConnectionFactory provides a default constructor 
  *
  * @author Anisha Malhotra 
  * @version 
@@ -43,7 +43,7 @@ public class ConnectionFactoryDefaultConstructor
 {
   /** <p>
    * Test that the implementation class for  
-   * javax.resource.cci.ConnectionFactory provides a default constructor 
+   * jakarta.resource.cci.ConnectionFactory provides a default constructor 
    * </p>
    *
    * @param descriptor deployment descriptor for the rar file

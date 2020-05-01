@@ -41,7 +41,7 @@ public class InteractionSpecSerializable
     implements ConnectorCheck 
 {
     /** <p>
-     * Test if the javax.resource.cci.InterfactionSpec implementation provided
+     * Test if the jakarta.resource.cci.InterfactionSpec implementation provided
      * in the rar file also implements the java.io.Serializable interface
      * </p>
      *
@@ -57,7 +57,7 @@ public class InteractionSpecSerializable
         if (isCCIImplemented(descriptor, result)) {
             //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //            File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-            Class is = findImplementorOf(descriptor, "javax.resource.cci.InteractionSpec");
+            Class is = findImplementorOf(descriptor, "jakarta.resource.cci.InteractionSpec");
             if (is !=null) {
                 testImplementationOf(is, "java.io.Serializable", result);
                 return result;
@@ -68,7 +68,7 @@ public class InteractionSpecSerializable
 				   new Object[] {compName.toString()}));
                 result.notApplicable(smh.getLocalString
     	            ("com.sun.enterprise.tools.verifier.tests.connector.cci.InteractionSpecJavaBeansCompliance.nonexist",
-                    "Error: While the CCI interfaces are implemented, the javax.resource.cci.InteractionSpec is not"));         
+                    "Error: While the CCI interfaces are implemented, the jakarta.resource.cci.InteractionSpec is not"));         
                 return result;            
             }
         } else {

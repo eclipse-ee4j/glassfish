@@ -41,14 +41,14 @@ public class WorkManagerProxy implements WorkManager, Externalizable {
     }
 
     /**
-     * @see javax.resource.spi.work.WorkManager
+     * @see jakarta.resource.spi.work.WorkManager
      */
     public void doWork(Work work) throws WorkException {
         wm.doWork(work);
     }
 
     /**
-     * @see javax.resource.spi.work.WorkManager
+     * @see jakarta.resource.spi.work.WorkManager
      */
     public void doWork(Work work, long startTimeout, ExecutionContext executionContext,
                        WorkListener workListener) throws WorkException {
@@ -56,14 +56,14 @@ public class WorkManagerProxy implements WorkManager, Externalizable {
     }
 
     /**
-     * @see javax.resource.spi.work.WorkManager
+     * @see jakarta.resource.spi.work.WorkManager
      */
     public long startWork(Work work) throws WorkException {
         return wm.startWork(work);
     }
 
     /**
-     * @see javax.resource.spi.work.WorkManager
+     * @see jakarta.resource.spi.work.WorkManager
      */
     public long startWork(Work work, long startTimeout, ExecutionContext executionContext,
                           WorkListener workListener) throws WorkException {
@@ -71,13 +71,13 @@ public class WorkManagerProxy implements WorkManager, Externalizable {
     }
 
     /**
-     * @see javax.resource.spi.work.WorkManager
+     * @see jakarta.resource.spi.work.WorkManager
      */
     public void scheduleWork(Work work) throws WorkException {
         wm.scheduleWork(work);
     }
     /**
-     * @see javax.resource.spi.work.WorkManager
+     * @see jakarta.resource.spi.work.WorkManager
      */
     public void scheduleWork(Work work, long startTimeout, ExecutionContext executionContext,
                              WorkListener workListener) throws WorkException {

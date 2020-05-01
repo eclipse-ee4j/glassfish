@@ -19,7 +19,7 @@ package com.sun.connector.cciblackbox;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import javax.resource.cci.InteractionSpec;
+import jakarta.resource.cci.InteractionSpec;
 
 /**
  * This implementation class holds properties for driving an Interaction

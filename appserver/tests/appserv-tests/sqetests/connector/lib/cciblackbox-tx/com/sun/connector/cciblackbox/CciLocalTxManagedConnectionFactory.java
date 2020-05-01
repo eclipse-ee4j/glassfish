@@ -24,13 +24,13 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionManager;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.EISSystemException;
-import javax.resource.spi.ManagedConnection;
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionManager;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.EISSystemException;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 
 /**

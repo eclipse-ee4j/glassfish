@@ -22,7 +22,7 @@ import java.util.Vector;
 import java.util.StringTokenizer;
 import java.util.Enumeration;
 import com.sun.jdbcra.util.MethodExecutor;
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;

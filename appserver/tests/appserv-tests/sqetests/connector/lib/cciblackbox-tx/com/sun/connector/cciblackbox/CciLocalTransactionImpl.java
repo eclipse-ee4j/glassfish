@@ -16,13 +16,13 @@
 
 package com.sun.connector.cciblackbox;
 
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 /**This implementation class defines a local transaction demarcation 
  * at the application level.
  * @author Sheetal Vartak
  */
-public class CciLocalTransactionImpl implements javax.resource.cci.LocalTransaction {
+public class CciLocalTransactionImpl implements jakarta.resource.cci.LocalTransaction {
 
   private CciManagedConnection mc;
 

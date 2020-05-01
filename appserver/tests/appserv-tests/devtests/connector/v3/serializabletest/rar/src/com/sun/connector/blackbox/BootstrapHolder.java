@@ -16,9 +16,9 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.XATerminator;
-import javax.resource.spi.work.WorkManager;
+import jakarta.resource.spi.BootstrapContext;
+import jakarta.resource.spi.XATerminator;
+import jakarta.resource.spi.work.WorkManager;
 import java.io.*;
 
 public class BootstrapHolder {

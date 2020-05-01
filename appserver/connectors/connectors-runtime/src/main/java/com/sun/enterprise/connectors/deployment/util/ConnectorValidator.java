@@ -137,7 +137,7 @@ public class ConnectorValidator extends DefaultDOLVisitor implements ConnectorVi
                     }
                     if(!validClass){
                         throw new IllegalArgumentException("Class ["+activationSpecClass+"] does not " +
-                                "implement javax.resource.spi.ActivationSpec interface, but " +
+                                "implement jakarta.resource.spi.ActivationSpec interface, but " +
                                 "defined in MessageListener ["+ml.getMessageListenerType()+"] of RAR ["+ descriptor.getName() + "]");
                     }
                 }else{

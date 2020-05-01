@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 
 public class InterceptorB {
 

@@ -22,10 +22,10 @@ import jakarta.ejb.Schedule;
 import jakarta.ejb.Timer;
 import jakarta.ejb.TimerService;
 import jakarta.ejb.EJBException;
-import javax.interceptor.Interceptors;
-import javax.interceptor.ExcludeDefaultInterceptors;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.InvocationContext;
 import javax.naming.InitialContext;
 import jakarta.annotation.Resource;
 

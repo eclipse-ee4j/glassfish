@@ -141,7 +141,7 @@ javax.imageio.plugins.bmp; \
 javax.imageio.plugins.jpeg; \
 javax.imageio.spi; \
 javax.imageio.stream; \
-javax.interceptor; \
+jakarta.interceptor; \
 jakarta.json; \
 jakarta.jms; \
 javax.json.bind; \

@@ -19,11 +19,11 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 import jakarta.ejb.Stateless;
 import jakarta.ejb.EJBException;
-import javax.interceptor.Interceptors;
-import javax.interceptor.ExcludeDefaultInterceptors;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 
 // Define some interceptors via annotations and some via

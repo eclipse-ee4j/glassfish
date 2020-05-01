@@ -20,7 +20,7 @@ import jakarta.annotation.*;
 
 import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 import org.omg.CORBA.ORB;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;

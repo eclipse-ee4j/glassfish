@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.Timer;
 

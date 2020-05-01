@@ -77,17 +77,17 @@ public class ManagedBeanHandler extends AbstractHandler {
         Map<String, InterceptorDescriptor> interceptorDescs = new HashMap<String, InterceptorDescriptor>();
 
 
-        // For now, just process the javax.interceptor related annotations directly instead
-        // of relying on the annotation framework.   All the existing javax.interceptor
+        // For now, just process the jakarta.interceptor related annotations directly instead
+        // of relying on the annotation framework.   All the existing jakarta.interceptor
         // handlers are very tightly coupled to ejb so it would be more work to abstract those
-        // than to just process the annotations directly.  Also, do javax.interceptor
-        // annotation processing reflectively to avoid dependency on javax.interceptor from
+        // than to just process the annotations directly.  Also, do jakarta.interceptor
+        // annotation processing reflectively to avoid dependency on jakarta.interceptor from
         // DOL module.
 
-        // TODO refactor javax.interceptor annotation handlers to support both ejb and non-ejb
+        // TODO refactor jakarta.interceptor annotation handlers to support both ejb and non-ejb
         // related interceptors
 
-        Annotation interceptorsAnn = getClassAnnotation(managedBeanClass, "javax.interceptor.Interceptors");
+        Annotation interceptorsAnn = getClassAnnotation(managedBeanClass, "jakarta.interceptor.Interceptors");
         if( interceptorsAnn != null ) {
             try {
                 Method m = interceptorsAnn.annotationType().getDeclaredMethod("value");
@@ -102,7 +102,7 @@ public class ManagedBeanHandler extends AbstractHandler {
         Class nextIntClass = managedBeanClass;
         while(nextIntClass != Object.class) {
             Method managedBeanAroundInvoke =
-                getMethodForMethodAnnotation(nextIntClass, "javax.interceptor.AroundInvoke");
+                getMethodForMethodAnnotation(nextIntClass, "jakarta.interceptor.AroundInvoke");
 
             if( (managedBeanAroundInvoke != null) && !(methodOverridden(managedBeanAroundInvoke,
                     nextIntClass, managedBeanClass)) ) {
@@ -164,7 +164,7 @@ public class ManagedBeanHandler extends AbstractHandler {
                 Class[] interceptors = next.getValue();
 
                 boolean excludeClassInterceptors =
-                        ( getMethodAnnotation(o, "javax.interceptor.ExcludeClassInterceptors")
+                        ( getMethodAnnotation(o, "jakarta.interceptor.ExcludeClassInterceptors")
                             != null );
 
                 List<InterceptorDescriptor> methodInterceptorChain = excludeClassInterceptors ?
@@ -198,7 +198,7 @@ public class ManagedBeanHandler extends AbstractHandler {
                  ManagedBeanDescriptor managedBeanDesc, Class managedBeanClass) 
                  throws AnnotationProcessorException {
 
-        Annotation ann = getMethodAnnotation(o, "javax.interceptor.Interceptors");
+        Annotation ann = getMethodAnnotation(o, "jakarta.interceptor.Interceptors");
         if(ann != null) {
             try {
                 Method valueM = ann.annotationType().getDeclaredMethod("value");
@@ -212,7 +212,7 @@ public class ManagedBeanHandler extends AbstractHandler {
             // If the method or constructor excludes
             // class-level interceptors, explicitly set method-level to an empty list.
             boolean excludeClassInterceptors =
-                    ( getMethodAnnotation(o, "javax.interceptor.ExcludeClassInterceptors") != null );
+                    ( getMethodAnnotation(o, "jakarta.interceptor.ExcludeClassInterceptors") != null );
             if( excludeClassInterceptors ) {
                 MethodDescriptor mDesc = getMethodDescriptor(o, managedBeanClass);
                 if (mDesc != null) {
@@ -259,7 +259,7 @@ public class ManagedBeanHandler extends AbstractHandler {
         Class nextIntClass = interceptorClass;
         while(nextIntClass != Object.class) {
             Method interceptorAroundInvoke =
-                getMethodForMethodAnnotation(nextIntClass, "javax.interceptor.AroundInvoke");
+                getMethodForMethodAnnotation(nextIntClass, "jakarta.interceptor.AroundInvoke");
             if( (interceptorAroundInvoke != null) && !(methodOverridden(interceptorAroundInvoke,
                     nextIntClass, interceptorClass)) ) {
 
@@ -270,7 +270,7 @@ public class ManagedBeanHandler extends AbstractHandler {
             }
 
             Method interceptorAroundConstruct =
-                getMethodForMethodAnnotation(nextIntClass, "javax.interceptor.AroundConstruct");
+                getMethodForMethodAnnotation(nextIntClass, "jakarta.interceptor.AroundConstruct");
             if( (interceptorAroundConstruct != null) && !(methodOverridden(interceptorAroundConstruct,
                     nextIntClass, interceptorClass)) ) {
 

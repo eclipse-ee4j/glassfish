@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.hello.session2;
 
 import jakarta.annotation.PreDestroy;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 
 public class MyCallbackHandler {
 

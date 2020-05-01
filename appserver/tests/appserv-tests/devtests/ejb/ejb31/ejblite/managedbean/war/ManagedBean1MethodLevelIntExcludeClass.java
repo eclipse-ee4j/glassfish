@@ -17,10 +17,10 @@
 package com.acme;
 
 import jakarta.annotation.*;
-import javax.interceptor.Interceptors;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.ExcludeClassInterceptors;
 
 @ManagedBean("ManagedBean1MethodLevelIntExcludeClass")
     @Interceptors(InterceptorB.class)

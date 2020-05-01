@@ -22,9 +22,9 @@ import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
-import javax.interceptor.Interceptors;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 @ManagedBean("foomanagedbean")
 @Interceptors(InterceptorA.class)

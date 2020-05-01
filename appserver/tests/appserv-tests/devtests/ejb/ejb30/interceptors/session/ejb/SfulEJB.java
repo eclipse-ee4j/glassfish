@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 import jakarta.ejb.Stateful;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptors;
 
 
 import jakarta.ejb.*;

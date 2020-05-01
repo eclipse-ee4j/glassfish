@@ -32,9 +32,9 @@ import jakarta.jms.QueueSession;
 import jakarta.jms.QueueSender;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.ExcludeDefaultInterceptors;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+import jakarta.interceptor.Interceptors;
 
 
 @MessageDriven

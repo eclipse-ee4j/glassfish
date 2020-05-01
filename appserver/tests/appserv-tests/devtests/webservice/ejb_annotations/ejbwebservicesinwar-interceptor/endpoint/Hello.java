@@ -35,7 +35,7 @@ public class Hello {
 	public Hello() {}
 
 	@WebMethod(operationName="sayHello", action="urn:SayHello")
-        @javax.interceptor.Interceptors(SimpleInterceptor.class)
+        @jakarta.interceptor.Interceptors(SimpleInterceptor.class)
 	public String sayHello(Object who) {
 		return "Hello " + who  ;
 

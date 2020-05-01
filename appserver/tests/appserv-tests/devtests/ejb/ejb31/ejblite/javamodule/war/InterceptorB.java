@@ -18,8 +18,8 @@ package com.acme;
 
 import jakarta.annotation.*;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
 import java.util.Map;
 
 import jakarta.ejb.EJBException;

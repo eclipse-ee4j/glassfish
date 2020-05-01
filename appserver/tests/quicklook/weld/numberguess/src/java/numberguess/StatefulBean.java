@@ -23,7 +23,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateful;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 
 @Stateful
 @SomeBindingType

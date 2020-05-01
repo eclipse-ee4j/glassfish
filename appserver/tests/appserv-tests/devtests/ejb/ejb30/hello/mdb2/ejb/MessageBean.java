@@ -25,8 +25,8 @@ import jakarta.ejb.NoSuchEJBException;
 import jakarta.ejb.EJB;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 import jakarta.ejb.MessageDrivenContext;
 
 import javax.naming.InitialContext;

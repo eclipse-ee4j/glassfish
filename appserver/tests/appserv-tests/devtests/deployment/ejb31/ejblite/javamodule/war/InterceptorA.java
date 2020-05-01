@@ -24,8 +24,8 @@ import org.omg.CORBA.ORB;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
 
 
 public class InterceptorA extends InterceptorSuper {

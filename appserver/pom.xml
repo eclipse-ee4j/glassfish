@@ -370,7 +370,7 @@
                             <jarType>api</jarType>
                             <specVersion>${jakarta.interceptor-api.version}</specVersion>
 			    <specImplVersion>${jakarta.interceptor-api.version}</specImplVersion>
-                            <apiPackage>javax.interceptor</apiPackage>
+                            <apiPackage>jakarta.interceptor</apiPackage>
                         </spec>
                         <spec>
                             <artifact>

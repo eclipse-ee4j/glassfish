@@ -20,12 +20,12 @@ package com.sun.s1asdev.ejb.ejb31.aroundtimeout;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.EJBException;
-import javax.interceptor.Interceptors;
-import javax.interceptor.ExcludeDefaultInterceptors;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.AroundTimeout;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.AroundTimeout;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 @Stateless
 // total ordering DCBA expressed in .xml

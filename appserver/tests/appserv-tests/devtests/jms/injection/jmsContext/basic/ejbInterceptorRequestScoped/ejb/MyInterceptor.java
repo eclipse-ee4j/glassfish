@@ -18,8 +18,8 @@ package org.glassfish.test.jms.injection.ejb;
 
 import jakarta.annotation.Resource;
 import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 import jakarta.jms.*;
 import jakarta.ejb.*;
 import javax.naming.*;

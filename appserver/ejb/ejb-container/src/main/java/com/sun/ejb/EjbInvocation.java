@@ -560,7 +560,7 @@ public class EjbInvocation
     }
 
     /* (non-Javadoc)
-     * @see javax.interceptor.InvocationContext#proceed()
+     * @see jakarta.interceptor.InvocationContext#proceed()
      */
     public Object proceed()
         throws Exception

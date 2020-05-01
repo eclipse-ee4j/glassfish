@@ -24,7 +24,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.ejb.TransactionManagementType;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 
 /**
  * @author Shing Wai Chan

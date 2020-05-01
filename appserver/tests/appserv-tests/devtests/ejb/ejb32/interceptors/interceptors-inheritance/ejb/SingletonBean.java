@@ -18,7 +18,7 @@ package com.acme;
 
 import jakarta.ejb.*;
 import jakarta.annotation.*;
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 
 @Singleton
 @Startup

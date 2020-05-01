@@ -37,7 +37,7 @@ import org.glassfish.cditest.user.model.UserImpl;
  */
 @Stateless
 @Local
-@javax.interceptor.Interceptors(org.glassfish.cditest.security.interceptor.SecurityInterceptor.class)
+@jakarta.interceptor.Interceptors(org.glassfish.cditest.security.interceptor.SecurityInterceptor.class)
 public class UserServiceImpl implements UserService {
     private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 

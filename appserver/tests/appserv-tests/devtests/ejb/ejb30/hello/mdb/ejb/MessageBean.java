@@ -36,7 +36,7 @@ import jakarta.jms.Session;
 
 import jakarta.annotation.Resource;
 
-@javax.interceptor.Interceptors(InterceptorA.class)
+@jakarta.interceptor.Interceptors(InterceptorA.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 @MessageDriven(mappedName="jms/ejb_ejb30_hello_mdb_InQueue", description="mymessagedriven bean description")
  public class MessageBean implements MessageListener {

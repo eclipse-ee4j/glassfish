@@ -20,7 +20,7 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.Remote;
 import jakarta.ejb.EJB;
 import jakarta.annotation.PostConstruct;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 import jakarta.ejb.EJBs;
 import jakarta.ejb.Remove;
 import jakarta.ejb.SessionSynchronization;

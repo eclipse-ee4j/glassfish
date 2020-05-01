@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session5;
 
 import jakarta.ejb.Stateful;
 import jakarta.ejb.Remote;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 import jakarta.ejb.EJBException;
 
 @Stateful

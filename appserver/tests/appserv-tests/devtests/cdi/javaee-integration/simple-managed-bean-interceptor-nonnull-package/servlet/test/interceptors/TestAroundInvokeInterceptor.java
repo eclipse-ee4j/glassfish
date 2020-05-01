@@ -16,7 +16,7 @@
 
 package test.interceptors;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 
 import test.beans.Tester;
 

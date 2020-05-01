@@ -17,7 +17,7 @@
 package ejb32.methodintf;
 
 import jakarta.ejb.*;
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 import jakarta.annotation.*;
 
 @Stateful

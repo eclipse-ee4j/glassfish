@@ -20,9 +20,9 @@ import jakarta.ejb.MessageDriven;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Timer;
-import javax.interceptor.AroundTimeout;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.AroundTimeout;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.MessageDrivenContext;

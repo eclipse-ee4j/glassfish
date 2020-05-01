@@ -18,7 +18,7 @@ package numberguess;
 
 import java.io.Serializable;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 import jakarta.annotation.*;
 
 import jakarta.ejb.EJB;

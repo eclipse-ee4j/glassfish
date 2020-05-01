@@ -23,7 +23,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
 import jakarta.ejb.MessageDriven;
 import jakarta.ejb.MessageDrivenContext;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 
 /**
  * @author David Blevins

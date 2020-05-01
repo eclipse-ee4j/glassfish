@@ -21,7 +21,7 @@ import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 
 public class ManagedSuper {
 

@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 import java.util.List;
 import java.util.LinkedList;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import jakarta.ejb.EJBException;
 
 public class Common {

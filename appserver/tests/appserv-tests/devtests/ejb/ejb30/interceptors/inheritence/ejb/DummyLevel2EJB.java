@@ -17,9 +17,9 @@
 package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
 import jakarta.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
 import jakarta.ejb.EJBException;
 import jakarta.annotation.PostConstruct;
 

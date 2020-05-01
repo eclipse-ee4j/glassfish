@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.interceptors.intro;
 
 import jakarta.ejb.Stateless;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 
 
 @Stateless

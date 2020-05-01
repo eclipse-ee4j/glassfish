@@ -25,7 +25,7 @@ import javax.naming.InitialContext;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 import java.rmi.RemoteException;
 

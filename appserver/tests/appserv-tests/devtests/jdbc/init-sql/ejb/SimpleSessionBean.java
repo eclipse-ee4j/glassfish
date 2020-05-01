@@ -22,8 +22,8 @@ import javax.sql.*;
 import java.rmi.*;
 import java.util.*;
 import java.sql.*;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 public class SimpleSessionBean implements SessionBean
 {

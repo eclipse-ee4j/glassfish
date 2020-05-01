@@ -259,7 +259,7 @@ javax.swing.text.rtf; \
 javax.swing.tree; \
 javax.swing.undo; \
 javax.tools; \
-javax.transaction; \
+jakarta.transaction; \
 javax.transaction.xa; \
 jakarta.validation; \
 jakarta.validation.bootstrap; \

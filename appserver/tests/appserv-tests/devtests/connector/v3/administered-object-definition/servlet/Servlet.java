@@ -28,7 +28,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.EJBs;
 import jakarta.ejb.EJBException;
 import jakarta.annotation.Resource;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 @EJB(name = "helloStateless3", beanInterface = Hello.class)
 @EJBs({@EJB(name = "helloStateless4", beanName = "HelloEJB",

@@ -21,7 +21,7 @@ import jakarta.ejb.SessionContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import java.rmi.RemoteException;
 import com.sun.s1peqe.transaction.txglobal.ejb.beanB.*;
 

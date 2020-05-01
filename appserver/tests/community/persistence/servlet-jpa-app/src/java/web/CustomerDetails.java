@@ -34,7 +34,7 @@ import jakarta.persistence.PersistenceContext;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import persistence.*;
 
 /**

@@ -28,8 +28,8 @@ import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.enterprise.inject.spi.BeanManager;
 import jakarta.jms.ConnectionFactory;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
-import javax.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.UserTransaction;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.Validator;
 

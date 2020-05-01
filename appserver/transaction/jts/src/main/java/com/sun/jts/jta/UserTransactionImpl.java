@@ -22,7 +22,7 @@ import javax.naming.*;
 import java.util.logging.Logger;
 import com.sun.logging.LogDomains;
 /**
- * This class implements the javax.transaction.UserTransaction interface
+ * This class implements the jakarta.transaction.UserTransaction interface
  * which defines methods that allow an application to explicitly manage
  * transaction boundaries.
  *
@@ -44,7 +44,7 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
 
     public UserTransactionImpl() {}
 
-    // Implementation of javax.transaction.UserTransaction interface
+    // Implementation of jakarta.transaction.UserTransaction interface
 
     /**
      * Create a new transaction and associate it with the current thread.

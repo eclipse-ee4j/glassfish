@@ -22,7 +22,7 @@ import java.util.*;
 import java.io.*;
 
 import jakarta.persistence.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import jakarta.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;

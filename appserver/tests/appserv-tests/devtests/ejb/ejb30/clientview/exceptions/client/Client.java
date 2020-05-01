@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.*;
 import jakarta.ejb.*;
 import java.rmi.RemoteException;
-import javax.transaction.TransactionRequiredException;
+import jakarta.transaction.TransactionRequiredException;
 import com.sun.s1asdev.ejb.ejb30.clientview.exceptions.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import javax.naming.InitialContext;

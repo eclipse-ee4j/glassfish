@@ -19,7 +19,7 @@ package client;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.naming.InitialContext;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.PrintWriter;
 

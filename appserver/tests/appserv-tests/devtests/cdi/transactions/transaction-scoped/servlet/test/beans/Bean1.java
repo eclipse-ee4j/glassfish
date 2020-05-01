@@ -19,7 +19,7 @@ package test.beans;
 import test.servlet.TransactionScopedTestServlet;
 
 import jakarta.annotation.PreDestroy;
-import javax.transaction.TransactionScoped;
+import jakarta.transaction.TransactionScoped;
 import java.io.Serializable;
 
 @TransactionScoped

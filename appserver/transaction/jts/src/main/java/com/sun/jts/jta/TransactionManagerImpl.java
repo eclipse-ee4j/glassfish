@@ -46,7 +46,7 @@ import com.sun.jts.utils.LogFormatter;
 import org.glassfish.internal.api.Globals;
 
 /**
- * An implementation of javax.transaction.TransactionManager using JTA.
+ * An implementation of jakarta.transaction.TransactionManager using JTA.
  *
  * This is a singleton object
  *

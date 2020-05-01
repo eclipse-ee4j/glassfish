@@ -30,7 +30,7 @@ import jakarta.transaction.*;
  * control should be used for the current transaction, and whether values
  * should be retained in JDO instances after transaction completion.
  *
- * <P>Transaction completion methods have the same semantics as javax.transaction
+ * <P>Transaction completion methods have the same semantics as jakarta.transaction
  * UserTransaction, and are valid only in the non-managed, non-distributed
  * transaction environment.
  * @author Craig Russell

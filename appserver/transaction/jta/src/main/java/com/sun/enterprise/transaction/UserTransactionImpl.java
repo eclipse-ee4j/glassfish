@@ -41,7 +41,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /** 
- * This class implements javax.transaction.UserTransaction .
+ * This class implements jakarta.transaction.UserTransaction .
  * Its methods are called from TX_BEAN_MANAGED EJB code.
  * Most of its methods just delegate to the TransactionManager
  * after doing some EJB Container-related steps.

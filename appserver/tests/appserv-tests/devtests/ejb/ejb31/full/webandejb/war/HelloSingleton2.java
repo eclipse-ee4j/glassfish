@@ -18,7 +18,7 @@ package com.acme;
 
 import jakarta.ejb.*;
 import jakarta.annotation.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 @Singleton
 //@Startup

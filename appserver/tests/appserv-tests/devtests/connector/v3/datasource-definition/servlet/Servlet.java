@@ -31,7 +31,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 
 import jakarta.annotation.sql.*;

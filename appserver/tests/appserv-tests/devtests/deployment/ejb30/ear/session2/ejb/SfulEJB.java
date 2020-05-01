@@ -31,7 +31,7 @@ import jakarta.ejb.TransactionManagementType;
 import javax.naming.InitialContext;
 
 import jakarta.annotation.Resource;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 import java.util.Collection;
 import java.util.HashSet;

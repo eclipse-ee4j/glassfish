@@ -20,7 +20,7 @@ import test.servlet.TransactionScopedTestServlet;
 
 import jakarta.annotation.PreDestroy;
 import javax.enterprise.inject.spi.PassivationCapable;
-import javax.transaction.TransactionScoped;
+import jakarta.transaction.TransactionScoped;
 import java.io.Serializable;
 
 @TransactionScoped

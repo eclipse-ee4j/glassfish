@@ -18,8 +18,8 @@ package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 
 import jakarta.ejb.*;
 import jakarta.annotation.Resource;
-import javax.transaction.TransactionManager;
-import javax.transaction.Status;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Status;
 import javax.naming.InitialContext;
 
 @Stateless

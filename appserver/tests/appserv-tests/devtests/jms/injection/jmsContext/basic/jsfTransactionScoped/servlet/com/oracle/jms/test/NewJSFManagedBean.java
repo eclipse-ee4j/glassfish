@@ -26,7 +26,7 @@ import jakarta.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import jakarta.jms.*;
 import jakarta.ejb.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 /**
  *

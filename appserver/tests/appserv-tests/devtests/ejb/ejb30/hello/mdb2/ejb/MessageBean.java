@@ -40,8 +40,8 @@ import jakarta.jms.QueueSession;
 import jakarta.jms.QueueSender;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
-import javax.transaction.TransactionManager;
-import javax.transaction.Status;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Status;
 import jakarta.annotation.Resource;
 
 import java.util.Collection;

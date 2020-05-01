@@ -21,7 +21,7 @@ import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
 import org.omg.CORBA.ORB;
 
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 public class FooNonManagedBean {
 

@@ -326,17 +326,17 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
         } else if ( exception instanceof java.rmi.MarshalException ) {
             mappedException = new MARSHAL(MAPEXCEPTION_CODE,
                 CompletionStatus.COMPLETED_MAYBE);
-        } else if ( exception instanceof javax.transaction.TransactionRolledbackException
+        } else if ( exception instanceof jakarta.transaction.TransactionRolledbackException
             || exception instanceof TransactionRolledbackLocalException )
         {
             mappedException = new TRANSACTION_ROLLEDBACK(MAPEXCEPTION_CODE,
                 CompletionStatus.COMPLETED_MAYBE);
-        } else if ( exception instanceof javax.transaction.TransactionRequiredException
+        } else if ( exception instanceof jakarta.transaction.TransactionRequiredException
             || exception instanceof TransactionRequiredLocalException )
         {
             mappedException = new TRANSACTION_REQUIRED(MAPEXCEPTION_CODE,
                 CompletionStatus.COMPLETED_MAYBE);
-        } else if ( exception instanceof javax.transaction.InvalidTransactionException ) {
+        } else if ( exception instanceof jakarta.transaction.InvalidTransactionException ) {
             mappedException = new INVALID_TRANSACTION(MAPEXCEPTION_CODE,
                 CompletionStatus.COMPLETED_MAYBE);
         } else {

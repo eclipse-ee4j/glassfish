@@ -23,7 +23,7 @@ import jakarta.ejb.*;
 import java.sql.*;
 import java.util.Set;
 import java.util.HashSet;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 @Stateless
 public class SimpleSessionBean implements SessionBean {

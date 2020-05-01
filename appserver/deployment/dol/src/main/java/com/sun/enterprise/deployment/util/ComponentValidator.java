@@ -974,11 +974,11 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      */
     private void computeRuntimeDefault(ResourceEnvReferenceDescriptor resourceEnvRef) {
         if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals(
-            "javax.transaction.UserTransaction")) {
+            "jakarta.transaction.UserTransaction")) {
             resourceEnvRef.setJndiName("java:comp/UserTransaction");
         }
 
-        else if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals("javax.transaction.TransactionSynchronizationRegistry")) {
+        else if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals("jakarta.transaction.TransactionSynchronizationRegistry")) {
             resourceEnvRef.setJndiName(
                 "java:comp/TransactionSynchronizationRegistry");
         }

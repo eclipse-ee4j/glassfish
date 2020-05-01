@@ -17,7 +17,7 @@
 package myapp;
 
 import jakarta.persistence.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import jakarta.annotation.*;
 import javax.servlet.*;
 import javax.servlet.http.*;

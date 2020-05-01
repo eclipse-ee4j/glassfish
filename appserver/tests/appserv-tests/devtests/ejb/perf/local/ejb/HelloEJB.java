@@ -40,7 +40,7 @@ public class HelloEJB implements SessionBean {
 
     private long overhead;
 
-    javax.transaction.UserTransaction ut;
+    jakarta.transaction.UserTransaction ut;
 
     public HelloEJB(){}
 

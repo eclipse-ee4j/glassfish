@@ -117,7 +117,7 @@ public class GoogleEJB implements SessionBean {
         
     public void helloOneWay(String s1) {
 
-        javax.transaction.TransactionManager tm = 
+        jakarta.transaction.TransactionManager tm = 
             com.sun.enterprise.Switch.getSwitch().getTransactionManager();
         int txStatus = -1;
         try {
@@ -137,7 +137,7 @@ public class GoogleEJB implements SessionBean {
           
             // we were invoked through a webserivce invocation.  there
             // shouldn't be a transaction.
-            if( txStatus == javax.transaction.Status.STATUS_NO_TRANSACTION) {
+            if( txStatus == jakarta.transaction.Status.STATUS_NO_TRANSACTION) {
                 System.out.println("Correctly found no tx for helloOneWay " +
                                    " invoked through a webservice");
             } else {
@@ -149,7 +149,7 @@ public class GoogleEJB implements SessionBean {
             // since there's no WEB service message context, we were
             // invoked through a remote invocation.  
                     
-            if( txStatus == javax.transaction.Status.STATUS_ACTIVE) {
+            if( txStatus == jakarta.transaction.Status.STATUS_ACTIVE) {
                 System.out.println("Correctly found an active tx for " +
                    "helloOneWay invoked through a Remote interface");
             } else {

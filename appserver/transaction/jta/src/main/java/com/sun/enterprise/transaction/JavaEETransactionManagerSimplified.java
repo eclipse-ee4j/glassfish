@@ -62,7 +62,7 @@ import org.glassfish.external.probe.provider.StatsProviderManager;
 import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
 
 /**
- * Implementation of javax.transaction.TransactionManager interface.
+ * Implementation of jakarta.transaction.TransactionManager interface.
  * This class provides non-XA local transaction support and delegates 
  * to implementation of the JavaEETransactionManagerDelegate for XA 
  * or LAO optimization, and complete JTS implementation.
@@ -1555,7 +1555,7 @@ public class JavaEETransactionManagerSimplified
     }
 
 /****************************************************************************/
-/** Implementation of javax.transaction.Synchronization *********************/
+/** Implementation of jakarta.transaction.Synchronization *********************/
 /****************************************************************************/
     private static class JTSSynchronization implements Synchronization {
         private TransactionInternal jtsTx;

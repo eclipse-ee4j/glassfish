@@ -17,7 +17,7 @@
 package sqetests.ejb.stateful.passivate.ejb.stateful;
 
 import jakarta.ejb.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.naming.*;
 import javax.rmi.*;
 import java.util.HashMap;
@@ -180,7 +180,7 @@ public class SessionBean implements jakarta.ejb.SessionBean {
         try{
             int txStatus=userTx.getStatus();
             System.out.println("Tx Status"+txStatus);          
-            if (txStatus == javax.transaction.Status.STATUS_ACTIVE) {
+            if (txStatus == jakarta.transaction.Status.STATUS_ACTIVE) {
                 System.out.println("committing tx that was left active");
                 userTx.commit();
             }

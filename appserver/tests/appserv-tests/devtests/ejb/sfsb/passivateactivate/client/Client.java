@@ -208,7 +208,7 @@ public class Client {
 	    boolean gotException = false;
 
             // Test BMT SFSB remove called in a transaction
-            javax.transaction.UserTransaction ut = (javax.transaction.UserTransaction) 
+            jakarta.transaction.UserTransaction ut = (jakarta.transaction.UserTransaction) 
                      (new InitialContext()).lookup("java:comp/UserTransaction");
             ut.begin();
 	    sfsb.remove();

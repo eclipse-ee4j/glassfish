@@ -1517,7 +1517,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Called by Transaction commit() or rollback()
      * cleans up transactional cache
-     * @param	status		javax.transaction.Status
+     * @param	status		jakarta.transaction.Status
      */
     public void afterCompletion(int status) {
         assertIsOpen();
@@ -2044,7 +2044,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     }
 
     /**
-     * Assigns reference to javax.transaction.Transaction associated
+     * Assigns reference to jakarta.transaction.Transaction associated
      * with the current thread in the managed environment
      */
     protected void setJTATransaction(jakarta.transaction.Transaction t) {

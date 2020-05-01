@@ -73,7 +73,7 @@ public class PoolTxHelper {
      * Remove the resource from book-keeping
      *
      * @param h ResourceHandle to be delisted
-     * @throws javax.transaction.SystemException when not able to delist the resource
+     * @throws jakarta.transaction.SystemException when not able to delist the resource
      */
     private void enforceDelistment(ResourceHandle h) throws SystemException {
         JavaEETransaction txn = (JavaEETransaction) ConnectorRuntime.getRuntime().getTransaction();

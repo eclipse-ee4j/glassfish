@@ -38,9 +38,9 @@ import com.sun.logging.LogDomains;
 import com.sun.enterprise.transaction.spi.TransactionInternal;
 
 /**
- * An implementation of javax.transaction.Transaction using JTS
+ * An implementation of jakarta.transaction.Transaction using JTS
  * XXX TODO should catch all org.omg.CORBA.SystemException
- * and throw javax.transaction.SystemException
+ * and throw jakarta.transaction.SystemException
  *
  * @author Tony Ng
  */
@@ -81,7 +81,7 @@ public class TransactionImpl implements TransactionInternal {
     }
 
     //-----------------------------------------------------------------
-    // The following implements javax.transaction.Trasaction interface
+    // The following implements jakarta.transaction.Trasaction interface
     //-----------------------------------------------------------------
 
     /**
@@ -205,8 +205,8 @@ public class TransactionImpl implements TransactionInternal {
 
         /*
         int status = getStatus();
-        if (status != javax.transaction.Status.STATUS_ACTIVE &&
-            status != javax.transaction.Status.STATUS_MARKED_ROLLBACK) {
+        if (status != jakarta.transaction.Status.STATUS_ACTIVE &&
+            status != jakarta.transaction.Status.STATUS_MARKED_ROLLBACK) {
             throw new IllegalStateException();
         }
         */

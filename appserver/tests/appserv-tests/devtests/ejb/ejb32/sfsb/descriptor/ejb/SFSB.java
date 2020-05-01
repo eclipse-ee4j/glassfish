@@ -53,9 +53,9 @@ public class SFSB implements Hello {
     public void destroy() {
         System.out.println("In SFSB::destroy()");
         try {
-            javax.transaction.TransactionSynchronizationRegistry r = (javax.transaction.TransactionSynchronizationRegistry)
+            jakarta.transaction.TransactionSynchronizationRegistry r = (jakarta.transaction.TransactionSynchronizationRegistry)
                    new InitialContext().lookup("java:comp/TransactionSynchronizationRegistry");
-            if (r.getTransactionStatus() != javax.transaction.Status.STATUS_ACTIVE) {
+            if (r.getTransactionStatus() != jakarta.transaction.Status.STATUS_ACTIVE) {
                 throw new IllegalStateException("Transaction status is not STATUS_ACTIVE: " + r.getTransactionStatus());
             }
             FooEntity fe = new FooEntity("FOO");

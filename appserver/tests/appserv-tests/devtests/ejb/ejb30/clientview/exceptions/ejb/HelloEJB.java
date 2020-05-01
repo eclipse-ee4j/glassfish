@@ -23,10 +23,10 @@ import javax.rmi.PortableRemoteObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import jakarta.annotation.Resource;
-import javax.transaction.TransactionRolledbackException;
-import static javax.transaction.Status.*;
-import javax.transaction.TransactionRequiredException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.TransactionRolledbackException;
+import static jakarta.transaction.Status.*;
+import jakarta.transaction.TransactionRequiredException;
+import jakarta.transaction.UserTransaction;
 import jakarta.annotation.PostConstruct;
 
 @Stateful

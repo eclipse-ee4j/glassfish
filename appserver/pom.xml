@@ -49,7 +49,7 @@
         <woodstock.version>5.0-SNAPSHOT</woodstock.version>
         <jakarta.ejb-api.version>4.0.0-RC1</jakarta.ejb-api.version>
         <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
-        <javax.transaction-api.version>2.0.0-RC1</javax.transaction-api.version>
+        <jakarta.transaction-api.version>2.0.0-RC1</jakarta.transaction-api.version>
         <jakarta.faces-api.version>3.0.0-RC1</jakarta.faces-api.version>
         <cdi-api.version>3.0.0-M2</cdi-api.version>
         <javax.inject.version>2.0.0-RC3</javax.inject.version>
@@ -256,12 +256,12 @@
                             <artifact>
                                 <groupId>jakarta.transaction</groupId>
                                 <artifactId>jakarta.transaction-api</artifactId>
-                                <version>${javax.transaction-api.version}</version>
+                                <version>${jakarta.transaction-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${javax.transaction-api.version}</specVersion>
-                            <specImplVersion>${javax.transaction-api.version}</specImplVersion>
+                            <specVersion>${jakarta.transaction-api.version}</specVersion>
+                            <specImplVersion>${jakarta.transaction-api.version}</specImplVersion>
                             <apiPackage>jakarta.transaction</apiPackage>
                         </spec>
                         <spec>
@@ -480,7 +480,7 @@
             <dependency>
                 <groupId>jakarta.transaction</groupId>
                 <artifactId>jakarta.transaction-api</artifactId>
-                <version>${javax.transaction-api.version}</version>
+                <version>${jakarta.transaction-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.transaction.cdi</groupId>

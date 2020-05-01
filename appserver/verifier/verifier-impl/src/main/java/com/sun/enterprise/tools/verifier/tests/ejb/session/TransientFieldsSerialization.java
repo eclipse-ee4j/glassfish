@@ -81,7 +81,7 @@ public class TransientFieldsSerialization extends EjbTest implements EjbCheck {
                         // any its subcontexts
                         //sg133765: do we need to do something for business interface
                         if ((fc.getName().equals("jakarta.ejb.SessionContext")) ||
-                                (fc.getName().equals("javax.transaction.UserTransaction")) ||
+                                (fc.getName().equals("jakarta.transaction.UserTransaction")) ||
                                 (fc.getName().equals(descriptor.getRemoteClassName())) ||
                                 (fc.getName().equals(descriptor.getHomeClassName()))||
                                 (fc.getName().equals(descriptor.getLocalClassName())) ||

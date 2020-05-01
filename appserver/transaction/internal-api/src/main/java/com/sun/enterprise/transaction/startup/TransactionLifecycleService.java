@@ -89,7 +89,7 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
                     @Override
                     public Object create(Context ic) throws NamingException {
                         ActiveDescriptor<?> descriptor = habitat.getBestDescriptor(
-                                BuilderHelper.createContractFilter("javax.transaction.UserTransaction"));
+                                BuilderHelper.createContractFilter("jakarta.transaction.UserTransaction"));
                         if (descriptor == null) return null;
                         
                         return habitat.getServiceHandle(descriptor).getService();

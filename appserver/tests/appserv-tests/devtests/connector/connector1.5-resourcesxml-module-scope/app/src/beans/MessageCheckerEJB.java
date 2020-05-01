@@ -27,7 +27,7 @@ import java.util.Vector;
 import java.sql.*;
 import java.rmi.RemoteException;
 
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import javax.naming.*;
 import javax.sql.*;
 

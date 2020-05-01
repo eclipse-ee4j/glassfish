@@ -197,7 +197,7 @@ public class Remote30WrapperGenerator extends Generator
             !java.rmi.Remote.class.isAssignableFrom(businessInterface);
         if( doExceptionTranslation ) {
 
-            _catch( _t("javax.transaction.TransactionRolledbackException"),
+            _catch( _t("jakarta.transaction.TransactionRolledbackException"),
                     "trex");
 
                 _define( _t("java.lang.RuntimeException"), "r", 
@@ -209,7 +209,7 @@ public class Remote30WrapperGenerator extends Generator
                               _v("trex")));
                 _throw(_v("r"));
 
-            _catch( _t("javax.transaction.TransactionRequiredException"),
+            _catch( _t("jakarta.transaction.TransactionRequiredException"),
                     "treqex");
 
                 _define( _t("java.lang.RuntimeException"), "r", 

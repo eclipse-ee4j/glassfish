@@ -18,7 +18,7 @@ package com.sun.s1asdev.jdbc.onlygetconnectionservlet.servlet;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.sql.*;
 import java.sql.*;
 import java.io.*;

@@ -65,7 +65,7 @@ public class HelloEJB implements Hello {
     
     private static final String pkey = "A BMP Bean";
 
-    @Resource javax.transaction.UserTransaction ut;
+    @Resource jakarta.transaction.UserTransaction ut;
 
     @PostConstruct
     public void create() {

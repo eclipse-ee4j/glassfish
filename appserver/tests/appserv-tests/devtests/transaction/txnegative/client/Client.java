@@ -24,7 +24,7 @@ package com.sun.s1peqe.transaction.txnegative.client;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
-import javax.transaction.*;
+import jakarta.transaction.*;
 
 public class Client {
     public SimpleReporterAdapter status;

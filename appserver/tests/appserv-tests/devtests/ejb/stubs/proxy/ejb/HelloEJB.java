@@ -45,7 +45,7 @@ public class HelloEJB implements SessionBean {
     
     private static final String pkey = "A BMP Bean";
 
-    javax.transaction.UserTransaction ut;
+    jakarta.transaction.UserTransaction ut;
 
     public HelloEJB(){}
 

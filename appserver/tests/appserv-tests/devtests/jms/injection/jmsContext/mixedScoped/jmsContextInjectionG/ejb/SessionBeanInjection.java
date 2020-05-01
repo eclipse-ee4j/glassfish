@@ -20,7 +20,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.*;
 import javax.inject.Inject;
 import jakarta.jms.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 
 /**

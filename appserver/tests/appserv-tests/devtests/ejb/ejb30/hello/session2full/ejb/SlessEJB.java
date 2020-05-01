@@ -20,7 +20,7 @@ import jakarta.ejb.CreateException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 public class SlessEJB 
 {

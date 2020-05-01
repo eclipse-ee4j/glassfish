@@ -68,7 +68,7 @@ public class HelloEJB implements Hello  {
     private int passivateCount;
     private int activateCount;
 
-    javax.transaction.UserTransaction ut;
+    jakarta.transaction.UserTransaction ut;
 
     @EJB private SlessBusiness	refSless_1;
     @EJB private SlessBusiness	refSless_2;

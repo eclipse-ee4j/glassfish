@@ -29,7 +29,7 @@ import jakarta.annotation.Resource;
 import jakarta.annotation.Resources;
 import javax.sql.DataSource;
 import java.sql.Connection;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import org.omg.CORBA.ORB;
 import org.omg.PortableServer.POA;
 

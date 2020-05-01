@@ -35,7 +35,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 @EJB(name = "helloStateless3", beanInterface = Hello.class)
 @EJBs({@EJB(name = "helloStateless4", beanName = "HelloEJB",

@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import jakarta.jms.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 public class TestServlet extends HttpServlet {
     @Resource(mappedName = "jms/jms_unit_test_Queue")

@@ -23,7 +23,7 @@ import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterInternalException;
 import jakarta.resource.spi.endpoint.MessageEndpoint;
 import jakarta.resource.spi.endpoint.MessageEndpointFactory;
-import javax.transaction.xa.XAResource;
+import jakarta.transaction.xa.XAResource;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;

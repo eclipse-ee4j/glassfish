@@ -22,7 +22,7 @@ import javax.sql.*;
 import java.rmi.*;
 import java.util.*;
 import java.sql.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import java.util.concurrent.*;
 import java.lang.reflect.Method;
 

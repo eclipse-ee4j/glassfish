@@ -28,7 +28,7 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
 import java.util.Set;
 
 /**
- * A wrapper for contextual instances of {@link javax.transaction.TransactionScoped} beans.
+ * A wrapper for contextual instances of {@link jakarta.transaction.TransactionScoped} beans.
  * We need this wrapper so that the contextual instance can be destroyed when the transaction completes.
  *
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>

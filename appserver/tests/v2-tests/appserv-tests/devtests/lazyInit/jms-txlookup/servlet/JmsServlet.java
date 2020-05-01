@@ -24,7 +24,7 @@ import javax.naming.*;
 import java.sql.*;
 import javax.sql.*;
 import jakarta.jms.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.*;
 
 public class JmsServlet extends HttpServlet {

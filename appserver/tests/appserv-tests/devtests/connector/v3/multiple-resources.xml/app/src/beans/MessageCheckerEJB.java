@@ -24,7 +24,7 @@ import jakarta.ejb.CreateException;
 import java.util.Properties;
 import java.sql.*;
 
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import javax.naming.*;
 import javax.sql.*;
 

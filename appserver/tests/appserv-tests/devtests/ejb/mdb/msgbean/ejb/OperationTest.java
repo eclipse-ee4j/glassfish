@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.mdb.msgbean;
 import jakarta.ejb.MessageDrivenContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 /**
  * Tests matrix of operations callable from the different

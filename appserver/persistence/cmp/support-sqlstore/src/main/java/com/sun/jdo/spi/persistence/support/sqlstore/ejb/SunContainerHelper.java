@@ -369,7 +369,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * This will guarantee that PersistenceManager is not bound to
      * any transaction.
      *
-     * @return javax.transaction.Transaction object representing 
+     * @return jakarta.transaction.Transaction object representing 
      * the suspended transaction.
      * Returns null if the calling thread is not associated
      * with a transaction.
@@ -389,7 +389,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * This will guarantee that the transaction continues to run after
      * read-only bean accessed its PersistenceManager.
      *
-     * @param tx - The javax.transaction.Transaction object that 
+     * @param tx - The jakarta.transaction.Transaction object that 
      * represents the transaction to be resumed. If this object had been
      * returned by #suspendCurrentTransaction() call it will be null in
      * case calling thread was not associated with a transaction.

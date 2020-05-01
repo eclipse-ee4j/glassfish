@@ -750,7 +750,7 @@ public class SQLPersistenceManagerFactory
     /**
      * Registers PersistenceManager in the transactional cache in
      * managed environment in case of BMT with JDO Transaction.
-     * There is no javax.transaction.Transaction
+     * There is no jakarta.transaction.Transaction
      * available before the user starts the transaction.
      */
     public void registerPersistenceManager(

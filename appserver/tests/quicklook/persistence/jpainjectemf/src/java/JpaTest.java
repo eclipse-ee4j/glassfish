@@ -17,7 +17,7 @@
 package myapp;
 
 import jakarta.persistence.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import java.io.*;
 
 public class JpaTest {

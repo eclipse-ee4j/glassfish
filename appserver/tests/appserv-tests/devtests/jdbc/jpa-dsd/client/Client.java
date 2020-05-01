@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.*;
 import java.sql.*;
 import jakarta.ejb.EJB;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import jakarta.annotation.*;
 import jakarta.annotation.sql.*;
 import javax.sql.DataSource;

@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
 import jakarta.ejb.*;
 import java.sql.*;
 import javax.sql.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import java.util.*;
 import javax.naming.*;
 

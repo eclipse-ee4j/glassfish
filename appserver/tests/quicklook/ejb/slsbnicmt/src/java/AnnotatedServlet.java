@@ -22,7 +22,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import jakarta.ejb.EJB;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 

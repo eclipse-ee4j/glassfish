@@ -19,7 +19,7 @@ package slsbnicmt;
 import jakarta.annotation.Resource;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 
 @Stateless
 public class AnnotatedEJB {

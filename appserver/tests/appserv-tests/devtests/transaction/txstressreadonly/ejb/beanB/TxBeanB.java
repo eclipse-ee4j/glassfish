@@ -21,7 +21,7 @@ import jakarta.ejb.SessionContext;
 
 import java.sql.Statement;
 import java.sql.ResultSet;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import java.sql.Connection;
 import javax.sql.DataSource;
 import javax.naming.Context;

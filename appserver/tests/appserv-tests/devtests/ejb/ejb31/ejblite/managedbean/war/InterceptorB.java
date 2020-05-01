@@ -20,7 +20,7 @@ import jakarta.annotation.*;
 
 import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 

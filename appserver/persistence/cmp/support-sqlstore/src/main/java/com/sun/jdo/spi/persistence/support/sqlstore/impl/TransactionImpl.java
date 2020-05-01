@@ -101,7 +101,7 @@ public class TransactionImpl
     static String    globalLock = "TranGlobalLock"; // NOI18N
 
     /**
-     * Transaction status (from javax.transaction.Status).
+     * Transaction status (from jakarta.transaction.Status).
      */
     private int            status;
 
@@ -519,7 +519,7 @@ public class TransactionImpl
     }
 
     //
-    // ----- Methods from javax.transaction.Transaction interface ------
+    // ----- Methods from jakarta.transaction.Transaction interface ------
     //
 
     /**
@@ -1296,7 +1296,7 @@ public class TransactionImpl
     }
 
     /**
-     * Translates a javax.transaction.Status value into a string.
+     * Translates a jakarta.transaction.Status value into a string.
      *
      * @param   status   Status object to translate.
      * @return  Printable String for a Status object.

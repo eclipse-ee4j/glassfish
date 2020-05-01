@@ -20,7 +20,7 @@ import jakarta.ejb.EJBException;
 import jakarta.ejb.SessionContext;
 import javax.naming.InitialContext;
 
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 import java.util.Collection;
 import java.util.HashSet;

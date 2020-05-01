@@ -26,7 +26,7 @@ import jakarta.ejb.EJBException;
 import jakarta.ejb.TimerService;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import com.sun.s1asdev.ejb.txprop.simple.HelloHome;
 import com.sun.s1asdev.ejb.txprop.simple.Hello;
 

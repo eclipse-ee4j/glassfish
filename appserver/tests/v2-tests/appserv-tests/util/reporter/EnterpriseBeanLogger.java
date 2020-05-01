@@ -19,7 +19,7 @@ package com.sun.ejte.ccl.reporter;
 import java.rmi.RemoteException;
 import javax.rmi.PortableRemoteObject;
 import jakarta.ejb.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.naming.*;
 
 import java.sql.*;

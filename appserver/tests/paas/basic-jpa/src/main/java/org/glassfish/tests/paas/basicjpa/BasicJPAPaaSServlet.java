@@ -55,7 +55,7 @@ import java.util.Iterator;
 import java.util.List;
 import jakarta.annotation.Resource;
 import jakarta.persistence.Query;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 /**
  *

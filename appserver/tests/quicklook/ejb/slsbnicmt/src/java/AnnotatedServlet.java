@@ -20,7 +20,7 @@ import java.io.*;
 import java.net.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 import javax.naming.InitialContext;

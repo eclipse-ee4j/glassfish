@@ -21,7 +21,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptors;
 
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 

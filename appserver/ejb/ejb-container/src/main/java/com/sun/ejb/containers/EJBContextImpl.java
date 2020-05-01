@@ -40,7 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Implementation of javax.ejb.EJBContext for the J2EE Reference Implementation.
+ * Implementation of jakarta.ejb.EJBContext for the J2EE Reference Implementation.
  *
  */
 

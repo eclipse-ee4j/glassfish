@@ -16,7 +16,7 @@
 
 package Data;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 16, 2002 1:22:14 PM
@@ -24,7 +24,7 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface LocalParts extends javax.ejb.EJBLocalObject {
+public interface LocalParts extends jakarta.ejb.EJBLocalObject {
     
     public void addSupplier(Data.LocalSuppliers supplier);
     

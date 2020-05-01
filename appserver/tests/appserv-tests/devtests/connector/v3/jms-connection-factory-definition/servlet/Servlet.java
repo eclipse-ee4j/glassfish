@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import jakarta.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.EJBs;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
 import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.JMSConnectionFactoryDefinition;
@@ -204,7 +204,7 @@ public class Servlet extends HttpServlet {
                 sleepFor(2);
                 helloStateful.ping();
                 //throw new EJBException("Did not get ConcurrentAccessException");
-            } catch (javax.ejb.ConcurrentAccessException conEx) {
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
                 ;   //Everything is fine
             } catch (Throwable th) {
                 throw new Exception("Got some wierd exception: " + th);

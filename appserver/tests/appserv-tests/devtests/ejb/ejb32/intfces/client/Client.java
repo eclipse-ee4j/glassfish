@@ -16,7 +16,7 @@
 
 package client.intrfaces;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 import admin.AdminBaseDevTest;

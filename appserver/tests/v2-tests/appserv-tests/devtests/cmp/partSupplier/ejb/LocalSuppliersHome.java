@@ -16,7 +16,7 @@
 
 package Data;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 16, 2002 1:22:07 PM
@@ -24,13 +24,13 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface LocalSuppliersHome extends javax.ejb.EJBLocalHome {
+public interface LocalSuppliersHome extends jakarta.ejb.EJBLocalHome {
     
     public Data.LocalSuppliers findByPrimaryKey(Data.SuppliersKey aKey)
-    throws javax.ejb.FinderException;
+    throws jakarta.ejb.FinderException;
     
-    public LocalSuppliers create(java.lang.Integer partid, java.lang.Integer supplierid, java.lang.String name, int status, java.lang.String city) throws javax.ejb.CreateException;
+    public LocalSuppliers create(java.lang.Integer partid, java.lang.Integer supplierid, java.lang.String name, int status, java.lang.String city) throws jakarta.ejb.CreateException;
     
-    public java.util.Collection findAll() throws javax.ejb.FinderException;
+    public java.util.Collection findAll() throws jakarta.ejb.FinderException;
     
 }

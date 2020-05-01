@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.timer31.schedule_ann.client;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import com.sun.s1asdev.ejb31.timer.schedule_ann.Stles;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

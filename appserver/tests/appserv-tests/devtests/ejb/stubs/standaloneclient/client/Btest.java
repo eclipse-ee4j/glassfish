@@ -24,8 +24,8 @@ import javax.naming.InitialContext;
 
 import javax.rmi.PortableRemoteObject;
 
-import javax.ejb.EJBHome;
-import javax.ejb.EJBMetaData;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBMetaData;
 
 
 public class Btest{

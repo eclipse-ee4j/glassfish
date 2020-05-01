@@ -25,9 +25,9 @@ import java.util.Set;
 
 /**
  * This class contains the following annotation type:
- * javax.ejb.Stateless
- * javax.ejb.Stateful
- * javax.ejb.MessageDriven
+ * jakarta.ejb.Stateless
+ * jakarta.ejb.Stateful
+ * jakarta.ejb.MessageDriven
  *
  * @author Qingqing Ouyang
  */

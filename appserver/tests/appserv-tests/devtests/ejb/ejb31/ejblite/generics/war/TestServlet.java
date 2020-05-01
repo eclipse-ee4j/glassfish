@@ -21,7 +21,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import jakarta.annotation.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 @javax.servlet.annotation.WebServlet(urlPatterns = "/TestServlet")
 public class TestServlet extends HttpServlet {

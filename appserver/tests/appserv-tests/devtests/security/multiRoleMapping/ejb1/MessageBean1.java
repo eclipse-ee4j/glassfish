@@ -17,8 +17,8 @@
 package com.sun.s1asdev.security.simpleMultiRoleMapping.ejb1;
 
 import jakarta.annotation.security.RolesAllowed;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
+import jakarta.ejb.Local;
+import jakarta.ejb.Stateless;
 
 @Stateless
 @Local({MessageLocal1.class})

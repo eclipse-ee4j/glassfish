@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.cmp.readonly.ejb;
 import java.sql.*;
 import javax.sql.*;
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 

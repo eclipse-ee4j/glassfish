@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.core;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class BmpEJB implements EntityBean
 {
@@ -77,12 +77,12 @@ public class BmpEJB implements EntityBean
 
     // throws some checked exception which is a subclass of the declared
     // checked exception
-    public void testException3() throws javax.ejb.FinderException {
+    public void testException3() throws jakarta.ejb.FinderException {
         throw new ObjectNotFoundException("testException3");
     }
 
     // throws some checked exception
-    public void testException4() throws javax.ejb.FinderException {
+    public void testException4() throws jakarta.ejb.FinderException {
         throw new FinderException("testException4");
     }
 

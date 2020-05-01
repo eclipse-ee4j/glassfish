@@ -16,7 +16,7 @@
 
 package com.sun.s1as.devtests.ejb.generics;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**

@@ -57,7 +57,7 @@
         <ejb-name>TimerSessionEJB</ejb-name>
         <method-name>ejbTimeout</method-name>
         <method-params>
-          <method-param>javax.ejb.Timer</method-param>
+          <method-param>jakarta.ejb.Timer</method-param>
         </method-params>
       </method>
     </method-permission>
@@ -73,7 +73,7 @@
         <ejb-name>TimerSessionEJB</ejb-name>
         <method-name>ejbTimeout</method-name>
         <method-params>
-          <method-param>javax.ejb.Timer</method-param>
+          <method-param>jakarta.ejb.Timer</method-param>
         </method-params>
       </method>
       <trans-attribute>RequiresNew</trans-attribute>

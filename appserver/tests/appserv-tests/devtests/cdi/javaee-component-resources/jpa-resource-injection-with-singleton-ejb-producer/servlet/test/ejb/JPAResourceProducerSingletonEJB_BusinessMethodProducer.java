@@ -23,7 +23,7 @@ import javax.persistence.PersistenceUnit;
 import test.beans.artifacts.ProducedViaProducerMethod;
 import test.beans.artifacts.ProducedViaStaticField;
 
-@javax.ejb.Singleton
+@jakarta.ejb.Singleton
 public class JPAResourceProducerSingletonEJB_BusinessMethodProducer {
     @PersistenceUnit(unitName="pu1")
     EntityManagerFactory customerDatabasePersistenceUnit;

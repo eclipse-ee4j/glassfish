@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.jmac.soap.ejbws;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import jakarta.jws.WebService;
 
 @Stateless

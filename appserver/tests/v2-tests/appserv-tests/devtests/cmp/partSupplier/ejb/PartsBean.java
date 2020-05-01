@@ -16,7 +16,7 @@
 
 package Data;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*; 
 
 /**
@@ -26,21 +26,21 @@ import java.util.*;
  */
 
 
-public abstract class PartsBean implements javax.ejb.EntityBean {
+public abstract class PartsBean implements jakarta.ejb.EntityBean {
     
-    private javax.ejb.EntityContext context;
+    private jakarta.ejb.EntityContext context;
     
     
     /**
-     * @see javax.ejb.EntityBean#setEntityContext(javax.ejb.EntityContext)
+     * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
-    public void setEntityContext(javax.ejb.EntityContext aContext) {
+    public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbActivate()
+     * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
         
@@ -48,7 +48,7 @@ public abstract class PartsBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbPassivate()
+     * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
         
@@ -56,7 +56,7 @@ public abstract class PartsBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbRemove()
+     * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         
@@ -64,7 +64,7 @@ public abstract class PartsBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#unsetEntityContext()
+     * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
@@ -72,7 +72,7 @@ public abstract class PartsBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbLoad()
+     * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
         
@@ -80,7 +80,7 @@ public abstract class PartsBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbStore()
+     * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
         
@@ -105,9 +105,9 @@ public abstract class PartsBean implements javax.ejb.EntityBean {
     
     public abstract void setSuppliers(java.util.Collection suppliers);
     
-    public java.lang.Integer ejbCreate(java.lang.Integer partid, java.lang.String name, java.lang.String color, java.math.BigDecimal weight, java.lang.Double price) throws javax.ejb.CreateException {
+    public java.lang.Integer ejbCreate(java.lang.Integer partid, java.lang.String name, java.lang.String color, java.math.BigDecimal weight, java.lang.Double price) throws jakarta.ejb.CreateException {
         if (partid == null) {
-            throw new javax.ejb.CreateException("The partid is required.");
+            throw new jakarta.ejb.CreateException("The partid is required.");
         }
         setPartid(partid);
         setName(name);
@@ -118,7 +118,7 @@ public abstract class PartsBean implements javax.ejb.EntityBean {
         return null;
     }
     
-    public void ejbPostCreate(java.lang.Integer partid, java.lang.String name, java.lang.String color, java.math.BigDecimal weight, java.lang.Double price) throws javax.ejb.CreateException {
+    public void ejbPostCreate(java.lang.Integer partid, java.lang.String name, java.lang.String color, java.math.BigDecimal weight, java.lang.Double price) throws jakarta.ejb.CreateException {
         
     }
     

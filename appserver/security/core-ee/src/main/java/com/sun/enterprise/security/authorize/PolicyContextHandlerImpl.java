@@ -30,8 +30,8 @@ public class PolicyContextHandlerImpl implements PolicyContextHandler {
 
     public static final String HTTP_SERVLET_REQUEST = "jakarta.servlet.http.HttpServletRequest";
     public static final String SOAP_MESSAGE = "jakarta.xml.soap.SOAPMessage";
-    public static final String ENTERPRISE_BEAN = "javax.ejb.EnterpriseBean";
-    public static final String EJB_ARGUMENTS = "javax.ejb.arguments";
+    public static final String ENTERPRISE_BEAN = "jakarta.ejb.EnterpriseBean";
+    public static final String EJB_ARGUMENTS = "jakarta.ejb.arguments";
     public static final String SUBJECT = "javax.security.auth.Subject.container";
     public static final String REUSE = "java.security.Policy.supportsReuse";
 

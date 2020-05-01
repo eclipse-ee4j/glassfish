@@ -16,10 +16,10 @@
 
 package com.sun.s1peqe.transaction.txglobal.ejb.beanB;
 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.SessionSynchronization;
-import javax.ejb.*;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.SessionSynchronization;
+import jakarta.ejb.*;
 
 import java.sql.Statement;
 import java.sql.ResultSet;

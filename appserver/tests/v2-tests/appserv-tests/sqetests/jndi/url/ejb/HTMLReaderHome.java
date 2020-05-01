@@ -18,8 +18,8 @@ package com.sun.s1peqe.jndi.url.ejb;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBHome;
 
 public interface HTMLReaderHome extends EJBHome {
 

@@ -19,7 +19,7 @@ package com.acme;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.Resource;
 
 @Singleton

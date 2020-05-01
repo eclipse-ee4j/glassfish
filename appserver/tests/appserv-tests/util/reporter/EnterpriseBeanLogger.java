@@ -18,7 +18,7 @@ package com.sun.ejte.ccl.reporter;
 
 import java.rmi.RemoteException;
 import javax.rmi.PortableRemoteObject;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.transaction.*;
 import javax.naming.*;
 
@@ -57,7 +57,7 @@ public class EnterpriseBeanLogger implements Serializable{
   private static int instanceCreated;
   protected String instanceName;
 
-  protected boolean prepareLocalAndRemoteObject(String localRef, String remoteRef) throws javax.ejb.CreateException {
+  protected boolean prepareLocalAndRemoteObject(String localRef, String remoteRef) throws jakarta.ejb.CreateException {
     instanceCreated++;
     instanceName = getClass().getName() + "____________________" + instanceCreated;
 

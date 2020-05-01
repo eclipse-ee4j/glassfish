@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.persistence.eem_injection;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import javax.persistence.EntityManager;
 

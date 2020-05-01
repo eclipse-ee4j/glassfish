@@ -19,7 +19,7 @@ package com.acme;
 import java.util.Set;
 import java.util.HashSet;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 import org.omg.CORBA.ORB;
 

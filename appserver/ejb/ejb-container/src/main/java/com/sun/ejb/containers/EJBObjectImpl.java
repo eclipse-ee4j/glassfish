@@ -176,7 +176,7 @@ public abstract class EJBObjectImpl
     
     /**
      * This is called when the EJB client does ejbref.getHandle().
-     * Return a serializable implementation of javax.ejb.Handle.
+     * Return a serializable implementation of jakarta.ejb.Handle.
      */
     public final Handle getHandle() throws RemoteException {
         container.authorizeRemoteMethod(BaseContainer.EJBObject_getHandle);

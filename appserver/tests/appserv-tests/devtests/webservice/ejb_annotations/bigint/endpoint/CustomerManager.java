@@ -19,7 +19,7 @@ package endpoint;
 import java.math.BigInteger;
 import java.util.*;
 import jakarta.jws.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.persistence.*;
 
 @Stateless

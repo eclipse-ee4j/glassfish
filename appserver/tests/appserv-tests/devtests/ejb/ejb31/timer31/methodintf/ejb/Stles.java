@@ -16,7 +16,7 @@
 
 package ejb31.timer.methodintf;
 
-@javax.ejb.Remote
+@jakarta.ejb.Remote
 public interface Stles {
 
     public boolean verifyTimers() throws Exception;

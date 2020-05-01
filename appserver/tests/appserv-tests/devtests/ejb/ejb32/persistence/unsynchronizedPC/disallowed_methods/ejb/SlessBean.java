@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.disallowed_method
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;

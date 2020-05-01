@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb32.ejblite.timer;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;

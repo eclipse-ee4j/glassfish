@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.interceptor.ExcludeDefaultInterceptors;
 import javax.interceptor.ExcludeClassInterceptors;

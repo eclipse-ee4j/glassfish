@@ -938,7 +938,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
     }
 
     //
-    // Logic used by TimerWrapper for javax.ejb.Timer methods.
+    // Logic used by TimerWrapper for jakarta.ejb.Timer methods.
     //
 
     @Override

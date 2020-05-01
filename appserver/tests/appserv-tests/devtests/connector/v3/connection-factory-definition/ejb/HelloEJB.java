@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import javax.naming.InitialContext;
 import javax.resource.ConnectionFactoryDefinitions;

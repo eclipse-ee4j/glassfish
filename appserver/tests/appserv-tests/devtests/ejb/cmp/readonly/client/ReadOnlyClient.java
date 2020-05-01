@@ -23,8 +23,8 @@ import java.util.*;
 import com.sun.s1asdev.ejb.cmp.readonly.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
-import javax.ejb.EJBException;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.CreateException;
 import java.rmi.RemoteException;
 
 /**

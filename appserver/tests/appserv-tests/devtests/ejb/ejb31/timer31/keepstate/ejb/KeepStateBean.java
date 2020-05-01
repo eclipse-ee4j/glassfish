@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb31.timer.keepstate;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.List;
 import java.util.ArrayList;
 

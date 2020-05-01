@@ -16,8 +16,8 @@
 
 package test.ejb.local;
 
-import javax.ejb.Local;
-import javax.ejb.Stateless;
+import jakarta.ejb.Local;
+import jakarta.ejb.Stateless;
 
 @Stateless
 @Local(TestInterface.class)

@@ -39,7 +39,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.AccessTimeout.
+ * This handler is responsible for handling the jakarta.ejb.AccessTimeout.
  *
  * @author Mahesh Kannan
  * @author Marina Vatkina

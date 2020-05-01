@@ -17,7 +17,7 @@
 package com.acme;
 
 import jakarta.annotation.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 

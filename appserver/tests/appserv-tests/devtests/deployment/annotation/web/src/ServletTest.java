@@ -21,7 +21,7 @@ import java.io.IOException;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.security.DeclareRoles;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -39,7 +39,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.Asynchronous
+ * This handler is responsible for handling the jakarta.ejb.Asynchronous
  * annotation on the Bean class.
  *
  * @author Marina Vatkina

@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.sfsb.passivateactivate.ejb;
 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.*;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.*;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;

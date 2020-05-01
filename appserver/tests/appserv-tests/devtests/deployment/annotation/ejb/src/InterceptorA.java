@@ -18,7 +18,7 @@ package test.ejb.stateless;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import javax.sql.DataSource;

@@ -16,8 +16,8 @@
 
 package com.sun.s1peqe.connector.cci;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
 
 public interface CoffeeRemoteHome extends EJBLocalHome {
     CoffeeRemote create() throws CreateException;

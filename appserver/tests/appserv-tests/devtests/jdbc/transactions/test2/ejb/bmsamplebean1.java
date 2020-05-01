@@ -19,7 +19,7 @@ package com.sun.s1asdev.jdbc.transactions.test2.ejb;
 import java.util.*;
 import java.io.*;
 import java.rmi.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.transaction.UserTransaction;
 import javax.naming.*;
 import javax.sql.*;
@@ -34,7 +34,7 @@ transient    Statement stmt = null,stmt2=null;
 transient    ResultSet rs = null,rs2=null;
 	
 
-    public void setSessionContext(javax.ejb.SessionContext ctx)
+    public void setSessionContext(jakarta.ejb.SessionContext ctx)
     {
         m_ctx = ctx;
     }
@@ -169,7 +169,7 @@ transient    ResultSet rs = null,rs2=null;
         return 0;
     }
 
-    private transient javax.ejb.SessionContext m_ctx = null;
+    private transient jakarta.ejb.SessionContext m_ctx = null;
 }
 
 

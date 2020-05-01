@@ -23,7 +23,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/registration1")

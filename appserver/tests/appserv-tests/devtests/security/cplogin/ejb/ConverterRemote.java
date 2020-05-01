@@ -16,7 +16,7 @@
 
 package com.sun.devtest.security.plogin.converter.ejb;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 import java.math.*;
 

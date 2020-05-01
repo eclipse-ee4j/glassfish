@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 import javax.interceptor.AroundInvoke;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.Interceptors;
 import javax.interceptor.ExcludeDefaultInterceptors;

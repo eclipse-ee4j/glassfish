@@ -16,8 +16,8 @@
 
 package org.glassfish.tests.ejb.remote;
 
-import javax.ejb.Stateless;
-import javax.ejb.Remote;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Remote;
 
 /**
  * @author Marina Vatkina

@@ -17,9 +17,9 @@
 package com.acme.ejb32.timer.opallowed;
 
 import jakarta.annotation.ManagedBean;
-import javax.ejb.EJB;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
 
 @ManagedBean("MngBean")
 public class MngTimeoutBean {

@@ -16,14 +16,14 @@
 
 package pkvalidation;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface A extends javax.ejb.EJBObject {
+public interface A extends jakarta.ejb.EJBObject {
  
     public String getLastname() throws java.rmi.RemoteException;
     

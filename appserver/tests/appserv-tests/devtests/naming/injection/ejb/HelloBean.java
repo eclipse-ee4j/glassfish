@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 import java.net.*;
 import java.util.*;

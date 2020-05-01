@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 import javax.interceptor.InvocationContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 
 public class Common {
 

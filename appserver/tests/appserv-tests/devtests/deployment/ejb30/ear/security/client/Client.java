@@ -19,8 +19,8 @@ package com.sun.s1asdev.deployment.ejb30.ear.security.client;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import com.sun.s1asdev.deployment.ejb30.ear.security.*;
 
 public class Client {

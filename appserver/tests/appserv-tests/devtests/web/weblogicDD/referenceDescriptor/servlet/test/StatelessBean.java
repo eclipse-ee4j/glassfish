@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @Stateless(mappedName="myejb")
 public class StatelessBean implements Sless {

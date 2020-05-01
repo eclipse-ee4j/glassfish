@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.mdb.cmt.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import javax.naming.*;
 import jakarta.jms.*;
 

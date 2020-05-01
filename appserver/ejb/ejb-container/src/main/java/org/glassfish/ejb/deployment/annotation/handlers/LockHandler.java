@@ -39,7 +39,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.Lock.
+ * This handler is responsible for handling the jakarta.ejb.Lock.
  *
  * @author Mahesh Kannan
  * @author Marina Vatkina

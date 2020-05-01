@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb31.timer.schedule_exp;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.interceptor.AroundTimeout;
 import javax.interceptor.InvocationContext;
 import jakarta.annotation.Resource;

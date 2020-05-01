@@ -234,7 +234,7 @@ public class EJBTimerServiceWrapper implements TimerService {
         } else {
             throw new IllegalStateException("EJBTimerService.createTimer can "
                 + "only be called from a timed object.  This EJB does not " 
-                + "implement javax.ejb.TimedObject");                 
+                + "implement jakarta.ejb.TimedObject");                 
         }
     }
 

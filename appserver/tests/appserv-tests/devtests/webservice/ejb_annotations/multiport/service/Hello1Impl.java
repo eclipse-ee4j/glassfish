@@ -27,7 +27,7 @@ import java.rmi.RemoteException;
 
 import jakarta.jws.WebService;
 
-@javax.ejb.Stateless
+@jakarta.ejb.Stateless
 @jakarta.jws.WebService(
     serviceName="HttpTestService",
     endpointInterface="service.Hello1",

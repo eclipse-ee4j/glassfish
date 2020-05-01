@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb31.timer.keepstate;
 
-@javax.ejb.Remote
+@jakarta.ejb.Remote
 public interface KeepStateIF {
     public static final String OLD_INFO = "xxx";
     public static final String NEW_INFO = "yyy";

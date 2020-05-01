@@ -18,10 +18,10 @@ package team;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.FinderException;
 
-public interface TeamHome extends  javax.ejb.EJBHome   {
+public interface TeamHome extends  jakarta.ejb.EJBHome   {
 
     public Team create (String id, String name, String city)
         throws CreateException, RemoteException;

@@ -91,12 +91,12 @@ public class Client {
      * If ejbPostCreate throws CreateException, the transaction is committed.
      */
     private static void runCreateException20Test() throws java.rmi.RemoteException, 
-            javax.ejb.FinderException, javax.ejb.RemoveException {
+            jakarta.ejb.FinderException, jakarta.ejb.RemoveException {
 
         // Test CreateException from ejbPostCreate
         try {
             a2home.create("A2");
-        } catch (javax.ejb.CreateException e) {
+        } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
 
@@ -107,7 +107,7 @@ public class Client {
         // Test CreateException from ejbCreate 
         try {
             a2home.create();
-        } catch (javax.ejb.CreateException e) {
+        } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
 
@@ -121,7 +121,7 @@ public class Client {
         // Test 2.0 bean with Unknown PK for CreateException from ejbPostCreate.
         try {
             a2unhome.create("A2");
-        } catch (javax.ejb.CreateException e) {
+        } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
 
@@ -141,12 +141,12 @@ public class Client {
      * If ejbPostCreate throws CreateException, the transaction is committed.
      */
     private static void runCreateException11Test() throws java.rmi.RemoteException, 
-            javax.ejb.FinderException, javax.ejb.RemoveException {
+            jakarta.ejb.FinderException, jakarta.ejb.RemoveException {
 
         // Test CreateException from ejbPostCreate
         try {
             a1home.create("A1");
-        } catch (javax.ejb.CreateException e) {
+        } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
 
@@ -157,7 +157,7 @@ public class Client {
         // Test CreateException from ejbPostCreate without a container transaction.
         try {
             a1home.create("A11", true); 
-        } catch (javax.ejb.CreateException e) {
+        } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
 
@@ -180,7 +180,7 @@ public class Client {
         // Test CreateException from ejbCreate without a container transaction.
         try {
             a1home.create("A111", false); 
-        } catch (javax.ejb.CreateException e) {
+        } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
 
@@ -195,7 +195,7 @@ public class Client {
         // Test 1.1 bean with Unknown PK for CreateException from ejbPostCreate.
         try {
             a1unhome.create("A1");
-        } catch (javax.ejb.CreateException e) {
+        } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
 

@@ -16,8 +16,8 @@
 
 package com.acme;
 
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;

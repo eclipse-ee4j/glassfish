@@ -32,7 +32,7 @@
         <timeout-method>
           <method-name>onDDTimeout</method-name>
           <method-params>
-              <method-param>javax.ejb.Timer</method-param>
+              <method-param>jakarta.ejb.Timer</method-param>
           </method-params>
         </timeout-method>
         <info>dd_timer</info>

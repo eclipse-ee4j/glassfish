@@ -16,9 +16,9 @@
 
 package com.acme.ejb32.timer.opallowed;
 
-import javax.ejb.Remote;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
 
 @Remote
 public interface SingletonTimeout {

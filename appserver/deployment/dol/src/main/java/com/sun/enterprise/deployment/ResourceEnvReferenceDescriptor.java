@@ -32,11 +32,11 @@ public class ResourceEnvReferenceDescriptor extends EnvironmentProperty implemen
     private boolean isManagedBean = false;
     private ManagedBeanDescriptor managedBeanDesc;
 
-    private static final String SESSION_CTX_TYPE = "javax.ejb.SessionContext";
-    private static final String MDB_CTX_TYPE ="javax.ejb.MessageDrivenContext";
-    private static final String EJB_CTX_TYPE ="javax.ejb.EJBContext";
+    private static final String SESSION_CTX_TYPE = "jakarta.ejb.SessionContext";
+    private static final String MDB_CTX_TYPE ="jakarta.ejb.MessageDrivenContext";
+    private static final String EJB_CTX_TYPE ="jakarta.ejb.EJBContext";
     private static final String EJB_TIMER_SERVICE_TYPE
-        = "javax.ejb.TimerService";
+        = "jakarta.ejb.TimerService";
     private static final String VALIDATION_VALIDATOR ="jakarta.validation.Validator";
     private static final String VALIDATION_VALIDATOR_FACTORY ="jakarta.validation.ValidatorFactory";
 

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb32.ejblite.timer;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 @Stateless

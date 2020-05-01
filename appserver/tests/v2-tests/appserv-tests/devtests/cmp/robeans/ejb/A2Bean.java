@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * 2.0 Bean that is deployed as a read-only bean

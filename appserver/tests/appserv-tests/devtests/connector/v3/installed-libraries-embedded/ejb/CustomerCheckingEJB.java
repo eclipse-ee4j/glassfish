@@ -16,7 +16,7 @@
 
 package samples.ejb.installed_libraries_embedded.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.sql.*;
 import javax.sql.DataSource;

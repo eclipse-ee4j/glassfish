@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import jakarta.annotation.security.RunAs;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.HttpConstraint;

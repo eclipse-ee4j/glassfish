@@ -18,7 +18,7 @@ package com.acme;
 
 import jakarta.annotation.*;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import org.omg.CORBA.ORB;
 import jakarta.annotation.Resource;
 import javax.persistence.PersistenceContext;

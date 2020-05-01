@@ -16,13 +16,13 @@
 
 package com.sun.s1asdev.ejb.timer.sessiontimer;
 
-import javax.ejb.TimedObject;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
-import javax.ejb.TimerService;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBContext;
+import jakarta.ejb.TimedObject;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBContext;
 import java.rmi.RemoteException;
 import javax.naming.*;
 

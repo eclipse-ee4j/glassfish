@@ -16,17 +16,17 @@
 
 package unknownpk;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface A1Home extends javax.ejb.EJBHome {
+public interface A1Home extends jakarta.ejb.EJBHome {
     
-    public  A1 findByPrimaryKey(Object pk)  throws java.rmi.RemoteException, javax.ejb.FinderException;
+    public  A1 findByPrimaryKey(Object pk)  throws java.rmi.RemoteException, jakarta.ejb.FinderException;
     
-    public  A1 create(java.lang.String name) throws java.rmi.RemoteException, javax.ejb.CreateException;
+    public  A1 create(java.lang.String name) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
 }

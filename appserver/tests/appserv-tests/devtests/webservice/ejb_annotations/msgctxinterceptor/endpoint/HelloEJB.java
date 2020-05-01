@@ -19,7 +19,7 @@ package endpoint;
 import java.util.Map;
 
 import jakarta.jws.WebService;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import jakarta.annotation.Resource;
 import jakarta.xml.ws.WebServiceContext;

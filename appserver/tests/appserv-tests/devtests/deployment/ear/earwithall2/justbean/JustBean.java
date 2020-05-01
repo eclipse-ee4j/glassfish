@@ -17,7 +17,7 @@
 package justbean;
 
 import java.rmi.RemoteException;
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 
 public interface JustBean extends EJBObject {
 

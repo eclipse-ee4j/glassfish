@@ -17,7 +17,7 @@
 package org.glassfish.tests.embedded.cdi_ejb_jpa;
 
 //Simple TestBean to test CDI. 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

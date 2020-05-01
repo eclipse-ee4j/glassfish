@@ -16,8 +16,8 @@
 
 package ejb32.intrfaces;
 
-import javax.ejb.Local;
-import javax.ejb.Stateful;
+import jakarta.ejb.Local;
+import jakarta.ejb.Stateful;
 /*
     StflEJB2 exposes local interfaces St4 and St6. St5 isn't business interface
  */

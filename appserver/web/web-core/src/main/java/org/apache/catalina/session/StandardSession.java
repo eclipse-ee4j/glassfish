@@ -2077,7 +2077,7 @@ public class StandardSession
             }
              */ 
             //original Hercules code was next line
-            //else if (value instanceof Serializable || value instanceof javax.ejb.EJBLocalObject || value instanceof javax.naming.Context || value instanceof javax.ejb.EJBLocalHome ) { //Bug 4853798
+            //else if (value instanceof Serializable || value instanceof jakarta.ejb.EJBLocalObject || value instanceof javax.naming.Context || value instanceof jakarta.ejb.EJBLocalHome ) { //Bug 4853798
             //FIXME: IndirectlySerializable includes more than 3 classes in Hercules code
             //need to explore implications of this
 

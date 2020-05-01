@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.naming.InitialContext;
 import com.sun.s1asdev.ejb.ejb30.hello.session.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

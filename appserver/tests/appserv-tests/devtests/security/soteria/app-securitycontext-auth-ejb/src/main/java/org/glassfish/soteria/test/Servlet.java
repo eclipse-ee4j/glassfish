@@ -19,7 +19,7 @@ package org.glassfish.soteria.test;
 import org.glassfish.soteria.SecurityContextImpl;
 
 import jakarta.annotation.security.DeclareRoles;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.credential.CallerOnlyCredential;

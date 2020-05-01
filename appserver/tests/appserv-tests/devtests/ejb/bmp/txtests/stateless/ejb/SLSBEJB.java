@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.bmp.txtests.stateless.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import com.sun.s1asdev.ejb.bmp.txtests.simple.ejb.SimpleBMPHome;
 import com.sun.s1asdev.ejb.bmp.txtests.simple.ejb.SimpleBMP;

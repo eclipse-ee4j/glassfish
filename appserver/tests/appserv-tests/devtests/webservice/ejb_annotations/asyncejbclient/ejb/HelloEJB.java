@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import jakarta.xml.ws.WebServiceRef;
 import jakarta.xml.ws.AsyncHandler;
 import jakarta.xml.ws.Response;

@@ -16,7 +16,7 @@
 
 package cascadeDelete;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 23, 2002 12:43:05 PM
@@ -24,12 +24,12 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface CHome extends javax.ejb.EJBHome {
+public interface CHome extends jakarta.ejb.EJBHome {
     
-    public cascadeDelete.C findByPrimaryKey(java.lang.Integer aKey) throws javax.ejb.FinderException, java.rmi.RemoteException;
+    public cascadeDelete.C findByPrimaryKey(java.lang.Integer aKey) throws jakarta.ejb.FinderException, java.rmi.RemoteException;
     
-    public java.util.Collection findAll() throws java.rmi.RemoteException, javax.ejb.FinderException;
+    public java.util.Collection findAll() throws java.rmi.RemoteException, jakarta.ejb.FinderException;
     
-    public C create(java.lang.Integer id, java.lang.String name) throws java.rmi.RemoteException, javax.ejb.CreateException;
+    public C create(java.lang.Integer id, java.lang.String name) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
 }

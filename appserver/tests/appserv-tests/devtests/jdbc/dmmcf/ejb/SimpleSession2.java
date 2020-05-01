@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.dmmcf.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface SimpleSession2 extends EJBObject {

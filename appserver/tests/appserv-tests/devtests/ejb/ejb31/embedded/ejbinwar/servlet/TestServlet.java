@@ -17,7 +17,7 @@
 package test;
 
 import java.io.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;

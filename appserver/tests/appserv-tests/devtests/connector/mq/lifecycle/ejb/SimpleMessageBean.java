@@ -16,10 +16,10 @@
 
 package com.sun.s1peqe.mq.cmt.excpt.ejb;
 
-import javax.ejb.EJBException;
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.MessageDrivenContext;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.MessageDrivenBean;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.ejb.CreateException;
 import javax.naming.*;
 import jakarta.jms.*;
 import java.sql.*;

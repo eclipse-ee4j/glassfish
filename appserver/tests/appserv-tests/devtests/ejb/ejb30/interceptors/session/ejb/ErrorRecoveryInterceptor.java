@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 public class ErrorRecoveryInterceptor {

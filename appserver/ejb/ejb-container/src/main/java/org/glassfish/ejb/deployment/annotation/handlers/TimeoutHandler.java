@@ -27,7 +27,7 @@ import org.glassfish.apf.HandlerProcessingResult;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.Timeout attribute
+ * This handler is responsible for handling the jakarta.ejb.Timeout attribute
  *
  */
 @Service

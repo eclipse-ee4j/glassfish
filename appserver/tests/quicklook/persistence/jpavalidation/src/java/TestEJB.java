@@ -16,7 +16,7 @@
 
 package myapp;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.persistence.*;
 import java.util.*;
 

@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
 
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 
 import javax.interceptor.InvocationContext;
 
@@ -26,9 +26,9 @@ import javax.interceptor.AroundInvoke;
 
 import javax.interceptor.Interceptors;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 
 

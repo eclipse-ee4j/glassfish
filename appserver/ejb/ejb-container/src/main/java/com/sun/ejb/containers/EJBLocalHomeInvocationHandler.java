@@ -137,7 +137,7 @@ public class EJBLocalHomeInvocationHandler
 
         if( (methodClass == jakarta.ejb.EJBLocalHome.class) ||
             invInfo.ejbIntfOverride ) {
-            // There is only one method on javax.ejb.EJBLocalHome
+            // There is only one method on jakarta.ejb.EJBLocalHome
             super.remove(args[0]);
             return null;
 

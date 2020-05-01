@@ -658,7 +658,7 @@ public class EJBTimerService {
                 throw new CreateException
                         ("Attempt to create an EJB Timer from a bean that is " +
                          "not a Timed Object.  EJB class " + ejbClass + 
-                         " must implement javax.ejb.TimedObject or " +
+                         " must implement jakarta.ejb.TimedObject or " +
                          " annotation a timeout method with @Timeout");
             }
         }
@@ -925,7 +925,7 @@ public class EJBTimerService {
     }
 
     //
-    // Logic used by TimerWrapper for javax.ejb.Timer methods.
+    // Logic used by TimerWrapper for jakarta.ejb.Timer methods.
     //
 
     protected void cancelTimer(TimerPrimaryKey timerId) 

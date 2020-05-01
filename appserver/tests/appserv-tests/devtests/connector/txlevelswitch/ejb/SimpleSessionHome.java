@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.connector.txlevelswitch.test1.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface SimpleSessionHome extends EJBHome

@@ -16,8 +16,8 @@
 
 package com.sun.s1peqe.transaction.txstress.ejb.beanB;
 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 
 import java.sql.Statement;
 import javax.transaction.UserTransaction;

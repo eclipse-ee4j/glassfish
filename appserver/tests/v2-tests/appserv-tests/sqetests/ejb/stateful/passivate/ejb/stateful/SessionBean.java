@@ -16,7 +16,7 @@
 
 package sqetests.ejb.stateful.passivate.ejb.stateful;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.transaction.*;
 import javax.naming.*;
 import javax.rmi.*;
@@ -32,11 +32,11 @@ import jakarta.jms.*;
  */
 
 
-public class SessionBean implements javax.ejb.SessionBean {
+public class SessionBean implements jakarta.ejb.SessionBean {
     private String message;
     private int lastCalculation;
     private int count = 0;
-    private javax.ejb.SessionContext sessionContext;
+    private jakarta.ejb.SessionContext sessionContext;
     Integer serializedInteger=new Integer(10000);
     UserTransaction userTx=null;
     public Context context=null;
@@ -49,9 +49,9 @@ public class SessionBean implements javax.ejb.SessionBean {
 
 
     /**
-     * @see javax.ejb.SessionBean#setSessionContext(javax.ejb.SessionContext)
+     * @see jakarta.ejb.SessionBean#setSessionContext(jakarta.ejb.SessionContext)
      */
-    public void setSessionContext(javax.ejb.SessionContext aContext) {
+    public void setSessionContext(jakarta.ejb.SessionContext aContext) {
         sessionContext=aContext;
 
         try{
@@ -68,7 +68,7 @@ public class SessionBean implements javax.ejb.SessionBean {
 
 
     /**
-     * @see javax.ejb.SessionBean#ejbActivate()
+     * @see jakarta.ejb.SessionBean#ejbActivate()
      */
     public void ejbActivate() {
         //key is method name and value is true/false       
@@ -79,7 +79,7 @@ public class SessionBean implements javax.ejb.SessionBean {
 
 
     /**
-     * @see javax.ejb.SessionBean#ejbPassivate()
+     * @see jakarta.ejb.SessionBean#ejbPassivate()
      */
     public void ejbPassivate() {
 
@@ -92,7 +92,7 @@ public class SessionBean implements javax.ejb.SessionBean {
 
 
     /**
-     * @see javax.ejb.SessionBean#ejbRemove()
+     * @see jakarta.ejb.SessionBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("----------SFSB Bean " +message+"  removed--------");
@@ -109,7 +109,7 @@ public class SessionBean implements javax.ejb.SessionBean {
 
     }
 
-    public void ejbCreate(String initialMessage) throws javax.ejb.CreateException {
+    public void ejbCreate(String initialMessage) throws jakarta.ejb.CreateException {
 	    try{
         beanResult.put(new String("passivate"),new Boolean(false));
         beanResult.put(new String("activate"),new Boolean(false));

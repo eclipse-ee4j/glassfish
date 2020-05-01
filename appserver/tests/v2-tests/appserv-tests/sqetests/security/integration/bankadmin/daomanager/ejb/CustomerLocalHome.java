@@ -17,15 +17,15 @@
 package com.sun.s1peqe.security.integration.bankadmin.daomanager;
 
 import java.util.Collection;
-import javax.ejb.CreateException;
-import javax.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
 import java.util.Date;
-import javax.ejb.FinderException;
+import jakarta.ejb.FinderException;
 
-public interface CustomerLocalHome extends javax.ejb.EJBLocalHome
+public interface CustomerLocalHome extends jakarta.ejb.EJBLocalHome
 {
 	public CustomerLocal createCustomer (String id,String name)
-	throws javax.ejb.CreateException;
-        public CustomerLocal findByPrimaryKey(String id) throws javax.ejb.FinderException;
+	throws jakarta.ejb.CreateException;
+        public CustomerLocal findByPrimaryKey(String id) throws jakarta.ejb.FinderException;
 
 }

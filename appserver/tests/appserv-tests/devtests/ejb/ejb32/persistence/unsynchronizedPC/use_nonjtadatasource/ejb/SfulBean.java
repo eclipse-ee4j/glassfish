@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.use_nonjtadatasou
 
 import java.util.Map;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;

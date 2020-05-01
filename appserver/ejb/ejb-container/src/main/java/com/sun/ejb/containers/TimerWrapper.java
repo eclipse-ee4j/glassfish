@@ -55,7 +55,7 @@ public class TimerWrapper
     }
 
     /*
-     * Implementations of javax.ejb.Timer methods
+     * Implementations of jakarta.ejb.Timer methods
      */
     public void cancel() 
         throws IllegalStateException, NoSuchObjectLocalException, EJBException {

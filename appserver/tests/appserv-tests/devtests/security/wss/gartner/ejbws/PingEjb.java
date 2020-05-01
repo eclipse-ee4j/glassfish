@@ -17,7 +17,7 @@
 package com.sun.s1asdev.security.wss.gartner;
 
 import jakarta.jws.WebService;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @Stateless
 @WebService(targetNamespace="http://gartner.wss.security.s1asdev.sun.com")

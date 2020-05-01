@@ -168,7 +168,7 @@ public interface Container {
      * finder method, such as calling ejbStore on bean instances.
      * (See EJB 2.1, Section 10.5.3 ejbFind,ejbStore)
      *
-     * @exception javax.ejb.EJBException  Thrown if an error occurs
+     * @exception jakarta.ejb.EJBException  Thrown if an error occurs
      *          during the preSelect actions performed by the container.
      *          If thrown, the remaining select query steps should be 
      *          aborted and an EJBException should be propagated

@@ -18,8 +18,8 @@ package com.sun.s1asdev.deployment.ejb30.ear.xmloverride;
 
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.RolesAllowed;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class SlessEJB implements Sless

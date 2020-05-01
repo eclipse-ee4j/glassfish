@@ -19,8 +19,8 @@ package endpoint.ejb;
 import java.security.Principal;
 import jakarta.jws.WebService;
 import jakarta.xml.ws.WebServiceRef;
-import javax.ejb.Stateless;
-import javax.ejb.SessionContext;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.SessionContext;
 import jakarta.annotation.Resource;
 
 @WebService(endpointInterface="endpoint.ejb.Hello", targetNamespace="http://endpoint/ejb")

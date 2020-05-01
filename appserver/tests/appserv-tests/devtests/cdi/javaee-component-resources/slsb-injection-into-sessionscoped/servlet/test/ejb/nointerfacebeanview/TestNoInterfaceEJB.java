@@ -16,7 +16,7 @@
 
 package test.ejb.nointerfacebeanview;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 
 @Stateless

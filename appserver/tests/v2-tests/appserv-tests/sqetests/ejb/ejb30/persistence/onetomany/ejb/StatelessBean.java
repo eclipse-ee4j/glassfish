@@ -16,7 +16,7 @@
 
 package pe.ejb.ejb30.persistence.toplinksample.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.persistence.*;
 import jakarta.annotation.*;
 import javax.sql.*;

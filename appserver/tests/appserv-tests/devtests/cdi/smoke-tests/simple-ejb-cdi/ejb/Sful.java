@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.cdi.ejb.hello.session;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 	
 @Remote
 public interface Sful

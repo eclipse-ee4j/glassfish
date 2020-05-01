@@ -17,9 +17,9 @@
 package com.sun.s1asdev.ejb.ejb31.aroundtimeout;
 
 
-import javax.ejb.Stateless;
-import javax.ejb.Schedule;
-import javax.ejb.EJBException;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.EJBException;
 import javax.interceptor.Interceptors;
 import javax.interceptor.ExcludeDefaultInterceptors;
 import javax.interceptor.ExcludeClassInterceptors;

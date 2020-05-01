@@ -16,7 +16,7 @@
 
 package myapp;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

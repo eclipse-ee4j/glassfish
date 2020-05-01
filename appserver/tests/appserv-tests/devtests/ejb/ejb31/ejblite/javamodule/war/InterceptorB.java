@@ -22,7 +22,7 @@ import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 import java.util.Map;
 
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 
 public class InterceptorB extends InterceptorSuper {
 

@@ -19,7 +19,7 @@ package org.glassfish.tests.ejb.sample;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import jakarta.annotation.sql.DataSourceDefinition;
 
 import javax.persistence.PersistenceContext;

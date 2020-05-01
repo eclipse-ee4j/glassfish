@@ -17,11 +17,11 @@
 package com.acme.ejb32.timer.opallowed;
 
 import jakarta.annotation.Resource;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

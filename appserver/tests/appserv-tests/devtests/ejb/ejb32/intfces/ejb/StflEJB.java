@@ -17,9 +17,9 @@
 package ejb32.intrfaces;
 
 import jakarta.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateful;
+import jakarta.ejb.EJB;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Stateful;
 
 /*
    StflEJB exposes remote interface St7. St5 isn't business interface.

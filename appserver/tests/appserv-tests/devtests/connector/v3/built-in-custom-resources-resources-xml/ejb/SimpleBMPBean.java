@@ -18,7 +18,7 @@ package com.sun.s1asdev.jdbc.CustomResourceFactories.ejb;
 
 import com.sun.s1asdev.custom.resource.CustomResourceJavaBean;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.sql.*;
 import java.sql.*;

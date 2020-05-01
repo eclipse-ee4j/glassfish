@@ -204,7 +204,7 @@ public class EjbNamingReferenceManagerImpl
 
         Object returnObject = ejbInv.context;
 
-        if( contextType.equals("javax.ejb.TimerService") ) {
+        if( contextType.equals("jakarta.ejb.TimerService") ) {
             if (EJBTimerService.getEJBTimerService() == null ) {
                 throw new IllegalStateException("EJB Timer Service not " +
                                                 "available");

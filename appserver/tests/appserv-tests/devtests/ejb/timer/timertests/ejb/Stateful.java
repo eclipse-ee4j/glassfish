@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.timer.timertests;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface Stateful extends EJBObject, TimerStuff {
 

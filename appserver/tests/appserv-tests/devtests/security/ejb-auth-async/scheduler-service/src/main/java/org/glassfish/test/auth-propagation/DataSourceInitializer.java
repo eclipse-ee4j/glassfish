@@ -18,8 +18,8 @@ package org.glassfish.test.authpropagation;
 
 import jakarta.annotation.*;
 import jakarta.annotation.sql.DataSourceDefinition;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;

@@ -23,7 +23,7 @@ import jakarta.xml.ws.WebServiceProvider;
 import jakarta.xml.ws.ServiceMode;
 import jakarta.xml.ws.Service	;	
 import jakarta.xml.soap.SOAPMessage;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;

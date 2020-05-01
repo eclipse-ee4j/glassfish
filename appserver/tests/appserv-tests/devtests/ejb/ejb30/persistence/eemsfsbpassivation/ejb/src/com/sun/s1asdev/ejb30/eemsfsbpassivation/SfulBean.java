@@ -19,15 +19,15 @@ package com.sun.s1asdev.ejb30.eemsfsbpassivation;
 import java.util.Map;
 import java.util.HashMap;
 import javax.naming.InitialContext;
-import javax.ejb.Stateful;
-import javax.ejb.EJB;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.EJB;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityManager;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.EJBException;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.ejb.EJBException;
 
 @Stateful
 public class SfulBean implements Sful {

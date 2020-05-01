@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.ejb.mdb;
 
-import javax.ejb.Singleton;
+import jakarta.ejb.Singleton;
 import jakarta.jms.*;
 import jakarta.annotation.Resource;
 

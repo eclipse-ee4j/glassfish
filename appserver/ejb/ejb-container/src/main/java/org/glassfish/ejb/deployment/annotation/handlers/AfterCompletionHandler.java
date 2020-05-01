@@ -32,7 +32,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.AfterCompletion
+ * This handler is responsible for handling the jakarta.ejb.AfterCompletion
  * annotation on a Bean method.
  *
  * @author Marina Vatkina

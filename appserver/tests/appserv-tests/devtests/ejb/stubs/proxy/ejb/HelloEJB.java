@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.stubs.proxy;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.*;
 import javax.rmi.PortableRemoteObject;
@@ -114,7 +114,7 @@ public class HelloEJB implements SessionBean {
             slessHome.remove(sless);
             throw new EJBException("expecting remove exception when " +
                                    "removing sless bean through EJBLocalHome");
-        } catch(javax.ejb.RemoveException e) {
+        } catch(jakarta.ejb.RemoveException e) {
             System.out.println("Successfully caught RemoveException for " +
                                "sless local home");
             // success
@@ -124,7 +124,7 @@ public class HelloEJB implements SessionBean {
             sfulHome.remove(sful);
             throw new EJBException("expecting remove exception when " +
                                    "removing sful bean through EJBLocalHome");
-        } catch(javax.ejb.RemoveException e) {
+        } catch(jakarta.ejb.RemoveException e) {
             System.out.println("Successfully caught RemoveException for " +
                                "sful local home");
             // success
@@ -152,7 +152,7 @@ public class HelloEJB implements SessionBean {
             slessRemoteHome.remove(slessRemote);
             throw new EJBException("expecting remove exception when " +
                                    "removing sless bean through EJBHome");
-        } catch(javax.ejb.RemoveException e) {
+        } catch(jakarta.ejb.RemoveException e) {
             System.out.println("Successfully caught RemoveException for " +
                                "sless home");
             // success
@@ -162,7 +162,7 @@ public class HelloEJB implements SessionBean {
             sfulRemoteHome.remove(sfulRemote);
             throw new EJBException("expecting remove exception when " +
                                    "removing sful bean through EJBHome");
-        } catch(javax.ejb.RemoveException e) {
+        } catch(jakarta.ejb.RemoveException e) {
             System.out.println("Successfully caught RemoveException for " +
                                "sful home");
             // success

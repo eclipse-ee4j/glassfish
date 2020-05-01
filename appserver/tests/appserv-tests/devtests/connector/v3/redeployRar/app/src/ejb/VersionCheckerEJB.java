@@ -16,9 +16,9 @@
 
 package beans;
 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.CreateException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.CreateException;
 import javax.naming.*;
 import com.sun.jdbcra.spi.JdbcSetupAdmin;
 

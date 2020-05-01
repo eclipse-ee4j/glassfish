@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejbc.sameimpl;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface FooLocal extends EJBLocalObject {
     void callHello();

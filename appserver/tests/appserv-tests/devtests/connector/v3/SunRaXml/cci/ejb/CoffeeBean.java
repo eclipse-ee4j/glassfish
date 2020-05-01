@@ -18,7 +18,7 @@ package com.sun.s1peqe.connector.cci;
 
 import java.math.BigDecimal;
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.resource.cci.*;
 import javax.resource.ResourceException;
 import javax.naming.*;

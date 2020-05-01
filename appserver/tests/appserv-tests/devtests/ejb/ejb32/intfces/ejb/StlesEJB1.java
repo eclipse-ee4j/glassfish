@@ -16,8 +16,8 @@
 
 package ejb32.intrfaces;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 /*
     StlesEJB1 exposes no-interface view, local interface St6, remote interface St7.
     St5 isn't business interface

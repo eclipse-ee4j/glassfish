@@ -19,7 +19,7 @@ package test.jms.injection;
 import java.io.*;
 import java.net.*;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

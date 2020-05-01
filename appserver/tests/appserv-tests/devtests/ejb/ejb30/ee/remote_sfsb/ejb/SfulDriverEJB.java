@@ -16,12 +16,12 @@
 
 package com.sun.s1asdev.ejb.ejb30.ee.remote_sfsb;
 
-import javax.ejb.EJB;
-import javax.ejb.EJBs;
-import javax.ejb.Stateful;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
+import jakarta.ejb.Stateful;
 import javax.naming.InitialContext;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 
 @Stateful(mappedName="jndi_SfulDriver")
 @EJBs({

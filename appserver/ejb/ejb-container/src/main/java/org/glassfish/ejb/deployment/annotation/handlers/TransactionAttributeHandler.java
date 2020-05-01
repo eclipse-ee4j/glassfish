@@ -47,7 +47,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.TransactionAttribute.
+ * This handler is responsible for handling the jakarta.ejb.TransactionAttribute.
  *
  * @author Shing Wai Chan
  */

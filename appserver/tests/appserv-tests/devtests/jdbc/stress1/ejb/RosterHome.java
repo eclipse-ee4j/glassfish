@@ -17,8 +17,8 @@
 package com.sun.s1asdev.jdbc.stress1.ejb;
 
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBHome;
 
 public interface RosterHome extends EJBHome {
     Roster create() throws RemoteException, CreateException;

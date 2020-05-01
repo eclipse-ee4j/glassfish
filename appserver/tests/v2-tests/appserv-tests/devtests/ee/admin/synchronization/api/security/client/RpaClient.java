@@ -18,7 +18,7 @@ package com.sun.devtest.admin.synchronization.api.security.client;
 
 import javax.naming.*;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 import java.util.Properties;
 

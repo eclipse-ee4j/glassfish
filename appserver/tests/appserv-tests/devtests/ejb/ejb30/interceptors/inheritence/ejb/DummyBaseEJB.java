@@ -19,11 +19,11 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 import java.util.List;
 import java.util.ArrayList;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 import jakarta.annotation.PostConstruct;
 
 public abstract class DummyBaseEJB

@@ -16,7 +16,7 @@
 
 package Data;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 16, 2002 2:08:21 PM
@@ -24,9 +24,9 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface SPSessionHome extends javax.ejb.EJBHome {
+public interface SPSessionHome extends jakarta.ejb.EJBHome {
     
     public Data.SPSession create()
-    throws javax.ejb.CreateException, java.rmi.RemoteException;
+    throws jakarta.ejb.CreateException, java.rmi.RemoteException;
     
 }

@@ -18,7 +18,7 @@ package ejb;
 
 import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import jakarta.xml.ws.WebServiceRef;
 import javax.naming.Context;

@@ -18,7 +18,7 @@ package mdb;
 
 import connector.MyMessageListener;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.io.*;
 import java.rmi.RemoteException;
@@ -47,7 +47,7 @@ public class MyMessageBean implements MessageDrivenBean,
     /**
      * setMessageDrivenContext method, declared as public (but
      * not final or static), with a return type of void, and
-     * with one argument of type javax.ejb.MessageDrivenContext.
+     * with one argument of type jakarta.ejb.MessageDrivenContext.
      *
      * @param mdc the context to set
      */

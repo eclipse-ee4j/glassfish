@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.ejb.sample;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.persistence.*;
 import jakarta.ws.rs.*;
 

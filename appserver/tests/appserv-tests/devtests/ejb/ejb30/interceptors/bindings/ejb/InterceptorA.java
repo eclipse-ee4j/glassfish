@@ -20,7 +20,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import jakarta.annotation.PostConstruct;
 import javax.naming.InitialContext;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 import jakarta.annotation.Resource;
 
 public class InterceptorA {

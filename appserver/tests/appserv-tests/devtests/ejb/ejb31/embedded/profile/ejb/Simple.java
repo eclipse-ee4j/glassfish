@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.ejb.profile;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * @author Marina Vatkina

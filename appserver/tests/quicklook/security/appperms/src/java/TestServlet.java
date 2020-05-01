@@ -21,7 +21,7 @@ import java.net.*;
 import java.security.AccessControlException;
 import java.security.AccessController;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.naming.*;
 
 import javax.servlet.*;

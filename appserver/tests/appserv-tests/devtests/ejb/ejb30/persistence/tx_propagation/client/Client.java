@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.persistence.tx_propagation.client;
 import java.io.*;
 import java.util.*;
 import java.sql.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.transaction.UserTransaction;
 import jakarta.annotation.Resource;
 import javax.sql.DataSource;

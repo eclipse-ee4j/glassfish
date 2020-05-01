@@ -19,7 +19,7 @@ package com.sun.s1asdev.jdbc.dmmcfnotxconn.ejb;
 import java.util.*;
 import java.io.*;
 import java.rmi.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.transaction.UserTransaction;
 import javax.naming.*;
 import javax.sql.*;

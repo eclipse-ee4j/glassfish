@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.timer31.nonpersistenttimer.client;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 import com.sun.s1asdev.ejb31.timer.nonpersistenttimer.StatefulWrapper;

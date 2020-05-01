@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -61,13 +61,13 @@ import javax.naming.InitialContext;
                     ic.lookup("java:comp/env/myem");
                 
             } catch(Exception e) {
-                throw new javax.ejb.EJBException(e);
+                throw new jakarta.ejb.EJBException(e);
             }
             
 
             System.out.println("HelloEJB successful injection of EMF/EM references!");
         } else {
-            throw new javax.ejb.EJBException("One or more EMF/EM references" +
+            throw new jakarta.ejb.EJBException("One or more EMF/EM references" +
                                              " was not injected in HelloEJB");
         }
 

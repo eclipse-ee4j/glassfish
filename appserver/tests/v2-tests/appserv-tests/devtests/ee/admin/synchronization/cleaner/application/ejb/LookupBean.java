@@ -18,9 +18,9 @@ package com.sun.devtest.admin.notification.lookup.ejb;
 
 import java.util.Collection;
 import java.rmi.RemoteException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
 import java.math.*;
 import javax.naming.*;
 

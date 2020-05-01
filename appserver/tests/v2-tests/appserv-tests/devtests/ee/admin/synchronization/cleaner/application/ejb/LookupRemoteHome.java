@@ -18,8 +18,8 @@ package com.sun.devtest.admin.notification.lookup.ejb;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBHome;
 
 /**
  */

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.mdb.msgbean;
 
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.MessageDrivenBean;
+import jakarta.ejb.MessageDrivenContext;
 import jakarta.jms.Message;
 import jakarta.jms.MessageListener;
 import javax.naming.*;

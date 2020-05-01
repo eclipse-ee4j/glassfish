@@ -24,8 +24,8 @@ import java.util.HashSet;
 import java.util.Collections;
 
 import javax.interceptor.InvocationContext;
-import javax.ejb.EJBException;
-import javax.ejb.Timer;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Timer;
 
 public class Common {
 

@@ -27,9 +27,9 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.naming.*;
-import javax.ejb.EJB;
-import javax.ejb.EJBs;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
+import jakarta.ejb.EJBException;
 import jakarta.annotation.Resource;
 import javax.transaction.UserTransaction;
 
@@ -175,7 +175,7 @@ public class Servlet extends HttpServlet {
                 sleepFor(2);
                 helloStateful.ping();
                 //throw new EJBException("Did not get ConcurrentAccessException");
-            } catch (javax.ejb.ConcurrentAccessException conEx) {
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
                 ;   //Everything is fine
             } catch (Throwable th) {
                 throw new EJBException("Got some wierd exception: " + th);

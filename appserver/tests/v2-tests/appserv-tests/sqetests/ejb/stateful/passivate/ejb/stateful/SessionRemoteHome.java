@@ -16,7 +16,7 @@
 
 package sqetests.ejb.stateful.passivate.ejb.stateful;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Oct 17, 2003 4:06:59 PM
@@ -24,11 +24,11 @@ import javax.ejb.*;
  * @author dsingh
  */
 
-public interface SessionRemoteHome extends javax.ejb.EJBHome {
+public interface SessionRemoteHome extends jakarta.ejb.EJBHome {
     
     public SessionRemote create()
-    throws javax.ejb.CreateException, java.rmi.RemoteException;
+    throws jakarta.ejb.CreateException, java.rmi.RemoteException;
     
-    public SessionRemote create(java.lang.String initialMessage) throws java.rmi.RemoteException, javax.ejb.CreateException;
+    public SessionRemote create(java.lang.String initialMessage) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
 }

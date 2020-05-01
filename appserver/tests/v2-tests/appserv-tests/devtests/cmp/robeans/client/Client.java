@@ -23,7 +23,7 @@
 import java.util.*;
 
 import javax.naming.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

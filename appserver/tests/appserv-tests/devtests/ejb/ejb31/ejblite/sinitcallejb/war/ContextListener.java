@@ -24,7 +24,7 @@ import javax.naming.InitialContext;
 
 import java.lang.reflect.Method;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 @WebListener
 public class ContextListener implements ServletContextListener {

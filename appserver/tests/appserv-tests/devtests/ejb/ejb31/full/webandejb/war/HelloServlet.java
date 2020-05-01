@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.EJB;
-import javax.ejb.ConcurrentAccessException;
-import javax.ejb.ConcurrentAccessTimeoutException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.ConcurrentAccessException;
+import jakarta.ejb.ConcurrentAccessTimeoutException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;

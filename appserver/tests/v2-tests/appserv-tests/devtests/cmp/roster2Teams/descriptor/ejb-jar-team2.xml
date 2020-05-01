@@ -566,7 +566,7 @@ where t.league = ?1</ejb-ql>
         <method-intf>Local</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBLocalObject</method-param>
+          <method-param>jakarta.ejb.EJBLocalObject</method-param>
         </method-params>
       </method>
       <method>
@@ -599,7 +599,7 @@ where t.league = ?1</ejb-ql>
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <method>
@@ -607,7 +607,7 @@ where t.league = ?1</ejb-ql>
         <method-intf>Remote</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
       <method>
@@ -842,7 +842,7 @@ where t.league = ?1</ejb-ql>
         <method-intf>Local</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBLocalObject</method-param>
+          <method-param>jakarta.ejb.EJBLocalObject</method-param>
         </method-params>
       </method>
       <method>
@@ -1032,7 +1032,7 @@ where t.league = ?1</ejb-ql>
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <method>
@@ -1045,7 +1045,7 @@ where t.league = ?1</ejb-ql>
         <method-intf>Remote</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
       <method>

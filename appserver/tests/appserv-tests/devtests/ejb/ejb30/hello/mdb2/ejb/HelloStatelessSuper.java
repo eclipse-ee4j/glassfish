@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb2;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.transaction.TransactionManager;
 import javax.transaction.Status;
 import javax.naming.InitialContext;

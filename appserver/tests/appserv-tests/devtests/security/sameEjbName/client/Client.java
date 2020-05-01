@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.sameEjbName.client;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.cdi.ejb.hello.session;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.inject.Inject;
 
 @Stateless

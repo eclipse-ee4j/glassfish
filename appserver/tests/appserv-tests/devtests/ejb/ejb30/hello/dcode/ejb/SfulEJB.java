@@ -16,11 +16,11 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.dcode;
 
-import javax.ejb.Stateful;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Init;
-import javax.ejb.RemoteHome;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Init;
+import jakarta.ejb.RemoteHome;
 
 @RemoteHome(SfulHome.class)
 @Stateful

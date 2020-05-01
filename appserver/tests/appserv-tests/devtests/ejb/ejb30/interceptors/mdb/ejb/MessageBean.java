@@ -16,10 +16,10 @@
 
 package com.sun.s1asdev.ejb.ejb30.interceptors.mdb;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEJBException;
-import javax.ejb.EJB;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.EJB;
 
 import javax.naming.InitialContext;
 

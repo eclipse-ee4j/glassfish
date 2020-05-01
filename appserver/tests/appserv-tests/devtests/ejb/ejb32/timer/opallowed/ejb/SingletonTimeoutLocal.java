@@ -16,9 +16,9 @@
 
 package com.acme.ejb32.timer.opallowed;
 
-import javax.ejb.Local;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
+import jakarta.ejb.Local;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
 
 @Local
 public interface SingletonTimeoutLocal {

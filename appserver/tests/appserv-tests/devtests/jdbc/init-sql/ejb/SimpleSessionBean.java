@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.initsql.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.sql.*;
 import java.rmi.*;

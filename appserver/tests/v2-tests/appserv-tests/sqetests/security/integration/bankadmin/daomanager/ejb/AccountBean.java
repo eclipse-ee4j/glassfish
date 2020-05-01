@@ -17,11 +17,11 @@
 package com.sun.s1peqe.security.integration.bankadmin.daomanager;
 
 import java.util.HashMap;
-import javax.ejb.EntityContext;
+import jakarta.ejb.EntityContext;
 import java.util.logging.*;
 import com.sun.ejte.ccl.reporter.*;
 
-public abstract class AccountBean extends EnterpriseBeanLogger implements javax.ejb.EntityBean
+public abstract class AccountBean extends EnterpriseBeanLogger implements jakarta.ejb.EntityBean
 {
     
     private static Logger logger = Logger.getLogger("bank.admin");
@@ -40,7 +40,7 @@ public abstract class AccountBean extends EnterpriseBeanLogger implements javax.
         //Business methods
 
     public String ejbCreateAccount(AccountDataObject ado)
-    throws javax.ejb.CreateException
+    throws jakarta.ejb.CreateException
     {
 
         toXML("ejbCreateAccount","Enter");
@@ -55,7 +55,7 @@ public abstract class AccountBean extends EnterpriseBeanLogger implements javax.
 
 
     public void ejbPostCreateAccount(AccountDataObject ado)
-    throws javax.ejb.CreateException
+    throws jakarta.ejb.CreateException
     {}
 
     public AccountDataObject getDAO()

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb31.aroundtimeout;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 	
 @Remote
 public interface Sless3

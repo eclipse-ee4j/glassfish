@@ -17,7 +17,7 @@
 package com.sun.s1peqe.jndi.url.ejb;
 
 import javax.naming.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.net.*;
 import java.io.*;
 

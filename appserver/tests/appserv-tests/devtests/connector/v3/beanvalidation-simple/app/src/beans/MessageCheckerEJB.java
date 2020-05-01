@@ -18,7 +18,7 @@ package beans;
 
 import connector.MyAdminObject;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.Properties;
 import java.sql.*;
 import java.rmi.RemoteException;

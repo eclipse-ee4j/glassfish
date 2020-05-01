@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 import jakarta.annotation.PostConstruct;
-import javax.ejb.PrePassivate;
-import javax.ejb.PostActivate;
+import jakarta.ejb.PrePassivate;
+import jakarta.ejb.PostActivate;
 
 public class BaseInterceptor
 	implements java.io.Serializable {

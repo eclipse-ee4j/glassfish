@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * This is the bean class for the MySession1Bean enterprise bean.
@@ -23,28 +23,28 @@ public class MySession1Bean implements SessionBean, MySession1RemoteBusiness {
     private SessionContext context;
     
     /**
-     * @see javax.ejb.SessionBean#setSessionContext(javax.ejb.SessionContext)
+     * @see jakarta.ejb.SessionBean#setSessionContext(jakarta.ejb.SessionContext)
      */
     public void setSessionContext(SessionContext aContext) {
         context = aContext;
     }
     
     /**
-     * @see javax.ejb.SessionBean#ejbActivate()
+     * @see jakarta.ejb.SessionBean#ejbActivate()
      */
     public void ejbActivate() {
         
     }
     
     /**
-     * @see javax.ejb.SessionBean#ejbPassivate()
+     * @see jakarta.ejb.SessionBean#ejbPassivate()
      */
     public void ejbPassivate() {
         
     }
     
     /**
-     * @see javax.ejb.SessionBean#ejbRemove()
+     * @see jakarta.ejb.SessionBean#ejbRemove()
      */
     public void ejbRemove() {
         

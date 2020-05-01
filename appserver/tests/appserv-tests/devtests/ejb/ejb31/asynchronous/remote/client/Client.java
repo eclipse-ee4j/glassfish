@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 import javax.naming.InitialContext;
@@ -95,7 +95,7 @@ public class Client {
 	    }
 	    
 	    try {
-		Future<String> f = statefulBeanLegacyRemote.throwException("javax.ejb.CreateException");
+		Future<String> f = statefulBeanLegacyRemote.throwException("jakarta.ejb.CreateException");
 		String result = f.get();
 		throw new EJBException("Didn't get CreateException");
 	    } catch(ExecutionException ee) {
@@ -108,7 +108,7 @@ public class Client {
 	    }
 
 	    try {
-		Future<String> f = statefulBeanLegacyRemote.throwException("javax.ejb.EJBException");
+		Future<String> f = statefulBeanLegacyRemote.throwException("jakarta.ejb.EJBException");
 		String result = f.get();
 		throw new EJBException("Didn't get EJBException");
 	    } catch(ExecutionException ee) {

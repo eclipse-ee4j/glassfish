@@ -16,17 +16,17 @@
 
 package com.sun.s1asdev.ejb.ejb30.persistence.eem_adapted;
 
-import javax.ejb.Stateful;
-import javax.ejb.Init;
-import javax.ejb.LocalHome;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Init;
+import jakarta.ejb.LocalHome;
 
 import javax.persistence.PersistenceContextType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 
 @Stateful
 @LocalHome(AdaptedLocalHome.class)

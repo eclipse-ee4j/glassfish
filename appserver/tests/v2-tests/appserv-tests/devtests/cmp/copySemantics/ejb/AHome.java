@@ -16,15 +16,15 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface AHome extends javax.ejb.EJBHome {
+public interface AHome extends jakarta.ejb.EJBHome {
     
-    public  A create(Integer i, java.lang.String name, java.util.Date d, byte[] b) throws java.rmi.RemoteException, javax.ejb.CreateException;
+    public  A create(Integer i, java.lang.String name, java.util.Date d, byte[] b) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
 }

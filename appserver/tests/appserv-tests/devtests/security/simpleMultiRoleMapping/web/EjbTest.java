@@ -19,7 +19,7 @@ package com.sun.s1asdev.security.simpleMultiRoleMapping.web;
 import com.sun.s1asdev.security.simpleMultiRoleMapping.ejb.MessageLocal;
 import java.io.*;
 import java.net.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

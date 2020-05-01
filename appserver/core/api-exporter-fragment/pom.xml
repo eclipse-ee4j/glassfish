@@ -87,9 +87,9 @@ javax.crypto; \
 javax.crypto.interfaces; \
 javax.crypto.spec; \
 javax.decorator; \
-javax.ejb; \
-javax.ejb.embeddable; \
-javax.ejb.spi; \
+jakarta.ejb; \
+jakarta.ejb.embeddable; \
+jakarta.ejb.spi; \
 javax.el; \
 javax.enterprise.concurrent; \
 javax.enterprise.context; \

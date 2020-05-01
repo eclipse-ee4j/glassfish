@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import jakarta.annotation.Resource;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.naming.InitialContext;

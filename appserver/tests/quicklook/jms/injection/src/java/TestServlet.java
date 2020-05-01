@@ -19,7 +19,7 @@ package org.glassfish.tests.jms.injection;
 import java.io.*;
 import java.net.*;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.naming.*;
 
 import javax.servlet.*;

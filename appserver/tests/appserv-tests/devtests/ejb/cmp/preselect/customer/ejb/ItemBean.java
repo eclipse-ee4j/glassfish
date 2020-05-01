@@ -17,7 +17,7 @@
 package com.sun.s1peqe.ejb.cmp.preselect.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 public abstract class ItemBean implements EntityBean {

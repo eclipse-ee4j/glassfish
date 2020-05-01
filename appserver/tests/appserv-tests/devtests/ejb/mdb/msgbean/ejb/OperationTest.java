@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.mdb.msgbean;
 
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.MessageDrivenContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.transaction.UserTransaction;

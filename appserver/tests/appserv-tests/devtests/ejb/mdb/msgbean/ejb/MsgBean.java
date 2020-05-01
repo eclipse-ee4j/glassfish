@@ -17,9 +17,9 @@
 package com.sun.s1asdev.ejb.mdb.msgbean;
 
 import java.util.Vector;
-import javax.ejb.EJBException;
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.MessageDrivenBean;
+import jakarta.ejb.MessageDrivenContext;
 import javax.naming.*;
 import jakarta.jms.*;
 import java.sql.*;

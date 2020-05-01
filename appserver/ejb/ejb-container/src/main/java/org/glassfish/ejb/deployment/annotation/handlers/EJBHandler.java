@@ -42,7 +42,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
- * This handler is responsible for handling the javax.ejb.EJB
+ * This handler is responsible for handling the jakarta.ejb.EJB
  *
  * @author Shing Wai Chan
  */

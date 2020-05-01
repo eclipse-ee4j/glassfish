@@ -16,7 +16,7 @@
 
 package org.jboss.weld.examples.translator;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class SentenceTranslator implements Translator 

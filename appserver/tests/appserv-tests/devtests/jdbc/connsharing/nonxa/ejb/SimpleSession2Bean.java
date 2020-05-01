@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.connsharing.nonxa.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.sql.*;
 import java.rmi.*;

@@ -154,7 +154,7 @@
         <method-intf></method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
       <method>
@@ -254,7 +254,7 @@
         <method-intf></method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
     </method-permission>

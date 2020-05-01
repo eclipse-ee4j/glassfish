@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb32.ejblite.async;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.io.*;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

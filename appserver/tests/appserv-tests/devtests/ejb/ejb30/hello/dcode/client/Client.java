@@ -18,8 +18,8 @@ package com.sun.s1asdev.ejb.ejb30.hello.dcode.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJB;
-import javax.ejb.Handle;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Handle;
 import com.sun.s1asdev.ejb.ejb30.hello.dcode.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

@@ -16,9 +16,9 @@
 
 package samples.ejb.subclassing.ejb;
 
-import javax.ejb.EJBLocalHome;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
 
-public interface CustomerLocalHome extends javax.ejb.EJBLocalHome {
+public interface CustomerLocalHome extends jakarta.ejb.EJBLocalHome {
 }
 

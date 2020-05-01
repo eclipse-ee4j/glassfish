@@ -18,10 +18,10 @@ package beans;
 
 import connector.MyAdminObject;
 import javax.rmi.PortableRemoteObject;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
-import javax.ejb.CreateException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.CreateException;
 import java.rmi.RemoteException;
 
 import javax.naming.*;

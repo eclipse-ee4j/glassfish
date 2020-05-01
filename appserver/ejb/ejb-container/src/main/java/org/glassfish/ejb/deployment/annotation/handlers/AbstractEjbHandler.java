@@ -302,7 +302,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             // be ejbTimeout.
             timeoutMethodDesc = new MethodDescriptor
                 ("ejbTimeout", "@Timeout method", 
-                 new String[] { "javax.ejb.Timer" }, 
+                 new String[] { "jakarta.ejb.Timer" }, 
                  MethodDescriptor.TIMER_METHOD);
         }
 
@@ -574,7 +574,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
         return ( (intf == java.io.Serializable.class) ||
                  (intf == java.io.Externalizable.class) ||
                  ( (intf.getPackage() != null) &&
-                   intf.getPackage().getName().equals("javax.ejb")) );
+                   intf.getPackage().getName().equals("jakarta.ejb")) );
     }
 
     protected void doDescriptionProcessing(String description,

@@ -16,7 +16,7 @@
 
 package ejb32.intrfaces;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 /*

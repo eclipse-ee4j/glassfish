@@ -18,7 +18,7 @@ package com.sun.s1asdev.jms.msgdest.jmsweb;
 
 import java.rmi.RemoteException;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.io.Serializable;
 import javax.naming.*;
 

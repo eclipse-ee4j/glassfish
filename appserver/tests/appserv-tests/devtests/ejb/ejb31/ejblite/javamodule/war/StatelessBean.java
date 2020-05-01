@@ -16,8 +16,8 @@
 
 package com.acme;
 
-import javax.ejb.Stateless;
-import javax.ejb.*;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.*;
 import javax.interceptor.Interceptors;
 
 import jakarta.annotation.PostConstruct;

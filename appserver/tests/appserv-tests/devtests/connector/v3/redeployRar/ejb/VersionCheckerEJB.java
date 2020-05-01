@@ -17,10 +17,10 @@
 package beans;
 
 import javax.rmi.PortableRemoteObject;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
-import javax.ejb.CreateException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.CreateException;
 import java.util.Properties;
 import java.util.Vector;
 import java.sql.*;

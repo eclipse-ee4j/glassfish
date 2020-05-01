@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.perf.local;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.*;
 import javax.rmi.PortableRemoteObject;

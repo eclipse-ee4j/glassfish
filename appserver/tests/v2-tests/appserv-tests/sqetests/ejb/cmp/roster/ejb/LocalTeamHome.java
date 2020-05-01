@@ -17,7 +17,7 @@
 package com.sun.s1peqe.ejb.cmp.roster.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface LocalTeamHome extends EJBLocalHome {
     public LocalTeam create (String id, String name, String city)

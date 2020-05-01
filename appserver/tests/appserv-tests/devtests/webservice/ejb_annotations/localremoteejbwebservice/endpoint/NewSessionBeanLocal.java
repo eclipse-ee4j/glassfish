@@ -16,7 +16,7 @@
 
 package endpoint;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  *

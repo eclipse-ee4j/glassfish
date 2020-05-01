@@ -18,8 +18,8 @@ package com.sun.s1asdev.ejb.ejb31.aroundtimeout.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import com.sun.s1asdev.ejb.ejb31.aroundtimeout.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

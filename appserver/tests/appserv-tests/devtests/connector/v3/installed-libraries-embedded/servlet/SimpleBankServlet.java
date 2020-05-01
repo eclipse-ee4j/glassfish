@@ -21,7 +21,7 @@ import java.util.*;
 import javax.servlet.*; 
 import javax.naming.*; 
 import javax.servlet.http.*; 
-import javax.ejb.*; 
+import jakarta.ejb.*; 
 
 import samples.ejb.installed_libraries_embedded.ejb.*;
 import com.sun.jdbcra.spi.JdbcSetupAdmin;

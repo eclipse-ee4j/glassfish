@@ -17,7 +17,7 @@
 package com.oracle.cdi.devtest.negative.normalScoped;
 
 import jakarta.annotation.PostConstruct;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.inject.Inject;
 
 /**

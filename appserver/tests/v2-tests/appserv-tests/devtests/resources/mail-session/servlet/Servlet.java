@@ -19,9 +19,9 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 import jakarta.annotation.Resource;
 import jakarta.mail.MailSessionDefinition;
 import jakarta.mail.MailSessionDefinitions;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.EJBs;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBs;
 import javax.naming.InitialContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -184,7 +184,7 @@ public class Servlet extends HttpServlet {
                 sleepFor(2);
                 helloStateful.ping();
                 //throw new EJBException("Did not get ConcurrentAccessException");
-            } catch (javax.ejb.ConcurrentAccessException conEx) {
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
                 ;   //Everything is fine
             } catch (Throwable th) {
                 throw new EJBException("Got some wierd exception: " + th);

@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.timer.timertests;
 
 import java.rmi.RemoteException;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public abstract class BarEJB 
     extends TimerStuffImpl 

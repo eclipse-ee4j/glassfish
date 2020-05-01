@@ -18,7 +18,7 @@ package com.sun.s1asdev.jdbc.dmmcf.ejb;
 
 import javax.naming.*;
 import javax.sql.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.sql.*;
 import java.util.Set;
 import java.util.HashSet;

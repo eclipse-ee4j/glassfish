@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.datasource40.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.sql.*;
 import java.sql.*;

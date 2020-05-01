@@ -21,8 +21,8 @@ import java.io.Serializable;
 import javax.interceptor.*;
 import jakarta.annotation.*;
 
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 
 import javax.inject.Inject;
 

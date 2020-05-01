@@ -16,14 +16,14 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2;
 
-import javax.ejb.Stateless;
-import javax.ejb.Remote;
-import javax.ejb.SessionContext;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Remote;
+import jakarta.ejb.SessionContext;
 import jakarta.annotation.Resource;
 
-import javax.ejb.EJB;
-import javax.ejb.RemoteHome;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.RemoteHome;
+import jakarta.ejb.CreateException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,8 +51,8 @@ public class SlessEJB
         return "hello from SlessEJB";
     }
 
-    public String hello2() throws javax.ejb.CreateException {
-        throw new javax.ejb.CreateException();
+    public String hello2() throws jakarta.ejb.CreateException {
+        throw new jakarta.ejb.CreateException();
     }
 
     public String getId() {

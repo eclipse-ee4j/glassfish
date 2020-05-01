@@ -18,7 +18,7 @@ package sahoo.hybridapp.example1.impl;
 
 import sahoo.hybridapp.example1.UserAuthService;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

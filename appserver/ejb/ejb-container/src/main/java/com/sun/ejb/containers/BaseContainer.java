@@ -2255,7 +2255,7 @@ public abstract class BaseContainer
         } else {
             throw new EJBException(localStrings.getLocalString(
                 "ejb.invalid_timeout_method",
-                "Invalid @Timeout or @Schedule signature for: {0} @Timeout or @Schedule method must return void and be a no-arg method or take a single javax.ejb.Timer param",
+                "Invalid @Timeout or @Schedule signature for: {0} @Timeout or @Schedule method must return void and be a no-arg method or take a single jakarta.ejb.Timer param",
                 method));
         }
     }
@@ -2412,7 +2412,7 @@ public abstract class BaseContainer
 
     /**
      * Create an array of all methods in the standard EJB interfaces:
-     * javax.ejb.EJB(Local){Home|Object} .
+     * jakarta.ejb.EJB(Local){Home|Object} .
      */
     private void initializeEjbInterfaceMethods()
         throws Exception
@@ -2863,7 +2863,7 @@ public abstract class BaseContainer
         
         // All methods on the Home/LocalHome & super-interfaces
         // are not business methods.
-        // All methods on javax.ejb.EJBObject and EJBLocalObject
+        // All methods on jakarta.ejb.EJBObject and EJBLocalObject
         // (e.g. remove) are not business methods.
         // All remaining methods are business methods
         
@@ -3674,7 +3674,7 @@ public abstract class BaseContainer
             handler.setProxy(ejbHomeProxy);
         } catch (ClassCastException e) {
             String msg = localStrings.getLocalString("ejb.basecontainer_invalid_home_interface",
-                    "Home interface [{0}] is invalid since it does not extend javax.ejb.EJBHome.", homeIntf);
+                    "Home interface [{0}] is invalid since it does not extend jakarta.ejb.EJBHome.", homeIntf);
             throw new IllegalArgumentException(msg, e);
         }
 
@@ -3741,7 +3741,7 @@ public abstract class BaseContainer
             invHandler.setProxy(proxy);
         } catch (ClassCastException e) {
             String msg = localStrings.getLocalString("ejb.basecontainer_invalid_local_home_interface",
-                    "Local home interface [{0}] is invalid since it does not extend javax.ejb.EJBLocalHome.", localHomeIntf);
+                    "Local home interface [{0}] is invalid since it does not extend jakarta.ejb.EJBLocalHome.", localHomeIntf);
             throw new IllegalArgumentException(msg, e);
         }
 
@@ -3806,7 +3806,7 @@ public abstract class BaseContainer
             handler.setProxy(localObjectProxy);
         } catch (ClassCastException e) {
             String msg = localStrings.getLocalString("ejb.basecontainer_invalid_local_interface",
-                    "Local component interface [{0}] is invalid since it does not extend javax.ejb.EJBLocalObject.", localIntf);
+                    "Local component interface [{0}] is invalid since it does not extend jakarta.ejb.EJBLocalObject.", localIntf);
             throw new IllegalArgumentException(msg, e);
         }
 
@@ -3895,7 +3895,7 @@ public abstract class BaseContainer
             handler.setEJBObject(ejbObjectProxy);
         } catch (ClassCastException e) {
             String msg = localStrings.getLocalString("ejb.basecontainer_invalid_remote_interface", 
-                "Remote component interface [{0}] is invalid since it does not extend javax.ejb.EJBObject.", remoteIntf);
+                "Remote component interface [{0}] is invalid since it does not extend jakarta.ejb.EJBObject.", remoteIntf);
             throw new IllegalArgumentException(msg, e);
         }
 

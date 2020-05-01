@@ -43,7 +43,7 @@ public final class HandleImpl implements Handle, Serializable
 	this.ejbObject = ejbObject;
     }
 
-    // This is the public API from javax.ejb.Handle
+    // This is the public API from jakarta.ejb.Handle
     public EJBObject getEJBObject() throws RemoteException
     {
 	return ejbObject;

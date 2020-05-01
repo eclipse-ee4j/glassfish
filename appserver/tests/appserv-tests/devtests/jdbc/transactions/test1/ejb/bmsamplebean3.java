@@ -19,7 +19,7 @@ package com.sun.s1asdev.jdbc.transactions.test1.ejb;
 import java.util.*;
 import java.io.*;
 import java.rmi.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.transaction.UserTransaction;
 import javax.naming.*;
 import javax.sql.*;
@@ -28,9 +28,9 @@ import javax.rmi.PortableRemoteObject;
 
 public class bmsamplebean3 implements SessionBean 
 {
-        private transient javax.ejb.SessionContext m_ctx = null;
+        private transient jakarta.ejb.SessionContext m_ctx = null;
 	EJBContext ejbcontext;
-    public void setSessionContext(javax.ejb.SessionContext ctx)
+    public void setSessionContext(jakarta.ejb.SessionContext ctx)
     {
         m_ctx = ctx;
        // m_ctx.setRollbackOnly();

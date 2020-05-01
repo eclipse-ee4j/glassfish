@@ -16,7 +16,7 @@
 
 package ejb31.timer.methodintf;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.Resource;
 
 @Stateless

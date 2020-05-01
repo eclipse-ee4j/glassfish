@@ -18,7 +18,7 @@ package org.glassfish.test.jms.mdbdest.ejb;
 
 import java.util.logging.*;
 import jakarta.annotation.Resource;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.inject.Inject;
 import jakarta.jms.*;
 

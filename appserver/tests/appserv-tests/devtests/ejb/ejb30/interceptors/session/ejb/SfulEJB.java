@@ -19,13 +19,13 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 import java.util.Map;
 import java.util.HashMap;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptors;
 
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 

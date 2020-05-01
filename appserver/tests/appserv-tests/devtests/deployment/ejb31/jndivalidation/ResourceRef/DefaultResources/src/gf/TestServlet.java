@@ -17,10 +17,10 @@
 package gf;
 
 import jakarta.annotation.Resource;
-import javax.ejb.EJBContext;
-import javax.ejb.SessionContext;
-import javax.ejb.MessageDrivenContext;
-import javax.ejb.TimerService;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.ejb.TimerService;
 import javax.enterprise.concurrent.ContextService;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;

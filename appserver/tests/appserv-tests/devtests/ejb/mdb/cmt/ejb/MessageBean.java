@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.mdb.cmt;
 
 import java.rmi.RemoteException;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 public class MessageBean  

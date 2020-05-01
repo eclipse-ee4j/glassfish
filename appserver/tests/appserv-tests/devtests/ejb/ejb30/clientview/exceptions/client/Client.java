@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.clientview.exceptions.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 import javax.transaction.TransactionRequiredException;
 import com.sun.s1asdev.ejb.ejb30.clientview.exceptions.*;
@@ -138,7 +138,7 @@ public class Client {
 		sleepFor(5);
 		sfulRemoteBusiness.ping();
 		stat.addStatus("local concurrentAccess[1.1]", stat.FAIL);
-	    } catch (javax.ejb.ConcurrentAccessException conEx) {
+	    } catch (jakarta.ejb.ConcurrentAccessException conEx) {
 		stat.addStatus("local concurrentAccess[1.1]", stat.PASS);
 	    } catch (Throwable th) {
 		System.out.println("Argggggg: Got: " + th);

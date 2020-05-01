@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.timer.timertests;
 
 import java.rmi.RemoteException;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class MessageDrivenEJB extends TimerStuffImpl 
     implements MessageDrivenBean, TimedObject, MessageListener {

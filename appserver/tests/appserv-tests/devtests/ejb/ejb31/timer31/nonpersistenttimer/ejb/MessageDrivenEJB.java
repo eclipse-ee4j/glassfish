@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb31.timer.nonpersistenttimer;
 
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class MessageDrivenEJB extends TimerStuffImpl 
     implements MessageDrivenBean, TimedObject, MessageListener {

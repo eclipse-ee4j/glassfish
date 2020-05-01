@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 public interface Hello {
 

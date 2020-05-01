@@ -1101,8 +1101,8 @@ public class EntityContainer
         i.method = removeMethod;
         
         // Method must be a remove method defined on one of :
-        // javax.ejb.EJBHome, javax.ejb.EJBObject, javax.ejb.EJBLocalHome,
-        // javax.ejb.EJBLocalObject
+        // jakarta.ejb.EJBHome, jakarta.ejb.EJBObject, jakarta.ejb.EJBLocalHome,
+        // jakarta.ejb.EJBLocalObject
         Class declaringClass = removeMethod.getDeclaringClass();
         i.isHome = ( (declaringClass == jakarta.ejb.EJBHome.class) ||
                      (declaringClass == jakarta.ejb.EJBLocalHome.class) );

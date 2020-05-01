@@ -93,7 +93,7 @@ public abstract class EJBLocalHomeImpl
     }
     
     /**
-     * This is the implementation of the javax.ejb.EJBLocalHome remove method.
+     * This is the implementation of the jakarta.ejb.EJBLocalHome remove method.
      */
     public final void remove(Object primaryKey)
         throws RemoveException, EJBException

@@ -291,7 +291,7 @@ public class TimerBean implements TimerLocal {
         // Only proceed with transactional semantics if this timer
         // is owned by the current server instance.  NOTE that this
         // will *ALWAYS* be the case for timers created from EJB
-        // applications via the javax.ejb.EJBTimerService.create methods.  
+        // applications via the jakarta.ejb.EJBTimerService.create methods.  
         //
         // For testing purposes, ejbCreate takes an ownerId parameter, 
         // which allows us to easily simulate other server instances 

@@ -24,7 +24,7 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Service
 public class GlassFishBatchSecurityHelper

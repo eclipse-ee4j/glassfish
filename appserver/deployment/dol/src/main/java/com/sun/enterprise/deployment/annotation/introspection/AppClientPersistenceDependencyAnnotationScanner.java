@@ -18,7 +18,7 @@ package com.sun.enterprise.deployment.annotation.introspection;
 
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Scans for annotations relevant to persistence units that indicate an app

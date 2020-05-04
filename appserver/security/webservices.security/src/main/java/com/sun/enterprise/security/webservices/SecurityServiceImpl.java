@@ -32,7 +32,7 @@ import org.glassfish.webservices.SecurityService;
 import org.glassfish.webservices.WebServiceContextImpl;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.sun.enterprise.security.SecurityContext;
 import java.security.Principal;
@@ -48,7 +48,7 @@ import com.sun.enterprise.web.WebModule;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.security.jacc.PolicyContext;
 import jakarta.xml.soap.SOAPMessage;
 

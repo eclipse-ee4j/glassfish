@@ -40,10 +40,10 @@ urlPatterns = "/BasicCDITestServlet")
 )
 public class BasicCDITestServlet extends HttpServlet {
 
-    @javax.inject.Inject
+    @jakarta.inject.Inject
     TestBean testBean;
 
-    @javax.inject.Inject
+    @jakarta.inject.Inject
     TestRequestScopedBean trsb;
 
     @Override

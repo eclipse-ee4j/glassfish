@@ -25,7 +25,7 @@ import static javax.security.enterprise.identitystore.LdapIdentityStoreDefinitio
 import static javax.security.enterprise.identitystore.LdapIdentityStoreDefinition.LdapSearchScope.SUBTREE;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @RequestScoped
 @Named

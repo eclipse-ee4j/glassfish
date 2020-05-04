@@ -23,7 +23,7 @@ public class TestManagedBean {
     
     public TestManagedBean(){}
 
-    @javax.inject.Inject //Constructor based Injection
+    @jakarta.inject.Inject //Constructor based Injection
     public TestManagedBean(TestBean tb){
         this.tb = tb;
     }

@@ -22,7 +22,7 @@ package test;
 
 import java.io.IOException;
 import jakarta.annotation.Resource;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;

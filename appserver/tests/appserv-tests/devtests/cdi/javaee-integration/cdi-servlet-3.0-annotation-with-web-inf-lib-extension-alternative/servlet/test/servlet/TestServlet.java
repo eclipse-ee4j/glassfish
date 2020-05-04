@@ -24,7 +24,7 @@ import jakarta.annotation.Resource;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

@@ -21,7 +21,7 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.util.Utility;
 import com.sun.logging.LogDomains;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.resource.spi.ResourceAdapter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +31,7 @@ import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Factory creating Active Resource adapters.

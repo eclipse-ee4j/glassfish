@@ -19,7 +19,7 @@ package test.ejb.timer;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.Timer;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import test.beans.BeanToTestTimerUse;
 import test.beans.TestApplicationScopedBean;

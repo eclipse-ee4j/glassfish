@@ -20,7 +20,7 @@ package com.sun.enterprise.transaction.jts.iiop;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
 import org.omg.IOP.Codec;

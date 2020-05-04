@@ -17,7 +17,7 @@
 package com.sun.s1asdev.cdi.ejb.hello.session;
 
 import jakarta.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Stateless
 public class SlessEJB implements Sless

@@ -33,7 +33,7 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.NamingException;
 import jakarta.servlet.ServletContext;
 import java.util.*;

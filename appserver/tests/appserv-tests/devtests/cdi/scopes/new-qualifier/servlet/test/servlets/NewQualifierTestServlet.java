@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 
 import javax.enterprise.inject.New;
 import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

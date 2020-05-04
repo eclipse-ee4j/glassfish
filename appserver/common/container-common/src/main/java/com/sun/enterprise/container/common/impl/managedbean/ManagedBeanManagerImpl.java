@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 
 import org.glassfish.api.admin.ProcessEnvironment;
@@ -265,7 +265,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
         if (isCDIBundle) {
             Constructor<?>[] ctors = clz.getDeclaredConstructors();
             for(Constructor<?> ctor : ctors) {
-                if (ctor.getAnnotation(javax.inject.Inject.class) != null) {
+                if (ctor.getAnnotation(jakarta.inject.Inject.class) != null) {
                     // @Inject constructor
                     return ctor;
                 }

@@ -52,7 +52,7 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import com.sun.enterprise.config.serverbeans.Module;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.validation.*;
 import jakarta.validation.bootstrap.GenericBootstrap;
 import java.beans.PropertyVetoException;

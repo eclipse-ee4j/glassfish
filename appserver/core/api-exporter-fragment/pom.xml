@@ -133,7 +133,7 @@ jakarta.faces.validator; \
 jakarta.faces.view; \
 jakarta.faces.view.facelets; \
 jakarta.faces.webapp; \
-javax.inject; \
+jakarta.inject; \
 javax.imageio; \
 javax.imageio.event; \
 javax.imageio.metadata; \

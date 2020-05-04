@@ -17,7 +17,7 @@
 package org.glassfish.weld;
 
 import jakarta.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.jsp.JspApplicationContext;

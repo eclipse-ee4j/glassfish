@@ -18,7 +18,7 @@ package com.sun.enterprise.deployment.annotation.introspection;
 
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.util.Set;
 import java.util.HashSet;

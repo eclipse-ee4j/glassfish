@@ -19,8 +19,8 @@ package org.jboss.weld.examples.translator;
 import jakarta.ejb.Remove;
 import jakarta.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 @Stateful
 @RequestScoped

@@ -33,7 +33,7 @@ import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.PolicyContextHandler;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /** @author JeanFrancois Arcand
  *  @author Harpreet Singh

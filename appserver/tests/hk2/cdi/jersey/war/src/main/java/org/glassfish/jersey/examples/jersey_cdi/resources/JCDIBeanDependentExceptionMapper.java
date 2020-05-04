@@ -38,10 +38,10 @@ import jakarta.ws.rs.ext.Provider;
 public class JCDIBeanDependentExceptionMapper implements ExceptionMapper<JDCIBeanDependentException> {
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<UriInfo> uiFieldInjectProvider;
+    private @Context jakarta.inject.Provider<UriInfo> uiFieldInjectProvider;
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<ResourceContext> rcProvider;
+    private @Context jakarta.inject.Provider<ResourceContext> rcProvider;
 
     private UriInfo uiMethodInject;
 

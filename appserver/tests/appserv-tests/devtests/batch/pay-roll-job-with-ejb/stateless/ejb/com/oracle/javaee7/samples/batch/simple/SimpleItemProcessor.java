@@ -14,10 +14,10 @@
  */
 package com.oracle.javaee7.samples.batch.simple;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
-@javax.inject.Named//("com.oracle.javaee7.samples.batch.simple.SimpleItemProcessor")
+@jakarta.inject.Named//("com.oracle.javaee7.samples.batch.simple.SimpleItemProcessor")
 public class SimpleItemProcessor
     implements javax.batch.api.ItemProcessor<String, String> {
 

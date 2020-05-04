@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.omg.CORBA.ORB;
 

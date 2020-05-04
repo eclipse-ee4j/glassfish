@@ -31,8 +31,8 @@ import java.io.PrintWriter;
         urlPatterns = "/BasicCDITestServlet")
 public class BasicCDITestServlet extends HttpServlet {
 
-    @javax.inject.Inject TestBean tb;
-    @javax.inject.Inject TestRequestScopedBean trsb;
+    @jakarta.inject.Inject TestBean tb;
+    @jakarta.inject.Inject TestRequestScopedBean trsb;
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,

@@ -17,7 +17,7 @@
 package test.beans.nonmock;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManagerFactory;
 
 import test.beans.TestBeanInterface;

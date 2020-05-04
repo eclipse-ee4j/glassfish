@@ -16,7 +16,7 @@ package com.oracle.javaee7.samples.batch.twosteps;
 
 import java.io.Externalizable;
 
-@javax.inject.Named("SimpleItemReader")
+@jakarta.inject.Named("SimpleItemReader")
 public class SimpleItemReader
     extends javax.batch.api.AbstractItemReader<String> {
 

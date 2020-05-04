@@ -33,7 +33,7 @@ import java.io.IOException;
 import com.sun.enterprise.module.HK2Module;
 import java.lang.annotation.Annotation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * SecuritySniffer for security related activities

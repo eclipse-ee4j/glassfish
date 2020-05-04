@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import jakarta.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  * Qualifier for ServerSentEventHandlerContext. If there is Server-Sent Event

@@ -18,7 +18,7 @@ package test.beans;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import test.artifacts.PaymentProcessor;
 

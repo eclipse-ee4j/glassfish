@@ -34,7 +34,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import jakarta.servlet.http.HttpServletRequest;
 import org.glassfish.hk2.api.Rank;
 

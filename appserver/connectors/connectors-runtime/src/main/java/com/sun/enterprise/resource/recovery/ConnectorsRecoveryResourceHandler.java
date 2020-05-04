@@ -42,9 +42,9 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 import com.sun.enterprise.config.serverbeans.Module;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import jakarta.resource.ResourceException;

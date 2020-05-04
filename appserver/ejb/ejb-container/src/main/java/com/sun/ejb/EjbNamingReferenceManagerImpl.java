@@ -24,10 +24,10 @@ import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import javax.naming.Context;
 import com.sun.enterprise.util.Utility;
 

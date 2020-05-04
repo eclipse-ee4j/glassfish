@@ -49,7 +49,7 @@ import jakarta.annotation.Resource;
 
     @Resource(mappedName="jms/cdi_hello_mdb_OutQueue") Queue clientQueue;
 
-    @javax.inject.Inject com.sun.s1asdev.cdi.hello.bean.TestBean tb;
+    @jakarta.inject.Inject com.sun.s1asdev.cdi.hello.bean.TestBean tb;
 
 
     public void onMessage(Message message) {

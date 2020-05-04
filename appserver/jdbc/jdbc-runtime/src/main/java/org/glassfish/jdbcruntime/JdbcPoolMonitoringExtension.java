@@ -36,8 +36,8 @@ import org.glassfish.jdbc.pool.monitor.JdbcConnPoolStatsProvider;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

@@ -18,7 +18,7 @@ package com.oracle.cdi.devtest.negative.normalScoped;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * This is a statless EJB that is injected with a service

@@ -30,12 +30,12 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.web.admin.LogFacade;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.jvnet.hk2.config.ConfigurationException;
 
 /**

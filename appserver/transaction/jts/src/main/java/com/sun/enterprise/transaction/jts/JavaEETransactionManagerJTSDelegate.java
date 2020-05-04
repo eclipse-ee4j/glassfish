@@ -63,7 +63,7 @@ import org.glassfish.api.admin.ServerEnvironment;
 
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 

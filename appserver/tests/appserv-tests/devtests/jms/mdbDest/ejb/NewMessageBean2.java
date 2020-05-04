@@ -19,7 +19,7 @@ package org.glassfish.test.jms.mdbdest.ejb;
 import java.util.logging.*;
 import jakarta.annotation.Resource;
 import jakarta.ejb.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 
 @MessageDriven(name = "test2", activationConfig = {

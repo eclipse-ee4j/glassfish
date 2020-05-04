@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

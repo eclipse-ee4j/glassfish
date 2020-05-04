@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -36,7 +36,7 @@ import org.glassfish.ejb.security.application.EJBSecurityManager;
 import org.glassfish.ejb.security.application.EjbSecurityProbeProvider;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 import com.sun.enterprise.security.factory.SecurityManagerFactory;

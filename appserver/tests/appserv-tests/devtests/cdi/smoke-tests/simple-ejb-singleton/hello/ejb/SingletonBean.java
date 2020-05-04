@@ -23,7 +23,7 @@ import org.omg.CORBA.ORB;
 import javax.naming.InitialContext;
 
 import javax.management.j2ee.ManagementHome;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Singleton
 @Remote(Hello.class)

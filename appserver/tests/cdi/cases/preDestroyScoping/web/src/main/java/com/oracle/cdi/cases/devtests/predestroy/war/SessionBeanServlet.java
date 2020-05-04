@@ -17,7 +17,7 @@
 package com.oracle.cdi.cases.devtests.predestroy.war;
 
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

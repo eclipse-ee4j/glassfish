@@ -18,7 +18,7 @@ package org.glassfish.sse.videoplayer;
 
 import org.glassfish.sse.api.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.io.IOException;
 
 /**

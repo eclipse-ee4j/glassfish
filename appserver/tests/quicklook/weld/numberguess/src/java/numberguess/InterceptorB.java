@@ -24,7 +24,7 @@ import jakarta.annotation.*;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class InterceptorB implements Serializable{
 

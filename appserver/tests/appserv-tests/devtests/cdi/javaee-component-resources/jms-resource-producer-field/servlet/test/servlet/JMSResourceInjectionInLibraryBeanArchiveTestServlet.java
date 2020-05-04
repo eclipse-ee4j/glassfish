@@ -19,7 +19,7 @@ package test.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.Queue;
 import jakarta.jms.Session;
 import javax.servlet.ServletException;

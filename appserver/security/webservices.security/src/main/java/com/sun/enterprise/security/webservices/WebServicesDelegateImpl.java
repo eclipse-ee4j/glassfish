@@ -45,7 +45,7 @@ import jakarta.xml.soap.SOAPPart;
 import org.glassfish.api.invocation.ComponentInvocation;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  *

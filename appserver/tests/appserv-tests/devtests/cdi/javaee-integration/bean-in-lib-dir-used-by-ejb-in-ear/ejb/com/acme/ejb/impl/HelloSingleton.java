@@ -23,7 +23,7 @@ import jakarta.ejb.DependsOn;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 

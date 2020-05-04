@@ -23,7 +23,7 @@ import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.omg.CORBA.ORB;
 import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
@@ -32,7 +32,7 @@ import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  *

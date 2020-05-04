@@ -33,7 +33,7 @@ public class MyMessageBean implements MessageDrivenBean, MyMessageListener {
     private transient MessageDrivenContext mdc = null;
     private Context context;
 
-    @javax.inject.Inject
+    @jakarta.inject.Inject
     private connector.TestCDIBean tb;
 
     /**

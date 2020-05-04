@@ -25,8 +25,8 @@ import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.internal.deployment.GenericHandler;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.*;
 import java.net.*;
 import java.util.Enumeration;

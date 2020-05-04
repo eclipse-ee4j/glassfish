@@ -25,7 +25,7 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.DeploymentUtils;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.lang.annotation.Annotation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Sniffer for detecting resource-adapter modules

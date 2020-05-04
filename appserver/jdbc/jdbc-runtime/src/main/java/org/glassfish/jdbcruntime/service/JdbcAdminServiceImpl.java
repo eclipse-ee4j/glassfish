@@ -28,7 +28,7 @@ import com.sun.enterprise.connectors.util.DriverLoader;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.naming.NamingException;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;

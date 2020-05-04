@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 

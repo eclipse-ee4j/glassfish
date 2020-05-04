@@ -55,12 +55,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import javax.rmi.CORBA.Tie;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.omg.CORBA.CompletionStatus;
 import org.omg.CORBA.INVALID_TRANSACTION;
 import org.omg.CORBA.LocalObject;

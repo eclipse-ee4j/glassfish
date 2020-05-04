@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import jakarta.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 import javax.servlet.ServletException;

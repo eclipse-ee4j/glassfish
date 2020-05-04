@@ -21,7 +21,7 @@ package tests.cdi.context;
 //import javax.enterprise.event.Observes;
 //import javax.enterprise.inject.Produces;
 //import javax.enterprise.inject.spi.BeanManager;
-//import javax.inject.Inject;
+//import jakarta.inject.Inject;
 //import javax.servlet.ServletContext;
 //import javax.servlet.ServletContextEvent;
 //

@@ -22,7 +22,7 @@ import java.io.PrintWriter;
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
 import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

@@ -16,7 +16,7 @@
 
 package tests.cdi.servlet;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.ServletContext;
 
 //Simple TestBean to test CDI. 

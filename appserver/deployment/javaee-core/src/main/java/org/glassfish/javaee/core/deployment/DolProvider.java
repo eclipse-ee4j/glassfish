@@ -56,8 +56,8 @@ import org.glassfish.hk2.api.PreDestroy;
 import org.xml.sax.SAXException;
 
 import javax.enterprise.deploy.shared.ModuleType;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

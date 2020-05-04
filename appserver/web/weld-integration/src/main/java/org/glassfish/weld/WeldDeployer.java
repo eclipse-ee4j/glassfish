@@ -58,7 +58,7 @@ import org.jboss.weld.injection.spi.InjectionServices;
 import org.jboss.weld.security.spi.SecurityServices;
 import org.jboss.weld.serialization.spi.ProxyServices;
 import org.jboss.weld.transaction.spi.TransactionServices;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.servlet.jsp.tagext.JspTag;
 
 import org.jvnet.hk2.annotations.Service;

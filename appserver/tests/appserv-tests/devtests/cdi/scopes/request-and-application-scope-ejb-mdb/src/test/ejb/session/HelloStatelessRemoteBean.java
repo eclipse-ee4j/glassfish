@@ -20,7 +20,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import test.beans.BeanToTestTimerUse;
 import test.beans.TestApplicationScopedBean;

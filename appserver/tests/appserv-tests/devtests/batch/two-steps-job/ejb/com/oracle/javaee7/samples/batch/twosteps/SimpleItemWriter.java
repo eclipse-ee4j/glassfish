@@ -16,7 +16,7 @@ package com.oracle.javaee7.samples.batch.twosteps;
 
 import java.io.Externalizable;
 import java.util.List;
-@javax.inject.Named("SimpleItemWriter")
+@jakarta.inject.Named("SimpleItemWriter")
 public class SimpleItemWriter
     extends javax.batch.api.AbstractItemWriter<String> {
     

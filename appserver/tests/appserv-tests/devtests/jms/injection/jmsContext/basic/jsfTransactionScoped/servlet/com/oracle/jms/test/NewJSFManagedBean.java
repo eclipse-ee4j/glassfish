@@ -23,7 +23,7 @@ package com.oracle.jms.test;
 import jakarta.annotation.Resource;
 import jakarta.faces.bean.ManagedBean;
 import jakarta.faces.bean.ViewScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 import jakarta.ejb.*;
 import jakarta.transaction.UserTransaction;

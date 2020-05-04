@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.JMSConnectionFactory;
 import jakarta.jms.JMSContext;

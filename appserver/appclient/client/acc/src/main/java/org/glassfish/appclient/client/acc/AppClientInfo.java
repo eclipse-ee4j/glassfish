@@ -35,8 +35,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.api.deployment.InstrumentableClassLoader;

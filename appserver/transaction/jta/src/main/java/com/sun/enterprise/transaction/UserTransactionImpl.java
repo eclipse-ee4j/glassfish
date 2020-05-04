@@ -33,7 +33,7 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.internal.api.Globals;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.annotations.ContractsProvided;

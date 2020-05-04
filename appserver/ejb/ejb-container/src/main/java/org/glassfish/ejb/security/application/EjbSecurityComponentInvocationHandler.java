@@ -26,10 +26,10 @@ import org.glassfish.api.invocation.ComponentInvocationHandler;
 import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.glassfish.api.invocation.InvocationException;
 import org.glassfish.api.invocation.InvocationManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Service(name="ejbSecurityCIH")
 @Singleton

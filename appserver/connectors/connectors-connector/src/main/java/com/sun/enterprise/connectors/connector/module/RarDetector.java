@@ -26,12 +26,12 @@ import org.glassfish.deployment.common.GenericAnnotationDetector;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Detects rar type archives.

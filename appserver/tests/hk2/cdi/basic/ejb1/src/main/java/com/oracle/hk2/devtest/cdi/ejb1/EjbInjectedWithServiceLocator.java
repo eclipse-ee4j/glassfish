@@ -22,7 +22,7 @@ import java.util.Map;
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;

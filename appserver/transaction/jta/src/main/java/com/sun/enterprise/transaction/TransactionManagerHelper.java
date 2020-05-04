@@ -21,7 +21,7 @@ import jakarta.resource.spi.XATerminator;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.glassfish.api.invocation.InvocationManager;

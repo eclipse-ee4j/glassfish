@@ -16,7 +16,7 @@
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 
 @ApplicationScoped

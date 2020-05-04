@@ -16,7 +16,7 @@ package com.oracle.javaee7.samples.batch.chunk;
 
 import java.io.Serializable;
 import java.util.List;
-@javax.inject.Named("SimpleItemWriter")
+@jakarta.inject.Named("SimpleItemWriter")
 public class SimpleItemWriter
     implements javax.batch.api.chunk.ItemWriter {
     

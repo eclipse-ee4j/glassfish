@@ -65,10 +65,10 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.types.Property;
 import com.sun.enterprise.config.serverbeans.Module;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import javax.naming.NamingException;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionManager;

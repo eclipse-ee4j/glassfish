@@ -45,7 +45,7 @@ import org.glassfish.admingui.connector.IndexItem;
 import org.glassfish.admingui.connector.IntegrationPoint;
 import org.glassfish.admingui.connector.ConsoleConfig;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 /**

@@ -17,7 +17,7 @@
 package test.beans;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @RequestScoped
 public class TestRequestScopedBean {

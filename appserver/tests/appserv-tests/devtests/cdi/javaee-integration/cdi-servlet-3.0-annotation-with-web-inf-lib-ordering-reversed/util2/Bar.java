@@ -16,6 +16,6 @@
 
 @javax.enterprise.context.RequestScoped
 public class Bar{
-@javax.inject.Inject
+@jakarta.inject.Inject
 Foo f;
 }

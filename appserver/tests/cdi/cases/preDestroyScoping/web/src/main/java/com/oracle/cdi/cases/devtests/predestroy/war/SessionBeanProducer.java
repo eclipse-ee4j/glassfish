@@ -22,7 +22,7 @@ import jakarta.annotation.PreDestroy;
 import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oracle.cdi.cases.devtests.predestroy.lib.EventLog;
 import com.oracle.cdi.cases.devtests.predestroy.lib.PreDestroyConstants;

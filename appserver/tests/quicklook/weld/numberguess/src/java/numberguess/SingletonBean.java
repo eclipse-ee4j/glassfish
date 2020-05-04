@@ -24,7 +24,7 @@ import jakarta.ejb.SessionContext;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 @Singleton

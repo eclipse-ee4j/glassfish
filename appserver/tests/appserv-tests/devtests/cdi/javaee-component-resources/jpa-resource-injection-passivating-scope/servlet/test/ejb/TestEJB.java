@@ -17,7 +17,7 @@
 package test.ejb;
 
 import jakarta.ejb.Stateful;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
 import test.beans.artifacts.TestDatabase;

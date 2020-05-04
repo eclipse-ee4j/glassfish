@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
         initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
 public class TestServlet extends HttpServlet {
 
-    @javax.inject.Inject
+    @jakarta.inject.Inject
     TestManagedBean testResource;
 
     public void service(HttpServletRequest req, HttpServletResponse res)

@@ -19,8 +19,8 @@ package com.acme;
 import jakarta.ejb.*;
 import jakarta.annotation.*;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javax.enterprise.event.Observes;
 
 @Stateless

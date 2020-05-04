@@ -35,8 +35,8 @@ import java.util.logging.Logger;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 import javax.security.auth.Subject;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
@@ -101,7 +101,7 @@ import com.sun.enterprise.security.auth.login.DigestCredentials;
 import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.util.net.NetUtils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.security.jacc.PolicyContext;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;

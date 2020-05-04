@@ -17,7 +17,7 @@
 package com.sun.enterprise.v3.server;
 
 import org.glassfish.internal.api.ClassLoaderHierarchy;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;

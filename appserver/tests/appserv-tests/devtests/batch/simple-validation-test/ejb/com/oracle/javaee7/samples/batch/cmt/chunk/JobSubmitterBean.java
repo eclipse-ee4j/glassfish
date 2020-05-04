@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.annotation.PostConstruct;
 
 import javax.batch.operations.JobOperator;

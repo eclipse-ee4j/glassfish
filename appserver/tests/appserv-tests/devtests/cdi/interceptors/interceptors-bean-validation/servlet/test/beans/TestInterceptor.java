@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.interceptor.AroundConstruct;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;

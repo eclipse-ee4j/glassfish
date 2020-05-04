@@ -26,7 +26,7 @@ import jakarta.security.auth.message.config.AuthConfigFactory;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  *

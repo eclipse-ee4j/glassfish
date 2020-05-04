@@ -17,7 +17,7 @@
 package test.beans;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @Named("test_named_bean")
 @RequestScoped

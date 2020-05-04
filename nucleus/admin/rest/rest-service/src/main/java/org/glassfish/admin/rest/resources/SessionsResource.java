@@ -17,7 +17,7 @@
 package org.glassfish.admin.rest.resources;
 
 import java.util.HashMap;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.security.auth.Subject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;

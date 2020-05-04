@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
         urlPatterns={"/myurl"},
         initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
 public class TestServlet extends HttpServlet {
-    @javax.inject.Inject TestManagedBean tb1;
+    @jakarta.inject.Inject TestManagedBean tb1;
     @jakarta.annotation.Resource TestManagedBean tb;
 
     public void service(HttpServletRequest req, HttpServletResponse res)

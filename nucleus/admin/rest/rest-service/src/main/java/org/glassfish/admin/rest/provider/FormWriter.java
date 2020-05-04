@@ -40,7 +40,7 @@ import java.util.Set;
 @Provider
 public class FormWriter implements MessageBodyWriter<Dom> {
     @Context
-    protected javax.inject.Provider<UriInfo> uriInfo;
+    protected jakarta.inject.Provider<UriInfo> uriInfo;
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {

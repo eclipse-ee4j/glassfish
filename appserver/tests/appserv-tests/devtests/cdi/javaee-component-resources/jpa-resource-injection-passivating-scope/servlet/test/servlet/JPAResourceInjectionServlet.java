@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import jakarta.annotation.Resource;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;

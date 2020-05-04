@@ -18,7 +18,7 @@ package test.ejb;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Stateless
 public class TestNoInterfaceEJB extends TestSuperClass {

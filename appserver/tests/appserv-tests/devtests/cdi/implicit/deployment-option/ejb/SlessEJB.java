@@ -15,7 +15,7 @@
  */
 
 import jakarta.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 @Stateless

@@ -93,8 +93,9 @@
         <javassist.version>3.26.0-GA</javassist.version>
         <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
         <jakarta.el-api.version>3.0.2</jakarta.el-api.version>
-        <hk2.version>2.6.1</hk2.version>
-        <hk2.plugin.version>2.5.0</hk2.plugin.version>
+        <jakarta.inject-api.version>2.0.0-RC3</jakarta.inject-api.version>
+        <hk2.version>3.0.0-M1</hk2.version>
+        <hk2.plugin.version>3.0.0-M1</hk2.plugin.version>
         <jboss.logging.version>3.4.1.Final</jboss.logging.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <jsch.version>0.1.56</jsch.version>
@@ -607,6 +608,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>${jakarta.inject-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-bom</artifactId>

@@ -34,7 +34,7 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import jakarta.resource.ResourceException;

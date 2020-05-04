@@ -17,7 +17,7 @@
 package test.util;
 
 import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 

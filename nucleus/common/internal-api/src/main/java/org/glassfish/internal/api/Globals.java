@@ -24,8 +24,8 @@ import org.glassfish.hk2.api.Rank;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.runlevel.RunLevel;
 import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * Very sensitive class, anything stored here cannot be garbage collected

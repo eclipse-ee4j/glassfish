@@ -22,8 +22,8 @@ import org.glassfish.apf.*;
 import org.glassfish.apf.impl.AnnotationUtils;
 import org.glassfish.apf.impl.HandlerProcessingResultImpl;
 import org.jvnet.hk2.annotations.Optional;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

@@ -29,9 +29,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * The implementation of the admin command lock.

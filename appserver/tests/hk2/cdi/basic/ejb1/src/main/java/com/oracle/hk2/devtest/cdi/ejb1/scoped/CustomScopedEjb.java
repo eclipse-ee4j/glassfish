@@ -17,8 +17,8 @@
 package com.oracle.hk2.devtest.cdi.ejb1.scoped;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * @author jwells

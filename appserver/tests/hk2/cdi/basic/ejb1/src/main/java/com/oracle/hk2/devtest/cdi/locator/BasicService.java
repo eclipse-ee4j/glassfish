@@ -17,8 +17,8 @@
 package com.oracle.hk2.devtest.cdi.locator;
 
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * This service will be created with HK2 but will

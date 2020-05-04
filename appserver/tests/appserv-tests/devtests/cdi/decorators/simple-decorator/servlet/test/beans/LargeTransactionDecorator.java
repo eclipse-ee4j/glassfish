@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Decorator
 public abstract class LargeTransactionDecorator implements Account {

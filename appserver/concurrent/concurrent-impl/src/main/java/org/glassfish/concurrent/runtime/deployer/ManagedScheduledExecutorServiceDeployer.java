@@ -33,8 +33,8 @@ import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.glassfish.resources.naming.SerializableObjectRefAddr;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import java.util.Collection;

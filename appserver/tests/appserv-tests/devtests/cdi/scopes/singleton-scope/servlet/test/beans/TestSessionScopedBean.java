@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @SessionScoped
 public class TestSessionScopedBean implements Serializable{

@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.jvnet.hk2.annotations.Service;
 
 import org.glassfish.webservices.monitoring.WebServiceEngineImpl;

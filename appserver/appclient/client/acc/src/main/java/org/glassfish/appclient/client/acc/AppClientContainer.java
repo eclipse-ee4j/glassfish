@@ -42,7 +42,7 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.NamingException;
 import jakarta.persistence.EntityManagerFactory;
 import javax.security.auth.callback.CallbackHandler;

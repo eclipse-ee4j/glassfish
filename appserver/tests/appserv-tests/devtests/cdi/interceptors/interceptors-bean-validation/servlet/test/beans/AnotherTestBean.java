@@ -17,7 +17,7 @@
 package test.beans;
 
 import jakarta.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 
 

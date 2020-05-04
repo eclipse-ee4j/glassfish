@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpUpgradeHandler;

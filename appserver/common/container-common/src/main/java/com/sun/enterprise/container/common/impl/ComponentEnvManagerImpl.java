@@ -43,7 +43,7 @@ import org.jvnet.hk2.annotations.Service;
 import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;

@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.ActivationConfigProperty;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.MessageDriven;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.JMSConnectionFactory;
 import jakarta.jms.JMSConnectionFactoryDefinition;

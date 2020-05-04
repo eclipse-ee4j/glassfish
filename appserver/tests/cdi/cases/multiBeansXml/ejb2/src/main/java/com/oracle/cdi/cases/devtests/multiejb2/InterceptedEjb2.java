@@ -21,7 +21,7 @@ import java.util.List;
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * 

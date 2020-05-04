@@ -32,8 +32,8 @@ import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 
 import com.sun.enterprise.deployment.deploy.shared.MultiReadableArchive;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

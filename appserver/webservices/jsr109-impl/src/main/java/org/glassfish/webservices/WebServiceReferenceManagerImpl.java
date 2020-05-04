@@ -27,7 +27,7 @@ import com.sun.enterprise.container.common.spi.WebServiceReferenceManager;
 import com.sun.xml.ws.api.FeatureConstructor;
 import com.sun.xml.ws.resources.ModelerMessages;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;

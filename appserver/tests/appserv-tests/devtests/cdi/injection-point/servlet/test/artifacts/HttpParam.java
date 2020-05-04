@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

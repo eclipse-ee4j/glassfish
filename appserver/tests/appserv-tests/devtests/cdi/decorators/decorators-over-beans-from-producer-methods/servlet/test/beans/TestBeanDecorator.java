@@ -18,7 +18,7 @@ package test.beans;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Decorator
 public abstract class TestBeanDecorator implements TestBeanInterface{

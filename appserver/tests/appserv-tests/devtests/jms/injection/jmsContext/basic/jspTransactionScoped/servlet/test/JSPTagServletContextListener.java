@@ -17,7 +17,7 @@
 package test;
 
 import jakarta.annotation.Resource;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

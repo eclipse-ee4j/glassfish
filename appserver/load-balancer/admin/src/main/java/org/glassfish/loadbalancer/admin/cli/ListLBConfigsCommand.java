@@ -38,7 +38,7 @@ import org.glassfish.loadbalancer.config.LbConfig;
 
 import org.glassfish.api.admin.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * This is a remote commands to list lb configs (ported from v2)

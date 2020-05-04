@@ -14,10 +14,10 @@
  */
 package com.oracle.javaee7.samples.batch.chunk;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
-@javax.inject.Named("SimpleItemProcessor")
+@jakarta.inject.Named("SimpleItemProcessor")
 public class SimpleItemProcessor
     implements javax.batch.api.chunk.ItemProcessor {
 

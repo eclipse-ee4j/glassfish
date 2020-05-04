@@ -36,7 +36,7 @@ import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.deployment.common.SimpleDeployer;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.persistence.common.Java2DBProcessorHelper;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 

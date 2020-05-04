@@ -19,7 +19,7 @@ package com.oracle.hk2.devtest.cdi.ear.war2;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

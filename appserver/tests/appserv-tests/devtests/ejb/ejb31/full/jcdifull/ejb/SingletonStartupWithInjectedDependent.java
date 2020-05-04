@@ -20,7 +20,7 @@ import jakarta.ejb.*;
 import jakarta.annotation.*;
 import jakarta.interceptor.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Singleton
 @Startup

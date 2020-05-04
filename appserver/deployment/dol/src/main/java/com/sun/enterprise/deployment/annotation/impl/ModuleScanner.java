@@ -28,7 +28,7 @@ import java.util.zip.ZipException;
 import org.glassfish.apf.Scanner;
 import org.glassfish.apf.impl.JavaEEScanner;
 import org.glassfish.hk2.classmodel.reflect.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 

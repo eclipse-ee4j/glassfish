@@ -20,7 +20,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;

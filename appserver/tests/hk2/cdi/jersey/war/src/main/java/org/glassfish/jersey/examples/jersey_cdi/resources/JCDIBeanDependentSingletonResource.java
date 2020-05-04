@@ -44,10 +44,10 @@ public class JCDIBeanDependentSingletonResource {
     private @Resource(name="injectedResource") int injectedResource = 0;
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<UriInfo> uiFieldInjectProvider;
+    private @Context jakarta.inject.Provider<UriInfo> uiFieldInjectProvider;
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<ResourceContext> rcProvider;
+    private @Context jakarta.inject.Provider<ResourceContext> rcProvider;
 
     private UriInfo uiMethodInject;
 

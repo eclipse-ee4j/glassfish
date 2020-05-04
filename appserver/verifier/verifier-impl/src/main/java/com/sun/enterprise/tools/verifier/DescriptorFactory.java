@@ -39,7 +39,7 @@ import com.sun.enterprise.v3.common.HTMLActionReporter;
 import org.glassfish.api.ActionReport;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.xml.sax.SAXException;
 

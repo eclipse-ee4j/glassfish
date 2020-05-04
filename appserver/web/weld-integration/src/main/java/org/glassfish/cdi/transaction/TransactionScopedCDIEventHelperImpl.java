@@ -19,7 +19,7 @@ package org.glassfish.cdi.transaction;
 import jakarta.enterprise.context.Destroyed;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Event;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.transaction.TransactionScoped;
 
 /**

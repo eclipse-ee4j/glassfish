@@ -18,7 +18,7 @@ package org.glassfish.soteria.test;
 
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @RequestScoped
 @Named

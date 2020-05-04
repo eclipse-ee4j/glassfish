@@ -42,7 +42,7 @@ import com.sun.enterprise.transaction.monitoring.TransactionServiceStatsProvider
 import com.sun.logging.LogDomains;
 import com.sun.enterprise.util.i18n.StringManager;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.glassfish.hk2.api.PostConstruct;

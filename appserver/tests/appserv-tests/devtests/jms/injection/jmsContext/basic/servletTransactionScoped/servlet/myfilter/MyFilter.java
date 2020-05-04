@@ -18,7 +18,7 @@ package myfilter;
 
 import java.io.*;
 import jakarta.annotation.Resource;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 import javax.servlet.*;
 import javax.naming.*;

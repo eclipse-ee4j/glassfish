@@ -18,7 +18,7 @@ package test.util;
 
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;

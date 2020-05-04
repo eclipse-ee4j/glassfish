@@ -17,7 +17,7 @@
 package com.acme.util;
 
 import jakarta.annotation.ManagedBean;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @ManagedBean
 public class TestManagedBean {

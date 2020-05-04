@@ -52,7 +52,6 @@
         <jakarta.transaction-api.version>2.0.0-RC1</jakarta.transaction-api.version>
         <jakarta.faces-api.version>3.0.0-RC1</jakarta.faces-api.version>
         <cdi-api.version>3.0.0-M2</cdi-api.version>
-        <javax.inject.version>2.0.0-RC3</javax.inject.version>
         <jakarta.resource-api.version>2.0.0-RC1</jakarta.resource-api.version>
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
         <jakarta.authorization-api.version>2.0.0-RC1</jakarta.authorization-api.version>
@@ -163,7 +162,7 @@
                 <version>1.6</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
-                    <excludes>jakarta.inject.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, jakarta.persistence.jar</excludes>
+                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, jakarta.persistence.jar</excludes>
                     <specs>
                         <spec>
                             <artifact>
@@ -498,8 +497,8 @@
                 <version>${cdi-api.version}</version>
                 <exclusions>
                   <exclusion>
-                      <groupId>javax.inject</groupId>
-                      <artifactId>javax.inject</artifactId>
+                      <groupId>jakarta.inject</groupId>
+                      <artifactId>jakarta.inject</artifactId>
                   </exclusion>
               </exclusions>
             </dependency>

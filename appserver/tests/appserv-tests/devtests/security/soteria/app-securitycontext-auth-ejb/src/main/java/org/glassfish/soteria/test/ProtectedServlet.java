@@ -21,7 +21,7 @@ import javax.security.enterprise.SecurityContext;
 import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.HttpConstraint;
 import jakarta.annotation.security.DeclareRoles;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.credential.CallerOnlyCredential;

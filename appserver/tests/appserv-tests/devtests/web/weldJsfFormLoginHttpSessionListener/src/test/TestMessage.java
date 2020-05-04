@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
 //import jakarta.faces.bean.ManagedBean;
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @Named
 @SessionScoped

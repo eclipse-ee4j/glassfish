@@ -37,8 +37,8 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.resource.ResourceException;
 import java.util.Properties;
 

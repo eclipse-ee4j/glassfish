@@ -23,7 +23,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.logging.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;

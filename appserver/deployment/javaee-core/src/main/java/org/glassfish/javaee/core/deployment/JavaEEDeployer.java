@@ -42,9 +42,9 @@ import java.util.jar.Attributes;
 import java.util.List;
 import java.net.URL;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 
 /**
  * Convenient superclass for JavaEE Deployer implementations.

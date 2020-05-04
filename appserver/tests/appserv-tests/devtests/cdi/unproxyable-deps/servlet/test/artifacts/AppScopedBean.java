@@ -17,7 +17,7 @@
 package test.artifacts;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class AppScopedBean {

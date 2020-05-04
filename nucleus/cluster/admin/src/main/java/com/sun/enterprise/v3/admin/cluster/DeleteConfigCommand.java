@@ -21,7 +21,7 @@ package com.sun.enterprise.v3.admin.cluster;
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 import org.jvnet.hk2.annotations.Service;

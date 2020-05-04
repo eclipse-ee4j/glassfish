@@ -26,7 +26,7 @@ import org.glassfish.hk2.api.PerLookup;
 
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.EOL;
 

@@ -31,8 +31,8 @@ import org.jvnet.hk2.annotations.Service;
 
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javax.naming.NamingException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

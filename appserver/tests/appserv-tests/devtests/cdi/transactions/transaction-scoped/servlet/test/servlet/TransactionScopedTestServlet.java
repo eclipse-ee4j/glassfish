@@ -20,7 +20,7 @@ import test.beans.Bean1;
 import test.beans.Bean2;
 
 import javax.enterprise.context.ContextNotActiveException;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;

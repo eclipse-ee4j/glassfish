@@ -18,7 +18,7 @@ package com.oracle.hk2.devtest.cdi.ear.ejb1;
 
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oracle.hk2.devtest.cdi.ear.lib1.HK2Service;
 import com.oracle.hk2.devtest.cdi.ear.lib1.Lib1HK2Service;

@@ -33,9 +33,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 import jakarta.resource.spi.ActivationSpec;
 import jakarta.resource.spi.BootstrapContext;
 import jakarta.resource.spi.ManagedConnectionFactory;
@@ -105,7 +105,7 @@ import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.glassfish.api.logging.LogHelper;
 import org.jvnet.hk2.config.types.Property;
 

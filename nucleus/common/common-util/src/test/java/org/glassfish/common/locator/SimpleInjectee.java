@@ -16,7 +16,7 @@
 
 package org.glassfish.common.locator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author jwells

@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 @jakarta.inject.Named("SimpleItemWriter")
 public class SimpleItemWriter
-    implements javax.batch.api.chunk.ItemWriter {
+    implements jakarta.batch.api.chunk.ItemWriter {
     
     @Override
     public void open(Serializable e) throws Exception {

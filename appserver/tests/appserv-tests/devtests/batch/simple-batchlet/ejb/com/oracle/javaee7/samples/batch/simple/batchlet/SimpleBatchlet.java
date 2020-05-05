@@ -19,7 +19,7 @@ import jakarta.inject.Inject;
 
 @jakarta.inject.Named
 public class SimpleBatchlet
-    implements javax.batch.api.Batchlet {
+    implements jakarta.batch.api.Batchlet {
 
     @Override
     public String process() throws Exception {

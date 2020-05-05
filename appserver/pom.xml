@@ -99,9 +99,9 @@
         <yasson.version>2.0.0-M1</yasson.version>
         <concurrent-api.version>2.0.0-RC1</concurrent-api.version>
         <concurrent.version>2.0.0-RC1</concurrent.version>
-        <jakarta.batch-api.version>1.0.2</jakarta.batch-api.version>
-        <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
+        <jakarta.batch-api.version>2.0.0-M1</jakarta.batch-api.version>
+        <com.ibm.jbatch.container.version>2.0.0-M1</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0-M1</com.ibm.jbatch.spi.version>
         <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
         <easymock.version>3.5</easymock.version>
 	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
@@ -273,7 +273,7 @@
                             <jarType>api</jarType>
                             <specVersion>1.0</specVersion>
                             <specImplVersion>${jakarta.batch-api.version}</specImplVersion>
-                            <apiPackage>javax.batch</apiPackage>
+                            <apiPackage>jakarta.batch</apiPackage>
                         </spec>
                         <spec>
                             <artifact>

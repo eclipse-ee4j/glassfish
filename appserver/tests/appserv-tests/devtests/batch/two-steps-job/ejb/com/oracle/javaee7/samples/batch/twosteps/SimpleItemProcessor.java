@@ -19,7 +19,7 @@ import jakarta.inject.Inject;
 
 @jakarta.inject.Named//("com.oracle.javaee7.samples.batch.simple.SimpleItemProcessor")
 public class SimpleItemProcessor
-    implements javax.batch.api.ItemProcessor<String, String> {
+    implements jakarta.batch.api.ItemProcessor<String, String> {
 
 //    @Inject
 //    IdGenerator idGen;

@@ -18,7 +18,7 @@ import java.io.Externalizable;
 
 @jakarta.inject.Named("SimpleItemReader")
 public class SimpleItemReader
-    extends javax.batch.api.AbstractItemReader<String> {
+    extends jakarta.batch.api.AbstractItemReader<String> {
 
     private int index = 0;
     

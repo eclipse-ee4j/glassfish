@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 @jakarta.inject.Named("SimpleItemReader")
 public class SimpleItemReader
-    implements javax.batch.api.chunk.ItemReader {
+    implements jakarta.batch.api.chunk.ItemReader {
 
     private int index = 0;
     

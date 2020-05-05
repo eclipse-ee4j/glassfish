@@ -23,8 +23,8 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.batch.spi.impl.BatchRuntimeHelper;
 import org.glassfish.batch.spi.impl.GlassFishBatchSecurityHelper;
 
-import javax.batch.operations.JobOperator;
-import javax.batch.runtime.BatchRuntime;
+import jakarta.batch.operations.JobOperator;
+import jakarta.batch.runtime.BatchRuntime;
 import jakarta.inject.Inject;
 import java.util.*;
 import java.util.logging.Level;

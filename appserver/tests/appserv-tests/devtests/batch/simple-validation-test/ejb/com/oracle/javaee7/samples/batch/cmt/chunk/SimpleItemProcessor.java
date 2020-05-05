@@ -19,7 +19,7 @@ import jakarta.inject.Inject;
 
 @jakarta.inject.Named("SimpleItemProcessor")
 public class SimpleItemProcessor
-    implements javax.batch.api.chunk.ItemProcessor {
+    implements jakarta.batch.api.chunk.ItemProcessor {
 
     @Inject
     IdGenerator idGen;

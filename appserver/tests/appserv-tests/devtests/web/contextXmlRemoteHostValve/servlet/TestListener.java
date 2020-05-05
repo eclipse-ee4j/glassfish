@@ -18,7 +18,7 @@ package test;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
+import jakarta.servlet.*;
 import org.apache.catalina.*;
 
 public class TestListener implements LifecycleListener {

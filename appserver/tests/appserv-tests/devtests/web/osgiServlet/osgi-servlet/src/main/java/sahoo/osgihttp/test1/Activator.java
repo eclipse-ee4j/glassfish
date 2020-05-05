@@ -16,7 +16,7 @@
 
 package sahoo.osgihttp.test1;
 
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;

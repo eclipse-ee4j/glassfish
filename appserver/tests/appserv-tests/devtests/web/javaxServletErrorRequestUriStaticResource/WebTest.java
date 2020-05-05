@@ -20,7 +20,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 /*
  * Unit test for CR 4882996
- * (request.getAttribute("javax.servlet.error.request_uri") is not working).
+ * (request.getAttribute("jakarta.servlet.error.request_uri") is not working).
  *
  * The following response body lines must be returned in order for this unit
  * test to succeed:

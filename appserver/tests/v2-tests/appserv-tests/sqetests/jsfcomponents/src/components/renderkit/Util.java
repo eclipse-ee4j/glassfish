@@ -212,9 +212,9 @@ public class Util extends Object {
         if (null !=
             (bundleName = (String) component.getAttributes().get(bundleAttr))) {
             // verify there is a Locale for this modelReference
-            javax.servlet.jsp.jstl.fmt.LocalizationContext locCtx = null;
+            jakarta.servlet.jsp.jstl.fmt.LocalizationContext locCtx = null;
             if (null != (locCtx =
-                (javax.servlet.jsp.jstl.fmt.LocalizationContext)
+                (jakarta.servlet.jsp.jstl.fmt.LocalizationContext)
                 (Util.getValueBinding(bundleName)).getValue(context))) {
                 result = locCtx.getLocale();
 //		Assert.assert_it(null != result);

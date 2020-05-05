@@ -20,18 +20,18 @@
 <%@ page import="java.util.*" %>
 
 <%
-Object attrValue = request.getAttribute("javax.servlet.include.request_uri");
+Object attrValue = request.getAttribute("jakarta.servlet.include.request_uri");
 if (!"/web-get-attribute-after-forward/process.jsp".equals(attrValue)) {
     throw new Exception("Missing or wrong value for request attribute " +
-        "javax.servlet.include.request_uri_name. Expected: " +
+        "jakarta.servlet.include.request_uri_name. Expected: " +
         "\"/web-get-attribute-after-forward/process.jsp\", received: " +
         attrValue);
 }
 
-attrValue = request.getAttribute("javax.servlet.forward.request_uri");
+attrValue = request.getAttribute("jakarta.servlet.forward.request_uri");
 if (!"/web-get-attribute-after-forward/forward.jsp".equals(attrValue)) {
     throw new Exception("Missing or wrong value for request attribute " +
-        "javax.servlet.forward.request_uri_name. Expected: " +
+        "jakarta.servlet.forward.request_uri_name. Expected: " +
         "\"/web-get-attribute-after-forward/forward.jsp\", received: " +
         attrValue);
 }

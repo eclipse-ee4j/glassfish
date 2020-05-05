@@ -18,10 +18,10 @@ package wftest;
 
 import java.io.*;
 import java.util.Enumeration;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebInitParam;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet(name="wftestServlet", urlPatterns={"/t"}, initParams={ @WebInitParam(name="mesg", value="hello a"), @WebInitParam(name="mesg3", value="hello3 a") })
 public class WFTestServlet extends HttpServlet {

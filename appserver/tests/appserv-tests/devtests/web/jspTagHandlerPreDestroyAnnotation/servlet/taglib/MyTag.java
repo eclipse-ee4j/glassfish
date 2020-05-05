@@ -18,7 +18,7 @@ package taglib;
 
 import java.io.*;
 import jakarta.annotation.PreDestroy;
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 public class MyTag extends TagSupport {
 

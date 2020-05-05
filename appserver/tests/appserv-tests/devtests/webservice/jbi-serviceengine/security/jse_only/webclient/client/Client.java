@@ -16,7 +16,7 @@
 
 package client;
 
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 import java.io.PrintWriter;
 import java.security.Principal;
 
@@ -30,12 +30,12 @@ public class Client extends HttpServlet {
     HelloEJBService service;
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws javax.servlet.ServletException {
+            throws jakarta.servlet.ServletException {
         doPost(req, resp);
     }
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws javax.servlet.ServletException {
+            throws jakarta.servlet.ServletException {
         try {
             Principal p = req.getUserPrincipal();
 	    String principal = (p==null)? "NULL": p.toString();

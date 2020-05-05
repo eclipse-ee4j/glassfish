@@ -73,7 +73,7 @@ import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.ws.handler.MessageContext;
 import org.glassfish.api.invocation.ComponentInvocation;

@@ -249,7 +249,7 @@
                             <jarType>api</jarType>
                             <specVersion>1.2</specVersion>
                             <specImplVersion>${jstl-impl.version}</specImplVersion>
-                            <apiPackage>javax.servlet.jsp.jstl</apiPackage>
+                            <apiPackage>jakarta.servlet.jsp.jstl</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -405,7 +405,7 @@
                             <jarType>api</jarType>
                             <specVersion>2.3</specVersion>
                             <specImplVersion>2.3.1</specImplVersion>
-                            <apiPackage>javax.servlet.jsp</apiPackage>
+                            <apiPackage>jakarta.servlet.jsp</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -518,8 +518,8 @@
                 <version>${jakarta.authorization-api.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -678,8 +678,8 @@
 
                 <exclusions>
                     <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

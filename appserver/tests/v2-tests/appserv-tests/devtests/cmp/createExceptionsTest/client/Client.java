@@ -22,8 +22,8 @@
 
 import java.util.Collection;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 

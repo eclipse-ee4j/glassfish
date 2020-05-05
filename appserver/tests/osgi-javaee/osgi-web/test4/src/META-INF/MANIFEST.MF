@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.6.5
 Bundle-ClassPath: WEB-INF/classes
-Import-Package2: javax.servlet.http; version=2.5, javax.servlet.jsp; j
- avax.servlet.jsp.tagext; jakarta.el; javax.servlet.jsp.el; version=2.1
+Import-Package2: jakarta.servlet.http; version=2.5, jakarta.servlet.jsp; j
+ avax.servlet.jsp.tagext; jakarta.el; jakarta.servlet.jsp.el; version=2.1
 Created-By: 1.5.0_05-b05 (Sun Microsystems Inc.)
-Import-Package: javax.servlet; 
+Import-Package: jakarta.servlet; 
 Bundle-SymbolicName: simple-jsp
 Web-ContextPath: /test4
 

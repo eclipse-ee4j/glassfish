@@ -18,12 +18,12 @@ package com.sun.s1as.devtests.ejb.generics;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import jakarta.annotation.*;
 import jakarta.ejb.*;
 
-@javax.servlet.annotation.WebServlet(urlPatterns = "/TestServlet")
+@jakarta.servlet.annotation.WebServlet(urlPatterns = "/TestServlet")
 public class TestServlet extends HttpServlet {
     @EJB
     private TestBean testBean;

@@ -27,8 +27,8 @@ import java.net.*;
 import java.sql.*;
 import jakarta.annotation.Resource;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.sql.DataSource;
 import com.sun.enterprise.admin.monitor.callflow.Agent;
 import com.sun.enterprise.Switch;

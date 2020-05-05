@@ -359,9 +359,9 @@
                         <configuration>
                             <resolutionFuzziness>groupId</resolutionFuzziness>
                             <includes>
-                                <include>javax.ejb</include>
+                                <include>jakarta.ejb</include>
                                 <include>jakarta.transaction</include>
-                                <include>javax.resource</include>
+                                <include>jakarta.resource</include>
                                 <include>jakarta.enterprise.concurrent</include>
                                 <include>jakarta.ws.rs</include>
                                 <include>javax.xml.registry</include>

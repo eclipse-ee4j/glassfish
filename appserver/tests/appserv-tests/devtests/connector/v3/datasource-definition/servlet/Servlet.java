@@ -17,8 +17,8 @@
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBs;
@@ -27,9 +27,9 @@ import jakarta.annotation.Resource;
 import jakarta.annotation.Resources;
 import javax.sql.DataSource;
 import java.sql.Connection;
-import javax.servlet.*;
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+import jakarta.servlet.http.*;
 
 import jakarta.transaction.UserTransaction;
 

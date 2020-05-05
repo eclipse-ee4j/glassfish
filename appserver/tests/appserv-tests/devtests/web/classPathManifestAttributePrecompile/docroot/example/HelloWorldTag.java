@@ -16,10 +16,10 @@
 
 package example;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.SkipPageException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.*;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.SkipPageException;
+import jakarta.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.tagext.*;
 import java.io.IOException;
 
 /**

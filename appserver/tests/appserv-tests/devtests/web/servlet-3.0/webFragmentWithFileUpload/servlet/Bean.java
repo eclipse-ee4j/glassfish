@@ -19,7 +19,7 @@ package fileupload;
 import java.io.IOException;
 import java.util.Scanner;
 import jakarta.faces.bean.ManagedBean;
-import javax.servlet.http.Part;
+import jakarta.servlet.http.Part;
 
 @ManagedBean
 public class Bean {

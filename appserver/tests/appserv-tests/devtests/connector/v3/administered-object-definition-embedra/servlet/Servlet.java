@@ -20,9 +20,9 @@ import java.io.*;
 
 import jakarta.resource.AdministeredObjectDefinitions;
 import jakarta.resource.AdministeredObjectDefinition;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 import javax.naming.*;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBs;

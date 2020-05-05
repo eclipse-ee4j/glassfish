@@ -17,8 +17,8 @@
 package com.sun.cb;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 /**
  * This is a simple example of an HTTP Servlet.  It responds to the GET

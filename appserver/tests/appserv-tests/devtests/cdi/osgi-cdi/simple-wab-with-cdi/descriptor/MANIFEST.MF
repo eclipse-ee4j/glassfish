@@ -17,5 +17,5 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: tests.cdi.simple-cdi-osgi-test
 Web-ContextPath: /test
 Import-Package: jakarta.enterprise.context,jakarta.enterprise.inject,javax
- .inject,jakarta.enterprise.inject.spi,javax.servlet,javax.servlet.annotation,javax.servlet.http,javax.naming
+ .inject,jakarta.enterprise.inject.spi,jakarta.servlet,jakarta.servlet.annotation,jakarta.servlet.http,javax.naming
 

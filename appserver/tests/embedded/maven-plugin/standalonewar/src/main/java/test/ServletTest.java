@@ -19,8 +19,8 @@ package test;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import org.xml.sax.InputSource;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
@@ -73,11 +73,11 @@ public class ServletTest extends HttpServlet implements HttpSessionListener {
         rd.forward(request, response);       
     }
 
-    public void sessionCreated(javax.servlet.http.HttpSessionEvent httpSessionEvent) {
+    public void sessionCreated(jakarta.servlet.http.HttpSessionEvent httpSessionEvent) {
         System.out.println("[Servlet.sessionCreated]");
     }
     
-    public void sessionDestroyed(javax.servlet.http.HttpSessionEvent httpSessionEvent) {
+    public void sessionDestroyed(jakarta.servlet.http.HttpSessionEvent httpSessionEvent) {
         System.out.println("[Servlet.sessionDestroyed]");
         System.out.println("Attributes: " + httpSessionEvent.getSession().getAttribute("test"));
     }

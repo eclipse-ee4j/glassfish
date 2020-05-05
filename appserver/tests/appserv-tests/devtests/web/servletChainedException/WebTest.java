@@ -19,7 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for Servlet 2.5 Issue #23 ("javax.servlet.ServletException does
+ * Unit test for Servlet 2.5 Issue #23 ("jakarta.servlet.ServletException does
  * not correctly chain exceptions").
  * See https://servlet-spec-eg.dev.java.net/issues/show_bug.cgi?id=23 for
  * details.

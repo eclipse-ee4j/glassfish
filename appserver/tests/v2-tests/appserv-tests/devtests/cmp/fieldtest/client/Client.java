@@ -20,8 +20,8 @@
  * Created on February 21, 2003, 3:20 PM
  */
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 

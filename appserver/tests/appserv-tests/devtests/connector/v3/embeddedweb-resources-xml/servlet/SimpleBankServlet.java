@@ -18,9 +18,9 @@ package samples.ejb.subclassing.servlet;
 
 import java.io.*;
 import java.util.*; 
-import javax.servlet.*; 
+import jakarta.servlet.*; 
 import javax.naming.*; 
-import javax.servlet.http.*; 
+import jakarta.servlet.http.*; 
 import jakarta.ejb.*; 
 
 import samples.ejb.subclassing.ejb.*; 

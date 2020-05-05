@@ -19,7 +19,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<tt:definition name="bookstore" screen="${requestScope['javax.servlet.forward.servlet_path']}">
+<tt:definition name="bookstore" screen="${requestScope['jakarta.servlet.forward.servlet_path']}">
   <tt:screen screenId="/bookstore">
     <tt:parameter name="title" value="Duke's Bookstore" direct="true"/>
     <tt:parameter name="banner" value="/template/banner.jsp" direct="false"/>

@@ -18,9 +18,9 @@ package test;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+import jakarta.servlet.http.*;
 
 @WebServlet(urlPatterns={"/test"}, asyncSupported=true)
 public class TestServlet1 extends HttpServlet {

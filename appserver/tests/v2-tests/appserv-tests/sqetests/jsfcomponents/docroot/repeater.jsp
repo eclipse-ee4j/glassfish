@@ -254,7 +254,7 @@ behavior of the default implementation.</p>
     <li>An array of JavaBeans.</li>
     <li>A <em>List</em> of JavaBeans.</li>
     <li>An instance of <em>java.sql.ResultSet</em> (or RowSet).</li>
-    <li>An instance of <em>javax.servlet.jsp.jstl.sql.Result</em>.</li>
+    <li>An instance of <em>jakarta.servlet.jsp.jstl.sql.Result</em>.</li>
     <li>A single JavaBean (which will be treated as a one-row table.</li>
     </ul>
   </td>

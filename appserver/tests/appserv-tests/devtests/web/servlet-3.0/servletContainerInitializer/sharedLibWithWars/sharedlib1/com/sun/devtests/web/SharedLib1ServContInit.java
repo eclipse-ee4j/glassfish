@@ -17,8 +17,8 @@
 package com.sun.devtests.web;
 
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.annotation.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
 
 @HandlesTypes(WebServlet.class)
 public class SharedLib1ServContInit implements ServletContainerInitializer {

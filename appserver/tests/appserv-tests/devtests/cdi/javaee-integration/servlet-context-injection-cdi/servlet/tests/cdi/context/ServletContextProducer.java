@@ -22,8 +22,8 @@ package tests.cdi.context;
 //import jakarta.enterprise.inject.Produces;
 //import jakarta.enterprise.inject.spi.BeanManager;
 //import jakarta.inject.Inject;
-//import javax.servlet.ServletContext;
-//import javax.servlet.ServletContextEvent;
+//import jakarta.servlet.ServletContext;
+//import jakarta.servlet.ServletContextEvent;
 //
 //import tests.cdi.artifacts.Destroyed;
 //import tests.cdi.artifacts.Initialized;

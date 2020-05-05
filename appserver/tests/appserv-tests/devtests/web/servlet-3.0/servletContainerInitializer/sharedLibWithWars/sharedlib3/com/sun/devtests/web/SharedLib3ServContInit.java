@@ -17,8 +17,8 @@
 package com.sun.devtests.web;
 
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.annotation.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
 
 @HandlesTypes(WebFilter.class)
 public class SharedLib3ServContInit implements ServletContainerInitializer {

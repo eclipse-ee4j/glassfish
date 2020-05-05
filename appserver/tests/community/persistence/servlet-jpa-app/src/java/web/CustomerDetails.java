@@ -32,8 +32,8 @@ import javax.naming.InitialContext;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import jakarta.transaction.UserTransaction;
 import persistence.*;
 

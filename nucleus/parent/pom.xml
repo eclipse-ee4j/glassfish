@@ -362,7 +362,7 @@
                                 <include>javax.ejb</include>
                                 <include>jakarta.transaction</include>
                                 <include>javax.resource</include>
-                                <include>javax.enterprise.concurrent</include>
+                                <include>jakarta.enterprise.concurrent</include>
                                 <include>jakarta.ws.rs</include>
                                 <include>javax.xml.registry</include>
                                 <include>jakarta.websocket</include>

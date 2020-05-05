@@ -90,8 +90,8 @@ jakarta.decorator; \
 jakarta.ejb; \
 jakarta.ejb.embeddable; \
 jakarta.ejb.spi; \
-javax.el; \
-javax.enterprise.concurrent; \
+jakarta.el; \
+jakarta.enterprise.concurrent; \
 jakarta.enterprise.context; \
 jakarta.enterprise.context.control; \
 jakarta.enterprise.context.spi; \

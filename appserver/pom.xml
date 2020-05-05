@@ -297,7 +297,7 @@
                             <jarType>api</jarType>
                             <specVersion>${concurrent-api.version}</specVersion>
                             <specImplVersion>${concurrent-api.version}</specImplVersion>
-                            <apiPackage>javax.enterprise.concurrent</apiPackage>
+                            <apiPackage>jakarta.enterprise.concurrent</apiPackage>
                         </spec>
                         <spec>
                             <artifact>
@@ -416,7 +416,7 @@
                             <jarType>impl</jarType>
                             <specVersion>3.0</specVersion>
                             <implVersion>3.0.0</implVersion>
-                            <apiPackage>javax.el</apiPackage>
+                            <apiPackage>jakarta.el</apiPackage>
                             <implNamespace>com.sun.el</implNamespace>
                         </spec>
                         <spec>

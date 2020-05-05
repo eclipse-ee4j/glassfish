@@ -3169,12 +3169,12 @@ public class WebappClassLoader
     // START GlassFish Issue 587
     /*
      * Purges all bean classes that were loaded by this WebappClassLoader
-     * from the caches maintained by javax.el.BeanELResolver, in order to
+     * from the caches maintained by jakarta.el.BeanELResolver, in order to
      * avoid this WebappClassLoader from leaking.
      */
     private void purgeELBeanClasses() {
 
-        Field fieldlist[] = javax.el.BeanELResolver.class.getDeclaredFields();
+        Field fieldlist[] = jakarta.el.BeanELResolver.class.getDeclaredFields();
         for (int i = 0; i < fieldlist.length; i++) {
             Field fld = fieldlist[i];
             if (fld.getName().equals("properties")) {

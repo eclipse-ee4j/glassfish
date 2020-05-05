@@ -42,7 +42,7 @@
         <jms-api.version>3.0.0-RC1</jms-api.version>
         <jsp-api.version>3.0.0-M1</jsp-api.version>
         <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
-        <jstl-impl.version>2.0.0-SNAPSHOT</jstl-impl.version>
+        <jstl-impl.version>2.0.0-M1</jstl-impl.version>
         <jstl-api.version>2.0.0-RC1</jstl-api.version>
         <mojarra.version>3.0.0-RC1</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
@@ -247,7 +247,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>1.2</specVersion>
+                            <specVersion>2.0</specVersion>
                             <specImplVersion>${jstl-impl.version}</specImplVersion>
                             <apiPackage>jakarta.servlet.jsp.jstl</apiPackage>
                         </spec>

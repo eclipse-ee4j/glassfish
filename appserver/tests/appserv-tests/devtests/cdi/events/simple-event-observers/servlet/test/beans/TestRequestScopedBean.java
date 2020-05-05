@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.enterprise.event.Event;
+import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 
 public class TestRequestScopedBean {

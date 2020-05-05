@@ -16,8 +16,8 @@
 
 package test.beans;
 
-import javax.enterprise.event.Event;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.event.Event;
+import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Inject;
 
 public class TestEventProducer {

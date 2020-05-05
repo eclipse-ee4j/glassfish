@@ -18,7 +18,7 @@ package test.beans.nonmock;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 
 import test.beans.TestBeanInterface;

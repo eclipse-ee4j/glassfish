@@ -16,7 +16,7 @@
 
 package test.beans.nonmock;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import javax.sql.DataSource;
 

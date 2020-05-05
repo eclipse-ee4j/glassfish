@@ -18,8 +18,8 @@ package test.beans;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Instance;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 
 @SessionScoped

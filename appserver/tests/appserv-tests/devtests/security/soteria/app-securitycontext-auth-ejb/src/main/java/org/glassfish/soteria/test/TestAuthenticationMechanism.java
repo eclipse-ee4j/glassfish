@@ -21,7 +21,7 @@ import static javax.security.enterprise.AuthenticationStatus.SEND_FAILURE;
 
 import java.util.HashSet;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.AuthenticationException;
 import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;

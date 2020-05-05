@@ -19,7 +19,7 @@ package test.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

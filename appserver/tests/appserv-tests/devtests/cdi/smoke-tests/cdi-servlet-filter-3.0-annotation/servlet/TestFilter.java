@@ -16,7 +16,7 @@
 
 import java.io.IOException;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

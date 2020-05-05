@@ -18,7 +18,7 @@ package org.glassfish.soteria.test;
 
 import static javax.security.enterprise.identitystore.CredentialValidationResult.Status.VALID;
 import java.io.IOException;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.AuthenticationException;

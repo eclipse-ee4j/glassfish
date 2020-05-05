@@ -18,8 +18,8 @@ package test.beans;
 
 import java.math.BigDecimal;
 
-import javax.decorator.Decorator;
-import javax.decorator.Delegate;
+import jakarta.decorator.Decorator;
+import jakarta.decorator.Delegate;
 import jakarta.inject.Inject;
 
 @Decorator

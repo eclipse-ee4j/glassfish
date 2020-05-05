@@ -24,9 +24,9 @@ import jakarta.inject.Inject;
 
 import javax.naming.InitialContext;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 
-import javax.enterprise.event.Event;
+import jakarta.enterprise.event.Event;
 
 import java.lang.reflect.Method;
 

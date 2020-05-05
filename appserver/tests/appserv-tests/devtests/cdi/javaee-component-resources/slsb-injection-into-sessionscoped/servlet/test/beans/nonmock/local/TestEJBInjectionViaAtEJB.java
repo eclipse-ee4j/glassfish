@@ -17,7 +17,7 @@
 package test.beans.nonmock.local;
 
 import jakarta.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 
 import test.beans.artifacts.InjectViaAtEJB;

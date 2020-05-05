@@ -31,7 +31,7 @@ public class CDILoggerInfo {
     public static final String CDI_WELD_LOGMESSAGE_RESOURCE = "org.glassfish.cdi.LogMessages";
 
     @LoggerInfo(subsystem = "AS-CDI", description = "CDI", publish = true)
-    public static final String CDI_LOGGER_SUBSYSTEM_NAME = "javax.enterprise.inject.spi";
+    public static final String CDI_LOGGER_SUBSYSTEM_NAME = "jakarta.enterprise.inject.spi";
     private static final Logger CDI_LOGGER = Logger.getLogger(CDI_LOGGER_SUBSYSTEM_NAME, CDI_WELD_LOGMESSAGE_RESOURCE);
 
     public static Logger getLogger() {

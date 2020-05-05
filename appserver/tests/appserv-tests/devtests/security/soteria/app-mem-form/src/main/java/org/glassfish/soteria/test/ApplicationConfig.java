@@ -16,7 +16,7 @@
 
 package org.glassfish.soteria.test;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 
 

@@ -16,8 +16,8 @@
 
 package org.glassfish.jersey.examples.jersey_cdi.resources.inherited;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 
 import jakarta.ws.rs.GET;

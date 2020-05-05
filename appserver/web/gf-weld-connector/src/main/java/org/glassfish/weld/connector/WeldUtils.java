@@ -76,7 +76,7 @@ public class WeldUtils {
 
     // We don't want this connector module to depend on CDI API, as connector can be present in a distribution
     // which does not have CDI implementation. So, we use the class name as a string.
-    private static final String SERVICES_CLASSNAME = "javax.enterprise.inject.spi.Extension";
+    private static final String SERVICES_CLASSNAME = "jakarta.enterprise.inject.spi.Extension";
     public static final String META_INF_SERVICES_EXTENSION =
         "META-INF" + SEPARATOR_CHAR + SERVICES_DIR + SEPARATOR_CHAR + SERVICES_CLASSNAME;
 

@@ -18,9 +18,9 @@ package test.artifacts;
 
 import java.util.Enumeration;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 import javax.servlet.ServletRequest;
 
 @RequestScoped

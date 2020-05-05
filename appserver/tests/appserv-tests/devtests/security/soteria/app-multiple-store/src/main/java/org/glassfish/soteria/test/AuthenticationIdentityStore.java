@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jakarta.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import javax.security.enterprise.credential.Credential;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;

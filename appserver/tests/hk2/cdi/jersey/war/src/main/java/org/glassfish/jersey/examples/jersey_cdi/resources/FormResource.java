@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.examples.jersey_cdi.resources;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.ws.rs.POST;

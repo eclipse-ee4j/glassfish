@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.locator;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

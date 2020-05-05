@@ -17,7 +17,7 @@
 package test.beans.nonmock.nointerfacebeanview;
 
 import jakarta.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 
 import test.beans.artifacts.InjectViaAtEJB;

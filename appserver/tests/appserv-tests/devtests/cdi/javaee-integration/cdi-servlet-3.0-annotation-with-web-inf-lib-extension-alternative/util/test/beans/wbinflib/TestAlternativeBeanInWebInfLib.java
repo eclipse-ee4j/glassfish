@@ -16,7 +16,7 @@
 
 package test.beans.wbinflib;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 @Alternative
 public class TestAlternativeBeanInWebInfLib extends TestBeanInWebInfLib {

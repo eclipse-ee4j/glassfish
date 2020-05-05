@@ -16,7 +16,7 @@
 
 package test.ejb;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 

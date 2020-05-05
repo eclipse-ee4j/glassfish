@@ -16,9 +16,9 @@
 
 package test.extension;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.*;
-import javax.enterprise.context.spi.*;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.*;
+import jakarta.enterprise.context.spi.*;
 
 import test.servlet.PortableExtensionInjectionTargetTestServlet;
 

@@ -21,7 +21,7 @@ import jakarta.annotation.*;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.event.Observes;
 
 @Stateless
 public class StatelessBean2 implements StatelessLocal2 {

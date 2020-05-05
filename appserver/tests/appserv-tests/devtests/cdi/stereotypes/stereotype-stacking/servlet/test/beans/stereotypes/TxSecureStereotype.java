@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 @TxStereotype
 @SecStereotype
-@javax.enterprise.inject.Stereotype
+@jakarta.enterprise.inject.Stereotype
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE })
 public @interface TxSecureStereotype {

@@ -21,7 +21,7 @@ import static javax.security.enterprise.identitystore.CredentialValidationResult
 
 import java.util.HashSet;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import javax.security.enterprise.credential.UsernamePasswordCredential;

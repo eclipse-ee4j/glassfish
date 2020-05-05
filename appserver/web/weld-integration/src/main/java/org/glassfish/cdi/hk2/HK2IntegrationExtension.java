@@ -41,7 +41,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 /**
  * A portable CDI extension, which is the touch-point for hk2 integration with CDI
  *
- * This extension is registered via META-INF/services/javax.enterprise.inject.spi.Extension
+ * This extension is registered via META-INF/services/jakarta.enterprise.inject.spi.Extension
  *
  * @author jwells
  *

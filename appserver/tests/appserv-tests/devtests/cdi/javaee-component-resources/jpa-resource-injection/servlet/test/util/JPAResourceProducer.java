@@ -16,7 +16,7 @@
 
 package test.util;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;

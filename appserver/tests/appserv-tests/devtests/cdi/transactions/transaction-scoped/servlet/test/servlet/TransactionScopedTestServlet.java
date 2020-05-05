@@ -19,7 +19,7 @@ package test.servlet;
 import test.beans.Bean1;
 import test.beans.Bean2;
 
-import javax.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;

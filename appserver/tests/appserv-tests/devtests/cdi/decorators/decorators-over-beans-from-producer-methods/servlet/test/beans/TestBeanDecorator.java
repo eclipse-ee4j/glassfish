@@ -16,8 +16,8 @@
 
 package test.beans;
 
-import javax.decorator.Decorator;
-import javax.decorator.Delegate;
+import jakarta.decorator.Decorator;
+import jakarta.decorator.Delegate;
 import jakarta.inject.Inject;
 
 @Decorator

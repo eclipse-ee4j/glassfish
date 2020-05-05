@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * The contextual instances are destroyed when the transaction completes.
  * <p/>
  * Any attempt to call a method on a {@link TransactionScoped} bean when a transaction is not active will result in a
- * {@Link javax.enterprise.context.ContextNotActiveException}.
+ * {@Link jakarta.enterprise.context.ContextNotActiveException}.
  *
  * A CDI Event: @Initialized(TransactionScoped.class) is fired with {@link TransactionScopedCDIEventPayload}, when the context is initialized for
  * the first time and @Destroyed(TransactionScoped.class) is fired with {@link TransactionScopedCDIEventPayload}, when the context is destroyed at

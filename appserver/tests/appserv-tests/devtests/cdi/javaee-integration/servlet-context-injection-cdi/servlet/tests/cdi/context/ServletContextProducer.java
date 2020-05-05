@@ -17,10 +17,10 @@
 package tests.cdi.context;
 
 //JJS: With cdi 1.1 the ServletContext is produced by Weld (2.0) and so producing one creates an ambiguous dependency.
-//import javax.enterprise.context.ApplicationScoped;
-//import javax.enterprise.event.Observes;
-//import javax.enterprise.inject.Produces;
-//import javax.enterprise.inject.spi.BeanManager;
+//import jakarta.enterprise.context.ApplicationScoped;
+//import jakarta.enterprise.event.Observes;
+//import jakarta.enterprise.inject.Produces;
+//import jakarta.enterprise.inject.spi.BeanManager;
 //import jakarta.inject.Inject;
 //import javax.servlet.ServletContext;
 //import javax.servlet.ServletContextEvent;

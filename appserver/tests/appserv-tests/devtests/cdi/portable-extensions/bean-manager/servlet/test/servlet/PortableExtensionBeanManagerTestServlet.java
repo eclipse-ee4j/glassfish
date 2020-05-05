@@ -19,11 +19,11 @@ package test.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.context.ConversationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

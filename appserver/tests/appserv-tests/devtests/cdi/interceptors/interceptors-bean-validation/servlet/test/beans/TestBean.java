@@ -17,7 +17,7 @@
 package test.beans;
 
 import jakarta.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import jakarta.validation.constraints.NotNull;
 

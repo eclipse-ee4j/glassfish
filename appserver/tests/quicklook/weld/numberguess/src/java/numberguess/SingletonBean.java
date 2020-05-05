@@ -23,7 +23,7 @@ import jakarta.ejb.EJBException;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 

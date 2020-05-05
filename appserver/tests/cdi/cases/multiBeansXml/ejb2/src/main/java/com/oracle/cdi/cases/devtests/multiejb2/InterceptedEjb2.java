@@ -20,7 +20,7 @@ import java.util.List;
 
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 
 /**

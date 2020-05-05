@@ -16,9 +16,9 @@
 
 package test.beans;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.Reception;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.event.Reception;
 
 public class TestEventConditionalObserver {
     public static int documentAdminUpdatedEvent,

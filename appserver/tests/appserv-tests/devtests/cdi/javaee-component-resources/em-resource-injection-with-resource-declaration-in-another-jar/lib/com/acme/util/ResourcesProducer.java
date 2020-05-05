@@ -16,7 +16,7 @@
 
 package com.acme.util;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;

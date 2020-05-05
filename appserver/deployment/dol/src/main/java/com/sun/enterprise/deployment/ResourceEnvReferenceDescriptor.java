@@ -40,7 +40,7 @@ public class ResourceEnvReferenceDescriptor extends EnvironmentProperty implemen
     private static final String VALIDATION_VALIDATOR ="jakarta.validation.Validator";
     private static final String VALIDATION_VALIDATOR_FACTORY ="jakarta.validation.ValidatorFactory";
 
-    private static final String CDI_BEAN_MANAGER_TYPE = "javax.enterprise.inject.spi.BeanManager";
+    private static final String CDI_BEAN_MANAGER_TYPE = "jakarta.enterprise.inject.spi.BeanManager";
 
     public ResourceEnvReferenceDescriptor() {
     }

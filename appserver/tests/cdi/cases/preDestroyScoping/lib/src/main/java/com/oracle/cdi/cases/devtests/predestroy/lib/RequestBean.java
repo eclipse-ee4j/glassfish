@@ -16,7 +16,7 @@
 
 package com.oracle.cdi.cases.devtests.predestroy.lib;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 @RequestScoped

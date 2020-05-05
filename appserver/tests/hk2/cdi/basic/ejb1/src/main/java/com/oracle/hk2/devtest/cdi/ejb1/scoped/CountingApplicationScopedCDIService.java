@@ -17,7 +17,7 @@
 package com.oracle.hk2.devtest.cdi.ejb1.scoped;
 
 import jakarta.annotation.ManagedBean;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * This is a CDI ApplicationScoped (a NormalScope) class that will be injected

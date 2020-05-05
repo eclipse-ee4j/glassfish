@@ -16,7 +16,7 @@
 
 package test.ejb.slsb;
 import jakarta.ejb.Stateless;
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Named;
 
 @Named

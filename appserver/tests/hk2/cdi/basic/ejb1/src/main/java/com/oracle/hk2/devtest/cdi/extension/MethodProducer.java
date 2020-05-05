@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.extension;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * This produces a service with a producer method

@@ -1681,7 +1681,7 @@
         </dependency>
         <!-- glassfish-gui -->
         <dependency>
-            <groupId>com.sun.jsftemplating</groupId>
+            <groupId>org.glassfish.jsftemplating</groupId>
             <artifactId>jsftemplating</artifactId>
             <exclusions>
                 <exclusion>

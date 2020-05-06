@@ -187,5 +187,9 @@
             <artifactId>javahelp</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
+        </dependency>
     </dependencies>
 </project>

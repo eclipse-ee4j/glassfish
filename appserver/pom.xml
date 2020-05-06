@@ -56,7 +56,7 @@
         <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
         <jakarta.authorization-api.version>2.0.0-RC1</jakarta.authorization-api.version>
         <jakarta.security.auth.message-api.version>2.0.0-RC1</jakarta.security.auth.message-api.version>
-        <!-- Ensure that nucleus/pom.xml's javax.validation property is of same value as the one below -->
+        <!-- Ensure that nucleus/pom.xml's jakarta.validation property is of same value as the one below -->
         <jakarta.validation-api.version>3.0.0-M1</jakarta.validation-api.version>
         <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>
         <jakarta.security.enterprise.version>1.0.1</jakarta.security.enterprise.version>
@@ -199,7 +199,7 @@
                             <jarType>impl</jarType>
                             <specVersion>0.9</specVersion>
                             <implVersion>${yasson.version}</implVersion>
-                            <apiPackage>javax.json.bind</apiPackage>
+                            <apiPackage>jakarta.json.bind</apiPackage>
                             <implNamespace>org.eclipse</implNamespace>
                         </spec>
                         <spec>
@@ -480,11 +480,6 @@
                 <groupId>jakarta.transaction</groupId>
                 <artifactId>jakarta.transaction-api</artifactId>
                 <version>${jakarta.transaction-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.transaction.cdi</groupId>
-                <artifactId>javax.transaction.cdi-api</artifactId>
-                <version>${javax.transaction.cdi-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.faces</groupId>

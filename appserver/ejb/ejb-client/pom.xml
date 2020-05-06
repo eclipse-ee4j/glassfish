@@ -70,12 +70,7 @@
             <artifactId>jakarta.ejb-api</artifactId>
         </dependency>
         <!-- these 2 dependencies are for compilation only  -->
-<!--
-        <dependency>
-            <groupId>javax.xml.soap</groupId>
-            <artifactId>javax.xml.soap-api</artifactId>
-            <optional>true</optional>
-        </dependency>        
+<!--       
         <dependency>
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-api-osgi</artifactId>

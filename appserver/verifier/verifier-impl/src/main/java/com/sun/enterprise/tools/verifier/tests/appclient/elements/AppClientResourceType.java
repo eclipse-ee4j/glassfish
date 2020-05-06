@@ -59,7 +59,7 @@ public class AppClientResourceType extends AppClientTest implements AppClientChe
 		    (resType.equals("jakarta.jms.QueueConnectionFactory")) ||
 		    (resType.equals("jakarta.jms.TopicConnectionFactory")) ||
 		    (resType.equals("jakarta.jms.ConnectionFactory")) ||
-		    (resType.equals("javax.mail.Session")) ||
+		    (resType.equals("jakarta.mail.Session")) ||
 		    (resType.equals("java.net.URL"))) {
 		    foundIt = true;
 		} else {

@@ -23,7 +23,6 @@ import java.net.URL;
 import javax.activation.DataHandler;
 
 import com.sun.messaging.xml.MessageTransformer;
-//import com.sun.messaging.TopicConnectionFactory;
 import jakarta.jms.TopicConnectionFactory;
 
 import jakarta.jms.TopicConnection;

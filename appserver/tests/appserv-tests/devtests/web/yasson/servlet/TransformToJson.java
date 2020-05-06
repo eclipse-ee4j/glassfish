@@ -17,7 +17,7 @@
 import java.io.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import javax.json.bind.*;
+import jakarta.json.bind.*;
 
 public class TransformToJson extends HttpServlet {
 

@@ -36,7 +36,7 @@ import jakarta.xml.ws.WebServiceException;
 import endpoint.jaxws.*;
 
 @WebServiceProvider(serviceName="HelloImplService", portName="HelloImpl", targetNamespace="http://endpoint/jaxws", wsdlLocation="HelloImplService.wsdl")
-@javax.jws.HandlerChain(name="some name", file="WEB-INF/myhandler.xml")
+@jakarta.jws.HandlerChain(name="some name", file="WEB-INF/myhandler.xml")
 public class HelloImpl implements Provider<Source> {
 
     private static final JAXBContext jaxbContext = createJAXBContext();

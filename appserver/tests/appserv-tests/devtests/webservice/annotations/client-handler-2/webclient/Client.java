@@ -25,7 +25,7 @@ import jakarta.xml.ws.*;
 
 public class Client extends HttpServlet {
 
-        @javax.jws.HandlerChain(name="some name", file="myhandler.xml")
+        @jakarta.jws.HandlerChain(name="some name", file="myhandler.xml")
         @WebServiceRef SubtractNumbersService service;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 

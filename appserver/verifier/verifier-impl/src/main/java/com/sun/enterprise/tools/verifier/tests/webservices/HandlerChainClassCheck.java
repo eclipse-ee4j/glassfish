@@ -43,11 +43,11 @@ public class HandlerChainClassCheck extends WSTest implements WSCheck {
                 String hClass =  ((WebServiceHandler)itr.next()).getHandlerClass();
                 try {
                     Class cl = Class.forName(hClass, false, getVerifierContext().getClassLoader());
-                    if (!((javax.xml.ws.handler.Handler.class).isAssignableFrom(cl))) {
+                    if (!((jakarta.xml.ws.handler.Handler.class).isAssignableFrom(cl))) {
                         addErrorDetails(result, compName);
                         result.failed(smh.getLocalString (getClass().getName() + ".failed",
                                 "Handler Class [{0}] does not implement " +
-                                "javax.xml.ws.handler.Handler Interface",
+                                "jakarta.xml.ws.handler.Handler Interface",
                                 new Object[] {hClass}));
                     }
                 } catch (ClassNotFoundException e) {

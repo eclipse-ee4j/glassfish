@@ -305,7 +305,6 @@
         hibernate-validator.jar
         validation.jar
         jakarta.ejb.jar
-        jakarta.enterprise.deploy-api.jar
         jakarta.jms-api.jar
         jakarta.mail.jar
         jakarta.management.j2ee-api.jar

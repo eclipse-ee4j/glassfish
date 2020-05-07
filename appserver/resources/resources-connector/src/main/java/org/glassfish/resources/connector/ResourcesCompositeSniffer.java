@@ -24,7 +24,6 @@ import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.resources.util.ResourceUtil;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.enterprise.deploy.shared.ModuleType;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +91,7 @@ public class ResourcesCompositeSniffer extends GenericSniffer {
      *
      */
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals(ModuleType.EAR.toString())) {
+        if (archiveType.toString().equals("ear")) {
             return true;
         }
         return false;

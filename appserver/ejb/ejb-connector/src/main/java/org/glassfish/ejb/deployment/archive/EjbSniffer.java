@@ -24,7 +24,6 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 
 import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
-import javax.enterprise.deploy.shared.ModuleType;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
@@ -140,7 +139,7 @@ public class EjbSniffer  extends GenericSniffer {
      */
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.equals(ejbType) ||
-            archiveType.toString().equals(ModuleType.WAR.toString())) {
+            archiveType.toString().equals("war")) {
             return true;
         }
         return false;

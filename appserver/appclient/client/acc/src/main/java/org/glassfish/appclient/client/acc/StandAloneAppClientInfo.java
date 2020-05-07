@@ -32,7 +32,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.xml.sax.SAXParseException;
 
-import javax.enterprise.deploy.shared.ModuleType;
 import jakarta.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,7 +67,7 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
     }
 
     public void postConstruct() {
-        Archivist archivist = archivistFactory.getArchivist(ModuleType.CAR.toString(), getClassLoader());
+        Archivist archivist = archivistFactory.getArchivist("car", getClassLoader());
         if (!(archivist instanceof AppClientArchivist)) {
             throw new IllegalArgumentException("expected an app client module but " +
                     appClientArchive.getURI().toASCIIString() +

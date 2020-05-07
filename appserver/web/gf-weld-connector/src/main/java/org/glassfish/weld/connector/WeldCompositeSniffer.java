@@ -26,7 +26,6 @@ import org.glassfish.javaee.core.deployment.ApplicationHolder;
 
 import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
-import javax.enterprise.deploy.shared.ModuleType;
 
 
 /**
@@ -64,7 +63,7 @@ public class WeldCompositeSniffer extends WeldSniffer {
      *
      */
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals(ModuleType.EAR.toString())) {
+        if (archiveType.toString().equals("ear")) {
             return true;
         }
         return false;

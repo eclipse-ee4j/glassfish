@@ -40,7 +40,6 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
 
-import javax.enterprise.deploy.shared.ModuleType;
 
 /**
  *
@@ -74,7 +73,7 @@ public class UndeployedLaunchable implements Launchable {
          * will often allow an app client or an EAR archive to be detected
          * automatically.
          */
-        Archivist archivist = af.getArchivist(ModuleType.CAR.toString(), classLoader);
+        Archivist archivist = af.getArchivist("car", classLoader);
         if (archivist == null) {
             throw new UserError(localStrings.get("appclient.invalidArchive",
                     ra.getURI().toASCIIString()));
@@ -262,7 +261,7 @@ public class UndeployedLaunchable implements Launchable {
         if (archivist == null) {
             ArchivistFactory af = Util.getArchivistFactory();
 
-            archivist = completeInit((AppClientArchivist) af.getArchivist(ModuleType.CAR.toString()));
+            archivist = completeInit((AppClientArchivist) af.getArchivist("car"));
         }
         archivist.setClassLoader(classLoader);
         return archivist;

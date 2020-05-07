@@ -82,7 +82,6 @@
         <jsftemplating.version>2.1.4</jsftemplating.version>
         <webservices.version>2.4.3</webservices.version>
         <woodstox.version>5.1.0</woodstox.version>
-        <jaxb.version>2.3.2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
         <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>

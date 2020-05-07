@@ -57,9 +57,5 @@
             <artifactId>internal-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>jakarta.enterprise.deploy</groupId>
-            <artifactId>jakarta.enterprise.deploy-api</artifactId>
-        </dependency>
     </dependencies>
 </project>

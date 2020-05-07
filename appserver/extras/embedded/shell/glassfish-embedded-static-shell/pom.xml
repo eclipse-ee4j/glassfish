@@ -211,11 +211,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise.deploy</groupId>
-            <artifactId>jakarta.enterprise.deploy-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-gms-api</artifactId>
             <optional>true</optional>

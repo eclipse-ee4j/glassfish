@@ -122,10 +122,6 @@
             <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise.deploy</groupId>
-            <artifactId>jakarta.enterprise.deploy-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
         </dependency>

@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.extension;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * This is a service that has fields indicating whether or not

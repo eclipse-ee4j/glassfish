@@ -121,7 +121,7 @@ public class BusinessMethodMatchesWithDD extends EjbTest implements EjbCheck {
                 found = false;
                 
                 // we don't test the EJB methods
-                if (remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBObject")) 
+                if (remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBObject")) 
                     continue;
                 if (!remoteMethod.getName().startsWith("ejb") &&
                         !remoteMethod.getName().equals("class$") &&

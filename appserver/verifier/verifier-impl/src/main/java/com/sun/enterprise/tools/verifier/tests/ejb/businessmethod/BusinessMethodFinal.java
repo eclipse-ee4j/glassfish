@@ -97,8 +97,8 @@ public class BusinessMethodFinal extends EjbTest implements EjbCheck {
             for (Method remoteMethod : intfClass.getMethods()) {
                 
                 // we don't test the EJB methods
-                if (remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBObject")||
-                        remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBLocalObject") ||
+                if (remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBObject")||
+                        remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBLocalObject") ||
                         remoteMethod.getDeclaringClass().getName().equals("java.lang.Object"))
                     continue;
                 

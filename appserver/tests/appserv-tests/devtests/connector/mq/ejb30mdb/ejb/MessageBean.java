@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.hello.mdb;
 
 import jakarta.annotation.Resource;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.jms.*;
 
 //Messages received from InQueue

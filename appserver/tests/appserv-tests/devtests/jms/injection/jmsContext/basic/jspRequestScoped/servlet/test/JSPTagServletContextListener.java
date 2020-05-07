@@ -17,10 +17,10 @@
 package test;
 
 import jakarta.annotation.Resource;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 public class JSPTagServletContextListener implements ServletContextListener {
 //    @Resource(mappedName = "jms/jms_unit_test_Queue")

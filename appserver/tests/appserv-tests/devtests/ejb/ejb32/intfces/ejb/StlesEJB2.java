@@ -16,8 +16,8 @@
 
 package ejb32.intrfaces;
 
-import javax.ejb.Local;
-import javax.ejb.Stateless;
+import jakarta.ejb.Local;
+import jakarta.ejb.Stateless;
 /*
     StlesEJB2 exposes remote interface St7. St3 isn't business interface
  */

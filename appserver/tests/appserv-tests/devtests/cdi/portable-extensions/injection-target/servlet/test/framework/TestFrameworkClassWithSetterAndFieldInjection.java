@@ -17,7 +17,7 @@
 package test.framework;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import test.beans.Preferred;
 import test.beans.TestBean;

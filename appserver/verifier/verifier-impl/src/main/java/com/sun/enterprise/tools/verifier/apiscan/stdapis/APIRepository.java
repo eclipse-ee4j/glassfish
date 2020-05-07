@@ -133,9 +133,9 @@ public class APIRepository {
     /**
      * This method is used to find out if a particular package is part of 
      * a standard API or not. e.g. to find out if an appclient (v 1.4) is 
-     * allowed to import javax.persistence.* , call this method as 
+     * allowed to import jakarta.persistence.* , call this method as 
      * <blockquote><pre>
-     * isPackagePartOf("javax.persistence","appclient_1.4")
+     * isPackagePartOf("jakarta.persistence","appclient_1.4")
      * </pre></blockquote>
      *
      * @param pkg_name name of the package

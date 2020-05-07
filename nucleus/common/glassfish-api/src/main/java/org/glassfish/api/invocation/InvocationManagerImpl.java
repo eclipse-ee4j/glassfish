@@ -27,11 +27,11 @@ import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
 import org.jvnet.hk2.annotations.Optional;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.hk2.api.IterableProvider;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Service
 @Singleton

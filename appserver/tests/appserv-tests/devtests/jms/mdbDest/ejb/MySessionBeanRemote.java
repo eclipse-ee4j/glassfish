@@ -16,7 +16,7 @@
 
 package org.glassfish.test.jms.mdbdest.ejb;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  *

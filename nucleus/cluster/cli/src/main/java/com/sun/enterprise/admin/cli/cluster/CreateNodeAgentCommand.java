@@ -19,7 +19,7 @@ package com.sun.enterprise.admin.cli.cluster;
 import java.io.File;
 import java.io.Console;
 import java.util.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 import org.jvnet.hk2.component.*;

@@ -14,12 +14,12 @@
  */
 package com.oracle.javaee7.samples.batch.cmt.chunk;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
-@javax.inject.Named("SimpleItemProcessor")
+@jakarta.inject.Named("SimpleItemProcessor")
 public class SimpleItemProcessor
-    implements javax.batch.api.chunk.ItemProcessor {
+    implements jakarta.batch.api.chunk.ItemProcessor {
 
     @Inject
     IdGenerator idGen;

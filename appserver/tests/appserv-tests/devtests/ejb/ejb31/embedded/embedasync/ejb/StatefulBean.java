@@ -16,10 +16,10 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Stateful
 @StatefulTimeout(0)

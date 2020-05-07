@@ -30,8 +30,8 @@ import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.ejb.deployment.archive.EjbJarDetector;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.loader.util.ASClassLoaderUtil;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.xml.stream.XMLStreamException;

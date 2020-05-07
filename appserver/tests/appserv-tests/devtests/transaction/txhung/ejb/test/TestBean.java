@@ -16,9 +16,9 @@
 
 package com.sun.s1peqe.transaction.txhung.ejb.test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 
 import java.sql.Statement;
 import java.sql.ResultSet;

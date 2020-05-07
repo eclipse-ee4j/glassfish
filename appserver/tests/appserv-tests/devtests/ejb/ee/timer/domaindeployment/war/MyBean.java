@@ -22,7 +22,7 @@
 package com.acme;
 
 import java.util.Collection;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.Resource;
 
 /**

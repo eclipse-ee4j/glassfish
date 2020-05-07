@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,14 +23,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.Local;
-import javax.ejb.LocalBean;
-import javax.ejb.LocalHome;
-import javax.ejb.Remote;
-import javax.ejb.RemoteHome;
-import javax.ejb.Timeout;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.Local;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.LocalHome;
+import jakarta.ejb.Remote;
+import jakarta.ejb.RemoteHome;
+import jakarta.ejb.Timeout;
 
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
@@ -297,12 +297,12 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
         }
 
         if( (timeoutMethodDesc == null) && 
-            javax.ejb.TimedObject.class.isAssignableFrom(ejbClass) ) {
+            jakarta.ejb.TimedObject.class.isAssignableFrom(ejbClass) ) {
             // If the class implements the TimedObject interface, it must
             // be ejbTimeout.
             timeoutMethodDesc = new MethodDescriptor
                 ("ejbTimeout", "@Timeout method", 
-                 new String[] { "javax.ejb.Timer" }, 
+                 new String[] { "jakarta.ejb.Timer" }, 
                  MethodDescriptor.TIMER_METHOD);
         }
 
@@ -574,7 +574,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
         return ( (intf == java.io.Serializable.class) ||
                  (intf == java.io.Externalizable.class) ||
                  ( (intf.getPackage() != null) &&
-                   intf.getPackage().getName().equals("javax.ejb")) );
+                   intf.getPackage().getName().equals("jakarta.ejb")) );
     }
 
     protected void doDescriptionProcessing(String description,

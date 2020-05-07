@@ -40,7 +40,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class Client {
     
     @Resource
-    static javax.transaction.UserTransaction ut;
+    static jakarta.transaction.UserTransaction ut;
     
     public static final int TIME_OUT = 1000 * 60;
     

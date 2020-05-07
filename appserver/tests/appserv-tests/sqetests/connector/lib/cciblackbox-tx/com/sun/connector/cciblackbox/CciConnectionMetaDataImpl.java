@@ -18,9 +18,9 @@ package com.sun.connector.cciblackbox;
 
 import java.sql.SQLException;
 
-import javax.resource.ResourceException;
-import javax.resource.cci.ConnectionMetaData;
-import javax.resource.spi.EISSystemException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.cci.ConnectionMetaData;
+import jakarta.resource.spi.EISSystemException;
 
 /**
  * @author Sheetal Vartak

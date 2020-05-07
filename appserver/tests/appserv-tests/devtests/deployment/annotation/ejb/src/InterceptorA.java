@@ -18,9 +18,9 @@ package test.ejb.stateless;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import javax.ejb.EJB;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.ejb.EJB;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 import javax.sql.DataSource;
 
 @Resource(name="jdbc/myDS", type=DataSource.class)

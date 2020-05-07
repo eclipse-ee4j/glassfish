@@ -16,8 +16,8 @@
 
 package test.beans;
 
-import javax.enterprise.context.RequestScoped;
-import javax.interceptor.Interceptors;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.interceptor.Interceptors;
 
 
 @RequestScoped

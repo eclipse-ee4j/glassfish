@@ -16,8 +16,8 @@
 
 package ejb32.methodintf;
 
-import javax.ejb.*;
-import javax.interceptor.*;
+import jakarta.ejb.*;
+import jakarta.interceptor.*;
 import jakarta.annotation.*;
 import javax.naming.InitialContext;
 

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.timer.timerserialization.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface TimerSLSB
     extends EJBLocalObject

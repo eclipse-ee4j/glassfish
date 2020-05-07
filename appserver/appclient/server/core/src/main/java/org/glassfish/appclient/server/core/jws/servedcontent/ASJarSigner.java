@@ -30,7 +30,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 
 /**

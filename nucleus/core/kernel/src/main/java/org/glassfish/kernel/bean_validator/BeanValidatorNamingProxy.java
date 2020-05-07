@@ -16,8 +16,8 @@
 
 package org.glassfish.kernel.bean_validator;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javax.naming.NamingException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

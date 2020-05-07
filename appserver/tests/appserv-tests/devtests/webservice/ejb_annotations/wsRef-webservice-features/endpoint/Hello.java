@@ -19,7 +19,7 @@ package endpoint;
 import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
 
-@javax.ejb.Stateless
+@jakarta.ejb.Stateless
 @WebService(
     name="Hello",
     serviceName="HelloService",

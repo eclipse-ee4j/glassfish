@@ -19,9 +19,9 @@ package com.sun.s1asdev.ejb.ejbc.equals;
 import java.util.Enumeration;
 import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 
@@ -165,7 +165,7 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidRemoteObject(sc.getEJBObject());
                 System.out.println("Assertion of my ejb object succeeded");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 e.printStackTrace();
                 throw e;
             }
@@ -173,42 +173,42 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidRemoteObject(null);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidRemoteObject(this);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidRemoteObject(home);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidRemoteObject(hr);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidRemoteObject(hr2);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidRemoteObject(meLocal);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
@@ -219,7 +219,7 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidLocalObject(meLocal);
                 System.out.println("Assertion of my ejb local object succeeded");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 e.printStackTrace();
                 throw e;
             }
@@ -227,42 +227,42 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidLocalObject(null);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidLocalObject(hl);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidLocalObject(hl2);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidLocalObject(this);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidLocalObject(home);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
             }
 
             try {
                 cont.assertValidLocalObject(hr2);
                 throw new EJBException("assertion should have failed");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("Successfully caught the following exception:" + e.getMessage());
                 System.out.println("Successfully detected invalid ejb local object");
             }
@@ -327,7 +327,7 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidRemoteObject(sc.getEJBObject());
                 System.out.println("assertValidRemoteObject: Successfully compared (ejbo1 == ejo1)");
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 e.printStackTrace();
                 System.out.println("assertValidRemoteObject: Failed (ejbo1 == ejbo1)");
                 return "Failed same EJBObject assert: " + e;
@@ -338,7 +338,7 @@ public class FooBean implements SessionBean {
                 String str = "Comparison of (ejbo and home) should have failed";
 		System.out.println(str);
 		return str;
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
 
@@ -347,7 +347,7 @@ public class FooBean implements SessionBean {
                 String str = "Comparison of (ejbo and null) should have failed";
 		System.out.println(str);
 		return str;
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
 
@@ -356,7 +356,7 @@ public class FooBean implements SessionBean {
                 String str = "Comparison of (ejbo and bean) should have failed";
 		System.out.println(str);
 		return str;
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
 
@@ -365,7 +365,7 @@ public class FooBean implements SessionBean {
                 String str = "Comparison of (ejbo and ejbo_from_diff_container) should have failed";
 		System.out.println(str);
 		return str;
-            } catch(javax.ejb.EJBException e) {
+            } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
 

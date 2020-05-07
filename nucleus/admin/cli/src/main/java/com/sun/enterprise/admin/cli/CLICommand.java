@@ -48,9 +48,9 @@ import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.remote.Metrix;
 
-import javax.inject.Inject;
-import javax.inject.Scope;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Scope;
+import jakarta.inject.Singleton;
 
 
 /**

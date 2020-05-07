@@ -24,10 +24,10 @@ package org.glassfish.devtest.ejb31.singleton.multimodule.mod1;
 import org.glassfish.devtest.ejb31.singleton.multimodule.servlet.RemoteInitTracker;
 import org.glassfish.devtest.ejb31.singleton.multimodule.servlet.LocalInitTracker;
 
-import javax.ejb.DependsOn;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.EJB;
+import jakarta.ejb.DependsOn;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.ejb.EJB;
 import jakarta.annotation.PostConstruct;
 
 /**

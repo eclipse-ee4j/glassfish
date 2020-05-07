@@ -19,7 +19,7 @@ package jaxr;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import jaxr.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;

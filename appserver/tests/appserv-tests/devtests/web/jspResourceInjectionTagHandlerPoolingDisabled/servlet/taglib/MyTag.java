@@ -19,9 +19,9 @@ package taglib;
 import java.io.IOException;
 import java.sql.Connection;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 import javax.naming.*;
 import jakarta.annotation.Resource;

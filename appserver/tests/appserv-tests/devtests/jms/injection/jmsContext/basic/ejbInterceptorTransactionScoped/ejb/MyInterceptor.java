@@ -16,11 +16,11 @@
 
 package org.glassfish.test.jms.injection.ejb;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 public class MyInterceptor {

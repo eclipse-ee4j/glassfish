@@ -26,9 +26,9 @@ import components.model.Node;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UICommand;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.faces.component.UICommand;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
 /**
  * Component wrapping a {@link Graph} object that is pointed at by the

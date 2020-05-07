@@ -16,8 +16,8 @@
 
 package org.glassfish.test.authpropagation;
 
-import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.ejb.EJB;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;

@@ -21,17 +21,17 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.annotation.PostConstruct;
 
-import javax.batch.operations.JobOperator;
-import javax.batch.runtime.BatchRuntime;
-import javax.batch.runtime.JobExecution;
-import javax.batch.runtime.JobInstance;
+import jakarta.batch.operations.JobOperator;
+import jakarta.batch.runtime.BatchRuntime;
+import jakarta.batch.runtime.JobExecution;
+import jakarta.batch.runtime.JobInstance;
 import com.ibm.jbatch.spi.TaggedJobExecution;
 
-import javax.ejb.Stateless;
-import javax.ejb.EJB;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.EJB;
 
 @Stateless
 public class JobSubmitterBean

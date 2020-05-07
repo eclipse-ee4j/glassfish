@@ -16,10 +16,10 @@
 
 package com.sun.s1peqe.security.integration.bankadmin.daomanager;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
-public interface CustomerRemote extends javax.ejb.EJBObject
+public interface CustomerRemote extends jakarta.ejb.EJBObject
 {
   public String getCustomerID() throws java.rmi.RemoteException;
   public String getCustomerName() throws java.rmi.RemoteException;

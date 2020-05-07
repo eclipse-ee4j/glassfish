@@ -49,7 +49,7 @@ public class CallbackMethodArgument extends InterceptorMethodTest {
                     logFailure(callbackMethodName, method);
                 } else if(!isBeanMethod && 
                         (args.length!=1 || 
-                                !javax.interceptor.InvocationContext.class.isAssignableFrom(args[0]))) {
+                                !jakarta.interceptor.InvocationContext.class.isAssignableFrom(args[0]))) {
                     logFailure(callbackMethodName, method);
                 }
             } catch (Exception e) {}//ignore as it will be caught in other tests

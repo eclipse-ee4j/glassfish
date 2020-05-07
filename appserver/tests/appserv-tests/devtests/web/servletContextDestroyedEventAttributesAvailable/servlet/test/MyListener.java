@@ -17,9 +17,9 @@
 package test;
 
 import java.io.*;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
 
 public class MyListener implements ServletContextListener {
 

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.allowedmethods.ctxcheck;
 
-import javax.ejb.EJBHome;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.CreateException;
 import java.rmi.RemoteException;
 
 

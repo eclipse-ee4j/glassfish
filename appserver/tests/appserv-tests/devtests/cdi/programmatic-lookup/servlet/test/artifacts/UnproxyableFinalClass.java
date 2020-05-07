@@ -18,7 +18,7 @@ package test.artifacts;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 @Dependent
 public final class UnproxyableFinalClass implements UnproxyableType,  Serializable{

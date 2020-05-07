@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import com.sun.gjc.spi.base.DatabaseMetaDataWrapper;
 
 import java.sql.*;
 import java.util.logging.Level;
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 /**
  * Wrapper class for DatabaseMetaData for JDBC 4.0 <br>

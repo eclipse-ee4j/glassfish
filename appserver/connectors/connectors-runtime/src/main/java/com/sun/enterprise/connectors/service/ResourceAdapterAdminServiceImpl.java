@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,9 +31,9 @@ import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.connectors.config.ResourceAdapterConfig;
 
 import javax.naming.NamingException;
-import javax.resource.ResourceException;
-import javax.resource.spi.ResourceAdapter;
-import javax.resource.spi.ResourceAdapterAssociation;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.ResourceAdapterAssociation;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.concurrent.*;

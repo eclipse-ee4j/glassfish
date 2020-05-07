@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.cdi.hello.mdb;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 // Hello1 interface is not annotated with @Local. If the
 // bean only implements one interface it is assumed to be

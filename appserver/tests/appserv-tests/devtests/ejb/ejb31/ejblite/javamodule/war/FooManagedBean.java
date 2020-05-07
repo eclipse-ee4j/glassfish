@@ -18,13 +18,13 @@ package com.acme;
 
 import jakarta.annotation.*;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
-import javax.interceptor.Interceptors;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 @ManagedBean("foomanagedbean")
 @Interceptors(InterceptorA.class)

@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Collection;
 import java.util.Iterator;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class TimerStuffImpl implements TimerStuff {
     

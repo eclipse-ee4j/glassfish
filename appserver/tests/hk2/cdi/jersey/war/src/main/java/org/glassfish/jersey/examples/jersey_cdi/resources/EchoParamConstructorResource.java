@@ -17,8 +17,8 @@
 package org.glassfish.jersey.examples.jersey_cdi.resources;
 
 import jakarta.annotation.ManagedBean;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Path;

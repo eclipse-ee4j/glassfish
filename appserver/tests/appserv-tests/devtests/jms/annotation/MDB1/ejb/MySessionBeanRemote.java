@@ -16,7 +16,7 @@
 
 package org.glassfish.test.jms.annotation.ejb;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface MySessionBeanRemote {

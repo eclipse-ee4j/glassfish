@@ -22,7 +22,7 @@
 package com.acme;
 
 import java.sql.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
 

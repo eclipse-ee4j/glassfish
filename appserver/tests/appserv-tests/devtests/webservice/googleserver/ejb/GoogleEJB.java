@@ -25,9 +25,9 @@ import javax.xml.rpc.Service;
 import javax.xml.rpc.Call;
 import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
 import javax.naming.*;
 
 public class GoogleEJB implements SessionBean {

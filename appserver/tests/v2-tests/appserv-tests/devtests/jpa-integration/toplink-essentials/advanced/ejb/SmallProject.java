@@ -18,12 +18,12 @@
 
 package oracle.toplink.essentials.testing.models.cmp3.advanced;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Local interface for the small project bean.
  * This is the bean's public/local interface for the clients usage.
- * All locals must extend the javax.ejb.EJBLocalObject.
+ * All locals must extend the jakarta.ejb.EJBLocalObject.
  * The bean itself does not have to implement the local interface, but must implement all of the methods.
  */
 @Entity

@@ -23,13 +23,13 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.EJBException;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.LocalBean;
 
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 
 @Singleton
 @LocalBean

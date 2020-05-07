@@ -16,7 +16,7 @@
 
 package dataregistry;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public interface LocalOrderHome extends EJBLocalHome {

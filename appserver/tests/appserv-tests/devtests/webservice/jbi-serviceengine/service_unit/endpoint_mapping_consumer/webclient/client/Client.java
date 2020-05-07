@@ -16,8 +16,8 @@
 
 package client;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -29,12 +29,12 @@ public class Client extends HttpServlet {
        @WebServiceRef EndpointMappingConsumerService service;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
                 System.out.println(" Service is :" + service);
                 EndpointMappingConsumer port = service.getEndpointMappingConsumerPort();

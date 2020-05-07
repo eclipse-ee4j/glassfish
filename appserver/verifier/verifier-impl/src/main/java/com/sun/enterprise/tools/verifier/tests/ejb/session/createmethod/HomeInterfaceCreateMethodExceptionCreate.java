@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  * 
  * A Session Bean's home interface defines one or more create(...) methods. 
  * 
- * The throws clause must include javax.ejb.CreateException. 
+ * The throws clause must include jakarta.ejb.CreateException. 
  */
 public class HomeInterfaceCreateMethodExceptionCreate extends EjbTest implements EjbCheck { 
     Result result = null;
@@ -50,7 +50,7 @@ public class HomeInterfaceCreateMethodExceptionCreate extends EjbTest implements
      * 
      * A Session Bean's home interface defines one or more create(...) methods. 
      * 
-     * The throws clause must include javax.ejb.CreateException. 
+     * The throws clause must include jakarta.ejb.CreateException. 
      *    
      * @param descriptor the Enterprise Java Bean deployment descriptor
      *   
@@ -129,7 +129,7 @@ public class HomeInterfaceCreateMethodExceptionCreate extends EjbTest implements
 		if (methods[i].getName().startsWith("create")) {
 		    methodExceptionTypes = methods[i].getExceptionTypes();
 		    
-		    // methods must also throw javax.ejb.CreateException
+		    // methods must also throw jakarta.ejb.CreateException
 		    if (EjbUtils.isValidCreateException(methodExceptionTypes)) {
 			throwsCreateException = true;
 		    }
@@ -148,7 +148,7 @@ public class HomeInterfaceCreateMethodExceptionCreate extends EjbTest implements
 					       new Object[] {c.getName(),methods[i].getName()}));
 			result.addGoodDetails(smh.getLocalString
 						  (getClass().getName() + ".passed",
-						   "The create method which must throw javax.ejb.CreateException was found.."));
+						   "The create method which must throw jakarta.ejb.CreateException was found.."));
 		    } else if (!throwsCreateException) {
 			oneFailed = true;
 			result.addErrorDetails(smh.getLocalString
@@ -161,7 +161,7 @@ public class HomeInterfaceCreateMethodExceptionCreate extends EjbTest implements
 						new Object[] {c.getName(),methods[i].getName()}));
 			result.addErrorDetails(smh.getLocalString
 					       (getClass().getName() + ".failed",
-						"Error: A create method was found, but did not throw javax.ejb.CreateException." ));
+						"Error: A create method was found, but did not throw jakarta.ejb.CreateException." ));
 		    }  // end of reporting for this particular 'create' method
 		} // if the home interface found a "create" method
 	    } // for all the methods within the home interface class, loop

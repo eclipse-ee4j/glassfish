@@ -182,7 +182,7 @@ public abstract class ClassPathManager {
                 "com.sun.jdo.api.persistence.enhancer.ByteCodeEnhancer," /* appserv-cmp */ +
                 "com.sun.enterprise.admin.servermgmt.DomainConfig," /* appserv-admin */ +
                 "com.sun.enterprise.deployment.client.DeploymentClientUtils," /* appserv-deployment-client */ +
-                "javax.ejb.EJB," /* javaee */ +
+                "jakarta.ejb.EJB," /* javaee */ +
                 "javax.security.auth.message.module.ServerAuthModule," /* jmac-api */ +
                 "com.sun.appserv.management.ext.logging.LogAnalyzer," /* appserv-ext */ + 
                 "com.sun.mail.iap.Argument," /* mail */ +

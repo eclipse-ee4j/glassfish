@@ -23,8 +23,8 @@ import jakarta.annotation.Resource;
 import jakarta.annotation.security.DeclareRoles;
 import jakarta.annotation.security.RolesAllowed;
 
-import javax.ejb.SessionContext;
-import javax.ejb.Stateful;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Stateful;
 
 @DeclareRoles({"javaUsers"})
 

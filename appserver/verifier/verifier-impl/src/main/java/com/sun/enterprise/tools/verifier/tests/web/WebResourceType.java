@@ -56,7 +56,7 @@ public class WebResourceType extends WebTest implements WebCheck {
 		if ((resType.equals("javax.sql.DataSource")) ||
 		    (resType.equals("jakarta.jms.QueueConnectionFactory")) ||
 		    (resType.equals("jakarta.jms.TopicConnectionFactory")) ||
-		    (resType.equals("javax.mail.Session")) ||
+		    (resType.equals("jakarta.mail.Session")) ||
 		    (resType.equals("java.net.URL"))) { 
 		    foundIt = true;
 		} else {

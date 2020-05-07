@@ -20,10 +20,10 @@ import com.sun.s1asdev.ejb.ejb32.mdb.ra.Command;
 import com.sun.s1asdev.ejb.ejb32.mdb.ra.CommandListener;
 
 import jakarta.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.MessageDriven;
-import javax.ejb.MessageDrivenContext;
-import javax.interceptor.Interceptors;
+import jakarta.ejb.EJB;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.interceptor.Interceptors;
 
 /**
  * @author David Blevins

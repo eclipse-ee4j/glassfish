@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.ejb.deployment.annotation.handlers;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.AroundInvoke;
 
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
@@ -32,7 +32,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.AroundInvoke attribute
+ * This handler is responsible for handling the jakarta.ejb.AroundInvoke attribute
  *
  */
 @Service

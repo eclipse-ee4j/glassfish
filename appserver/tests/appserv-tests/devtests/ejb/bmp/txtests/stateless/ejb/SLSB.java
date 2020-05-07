@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.bmp.txtests.stateless.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface SLSB
     extends EJBObject

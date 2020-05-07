@@ -21,16 +21,16 @@ import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.annotation.security.RunAs;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
-import javax.ejb.SessionSynchronization;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import jakarta.ejb.EJB;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.SessionSynchronization;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import javax.transaction.TransactionManager;
-import javax.transaction.Status;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Status;
 
 @RunAs(value="nobody")
 @Stateful

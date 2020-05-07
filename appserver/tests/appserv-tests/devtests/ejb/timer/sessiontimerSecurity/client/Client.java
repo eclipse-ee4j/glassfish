@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.timer.sessiontimersecurity.client;
 
 import javax.naming.*;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 import com.sun.s1asdev.ejb.timer.sessiontimersecurity.TimerSession;
 import com.sun.s1asdev.ejb.timer.sessiontimersecurity.TimerSessionHome;

@@ -55,15 +55,15 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.glassfish.webservices.WebServiceDeploymentListener;
 import org.glassfish.webservices.WebServicesDeployer;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.jvnet.hk2.annotations.Optional;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.jvnet.hk2.config.types.Property;
 
 /**

@@ -16,10 +16,10 @@
 
 package com.sun.jdbcra.spi;
 
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.ManagedConnection;
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
 
 /**
  * ConnectionManager implementation for Generic JDBC Connector.
@@ -27,7 +27,7 @@ import javax.resource.spi.ConnectionRequestInfo;
  * @version	1.0, 02/07/31
  * @author	Binod P.G
  */
-public class ConnectionManager implements javax.resource.spi.ConnectionManager{ 
+public class ConnectionManager implements jakarta.resource.spi.ConnectionManager{ 
 
     /**
      * Returns a <code>Connection </code> object to the <code>ConnectionFactory</code>

@@ -17,9 +17,9 @@
 package com.acme;
 
 import jakarta.annotation.*;
-import javax.interceptor.Interceptors;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 @ManagedBean("ManagedBean2IntPlusBean")
     @Interceptors({InterceptorA.class, InterceptorB.class})

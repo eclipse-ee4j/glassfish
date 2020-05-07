@@ -16,7 +16,7 @@
 
 package org.glassfish.devtest.ejb31.singleton.multimodule.servlet;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 import java.util.Map;
 
 

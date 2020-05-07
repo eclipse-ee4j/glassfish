@@ -16,13 +16,13 @@
 
 package test.ejb;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 
 import test.beans.artifacts.ProducedViaStaticField;
 
-@javax.ejb.Singleton
+@jakarta.ejb.Singleton
 public class JPAResourceProducerSingletonEJB_StaticField {
     @Produces @PersistenceUnit(unitName="pu1") @ProducedViaStaticField 
     public static EntityManagerFactory customerDatabasePersistenceUnit1;

@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.Resource;
 
 @Stateful
@@ -161,7 +161,7 @@ public class StatefulWrapperImpl implements StatefulWrapper {
         timerStuff.assertNoTimers();
     }
 
-    public void removeFoo() throws javax.ejb.RemoveException {
+    public void removeFoo() throws jakarta.ejb.RemoveException {
         if (foo != null) {
             foo.remove();
         }

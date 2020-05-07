@@ -17,9 +17,9 @@
 package team;
 
 import java.util.Collection;
-import javax.ejb.CreateException;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.FinderException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.FinderException;
 
 public interface LocalTeamHome extends EJBLocalHome {
     

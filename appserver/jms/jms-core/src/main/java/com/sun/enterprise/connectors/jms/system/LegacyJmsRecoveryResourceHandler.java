@@ -22,8 +22,8 @@ import com.sun.enterprise.transaction.config.TransactionService;
 import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import javax.transaction.xa.XAResource;

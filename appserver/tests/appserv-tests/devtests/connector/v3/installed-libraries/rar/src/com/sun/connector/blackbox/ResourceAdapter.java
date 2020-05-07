@@ -16,15 +16,15 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.ResourceAdapterInternalException;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.resource.ResourceException;
+import jakarta.resource.spi.BootstrapContext;
+import jakarta.resource.spi.ResourceAdapterInternalException;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.ResourceException;
 import javax.transaction.xa.XAResource;
 import java.io.Serializable;
 
-public class ResourceAdapter implements javax.resource.spi.ResourceAdapter, Serializable {
+public class ResourceAdapter implements jakarta.resource.spi.ResourceAdapter, Serializable {
 
     private BootstrapContext context;
     public void start(BootstrapContext bootstrapContext) throws ResourceAdapterInternalException {

@@ -30,7 +30,7 @@ import org.glassfish.internal.deployment.Deployment;
 
 import jakarta.enterprise.concurrent.ContextService;
 import jakarta.enterprise.concurrent.ManagedTask;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;

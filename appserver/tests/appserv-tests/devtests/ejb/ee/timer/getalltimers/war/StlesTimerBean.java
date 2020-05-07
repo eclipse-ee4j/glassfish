@@ -17,15 +17,15 @@
 package com.acme;
 
 import jakarta.annotation.Resource;
-import javax.ejb.Schedule;
-import javax.ejb.ScheduleExpression;
-import javax.ejb.Schedules;
-import javax.ejb.Singleton;
-import javax.ejb.Stateless;
-import javax.ejb.Timeout;
-import javax.ejb.Timer;
-import javax.ejb.TimerConfig;
-import javax.ejb.TimerService;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.ScheduleExpression;
+import jakarta.ejb.Schedules;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Timeout;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerConfig;
+import jakarta.ejb.TimerService;
 import java.util.HashSet;
 
 @Stateless

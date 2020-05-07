@@ -68,7 +68,7 @@
     <target name="create-pool">
         <antcall target="create-connector-connpool-common">
             <param name="ra.name" value="connector-embedded-cciApp#cciblackbox-${tx.mode}"/>
-            <param name="connection.defname" value="javax.resource.cci.ConnectionFactory"/>
+            <param name="connection.defname" value="jakarta.resource.cci.ConnectionFactory"/>
             <param name="connector.conpool.name" value="EMBEDDED-CCI-CONNPOOL"/>
         </antcall>
     </target>

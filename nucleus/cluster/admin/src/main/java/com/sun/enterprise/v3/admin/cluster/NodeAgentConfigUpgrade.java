@@ -29,8 +29,8 @@ import com.sun.enterprise.config.serverbeans.NodeAgent;
 import com.sun.enterprise.config.serverbeans.NodeAgents;
 import com.sun.enterprise.config.serverbeans.JmxConnector;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
-import javax.inject.Inject;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+import jakarta.inject.Inject;
 
 
 import org.jvnet.hk2.annotations.Service;
@@ -40,7 +40,7 @@ import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.component.*;
 import org.jvnet.hk2.config.*;
 

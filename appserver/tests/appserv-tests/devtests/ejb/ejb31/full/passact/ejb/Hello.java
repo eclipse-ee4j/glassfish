@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 import java.util.concurrent.Future;
-import javax.ejb.Asynchronous;
+import jakarta.ejb.Asynchronous;
 
 @Remote
 public interface Hello {

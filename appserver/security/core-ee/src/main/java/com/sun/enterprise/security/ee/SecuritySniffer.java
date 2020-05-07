@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,15 +27,13 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.enterprise.deploy.shared.ModuleType;
-
 import java.util.logging.Logger;
 import java.io.IOException;
 
 import com.sun.enterprise.module.HK2Module;
 import java.lang.annotation.Annotation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * SecuritySniffer for security related activities
@@ -52,8 +50,8 @@ public class SecuritySniffer extends GenericSniffer {
     
     @SuppressWarnings("unchecked")
     private static final Class<? extends Annotation>[] ejbAnnotations = new Class[]{
-        javax.ejb.Stateless.class, javax.ejb.Stateful.class,
-        javax.ejb.MessageDriven.class, javax.ejb.Singleton.class
+        jakarta.ejb.Stateless.class, jakarta.ejb.Stateful.class,
+        jakarta.ejb.MessageDriven.class, jakarta.ejb.Singleton.class
     };
 
     public SecuritySniffer() {
@@ -151,8 +149,8 @@ public class SecuritySniffer extends GenericSniffer {
      *
      */
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals(ModuleType.WAR.toString()) ||
-            archiveType.toString().equals(ModuleType.EJB.toString())) {
+        if (archiveType.toString().equals("war") ||
+            archiveType.toString().equals("ejb")) {
             return true;
         }
         return false;

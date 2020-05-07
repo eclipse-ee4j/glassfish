@@ -16,13 +16,13 @@
 
 package com.sun.s1asdev.ejb.timer.timerserialization.ejb;
 
-import javax.ejb.TimedObject;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
-import javax.ejb.TimerService;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.TimedObject;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.*;

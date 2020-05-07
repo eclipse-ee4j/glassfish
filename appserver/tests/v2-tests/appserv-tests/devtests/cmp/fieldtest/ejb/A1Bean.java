@@ -16,7 +16,7 @@
 
 package fieldtest;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 /**
@@ -25,54 +25,54 @@ import javax.naming.*;
  */
 
 
-public class A1Bean implements javax.ejb.EntityBean {
+public class A1Bean implements jakarta.ejb.EntityBean {
     
-    private javax.ejb.EntityContext context;
+    private jakarta.ejb.EntityContext context;
     
     /**
-     * @see javax.ejb.EntityBean#setEntityContext(javax.ejb.EntityContext)
+     * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
-    public void setEntityContext(javax.ejb.EntityContext aContext) {
+    public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
     
     /**
-     * @see javax.ejb.EntityBean#ejbActivate()
+     * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
         
     }
     
     /**
-     * @see javax.ejb.EntityBean#ejbPassivate()
+     * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
         
     }
     
     /**
-     * @see javax.ejb.EntityBean#ejbRemove()
+     * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: A1Bean ejbRemove");
     }
     
     /**
-     * @see javax.ejb.EntityBean#unsetEntityContext()
+     * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
     
     /**
-     * @see javax.ejb.EntityBean#ejbLoad()
+     * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
         
     }
     
     /**
-     * @see javax.ejb.EntityBean#ejbStore()
+     * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
     }
@@ -112,7 +112,7 @@ public class A1Bean implements javax.ejb.EntityBean {
     public byte[] blb;
     public java.util.ArrayList list;
 
-    public A1PK ejbCreate(java.lang.String name) throws javax.ejb.CreateException {
+    public A1PK ejbCreate(java.lang.String name) throws jakarta.ejb.CreateException {
 
         this.name = name;
         id1 = name;
@@ -123,7 +123,7 @@ public class A1Bean implements javax.ejb.EntityBean {
         return null;
     }
     
-    public void ejbPostCreate(java.lang.String name) throws javax.ejb.CreateException { 
+    public void ejbPostCreate(java.lang.String name) throws jakarta.ejb.CreateException { 
         blb = new byte[]{1,2};
         list = new java.util.ArrayList();
     }

@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.bmp.finder.ejb;
 
 import java.rmi.RemoteException; 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.sql.*;
 import javax.sql.*;
 import java.util.*;

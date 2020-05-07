@@ -31,7 +31,7 @@ import com.sun.enterprise.tools.verifier.tests.*;
 
 /**
  * Test that "resourceadapter-class" implements 
- * "javax.resource.spi.ResourceAdapter".
+ * "jakarta.resource.spi.ResourceAdapter".
  *
  * @author Anisha Malhotra 
  * @version 
@@ -43,7 +43,7 @@ implements ConnectorCheck
 
   /** <p>
    * Test that "resourceadapter-class" implements 
-   * "javax.resource.spi.ResourceAdapter".
+   * "jakarta.resource.spi.ResourceAdapter".
    * </p>
    *
    * @param descriptor deployment descriptor for the rar file
@@ -102,14 +102,14 @@ implements ConnectorCheck
            new Object[] {resourceAdapterClass}));
       return result;
     }
-    if(!isImplementorOf(implClass, "javax.resource.spi.ResourceAdapter"))
+    if(!isImplementorOf(implClass, "jakarta.resource.spi.ResourceAdapter"))
     {
       result.addErrorDetails(smh.getLocalString
           ("tests.componentNameConstructor",
            "For [ {0} ]",
            new Object[] {compName.toString()}));
       result.failed(smh.getLocalString(getClass().getName() + ".failed",
-            "Error: resourceadapter-class [ {0} ] does not implement javax.resource.spi.ResourceAdapter",
+            "Error: resourceadapter-class [ {0} ] does not implement jakarta.resource.spi.ResourceAdapter",
             new Object[] {resourceAdapterClass}));
     }
     else
@@ -119,7 +119,7 @@ implements ConnectorCheck
            "For [ {0} ]",
            new Object[] {compName.toString()}));	
       result.passed(smh.getLocalString(getClass().getName() + ".passed",
-            "Success: resourceadapter-class implements javax.resource.spi.ResourceAdapter"));                     
+            "Success: resourceadapter-class implements jakarta.resource.spi.ResourceAdapter"));                     
     }
     return result;                
   }

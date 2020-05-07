@@ -17,7 +17,7 @@
 package j2eeguide.product;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class ProductEJB implements EntityBean {
 

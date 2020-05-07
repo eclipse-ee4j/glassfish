@@ -22,9 +22,9 @@
 
 package com.acme;
 
-import javax.persistence.*;
-import static javax.persistence.GeneratorType.*;
-import static javax.persistence.AccessType.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.GeneratorType.*;
+import static jakarta.persistence.AccessType.*;
 
 /**
  *

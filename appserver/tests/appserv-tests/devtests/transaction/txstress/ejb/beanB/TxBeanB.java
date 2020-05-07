@@ -16,11 +16,11 @@
 
 package com.sun.s1peqe.transaction.txstress.ejb.beanB;
 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 
 import java.sql.Statement;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import java.sql.Connection;
 import javax.sql.DataSource;
 import javax.naming.Context;

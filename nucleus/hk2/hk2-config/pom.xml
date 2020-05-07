@@ -124,7 +124,7 @@
             <version>${hibernate-validator.version}</version>
         </dependency>
 
-        <!-- hk2-config tests use hibernate-validator which requires javax.el-api -->
+        <!-- hk2-config tests use hibernate-validator which requires jakarta.el-api -->
         <dependency>
           <groupId>jakarta.el</groupId>
           <artifactId>jakarta.el-api</artifactId>

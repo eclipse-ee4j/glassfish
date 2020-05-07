@@ -36,7 +36,7 @@ import org.jvnet.hk2.config.*;
 import org.glassfish.api.admin.config.Named;
 import org.glassfish.api.admin.config.ReferenceContainer;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.validation.Payload;
 import java.beans.PropertyVetoException;
 import java.io.File;

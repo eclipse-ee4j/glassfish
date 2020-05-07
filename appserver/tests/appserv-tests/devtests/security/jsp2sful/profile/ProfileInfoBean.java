@@ -16,12 +16,12 @@
 
 package profile;
 
-import javax.ejb.SessionContext;
-import javax.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
 import java.util.Vector;
 import java.lang.String;
 import java.util.Iterator;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 import java.rmi.RemoteException;
 /**
  *
@@ -62,7 +62,7 @@ public class ProfileInfoBean implements SessionBean {
     }
     
     
-    public void setSessionContext(javax.ejb.SessionContext sessionContext) {
+    public void setSessionContext(jakarta.ejb.SessionContext sessionContext) {
         sc = sessionContext;
     }
     

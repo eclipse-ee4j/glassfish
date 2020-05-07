@@ -21,7 +21,7 @@
  */
 
 package shopping;
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 /**
  * Negative RealmPerAPP Stateful Session Bean. 
  * Tries to log into a non existent realm

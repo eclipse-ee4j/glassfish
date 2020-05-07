@@ -56,7 +56,7 @@ public class InteractionSpecJavaBeansCompliance extends ConnectionFactoryTest im
         if (isCCIImplemented(descriptor, result)) {
             //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //            File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-            Class mcf = findImplementorOf(descriptor, "javax.resource.cci.InteractionSpec");
+            Class mcf = findImplementorOf(descriptor, "jakarta.resource.cci.InteractionSpec");
             if (mcf != null) {
                 try {
                     BeanInfo bi = Introspector.getBeanInfo(mcf, Object.class);
@@ -73,7 +73,7 @@ public class InteractionSpecJavaBeansCompliance extends ConnectionFactoryTest im
 							new Object[] {compName.toString()}));
 				result.failed(smh.getLocalString
 					      (getClass().getName() + ".failed",
-					       "Error: The javax.resource.cci.InteractionSpec implementation [ {0} ] of the property [ {1} ] is not JavaBeans compliant",
+					       "Error: The jakarta.resource.cci.InteractionSpec implementation [ {0} ] of the property [ {1} ] is not JavaBeans compliant",
 					       new Object[] {mcf.getName(), properties[i].getName()} ));                                                                                
 			}
                         if (!properties[i].isConstrained() && !properties[i].isBound()) {
@@ -84,7 +84,7 @@ public class InteractionSpecJavaBeansCompliance extends ConnectionFactoryTest im
 						    new Object[] {compName.toString()}));
 			    result.failed(smh.getLocalString
 					  (getClass().getName() + ".failed2",
-					   "Error: The property [ {0} ] of the javax.resource.cci.InteractionSpec implementation [ {1} ] is not bound or constrained",
+					   "Error: The property [ {0} ] of the jakarta.resource.cci.InteractionSpec implementation [ {1} ] is not bound or constrained",
 					   new Object[] {properties[i].getName(), mcf.getName()} ));                                                                                
                         }
                     }
@@ -95,7 +95,7 @@ public class InteractionSpecJavaBeansCompliance extends ConnectionFactoryTest im
 					   new Object[] {compName.toString()}));
                     result.notApplicable(smh.getLocalString
     	                (getClass().getName() + ".failed",
-                        "Error: The javax.resource.cci.InteractionSpec implementation [ {0} ] is not JavaBeans compliant",
+                        "Error: The jakarta.resource.cci.InteractionSpec implementation [ {0} ] is not JavaBeans compliant",
                         new Object[] {mcf.getName()} ));                                                
                     return result;
                 }
@@ -107,7 +107,7 @@ public class InteractionSpecJavaBeansCompliance extends ConnectionFactoryTest im
 					   new Object[] {compName.toString()}));
                 result.notApplicable(smh.getLocalString
     	            (getClass().getName() + ".nonexist",
-                    "Error: While the CCI interfaces are implemented, the javax.resource.cci.InteractionSpec is not"));         
+                    "Error: While the CCI interfaces are implemented, the jakarta.resource.cci.InteractionSpec is not"));         
                 return result;
             }
                 
@@ -128,7 +128,7 @@ public class InteractionSpecJavaBeansCompliance extends ConnectionFactoryTest im
 					   new Object[] {compName.toString()}));	
 		result.passed(smh.getLocalString
                 (getClass().getName() + ".passed",
-                "The javax.resource.cci.InteractionSpec implementation is JavaBeans compliant"));                     
+                "The jakarta.resource.cci.InteractionSpec implementation is JavaBeans compliant"));                     
         }
         return result;
     }

@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 import javax.naming.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

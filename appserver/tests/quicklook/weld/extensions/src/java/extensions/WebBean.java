@@ -22,7 +22,7 @@
 package extensions;
 
 import jakarta.annotation.Resource;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  *

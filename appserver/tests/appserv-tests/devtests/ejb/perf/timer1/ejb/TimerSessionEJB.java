@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.perf.timer1;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.jms.*;
 import jakarta.annotation.*;
 import java.util.Date;

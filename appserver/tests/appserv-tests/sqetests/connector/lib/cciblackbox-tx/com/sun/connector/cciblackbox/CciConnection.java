@@ -19,13 +19,13 @@ package com.sun.connector.cciblackbox;
 import java.sql.SQLException;
 
 import javax.naming.Context;
-import javax.resource.NotSupportedException;
-import javax.resource.ResourceException;
-import javax.resource.cci.ConnectionMetaData;
-import javax.resource.cci.Interaction;
-import javax.resource.cci.ResultSetInfo;
-import javax.resource.spi.ConnectionEvent;
-import javax.resource.spi.IllegalStateException;
+import jakarta.resource.NotSupportedException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.cci.ConnectionMetaData;
+import jakarta.resource.cci.Interaction;
+import jakarta.resource.cci.ResultSetInfo;
+import jakarta.resource.spi.ConnectionEvent;
+import jakarta.resource.spi.IllegalStateException;
 import javax.rmi.PortableRemoteObject;
 
 import wlstest.functional.connector.common.apps.ejb.test_proxy.ConnectorTest;
@@ -37,7 +37,7 @@ import weblogic.jndi.Environment;
  *
  * @author Sheetal Vartak
  */
-public class CciConnection implements javax.resource.cci.Connection {
+public class CciConnection implements jakarta.resource.cci.Connection {
 
   private boolean destroyed;
 
@@ -57,7 +57,7 @@ public class CciConnection implements javax.resource.cci.Connection {
     return new CciSQLInteraction(this);
   }
 
-  public javax.resource.cci.LocalTransaction getLocalTransaction() throws ResourceException {
+  public jakarta.resource.cci.LocalTransaction getLocalTransaction() throws ResourceException {
     try {
       java.sql.Connection con = getJdbcConnection();
       if (con.getTransactionIsolation() == con.TRANSACTION_NONE) {

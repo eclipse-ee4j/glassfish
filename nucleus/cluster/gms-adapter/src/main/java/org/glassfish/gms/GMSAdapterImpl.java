@@ -28,8 +28,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import org.glassfish.api.logging.LogLevel;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;

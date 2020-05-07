@@ -23,15 +23,15 @@ import java.io.*;
  * A simple stateless bean for the HelloWorld application. This bean implements one
  * business method as declared by the remote interface.
  */
-public class GreeterEJB implements javax.ejb.SessionBean { 
+public class GreeterEJB implements jakarta.ejb.SessionBean { 
 
-    private  javax.ejb.SessionContext m_ctx = null; 
+    private  jakarta.ejb.SessionContext m_ctx = null; 
    
     /**
      * Sets the session context. Required by EJB spec.
      * @param ctx A SessionContext object.
      */
-    public void setSessionContext(javax.ejb.SessionContext ctx) { 
+    public void setSessionContext(jakarta.ejb.SessionContext ctx) { 
         m_ctx = ctx; 
     } 
 
@@ -39,7 +39,7 @@ public class GreeterEJB implements javax.ejb.SessionBean {
      * Creates a bean. Required by EJB spec.
      * @exception throws CreateException.
      */
-    public void ejbCreate() throws javax.ejb.EJBException, javax.ejb.CreateException { 
+    public void ejbCreate() throws jakarta.ejb.EJBException, jakarta.ejb.CreateException { 
         System.out.println("ejbCreate() on obj " + this); 
     } 
 

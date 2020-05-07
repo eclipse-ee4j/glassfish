@@ -19,10 +19,10 @@ package endpoint;
 import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
 import jakarta.annotation.Resource;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 
 
-@javax.ejb.Stateless
+@jakarta.ejb.Stateless
 @WebService(
     name="Hello",
     serviceName="HelloService",
@@ -35,7 +35,7 @@ public class Hello {
 	public Hello() {}
 
 	@WebMethod(operationName="sayHello", action="urn:SayHello")
-        @javax.interceptor.Interceptors(SimpleInterceptor.class)
+        @jakarta.interceptor.Interceptors(SimpleInterceptor.class)
 	public String sayHello(Object who) {
 		return "Hello " + who  ;
 

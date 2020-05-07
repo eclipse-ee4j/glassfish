@@ -16,12 +16,12 @@
 
 package samples.ejb.bmp.robean.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.sql.*;
 import javax.sql.DataSource;
 
-public class AddressEJB implements javax.ejb.EntityBean {
+public class AddressEJB implements jakarta.ejb.EntityBean {
     //database fields
     String SSN;
     String firstName;

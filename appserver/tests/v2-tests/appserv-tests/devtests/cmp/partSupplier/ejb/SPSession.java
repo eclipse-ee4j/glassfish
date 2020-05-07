@@ -16,7 +16,7 @@
 
 package Data;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 16, 2002 2:08:21 PM
@@ -24,7 +24,7 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface SPSession extends javax.ejb.EJBObject {
+public interface SPSession extends jakarta.ejb.EJBObject {
     
     public int checkAllParts() throws java.rmi.RemoteException;
     

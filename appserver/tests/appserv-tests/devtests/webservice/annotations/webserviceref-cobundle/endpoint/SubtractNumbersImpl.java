@@ -21,7 +21,7 @@ import service.SubtractNumbers;
 /**
  * @author Rama Pulavarthi
  */
-@javax.jws.WebService(targetNamespace = "http://endpoint/", portName = "SubtractNumbersPort",
+@jakarta.jws.WebService(targetNamespace = "http://endpoint/", portName = "SubtractNumbersPort",
         serviceName = "SubtractNumbersService", wsdlLocation = "WEB-INF/wsdl/SubtractNumbers.wsdl",
         endpointInterface = "service.SubtractNumbers")
 public class SubtractNumbersImpl {

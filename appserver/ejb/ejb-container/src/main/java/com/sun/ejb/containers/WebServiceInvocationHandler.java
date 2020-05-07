@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,27 +17,21 @@
 package com.sun.ejb.containers;
 
 import java.rmi.UnmarshalException;
-import javax.ejb.EJBException;
-import javax.ejb.AccessLocalException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.AccessLocalException;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Method;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.InvocationInfo;
 import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.ejb.api.EjbEndpointFacade;
-import com.sun.ejb.Container;
-import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.LogDomains;
 
 /** 
  * This is a proxy invocation handler for web service ejb invocations.

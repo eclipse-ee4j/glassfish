@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session.client;
 import java.io.*;
 import java.util.*;
 import javax.naming.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import com.sun.s1asdev.ejb.ejb30.interceptors.session.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

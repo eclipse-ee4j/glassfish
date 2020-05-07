@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public interface Team extends  javax.ejb.EJBObject   {
+public interface Team extends  jakarta.ejb.EJBObject   {
 
     public String getTeamId() throws RemoteException;
     public String getName() throws RemoteException;

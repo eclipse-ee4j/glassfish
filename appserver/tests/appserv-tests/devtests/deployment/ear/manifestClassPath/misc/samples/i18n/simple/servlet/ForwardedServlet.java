@@ -10,8 +10,8 @@
 
 package samples.i18n.simple.servlet;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 /**
  * Servlet forwarded from SimpleI18nServlet

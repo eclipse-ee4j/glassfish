@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb30.eempassivation;
 
 import java.util.Map;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface Sful {

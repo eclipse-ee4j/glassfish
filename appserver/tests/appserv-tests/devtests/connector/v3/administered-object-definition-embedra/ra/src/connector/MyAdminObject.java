@@ -19,8 +19,8 @@ package connector;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSException;
 import jakarta.jms.Queue;
-import javax.resource.spi.AdministeredObject;
-import javax.resource.spi.ConfigProperty;
+import jakarta.resource.spi.AdministeredObject;
+import jakarta.resource.spi.ConfigProperty;
 
 @AdministeredObject(
         adminObjectInterfaces = {Destination.class,Queue.class}

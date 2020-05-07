@@ -18,14 +18,14 @@ package com.acme;
 
 import jakarta.annotation.*;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
 import org.omg.CORBA.ORB;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
 
 
 public class InterceptorA extends InterceptorSuper {

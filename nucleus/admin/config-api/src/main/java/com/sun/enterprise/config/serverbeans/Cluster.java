@@ -56,7 +56,7 @@ import org.jvnet.hk2.config.types.PropertyBag;
 
 import org.glassfish.quality.ToDo;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

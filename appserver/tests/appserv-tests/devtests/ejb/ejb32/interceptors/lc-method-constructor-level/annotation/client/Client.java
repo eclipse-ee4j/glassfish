@@ -19,7 +19,7 @@ package com.acme;
 import java.io.*;
 import java.util.*;
 import javax.naming.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {

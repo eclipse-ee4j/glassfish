@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;

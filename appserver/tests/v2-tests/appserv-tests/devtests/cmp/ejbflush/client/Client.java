@@ -59,7 +59,7 @@ public class Client {
             try {
                 t.testA1();
                 System.out.println("A1 FAILED");
-            } catch (javax.ejb.CreateException e) {
+            } catch (jakarta.ejb.CreateException e) {
                 System.out.println("A1 FAILED");
             } catch (Exception e) {
                 System.out.println("A1 OK");
@@ -70,7 +70,7 @@ public class Client {
             try {
                 t.testA2();
                 System.out.println("A2 FAILED");
-            } catch (javax.ejb.CreateException e) {
+            } catch (jakarta.ejb.CreateException e) {
                 System.out.println("A1 FAILED");
             } catch (Exception e) {
                 System.out.println("A2 OK");

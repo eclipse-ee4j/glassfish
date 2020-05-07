@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.jdbc.jdbcjmsauth.ejb;
 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.CreateException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.CreateException;
 import jakarta.jms.QueueConnectionFactory;
 import jakarta.jms.QueueConnection;
 import jakarta.jms.QueueSession;

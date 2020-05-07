@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,14 +18,14 @@ package com.sun.ejb;
 
 import java.rmi.Remote;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBObject;
-import javax.ejb.FinderException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBMetaData;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.FinderException;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -168,13 +168,13 @@ public interface Container {
      * finder method, such as calling ejbStore on bean instances.
      * (See EJB 2.1, Section 10.5.3 ejbFind,ejbStore)
      *
-     * @exception javax.ejb.EJBException  Thrown if an error occurs
+     * @exception jakarta.ejb.EJBException  Thrown if an error occurs
      *          during the preSelect actions performed by the container.
      *          If thrown, the remaining select query steps should be 
      *          aborted and an EJBException should be propagated
      *          back to the application code.
      */
-    void preSelect() throws javax.ejb.EJBException;
+    void preSelect() throws jakarta.ejb.EJBException;
 
 
     /**

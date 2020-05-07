@@ -60,7 +60,7 @@ public class EntityBeanInterface extends EjbTest implements EjbCheck {
 			    logger.log(Level.FINE, getClass().getName() + ".debug1",
                         new Object[] {interfaces[i].getName()});
 
-			if (interfaces[i].getName().equals("javax.ejb.EntityBean") &&
+			if (interfaces[i].getName().equals("jakarta.ejb.EntityBean") &&
 			    descriptor instanceof EjbEntityDescriptor) {
 			    validBean = true;
 			    result.addGoodDetails(smh.getLocalString

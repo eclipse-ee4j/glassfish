@@ -17,8 +17,8 @@
 package com.sun.s1asdev.ejb.ejb30.hello.mdb;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import jakarta.jms.*;
 import jakarta.annotation.Resource;
 

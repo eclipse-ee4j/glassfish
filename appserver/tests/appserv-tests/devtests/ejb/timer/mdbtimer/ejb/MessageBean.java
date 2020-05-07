@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.timer.mdbtimer;
 
 import java.rmi.RemoteException;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.Date;
 

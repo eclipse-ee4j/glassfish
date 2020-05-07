@@ -91,7 +91,7 @@ public class TransactionSupportExistence
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
         if (connectorTransactionSupport.equals(ConnectorTagNames.DD_NO_TRANSACTION)) {
             boolean oneFailed=false;
-            if (findImplementorOf(descriptor, "javax.resource.spi.LocalTransaction")!=null) {
+            if (findImplementorOf(descriptor, "jakarta.resource.spi.LocalTransaction")!=null) {
                 oneFailed = true;
 		result.addWarningDetails(smh.getLocalString
 					  ("tests.componentNameConstructor",
@@ -99,7 +99,7 @@ public class TransactionSupportExistence
 					   new Object[] {compName.toString()}));
                 result.warning(smh.getLocalString(getClass().getName() + ".warning",
                 "Warning: Transaction support {0} is specified for ressource adapter but [ {1} ] is implemented",
-		new Object[] {"NoTransaction", "javax.resource.spi.LocalTransaction"}));     
+		new Object[] {"NoTransaction", "jakarta.resource.spi.LocalTransaction"}));     
             }
             if (findImplementorOf(descriptor, "javax.transaction.xa.XAResource")!=null) {
                 oneFailed = true;
@@ -118,19 +118,19 @@ public class TransactionSupportExistence
 					   new Object[] {compName.toString()}));	
 		result.passed(smh.getLocalString(getClass().getName() + ".passed1",
                     "Transaction support NoTransaction is specified for ressource adapter and [ {0} ] are not implemented",
-                    new Object[] {"javax.transaction.xa.XAResource, javax.resource.spi.LocalTransaction"}));                          
+                    new Object[] {"javax.transaction.xa.XAResource, jakarta.resource.spi.LocalTransaction"}));                          
             }
         }
         else {
             if (connectorTransactionSupport.equals(ConnectorTagNames.DD_LOCAL_TRANSACTION)) {
-                if (findImplementorOf(descriptor, "javax.resource.spi.LocalTransaction")==null) {
+                if (findImplementorOf(descriptor, "jakarta.resource.spi.LocalTransaction")==null) {
                     result.addErrorDetails(smh.getLocalString
 					  ("tests.componentNameConstructor",
 					   "For [ {0} ]",
 					   new Object[] {compName.toString()}));
 		result.failed(smh.getLocalString(getClass().getName() + ".nonexist",
                     "Error: Transaction support {0} is specified for ressource adapter but [ {1} ] is not implemented",
-		    new Object[] {"LocalTransaction", "javax.resource.spi.LocalTransaction"}));     
+		    new Object[] {"LocalTransaction", "jakarta.resource.spi.LocalTransaction"}));     
                 } else {                
                     if (findImplementorOf(descriptor, "javax.transaction.xa.XAResource")!=null) {
 			result.addWarningDetails(smh.getLocalString
@@ -147,13 +147,13 @@ public class TransactionSupportExistence
 					   new Object[] {compName.toString()}));
 			result.passed(smh.getLocalString(getClass().getName() + ".passed2",
                             "Transaction support {0} is specified for ressource adapter and [ {1} ] is(are) implemented",
-                		new Object[] {"LocalTransaction", "javax.resource.spi.LocalTransaction"}));                             
+                		new Object[] {"LocalTransaction", "jakarta.resource.spi.LocalTransaction"}));                             
                     }
                 }                            
             } else {
                 if (connectorTransactionSupport.equals(ConnectorTagNames.DD_XA_TRANSACTION)) {
                     boolean oneFailed = false;
-                    if (findImplementorOf(descriptor, "javax.resource.spi.LocalTransaction")==null) {
+                    if (findImplementorOf(descriptor, "jakarta.resource.spi.LocalTransaction")==null) {
                         oneFailed = true;
                         result.addErrorDetails(smh.getLocalString
 					  ("tests.componentNameConstructor",
@@ -161,7 +161,7 @@ public class TransactionSupportExistence
 					   new Object[] {compName.toString()}));
 			result.failed(smh.getLocalString(getClass().getName() + ".nonexist",
                         "Error: Transaction support {0} is specified for ressource adapter but [ {1} ] is not implemented",
-		        new Object[] {"XATransaction", "javax.resource.spi.LocalTransaction"}));                         
+		        new Object[] {"XATransaction", "jakarta.resource.spi.LocalTransaction"}));                         
                     }
                     if (findImplementorOf(descriptor, "javax.transaction.xa.XAResource")==null) {
                         oneFailed = true;
@@ -180,7 +180,7 @@ public class TransactionSupportExistence
 					   new Object[] {compName.toString()}));
 			result.passed(smh.getLocalString(getClass().getName() + ".passed2",
                             "Transaction support {0} is specified for ressource adapter and [ {1} ] is(are) implemented",
-                            new Object[] {"XATransaction", "javax.transaction.xa.Transaction, javax.resource.spi.LocalTransaction"}));                               
+                            new Object[] {"XATransaction", "javax.transaction.xa.Transaction, jakarta.resource.spi.LocalTransaction"}));                               
                     }
                 } else {
                     // unknow transaction support

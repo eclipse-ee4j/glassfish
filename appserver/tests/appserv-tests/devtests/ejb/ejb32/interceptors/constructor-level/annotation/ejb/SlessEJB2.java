@@ -16,8 +16,8 @@
 
 package com.acme;
 
-import javax.ejb.Stateless;
-import javax.interceptor.*;
+import jakarta.ejb.Stateless;
+import jakarta.interceptor.*;
 import jakarta.annotation.*;
 
 @Stateless

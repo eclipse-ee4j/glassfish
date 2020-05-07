@@ -24,9 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.glassfish.api.logging.LogLevel;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;

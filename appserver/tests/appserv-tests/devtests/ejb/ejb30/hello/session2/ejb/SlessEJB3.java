@@ -16,12 +16,12 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2;
 
-import javax.ejb.Stateless;
-import javax.ejb.Remote;
-import javax.ejb.EJB;
-import javax.ejb.EJBContext;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Remote;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBContext;
 import jakarta.annotation.PostConstruct;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 import jakarta.annotation.Resource;
 
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class SlessEJB3 implements SlessSub
 
     private @Resource SessionContext ejbContext2;
 
-    @Resource(type=javax.ejb.SessionContext.class) 
+    @Resource(type=jakarta.ejb.SessionContext.class) 
     private EJBContext ejbContext3;
 
     private EJBContext ejbContext4;
@@ -74,7 +74,7 @@ public class SlessEJB3 implements SlessSub
     }
 
     private EJBContext ejbContext6;
-    @Resource(type=javax.ejb.SessionContext.class)
+    @Resource(type=jakarta.ejb.SessionContext.class)
         private void setEJBContext6(EJBContext context) {
         ejbContext6 = context;
     }
@@ -101,8 +101,8 @@ public class SlessEJB3 implements SlessSub
         return "hello from sless ejb3";
     }
 
-    public String hello2() throws javax.ejb.CreateException {
-        throw new javax.ejb.CreateException();
+    public String hello2() throws jakarta.ejb.CreateException {
+        throw new jakarta.ejb.CreateException();
     }
 
     public String hello3() {
@@ -119,7 +119,7 @@ public class SlessEJB3 implements SlessSub
         if( get1.equals(get2) ) {
             System.out.println("get1 =" + get1);
             System.out.println("get2 =" +  get2);
-            throw new javax.ejb.EJBException("SFSB get test failed");
+            throw new jakarta.ejb.EJBException("SFSB get test failed");
         }
 
         return "hello3()";

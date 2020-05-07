@@ -632,8 +632,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>jakarta.persistence</artifactId>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1617,8 +1617,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1681,7 +1681,7 @@
         </dependency>
         <!-- glassfish-gui -->
         <dependency>
-            <groupId>com.sun.jsftemplating</groupId>
+            <groupId>org.glassfish.jsftemplating</groupId>
             <artifactId>jsftemplating</artifactId>
             <exclusions>
                 <exclusion>

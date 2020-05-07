@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.*;
 import javax.rmi.PortableRemoteObject;
@@ -68,7 +68,7 @@ public class HelloEJB implements Hello  {
     private int passivateCount;
     private int activateCount;
 
-    javax.transaction.UserTransaction ut;
+    jakarta.transaction.UserTransaction ut;
 
     @EJB private SlessBusiness	refSless_1;
     @EJB private SlessBusiness	refSless_2;

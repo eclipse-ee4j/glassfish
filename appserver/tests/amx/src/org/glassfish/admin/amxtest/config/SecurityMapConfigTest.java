@@ -101,7 +101,7 @@ public final class SecurityMapConfigTest
         return smc;
     }
 
-    private static final String CONNECTOR_DEF_NAME = "javax.resource.cci.ConnectionFactory";
+    private static final String CONNECTOR_DEF_NAME = "jakarta.resource.cci.ConnectionFactory";
 
     public void
     testCreateRemove() {

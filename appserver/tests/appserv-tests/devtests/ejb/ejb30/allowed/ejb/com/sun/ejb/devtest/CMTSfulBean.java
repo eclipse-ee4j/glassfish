@@ -16,7 +16,7 @@
 
 package com.sun.ejb.devtest;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 import javax.naming.InitialContext;
 
 @Stateful

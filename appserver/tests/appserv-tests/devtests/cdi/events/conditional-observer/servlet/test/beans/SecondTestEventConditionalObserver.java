@@ -18,9 +18,9 @@ package test.beans;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.Reception;
+import jakarta.enterprise.context.ConversationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.event.Reception;
 
 @ConversationScoped
 public class SecondTestEventConditionalObserver implements Serializable{

@@ -95,7 +95,7 @@ public class RemoteHomeInterfaceSuperInterface extends EjbTest implements EjbChe
                         
                         if (RmiIIOPUtils.isValidRmiIIOPInterfaceMethods(intf)) {
                             // this interface is valid, continue
-                            if (intf.getName().equals("javax.ejb.EJBHome")) {
+                            if (intf.getName().equals("jakarta.ejb.EJBHome")) {
                                 validHomeInterface = true;
                                 break;
                             }

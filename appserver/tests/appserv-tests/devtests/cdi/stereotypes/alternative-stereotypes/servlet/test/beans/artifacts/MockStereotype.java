@@ -22,12 +22,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 
 
 @Alternative
-@javax.enterprise.inject.Stereotype
+@jakarta.enterprise.inject.Stereotype
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE })
 public @interface MockStereotype {

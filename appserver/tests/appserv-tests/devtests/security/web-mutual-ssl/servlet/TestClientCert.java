@@ -18,8 +18,8 @@ package devtests.security;
 
 import java.io.*;
 import java.security.cert.X509Certificate;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class TestClientCert extends HttpServlet {
 
@@ -29,7 +29,7 @@ public class TestClientCert extends HttpServlet {
         System.out.println("start service(...) of TestClientCert" );
 
         X509Certificate[] certs = (X509Certificate[])req.getAttribute(
-            "javax.servlet.request.X509Certificate");
+            "jakarta.servlet.request.X509Certificate");
         String clName = null;
         if (certs != null) {
             for (X509Certificate cert : certs) {

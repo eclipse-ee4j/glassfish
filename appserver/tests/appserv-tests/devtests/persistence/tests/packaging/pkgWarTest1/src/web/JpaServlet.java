@@ -20,13 +20,13 @@
 
 package web;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.util.*;
 import java.io.*;
 
-import javax.persistence.*;
-import javax.transaction.*;
+import jakarta.persistence.*;
+import jakarta.transaction.*;
 import jakarta.annotation.*;
 
 import entity.*;

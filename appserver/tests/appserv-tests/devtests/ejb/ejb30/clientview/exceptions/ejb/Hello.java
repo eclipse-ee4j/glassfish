@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 
-import javax.ejb.FinderException;
+import jakarta.ejb.FinderException;
 
 // Remote business interface
 

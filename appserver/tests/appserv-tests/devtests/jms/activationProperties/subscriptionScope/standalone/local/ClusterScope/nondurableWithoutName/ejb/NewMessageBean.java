@@ -18,7 +18,7 @@ package org.glassfish.test.jms.activationproperties.ejb;
 
 import java.util.logging.*;
 import jakarta.annotation.Resource;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.jms.*;
 
 @MessageDriven(mappedName = "jms/jms_unit_test_Topic", activationConfig = {

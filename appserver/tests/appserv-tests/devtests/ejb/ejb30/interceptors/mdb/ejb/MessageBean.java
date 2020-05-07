@@ -16,10 +16,10 @@
 
 package com.sun.s1asdev.ejb.ejb30.interceptors.mdb;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEJBException;
-import javax.ejb.EJB;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.EJB;
 
 import javax.naming.InitialContext;
 
@@ -32,9 +32,9 @@ import jakarta.jms.QueueSession;
 import jakarta.jms.QueueSender;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.ExcludeDefaultInterceptors;
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+import jakarta.interceptor.Interceptors;
 
 
 @MessageDriven

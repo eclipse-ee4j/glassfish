@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,7 @@ import org.glassfish.internal.api.Globals;
 import org.jboss.weld.injection.spi.InjectionContext;
 import org.jboss.weld.injection.spi.InjectionServices;
 
-import javax.enterprise.inject.spi.*;
+import jakarta.enterprise.inject.spi.*;
 
 /**
  * The InjectionServices for a non-module bda (library or rar).  A non-module bda has no associated bundle so we
@@ -67,7 +67,7 @@ public class NonModuleInjectionServices implements InjectionServices {
         }
     }
 
-    public <T> void registerInjectionTarget(javax.enterprise.inject.spi.InjectionTarget<T> injectionTarget, AnnotatedType<T> annotatedType) {
+    public <T> void registerInjectionTarget(jakarta.enterprise.inject.spi.InjectionTarget<T> injectionTarget, AnnotatedType<T> annotatedType) {
     }
 
     public void cleanup() {

@@ -12,6 +12,6 @@ package samples.ejb.subclassing.ejb;
 
 import java.rmi.RemoteException;
 
-public interface CustomerHome extends javax.ejb.EJBHome {
+public interface CustomerHome extends jakarta.ejb.EJBHome {
 }
 

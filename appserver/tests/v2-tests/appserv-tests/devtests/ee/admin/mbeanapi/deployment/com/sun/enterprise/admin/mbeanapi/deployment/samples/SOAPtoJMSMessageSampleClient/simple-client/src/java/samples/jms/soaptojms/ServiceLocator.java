@@ -13,8 +13,8 @@ package samples.jms.soaptojms;
 
 import java.net.URL;
 
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalHome;
 import jakarta.jms.QueueConnectionFactory;
 import jakarta.jms.Queue;
 import jakarta.jms.TopicConnectionFactory;

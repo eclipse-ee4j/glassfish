@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.sfsb.passivateactivate.client;
 import java.util.ArrayList;
 import javax.naming.*;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 
 import com.sun.s1asdev.ejb.sfsb.passivateactivate.ejb.SFSBHome;
@@ -208,7 +208,7 @@ public class Client {
 	    boolean gotException = false;
 
             // Test BMT SFSB remove called in a transaction
-            javax.transaction.UserTransaction ut = (javax.transaction.UserTransaction) 
+            jakarta.transaction.UserTransaction ut = (jakarta.transaction.UserTransaction) 
                      (new InitialContext()).lookup("java:comp/UserTransaction");
             ut.begin();
 	    sfsb.remove();

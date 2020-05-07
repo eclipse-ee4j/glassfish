@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,10 @@ package org.glassfish.ejb.deployment;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.internal.deployment.AnnotationTypesProvider;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.Stateful;
-import javax.ejb.Stateless;
-import javax.ejb.Singleton;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Singleton;
 import java.lang.annotation.Annotation;
 
 /**

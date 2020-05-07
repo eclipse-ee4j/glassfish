@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,9 @@ package com.sun.enterprise.connectors;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.LazyAssociatableConnectionManager;
-import javax.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.LazyAssociatableConnectionManager;
+import jakarta.resource.spi.ManagedConnectionFactory;
 
 /**
  * @author Aditya Gore
@@ -34,8 +34,8 @@ public class LazyAssociatableConnectionManagerImpl extends ConnectionManagerImpl
     }
 
     public void associateConnection(Object connection,
-                                    javax.resource.spi.ManagedConnectionFactory mcf,
-                                    javax.resource.spi.ConnectionRequestInfo info)
+                                    jakarta.resource.spi.ManagedConnectionFactory mcf,
+                                    jakarta.resource.spi.ConnectionRequestInfo info)
             throws ResourceException {
         //the following call will also take care of associating "connection"
         //with a new ManagedConnection instance

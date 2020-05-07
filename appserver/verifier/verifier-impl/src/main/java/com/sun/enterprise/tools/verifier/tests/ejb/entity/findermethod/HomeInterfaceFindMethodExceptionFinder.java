@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
 
 /** 
  * Entity beans home interface find<METHOD> method throws 
- * javax.ejb.FinderException test.
+ * jakarta.ejb.FinderException test.
  * 
  * The following are the requirements for the enterprise Bean's home interface 
  * find<METHOD> signature: 
@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
  * An Entity Bean's home interface defines one or more find<METHOD>(...) 
  * methods. 
  * 
- * The throws clause must include javax.ejb.FinderException. 
+ * The throws clause must include jakarta.ejb.FinderException. 
  */
 public class HomeInterfaceFindMethodExceptionFinder extends EjbTest implements EjbCheck { 
     Result result = null;
@@ -46,7 +46,7 @@ public class HomeInterfaceFindMethodExceptionFinder extends EjbTest implements E
 
     /**
      * Entity beans home interface find<METHOD> method throws 
-     * javax.ejb.FinderException test.
+     * jakarta.ejb.FinderException test.
      * 
      * The following are the requirements for the enterprise Bean's home interface 
      * find<METHOD> signature: 
@@ -54,7 +54,7 @@ public class HomeInterfaceFindMethodExceptionFinder extends EjbTest implements E
      * An Entity Bean's home interface defines one or more find<METHOD>(...) 
      * methods. 
      * 
-     * The throws clause must include javax.ejb.FinderException. 
+     * The throws clause must include jakarta.ejb.FinderException. 
      *    
      * @param descriptor the Enterprise Java Bean deployment descriptor
      *   
@@ -119,7 +119,7 @@ public class HomeInterfaceFindMethodExceptionFinder extends EjbTest implements E
     private boolean commonToBothInterfaces(String home, EjbDescriptor descriptor) {
 	boolean oneFailed = false;
 		// RULE: Entity home interface are only allowed to have find<METHOD> 
-		//       methods which must throw javax.ejb.FinderException
+		//       methods which must throw jakarta.ejb.FinderException
 		try {
 		    VerifierTestContext context = getVerifierContext();
 		ClassLoader jcl = context.getClassLoader();
@@ -136,7 +136,7 @@ public class HomeInterfaceFindMethodExceptionFinder extends EjbTest implements E
 			    throwsFinderException = false;
 			    methodExceptionTypes = methods[i].getExceptionTypes();
                  
-			    // methods must throw javax.ejb.FinderException
+			    // methods must throw jakarta.ejb.FinderException
 			    if (EjbUtils.isValidFinderException(methodExceptionTypes)) {
 				throwsFinderException = true;
 			    }
@@ -155,7 +155,7 @@ public class HomeInterfaceFindMethodExceptionFinder extends EjbTest implements E
 						       new Object[] {c.getName(),methods[i].getName()}));
 				result.addGoodDetails(smh.getLocalString
 						      (getClass().getName() + ".passed",
-						       "The [ {0} ] method which must throw javax.ejb.FinderException was found.",
+						       "The [ {0} ] method which must throw jakarta.ejb.FinderException was found.",
 						       new Object[] {methods[i].getName()}));
 			    } else if (!throwsFinderException) {
 				oneFailed = true;
@@ -169,7 +169,7 @@ public class HomeInterfaceFindMethodExceptionFinder extends EjbTest implements E
 							new Object[] {c.getName(),methods[i].getName()}));
 				result.addErrorDetails(smh.getLocalString
 						       (getClass().getName() + ".failed",
-							"Error: A [ {0} ] method was found, but did not throw javax.ejb.FinderException.",
+							"Error: A [ {0} ] method was found, but did not throw jakarta.ejb.FinderException.",
 							new Object[] {methods[i].getName()}));
 			    }  // end of reporting for this particular 'find' method
 			} // if the home interface found a "find" method

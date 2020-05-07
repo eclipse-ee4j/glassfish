@@ -24,7 +24,7 @@ import java.util.Hashtable;
 
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  *

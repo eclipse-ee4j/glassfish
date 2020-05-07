@@ -18,10 +18,10 @@
 package org.apache.catalina;
 
 
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import java.util.EventObject;
 
 

@@ -17,8 +17,8 @@
 package com.sun.s1asdev.ejb.bmp.txtests.stateless.ejb;
 
 import java.rmi.RemoteException;
-import javax.ejb.EJBHome;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.CreateException;
 
 public interface SLSBHome
     extends EJBHome

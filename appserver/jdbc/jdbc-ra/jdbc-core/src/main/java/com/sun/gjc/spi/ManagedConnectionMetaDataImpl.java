@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package com.sun.gjc.spi;
 
 import com.sun.logging.LogDomains;
 
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @author Evani Sai Surya Kiran
  * @version 1.0, 02/08/03
  */
-public class ManagedConnectionMetaDataImpl implements javax.resource.spi.ManagedConnectionMetaData {
+public class ManagedConnectionMetaDataImpl implements jakarta.resource.spi.ManagedConnectionMetaData {
 
     private java.sql.DatabaseMetaData dmd = null;
     private ManagedConnectionImpl mc;
@@ -115,7 +115,7 @@ public class ManagedConnectionMetaDataImpl implements javax.resource.spi.Managed
      * @throws <code>ResourceException</code>
      */
     public String getUserName() throws ResourceException {
-        javax.resource.spi.security.PasswordCredential pc = mc.getPasswordCredential();
+        jakarta.resource.spi.security.PasswordCredential pc = mc.getPasswordCredential();
         if (pc != null) {
             return pc.getUserName();
         }

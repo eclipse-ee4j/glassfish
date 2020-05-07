@@ -16,7 +16,7 @@
 
 package com.sun.s1peqe.security.authoriz.methodperms;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.io.Serializable;

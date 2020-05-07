@@ -16,8 +16,8 @@
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class TestServlet extends HttpServlet {
 
@@ -25,7 +25,7 @@ public class TestServlet extends HttpServlet {
             throws IOException, ServletException {
 
         Object cert = req.getAttribute(
-            "javax.servlet.request.X509Certificate");
+            "jakarta.servlet.request.X509Certificate");
         String clName = null;
         if (cert != null) {
             clName = cert.getClass().getName();

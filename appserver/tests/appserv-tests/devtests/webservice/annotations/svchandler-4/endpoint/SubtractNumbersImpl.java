@@ -16,8 +16,8 @@
 
 package endpoint;
 
-@javax.jws.HandlerChain(name="some name", file="myhandler.xml")
-@javax.jws.WebService (serviceName="junkjunkjunk", endpointInterface="endpoint.SubtractNumbersPortType")
+@jakarta.jws.HandlerChain(name="some name", file="myhandler.xml")
+@jakarta.jws.WebService (serviceName="junkjunkjunk", endpointInterface="endpoint.SubtractNumbersPortType")
 public class SubtractNumbersImpl implements SubtractNumbersPortType {
     
     public int subtractNumbers (int number1, int number2) {

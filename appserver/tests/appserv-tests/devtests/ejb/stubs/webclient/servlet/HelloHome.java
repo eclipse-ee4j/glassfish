@@ -19,8 +19,8 @@ package com.sun.s1asdev.ejb.stubs.ejbapp;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import javax.ejb.EJBHome;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.CreateException;
 
 
 public interface HelloHome extends EJBHome {

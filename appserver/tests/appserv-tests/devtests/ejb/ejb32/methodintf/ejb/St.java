@@ -16,7 +16,7 @@
 
 package ejb32.methodintf;
 
-@javax.ejb.Remote
+@jakarta.ejb.Remote
 public interface St {
 
     public void test() throws Exception;

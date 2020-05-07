@@ -32,8 +32,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
@@ -44,7 +44,7 @@ import org.glassfish.javaee.core.deployment.JavaEEDeployer;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.appclient.server.core.jws.JWSAdapterManager;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;

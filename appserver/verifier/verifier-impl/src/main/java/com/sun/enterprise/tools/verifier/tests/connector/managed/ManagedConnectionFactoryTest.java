@@ -44,7 +44,7 @@ public abstract class ManagedConnectionFactoryTest extends ConnectorTest {
     /**
      * <p>
      * Get the <code>Class</code> object of the class declared to be implementing
-     * the javax.resource.spi.ManagedConnectionFactory interface in the 
+     * the jakarta.resource.spi.ManagedConnectionFactory interface in the 
      * archive deployment descriptor
      * </p> 
      *
@@ -71,7 +71,7 @@ public abstract class ManagedConnectionFactoryTest extends ConnectorTest {
         managedConnectionFactoryImpl = 
           connDefDesc.getManagedConnectionFactoryImpl();
         Class implClass = Class.forName(managedConnectionFactoryImpl, false, getVerifierContext().getClassLoader());
-        if(isImplementorOf(implClass, "javax.resource.spi.ManagedConnectionFactory"))
+        if(isImplementorOf(implClass, "jakarta.resource.spi.ManagedConnectionFactory"))
         {
           return implClass;
         }
@@ -112,7 +112,7 @@ public abstract class ManagedConnectionFactoryTest extends ConnectorTest {
                new Object[] {compName.toString()}));
           result.failed(smh.getLocalString
               ("com.sun.enterprise.tools.verifier.tests.connector.managed.ManagedConnectionFactoryTest.nonimpl", 
-               "Error: The resource adapter must implement the javax.resource.spi.ManagedConnectionFactory interface and declare it in the managedconnecttionfactory-class deployment descriptor."));                
+               "Error: The resource adapter must implement the jakarta.resource.spi.ManagedConnectionFactory interface and declare it in the managedconnecttionfactory-class deployment descriptor."));                
         }
       } catch(ClassNotFoundException cnfe) {
         cnfe.printStackTrace();

@@ -19,13 +19,13 @@ package org.glassfish.soteria.test;
 import java.io.IOException;
 
 import jakarta.annotation.security.DeclareRoles;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.security.enterprise.SecurityContext;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.soteria.SecurityContextImpl;
 import java.util.stream.*;

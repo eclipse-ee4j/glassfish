@@ -79,22 +79,23 @@
         <findbugs.version>3.0.3</findbugs.version>
         <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
 
-        <webservices.version>3.0.0-SNAPSHOT</webservices.version>
+        <webservices.version>3.0.0-M1</webservices.version>
         <glassfish-corba.version>4.2.0</glassfish-corba.version>
         <stax-api.version>1.0-2</stax-api.version>
         <slf4j.version>1.7.21</slf4j.version>
         <management-api.version>1.1-rev-1</management-api.version>
-        <servlet-api.version>4.0.3</servlet-api.version>
+        <servlet-api.version>5.0.0-M1</servlet-api.version>
         <grizzly.version>2.4.4</grizzly.version>
         <grizzly.npn.version>1.9</grizzly.npn.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <jakarta.validation.version>3.0.0-M1</jakarta.validation.version>
         <hibernate-validator.version>7.0.0.Alpha1</hibernate-validator.version>
         <javassist.version>3.26.0-GA</javassist.version>
-        <jakarta.el.version>3.0.3</jakarta.el.version>
+        <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
         <jakarta.el-api.version>3.0.2</jakarta.el-api.version>
-        <hk2.version>2.6.1</hk2.version>
-        <hk2.plugin.version>2.5.0</hk2.plugin.version>
+        <jakarta.inject-api.version>2.0.0-RC3</jakarta.inject-api.version>
+        <hk2.version>3.0.0-M1</hk2.version>
+        <hk2.plugin.version>3.0.0-M1</hk2.plugin.version>
         <jboss.logging.version>3.4.1.Final</jboss.logging.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <jsch.version>0.1.56</jsch.version>
@@ -358,10 +359,10 @@
                         <configuration>
                             <resolutionFuzziness>groupId</resolutionFuzziness>
                             <includes>
-                                <include>javax.ejb</include>
+                                <include>jakarta.ejb</include>
                                 <include>jakarta.transaction</include>
-                                <include>javax.resource</include>
-                                <include>javax.enterprise.concurrent</include>
+                                <include>jakarta.resource</include>
+                                <include>jakarta.enterprise.concurrent</include>
                                 <include>jakarta.ws.rs</include>
                                 <include>javax.xml.registry</include>
                                 <include>jakarta.websocket</include>
@@ -607,6 +608,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>${jakarta.inject-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-bom</artifactId>

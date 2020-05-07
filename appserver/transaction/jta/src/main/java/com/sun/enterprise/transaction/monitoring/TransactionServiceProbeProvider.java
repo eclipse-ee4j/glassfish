@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 package com.sun.enterprise.transaction.monitoring;
 
 import org.glassfish.external.probe.provider.annotations.*;
-import org.glassfish.gmbal.Description;
 
 /**
  * Probe emitter for the Transaction Service. Used by the probe framework as an event notifier.

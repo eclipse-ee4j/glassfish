@@ -16,9 +16,9 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.spi.ConnectionEvent;
-import javax.resource.spi.ConnectionEventListener;
-import javax.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ConnectionEvent;
+import jakarta.resource.spi.ConnectionEventListener;
+import jakarta.resource.spi.ManagedConnection;
 import java.util.Vector;
 
 /**

@@ -16,9 +16,9 @@ package com.oracle.javaee7.samples.batch.cmt.chunk;
 
 import java.io.Serializable;
 import java.util.List;
-@javax.inject.Named("SimpleItemWriter")
+@jakarta.inject.Named("SimpleItemWriter")
 public class SimpleItemWriter
-    implements javax.batch.api.chunk.ItemWriter {
+    implements jakarta.batch.api.chunk.ItemWriter {
     
     @Override
     public void open(Serializable e) throws Exception {

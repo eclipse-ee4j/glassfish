@@ -12,9 +12,9 @@ package com.sun.grizzly.samples.websockets;
 
 import org.glassfish.grizzly.websockets.WebSocketEngine;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import java.util.logging.Logger;
 
 public class WebSocketsServlet extends HttpServlet {

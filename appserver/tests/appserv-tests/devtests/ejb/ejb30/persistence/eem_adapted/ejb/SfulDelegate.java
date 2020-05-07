@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.persistence.eem_adapted;
 
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBLocalObject;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 public interface SfulDelegate
     extends EJBLocalObject {

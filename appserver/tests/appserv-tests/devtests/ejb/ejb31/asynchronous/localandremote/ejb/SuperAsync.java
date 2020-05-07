@@ -17,7 +17,7 @@
 package com.acme;
 
 import java.util.concurrent.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface SuperAsync { 
     public Future<String> hello(String name);

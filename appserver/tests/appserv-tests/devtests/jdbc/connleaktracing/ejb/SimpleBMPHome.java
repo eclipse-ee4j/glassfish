@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.jdbc.connectionleaktracing.ejb;
 
-import javax.ejb.CreateException;
+import jakarta.ejb.CreateException;
 import java.rmi.RemoteException;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 
 public interface SimpleBMPHome
         extends EJBHome {

@@ -19,7 +19,7 @@ package com.sun.ejb.devtest.client;
 import java.io.*;
 import java.util.*;
 import javax.naming.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import com.oracle.javaee7.samples.batch.simple.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

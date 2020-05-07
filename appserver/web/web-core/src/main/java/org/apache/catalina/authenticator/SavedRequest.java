@@ -18,7 +18,7 @@
 package org.apache.catalina.authenticator;
 
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,18 +21,17 @@ import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
 import com.sun.enterprise.deployment.deploy.shared.Util;
 import org.glassfish.deployment.common.GenericAnnotationDetector;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Detects rar type archives.
@@ -45,7 +44,7 @@ import javax.inject.Inject;
 @Singleton
 public class RarDetector implements ArchiveDetector {
     private static final Class[] connectorAnnotations = new Class[]{
-            javax.resource.spi.Connector.class};
+            jakarta.resource.spi.Connector.class};
 
     public static final String RAR_DETECTOR_RANK_PROP = "glassfish.rar.detector.rank";
     public static final int DEFAULT_RAR_DETECTOR_RANK = 300;

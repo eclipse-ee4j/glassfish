@@ -19,12 +19,12 @@ package com.acme.ejb.impl;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
-import javax.ejb.DependsOn;
-import javax.ejb.SessionContext;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.ejb.DependsOn;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 
 import com.acme.ejb.api.Hello;
 import com.acme.util.TestDatabase;

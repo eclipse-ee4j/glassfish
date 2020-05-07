@@ -88,6 +88,10 @@
             <artifactId>orb-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.authorization</groupId>
+            <artifactId>jakarta.authorization-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

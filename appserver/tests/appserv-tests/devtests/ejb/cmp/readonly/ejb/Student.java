@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.cmp.readonly.ejb;
 
 import java.util.ArrayList;
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 

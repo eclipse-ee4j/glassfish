@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,25 +17,15 @@
 package com.sun.ejb.containers;
 
 import com.sun.ejb.EjbInvocation;
-import com.sun.ejb.spi.container.StatefulEJBContext;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 
-import javax.ejb.EJBException;
-import javax.ejb.SessionContext;
-import javax.ejb.TimerService;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.transaction.UserTransaction;
-import javax.xml.rpc.handler.MessageContext;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.TimerService;
+import jakarta.transaction.UserTransaction;
 import com.sun.ejb.EJBUtils;
-import java.util.*;
-
-
-import static com.sun.ejb.containers.StatefulSessionContainer.EEMRefInfo;
-import static com.sun.ejb.containers.StatefulSessionContainer.EEMRefInfoKey;
 
 /**
  * Implementation of EJBContext for SessionBeans
@@ -94,11 +84,6 @@ public abstract class AbstractSessionContextImpl
             throw new IllegalStateException("Operation not allowed");
 
         return ((BaseContainer) getContainer()).getUserTransaction();
-    }
-
-    public MessageContext getMessageContext() {
-        //no jax-rpc anymore
-        return null;
     }
 
     public <T> T getBusinessObject(Class<T> businessInterface)

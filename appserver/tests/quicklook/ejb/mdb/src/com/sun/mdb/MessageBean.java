@@ -16,11 +16,11 @@
 
 package com.sun.mdb;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.NoSuchEJBException;
-import javax.ejb.EJB;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
 import jakarta.jms.MessageListener;
 import jakarta.jms.Message;
 import jakarta.jms.Queue;

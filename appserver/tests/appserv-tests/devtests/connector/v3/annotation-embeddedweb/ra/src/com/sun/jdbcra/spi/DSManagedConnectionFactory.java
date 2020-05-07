@@ -16,15 +16,15 @@
 
 package com.sun.jdbcra.spi;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.ConnectionDefinition;
-import javax.resource.spi.ConfigProperty;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ConnectionDefinition;
+import jakarta.resource.spi.ConfigProperty;
 
 import com.sun.jdbcra.common.DataSourceSpec;
 import com.sun.jdbcra.common.DataSourceObjectBuilder;
 import com.sun.jdbcra.util.SecurityUtils;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.spi.security.PasswordCredential;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -68,7 +68,7 @@ public class DSManagedConnectionFactory extends ManagedConnectionFactory {
      * @throws	ResourceAllocationException	if there is an error in allocating the 
      *						physical connection
      */
-    public javax.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
+    public jakarta.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
         ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         if(logWriter != null) {
                 logWriter.println("In createManagedConnection");
@@ -85,7 +85,7 @@ public class DSManagedConnectionFactory extends ManagedConnectionFactory {
                 dataSourceObj = (javax.sql.DataSource) dsObjBuilder.constructDataSourceObject();
             } catch(ClassCastException cce) {
 	        _logger.log(Level.SEVERE, "jdbc.exc_cce", cce);
-                throw new javax.resource.ResourceException(cce.getMessage());
+                throw new jakarta.resource.ResourceException(cce.getMessage());
             }
         }
         
@@ -106,7 +106,7 @@ public class DSManagedConnectionFactory extends ManagedConnectionFactory {
         } catch(java.sql.SQLException sqle) {
             sqle.printStackTrace();
 	    _logger.log(Level.WARNING, "jdbc.exc_create_conn", sqle);
-            throw new javax.resource.spi.ResourceAllocationException("The connection could not be allocated: " + 
+            throw new jakarta.resource.spi.ResourceAllocationException("The connection could not be allocated: " + 
                 sqle.getMessage());
         } catch(Exception e){
             System.out.println("V3-TEST : unable to get connection");

@@ -10,7 +10,7 @@
 
 package com.oracle.javaee7.samples.batch.simple;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface Sless {

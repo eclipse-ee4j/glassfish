@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.embedded.remoteejbs;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.InitialContext;
 
 @Stateless

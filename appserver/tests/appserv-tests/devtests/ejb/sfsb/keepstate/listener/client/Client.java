@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.sfsb.lifecycle.client;
 import java.util.ArrayList;
 import javax.naming.*;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 
 import com.sun.s1asdev.ejb.ejb30.sfsb.lifecycle.ejb.SFSBHome;

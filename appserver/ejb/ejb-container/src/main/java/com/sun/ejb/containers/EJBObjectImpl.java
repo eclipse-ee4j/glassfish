@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package com.sun.ejb.containers;
 import java.rmi.RemoteException;
 import java.lang.reflect.Method;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import com.sun.ejb.portable.*;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -176,7 +176,7 @@ public abstract class EJBObjectImpl
     
     /**
      * This is called when the EJB client does ejbref.getHandle().
-     * Return a serializable implementation of javax.ejb.Handle.
+     * Return a serializable implementation of jakarta.ejb.Handle.
      */
     public final Handle getHandle() throws RemoteException {
         container.authorizeRemoteMethod(BaseContainer.EJBObject_getHandle);

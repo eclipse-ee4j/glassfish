@@ -17,7 +17,7 @@
 package test.ejb;
 
 import jakarta.annotation.Resource;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class SlessEJB implements Sless {

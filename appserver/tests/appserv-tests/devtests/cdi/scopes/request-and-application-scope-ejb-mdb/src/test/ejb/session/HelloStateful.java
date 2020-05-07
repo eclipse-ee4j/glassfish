@@ -16,8 +16,8 @@
 
 package test.ejb.session;
 
-import javax.ejb.Stateful;
-import javax.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remove;
 import jakarta.annotation.PreDestroy;
 
 @Stateful(description="my stateful bean description")

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.mdb.singleton;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 @Stateless

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ import com.sun.ejb.portable.*;
 
 import java.lang.reflect.Method;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
@@ -38,7 +38,7 @@ import java.util.logging.*;
  */
 
 public abstract class EJBHomeImpl
-    implements javax.ejb.EJBHome
+    implements jakarta.ejb.EJBHome
 {
 
     protected static final Logger _logger = EjbContainerUtilImpl.getLogger();
@@ -100,11 +100,11 @@ public abstract class EJBHomeImpl
     
     /***************************************
 ***********************************
-    The following are implementations of javax.ejb.EJBHome methods.
+    The following are implementations of jakarta.ejb.EJBHome methods.
      **************************************************************************/
     
     /**
-     * This is the implementation of the javax.ejb.EJBHome remove method.
+     * This is the implementation of the jakarta.ejb.EJBHome remove method.
      * @exception RemoveException on error during removal
      */
     public final void remove(Handle handle)
@@ -127,7 +127,7 @@ public abstract class EJBHomeImpl
     
     
     /**
-     * This is the implementation of the javax.ejb.EJBHome remove method.
+     * This is the implementation of the jakarta.ejb.EJBHome remove method.
      * @exception RemoveException on error during removal
      */
     public final void remove(Object primaryKey)
@@ -153,7 +153,7 @@ public abstract class EJBHomeImpl
     
     
     /**
-     * This is the implementation of the javax.ejb.EJBHome method.
+     * This is the implementation of the jakarta.ejb.EJBHome method.
      */
     public final EJBMetaData getEJBMetaData()
         throws RemoteException
@@ -164,7 +164,7 @@ public abstract class EJBHomeImpl
     }
     
     /**
-     * This is the implementation of the javax.ejb.EJBHome getHomeHandle
+     * This is the implementation of the jakarta.ejb.EJBHome getHomeHandle
      * method.
      */
     public final HomeHandle getHomeHandle()

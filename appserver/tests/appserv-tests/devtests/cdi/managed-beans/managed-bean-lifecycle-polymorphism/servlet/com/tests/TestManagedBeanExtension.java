@@ -16,7 +16,7 @@
 
 package com.tests;
 
-@javax.enterprise.inject.Alternative
+@jakarta.enterprise.inject.Alternative
 @jakarta.annotation.ManagedBean
 public class TestManagedBeanExtension extends TestManagedBean {
 

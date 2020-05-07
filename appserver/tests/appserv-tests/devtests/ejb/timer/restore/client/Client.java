@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.timer.restore.client;
 
 import javax.naming.*;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 import java.util.HashSet;
 import java.util.Set;

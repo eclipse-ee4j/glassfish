@@ -24,8 +24,8 @@ import com.unboundid.ldif.LDIFReader;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
 
 /**
  * Starts up the embedded Unboundid LDAP server on port 33389 and loads a test directory

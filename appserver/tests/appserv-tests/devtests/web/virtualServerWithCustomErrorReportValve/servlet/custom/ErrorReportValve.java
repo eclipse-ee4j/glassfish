@@ -17,7 +17,7 @@
 package custom;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 import org.glassfish.web.valve.GlassFishValve;

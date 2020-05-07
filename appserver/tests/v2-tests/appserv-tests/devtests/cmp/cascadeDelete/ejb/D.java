@@ -16,7 +16,7 @@
 
 package cascadeDelete;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 23, 2002 12:43:03 PM
@@ -24,7 +24,7 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface D extends javax.ejb.EJBObject {
+public interface D extends jakarta.ejb.EJBObject {
     
 }
 

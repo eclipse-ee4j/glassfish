@@ -18,8 +18,8 @@ package org.glassfish.test.jms.activationproperties.ejb;
 
 import java.util.logging.Logger;
 import jakarta.annotation.Resource;
-import javax.ejb.*;
-import javax.inject.Inject;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 
 /**

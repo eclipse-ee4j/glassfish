@@ -16,7 +16,7 @@
 
 package test.beans.nonmock;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import test.beans.TestBeanInterface;
 import test.beans.artifacts.AnotherQualifier;

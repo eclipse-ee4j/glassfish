@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb30.eempassivation;
 
-import javax.ejb.Stateless;
-import javax.ejb.EJB;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.EJB;
 
 import javax.naming.*;
 

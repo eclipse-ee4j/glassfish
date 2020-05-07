@@ -17,7 +17,7 @@
 package com.sun.s1peqe.ejb.cmp.preselect.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.rmi.RemoteException;
 import javax.rmi.PortableRemoteObject;

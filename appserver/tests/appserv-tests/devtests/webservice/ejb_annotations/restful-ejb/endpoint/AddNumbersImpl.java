@@ -31,7 +31,7 @@ import jakarta.xml.ws.handler.MessageContext;
 import jakarta.xml.ws.http.HTTPException;
 import jakarta.xml.ws.http.HTTPBinding;
 import jakarta.xml.ws.BindingType;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @WebServiceProvider
 @Stateless

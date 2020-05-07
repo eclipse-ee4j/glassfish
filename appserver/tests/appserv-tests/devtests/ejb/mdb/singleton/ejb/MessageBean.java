@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.mdb.singleton;
 
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class MessageBean implements  MessageListener {
     @EJB

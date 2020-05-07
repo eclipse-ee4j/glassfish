@@ -17,8 +17,8 @@
 package com.sun.jdbcra.spi;
 
 import com.sun.jdbcra.spi.ManagedConnection;
-import javax.resource.ResourceException;
-import javax.resource.spi.LocalTransactionException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.LocalTransactionException;
 
 /**
  * <code>LocalTransaction</code> implementation for Generic JDBC Connector.
@@ -26,7 +26,7 @@ import javax.resource.spi.LocalTransactionException;
  * @version	1.0, 02/08/03
  * @author	Evani Sai Surya Kiran
  */
-public class LocalTransaction implements javax.resource.spi.LocalTransaction {
+public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
     
     private ManagedConnection mc;
     

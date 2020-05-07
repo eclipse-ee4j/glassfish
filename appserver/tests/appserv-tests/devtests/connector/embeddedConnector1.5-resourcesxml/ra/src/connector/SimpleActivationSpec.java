@@ -16,8 +16,8 @@
 
 package connector;
 
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.ResourceAdapter;
 
 /**
  * This class is supposed to implemented as a JavaBean

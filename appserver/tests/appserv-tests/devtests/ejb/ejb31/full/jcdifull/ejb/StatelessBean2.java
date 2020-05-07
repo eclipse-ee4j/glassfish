@@ -16,12 +16,12 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.enterprise.event.Observes;
 
 @Stateless
 public class StatelessBean2 implements StatelessLocal2 {

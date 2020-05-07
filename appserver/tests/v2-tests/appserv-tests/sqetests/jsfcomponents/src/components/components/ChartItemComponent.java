@@ -22,10 +22,10 @@ package components.components;
 
 
 import java.io.IOException;
-import javax.faces.application.Application;
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-import javax.faces.component.UIComponentBase;
+import jakarta.faces.application.Application;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.el.ValueBinding;
+import jakarta.faces.component.UIComponentBase;
 
 
 /**

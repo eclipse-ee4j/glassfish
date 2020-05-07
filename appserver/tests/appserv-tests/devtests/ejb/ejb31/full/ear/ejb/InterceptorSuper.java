@@ -16,8 +16,8 @@
 
 package com.acme;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
 
 
 public class InterceptorSuper {

@@ -16,7 +16,7 @@
 
 package org.glassfish.test.authpropagation;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 

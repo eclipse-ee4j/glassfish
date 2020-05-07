@@ -21,12 +21,12 @@ import java.io.PrintWriter;
 import java.util.Set;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.inject.spi.ProcessInjectionTarget;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Check that ExtensionBean is deployed and accessible

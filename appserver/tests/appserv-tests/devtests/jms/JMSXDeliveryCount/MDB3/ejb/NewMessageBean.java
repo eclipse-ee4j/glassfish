@@ -18,8 +18,8 @@ package org.glassfish.test.jms.jmsxdeliverycount.ejb;
 
 import java.util.logging.*;
 import jakarta.annotation.Resource;
-import javax.ejb.*;
-import javax.inject.Inject;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 
 @MessageDriven(mappedName = "jms/jms_unit_test_Queue", activationConfig = {

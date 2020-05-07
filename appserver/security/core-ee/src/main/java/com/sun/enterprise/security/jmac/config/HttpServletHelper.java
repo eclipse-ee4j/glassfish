@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package com.sun.enterprise.security.jmac.config;
 import java.util.HashMap;
 import java.util.Map;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.config.AuthConfigProvider;
+import jakarta.security.auth.message.config.AuthConfigProvider;
 
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
@@ -31,7 +31,7 @@ import com.sun.enterprise.security.web.integration.WebSecurityManager;
 public class HttpServletHelper extends ConfigHelper {
     private String realmName = null;
 
-    public static final String AUTH_TYPE = "javax.servlet.http.authType";
+    public static final String AUTH_TYPE = "jakarta.servlet.http.authType";
 
     public HttpServletHelper(String appContext, Map map,
             CallbackHandler cbh, String realmName,

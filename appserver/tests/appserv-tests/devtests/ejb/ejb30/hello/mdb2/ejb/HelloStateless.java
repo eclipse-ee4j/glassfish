@@ -16,12 +16,12 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb2;
 
-import javax.ejb.Stateless;
-import javax.ejb.TimerService;
-import javax.ejb.Local;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.Local;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 
 @Local({Hello1.class})
 @Stateless public class HelloStateless extends HelloStatelessSuper implements Hello1 {

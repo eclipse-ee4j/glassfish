@@ -26,7 +26,7 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

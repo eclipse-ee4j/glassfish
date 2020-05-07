@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,7 @@
 package com.sun.ejb.portable;
 
 import java.io.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 
 /**
@@ -27,7 +27,7 @@ import javax.rmi.PortableRemoteObject;
  *
  */
 
-public final class EJBMetaDataImpl implements javax.ejb.EJBMetaData, Serializable
+public final class EJBMetaDataImpl implements jakarta.ejb.EJBMetaData, Serializable
 {
     // for backward compatibility
     private static final long serialVersionUID = 5777657175353026918L;

@@ -18,11 +18,11 @@ package samples.ejb.stateless.simple.servlet;
 
 import java.io.*; 
 import java.util.*; 
-import javax.servlet.*; 
+import jakarta.servlet.*; 
 import javax.naming.*; 
-import javax.servlet.http.*; 
+import jakarta.servlet.http.*; 
 import javax.rmi.PortableRemoteObject;
-import javax.ejb.*; 
+import jakarta.ejb.*; 
 
 import samples.ejb.stateless.simple.ejb.*; 
 
@@ -39,7 +39,7 @@ public class GreeterServlet extends HttpServlet {
    public void doGet (HttpServletRequest request,HttpServletResponse response) 
         throws ServletException, IOException { 
 
-        javax.ejb.Handle beanHandle; 
+        jakarta.ejb.Handle beanHandle; 
         Greeter myGreeterBean; 
         GreeterHome myGreeterHome; 
         Greeter myGreeterRemote;

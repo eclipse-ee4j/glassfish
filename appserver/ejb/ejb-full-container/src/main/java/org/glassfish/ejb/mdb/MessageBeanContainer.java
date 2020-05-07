@@ -23,13 +23,13 @@ import java.lang.reflect.Proxy;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.RemoveException;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.transaction.Status;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.MessageDrivenBean;
+import jakarta.ejb.RemoveException;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.transaction.Status;
 import javax.transaction.xa.XAResource;
 
 import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;

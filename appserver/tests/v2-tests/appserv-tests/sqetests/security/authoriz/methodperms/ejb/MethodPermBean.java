@@ -18,8 +18,8 @@ package com.sun.s1peqe.security.authoriz.methodperms;
 
 import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 
 public class MethodPermBean implements SessionBean {
     private String str;

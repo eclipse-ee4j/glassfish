@@ -37,7 +37,7 @@ import java.util.Set;
  * Compatibility Note: EJB 1.0 allowed the business methods to throw the 
  * java.rmi.RemoteException to indicate a non-application exception. This 
  * practice is deprecated in EJB 1.1---an EJB 1.1 compliant enterprise bean 
- * should throw the javax.ejb.EJBException or another RuntimeException to 
+ * should throw the jakarta.ejb.EJBException or another RuntimeException to 
  * indicate non-application exceptions to the Container (see Section 12.2.2). 
  * Note: Treat as a warning to user in this instance.
  */
@@ -53,7 +53,7 @@ public class BusinessMethodException extends EjbTest implements EjbCheck {
      * Compatibility Note: EJB 1.0 allowed the business methods to throw the 
      * java.rmi.RemoteException to indicate a non-application exception. This 
      * practice is deprecated in EJB 1.1---an EJB 1.1 compliant enterprise bean 
-     * should throw the javax.ejb.EJBException or another RuntimeException to 
+     * should throw the jakarta.ejb.EJBException or another RuntimeException to 
      * indicate non-application exceptions to the Container (see Section 12.2.2). 
      * Note: Treat as a warning to user in this instance.
      *   
@@ -106,8 +106,8 @@ public class BusinessMethodException extends EjbTest implements EjbCheck {
             
             for (Method remoteMethod : intfClass.getMethods()) {
                 // we don't test the EJB methods
-                if (remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBObject")||
-                        remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBLocalObject")) 
+                if (remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBObject")||
+                        remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBLocalObject")) 
                     continue;
                 
                 Class beanClass = Class.forName(descriptor.getEjbClassName(), 
@@ -120,7 +120,7 @@ public class BusinessMethodException extends EjbTest implements EjbCheck {
                     // Compatibility Note: EJB 1.0 allowed the business methods to throw
                     // the java.rmi.RemoteException to indicate a non-application 
                     // exception. This practice is deprecated in EJB 1.1---an EJB 1.1 
-                    // compliant enterprise bean should throw the javax.ejb.EJBException
+                    // compliant enterprise bean should throw the jakarta.ejb.EJBException
                     // or another RuntimeException to indicate non-application 
                     // exceptions to the Container (see Section 12.2.2). 
                     // Note: Treat as a warning to user in this instance 
@@ -135,7 +135,7 @@ public class BusinessMethodException extends EjbTest implements EjbCheck {
                                     "\n java.rmi.RemoteException to indicate a non-application" +
                                     "\n exception. This practice is deprecated in EJB 1.1" +
                                     "\n ---an EJB 1.1 compliant enterprise bean should" +
-                                    "\n throw the javax.ejb.EJBException or another " +
+                                    "\n throw the jakarta.ejb.EJBException or another " +
                                     "\n RuntimeException to indicate non-application exceptions" +
                                     "\n to the Container. ",
                                     new Object[] {method.getName()}));

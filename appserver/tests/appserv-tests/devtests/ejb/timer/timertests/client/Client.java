@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.timer.timertests.client;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 

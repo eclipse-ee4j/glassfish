@@ -26,8 +26,8 @@ import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 
@@ -37,9 +37,7 @@ import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -293,7 +291,7 @@ public class ResourceHandler extends AbstractResourceHandler {
                 resourceType == webServiceContext ||
                 resourceType.getName().equals("jakarta.mail.Session") || 
                 resourceType.getName().equals("java.net.URL") ||
-                resourceType.getName().equals("javax.resource.cci.ConnectionFactory") ||
+                resourceType.getName().equals("jakarta.resource.cci.ConnectionFactory") ||
                 resourceType == org.omg.CORBA_2_3.ORB.class || 
                 resourceType == org.omg.CORBA.ORB.class || 
                 resourceType.getName().equals("jakarta.jms.XAConnectionFactory") ||

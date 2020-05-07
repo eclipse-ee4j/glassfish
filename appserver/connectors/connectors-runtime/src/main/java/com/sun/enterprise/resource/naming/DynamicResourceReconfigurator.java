@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,13 +25,12 @@ import com.sun.logging.LogDomains;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.RetryableUnavailableException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.RetryableUnavailableException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

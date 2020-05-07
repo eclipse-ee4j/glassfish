@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.resource.rm;
 
-import javax.transaction.*;
-import javax.resource.spi.ManagedConnection;
+import jakarta.transaction.*;
+import jakarta.resource.spi.ManagedConnection;
 import java.util.logging.Level;
 import java.util.List;
 
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;

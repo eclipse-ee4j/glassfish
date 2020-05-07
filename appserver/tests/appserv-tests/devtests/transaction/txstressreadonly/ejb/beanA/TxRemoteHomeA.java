@@ -16,9 +16,9 @@
 
 package com.sun.s1peqe.transaction.txstressreadonly.ejb.beanA;
 
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
+import jakarta.ejb.CreateException;
 
 public interface TxRemoteHomeA extends EJBHome {
     public TxRemoteA create() throws RemoteException, CreateException;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,20 +20,19 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEntityException;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.TransactionRolledbackLocalException;
-import javax.ejb.TransactionRequiredLocalException;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEntityException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.TransactionRolledbackLocalException;
+import jakarta.ejb.TransactionRequiredLocalException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.UserTransaction;
 
 import com.sun.ejb.Container;
 import com.sun.ejb.EjbInvocation;
-import com.sun.ejb.InvocationInfo;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import org.glassfish.ejb.deployment.descriptor.ContainerTransaction;
 import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;

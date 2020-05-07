@@ -16,8 +16,8 @@
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class DispatchFrom extends HttpServlet {
 

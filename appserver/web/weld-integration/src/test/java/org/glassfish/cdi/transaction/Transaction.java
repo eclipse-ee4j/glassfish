@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package org.glassfish.cdi.transaction;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.XAResource;
 
 /**
@@ -24,7 +24,7 @@ import javax.transaction.xa.XAResource;
  * Date: 12/18/12
  * Time: 11:50 AM
  */
-public class Transaction implements javax.transaction.Transaction {
+public class Transaction implements jakarta.transaction.Transaction {
     private static int counter;
     private int txid;
     public boolean isMarkedRollback;

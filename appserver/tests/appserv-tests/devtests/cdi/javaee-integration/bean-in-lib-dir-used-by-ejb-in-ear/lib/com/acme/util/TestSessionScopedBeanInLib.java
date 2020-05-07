@@ -18,7 +18,7 @@ package com.acme.util;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.SessionScoped;
 
 @SessionScoped
 public class TestSessionScopedBeanInLib implements Serializable{

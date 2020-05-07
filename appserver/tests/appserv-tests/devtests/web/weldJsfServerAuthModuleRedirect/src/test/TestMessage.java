@@ -18,9 +18,9 @@ package test;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-//import javax.faces.bean.ManagedBean;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+//import jakarta.faces.bean.ManagedBean;
+import jakarta.inject.Named;
 
 @Named
 @SessionScoped

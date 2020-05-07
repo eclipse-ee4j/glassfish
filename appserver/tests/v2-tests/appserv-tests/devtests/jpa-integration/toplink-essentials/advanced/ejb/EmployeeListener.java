@@ -16,7 +16,7 @@
 
 package oracle.toplink.essentials.testing.models.cmp3.advanced;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.EventListener;
 
 public class EmployeeListener implements EventListener {

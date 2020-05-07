@@ -17,11 +17,11 @@
 package test.beans;
 
 import jakarta.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import jakarta.validation.constraints.NotNull;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 @RequestScoped

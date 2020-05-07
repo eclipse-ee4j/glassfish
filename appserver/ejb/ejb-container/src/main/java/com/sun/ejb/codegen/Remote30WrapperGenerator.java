@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 package com.sun.ejb.codegen;
 
 import java.lang.reflect.Method;
-import java.io.*;
 import java.util.*;
 
 
@@ -82,10 +81,10 @@ public class Remote30WrapperGenerator extends Generator
 		    "Business interface " + businessInterface + " not found "));
 	    }
 
-        if( javax.ejb.EJBObject.class.isAssignableFrom(businessInterface) ) {
+        if( jakarta.ejb.EJBObject.class.isAssignableFrom(businessInterface) ) {
             throw new GeneratorException("Invalid Remote Business Interface " +
                  businessInterface + ". A Remote Business interface MUST " +
-                 "not extend javax.ejb.EJBObject.");
+                 "not extend jakarta.ejb.EJBObject.");
         }
 
         remoteClientClassName = EJBUtils.
@@ -198,11 +197,11 @@ public class Remote30WrapperGenerator extends Generator
             !java.rmi.Remote.class.isAssignableFrom(businessInterface);
         if( doExceptionTranslation ) {
 
-            _catch( _t("javax.transaction.TransactionRolledbackException"),
+            _catch( _t("jakarta.transaction.TransactionRolledbackException"),
                     "trex");
 
                 _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("javax.ejb.EJBTransactionRolledbackException"), 
+                         _new( _t("jakarta.ejb.EJBTransactionRolledbackException"), 
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
                               _s(_t("java.lang.Throwable"), 
@@ -210,11 +209,11 @@ public class Remote30WrapperGenerator extends Generator
                               _v("trex")));
                 _throw(_v("r"));
 
-            _catch( _t("javax.transaction.TransactionRequiredException"),
+            _catch( _t("jakarta.transaction.TransactionRequiredException"),
                     "treqex");
 
                 _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("javax.ejb.EJBTransactionRequiredException"), 
+                         _new( _t("jakarta.ejb.EJBTransactionRequiredException"), 
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
                               _s(_t("java.lang.Throwable"), 
@@ -226,7 +225,7 @@ public class Remote30WrapperGenerator extends Generator
                     "nsoe");
 
                 _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("javax.ejb.NoSuchEJBException"), 
+                         _new( _t("jakarta.ejb.NoSuchEJBException"), 
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
                               _s(_t("java.lang.Throwable"), 
@@ -238,7 +237,7 @@ public class Remote30WrapperGenerator extends Generator
                     "accex");
 
                 _define( _t("java.lang.RuntimeException"), "r",
-                         _new( _t("javax.ejb.EJBAccessException"),
+                         _new( _t("jakarta.ejb.EJBAccessException"),
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
                               _s(_t("java.lang.Throwable"),
@@ -254,21 +253,21 @@ public class Remote30WrapperGenerator extends Generator
                 //_define( _t("java.lang.Throwable"), "r", _null());
 
                          
-                // _throw(_cast(_t("javax.ejb.EJBException"), _v("r")));
-                _throw(_cast(_t("javax.ejb.EJBException"),
+                // _throw(_cast(_t("jakarta.ejb.EJBException"), _v("r")));
+                _throw(_cast(_t("jakarta.ejb.EJBException"),
                             _call( _v("iejbcEx"), "getCause",
                               _s(_t("java.lang.Throwable")))));
 
 
             _catch( _t("java.rmi.RemoteException"), "re");
             
-                _throw( _new( _t("javax.ejb.EJBException"), 
+                _throw( _new( _t("jakarta.ejb.EJBException"), 
                               _s(_void(), _t("java.lang.Exception")), 
                               _v("re")));
             
             _catch( _t("org.omg.CORBA.SystemException"), "corbaSysEx");
                 _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("javax.ejb.EJBException"), 
+                         _new( _t("jakarta.ejb.EJBException"), 
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
                               _s(_t("java.lang.Throwable"), 

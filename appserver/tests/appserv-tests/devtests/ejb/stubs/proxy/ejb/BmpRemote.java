@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.stubs.proxy;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 
 public interface BmpRemote extends CommonRemote

@@ -23,7 +23,7 @@ import java.util.*;
 import com.sun.s1asdev.ejb.bmp.readonly.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
-import javax.ejb.CreateException;
+import jakarta.ejb.CreateException;
 
 /**
  * A simple java client will: 

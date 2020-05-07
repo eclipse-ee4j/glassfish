@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 import java.lang.annotation.*;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;

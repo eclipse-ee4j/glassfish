@@ -16,8 +16,8 @@
 
 package connector;
 
-import javax.resource.spi.*;
-import javax.resource.spi.work.*;
+import jakarta.resource.spi.*;
+import jakarta.resource.spi.work.*;
 
 /**
  *

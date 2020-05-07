@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.txscope_synctype_mismatch.ejb;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 @Local
 public interface Finder {

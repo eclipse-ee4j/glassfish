@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import javax.transaction.SystemException;
+import jakarta.transaction.SystemException;
 import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 import org.glassfish.jdbc.devtests.v3.util.TablesUtil;
 
@@ -75,10 +75,10 @@ public class UserTxTest implements SimpleTest {
         TablesUtil.createTables(ds1, out, tableName, columnName);
 
         out.println("<h4> user-tx-rollback test </h4>");
-        javax.transaction.UserTransaction ut = null;
+        jakarta.transaction.UserTransaction ut = null;
         try {
             InitialContext ic = new InitialContext();
-            ut = (javax.transaction.UserTransaction) ic.lookup("java:comp/UserTransaction");
+            ut = (jakarta.transaction.UserTransaction) ic.lookup("java:comp/UserTransaction");
             out.println("<br>Able to lookup UserTransaction");
             ut.begin();
             out.println("<br>");
@@ -149,10 +149,10 @@ public class UserTxTest implements SimpleTest {
         TablesUtil.createTables(ds1, out, tableName, columnName);
 
         out.println("<h4> user-tx-commit test </h4>");
-        javax.transaction.UserTransaction ut = null;
+        jakarta.transaction.UserTransaction ut = null;
         try {
             InitialContext ic = new InitialContext();
-            ut = (javax.transaction.UserTransaction) ic.lookup("java:comp/UserTransaction");
+            ut = (jakarta.transaction.UserTransaction) ic.lookup("java:comp/UserTransaction");
             out.println("<br>Able to lookup UserTransaction");
             ut.begin();
             out.println("<br>");

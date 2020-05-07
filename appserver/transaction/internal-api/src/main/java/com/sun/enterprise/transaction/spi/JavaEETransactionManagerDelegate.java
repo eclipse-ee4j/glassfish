@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,10 +18,10 @@ package com.sun.enterprise.transaction.spi;
 
 import java.util.concurrent.locks.Lock;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.*;
-import javax.resource.spi.XATerminator;
-import javax.resource.spi.work.WorkException;
+import jakarta.resource.spi.XATerminator;
+import jakarta.resource.spi.work.WorkException;
 
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
@@ -280,7 +280,7 @@ public interface JavaEETransactionManagerDelegate {
      * of an active Transaction.
      */
     public TransactionAdminBean getTransactionAdminBean(Transaction t) 
-            throws javax.transaction.SystemException;
+            throws SystemException;
 
     /**
      * Return location of transaction logs

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session;
 
-import javax.ejb.Stateless;
-import javax.ejb.Remote;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Remote;
 
 @Stateless
 @Remote({Sless.class})

@@ -16,7 +16,7 @@
 
 package connector;
 
-import javax.resource.spi.*;
+import jakarta.resource.spi.*;
 
 public class MyAdminObject implements java.io.Serializable, ResourceAdapterAssociation {
 
@@ -37,7 +37,7 @@ public class MyAdminObject implements java.io.Serializable, ResourceAdapterAssoc
     }
 
 
-    public void setResourceAdapter(ResourceAdapter ra) throws javax.resource.ResourceException{
+    public void setResourceAdapter(ResourceAdapter ra) throws jakarta.resource.ResourceException{
         this.resourceAdapter = ra;
     }
 

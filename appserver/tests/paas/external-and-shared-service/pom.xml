@@ -71,11 +71,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-      	    <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.0.0-RC2</version>
         </dependency>
-	        <dependency>
+        <dependency>
             <groupId>org.glassfish.extras</groupId>
             <artifactId>glassfish-embedded-static-shell</artifactId>
             <version>${project.version}</version>

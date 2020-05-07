@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.mdb.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import jakarta.jms.*;
 import jakarta.annotation.Resource;
 import javax.naming.InitialContext;

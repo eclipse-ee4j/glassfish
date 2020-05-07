@@ -17,10 +17,10 @@
 package org.glassfish.test.authpropagation;
 
 import jakarta.annotation.Resource;
-import javax.ejb.Asynchronous;
-import javax.ejb.LocalBean;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
+import jakarta.ejb.Asynchronous;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Stateless;
 import java.util.logging.Logger;
 
 @Stateless

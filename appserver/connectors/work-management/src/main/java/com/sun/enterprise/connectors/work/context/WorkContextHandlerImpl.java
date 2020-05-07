@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,8 +33,8 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
-import javax.inject.Inject;
-import javax.resource.spi.work.*;
+import jakarta.inject.Inject;
+import jakarta.resource.spi.work.*;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import java.util.*;

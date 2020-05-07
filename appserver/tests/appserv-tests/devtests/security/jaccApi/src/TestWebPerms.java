@@ -26,7 +26,7 @@ import javax.security.jacc.WebRoleRefPermission;
 import javax.security.jacc.HttpMethodSpec;
 import javax.security.jacc.URLPattern;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

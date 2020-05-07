@@ -16,19 +16,19 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2;
 
-import javax.ejb.Stateless;
-import javax.ejb.Remote;
-import javax.ejb.EJBException;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Remote;
+import jakarta.ejb.EJBException;
 import jakarta.annotation.PostConstruct;
-import javax.ejb.SessionBean;
-import javax.ejb.CreateException;
-import javax.ejb.SessionContext;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 
 import javax.naming.InitialContext;
-import javax.transaction.TransactionManager;
-import javax.transaction.Status;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Status;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -64,8 +64,8 @@ public class SlessEJB2 implements Sless, SessionBean
         return "hello from SlessEJB2";
     }
 
-    public String hello2() throws javax.ejb.CreateException {
-        throw new javax.ejb.CreateException();
+    public String hello2() throws jakarta.ejb.CreateException {
+        throw new jakarta.ejb.CreateException();
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)

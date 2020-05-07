@@ -16,8 +16,8 @@
 
 package com.sun.mdb;
 
-import javax.ejb.Stateful;
-import javax.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remove;
 import jakarta.annotation.PreDestroy;
 
 // Hello1 interface is not annotated with @Local. If the

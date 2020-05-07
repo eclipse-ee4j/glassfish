@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.core;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.*;
 import javax.rmi.PortableRemoteObject;
@@ -65,7 +65,7 @@ public class HelloEJB implements Hello {
     
     private static final String pkey = "A BMP Bean";
 
-    @Resource javax.transaction.UserTransaction ut;
+    @Resource jakarta.transaction.UserTransaction ut;
 
     @PostConstruct
     public void create() {

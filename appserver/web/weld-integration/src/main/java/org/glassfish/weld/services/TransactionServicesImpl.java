@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +16,13 @@
 
 package org.glassfish.weld.services;
 
-import static javax.transaction.Status.*;
+import static jakarta.transaction.Status.*;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;

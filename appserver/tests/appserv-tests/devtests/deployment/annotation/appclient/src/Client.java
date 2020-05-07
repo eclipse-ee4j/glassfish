@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import test.ejb.stateful.SFHello;
 

@@ -41,14 +41,14 @@ public abstract class ConnectionFactoryTest extends CCITest {
    /**
      * <p>
      * Get the <code>Class</code> object of the class declared as implementing
-     * the javax.resource.cci.ConnectionFactory interface and declared in the 
+     * the jakarta.resource.cci.ConnectionFactory interface and declared in the 
      * archive deployment descriptors under the connection-factory-impl-class
      * </p> 
      *
      * @param descriptor the rar file deployment descriptor
      * @param result instance to use to put the result of the test
      * @return Class object for the connectionfactoryimpl-class that implements
-     * javax.resource.cci.ConnectionFactory
+     * jakarta.resource.cci.ConnectionFactory
     */
   protected Class getConnectionFactoryImpl(ConnectorDescriptor descriptor,
       Result result) 
@@ -83,7 +83,7 @@ public abstract class ConnectionFactoryTest extends CCITest {
              new Object[] {impl}));
         return null;
       }            
-      if(isImplementorOf(implClass, "javax.resource.cci.ConnectionFactory"))
+      if(isImplementorOf(implClass, "jakarta.resource.cci.ConnectionFactory"))
         return implClass;
     }
     return null;
@@ -119,7 +119,7 @@ public abstract class ConnectionFactoryTest extends CCITest {
            new Object[] {compName.toString()}));
       result.failed(smh.getLocalString
           ("com.sun.enterprise.tools.verifier.tests.connector.cci.ConnectionFactoryTest.nonimpl", 
-           "Error: The resource adapter must implement the javax.resource.cci.ConnectionFactory interface and declare it in the connectionfactory-impl-class deployment descriptor."));                           
+           "Error: The resource adapter must implement the jakarta.resource.cci.ConnectionFactory interface and declare it in the connectionfactory-impl-class deployment descriptor."));                           
     }
     return mcf;
   }

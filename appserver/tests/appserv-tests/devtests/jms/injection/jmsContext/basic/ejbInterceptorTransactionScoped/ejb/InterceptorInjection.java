@@ -17,9 +17,9 @@
 package org.glassfish.test.jms.injection.ejb;
 
 import jakarta.annotation.Resource;
-import javax.inject.Inject;
-import javax.interceptor.*;
-import javax.ejb.*;
+import jakarta.inject.Inject;
+import jakarta.interceptor.*;
+import jakarta.ejb.*;
 import jakarta.jms.*;
 
 /**

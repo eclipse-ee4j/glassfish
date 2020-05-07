@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.connectors;
 
-import javax.resource.spi.XATerminator;
+import jakarta.resource.spi.XATerminator;
 import javax.transaction.xa.Xid;
 import javax.transaction.xa.XAException;
 import java.io.Externalizable;
@@ -51,35 +51,35 @@ public class XATerminatorProxy implements XATerminator, Externalizable {
     }
 
     /**
-     * @see javax.resource.spi.XATerminator
+     * @see jakarta.resource.spi.XATerminator
      */
     public void commit(Xid xid, boolean onePhase) throws XAException {
         xat.commit(xid, onePhase);
     }
 
     /**
-     * @see javax.resource.spi.XATerminator
+     * @see jakarta.resource.spi.XATerminator
      */
     public void forget(Xid xid) throws XAException {
         xat.forget(xid);
     }
 
     /**
-     * @see javax.resource.spi.XATerminator
+     * @see jakarta.resource.spi.XATerminator
      */
     public int prepare(Xid xid) throws XAException {
         return xat.prepare(xid);
     }
 
     /**
-     * @see javax.resource.spi.XATerminator
+     * @see jakarta.resource.spi.XATerminator
      */
     public Xid[] recover(int flag) throws XAException {
         return xat.recover(flag);
     }
 
     /**
-     * @see javax.resource.spi.XATerminator
+     * @see jakarta.resource.spi.XATerminator
      */
     public void rollback(Xid xid) throws XAException {
         xat.rollback(xid);

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb32.ejblite.timer;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 @Local
 public interface Foo extends TimerStuff {

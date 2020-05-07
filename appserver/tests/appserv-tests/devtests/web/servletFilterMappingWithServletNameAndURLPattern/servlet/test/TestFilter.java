@@ -18,7 +18,7 @@ package test;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.servlet.*;
+import jakarta.servlet.*;
 import javax.naming.*;
 
 public class TestFilter implements Filter {

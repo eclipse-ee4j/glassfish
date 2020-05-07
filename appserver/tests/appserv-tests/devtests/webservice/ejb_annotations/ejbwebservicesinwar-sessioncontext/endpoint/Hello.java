@@ -19,10 +19,10 @@ package endpoint;
 import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
 import jakarta.annotation.Resource;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 
 
-@javax.ejb.Stateless
+@jakarta.ejb.Stateless
 @WebService(
     name="Hello",
     serviceName="HelloService",

@@ -18,7 +18,7 @@ package org.glassfish.ha.store.adapter.cache;
 
 import java.io.Serializable;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.event.Events;

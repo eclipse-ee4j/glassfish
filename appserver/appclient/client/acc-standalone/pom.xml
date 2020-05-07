@@ -110,7 +110,7 @@
                           <prefix>../modules</prefix>
                           <stripVersion>true</stripVersion>
                           <excludeArtifactIds>jakarta.json</excludeArtifactIds>
-                          <excludeArtifactIds>javax.inject</excludeArtifactIds>
+                          <excludeArtifactIds>jakarta.inject</excludeArtifactIds>
                       </configuration>
                   </execution>
               </executions>

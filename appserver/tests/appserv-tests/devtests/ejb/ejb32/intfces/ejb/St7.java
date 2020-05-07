@@ -16,7 +16,7 @@
 
 package ejb32.intrfaces;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface St7 {

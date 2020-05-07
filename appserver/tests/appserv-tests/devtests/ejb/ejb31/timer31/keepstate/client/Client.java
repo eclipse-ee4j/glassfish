@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.timer31.keepstate.client;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import com.sun.s1asdev.ejb31.timer.keepstate.KeepStateIF;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

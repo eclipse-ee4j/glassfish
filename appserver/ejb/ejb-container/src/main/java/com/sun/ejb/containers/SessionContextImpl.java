@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,9 +22,9 @@ import com.sun.enterprise.container.common.impl.PhysicalEntityManagerWrapper;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import org.glassfish.api.invocation.ComponentInvocation;
 
-import javax.ejb.SessionContext;
-import javax.ejb.TimerService;
-import javax.persistence.EntityManagerFactory;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.TimerService;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.*;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -262,8 +262,8 @@ public final class SessionContextImpl
             // If call came through a home/local-home, this can only be a
             // create call.
             inEjbCreate = ((EjbInvocation)inv).isHome &&
-                (javax.ejb.EJBHome.class.isAssignableFrom(clientIntf) ||
-                 javax.ejb.EJBLocalHome.class.isAssignableFrom(clientIntf));
+                (jakarta.ejb.EJBHome.class.isAssignableFrom(clientIntf) ||
+                 jakarta.ejb.EJBLocalHome.class.isAssignableFrom(clientIntf));
         }
         return inEjbCreate;
     }

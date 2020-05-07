@@ -17,7 +17,7 @@
 package endpoint;
 
 import jakarta.jws.WebService;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;

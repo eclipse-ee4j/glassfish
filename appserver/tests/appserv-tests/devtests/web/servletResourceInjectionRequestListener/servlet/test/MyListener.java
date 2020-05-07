@@ -16,10 +16,10 @@
 
 package test;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.ServletRequestEvent;
 
 import javax.naming.*;
 import jakarta.annotation.Resource;

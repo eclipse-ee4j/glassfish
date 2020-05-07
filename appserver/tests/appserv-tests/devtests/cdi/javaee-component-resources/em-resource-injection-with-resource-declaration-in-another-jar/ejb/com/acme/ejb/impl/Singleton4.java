@@ -16,7 +16,7 @@
 
 package com.acme.ejb.impl;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 

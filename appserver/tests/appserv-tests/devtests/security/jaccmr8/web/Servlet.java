@@ -17,16 +17,16 @@
 package org.glassfish.jacc.test.mr8;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
-import javax.ejb.EJB;
-import javax.ejb.EJBs;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
 import java.net.URLEncoder;
 import java.net.URLDecoder;
 import java.security.Principal;
 
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet(name = "Servlet", urlPatterns = {"/servlet","/authuser","/anyauthuser","/star","/denyuncoveredpost"})
 public class Servlet extends HttpServlet {

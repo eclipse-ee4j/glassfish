@@ -17,7 +17,7 @@
 package endpoint;
 
 import jakarta.jws.WebService;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @WebService(endpointInterface="endpoint.Hello")
 @Stateless

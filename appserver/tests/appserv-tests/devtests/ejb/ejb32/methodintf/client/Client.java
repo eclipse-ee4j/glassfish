@@ -16,7 +16,7 @@
 
 package client.methodintf;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 import ejb32.methodintf.St;

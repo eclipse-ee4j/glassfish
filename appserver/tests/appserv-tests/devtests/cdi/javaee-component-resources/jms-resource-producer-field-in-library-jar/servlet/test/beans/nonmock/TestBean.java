@@ -16,8 +16,8 @@
 
 package test.beans.nonmock;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.jms.Queue;
 
 import test.beans.TestBeanInterface;

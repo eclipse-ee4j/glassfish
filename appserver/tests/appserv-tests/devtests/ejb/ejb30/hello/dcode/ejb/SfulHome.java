@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.dcode;
 
-public interface SfulHome extends javax.ejb.EJBHome
+public interface SfulHome extends jakarta.ejb.EJBHome
 {
-    public Sful create() throws javax.ejb.CreateException, java.rmi.RemoteException;
+    public Sful create() throws jakarta.ejb.CreateException, java.rmi.RemoteException;
 }

@@ -16,9 +16,9 @@
 
 package org.glassfish.tests.ejb.sample;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup; 
-import javax.ejb.SessionContext; 
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup; 
+import jakarta.ejb.SessionContext; 
 import jakarta.annotation.Resource;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.security.PermitAll;

@@ -21,12 +21,12 @@ import java.io.PrintWriter;
 
 import jakarta.annotation.Generated;
 import jakarta.annotation.Resource;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebInitParam;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
 @WebServlet(name="mytest",
@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
         initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
 public class TestServlet extends HttpServlet {
 
-    @javax.inject.Inject
+    @jakarta.inject.Inject
     TestManagedBean testResource;
 
     public void service(HttpServletRequest req, HttpServletResponse res)

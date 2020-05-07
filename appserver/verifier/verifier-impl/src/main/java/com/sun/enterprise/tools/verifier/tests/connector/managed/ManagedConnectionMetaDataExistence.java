@@ -31,7 +31,7 @@ import com.sun.enterprise.tools.verifier.tests.connector.ConnectorTest;
 import com.sun.enterprise.tools.verifier.tests.connector.ConnectorCheck;
 
 /**
- * Test the implementation of the javax.resource.spi.ManagedConnectionMetaData 
+ * Test the implementation of the jakarta.resource.spi.ManagedConnectionMetaData 
  * interface in the rar file
  *
  * @author  Jerome Dochez
@@ -43,7 +43,7 @@ public class ManagedConnectionMetaDataExistence
 {
 
     /** <p>
-     * Test the implementation of the javax.resource.spi.ManagedConnection 
+     * Test the implementation of the jakarta.resource.spi.ManagedConnection 
      * interface in the rar file
      * </p>
      *
@@ -70,7 +70,7 @@ public class ManagedConnectionMetaDataExistence
         }
         //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-        findImplementorOf(descriptor, "javax.resource.spi.ManagedConnectionMetaData", result);
+        findImplementorOf(descriptor, "jakarta.resource.spi.ManagedConnectionMetaData", result);
         return result;
     }
 }

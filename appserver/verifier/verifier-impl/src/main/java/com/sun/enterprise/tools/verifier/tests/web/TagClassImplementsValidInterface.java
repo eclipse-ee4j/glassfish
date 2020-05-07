@@ -26,7 +26,7 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 /**
  * dynamic-attributes element in tag element describes whether this tag supports
  * additional attributes with dynamic names. If true, the tag-class must
- * implement the javax.servlet.jsp.tagext.DynamicAttributes interface.
+ * implement the jakarta.servlet.jsp.tagext.DynamicAttributes interface.
  * Defaults to false.
  * @author Sudipto Ghosh
  *
@@ -57,7 +57,7 @@ public class TagClassImplementsValidInterface extends WebTest implements WebChec
                        //do nothing
                     }
                     if (tagdesc.getDynamicAttributes().equalsIgnoreCase("true") &&
-                            !javax.servlet.jsp.tagext.DynamicAttributes.class.
+                            !jakarta.servlet.jsp.tagext.DynamicAttributes.class.
                             isAssignableFrom(c) ) {
                         addErrorDetails(result, compName);
                         result.failed(smh.getLocalString(getClass()
@@ -65,7 +65,7 @@ public class TagClassImplementsValidInterface extends WebTest implements WebChec
                                 ".failed",
                                 "Error: tag class [ {0} ] in [ {1} ] does not " +
                                 "implements interface " +
-                                "javax.servlet.jsp.tagext.DynamicAttributes",
+                                "jakarta.servlet.jsp.tagext.DynamicAttributes",
                                 new Object[]{c.getName(), tld.getUri()}));
 
                     }

@@ -17,19 +17,19 @@
 package gf;
 
 import jakarta.annotation.Resource;
-import javax.ejb.EJBContext;
-import javax.ejb.SessionContext;
-import javax.ejb.MessageDrivenContext;
-import javax.ejb.TimerService;
-import javax.enterprise.concurrent.ContextService;
-import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.concurrent.ManagedScheduledExecutorService;
-import javax.enterprise.concurrent.ManagedThreadFactory;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.ejb.TimerService;
+import jakarta.enterprise.concurrent.ContextService;
+import jakarta.enterprise.concurrent.ManagedExecutorService;
+import jakarta.enterprise.concurrent.ManagedScheduledExecutorService;
+import jakarta.enterprise.concurrent.ManagedThreadFactory;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.jms.ConnectionFactory;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
-import javax.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.UserTransaction;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.Validator;
 

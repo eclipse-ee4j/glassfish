@@ -36,7 +36,7 @@ import sun.security.util.PropertyExpander;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import javax.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.MessagePolicy;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import org.glassfish.internal.api.Globals;

@@ -17,8 +17,8 @@
 package com.sun.s1peqe.security.ssl.converter.ejb;
 
 import java.rmi.RemoteException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 import java.math.*;
 
 /**

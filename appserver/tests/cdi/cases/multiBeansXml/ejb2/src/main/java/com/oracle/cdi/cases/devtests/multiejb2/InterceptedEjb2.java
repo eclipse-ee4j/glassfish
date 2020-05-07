@@ -18,10 +18,10 @@ package com.oracle.cdi.cases.devtests.multiejb2;
 
 import java.util.List;
 
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
 
 /**
  * 

@@ -18,7 +18,7 @@ package org.glassfish.jaccApi.common;
 
 import javax.security.auth.message.config.AuthConfigFactory;
 import javax.security.auth.message.module.ServerAuthModule;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  *

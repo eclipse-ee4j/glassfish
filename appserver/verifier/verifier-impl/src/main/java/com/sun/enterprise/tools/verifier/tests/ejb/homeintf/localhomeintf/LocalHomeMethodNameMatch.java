@@ -32,6 +32,6 @@ public class LocalHomeMethodNameMatch extends HomeMethodNameMatch {
 	return descriptor.getLocalHomeClassName();
     }
     protected String getSuperInterface() {
-	return "javax.ejb.EJBLocalHome";
+	return "jakarta.ejb.EJBLocalHome";
     }
 }

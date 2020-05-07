@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 import dataregistry.*;

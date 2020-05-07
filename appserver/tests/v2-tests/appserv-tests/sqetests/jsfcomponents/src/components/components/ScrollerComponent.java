@@ -22,14 +22,14 @@ package components.components;
 
 import components.renderkit.Util;
 
-import javax.faces.component.UICommand;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIData;
-import javax.faces.component.UIForm;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.el.MethodBinding;
-import javax.faces.event.ActionEvent;
+import jakarta.faces.component.UICommand;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIData;
+import jakarta.faces.component.UIForm;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.el.MethodBinding;
+import jakarta.faces.event.ActionEvent;
 
 import java.io.IOException;
 import java.util.Map;

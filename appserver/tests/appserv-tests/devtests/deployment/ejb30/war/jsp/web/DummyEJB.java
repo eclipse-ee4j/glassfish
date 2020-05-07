@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.deployment.ejb30.web.jsp;
 
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 
 @Stateless
 @Remote({Dummy.class})

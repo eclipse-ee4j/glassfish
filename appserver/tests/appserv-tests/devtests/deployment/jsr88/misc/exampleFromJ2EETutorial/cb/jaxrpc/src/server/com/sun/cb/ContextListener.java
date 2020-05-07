@@ -16,7 +16,7 @@
 
 package com.sun.cb;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 import javax.xml.registry.*; 
 import java.util.ResourceBundle;
 import java.io.*;

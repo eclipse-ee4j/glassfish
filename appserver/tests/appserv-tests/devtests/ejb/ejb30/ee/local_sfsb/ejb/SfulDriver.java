@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.ee.local_sfsb;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface SfulDriver {

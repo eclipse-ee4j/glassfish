@@ -18,6 +18,6 @@ package samples.ejb.bmp.robean.ejb;
 
 import java.rmi.RemoteException;
 
-public interface CustomerTransactional extends javax.ejb.EJBObject {
+public interface CustomerTransactional extends jakarta.ejb.EJBObject {
     public double getBalance() throws RemoteException;
 }

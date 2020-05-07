@@ -21,7 +21,7 @@ import com.sun.enterprise.tools.verifier.Result;
 import org.glassfish.deployment.common.Descriptor;
 
 import java.util.Collection;
-import javax.persistence.PersistenceContextType;
+import jakarta.persistence.PersistenceContextType;
 
 /**
  * Assertion :

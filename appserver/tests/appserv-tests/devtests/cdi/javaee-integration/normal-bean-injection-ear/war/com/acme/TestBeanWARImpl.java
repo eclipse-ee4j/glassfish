@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.SessionScoped;
 
 
 @SessionScoped

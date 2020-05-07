@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020jakarta Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,13 +29,13 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
@@ -182,8 +182,8 @@ public class TransactionalInterceptorBase implements Serializable {
     }
 
     public Object proceed(InvocationContext ctx) throws Exception {
-        javax.transaction.Transactional transactionalAnnotation =
-                ctx.getMethod().getAnnotation(javax.transaction.Transactional.class);
+        jakarta.transaction.Transactional transactionalAnnotation =
+                ctx.getMethod().getAnnotation(jakarta.transaction.Transactional.class);
         Class[] rollbackOn = null;
         Class[] dontRollbackOn = null;
         if (transactionalAnnotation != null) { //if at method level
@@ -191,7 +191,7 @@ public class TransactionalInterceptorBase implements Serializable {
             dontRollbackOn = transactionalAnnotation.dontRollbackOn();
         } else {  //if not, at class level
             Class<?> targetClass = ctx.getTarget().getClass();
-            transactionalAnnotation = targetClass.getAnnotation(javax.transaction.Transactional.class);
+            transactionalAnnotation = targetClass.getAnnotation(jakarta.transaction.Transactional.class);
             if (transactionalAnnotation != null) {
                 rollbackOn = transactionalAnnotation.rollbackOn();
                 dontRollbackOn = transactionalAnnotation.dontRollbackOn();

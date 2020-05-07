@@ -32,7 +32,7 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 
 /**
- * Test if a javax.resource.cci.Interfaction implementation has been provided in
+ * Test if a jakarta.resource.cci.Interfaction implementation has been provided in
  * the rar file
  *
  * @author  Jerome Dochez
@@ -44,7 +44,7 @@ public class InteractionExistence
 {
 
     /** <p>
-     * Test if a javax.resource.cci.Interfaction implementation has been 
+     * Test if a jakarta.resource.cci.Interfaction implementation has been 
      * provided in the rar file
      * </p>
      *
@@ -59,7 +59,7 @@ public class InteractionExistence
         if (isCCIImplemented(descriptor, result)) {
             //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //            File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-            findImplementorOf(descriptor, "javax.resource.cci.Interaction", result);
+            findImplementorOf(descriptor, "jakarta.resource.cci.Interaction", result);
         } else {
 	    result.addNaDetails(smh.getLocalString
 				  ("tests.componentNameConstructor",

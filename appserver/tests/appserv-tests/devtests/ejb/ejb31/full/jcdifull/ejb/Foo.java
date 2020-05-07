@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.enterprise.context.*;
+import jakarta.enterprise.context.*;
 
 @RequestScoped
 public class Foo {

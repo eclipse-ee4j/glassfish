@@ -17,7 +17,7 @@
 package connector;
 
 import jakarta.validation.constraints.*;
-import javax.resource.spi.*;
+import jakarta.resource.spi.*;
 
 public class MyAdminObject1 implements java.io.Serializable {
 

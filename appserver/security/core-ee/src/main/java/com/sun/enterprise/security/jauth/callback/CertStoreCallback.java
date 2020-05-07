@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,7 @@
 
 package com.sun.enterprise.security.jauth.callback;
 
-import java.security.KeyStore;
 import java.security.cert.CertStore;
-import javax.security.auth.callback.Callback;
 
 /**
  * Callback for CertStore.
@@ -32,7 +30,7 @@ import javax.security.auth.callback.Callback;
  * @version %I%, %G%
  */
 public class CertStoreCallback extends
-        javax.security.auth.message.callback.CertStoreCallback {
+        jakarta.security.auth.message.callback.CertStoreCallback {
 
     /**
      * Set the CertStore.

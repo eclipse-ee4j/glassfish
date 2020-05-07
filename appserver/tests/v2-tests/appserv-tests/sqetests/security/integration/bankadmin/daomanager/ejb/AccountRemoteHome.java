@@ -17,16 +17,16 @@
 package com.sun.s1peqe.security.integration.bankadmin.daomanager;
 
 import java.util.Collection;
-import javax.ejb.CreateException;
+import jakarta.ejb.CreateException;
 import java.rmi.RemoteException;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import java.util.Date;
-import javax.ejb.FinderException;
+import jakarta.ejb.FinderException;
 
-public interface AccountRemoteHome extends javax.ejb.EJBHome
+public interface AccountRemoteHome extends jakarta.ejb.EJBHome
 {
 	public AccountRemote createAccount (AccountDataObject dao)
-	throws javax.ejb.CreateException,RemoteException;
-        public AccountRemote findByPrimaryKey(String id) throws javax.ejb.FinderException,RemoteException;
+	throws jakarta.ejb.CreateException,RemoteException;
+        public AccountRemote findByPrimaryKey(String id) throws jakarta.ejb.FinderException,RemoteException;
 
 }

@@ -16,7 +16,7 @@
 
 package wstoejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 
 /**

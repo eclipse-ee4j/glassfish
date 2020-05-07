@@ -19,7 +19,7 @@ package helloservice;
 import javax.rmi.*;
 import java.rmi.*;
 import javax.naming.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import statelesshello.*;
 
 public class SayHelloImpl implements SayHello {

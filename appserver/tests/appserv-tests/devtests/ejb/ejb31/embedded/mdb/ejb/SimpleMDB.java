@@ -21,7 +21,7 @@
 
 package org.glassfish.tests.ejb.mdb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.jms.*;
 
 /**

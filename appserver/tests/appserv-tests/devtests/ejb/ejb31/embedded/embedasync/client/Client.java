@@ -18,8 +18,8 @@ package com.acme;
 
 import java.util.Map;
 import java.util.HashMap;
-import javax.ejb.*;
-import javax.ejb.embeddable.EJBContainer;
+import jakarta.ejb.*;
+import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import javax.naming.NamingException;
 

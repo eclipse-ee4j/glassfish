@@ -22,9 +22,9 @@ import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.annotation.security.RunAs;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.SessionContext;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.SessionContext;
 import jakarta.jws.WebService;
 
 import com.sun.s1asdev.security.wss.roles2.ejb.SfulLocal;

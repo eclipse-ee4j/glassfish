@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.clientview.core.client;
 import java.io.*;
 import java.util.*;
 import javax.naming.InitialContext;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import org.omg.CORBA.ORB;
 import com.sun.s1asdev.ejb.ejb30.clientview.core.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -123,7 +123,7 @@ public class Client {
         try {
             h.throwAppException1();
             throw new Exception("didn't get exception for testException2");
-        } catch(javax.ejb.FinderException e) {
+        } catch(jakarta.ejb.FinderException e) {
             System.out.println("Successfully caught exception " + 
                                e.getClass() + " " + e.getMessage());
         }
@@ -131,7 +131,7 @@ public class Client {
         try {
             h.throwAppException2();
             throw new Exception("didn't get exception for testException3");
-        } catch(javax.ejb.FinderException e) {
+        } catch(jakarta.ejb.FinderException e) {
             System.out.println("Successfully caught exception " + 
                                e.getClass() + " " + e.getMessage());
         }

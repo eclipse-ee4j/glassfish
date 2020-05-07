@@ -17,7 +17,7 @@
 package com.sun.s1peqe.ejb.cmp.roster.ejb;
 
 import java.util.*;
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 import com.sun.s1peqe.ejb.cmp.roster.util.*;
 

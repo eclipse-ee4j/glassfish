@@ -16,8 +16,8 @@
 
 package com.sun.s1peqe.nonacc.simple.ejb;
 
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.MessageDrivenBean;
+import jakarta.ejb.MessageDrivenContext;
 import javax.naming.*;
 import jakarta.jms.*;
 

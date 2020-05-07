@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.stubs.stubser.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 import org.omg.CORBA.ORB;

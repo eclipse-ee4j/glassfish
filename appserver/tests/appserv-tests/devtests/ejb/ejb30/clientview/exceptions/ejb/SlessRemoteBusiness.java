@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 
 // Remote business interface
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface SlessRemoteBusiness 

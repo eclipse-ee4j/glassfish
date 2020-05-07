@@ -17,7 +17,7 @@
 package dataregistry;
 
 import java.util.Collection;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public interface LocalPart extends EJBLocalObject {

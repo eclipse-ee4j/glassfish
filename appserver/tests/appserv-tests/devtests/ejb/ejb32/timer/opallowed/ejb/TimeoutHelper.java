@@ -16,8 +16,8 @@
 
 package com.acme.ejb32.timer.opallowed;
 
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
 
 public class TimeoutHelper {
     // this is to test the APIs allowed to be invoked

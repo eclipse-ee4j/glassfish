@@ -16,7 +16,7 @@
 
 package com.sun.jersey;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import jakarta.annotation.PostConstruct;
 
 import com.acme.SingletonBean;

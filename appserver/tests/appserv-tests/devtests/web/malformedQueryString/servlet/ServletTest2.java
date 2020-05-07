@@ -18,8 +18,8 @@ package test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class ServletTest2 extends HttpServlet {
 

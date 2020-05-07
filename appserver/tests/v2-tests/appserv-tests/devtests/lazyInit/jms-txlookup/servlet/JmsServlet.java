@@ -18,13 +18,13 @@ package com.sun.s1asdev.jms.msgdest.jmsweb;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 import java.sql.*;
 import javax.sql.*;
 import jakarta.jms.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.*;
 
 public class JmsServlet extends HttpServlet {

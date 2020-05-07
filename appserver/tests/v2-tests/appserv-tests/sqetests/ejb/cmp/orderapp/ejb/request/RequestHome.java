@@ -17,7 +17,7 @@
 package request;
 
 import java.rmi.RemoteException;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public interface RequestHome extends EJBHome {

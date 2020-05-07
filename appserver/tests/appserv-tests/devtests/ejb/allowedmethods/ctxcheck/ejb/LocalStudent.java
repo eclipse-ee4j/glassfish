@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.allowedmethods.ctxcheck;
 
 import java.util.ArrayList;
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBLocalObject;
 import java.rmi.RemoteException;
 
 

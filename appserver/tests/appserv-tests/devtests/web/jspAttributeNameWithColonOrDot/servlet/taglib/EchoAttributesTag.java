@@ -19,10 +19,10 @@ package test;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.IOException;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.jsp.tagext.DynamicAttributes;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.tagext.DynamicAttributes;
 
 /**
  * SimpleTag handler that echoes all its attributes 

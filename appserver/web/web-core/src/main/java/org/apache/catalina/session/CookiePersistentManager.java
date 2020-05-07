@@ -23,7 +23,7 @@ import org.apache.catalina.core.StandardContext;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.*;
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 
 /**
  * Session manager for cookie-based persistence, where cookies carry session state.

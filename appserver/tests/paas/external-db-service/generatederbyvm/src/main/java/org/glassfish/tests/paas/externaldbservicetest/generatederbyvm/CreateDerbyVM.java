@@ -36,7 +36,7 @@ import org.glassfish.virtualization.spi.VirtualCluster;
 import org.glassfish.virtualization.spi.VirtualMachine;
 import org.glassfish.virtualization.util.ServiceType;
 import org.glassfish.virtualization.util.SimpleSearchCriteria;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Optional;
 
 import org.jvnet.hk2.annotations.Service;

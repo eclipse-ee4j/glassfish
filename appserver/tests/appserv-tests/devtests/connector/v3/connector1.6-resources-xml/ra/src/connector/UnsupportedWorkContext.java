@@ -16,7 +16,7 @@
 
 package connector;
 
-import javax.resource.spi.work.WorkContext;
+import jakarta.resource.spi.work.WorkContext;
 
 public class UnsupportedWorkContext implements WorkContext {
     public String getName() {

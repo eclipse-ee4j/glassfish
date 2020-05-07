@@ -16,7 +16,7 @@
 
 package endpoint;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  *

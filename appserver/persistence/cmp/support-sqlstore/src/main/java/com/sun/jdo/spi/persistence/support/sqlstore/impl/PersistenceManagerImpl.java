@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +36,7 @@ import com.sun.jdo.spi.persistence.utility.SemaphoreImpl;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import org.glassfish.persistence.common.I18NHelper;
-import javax.transaction.Status;
+import jakarta.transaction.Status;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Constructor;
@@ -53,7 +53,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     private PersistenceManagerWrapper current = null;
 
     // Reference to the associated JTA Transaction if any
-    private javax.transaction.Transaction _jta = null;
+    private jakarta.transaction.Transaction _jta = null;
 
     /**
      * Reference to global PersistenceStore
@@ -291,7 +291,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Constructor
      */
-    PersistenceManagerImpl(PersistenceManagerFactory pmf, javax.transaction.Transaction t,
+    PersistenceManagerImpl(PersistenceManagerFactory pmf, jakarta.transaction.Transaction t,
                            String username, char[] password) {
         persistenceManagerFactory = pmf;
 
@@ -1517,7 +1517,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Called by Transaction commit() or rollback()
      * cleans up transactional cache
-     * @param	status		javax.transaction.Status
+     * @param	status		jakarta.transaction.Status
      */
     public void afterCompletion(int status) {
         assertIsOpen();
@@ -2044,10 +2044,10 @@ public class PersistenceManagerImpl implements PersistenceManager {
     }
 
     /**
-     * Assigns reference to javax.transaction.Transaction associated
+     * Assigns reference to jakarta.transaction.Transaction associated
      * with the current thread in the managed environment
      */
-    protected void setJTATransaction(javax.transaction.Transaction t) {
+    protected void setJTATransaction(jakarta.transaction.Transaction t) {
         if (this._jta != null) {
             Object[] items = new Object[] {this._jta, t};
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,

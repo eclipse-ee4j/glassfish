@@ -17,7 +17,7 @@
 package org.glassfish.jersey.examples.jersey_cdi.resources;
 
 import java.math.BigDecimal;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.FormParam;
 

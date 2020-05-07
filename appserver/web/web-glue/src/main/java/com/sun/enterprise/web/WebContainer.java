@@ -36,14 +36,14 @@ import java.util.logging.Logger;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.jsp.JspFactory;
-import javax.servlet.jsp.tagext.JspTag;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.jsp.JspFactory;
+import jakarta.servlet.jsp.tagext.JspTag;
 
 import org.apache.catalina.Connector;
 import org.apache.catalina.Container;

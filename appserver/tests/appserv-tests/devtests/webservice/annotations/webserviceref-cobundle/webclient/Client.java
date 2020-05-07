@@ -16,8 +16,8 @@
 
 package webclient;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -35,12 +35,12 @@ public class Client extends HttpServlet {
     SubtractNumbersService service;
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws javax.servlet.ServletException {
+            throws jakarta.servlet.ServletException {
         doPost(req, resp);
     }
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws javax.servlet.ServletException {
+            throws jakarta.servlet.ServletException {
         try {
             com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump = true;
             SubtractNumbers port2 = service.getSubtractNumbersPort();

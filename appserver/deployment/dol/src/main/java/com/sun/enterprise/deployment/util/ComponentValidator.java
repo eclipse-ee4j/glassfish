@@ -974,11 +974,11 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      */
     private void computeRuntimeDefault(ResourceEnvReferenceDescriptor resourceEnvRef) {
         if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals(
-            "javax.transaction.UserTransaction")) {
+            "jakarta.transaction.UserTransaction")) {
             resourceEnvRef.setJndiName("java:comp/UserTransaction");
         }
 
-        else if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals("javax.transaction.TransactionSynchronizationRegistry")) {
+        else if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals("jakarta.transaction.TransactionSynchronizationRegistry")) {
             resourceEnvRef.setJndiName(
                 "java:comp/TransactionSynchronizationRegistry");
         }
@@ -986,13 +986,13 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         else if (resourceEnvRef.getJndiName() == null ||
                 resourceEnvRef.getJndiName().length() == 0) {
             if (resourceEnvRef.getRefType() != null) {
-                if (resourceEnvRef.getRefType().equals("javax.enterprise.concurrent.ManagedExecutorService")) {
+                if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedExecutorService")) {
                     resourceEnvRef.setLookupName("java:comp/DefaultManagedExecutorService");
-                } else if (resourceEnvRef.getRefType().equals("javax.enterprise.concurrent.ManagedScheduledExecutorService")) {
+                } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedScheduledExecutorService")) {
                     resourceEnvRef.setLookupName("java:comp/DefaultManagedScheduledExecutorService");
-                } else if (resourceEnvRef.getRefType().equals("javax.enterprise.concurrent.ManagedThreadFactory")) {
+                } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedThreadFactory")) {
                     resourceEnvRef.setLookupName("java:comp/DefaultManagedThreadFactory");
-                } else if (resourceEnvRef.getRefType().equals("javax.enterprise.concurrent.ContextService")) {
+                } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ContextService")) {
                     resourceEnvRef.setLookupName("java:comp/DefaultContextService");
                 } else {
                     resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));

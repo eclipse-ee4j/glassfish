@@ -34,7 +34,7 @@ import org.glassfish.hk2.utilities.BuilderHelper;
 import com.sun.enterprise.admin.util.*;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * A scaled-down implementation of multi-mode command.

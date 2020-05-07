@@ -53,7 +53,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     private static final String URL_RESOURCE_TYPE = "java.net.URL";
     
     //START OF IASRI 4633229
-    private static final String CONNECTOR_RESOURCE_TYPE = "javax.resource.cci.ConnectionFactory";    
+    private static final String CONNECTOR_RESOURCE_TYPE = "jakarta.resource.cci.ConnectionFactory";    
     //END OF IASRI 4633229
     private static final String MAIL_RESOURCE_TYPE = "jakarta.mail.Session";    
 

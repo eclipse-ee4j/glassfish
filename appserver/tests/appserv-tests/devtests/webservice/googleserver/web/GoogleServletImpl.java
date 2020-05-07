@@ -28,7 +28,7 @@ import javax.xml.rpc.Service;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.namespace.QName;
 
-public class GoogleServletImpl implements javax.servlet.SingleThreadModel, ServiceLifecycle {
+public class GoogleServletImpl implements jakarta.servlet.SingleThreadModel, ServiceLifecycle {
 
     private static final QName PORT_QNAME = 
         new QName("urn:GoogleSearch", "GoogleSearchPort");

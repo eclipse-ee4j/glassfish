@@ -17,11 +17,11 @@
 package com.sun.s1asdev.ejb31.timer.nonpersistenttimer;
 
 import java.util.Date;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 
-//@javax.ejb.Stateful
+//@jakarta.ejb.Stateful
 public class StatefulWrapperImpl implements StatefulWrapper {
 
     private SessionContext context;
@@ -298,7 +298,7 @@ System.out.println("********PG-> setup(): after createPublisher");
         timerStuff.assertNoTimers();
     }
 
-    public void removeFoo() throws java.rmi.RemoteException, javax.ejb.RemoveException {
+    public void removeFoo() throws java.rmi.RemoteException, jakarta.ejb.RemoveException {
         if (foo != null) {
             ((Foo) foo).remove();
         }

@@ -18,7 +18,7 @@ package j2eeguide.product;
 
 import java.util.Collection;
 import java.rmi.RemoteException;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface ProductHome extends EJBHome {
 

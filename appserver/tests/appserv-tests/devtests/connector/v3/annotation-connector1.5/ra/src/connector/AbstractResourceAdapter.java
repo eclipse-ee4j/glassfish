@@ -16,7 +16,7 @@
 
 package connector;
 
-import javax.resource.spi.*;
+import jakarta.resource.spi.*;
 
 public abstract class AbstractResourceAdapter{
 

@@ -21,12 +21,12 @@
 package com.oracle.jms.test;
 
 import jakarta.annotation.Resource;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
+import jakarta.faces.bean.ManagedBean;
+import jakarta.faces.bean.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
-import javax.ejb.*;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.*;
+import jakarta.transaction.UserTransaction;
 
 /**
  *

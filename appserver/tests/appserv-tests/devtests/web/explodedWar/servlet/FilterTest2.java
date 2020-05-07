@@ -16,9 +16,9 @@
 
 package test;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebFilter;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebFilter;
 
 @WebFilter("/*")
 public class FilterTest2 implements Filter{
@@ -27,7 +27,7 @@ public class FilterTest2 implements Filter{
         System.out.println("[Filter.destroy]");
     }    
     
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, javax.servlet.ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
         System.out.println("[Filter.doFilter]");
           
         ((HttpServletRequest)request).getSession(true).setAttribute("FILTER2", "PASS");
@@ -35,7 +35,7 @@ public class FilterTest2 implements Filter{
         
     }    
     
-    public void init(javax.servlet.FilterConfig filterConfig) throws javax.servlet.ServletException {
+    public void init(jakarta.servlet.FilterConfig filterConfig) throws jakarta.servlet.ServletException {
         System.out.println("[Filter.init]");
     }
 }

@@ -17,10 +17,10 @@
 package org.glassfish.test.jms.injection.ejb;
 
 import jakarta.annotation.Resource;
-import javax.ejb.*;
-import javax.inject.Inject;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 
 /**

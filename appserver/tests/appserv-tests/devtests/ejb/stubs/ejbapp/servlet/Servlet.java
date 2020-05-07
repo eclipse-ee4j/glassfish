@@ -18,8 +18,8 @@ package com.sun.s1asdev.ejb.stubs.ejbapp;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 import com.sun.s1asdev.ejb.stubs.ejbapp.Hello;

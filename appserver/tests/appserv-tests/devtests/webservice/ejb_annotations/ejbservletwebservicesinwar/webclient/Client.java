@@ -16,8 +16,8 @@
 
 package webclient;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import ejbclient.*;
@@ -33,12 +33,12 @@ public class Client extends HttpServlet {
             webclient.Hello hiport2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
                 String ret1 = hiport1.sayHello("All");
                 String ret2 = hiport2.sayHello("All");

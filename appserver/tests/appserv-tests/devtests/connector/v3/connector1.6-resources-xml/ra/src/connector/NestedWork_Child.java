@@ -16,9 +16,9 @@
 
 package connector;
 
-import javax.resource.spi.work.*;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.resource.spi.XATerminator;
+import jakarta.resource.spi.work.*;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.XATerminator;
 import javax.transaction.xa.Xid;
 import java.util.List;
 import java.util.ArrayList;

@@ -31,7 +31,7 @@ import java.util.Set;
  * The transaction attributes must be specified for the methods defined
  * in the bean's remote interface and all the direct and indirect 
  * superinterfaces of the remote interface, excluding the methods of
- * the javax.ejb.EJBObject interface.
+ * the jakarta.ejb.EJBObject interface.
  */
 public class MethodPermissionComponentInterface extends EjbTest implements EjbCheck { 
     Result result  = null;

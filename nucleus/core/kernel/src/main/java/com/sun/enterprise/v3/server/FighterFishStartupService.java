@@ -21,7 +21,7 @@ import java.util.List;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.hk2.api.ServiceHandle;

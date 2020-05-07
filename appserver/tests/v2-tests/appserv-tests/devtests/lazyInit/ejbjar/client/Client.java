@@ -19,8 +19,8 @@ package examples.sfsb;
 import java.rmi.RemoteException;
 import java.util.Properties;
 
-import javax.ejb.CreateException;
-import javax.ejb.RemoveException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.RemoveException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

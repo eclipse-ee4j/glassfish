@@ -17,9 +17,9 @@
 package com.acme;
 
 import jakarta.annotation.*;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
-import javax.ejb.EJBException;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.ejb.EJBException;
 
 public class NonSerializableInterceptor {
 

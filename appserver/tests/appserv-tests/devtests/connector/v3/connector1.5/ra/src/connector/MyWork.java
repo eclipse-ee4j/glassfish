@@ -18,15 +18,15 @@ package connector;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.resource.spi.UnavailableException;
-import javax.resource.spi.work.Work;
-import javax.resource.spi.ResourceAdapterAssociation;
-import javax.resource.spi.ResourceAdapter;
-import javax.resource.ResourceException;
-import javax.resource.spi.work.WorkManager;
-import javax.resource.spi.work.ExecutionContext;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.spi.UnavailableException;
+import jakarta.resource.spi.work.Work;
+import jakarta.resource.spi.ResourceAdapterAssociation;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.work.WorkManager;
+import jakarta.resource.spi.work.ExecutionContext;
 
 /**
  *

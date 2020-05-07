@@ -125,7 +125,7 @@ public class ASEjbRRefJndiName extends ASEjbResRef {
                                     new Object[]{refJndiName,type}));
                             }
                         }
-                        else if(type.indexOf("javax.mail")>-1) //jms resource
+                        else if(type.indexOf("jakarta.mail")>-1) //jms resource
                         {
                             if(refJndiName.startsWith("mail/")) {
                                 addGoodDetails(result, compName);

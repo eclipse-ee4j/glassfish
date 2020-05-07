@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.interceptor.Interceptors;
+import jakarta.interceptor.Interceptors;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.ManagedBean;

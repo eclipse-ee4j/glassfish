@@ -33,7 +33,7 @@ import com.sun.enterprise.tools.verifier.tests.connector.ConnectorCheck;
 
 /**
  * Test that the return type of
- * javax.resource.spi.ManagedConnection.getMetaData() implements 
+ * jakarta.resource.spi.ManagedConnection.getMetaData() implements 
  * the ManagedConnectionMetaData interface.
  *
  * @author Anisha Malhotra 
@@ -45,7 +45,7 @@ public class ManagedConnectionGetMetaData
 {
   /** <p>
    * Test that the return type of
-   * javax.resource.spi.ManagedConnection.getMetaData() implements 
+   * jakarta.resource.spi.ManagedConnection.getMetaData() implements 
    * the ManagedConnectionMetaData interface.
    * </p>
    *
@@ -72,7 +72,7 @@ public class ManagedConnectionGetMetaData
     }
 	//File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-        Class c = findImplementorOf(descriptor, "javax.resource.spi.ManagedConnection");
+        Class c = findImplementorOf(descriptor, "jakarta.resource.spi.ManagedConnection");
     if(c == null)
     {
       result.addErrorDetails(smh.getLocalString
@@ -82,7 +82,7 @@ public class ManagedConnectionGetMetaData
       result.failed(smh.getLocalString
           ("com.sun.enterprise.tools.verifier.tests.connector.ConnectorTest.findImplementor.failed", 
            "Error: There is no implementation of the [ {0} ] provided",
-           new Object[] {"javax.resource.spi.ManagedConnection"}));        
+           new Object[] {"jakarta.resource.spi.ManagedConnection"}));        
       return result;
     }
     // get return type of getMetaData()
@@ -108,7 +108,7 @@ public class ManagedConnectionGetMetaData
     }
     Class returnType = m.getReturnType();
     if(VerifierTest.isImplementorOf(returnType, 
-          "javax.resource.spi.ManagedConnectionMetaData"))
+          "jakarta.resource.spi.ManagedConnectionMetaData"))
     {
       result.addGoodDetails(smh.getLocalString
           ("tests.componentNameConstructor",
@@ -117,7 +117,7 @@ public class ManagedConnectionGetMetaData
       result.passed(smh.getLocalString
           ("com.sun.enterprise.tools.verifier.tests.connector.managed.ManagedConnectionGetMetaData.passed", 
            "ManagedConnection.getMetaData() returns an instance of the" + 
-           "javax.resource.spi.ManagedConnectionMetaData interface"));
+           "jakarta.resource.spi.ManagedConnectionMetaData interface"));
     }
     else
     {
@@ -128,7 +128,7 @@ public class ManagedConnectionGetMetaData
       result.failed(smh.getLocalString
           ("com.sun.enterprise.tools.verifier.tests.connector.managed.ManagedConnectionGetMetaData.failed1", 
            "Error: getMetaData() does not return an instance of the" + 
-           "javax.resource.spi.ManagedConnectionMetaData interface"));
+           "jakarta.resource.spi.ManagedConnectionMetaData interface"));
     }
     return result;
   }

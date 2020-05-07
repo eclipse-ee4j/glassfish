@@ -22,7 +22,7 @@ package com.sun.jdbcra.spi;
  * @version	1.0, 02/07/31
  * @author	Binod P.G
  */
-public class ConnectionRequestInfo implements javax.resource.spi.ConnectionRequestInfo{ 
+public class ConnectionRequestInfo implements jakarta.resource.spi.ConnectionRequestInfo{ 
 
     private String user;
     private String password;

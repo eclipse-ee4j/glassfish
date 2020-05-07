@@ -16,8 +16,8 @@
 
 package org.glassfish.tests.jms.injection;
 
-import javax.ejb.*;
-import javax.inject.Inject;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
 import jakarta.jms.*;
 
 /**

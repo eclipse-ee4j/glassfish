@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejbflush;
 
 import javax.naming.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class TestBean implements SessionBean {
 

@@ -16,7 +16,7 @@
 
 package org.glassfish.admin.rest.adapter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.hk2.api.ServiceLocator;
 

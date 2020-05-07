@@ -18,11 +18,11 @@ package com.acme;
 
 import jakarta.annotation.*;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import jakarta.annotation.Resource;
 import org.omg.CORBA.ORB;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
 
 @ManagedBean("somemanagedbean")
 public class Foo2ManagedBean {

@@ -19,13 +19,11 @@ package com.sun.enterprise.connectors;
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
 import com.sun.enterprise.connectors.module.ConnectorApplication;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.resource.DynamicallyReconfigurableResource;
 import com.sun.logging.LogDomains;
 import org.glassfish.connectors.config.ResourceAdapterConfig;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
-
-import javax.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.validation.Validator;
 import java.util.*;
 import java.util.logging.Level;

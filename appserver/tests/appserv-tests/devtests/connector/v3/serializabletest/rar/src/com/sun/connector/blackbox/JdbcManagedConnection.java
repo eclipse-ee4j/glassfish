@@ -16,12 +16,12 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.NotSupportedException;
-import javax.resource.ResourceException;
-import javax.resource.spi.*;
-import javax.resource.spi.IllegalStateException;
-import javax.resource.spi.SecurityException;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.NotSupportedException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.*;
+import jakarta.resource.spi.IllegalStateException;
+import jakarta.resource.spi.SecurityException;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import javax.sql.XAConnection;
 import javax.transaction.xa.XAResource;

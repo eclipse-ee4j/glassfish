@@ -20,13 +20,13 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionListener;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.http.HttpSessionListener;
 
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -51,7 +51,6 @@ import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Environments;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
-import org.jboss.weld.bootstrap.spi.BootstrapConfiguration;
 import org.jboss.weld.bootstrap.spi.EEModuleDescriptor;
 import org.jboss.weld.bootstrap.spi.helpers.EEModuleDescriptorImpl;
 import org.jboss.weld.ejb.spi.EjbServices;
@@ -59,8 +58,8 @@ import org.jboss.weld.injection.spi.InjectionServices;
 import org.jboss.weld.security.spi.SecurityServices;
 import org.jboss.weld.serialization.spi.ProxyServices;
 import org.jboss.weld.transaction.spi.TransactionServices;
-import javax.inject.Inject;
-import javax.servlet.jsp.tagext.JspTag;
+import jakarta.inject.Inject;
+import jakarta.servlet.jsp.tagext.JspTag;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -76,8 +75,6 @@ import com.sun.enterprise.deployment.web.ServletFilterMapping;
 import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
 import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
 import org.jboss.weld.resources.spi.ResourceLoader;
-import org.jboss.weld.module.ejb.WeldEjbModule;
-import org.jboss.weld.module.WeldModule;
 
 @Service
 public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer>
@@ -301,9 +298,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
        }
     }
     private String getDeploymentErrorMsgPrefix( Throwable t ) {
-        if ( t instanceof javax.enterprise.inject.spi.DefinitionException ) {
+        if ( t instanceof jakarta.enterprise.inject.spi.DefinitionException ) {
             return "CDI definition failure:";
-        } else if ( t instanceof javax.enterprise.inject.spi.DeploymentException ) {
+        } else if ( t instanceof jakarta.enterprise.inject.spi.DeploymentException ) {
             return "CDI deployment failure:";
         } else {
             Throwable cause = t.getCause();
@@ -463,8 +460,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             ProxyServices proxyServices = new ProxyServicesImpl(services);
             deploymentImpl.getServices().add(ProxyServices.class, proxyServices);
 
-            BootstrapConfigurationImpl bootstrapConfiguration = new BootstrapConfigurationImpl();
-            deploymentImpl.getServices().add(BootstrapConfiguration.class, bootstrapConfiguration);
         
             addWeldListenerToAllWars(context);
         } else {

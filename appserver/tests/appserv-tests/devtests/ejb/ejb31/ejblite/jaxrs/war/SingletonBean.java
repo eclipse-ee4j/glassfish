@@ -23,10 +23,10 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.EJBException;
-import javax.ejb.EJB;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJB;
 
 @Singleton
 public class SingletonBean {

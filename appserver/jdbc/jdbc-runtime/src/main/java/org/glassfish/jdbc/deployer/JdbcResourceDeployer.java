@@ -30,8 +30,8 @@ import org.glassfish.jdbc.util.JdbcResourcesUtil;
 import org.glassfish.resourcebase.resources.api.*;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;

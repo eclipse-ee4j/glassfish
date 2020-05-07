@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.contauth.ejb;
 
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBLocalObject;
 import java.rmi.*;
 
 public interface SimpleBMP

@@ -16,10 +16,10 @@
 
 package numberguess;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 import jakarta.annotation.*;
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 import java.io.Serializable;
 
 @Interceptor

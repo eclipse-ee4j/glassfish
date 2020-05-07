@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,18 +16,16 @@
 
 package com.sun.jts.jta;
 
-import java.util.*;
 import org.omg.CosTransactions.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.*;
 
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.CosTransactions.ControlImpl;
-import com.sun.jts.CosTransactions.TopCoordinator;
 import com.sun.jts.CosTransactions.GlobalTID;
 
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
 
 import org.omg.CosTransactions.Status;
 import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
@@ -40,9 +38,9 @@ import com.sun.logging.LogDomains;
 import com.sun.enterprise.transaction.spi.TransactionInternal;
 
 /**
- * An implementation of javax.transaction.Transaction using JTS
+ * An implementation of jakarta.transaction.Transaction using JTS
  * XXX TODO should catch all org.omg.CORBA.SystemException
- * and throw javax.transaction.SystemException
+ * and throw jakarta.transaction.SystemException
  *
  * @author Tony Ng
  */
@@ -83,7 +81,7 @@ public class TransactionImpl implements TransactionInternal {
     }
 
     //-----------------------------------------------------------------
-    // The following implements javax.transaction.Trasaction interface
+    // The following implements jakarta.transaction.Trasaction interface
     //-----------------------------------------------------------------
 
     /**
@@ -167,8 +165,8 @@ public class TransactionImpl implements TransactionInternal {
             SystemException {
 
         int status = getStatus();
-        if (status != javax.transaction.Status.STATUS_ACTIVE &&
-            status != javax.transaction.Status.STATUS_MARKED_ROLLBACK) {
+        if (status != jakarta.transaction.Status.STATUS_ACTIVE &&
+            status != jakarta.transaction.Status.STATUS_MARKED_ROLLBACK) {
             throw new IllegalStateException();
         }
 	//START IASRI 4706150
@@ -186,7 +184,7 @@ public class TransactionImpl implements TransactionInternal {
                 // registerSynchronization(sync);
             }
             tranState.startAssociation(res, control, status);
-            if (status == javax.transaction.Status.STATUS_MARKED_ROLLBACK) {
+            if (status == jakarta.transaction.Status.STATUS_MARKED_ROLLBACK) {
                 throw new RollbackException();
             }
             return true;
@@ -207,8 +205,8 @@ public class TransactionImpl implements TransactionInternal {
 
         /*
         int status = getStatus();
-        if (status != javax.transaction.Status.STATUS_ACTIVE &&
-            status != javax.transaction.Status.STATUS_MARKED_ROLLBACK) {
+        if (status != jakarta.transaction.Status.STATUS_ACTIVE &&
+            status != jakarta.transaction.Status.STATUS_MARKED_ROLLBACK) {
             throw new IllegalStateException();
         }
         */
@@ -247,11 +245,11 @@ public class TransactionImpl implements TransactionInternal {
             }
             return TransactionManagerImpl.mapStatus(status);
         } catch (TRANSACTION_ROLLEDBACK ex) {
-            return javax.transaction.Status.STATUS_NO_TRANSACTION;
+            return jakarta.transaction.Status.STATUS_NO_TRANSACTION;
         } catch (INVALID_TRANSACTION ex) {
-            return javax.transaction.Status.STATUS_NO_TRANSACTION;
+            return jakarta.transaction.Status.STATUS_NO_TRANSACTION;
         } catch (Unavailable ex) {
-            return javax.transaction.Status.STATUS_NO_TRANSACTION;
+            return jakarta.transaction.Status.STATUS_NO_TRANSACTION;
         } catch (Exception ex) {
 			_logger.log(Level.WARNING,"jts.unexpected_error_in_getstatus",ex);
             throw new SystemException();
@@ -277,10 +275,10 @@ public class TransactionImpl implements TransactionInternal {
         SystemException {
 
         int status = getStatus();
-        if (status == javax.transaction.Status.STATUS_MARKED_ROLLBACK) {
+        if (status == jakarta.transaction.Status.STATUS_MARKED_ROLLBACK) {
             throw new RollbackException();
         }
-        if (status != javax.transaction.Status.STATUS_ACTIVE) {
+        if (status != jakarta.transaction.Status.STATUS_ACTIVE) {
             throw new IllegalStateException();
         }
         if (tranState == null) {
@@ -294,10 +292,10 @@ public class TransactionImpl implements TransactionInternal {
         SystemException {
 
         int status = getStatus();
-        if (status == javax.transaction.Status.STATUS_MARKED_ROLLBACK) {
+        if (status == jakarta.transaction.Status.STATUS_MARKED_ROLLBACK) {
             throw new RollbackException();
         }
-        if (status != javax.transaction.Status.STATUS_ACTIVE) {
+        if (status != jakarta.transaction.Status.STATUS_ACTIVE) {
             throw new IllegalStateException();
         }
         if (tranState == null) {
@@ -310,8 +308,8 @@ public class TransactionImpl implements TransactionInternal {
         throws IllegalStateException, SystemException {
 
         int status = getStatus();
-        if (status != javax.transaction.Status.STATUS_MARKED_ROLLBACK &&
-            status != javax.transaction.Status.STATUS_ACTIVE) {
+        if (status != jakarta.transaction.Status.STATUS_MARKED_ROLLBACK &&
+            status != jakarta.transaction.Status.STATUS_ACTIVE) {
             throw new IllegalStateException();
         }
         try {

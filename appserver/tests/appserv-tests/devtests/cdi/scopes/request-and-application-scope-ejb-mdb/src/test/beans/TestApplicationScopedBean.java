@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 //Simple TestBean to test CDI. 
 @ApplicationScoped

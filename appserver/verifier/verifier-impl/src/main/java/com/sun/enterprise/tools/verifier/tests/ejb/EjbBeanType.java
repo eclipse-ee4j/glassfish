@@ -60,7 +60,7 @@ public class EjbBeanType extends EjbTest implements EjbCheck {
                         logger.log(Level.FINE, getClass().getName() + ".debug1",
                                 new Object[] {interfaces[i].getName()});
 
-                        if (interfaces[i].getName().equals("javax.ejb.EntityBean") &&
+                        if (interfaces[i].getName().equals("jakarta.ejb.EntityBean") &&
                                 (descriptor instanceof EjbEntityDescriptor)) {
                             validBean = true;
                             result.addGoodDetails(smh.getLocalString
@@ -72,7 +72,7 @@ public class EjbBeanType extends EjbTest implements EjbCheck {
                                             "[ {0} ] properly implements the {1}Bean interface.",
                                             new Object[] {descriptor.getEjbClassName(),"Entity"}));
                             break;
-                        } else if (interfaces[i].getName().equals("javax.ejb.SessionBean") &&
+                        } else if (interfaces[i].getName().equals("jakarta.ejb.SessionBean") &&
                                 descriptor instanceof EjbSessionDescriptor) {
                             validBean = true;
                             result.addGoodDetails(smh.getLocalString

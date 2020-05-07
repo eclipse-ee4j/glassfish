@@ -18,23 +18,23 @@ package mdb;
 
 import java.sql.Statement;
 
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.MessageDrivenBean;
+import jakarta.ejb.MessageDrivenContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import connector.MyMessageListener;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.io.*;
 import java.rmi.RemoteException;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.sql.*;
 import javax.sql.*;
 import jakarta.jms.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 
 
 /**
@@ -45,7 +45,7 @@ public class MyMessageBean implements MessageDrivenBean,
     private transient MessageDrivenContext mdc = null;
     private Context context;
     
-    @javax.inject.Inject
+    @jakarta.inject.Inject
     private connector.TestCDIBean tb;
 
     /**
@@ -56,7 +56,7 @@ public class MyMessageBean implements MessageDrivenBean,
     /**
      * setMessageDrivenContext method, declared as public (but 
      * not final or static), with a return type of void, and 
-     * with one argument of type javax.ejb.MessageDrivenContext.
+     * with one argument of type jakarta.ejb.MessageDrivenContext.
      *
      * @param mdc    the context to set
      */

@@ -16,7 +16,7 @@
 
 package com.acme.ejb.api;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface HelloRemote {

@@ -24,7 +24,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.PasswordValidationCallback;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
-import javax.resource.spi.work.SecurityContext;
+import jakarta.resource.spi.work.SecurityContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;

@@ -26,7 +26,7 @@ import com.sun.enterprise.ee.cms.core.MessageSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;

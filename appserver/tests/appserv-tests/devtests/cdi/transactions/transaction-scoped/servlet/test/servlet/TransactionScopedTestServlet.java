@@ -19,15 +19,15 @@ package test.servlet;
 import test.beans.Bean1;
 import test.beans.Bean2;
 
-import javax.enterprise.context.ContextNotActiveException;
-import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.UserTransaction;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 
 @WebServlet(name = "TransactionScopedTestServlet", urlPatterns = {"/TransactionScopedTestServlet"})

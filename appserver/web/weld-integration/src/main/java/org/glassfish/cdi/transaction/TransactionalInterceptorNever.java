@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,18 +16,17 @@
 
 package org.glassfish.cdi.transaction;
 
-import org.glassfish.logging.annotation.LoggerInfo;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.TransactionalException;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.InvalidTransactionException;
+import jakarta.transaction.TransactionalException;
 import java.util.logging.Logger;
 
 /**
  * Transactional annotation Interceptor class for Never transaction type,
- * ie javax.transaction.Transactional.TxType.NEVER
+ * ie jakarta.transaction.Transactional.TxType.NEVER
  * If called outside a transaction context, managed bean method execution will then
  * continue outside a transaction context.
  * If called inside a transaction context, InvalidTransactionException will be thrown
@@ -36,7 +35,7 @@ import java.util.logging.Logger;
  */
 @jakarta.annotation.Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
 @Interceptor
-@javax.transaction.Transactional(javax.transaction.Transactional.TxType.NEVER)
+@jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.NEVER)
 public class TransactionalInterceptorNever extends TransactionalInterceptorBase {
 
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);

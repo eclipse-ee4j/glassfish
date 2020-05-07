@@ -21,15 +21,15 @@ import static javax.security.enterprise.AuthenticationStatus.SEND_FAILURE;
 
 import java.util.HashSet;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.AuthenticationException;
 import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import javax.security.enterprise.authentication.mechanism.http.HttpMessageContext;
 import javax.security.enterprise.credential.CallerOnlyCredential;
 import javax.security.enterprise.credential.Credential;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RequestScoped
 public class TestAuthenticationMechanism implements HttpAuthenticationMechanism {

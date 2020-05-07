@@ -18,19 +18,19 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
 
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.AroundInvoke;
 
-import javax.ejb.PrePassivate;
+import jakarta.ejb.PrePassivate;
 
-import javax.ejb.PostActivate;
+import jakarta.ejb.PostActivate;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import jakarta.annotation.Resource;
 
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 
 
 

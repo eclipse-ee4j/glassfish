@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,9 +25,9 @@ package com.sun.jdo.spi.persistence.support.ejb.cmp;
 import java.util.Collection;
 import java.util.Set;
 
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBException;
-import javax.ejb.EJBContext;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBContext;
 
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.JDOHelper;

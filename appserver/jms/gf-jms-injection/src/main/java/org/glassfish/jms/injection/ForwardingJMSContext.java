@@ -17,7 +17,6 @@
 package org.glassfish.jms.injection;
 
 import java.io.Serializable;
-import java.util.Map;
 import jakarta.jms.*;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 

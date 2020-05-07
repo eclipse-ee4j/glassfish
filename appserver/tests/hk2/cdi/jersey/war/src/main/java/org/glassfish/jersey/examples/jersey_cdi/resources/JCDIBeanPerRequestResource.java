@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import jakarta.annotation.Resource;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;

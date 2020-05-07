@@ -40,7 +40,7 @@ public class ImplementsMessageDrivenBean extends MessageBeanTest {
         
         Result result = getInitializedResult();
         Class mbc = loadMessageBeanClass(descriptor, result);
-        testImplementationOf(mbc, "javax.ejb.MessageDrivenBean", result);
+        testImplementationOf(mbc, "jakarta.ejb.MessageDrivenBean", result);
         return result;
     }
 }

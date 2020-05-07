@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.unsynchpc_flush.ejb;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "EJB32_PERSISTENCE_CONTEXT_PERSON")

@@ -21,7 +21,7 @@ import java.util.Collection;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.JMSConnectionFactoryDefinition;

@@ -16,13 +16,13 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEJBException;
-import javax.ejb.EJB;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.ejb.ActivationConfigProperty;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.ejb.ActivationConfigProperty;
 
 import jakarta.jms.MessageListener;
 import jakarta.jms.Message;
@@ -36,7 +36,7 @@ import jakarta.jms.Session;
 
 import jakarta.annotation.Resource;
 
-@javax.interceptor.Interceptors(InterceptorA.class)
+@jakarta.interceptor.Interceptors(InterceptorA.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 @MessageDriven(mappedName="jms/ejb_ejb30_hello_mdb_InQueue", description="mymessagedriven bean description")
  public class MessageBean implements MessageListener {

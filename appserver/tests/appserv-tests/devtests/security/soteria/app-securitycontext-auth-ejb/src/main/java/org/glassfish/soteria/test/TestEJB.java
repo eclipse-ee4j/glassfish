@@ -16,12 +16,12 @@
 
 package org.glassfish.soteria.test;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.annotation.security.DeclareRoles;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.Resource;
-import javax.ejb.EJBContext;
+import jakarta.ejb.EJBContext;
 import jakarta.annotation.security.RolesAllowed;
 import org.glassfish.soteria.SecurityContextImpl;
 import javax.security.enterprise.SecurityContext;

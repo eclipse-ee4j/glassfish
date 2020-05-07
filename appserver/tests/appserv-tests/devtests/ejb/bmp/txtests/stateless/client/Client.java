@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.bmp.txtests.stateless.client;
 
 import javax.naming.*;
 import jakarta.jms.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
 
 import com.sun.s1asdev.ejb.bmp.txtests.stateless.ejb.SLSBHome;

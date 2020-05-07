@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 
 @Stateful(name="SimpleVersionedEjb", mappedName="ejb/SimpleVersionedEjb")
 public class SimpleVersionedEjbImpl implements SimpleVersionedEjb {

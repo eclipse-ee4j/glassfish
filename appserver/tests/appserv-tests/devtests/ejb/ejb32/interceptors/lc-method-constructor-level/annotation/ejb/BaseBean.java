@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 import java.lang.reflect.*;
 
 

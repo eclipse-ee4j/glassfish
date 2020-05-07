@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.*;
 
 import javax.naming.InitialContext;
@@ -106,12 +106,12 @@ public class Client {
 	    }
 	 
 	    Future<String> futureException = 
-		hello.asyncThrowException("javax.ejb.ConcurrentAccessTimeoutException");
+		hello.asyncThrowException("jakarta.ejb.ConcurrentAccessTimeoutException");
 	    try {
 		String result = futureException.get();
 		throw new EJBException("Should have gotten exception");
 	    } catch(ExecutionException e) {
-		if( e.getCause() instanceof javax.ejb.ConcurrentAccessTimeoutException) {
+		if( e.getCause() instanceof jakarta.ejb.ConcurrentAccessTimeoutException) {
 		    System.out.println("Got correct async exception. Cause is " +
 				       e.getCause().getMessage());
 		} else {
@@ -135,21 +135,21 @@ public class Client {
 	    }
 
 	    try {
-		hello.throwException("javax.ejb.ConcurrentAccessException");
+		hello.throwException("jakarta.ejb.ConcurrentAccessException");
 		throw new EJBException("expected an exception");
 	    } catch(ConcurrentAccessException cae) {
 		System.out.println("Got expected " + cae);
 	    }
 
 	    try {
-		hello.throwException("javax.ejb.ConcurrentAccessTimeoutException");
+		hello.throwException("jakarta.ejb.ConcurrentAccessTimeoutException");
 		throw new EJBException("expected an exception");
 	    } catch(ConcurrentAccessTimeoutException cat) {
 		System.out.println("Got expected " + cat);
 	    }
 
 	    try {
-		hello.throwException("javax.ejb.IllegalLoopbackException");
+		hello.throwException("jakarta.ejb.IllegalLoopbackException");
 		throw new EJBException("expected an exception");
 	    } catch(IllegalLoopbackException ile) {
 		System.out.println("Got expected " + ile);

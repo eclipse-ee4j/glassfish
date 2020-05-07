@@ -19,7 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /**
- * Unit test for javax.servlet.context.orderedLibs ServletContext
+ * Unit test for jakarta.servlet.context.orderedLibs ServletContext
  * attribute.
  *
  * This unit test creates and deploys a WAR file that bundles two web
@@ -31,7 +31,7 @@ import com.sun.ejte.ccl.reporter.*;
  * with webFragment2 listed first, followed by webFragment1.
  * 
  * Either ServletContextListener checks for the presence and contents of the
- * javax.servlet.context.orderedLibs ServletContext attribute and, if
+ * jakarta.servlet.context.orderedLibs ServletContext attribute and, if
  * satisfied, registers a Servlet.
  *
  * The client then accesses each of the Servlets. If it fails to access either
@@ -57,7 +57,7 @@ public class WebTest {
     
     public static void main(String[] args) {
         stat.addDescription("Unit test for " +
-            "javax.servlet.context.orderedLibs ServletContext attribute");
+            "jakarta.servlet.context.orderedLibs ServletContext attribute");
 
         try {
             new WebTest(args).doTest();

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.webservice.commit;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import jakarta.annotation.Resource;
 import jakarta.jws.WebService;
 import javax.sql.*;

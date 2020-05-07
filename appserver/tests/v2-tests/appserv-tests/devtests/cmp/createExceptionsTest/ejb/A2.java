@@ -16,13 +16,13 @@
 
 package create;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface A2 extends javax.ejb.EJBObject {
+public interface A2 extends jakarta.ejb.EJBObject {
  
 }

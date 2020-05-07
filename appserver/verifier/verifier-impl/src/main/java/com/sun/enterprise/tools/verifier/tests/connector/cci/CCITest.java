@@ -63,7 +63,7 @@ public abstract class CCITest extends ConnectorTest {
     {
       ConnectionDefDescriptor connDefDesc = (ConnectionDefDescriptor)
         iter.next();
-      // check if intf implements javax.resource.cci.ConnectionFactory
+      // check if intf implements jakarta.resource.cci.ConnectionFactory
       String intf = connDefDesc.getConnectionFactoryIntf();
       Class implClass = null;
       try
@@ -82,7 +82,7 @@ public abstract class CCITest extends ConnectorTest {
              new Object[] {intf}));                
         continue;
       }
-      if(isImplementorOf(implClass, "javax.resource.cci.ConnectionFactory"))
+      if(isImplementorOf(implClass, "jakarta.resource.cci.ConnectionFactory"))
       {
         return true;
       }
@@ -94,7 +94,7 @@ public abstract class CCITest extends ConnectorTest {
   /**
    * <p>
    * Returns the connection-interface that implements
-   * "javax.resource.cci.Connection"
+   * "jakarta.resource.cci.Connection"
    * </p>
    * @param descriptor the deployment descriptor
    * @param result to put the result
@@ -137,7 +137,7 @@ public abstract class CCITest extends ConnectorTest {
              new Object[] {intf}));                
         continue;
       }
-      if(isImplementorOf(intfClass, "javax.resource.cci.Connection"))
+      if(isImplementorOf(intfClass, "jakarta.resource.cci.Connection"))
       {
         return intf;
       }

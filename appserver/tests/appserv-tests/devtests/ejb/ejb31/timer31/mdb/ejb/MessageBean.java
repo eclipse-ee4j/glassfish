@@ -16,22 +16,22 @@
 
 package com.acme;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.EJB;
-import javax.ejb.Schedule;
-import javax.ejb.Timer;
-import javax.interceptor.AroundTimeout;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.Interceptors;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Timer;
+import jakarta.interceptor.AroundTimeout;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
 
 import jakarta.annotation.Resource;
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.MessageDrivenContext;
 import jakarta.jms.MessageListener;
 import jakarta.jms.Message;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.security.*;
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 
 @Interceptors(InterceptorA.class)
 @MessageDriven(mappedName="jms/ejb_ejb31_timer31_mdb_InQueue", description="mymessagedriven bean description")

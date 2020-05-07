@@ -100,8 +100,8 @@ public class BusinessMethodExceptionCheck extends EjbTest implements EjbCheck {
             for (Method remoteMethod : intfClass.getMethods()) {
                 
                 // we don't test the EJB methods,testing only business methods
-                if (remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBObject")||
-                        remoteMethod.getDeclaringClass().getName().equals("javax.ejb.EJBLocalObject"))
+                if (remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBObject")||
+                        remoteMethod.getDeclaringClass().getName().equals("jakarta.ejb.EJBLocalObject"))
                     continue;
                 
                 Class [] parameterTypes = remoteMethod.getParameterTypes();

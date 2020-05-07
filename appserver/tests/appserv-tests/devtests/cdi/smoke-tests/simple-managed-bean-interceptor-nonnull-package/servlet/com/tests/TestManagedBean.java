@@ -26,7 +26,7 @@ public class TestManagedBean {
 
     //A Managed Bean needs to have a no-arg constructor
     public TestManagedBean() {}
-    @javax.inject.Inject //Constructor based Injection
+    @jakarta.inject.Inject //Constructor based Injection
     public TestManagedBean(TestBean tb){
         this.tb = tb;
     }

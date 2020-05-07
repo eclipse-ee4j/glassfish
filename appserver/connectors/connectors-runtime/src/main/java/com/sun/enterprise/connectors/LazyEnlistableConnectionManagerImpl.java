@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +20,8 @@ package com.sun.enterprise.connectors;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.LazyEnlistableConnectionManager;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.LazyEnlistableConnectionManager;
 
 /**
  * @author Aditya Gore
@@ -33,7 +33,7 @@ public class LazyEnlistableConnectionManagerImpl extends ConnectionManagerImpl
         super( poolInfo, resourceInfo );
     }
     
-    public void lazyEnlist( javax.resource.spi.ManagedConnection mc ) throws ResourceException {
+    public void lazyEnlist( jakarta.resource.spi.ManagedConnection mc ) throws ResourceException {
         ConnectorRuntime.getRuntime().getPoolManager().lazyEnlist( mc );
     }
 }

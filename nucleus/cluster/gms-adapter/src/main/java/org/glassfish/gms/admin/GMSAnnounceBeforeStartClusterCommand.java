@@ -24,7 +24,7 @@ import com.sun.enterprise.ee.cms.core.GMSConstants;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;

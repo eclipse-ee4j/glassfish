@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.deployment.ejb30.ear.security;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 	
 @Remote
 public interface Sful

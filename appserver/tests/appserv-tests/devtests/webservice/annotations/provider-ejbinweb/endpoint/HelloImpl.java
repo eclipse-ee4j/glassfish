@@ -19,7 +19,7 @@ package endpoint;
 import java.io.*;
 import jakarta.xml.ws.Provider;
 import jakarta.xml.ws.WebServiceProvider;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;

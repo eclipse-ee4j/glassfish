@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +16,11 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
-import java.io.File;
-import java.util.Properties;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import com.sun.jts.pi.InterceptorImpl;
-import com.sun.jts.jta.TransactionManagerImpl;
-import com.sun.jts.CosTransactions.Configuration;
 
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
 import org.omg.IOP.Codec;

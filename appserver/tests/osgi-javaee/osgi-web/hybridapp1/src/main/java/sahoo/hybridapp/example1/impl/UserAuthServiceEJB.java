@@ -20,7 +20,7 @@ import sahoo.hybridapp.example1.UserAuthService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Statement;

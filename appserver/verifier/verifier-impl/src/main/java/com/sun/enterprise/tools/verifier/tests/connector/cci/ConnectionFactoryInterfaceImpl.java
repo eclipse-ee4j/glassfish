@@ -60,7 +60,7 @@ public class ConnectionFactoryInterfaceImpl extends ConnectionFactoryTest implem
            new Object[] {compName.toString()}));
       result.passed(smh.getLocalString
           ("com.sun.enterprise.tools.verifier.tests.connector.cci.ConnectionFactoryInterfaceImpl.pass1",
-           "The class [ {0} ] as defined in the connectionfactory-impl-class deployment descriptor implements javax.resource.cci.ConnectionFactory",
+           "The class [ {0} ] as defined in the connectionfactory-impl-class deployment descriptor implements jakarta.resource.cci.ConnectionFactory",
            new Object[] {c.getName()}));
       }
     }

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2full;
 
-import javax.ejb.EJBContext;
-import javax.ejb.SessionContext;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.SessionContext;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -62,8 +62,8 @@ public class SlessEJB3 implements SlessSub
         return "hello from sless ejb3";
     }
 
-    public String hello2() throws javax.ejb.CreateException {
-        throw new javax.ejb.CreateException();
+    public String hello2() throws jakarta.ejb.CreateException {
+        throw new jakarta.ejb.CreateException();
     }
 
     public String hello3() {
@@ -80,7 +80,7 @@ public class SlessEJB3 implements SlessSub
         if( get1.equals(get2) ) {
             System.out.println("get1 =" + get1);
             System.out.println("get2 =" +  get2);
-            throw new javax.ejb.EJBException("SFSB get test failed");
+            throw new jakarta.ejb.EJBException("SFSB get test failed");
         }
 
         return "hello3()";

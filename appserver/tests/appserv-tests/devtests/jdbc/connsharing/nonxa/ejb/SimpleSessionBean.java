@@ -19,11 +19,11 @@ package com.sun.s1asdev.jdbc.connsharing.nonxa.ejb;
 import jakarta.annotation.Resource;
 import javax.naming.*;
 import javax.sql.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.sql.*;
 import java.util.Set;
 import java.util.HashSet;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 @Stateless
 public class SimpleSessionBean implements SessionBean {

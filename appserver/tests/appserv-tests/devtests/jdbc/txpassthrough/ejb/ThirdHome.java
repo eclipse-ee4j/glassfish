@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.txpassthrough.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.io.*;

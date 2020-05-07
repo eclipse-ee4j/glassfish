@@ -21,10 +21,10 @@
 
 package org.glassfish.devtest.ejb31.singleton.servlet;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.Local;
-import javax.ejb.Remote;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remote;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.ArrayList;

@@ -19,7 +19,7 @@ package org.glassfish.tests.ejb.sample;
 /**
  * @author mvatkina
  */
-@javax.ejb.Local
+@jakarta.ejb.Local
 public interface SimpleInterface {
 
     public String saySomething() ;

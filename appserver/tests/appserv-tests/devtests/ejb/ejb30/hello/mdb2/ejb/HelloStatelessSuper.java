@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb2;
 
-import javax.ejb.*;
-import javax.transaction.TransactionManager;
-import javax.transaction.Status;
+import jakarta.ejb.*;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Status;
 import javax.naming.InitialContext;
 
 public class HelloStatelessSuper {

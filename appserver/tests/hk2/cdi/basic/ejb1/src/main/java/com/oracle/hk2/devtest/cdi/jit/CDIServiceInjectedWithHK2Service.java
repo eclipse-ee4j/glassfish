@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.jit;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * This is a CDI service injected with the HK2Service

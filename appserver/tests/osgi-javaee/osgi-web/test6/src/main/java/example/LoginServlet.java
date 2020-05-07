@@ -16,8 +16,8 @@
 
 package example;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.*;
 
 public class LoginServlet extends HttpServlet {
   public void service(HttpServletRequest req, HttpServletResponse res) 

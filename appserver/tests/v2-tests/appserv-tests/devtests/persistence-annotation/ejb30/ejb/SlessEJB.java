@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session;
 
-import javax.ejb.Stateless;
-import javax.ejb.RemoteInterface;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.RemoteInterface;
 @Stateless
 @RemoteInterface({Sless.class})
 public class SlessEJB implements Sless

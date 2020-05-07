@@ -46,7 +46,7 @@
         <jstl-api.version>2.0.0-RC1</jstl-api.version>
         <mojarra.version>3.0.0-RC1</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>5.0-SNAPSHOT</woodstock.version>
+        <woodstock.version>5.0.0-M1</woodstock.version>
         <jakarta.ejb-api.version>4.0.0-RC1</jakarta.ejb-api.version>
         <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
         <jakarta.transaction-api.version>2.0.0-RC1</jakarta.transaction-api.version>

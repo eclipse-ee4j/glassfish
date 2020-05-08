@@ -82,7 +82,6 @@
         <jsftemplating.version>2.1.4</jsftemplating.version>
         <webservices.version>2.4.3</webservices.version>
         <woodstox.version>5.1.0</woodstox.version>
-        <jaxb.version>2.3.2</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
         <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>
@@ -110,6 +109,9 @@
         <easymock.version>3.5</easymock.version>
 	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
 
+        <jaxws-api.version>2.3.1</jaxws-api.version>
+        <soap-api.version>1.4.0</soap-api.version>
+        <jakarta.jws-api.version>2.1.0</jakarta.jws-api.version>
     </properties>
 
     <modules>
@@ -990,6 +992,11 @@
                <groupId>javax.xml.ws</groupId>
                <artifactId>jaxws-api</artifactId>
                <version>${jaxws-api.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>javax.xml.soap</groupId>
+               <artifactId>javax.xml.soap-api</artifactId>
+               <version>${soap-api.version}</version>
            </dependency>
            <dependency>
                <groupId>jakarta.jws</groupId>

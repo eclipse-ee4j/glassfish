@@ -26,8 +26,11 @@ import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
@@ -159,7 +162,12 @@ public class SMGlobalPolicyUtil {
     
     private static final AllPermission ALL_PERM = new AllPermission();
 
-    
+    //JDK-8173082: JDK required permissions needed by applications using java.desktop module
+    private static final List<String> JDK_REQUIRED_PERMISSIONS = Stream.of(
+        "accessClassInPackage.com.sun.beans",
+        "accessClassInPackage.com.sun.beans.*",
+        "accessClassInPackage.com.sun.java.swing.plaf.*",
+        "accessClassInPackage.com.apple.*").collect(Collectors.toList());
 
     //convert a string type to the CommponentType
     public static CommponentType convertComponentType(String type) {        
@@ -389,7 +397,7 @@ public class SMGlobalPolicyUtil {
         Enumeration<Permission> checkEnum = toBeCheckedPC.elements();
         while (checkEnum.hasMoreElements()) {
             Permission p = checkEnum.nextElement();
-            if (containPC.implies(p)) {
+            if (!JDK_REQUIRED_PERMISSIONS.contains(p.getName()) && containPC.implies(p)) {
                 throw new SecurityException("Restricted permission " + p 
                         + " is declared or implied in the " + containPC);
             }

@@ -439,7 +439,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
     private static String CERTIFICATE_DN_PREFIX = "CN=";
 
     private static String CERTIFICATE_DN_SUFFIX =
-        ",OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US";
+        ",OU=GlassFish,O=Eclipse.org Foundation Inc,L=Ottawa,ST=Ontario,C=CA";
 
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 

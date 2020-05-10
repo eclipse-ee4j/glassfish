@@ -850,7 +850,7 @@ public class ASURLClassLoader
      */
     private byte[] getClassData(InputStream istream) throws IOException {
 
-        BufferedInputStream bstream = new BufferedInputStream(istream);;
+        BufferedInputStream bstream = new BufferedInputStream(istream);
         byte[] buf = new byte[4096];
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int num = 0;

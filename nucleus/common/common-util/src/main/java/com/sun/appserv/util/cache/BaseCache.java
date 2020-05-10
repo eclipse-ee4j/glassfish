@@ -754,14 +754,13 @@ public class BaseCache implements Cache {
      */
     public int clear() {
         
-		CacheItem item=null, next=null;
+		CacheItem item=null;
         int count = 0;
 
         for (int index = 0; index < maxBuckets; index++) {
 		    synchronized (bucketLocks[index]) {
 			    for (item = buckets[index]; item != null; 
                                             item = item.next) {
-                    next = item.next;
                     item.next = null;
 
                     count++;

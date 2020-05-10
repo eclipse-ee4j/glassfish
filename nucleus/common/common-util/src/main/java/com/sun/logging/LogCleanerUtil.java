@@ -29,7 +29,6 @@ public final class LogCleanerUtil {
     private final static String  IMMUNE_HTML = ",.-_ ";
     private static final char REPLACEMENT_CHAR = '\ufffd';
     private static final String REPLACEMENT_HEX = "fffd";
-    private static final String REPLACEMENT_STR = "" + REPLACEMENT_CHAR;
     private static final Map<Integer,String> characterToEntityMap = getCharacterToEntityMap();
     private static final String[] hex = new String[256];
     static {

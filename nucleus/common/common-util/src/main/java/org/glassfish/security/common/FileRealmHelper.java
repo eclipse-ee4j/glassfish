@@ -82,10 +82,8 @@ public final class FileRealmHelper
     private final HashMap<String,User> userTable = new HashMap<String, User>();  // user=>FileRealmUser
     private final HashMap<String,Integer> groupSizeMap = new HashMap<String, Integer>(); // maps of groups with value cardinality of group
     private File keyfile;
-    private String keyfileName;
 
     private static final String SSHA_TAG = "{SSHA}";
-    private static final String SSHA_256_TAG = "{SSHA256}";
     private static final String algoSHA = "SHA";
     private static final String algoSHA256 = "SHA-256";
     private static final String resetKey = "RESET";
@@ -114,7 +112,6 @@ public final class FileRealmHelper
      */
     public FileRealmHelper(String keyfileName) throws IOException
     {
-        this.keyfileName = keyfileName;
         keyfile = new File(keyfileName);
         // if not existent, try to create
         if (!keyfile.exists()) {

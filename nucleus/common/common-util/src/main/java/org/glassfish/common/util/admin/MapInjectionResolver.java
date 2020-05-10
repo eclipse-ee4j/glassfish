@@ -53,8 +53,6 @@ public class MapInjectionResolver extends InjectionResolver<Param> {
 
     public static final LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(MapInjectionResolver.class);
-    private static Validator beanValidator = null;
-
     
     public MapInjectionResolver(CommandModel model,
 					ParameterMap parameters) {

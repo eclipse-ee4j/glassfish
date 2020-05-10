@@ -430,7 +430,7 @@ public class LogDomains {
                 }
 
             }
-        };
+        }
         return cLogger;
     }
 

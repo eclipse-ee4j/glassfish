@@ -63,7 +63,6 @@ public class BeanUtils {
         if (data == null || bean == null) {
             return;
         }
-        Class clazz = bean.getClass();
         for (Map.Entry<String, Object> entry : data.entrySet()) {
             try {
                 Method mtd = getSetter(bean, entry.getKey());

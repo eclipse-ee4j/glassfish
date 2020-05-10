@@ -640,7 +640,6 @@ public final class FileRealmHelper
     private static String encodeUser(String name, User ud, String algo)
     {
         StringBuilder sb = new StringBuilder();
-        String cryptPwd = null;
 
         sb.append(name);
         sb.append(FIELD_SEP);

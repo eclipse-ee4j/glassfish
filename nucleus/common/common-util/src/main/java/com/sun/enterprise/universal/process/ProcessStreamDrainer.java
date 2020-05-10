@@ -146,8 +146,6 @@ public class ProcessStreamDrainer
         
         redirectStandardStreams = redirect;
 
-        ProcessStreamDrainerWorker worker;
-        
         if(redirectStandardStreams)
             outWorker = new ProcessStreamDrainerWorker(process.getInputStream(), System.out, save);
         else

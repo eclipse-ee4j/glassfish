@@ -442,7 +442,6 @@ public class TimerSchedule implements Serializable {
                 // Both are specified - pick the closest date:
                 Calendar date1 = (Calendar)next.clone();
                 Calendar date2 = (Calendar)next.clone();
-                boolean changed = false;
 
                 //System.out.println("==> Processing 1 DAY_OF_MONTH ...");
                 if(skipToNextValue(date1, daysOfMonth, Calendar.DAY_OF_MONTH, Calendar.MONTH)) {

@@ -379,7 +379,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     public void unregister(String contextRoot) {
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "MAPPER ({0}) UNREGISTER contextRoot: {1}",
+            LOGGER.log(Level.FINE, "MAPPER({0}) UNREGISTER contextRoot: {1}",
                     new Object[]{this, contextRoot});
         }
         for (String host : grizzlyService.hosts) {

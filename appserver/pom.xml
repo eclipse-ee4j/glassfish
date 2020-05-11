@@ -127,7 +127,7 @@
         <eclipselink.version>3.0.0-M1</eclipselink.version>
 
         <!-- Jakarta Transactions -->
-        <jakarta.transaction-api.version>2.0.0-RC1</jakarta.transaction-api.version>
+        <jakarta.transaction-api.version>2.0.0-RC2</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
         <jakarta.resource-api.version>2.0.0-RC1</jakarta.resource-api.version>

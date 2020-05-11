@@ -389,7 +389,8 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     public void register(final Endpoint endpoint) {
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "MAPPER({0}) REGISTER endpoint: {1}", endpoint);
+            LOGGER.log(Level.FINE, "MAPPER({0}) REGISTER endpoint: {1}",
+                    new Object[]{this, endpoint});
         }
 
         mapMultipleAdapter = true;

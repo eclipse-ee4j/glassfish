@@ -390,6 +390,12 @@
 
 <!-- the following targets are for running the wsit tests -->
     <path id="wsit.classpath">
+        <pathelement location="${glassfish.home}/modules/jakarta.xml.bind-api.jar"/>
+        <pathelement location="${glassfish.home}/modules/jakarta.activation.jar"/>
+        <pathelement location="${glassfish.home}/modules/jakarta.mail.jar"/>
+        <pathelement location="${glassfish.home}/modules/jaxb-osgi.jar"/>
+        <pathelement location="${glassfish.home}/modules/webservices-api-osgi.jar"/>
+        <pathelement location="${glassfish.home}/modules/webservices-osgi.jar"/>
         <pathelement location="${java.home}/../lib/tools.jar"/>
     </path>
 
@@ -402,7 +408,6 @@
 
     <target name="declare-wsimport" if="wsjar.available">
       <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
-         <classpath refid="class.path"/>
          <classpath refid="wsit.classpath"/>
       </taskdef>
     </target>

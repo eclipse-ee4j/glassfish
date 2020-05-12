@@ -647,7 +647,7 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
-                <version>1.6</version>
+                <version>2.1</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
                     <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar,

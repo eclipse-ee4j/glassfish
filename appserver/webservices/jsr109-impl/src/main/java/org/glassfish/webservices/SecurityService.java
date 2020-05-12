@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package org.glassfish.webservices;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.web.WebModule;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 import java.security.Principal;
 import org.jvnet.hk2.annotations.Contract;
@@ -30,13 +30,13 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface SecurityService {
+    Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor desc);
     
-    public Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor desc);
-    public boolean doSecurity(HttpServletRequest hreq, EjbRuntimeEndpointInfo ejbEndpoint, String realmName, WebServiceContextImpl context);
-    public void resetSecurityContext();
-    public void resetPolicyContext();
-    public ClientPipelineHook getClientPipelineHook(ServiceReferenceDescriptor ref);
-    public Principal getUserPrincipal(boolean isWeb);
-    public boolean isUserInRole(WebModule webModule, Principal principal, String servletName, String role);
+    boolean doSecurity(HttpServletRequest hreq, EjbRuntimeEndpointInfo ejbEndpoint, String realmName, WebServiceContextImpl context);
+    Principal getUserPrincipal(boolean isWeb);
+    boolean isUserInRole(WebModule webModule, Principal principal, String servletName, String role);
+    
+    void resetSecurityContext();
+    void resetPolicyContext();
+    ClientPipelineHook getClientPipelineHook(ServiceReferenceDescriptor ref);
 }
-

@@ -118,7 +118,7 @@
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.10</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
-        <mail.version>2.0.0-RC4</mail.version>
+        <mail.version>2.0.0-RC5</mail.version>
         <activation.version>2.0.0-RC3</activation.version>
         <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>
         <copyright-plugin.version>1.50</copyright-plugin.version>

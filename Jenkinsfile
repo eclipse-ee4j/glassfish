@@ -81,7 +81,7 @@ pipeline {
   
   options {
     // keep at most 50 builds
-    buildDiscarder(logRotator(numToKeepStr: '50'))
+    buildDiscarder(logRotator(numToKeepStr: '10'))
     
     // preserve the stashes to allow re-running a test stage
     preserveStashes()

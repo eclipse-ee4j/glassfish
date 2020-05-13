@@ -85,14 +85,6 @@ jakarta.enterprise.concurrent; \
 jakarta.enterprise.context; \
 jakarta.enterprise.context.control; \
 jakarta.enterprise.context.spi; \
-javax.enterprise.deploy.model; \
-javax.enterprise.deploy.model.exceptions; \
-javax.enterprise.deploy.shared; \
-javax.enterprise.deploy.shared.factories; \
-javax.enterprise.deploy.spi; \
-javax.enterprise.deploy.spi.exceptions; \
-javax.enterprise.deploy.spi.factories; \
-javax.enterprise.deploy.spi.status; \
 jakarta.enterprise.event; \
 jakarta.enterprise.inject; \
 jakarta.enterprise.inject.literal; \

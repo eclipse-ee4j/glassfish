@@ -122,17 +122,17 @@ public interface PAMLibrary extends Library {
              * resp and its member string both needs to be allocated by malloc,
              * to be freed by the caller.
              */
-            int callback(int num_msg, Pointer msg, Pointer resp, Pointer _);
+            int callback(int num_msg, Pointer msg, Pointer resp, Pointer pointer);
         }
         public PamCallback conv;
-        public Pointer _;
+        public Pointer pointer;
 
         public pam_conv(PamCallback conv) {
             this.conv = conv;
         }
 
         protected List getFieldOrder() {
-            return Arrays.asList("conv", "_");
+            return Arrays.asList("conv", "pointer");
         }
         protected PamCallback getConv(){
             return conv;

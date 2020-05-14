@@ -652,6 +652,11 @@
                 <version>${webservices.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.glassfish.metro</groupId>
+                <artifactId>webservices-rt</artifactId>
+                <version>${webservices.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-osgi</artifactId>
                 <version>${jaxb.version}</version>

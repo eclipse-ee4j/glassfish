@@ -21,24 +21,17 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} corresponding to {@link javax.enterprise.deploy.shared.ModuleType#RAR}.
+ * {@link ArchiveType} .
  *
  * @author sanjeeb.sahoo@oracle.com
  */
 @Service(name = RarType.ARCHIVE_TYPE)
 @jakarta.inject.Singleton
 public class RarType extends ArchiveType {
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#RAR#toString()}
-     * We have inlined the value here as opposed to initializing by calling a method on ModuleType.toString().
-     * This is done so that we can refer it in annotation attributes
-     */
+
     public static final String ARCHIVE_TYPE = "rar";
 
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#RAR#getExtension()}
-     * This has been inlined so that other modules can refer to it as a constant in annotation attributes for example.
-     */
+
     public static final String ARCHIVE_EXTENSION = ".rar";
 
     public RarType() {

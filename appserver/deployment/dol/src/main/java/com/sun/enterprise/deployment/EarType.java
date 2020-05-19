@@ -21,24 +21,16 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} corresponding to {@link javax.enterprise.deploy.shared.ModuleType#EAR}.
+ * {@link ArchiveType} .
  *
  * @author sanjeeb.sahoo@oracle.com
  */
 @Service(name = EarType.ARCHIVE_TYPE)
 @jakarta.inject.Singleton
 public class EarType extends ArchiveType {
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#EAR#toString()}
-     * We have inlined the value here as opposed to initializing by calling a method on ModuleType.toString().
-     * This is done so that we can refer it in annotation attributes
-     */
+
     public static final String ARCHIVE_TYPE = "ear";
 
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#EAR#getExtension()}
-     * This has been inlined so that other modules can refer to it as a constant in annotation attributes for example.
-     */
     public static final String ARCHIVE_EXTENSION = ".ear";
 
     public EarType() {

@@ -106,8 +106,8 @@
         <tyrus.version>2.0.0-M1</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <concurrent-api.version>2.0.0-RC1</concurrent-api.version>
-        <concurrent.version>2.0.0-RC1</concurrent.version>
+        <concurrent-api.version>2.0.0-RC2</concurrent-api.version>
+        <concurrent.version>2.0.0-RC2</concurrent.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
@@ -164,7 +164,7 @@
 
         <!-- CDI -->
         <cdi-api.version>3.0.0-M2</cdi-api.version>
-        <weld.version>4.0.0.Alpha1</weld.version>
+        <weld.version>4.0.0.Alpha2</weld.version>
         <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
 
 

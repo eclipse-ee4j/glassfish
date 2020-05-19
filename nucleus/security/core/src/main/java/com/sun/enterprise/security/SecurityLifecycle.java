@@ -164,7 +164,7 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
     
 
 /*    private void registerPolicyHandlers()
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         PolicyContextHandler pch = PolicyContextHandlerImpl.getInstance();
         PolicyContext.registerHandler(PolicyContextHandlerImpl.ENTERPRISE_BEAN,
             pch, true);

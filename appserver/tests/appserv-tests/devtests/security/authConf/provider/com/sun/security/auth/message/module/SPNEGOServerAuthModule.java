@@ -69,7 +69,7 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
         "assign.groups";
 
     private static String POLICY_CONTEXT_OPTIONS_KEY = 
-        "javax.security.jacc.PolicyContext";
+        "jakarta.security.jacc.PolicyContext";
 
     public static final String AUTH_TYPE_INFO_KEY = 
         "jakarta.servlet.http.authType";

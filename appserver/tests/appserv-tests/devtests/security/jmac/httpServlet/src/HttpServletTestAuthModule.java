@@ -48,7 +48,7 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
                throws AuthException {
         this.handler = handler;
         if (options != null) {
-            this.pc = (String)options.get("javax.security.jacc.PolicyContext");
+            this.pc = (String)options.get("jakarta.security.jacc.PolicyContext");
         }
     }
 

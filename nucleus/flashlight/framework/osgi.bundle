@@ -21,8 +21,8 @@
                             org.glassfish.flashlight.provider; version=${project.osgi.version}
 
 DynamicImport-Package: \
-                        org.objectweb.asm;password=GlassFish, \
-                        org.objectweb.asm.commons;password=GlassFish \
+                        org.objectweb.asm, \
+                        org.objectweb.asm.commons \
 
 
 Bundle-Activator: org.glassfish.flashlight.impl.core.FlashlightBundleActivator

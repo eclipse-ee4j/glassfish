@@ -130,3 +130,8 @@
       permission java.io.FilePermission       "<<ALL FILES>>", "write,read";
 
  };
+//Added for creating stub on JDK 11
+grant codeBase "jrt:/jdk.compiler" {
+      permission java.lang.RuntimePermission "getenv.JDK_JAVAC_OPTIONS";
+      permission java.lang.RuntimePermission "createClassLoader";
+};

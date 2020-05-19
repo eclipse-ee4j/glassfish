@@ -53,7 +53,7 @@ public class ExtensionBean implements Extension {
         adv = true;
     }
 
-    void processAnnotatedType(@Observes ProcessAnnotatedType<?> _) {
+    void processAnnotatedType(@Observes ProcessAnnotatedType<?> type) {
         pat = true;
     }
 

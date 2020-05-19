@@ -27,8 +27,8 @@
 
 # dependent flashlight package resolved at runtime
 DynamicImport-Package: org.glassfish.flashlight.provider, \
-                       org.objectweb.asm;password=GlassFish, \
-                       org.objectweb.asm.commons;password=GlassFish
+                       org.objectweb.asm, \
+                       org.objectweb.asm.commons
 
 # Only in non-OSGi embedded mode, kernel depends on logging package, so
 # optionally depend on that pkg. This way, when GF is embedded in

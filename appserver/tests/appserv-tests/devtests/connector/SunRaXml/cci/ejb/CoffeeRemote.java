@@ -16,7 +16,7 @@
 
 package com.sun.s1peqe.connector.cci;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface CoffeeRemote extends EJBObject {

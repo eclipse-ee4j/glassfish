@@ -21,7 +21,7 @@
  */
 
 package shopping;
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 /**
  * Shopping Cart Stateful Session Bean. Just tests -Dj2eelogin.name 
  *  -Dj2eelogin.password system properties.

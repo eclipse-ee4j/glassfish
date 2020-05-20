@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.perf.local2;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface SlessHome extends EJBLocalHome
 {

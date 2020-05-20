@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.enterprise.concurrent.ContextService;
-import javax.inject.Inject;
+import jakarta.enterprise.concurrent.ContextService;
+import jakarta.inject.Inject;
 import javax.naming.NamingException;
 
 /**

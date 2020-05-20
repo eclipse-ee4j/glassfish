@@ -26,7 +26,7 @@ import javax.naming.*;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.namespace.QName;
-import javax.servlet.SingleThreadModel;
+import jakarta.servlet.SingleThreadModel;
 
 public class FindInterestServletImpl implements 
 			SingleThreadModel, ServiceLifecycle {

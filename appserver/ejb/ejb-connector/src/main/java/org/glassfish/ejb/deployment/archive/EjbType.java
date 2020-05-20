@@ -21,7 +21,7 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} corresponding to {@link javax.enterprise.deploy.shared.ModuleType#EJB}.
+ * {@link ArchiveType} .
  * This module is an Enterprise Java Bean archive.
  * Please note, a war containing EJBs is not of this type, because
  * those EJBs are components running in a web container,
@@ -29,21 +29,12 @@ import org.jvnet.hk2.annotations.Service;
  * @author sanjeeb.sahoo@oracle.com
  */
 @Service(name = EjbType.ARCHIVE_TYPE)
-@javax.inject.Singleton
+@jakarta.inject.Singleton
 public class EjbType extends ArchiveType {
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#EJB#toString()}
-     * We have inlined the value here as opposed to initializing by calling a method on ModuleType.toString().
-     * This is done so that we can refer it in annotation attributes
-     */
+
     public static final String ARCHIVE_TYPE = "ejb";
 
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#EJB#getExtension()}
-     * This has been inlined so that other modules can refer to it as a constant in annotation attributes for example.
-     */
     public static final String ARCHIVE_EXTENSION = ".jar";
-
 
     public EjbType() {
         super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);

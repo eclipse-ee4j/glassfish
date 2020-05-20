@@ -16,7 +16,7 @@
 
 package com.acme;
 
-@javax.ejb.Remote
+@jakarta.ejb.Remote
 public interface Hello1 {
 
     String test();

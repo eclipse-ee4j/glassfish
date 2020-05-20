@@ -16,7 +16,7 @@
 
 package com.oracle.cdi.devtest.negative.normalScoped;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * This class extends a class with final methods, but does not have any final

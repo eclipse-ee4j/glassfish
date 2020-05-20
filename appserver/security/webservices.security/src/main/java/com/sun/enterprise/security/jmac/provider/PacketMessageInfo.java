@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.security.jmac.provider;
 
-import javax.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessageInfo;
 import com.sun.xml.ws.api.message.Packet;
 
 /**

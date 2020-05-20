@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +16,20 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.annotation.Resource;
-import javax.mail.MailSessionDefinition;
-import javax.mail.MailSessionDefinitions;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.EJBs;
+import jakarta.annotation.Resource;
+import jakarta.mail.MailSessionDefinition;
+import jakarta.mail.MailSessionDefinitions;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBs;
 import javax.naming.InitialContext;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.UserTransaction;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -184,7 +184,7 @@ public class Servlet extends HttpServlet {
                 sleepFor(2);
                 helloStateful.ping();
                 //throw new EJBException("Did not get ConcurrentAccessException");
-            } catch (javax.ejb.ConcurrentAccessException conEx) {
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
                 ;   //Everything is fine
             } catch (Throwable th) {
                 throw new EJBException("Got some wierd exception: " + th);

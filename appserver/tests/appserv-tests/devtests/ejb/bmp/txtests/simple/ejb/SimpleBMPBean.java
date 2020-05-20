@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.bmp.txtests.simple.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.sql.*;
 import java.rmi.*;

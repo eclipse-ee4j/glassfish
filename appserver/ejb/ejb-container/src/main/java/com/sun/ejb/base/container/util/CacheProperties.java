@@ -19,8 +19,8 @@ package com.sun.ejb.base.container.util;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import com.sun.logging.LogDomains;
 import org.glassfish.api.admin.ServerEnvironment;

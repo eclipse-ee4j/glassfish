@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -360,7 +360,7 @@ public class EjbOptionalIntfGenerator
         GeneratorAdapter mg = new GeneratorAdapter(access, asmMethod, null,
                 getExceptionTypes(m), cv);
 
-        mg.throwException(Type.getType(javax.ejb.EJBException.class),
+        mg.throwException(Type.getType(jakarta.ejb.EJBException.class),
                 "Illegal non-business method access on no-interface view");
         
         mg.returnValue();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,9 +37,9 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.resource.ResourceException;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.resource.ResourceException;
 import java.util.Properties;
 
 @ExecuteOn({RuntimeType.DAS})
@@ -200,7 +200,7 @@ public class JMSPing implements AdminCommand {
         }
         aoAttrList.set("property", propString);
 
-        aoAttrList.set("restype",  "javax.jms.QueueConnectionFactory");
+        aoAttrList.set("restype",  "jakarta.jms.QueueConnectionFactory");
         aoAttrList.set("DEFAULT",  tmpJMSResource);
         //aoAttrList.set("target", target);
         commandRunner.getCommandInvocation("create-jms-resource", subReport, subject).parameters(aoAttrList).execute();

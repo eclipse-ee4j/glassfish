@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -184,14 +184,14 @@
       <arg line="delete-jmsdest"/>	
       <arg line="${as.props}"/>
       <arg line="--instance ${appserver.instance.name}"/>
-      <arg line="--desttype javax.jms.Queue"/>
+      <arg line="--desttype jakarta.jms.Queue"/>
       <arg line="MyQueue"/>
     </exec>
     <exec executable="${ASADMIN}" failonerror="false">
       <arg line="delete-jmsdest"/>	
       <arg line="${as.props}"/>
       <arg line="--instance ${appserver.instance.name}"/>
-      <arg line="--desttype javax.jms.Queue"/>
+      <arg line="--desttype jakarta.jms.Queue"/>
       <arg line="adminQueue"/>
     </exec>  
   </target>
@@ -226,19 +226,19 @@
   <!-- Create all the required JMS resources using common target -->
   <target name="create-jmsresources" depends="init-common">
     <antcall target="deploy-jms-common">
-      <param name="jms.factory.type" value="javax.jms.QueueConnectionFactory"/>
+      <param name="jms.factory.type" value="jakarta.jms.QueueConnectionFactory"/>
       <param name="jms.factory.name" value="jms/QueueConnectionFactory"/>
       <param name="dest.type" value="queue" />
       <param name="dest.name" value="adminQueue"/>
-      <param name="jms.resource.type" value="javax.jms.Queue"/>
+      <param name="jms.resource.type" value="jakarta.jms.Queue"/>
       <param name="jms.resource.name" value="jms/adminQueue"/>
     </antcall>
     <antcall target="deploy-jms-common">
-      <param name="jms.factory.type" value="javax.jms.QueueConnectionFactory"/>
+      <param name="jms.factory.type" value="jakarta.jms.QueueConnectionFactory"/>
       <param name="jms.factory.name" value="jms/MyQueueConnectionFactory"/>
       <param name="dest.type" value="queue" />
       <param name="dest.name" value="MyQueue"/>
-      <param name="jms.resource.type" value="javax.jms.Queue"/>
+      <param name="jms.resource.type" value="jakarta.jms.Queue"/>
       <param name="jms.resource.name" value="jms/MyQueue"/>
     </antcall>
     

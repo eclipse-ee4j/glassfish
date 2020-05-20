@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,18 +16,17 @@
 
 package org.glassfish.cdi.transaction;
 
-import org.glassfish.logging.annotation.LoggerInfo;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-import javax.transaction.Status;
-import javax.transaction.TransactionalException;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.Status;
+import jakarta.transaction.TransactionalException;
 import java.util.logging.Logger;
 
 /**
  * Transactional annotation Interceptor class for Required transaction type,
- * ie javax.transaction.Transactional.TxType.REQUIRED
+ * ie jakarta.transaction.Transactional.TxType.REQUIRED
  * If called outside a transaction context, a new JTA transaction will begin,
  * the managed bean method execution will then continue inside this transaction context,
  * and the transaction will be committed.
@@ -36,9 +35,9 @@ import java.util.logging.Logger;
  *
  * @author Paul Parkinson
  */
-@javax.annotation.Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
+@jakarta.annotation.Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
 @Interceptor
-@javax.transaction.Transactional(javax.transaction.Transactional.TxType.REQUIRED)
+@jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.REQUIRED)
 public class TransactionalInterceptorRequired extends TransactionalInterceptorBase {
 
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);

@@ -35,8 +35,8 @@ import java.util.Set;
  * exception must not be defined as a subclass of the 
  * java.lang.RuntimeException, or of the java.rmi.RemoteException. These are 
  * reserved for system exceptions. 
- * The javax.ejb.CreateException, javax.ejb.RemoveException, 
- * javax.ejb.FinderException, and subclasses thereof, are considered to be 
+ * The jakarta.ejb.CreateException, jakarta.ejb.RemoveException, 
+ * jakarta.ejb.FinderException, and subclasses thereof, are considered to be 
  * application exceptions.
  */
 public class ApplicationExceptionComponentInterfaceMethods extends EjbTest implements EjbCheck {
@@ -51,8 +51,8 @@ public class ApplicationExceptionComponentInterfaceMethods extends EjbTest imple
      * exception must not be defined as a subclass of the 
      * java.lang.RuntimeException, or of the java.rmi.RemoteException. These are 
      * reserved for system exceptions. 
-     * The javax.ejb.CreateException, javax.ejb.RemoveException, 
-     * javax.ejb.FinderException, and subclasses thereof, are considered to be 
+     * The jakarta.ejb.CreateException, jakarta.ejb.RemoveException, 
+     * jakarta.ejb.FinderException, and subclasses thereof, are considered to be 
      * application exceptions.
      *
      * @param descriptor the Enterprise Java Bean deployment descriptor

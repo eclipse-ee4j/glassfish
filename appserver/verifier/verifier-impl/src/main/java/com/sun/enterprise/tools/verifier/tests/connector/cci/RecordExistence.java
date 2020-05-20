@@ -30,7 +30,7 @@ import com.sun.enterprise.tools.verifier.tests.*;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 /**
- * Test if a javax.resource.cci.Record implementation has been provided in
+ * Test if a jakarta.resource.cci.Record implementation has been provided in
  * the rar file
  *
  * @author  Jerome Dochez
@@ -42,7 +42,7 @@ public class RecordExistence
 {
 
     /** <p>
-     * Test if a javax.resource.cci.Record implementation has been 
+     * Test if a jakarta.resource.cci.Record implementation has been 
      * provided in the rar file
      * </p>
      *
@@ -58,7 +58,7 @@ public class RecordExistence
         if (isCCIImplemented(descriptor, result)) {
             //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //            File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-            findImplementorOf(descriptor, "javax.resource.cci.Record", result);
+            findImplementorOf(descriptor, "jakarta.resource.cci.Record", result);
         } else {
 	    result.addNaDetails(smh.getLocalString
 				  ("tests.componentNameConstructor",

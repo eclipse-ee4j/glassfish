@@ -12,7 +12,7 @@ package samples.ejb.subclassing.ejb;
 
 import java.rmi.RemoteException;
 
-public interface Customer extends javax.ejb.EJBObject
+public interface Customer extends jakarta.ejb.EJBObject
 {
   public String getLastName() throws RemoteException;
 

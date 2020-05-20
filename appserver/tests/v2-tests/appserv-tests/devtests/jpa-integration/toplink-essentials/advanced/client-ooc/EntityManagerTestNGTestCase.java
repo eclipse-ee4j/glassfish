@@ -25,9 +25,9 @@ import org.testng.Assert;
 import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Query;
 import java.util.List;
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,18 +16,12 @@
 
 package com.sun.s1asdev.ejb31.timer.nonpersistenttimer;
 
-import java.io.Serializable;
-import java.rmi.NoSuchObjectException;
 import java.util.Date;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.ejb.*;
-//import javax.jms.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 
-//@javax.ejb.Stateful
+//@jakarta.ejb.Stateful
 public class StatefulWrapperImpl implements StatefulWrapper {
 
     private SessionContext context;
@@ -304,7 +298,7 @@ System.out.println("********PG-> setup(): after createPublisher");
         timerStuff.assertNoTimers();
     }
 
-    public void removeFoo() throws java.rmi.RemoteException, javax.ejb.RemoveException {
+    public void removeFoo() throws java.rmi.RemoteException, jakarta.ejb.RemoveException {
         if (foo != null) {
             ((Foo) foo).remove();
         }

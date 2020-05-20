@@ -31,7 +31,7 @@ public class RemoteHomeMethodNameMatch extends HomeMethodNameMatch {
 	return descriptor.getHomeClassName();
     }
     protected String getSuperInterface() {
-	return "javax.ejb.EJBHome";
+	return "jakarta.ejb.EJBHome";
     }
   
 }

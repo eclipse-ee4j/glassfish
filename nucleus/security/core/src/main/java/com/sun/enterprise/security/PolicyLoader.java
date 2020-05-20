@@ -28,12 +28,12 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.i18n.StringManager;
 import java.util.List;
 import org.glassfish.api.admin.ServerEnvironment;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Loads the Default Policy File into the system.

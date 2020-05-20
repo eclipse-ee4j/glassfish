@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>featuresets</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>web</artifactId>
     <name>Glassfish Web Featureset</name>
@@ -115,16 +115,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise.deploy</groupId>
-            <artifactId>jakarta.enterprise.deploy-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
             <exclusions>
@@ -200,7 +190,8 @@
           </dependency>
 
         <!-- jersey -->
-        <dependency>
+        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
+<!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
             <exclusions>
@@ -209,7 +200,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
@@ -270,7 +261,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
+<!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-processing</artifactId>
             <exclusions>
@@ -279,7 +271,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-mvc</artifactId>
@@ -351,17 +343,6 @@
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>container-common</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>deployment-client</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
@@ -632,16 +613,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>jakarta.management.j2ee</groupId>
-            <artifactId>jakarta.management.j2ee-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>jakarta.security.auth.message</groupId>
             <artifactId>jakarta.security.auth.message-api</artifactId>
             <exclusions>
@@ -652,8 +623,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>jakarta.security.jacc</groupId>
-            <artifactId>jakarta.security.jacc-api</artifactId>
+            <groupId>jakarta.authorization</groupId>
+            <artifactId>jakarta.authorization-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -683,6 +654,16 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <exclusions>
@@ -693,8 +674,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>jakarta.persistence</artifactId>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -732,6 +713,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
 
         <!-- glassfish-ha -->
           <dependency>
@@ -832,7 +814,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.resources</groupId>
-            <artifactId>javamail-connector</artifactId>
+            <artifactId>mail-connector</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
@@ -843,7 +825,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.resources</groupId>
-            <artifactId>javamail-runtime</artifactId>
+            <artifactId>mail-runtime</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
@@ -1427,16 +1409,6 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.antlr</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.asm</artifactId>
             <exclusions>
                 <exclusion>
@@ -1517,110 +1489,6 @@
             </exclusions>
        </dependency>
 
-        <!-- glassfish-osgi-http -->
-       <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-http</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- glassfish-osgi -->
-        <!-- Shared OSGi support for Java EE -->
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-javaee-base</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-jpa</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-jpa-extension</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-jta</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-           <groupId>org.glassfish.fighterfish</groupId>
-           <artifactId>osgi-jdbc</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-cdi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-ejb-container</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-web-container</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.fighterfish</groupId>
-            <artifactId>osgi-ee-resources</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.eventadmin</artifactId>
@@ -1686,33 +1554,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
         <dependency>
-            <groupId>org.glassfish.main.bean-validator</groupId>
-            <artifactId>bean-validator</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.bean-validator-cdi</groupId>
-            <artifactId>bean-validator-cdi</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-      -->
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1775,7 +1619,7 @@
         </dependency>
         <!-- glassfish-gui -->
         <dependency>
-            <groupId>com.sun.jsftemplating</groupId>
+            <groupId>org.glassfish.jsftemplating</groupId>
             <artifactId>jsftemplating</artifactId>
             <exclusions>
                 <exclusion>

@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import com.sun.appserv.security.*;
 import com.sun.devtest.security.plogin.converter.ejb.*;
 

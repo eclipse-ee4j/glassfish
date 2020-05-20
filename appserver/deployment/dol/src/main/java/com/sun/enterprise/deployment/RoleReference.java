@@ -45,17 +45,6 @@ public class RoleReference extends EnvironmentProperty implements
 	super(name, "", description);
     }
     
-    /** 
-     * Construct the role reference with the same name and rolename the same 
-     * as the environment property value.
-     * @param the environment property instance.
-     */
-    public RoleReference(EnvironmentProperty environmentProperty) {
-	super(environmentProperty.getName(), 
-		environmentProperty.getDescription(), "");
-	this.setValue(environmentProperty.getValue());
-    }
-    
     /**
      * Set the value for the reference.
      * @param the role

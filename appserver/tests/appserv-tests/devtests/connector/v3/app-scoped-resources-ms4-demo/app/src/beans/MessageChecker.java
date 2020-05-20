@@ -16,7 +16,7 @@
 
 package beans;
 
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBLocalObject;
 
 
 public interface MessageChecker extends EJBLocalObject {

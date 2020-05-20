@@ -16,13 +16,13 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.annotation.Resource;
+import jakarta.ejb.SessionContext;
 
 
-@javax.ejb.Stateless
+@jakarta.ejb.Stateless
 @WebService(
     name="Hello",
     serviceName="HelloService",

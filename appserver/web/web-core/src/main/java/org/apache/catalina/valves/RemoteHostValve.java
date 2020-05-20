@@ -21,7 +21,7 @@ package org.apache.catalina.valves;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 
 

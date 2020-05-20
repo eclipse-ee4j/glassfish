@@ -16,7 +16,7 @@
 
 package com.acme.ejb32.timer.getalltimers;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

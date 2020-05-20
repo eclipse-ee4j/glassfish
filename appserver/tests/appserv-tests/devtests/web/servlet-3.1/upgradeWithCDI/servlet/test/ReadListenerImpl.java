@@ -21,10 +21,10 @@ import java.io.OutputStream;
 import java.util.StringTokenizer;
 
 import javax.naming.InitialContext;
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.WebConnection;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.WebConnection;
 
 /**
  * The protocol is as follows:

@@ -18,15 +18,15 @@ package com.sun.s1asdev.ejb.ejb30.persistence.context;
 
 import java.util.Vector;
 import java.util.List;
-import javax.ejb.Stateless;
-import javax.ejb.EJBException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceProperty;
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.Query;
-import javax.persistence.EntityManager;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.EJBException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceProperty;
+import jakarta.persistence.TransactionRequiredException;
+import jakarta.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 
 @Stateless
 public class SlessBean implements Sless {

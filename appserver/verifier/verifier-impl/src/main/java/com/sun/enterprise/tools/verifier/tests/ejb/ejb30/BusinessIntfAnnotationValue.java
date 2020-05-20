@@ -21,8 +21,8 @@ import com.sun.enterprise.tools.verifier.tests.ComponentNameConstructor;
 import com.sun.enterprise.tools.verifier.tests.ejb.EjbTest;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 
-import javax.ejb.Local;
-import javax.ejb.Remote;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remote;
 import java.util.Set;
 
 /**

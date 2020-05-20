@@ -31,7 +31,7 @@ import org.glassfish.internal.data.*;
 import org.glassfish.internal.deployment.SnifferManager;
 import org.glassfish.hk2.classmodel.reflect.*;
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.hk2.api.PerLookup;
 import com.sun.enterprise.deployment.*;

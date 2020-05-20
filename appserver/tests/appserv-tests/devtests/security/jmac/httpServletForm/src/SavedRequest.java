@@ -17,7 +17,7 @@
 package com.sun.s1asdev.security.jmac.httpservletform;
 
 import java.io.Serializable;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 final class SavedRequest implements Serializable {
     private String method = null;

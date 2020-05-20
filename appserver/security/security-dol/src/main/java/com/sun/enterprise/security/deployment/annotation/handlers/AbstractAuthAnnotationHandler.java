@@ -37,9 +37,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 /**
  * This is an abstract class encapsulate generic behaviour of auth annotations,

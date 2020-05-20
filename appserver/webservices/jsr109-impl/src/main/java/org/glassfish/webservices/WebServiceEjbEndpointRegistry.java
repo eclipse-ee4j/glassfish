@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,15 +31,15 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.jvnet.hk2.annotations.Service;
 
 import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
 import org.glassfish.ejb.api.EjbEndpointFacade;
 
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.handler.Handler;
+import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.handler.Handler;
 
 /**
  * This class acts as a registry of all the webservice EJB end points
@@ -75,7 +75,7 @@ public class WebServiceEjbEndpointRegistry implements WSEjbEndpointRegistry {
                                   EjbEndpointFacade ejbContainer,
                                   Object servant, Class tieClass)  {
         String uri = null;
-        EjbRuntimeEndpointInfo endpoint = createEjbEndpointInfo(webserviceEndpoint, ejbContainer,servant,tieClass);
+        EjbRuntimeEndpointInfo endpoint = createEjbEndpointInfo(webserviceEndpoint, ejbContainer,servant);
         synchronized(webServiceEjbEndpoints) {
             String uriRaw = endpoint.getEndpointAddressUri();
             if (uriRaw != null ) {
@@ -95,15 +95,11 @@ public class WebServiceEjbEndpointRegistry implements WSEjbEndpointRegistry {
 
         // notify monitoring layers that a new endpoint is being created.
         WebServiceEngineImpl engine = WebServiceEngineImpl.getInstance();
-        if (endpoint.getEndpoint().getWebService().getMappingFileUri()!=null) {
-            engine.createHandler((com.sun.xml.rpc.spi.runtime.SystemHandlerDelegate)null, endpoint.getEndpoint());
-        } else {
-            engine.createHandler(endpoint.getEndpoint());
-            try {
-                endpoint.initRuntimeInfo(adapterListMap.get(uri));
-            } catch (Exception e) {
-                logger.log(Level.WARNING,LogUtils.EJB_POSTPROCESSING_ERROR, e);
-            }
+        engine.createHandler(endpoint.getEndpoint());
+        try {
+            endpoint.initRuntimeInfo(adapterListMap.get(uri));
+        } catch (Exception e) {
+            logger.log(Level.WARNING,LogUtils.EJB_POSTPROCESSING_ERROR, e);
         }
     }
 
@@ -154,23 +150,16 @@ public class WebServiceEjbEndpointRegistry implements WSEjbEndpointRegistry {
         engine.removeHandler(endpoint.getEndpoint());
 
     }
-    
+
     /**
      * Creates a new EjbRuntimeEndpointInfo instance depending on the type
      * and version of the web service implementation.
      * @param   
      */
-  public EjbRuntimeEndpointInfo createEjbEndpointInfo(WebServiceEndpoint webServiceEndpoint,
+    public EjbRuntimeEndpointInfo createEjbEndpointInfo(WebServiceEndpoint webServiceEndpoint,
                                   EjbEndpointFacade ejbContainer,
-                                  Object servant, Class tieClass) {
-        EjbRuntimeEndpointInfo info = null;
-        if (webServiceEndpoint.getWebService().hasMappingFile()) {
-            info = new Ejb2RuntimeEndpointInfo(webServiceEndpoint, ejbContainer, servant, tieClass);
-        } else {
-            info = new EjbRuntimeEndpointInfo(webServiceEndpoint, ejbContainer, servant);
-        }
-
-        return info;
+                                  Object servant) {
+        return new EjbRuntimeEndpointInfo(webServiceEndpoint, ejbContainer, servant);
     }
 
     public EjbRuntimeEndpointInfo getEjbWebServiceEndpoint(String uriRaw, String method, String query) {

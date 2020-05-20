@@ -25,9 +25,9 @@ import java.rmi.RemoteException;
 
 // Service Implementation Class - as outlined in JAX-RPC Specification
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
-@javax.jws.WebService(
+@jakarta.jws.WebService(
     serviceName="HttpTestService",
     endpointInterface="service.Hello1",
     portName="Hello1Port",

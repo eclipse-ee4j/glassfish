@@ -19,11 +19,11 @@ package eetimer;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
-import javax.ejb.Singleton;
-import javax.ejb.TimedObject;
-import javax.ejb.Timer;
-import javax.ejb.TimerService;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.TimedObject;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerService;
 
 @Singleton
 public class CreateTimersBean implements TimedObject {

@@ -83,8 +83,8 @@ ${S1AS_HOME}/bin/asadmin start-node-agent --user ${AS_ADMIN_USER} --password ${A
 #./asadmin set --user admin --password adminadmin --host localhost --port 4849 domain.resources.jdbc-connection-pool.bmpEnrollerPool.property.User=pbPublic
 #./asadmin set --user admin --password adminadmin --host localhost --port 4849 domain.resources.jdbc-connection-pool.bmpEnrollerPool.property.Password=pbPublic
 
-#./asadmin create-jms-resource --restype javax.jms.QueueConnectionFactory --user admin --password adminadmin --target C1 jms/QCFactory
+#./asadmin create-jms-resource --restype jakarta.jms.QueueConnectionFactory --user admin --password adminadmin --target C1 jms/QCFactory
 
 #./asadmin create-jmsdest --desttype queue --user admin --password adminadmin --target C1 Queue
 
-#./asadmin create-jms-resource --restype javax.jms.Queue --property imqDestinationName=Queue --target C1 --user admin --password adminadmin jms/SampleQueue
+#./asadmin create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=Queue --target C1 --user admin --password adminadmin jms/SampleQueue

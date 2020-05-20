@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 #
-# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,8 @@
 
 copy_ql_results(){
 	if [[ ${1} = "ql_gf_web_profile_all" || ${1} = "ql_gf_full_profile_all" || "ql_gf_embedded_profile_all" = ${1} ]]; then
-		tar -cvf ${WORKSPACE}/results/domainArchive.tar.gz ${WORKSPACE}/glassfish5/glassfish/domains
-		cp ${WORKSPACE}/glassfish5/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
+		tar -cvf ${WORKSPACE}/results/domainArchive.tar.gz ${WORKSPACE}/glassfish6/glassfish/domains
+		cp ${WORKSPACE}/glassfish6/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
 		cp -r ${WORKSPACE}/appserver/tests/quicklook/test-output/* ${WORKSPACE}/results/
 		cp ${WORKSPACE}/appserver/tests/quicklook/test-output/TESTS-TestSuites.xml ${WORKSPACE}/results/junitreports/test_results_junit.xml
 		cp ${WORKSPACE}/appserver/tests/quicklook/quicklook_summary.txt ${WORKSPACE}/results || true

@@ -39,9 +39,9 @@ public class CredentialInterface extends ConnectorTest implements ConnectorCheck
 
 
     private static String[] allowedInterfaces = new String[] {
-                              "javax.resource.spi.security.PasswordCredential",
+                              "jakarta.resource.spi.security.PasswordCredential",
                               "org.ietf.jgss.GSSCredential",
-                              "javax.resource.spi.security.GenericCredential" };
+                              "jakarta.resource.spi.security.GenericCredential" };
 
     /** <p>
      * All Credential interface declared in the DD should be one of the 

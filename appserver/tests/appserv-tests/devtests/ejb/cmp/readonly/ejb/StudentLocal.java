@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.cmp.readonly.ejb;
 
 import java.util.ArrayList;
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBLocalObject;
 
 public interface StudentLocal extends EJBLocalObject {
  

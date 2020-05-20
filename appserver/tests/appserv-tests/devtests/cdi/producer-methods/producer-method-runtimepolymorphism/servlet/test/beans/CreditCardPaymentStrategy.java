@@ -18,7 +18,7 @@ package test.beans;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped 
 //Note: This is request scoped bean

@@ -1,0 +1,19 @@
+type=page
+status=published
+title=Resources and Services Administration
+next=jdbc.html
+prev=batch.html
+~~~~~~
+Resources and Services Administration
+=====================================
+
+[[gitxw]][[GSADG00298]][[part-ii]]
+
+Part II +
+---------
+
+[[resources-and-services-administration]]
+Resources and Services Administration
+-------------------------------------
+
+

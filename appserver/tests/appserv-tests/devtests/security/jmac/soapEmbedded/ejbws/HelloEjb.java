@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.security.jmac.soapembedded.ejbws;
 
-import javax.ejb.Stateless;
-import javax.jws.WebService;
+import jakarta.ejb.Stateless;
+import jakarta.jws.WebService;
 
 @Stateless
 @WebService(targetNamespace="http://ejbws.soapembedded.jmac.security.s1asdev.sun.com", serviceName="JmacSoapEmbeddedEjbService")

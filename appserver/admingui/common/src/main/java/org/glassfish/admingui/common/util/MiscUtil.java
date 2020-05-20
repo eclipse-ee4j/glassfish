@@ -17,8 +17,8 @@
 package org.glassfish.admingui.common.util;
 
 import java.io.ByteArrayInputStream;
-import javax.el.ValueExpression;
-import javax.faces.context.FacesContext;
+import jakarta.el.ValueExpression;
+import jakarta.faces.context.FacesContext;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

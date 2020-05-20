@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.*;
-import javax.annotation.*;
-import javax.interceptor.*;
+import jakarta.ejb.*;
+import jakarta.annotation.*;
+import jakarta.interceptor.*;
 
 @Singleton
 public class SingletonBean extends BaseBean implements Snglt {

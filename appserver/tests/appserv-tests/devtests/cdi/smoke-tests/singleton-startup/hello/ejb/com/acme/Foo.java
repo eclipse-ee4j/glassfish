@@ -16,12 +16,12 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class Foo {
 
     @EJB Hello hello;
-    @javax.inject.Inject TestBean tb;
+    @jakarta.inject.Inject TestBean tb;
     
     public boolean testInjection(){
         return tb != null;

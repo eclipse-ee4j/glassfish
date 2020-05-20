@@ -16,7 +16,7 @@
 
 package pe.ejb.ejb30.persistence.toplinksample.ejb;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity(name="OrderBean")
 @Table(name="CMP3_ORDER")

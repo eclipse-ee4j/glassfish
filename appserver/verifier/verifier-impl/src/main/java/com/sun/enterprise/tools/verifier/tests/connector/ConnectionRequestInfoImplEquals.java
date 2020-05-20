@@ -55,7 +55,7 @@ public class ConnectionRequestInfoImplEquals extends ConnectorTest implements Co
         // let's get first the the default implementation of the ConnectionManager
         //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());            
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-        Class c = findImplementorOf(descriptor, "javax.resource.spi.ConnectionRequestInfo");
+        Class c = findImplementorOf(descriptor, "jakarta.resource.spi.ConnectionRequestInfo");
         
         if (c == null) {
 	    result.addNaDetails(smh.getLocalString
@@ -65,7 +65,7 @@ public class ConnectionRequestInfoImplEquals extends ConnectorTest implements Co
             result.notApplicable(smh.getLocalString
 	    ("com.sun.enterprise.tools.verifier.tests.connector.ConnectorTest.optionalInterfaceMissing", 
             "Warning: There is no implementation of the optional [ {0} ] interface",
-            new Object[] {"javax.resource.spi.ConnectionRequestInfo"}));  
+            new Object[] {"jakarta.resource.spi.ConnectionRequestInfo"}));  
         } else {
             // An implementation of the interface is provided, let's check the equals method
             checkMethodImpl(c, "equals", new Class[] {Object.class}, "public boolean equals(java.lang.Object)", result);                    

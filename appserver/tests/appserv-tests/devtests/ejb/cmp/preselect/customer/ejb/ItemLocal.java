@@ -17,7 +17,7 @@
 package com.sun.s1peqe.ejb.cmp.preselect.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface ItemLocal extends EJBLocalObject, java.io.Serializable {
     public String getId();

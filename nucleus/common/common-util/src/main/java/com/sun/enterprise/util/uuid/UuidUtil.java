@@ -129,7 +129,6 @@ public class UuidUtil
      */
     private static String getIdentityHashCode(Object obj) {
 
-        String result = null;
         try {
             int hc = System.identityHashCode(obj);
             return formatHexString(hc);

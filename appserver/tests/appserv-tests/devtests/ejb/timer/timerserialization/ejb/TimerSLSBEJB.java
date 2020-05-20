@@ -16,12 +16,12 @@
 
 package com.sun.s1asdev.ejb.timer.timerserialization.ejb;
 
-import javax.ejb.TimedObject;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
-import javax.ejb.TimerService;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.TimedObject;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 
 public class TimerSLSBEJB
     implements TimedObject, SessionBean 

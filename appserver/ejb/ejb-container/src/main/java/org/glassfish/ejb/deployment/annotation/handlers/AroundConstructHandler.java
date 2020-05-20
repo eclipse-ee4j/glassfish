@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
-import javax.interceptor.AroundConstruct;
+import jakarta.interceptor.AroundConstruct;
 
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
@@ -30,11 +30,10 @@ import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling javax.intercept.AroundConstruct 
+ * This handler is responsible for handling jakarta.intercept.AroundConstruct
  *
  */
 @Service

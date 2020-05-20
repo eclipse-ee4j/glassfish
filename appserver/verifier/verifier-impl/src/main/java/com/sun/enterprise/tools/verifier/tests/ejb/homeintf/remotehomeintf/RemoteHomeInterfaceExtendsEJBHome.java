@@ -30,7 +30,7 @@ public class RemoteHomeInterfaceExtendsEJBHome extends HomeInterfaceExtendsRight
 	return descriptor.getHomeClassName();
     }
      protected String getSuperInterface() {
-	 return "javax.ejb.EJBHome";
+	 return "jakarta.ejb.EJBHome";
     }
 
 }

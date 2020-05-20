@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,11 @@
 
 package org.glassfish.persistence.jpa;
 
-import javax.persistence.spi.ClassTransformer;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.naming.NamingException;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.ValidatorFactory;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;

@@ -29,6 +29,7 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.connectors.config.GroupMap;
 import org.glassfish.connectors.config.PrincipalMap;
 import org.glassfish.connectors.config.WorkSecurityMap;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
@@ -42,7 +43,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
 import static org.glassfish.connectors.admin.cli.CLIConstants.WSM.*;

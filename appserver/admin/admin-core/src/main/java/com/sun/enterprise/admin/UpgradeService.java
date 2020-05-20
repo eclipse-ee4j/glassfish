@@ -21,10 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.File;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import com.sun.enterprise.config.serverbeans.*;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
@@ -35,10 +34,11 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transaction;
-import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.types.PropertyBag;
+import com.sun.enterprise.config.serverbeans.Module;
+
 
 /**
  * Startup service to update existing domain.xml to the latest expected format

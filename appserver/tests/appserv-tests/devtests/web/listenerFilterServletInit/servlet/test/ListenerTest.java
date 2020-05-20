@@ -16,8 +16,8 @@
 
 package test;
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebListener;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebListener;
 
 @WebListener
 public class ListenerTest implements ServletContextListener {

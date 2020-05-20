@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,108 +17,28 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
+
     <artifactId>glassfish-parent</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish Appserver Parent Project</name>
 
-    <description>Glassfish Appserver Parent Project</description>
+    <name>Eclipse GlassFish Parent Project</name>
+    <description>Eclipse GlassFish Parent Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
-
-    <scm>
-      <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
-      <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
-      <url>https://github.com/eclipse-ee4j/glassfish</url>
-    </scm>
-
-    <properties>
-        <jms-api.version>2.0.2</jms-api.version>
-        <jsp-api.version>2.3.5</jsp-api.version>
-        <jsp-impl.version>2.3.5</jsp-impl.version>
-        <jstl-impl.version>1.2.6</jstl-impl.version>
-        <jstl-api.version>1.2.4</jstl-api.version>
-        <mojarra.version>2.3.9</mojarra.version>
-        <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>4.0.2.16</woodstock.version>
-        <javax.ejb-api.version>3.2.5</javax.ejb-api.version>
-        <jakarta.interceptor-api.version>1.2.4</jakarta.interceptor-api.version>
-        <jakarta.xml.rpc-api.version>1.1.3</jakarta.xml.rpc-api.version>
-        <javax.transaction-api.version>1.3.2</javax.transaction-api.version>
-        <jakarta.faces-api.version>2.3.1</jakarta.faces-api.version>
-        <cdi-api.version>2.0</cdi-api.version>
-        <javax.inject.version>1</javax.inject.version>
-        <jakarta.resource-api.version>1.7.3</jakarta.resource-api.version>
-        <javax.enterprise.deploy-api.version>1.7.1</javax.enterprise.deploy-api.version>
-        <jakarta.security.jacc-api.version>1.6.1</jakarta.security.jacc-api.version>
-        <jakarta.security.auth.message-api.version>1.1.2</jakarta.security.auth.message-api.version>
-        <!-- Ensure that nucleus/pom.xml's javax.validation property is of same value as the one below -->
-        <javax.validation-api.version>2.0.0.Final</javax.validation-api.version>
-        <jakarta.security.enterprise-api.version>1.0.1</jakarta.security.enterprise-api.version>
-        <jakarta.security.enterprise.version>1.0.1</jakarta.security.enterprise.version>
-
-        <product.name>GlassFish Server Open Source Edition</product.name>
-        <brief_product_name>GlassFish Server</brief_product_name>
-        <abbrev_product_name>glassfish</abbrev_product_name>
-        <admin_client_command_name>asadmin</admin_client_command_name>
-        <default_domain_template>appserver-domain.jar</default_domain_template>
-        <version_prefix />
-        <version_suffix />
-        <major_version>5</major_version>
-        <minor_version>1</minor_version>
-        <update_version>0</update_version>
-        <install.dir.name>glassfish5</install.dir.name>
-
-        <javaee.major_version>8</javaee.major_version>
-        <javaee.version_qualifier>-b${build.id}</javaee.version_qualifier>
-        <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
-
-        <jsftemplating.version>2.1.4</jsftemplating.version>
-        <webservices.version>2.4.3</webservices.version>
-        <woodstox.version>5.1.0</woodstox.version>
-        <stax2-api.version>4.1</stax2-api.version>
-        <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
-        <eclipselink.version>2.7.4</eclipselink.version>
-        <jakarta-persistence-api.version>2.2.2</jakarta-persistence-api.version>
-        <dbschema.version>6.7</dbschema.version>
-        <schema2beans.version>6.7</schema2beans.version>
-        <mq.version>5.1.4</mq.version>
-        <derby.version>10.13.1.3</derby.version>
-        <weld.version>3.0.0.Final</weld.version>
-        <wsdl4j.version>1.6.2</wsdl4j.version>
-        <websocket-api.version>1.1.1</websocket-api.version>
-        <tyrus.version>1.15</tyrus.version>
-        <jsonp-api.version>1.1.5</jsonp-api.version>
-        <jsonp-ri.version>1.1.5</jsonp-ri.version>
-        <jsonp-jaxrs.version>1.1.5</jsonp-jaxrs.version>
-        <json.bind-api.version>1.0.1</json.bind-api.version>
-        <yasson.version>1.0.3</yasson.version>
-        <concurrent-api.version>1.1.1</concurrent-api.version>
-        <concurrent.version>1.1.1</concurrent.version>
-        <javax.batch-api.version>1.0.1</javax.batch-api.version>
-        <com.ibm.jbatch.container.version>1.0.2</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>1.0.2</com.ibm.jbatch.spi.version>
-        <javax.management.j2ee-api.version>1.1.3</javax.management.j2ee-api.version>
-	    <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
-        <easymock.version>3.5</easymock.version>
-	<maven-rar-plugin.version>2.4</maven-rar-plugin.version>
-
-        <jaxws-api.version>2.3.1</jaxws-api.version>
-        <soap-api.version>1.4.0</soap-api.version>
-        <jakarta.jws-api.version>2.1.0</jakarta.jws-api.version>
-    </properties>
 
     <modules>
         <module>common</module>
         <module>libpam4j</module>
-	    <module>jaxr-ra</module>
-	    <module>ldapbp</module>
+        <module>ldapbp</module>
         <module>ha</module>
         <module>deployment</module>
         <module>admin</module>
@@ -153,423 +73,172 @@
         <module>ant-tasks</module>
     </modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>spec-version-maven-plugin</artifactId>
-                <version>1.6</version>
-                <configuration>
-                    <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
-                    <excludes>jakarta.inject.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar, jakarta.persistence.jar</excludes>
-                    <specs>
-                        <spec>
-                            <artifact>
-                                <groupId>com.sun.mail</groupId>
-                                <artifactId>jakarta.mail</artifactId>
-                                <version>${mail.version}</version>
-                            </artifact>
-                            <jarType>impl</jarType>
-                            <specVersion>1.6</specVersion>
-                            <implVersion>1.6.3</implVersion>
-                            <apiPackage>javax.mail</apiPackage>
-                            <implNamespace>com.sun.mail</implNamespace>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>org.glassfish</groupId>
-                                <artifactId>jakarta.json</artifactId>
-                                <version>${jsonp-ri.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>impl</jarType>
-                            <specVersion>1.1</specVersion>
-                            <implVersion>${jsonp-ri.version}</implVersion>
-                            <apiPackage>javax.json</apiPackage>
-                            <implNamespace>org.glassfish</implNamespace>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>org.eclipse</groupId>
-                                <artifactId>yasson</artifactId>
-                                <version>${yasson.version}</version>
-                            </artifact>
-                            <nonFinal>true</nonFinal>
-                            <jarType>impl</jarType>
-                            <specVersion>0.9</specVersion>
-                            <implVersion>${yasson.version}</implVersion>
-                            <apiPackage>javax.json.bind</apiPackage>
-                            <implNamespace>org.eclipse</implNamespace>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>org.glassfish</groupId>
-                                <artifactId>jakarta.faces</artifactId>
-                                <version>${mojarra.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>impl</jarType>
-                            <specVersion>2.2</specVersion>
-                            <implVersion>${mojarra.version}</implVersion>
-                            <apiPackage>javax.faces</apiPackage>
-                            <implNamespace>org.glassfish</implNamespace>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.security.jacc</groupId>
-                                <artifactId>jakarta.security.jacc-api</artifactId>
-                                <version>${jakarta.security.jacc-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jakarta.security.jacc-api.version}</specVersion>
-                            <specImplVersion>${jakarta.security.jacc-api.version}</specImplVersion>
-                            <apiPackage>jakarta.security.jacc</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.security.auth.message</groupId>
-                                <artifactId>jakarta.security.auth.message-api</artifactId>
-                                <version>${jakarta.security.auth.message-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jakarta.security.auth.message-api.version}</specVersion>
-                            <specImplVersion>${jakarta.security.auth.message-api.version}</specImplVersion>
-                            <apiPackage>jakarta.security.auth.message</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.servlet.jsp.jstl</groupId>
-                                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-                                <version>${jstl-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.2</specVersion>
-                            <specImplVersion>${jstl-impl.version}</specImplVersion>
-                            <apiPackage>javax.servlet.jsp.jstl</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.transaction</groupId>
-                                <artifactId>jakarta.transaction-api</artifactId>
-                                <version>${javax.transaction-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${javax.transaction-api.version}</specVersion>
-                            <specImplVersion>${javax.transaction-api.version}</specImplVersion>
-                            <apiPackage>jakarta.transaction</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>javax.batch</groupId>
-                                <artifactId>javax.batch-api</artifactId>
-                                <version>${javax.batch-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.0</specVersion>
-			    <specImplVersion>${javax.batch-api.version}</specImplVersion>
-                            <apiPackage>javax.batch</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.jms</groupId>
-                                <artifactId>jakarta.jms-api</artifactId>
-                                <version>${jms-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jms-api.version}</specVersion>
-                            <specImplVersion>${jms-api.version}</specImplVersion>
-                            <apiPackage>javax.jms</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.enterprise.concurrent</groupId>
-                                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
-                                <version>${concurrent-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${concurrent-api.version}</specVersion>
-                            <specImplVersion>${concurrent-api.version}</specImplVersion>
-                            <apiPackage>javax.enterprise.concurrent</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.servlet</groupId>
-                                <artifactId>jakarta.servlet-api</artifactId>
-                                <version>${servlet-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>3.1</specVersion>
-                            <specImplVersion>${servlet-api.version}</specImplVersion>
-                            <apiPackage>jakarta.servlet</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.annotation</groupId>
-                                <artifactId>jakarta.annotation-api</artifactId>
-                                <version>${jakarta.annotation-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jakarta.annotation-api.version}</specVersion>
-                            <specImplVersion>${jakarta.annotation-api.version}</specImplVersion>
-                            <apiPackage>javax.annotation</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.websocket</groupId>
-                                <artifactId>jakarta.websocket-api</artifactId>
-                                <version>${websocket-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.0</specVersion>
-                            <specImplVersion>${websocket-api.version}</specImplVersion>
-                            <apiPackage>javax.websocket</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.ws.rs</groupId>
-                                <artifactId>jakarta.ws.rs-api</artifactId>
-                                <version>${jax-rs-api.impl.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jax-rs-api.spec.version}</specVersion>
-                            <specImplVersion>${jax-rs-api.impl.version}</specImplVersion>
-                            <apiPackage>javax.ws.rs</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.ejb</groupId>
-                                <artifactId>jakarta.ejb-api</artifactId>
-                                <version>${javax.ejb-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${javax.ejb-api.version}</specVersion>
-			    <specImplVersion>${javax.ejb-api.version}</specImplVersion>
-                            <apiPackage>javax.ejb</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.interceptor</groupId>
-                                <artifactId>jakarta.interceptor-api</artifactId>
-                                <version>${jakarta.interceptor-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jakarta.interceptor-api.version}</specVersion>
-			    <specImplVersion>${jakarta.interceptor-api.version}</specImplVersion>
-                            <apiPackage>javax.interceptor</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.resource</groupId>
-                                <artifactId>jakarta.resource-api</artifactId>
-                                <version>${jakarta.resource-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jakarta.resource-api.version}</specVersion>
-			    <specImplVersion>${jakarta.resource-api.version}</specImplVersion>
-                            <apiPackage>javax.resource</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.xml.registry</groupId>
-                                <artifactId>jakarta.xml.registry-api</artifactId>
-                                <version>${jakarta.xml.registry-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.0</specVersion>
-                            <specImplVersion>${jakarta.xml.registry-api.version}</specImplVersion>
-                            <apiPackage>javax.xml.registry</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.xml.rpc</groupId>
-                                <artifactId>jakarta.xml.rpc-api</artifactId>
-                                <version>${jakarta.xml.rpc-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.1</specVersion>
-                            <specImplVersion>${jakarta.xml.rpc-api.version}</specImplVersion>
-                            <apiPackage>javax.xml.rpc</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.enterprise.deploy</groupId>
-                                <artifactId>jakarta.enterprise.deploy-api</artifactId>
-                                <version>${javax.enterprise.deploy-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.6</specVersion>
-                            <specImplVersion>1.6</specImplVersion>
-                            <apiPackage>javax.enterprise.deploy</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.management.j2ee</groupId>
-                                <artifactId>jakarta.management.j2ee-api</artifactId>
-                                <version>${javax.management.j2ee-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>1.1</specVersion>
-                            <specImplVersion>${javax.management.j2ee-api.version}</specImplVersion>
-                            <apiPackage>javax.management.j2ee</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.servlet.jsp</groupId>
-                                <artifactId>jakarta.servlet.jsp-api</artifactId>
-                                <version>${jsp-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>2.3</specVersion>
-                            <specImplVersion>2.3.1</specImplVersion>
-                            <apiPackage>javax.servlet.jsp</apiPackage>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>org.glassfish</groupId>
-                                <artifactId>jakarta.el</artifactId>
-                                <version>${jakarta.el.version}</version>
-                            </artifact>
-                            <jarType>impl</jarType>
-                            <specVersion>3.0</specVersion>
-                            <implVersion>3.0.0</implVersion>
-                            <apiPackage>javax.el</apiPackage>
-                            <implNamespace>com.sun.el</implNamespace>
-                        </spec>
-                        <spec>
-                            <artifact>
-                                <groupId>jakarta.security.enterprise</groupId>
-                                <artifactId>jakarta.security.enterprise-api</artifactId>
-                                <version>${jakarta.security.enterprise-api.version}</version>
-                            </artifact>
-                            <nonFinal>false</nonFinal>
-                            <jarType>api</jarType>
-                            <specVersion>${jakarta.security.enterprise-api.version}</specVersion>
-                            <specImplVersion>${jakarta.security.enterprise.version}</specImplVersion>
-                            <apiPackage>javax.security.enterprise</apiPackage>
-                            <implNamespace>org.glassfish.soteria</implNamespace>
-                        </spec>
-                    </specs>
-                </configuration>
-            </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                <groupId>org.glassfish.copyright</groupId>
-                <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                <configuration>
-                    <exclude combine.children="append">
-                         <pattern>connectors/descriptors/src/main/resources/glassfish/lib/dtds/</pattern>
-                         <pattern>connectors/descriptors/src/main/resources/glassfish/lib/schemas/</pattern>
-                         <pattern>admingui/war/src/main/webapp/3rd-party-license</pattern>
-                         <pattern>packager/legal/</pattern>
-                         <pattern>common/annotation-framework/src/main/java/org/glassfish/apf/skip-annotation-class-list</pattern>
-                         <pattern>admingui/common/src/main/resources/applications/appEdit/</pattern>
-                         <pattern>.layout</pattern>
-                         <pattern>admingui/war/src/main/webapp/j_security_check</pattern>
-                         <pattern>appclient/client/acc/src/test/resources/topSecret.stuff</pattern>
-                    </exclude>
-                </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-rar-plugin</artifactId>
-                    <version>${maven-rar-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+    <scm>
+        <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
+        <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
+        <url>https://github.com/eclipse-ee4j/glassfish</url>
+    </scm>
+
+    <properties>
+        <product.name>Eclipse GlassFish</product.name>
+        <brief_product_name>GlassFish</brief_product_name>
+        <abbrev_product_name>glassfish</abbrev_product_name>
+        <admin_client_command_name>asadmin</admin_client_command_name>
+        <default_domain_template>appserver-domain.jar</default_domain_template>
+        <version_prefix />
+        <version_suffix />
+        <major_version>6</major_version>
+        <minor_version>0</minor_version>
+        <update_version>0</update_version>
+        <install.dir.name>glassfish6</install.dir.name>
+
+        <javaee.major_version>8</javaee.major_version>
+        <javaee.version_qualifier>-b${build.id}</javaee.version_qualifier>
+        <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
+
+
+        <!-- Jakarta Faces -->
+        <jakarta.faces-api.version>3.0.0-RC1</jakarta.faces-api.version>
+        <mojarra.version>3.0.0-RC1</mojarra.version>
+
+        <!-- Jakarta WebSocket -->
+        <websocket-api.version>2.0.0-M1</websocket-api.version>
+        <tyrus.version>2.0.0-M1</tyrus.version>
+
+        <!-- Jakarta Concurrency -->
+        <concurrent-api.version>2.0.0-RC2</concurrent-api.version>
+        <concurrent.version>2.0.0-RC2</concurrent.version>
+
+        <!-- Jakarta Interceptors -->
+        <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
+
+        <!-- Jakarta EE Security + Authentication/Authorization -->
+        <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>
+        <jakarta.authorization-api.version>2.0.0-RC1</jakarta.authorization-api.version>
+        <jakarta.security.auth.message-api.version>2.0.0-RC1</jakarta.security.auth.message-api.version>
+        <jakarta.security.enterprise.version>1.0.1</jakarta.security.enterprise.version>
+
+        <!-- Jakarta Messaging -->
+        <jms-api.version>3.0.0-RC1</jms-api.version>
+        <mq.version>6.0.0-M1</mq.version>
+
+        <!-- Jakarta Persistence -->
+        <jakarta-persistence-api.version>3.0.0-RC2</jakarta-persistence-api.version>
+        <eclipselink.version>3.0.0-M1</eclipselink.version>
+
+        <!-- Jakarta Transactions -->
+        <jakarta.transaction-api.version>2.0.0-RC2</jakarta.transaction-api.version>
+
+        <!-- Jakarta Connectors -->
+        <jakarta.resource-api.version>2.0.0-RC1</jakarta.resource-api.version>
+
+        <!-- Jakarta Batch -->
+        <jakarta.batch-api.version>2.0.0-M2</jakarta.batch-api.version>
+        <com.ibm.jbatch.container.version>2.0.0-M1</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0-M1</com.ibm.jbatch.spi.version>
+
+        <!-- Jakarta Enterprise beans -->
+        <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>
+
+        <!-- Jakarta JSON -->
+        <jsonp-api.version>2.0.0-RC2</jsonp-api.version>
+        <jsonp-ri.version>2.0.0-RC2</jsonp-ri.version>
+        <jsonp-jaxrs.version>2.0.0-RC2</jsonp-jaxrs.version>
+        <json.bind-api.version>2.0.0-RC1</json.bind-api.version>
+        <yasson.version>2.0.0-M1</yasson.version>
+
+        <!-- Jakarta Server Pages -->
+        <jsp-api.version>3.0.0-M1</jsp-api.version>
+        <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
+
+        <!-- Used for Jakarta XML Web Services -->
+        <woodstox.version>5.1.0</woodstox.version>
+        <stax2-api.version>4.1</stax2-api.version>
+        <jaxws-api.version>2.3.1</jaxws-api.version>
+        <soap-api.version>1.4.0</soap-api.version>
+        <jakarta.jws-api.version>2.1.0</jakarta.jws-api.version>
+
+        <!-- Jakarta XML Binding -->
+        <jaxb.version>3.0.0-M2</jaxb.version>
+
+        <!-- Jakarta Standard Tag Library -->
+        <jstl-api.version>2.0.0-RC1</jstl-api.version>
+        <jstl-impl.version>2.0.0-M1</jstl-impl.version>
+
+        <!-- CDI -->
+        <cdi-api.version>3.0.0-M2</cdi-api.version>
+        <weld.version>4.0.0.Alpha2</weld.version>
+        <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
+
+
+        <!-- Admin console components -->
+        <jsftemplating.version>3.0.0-M1</jsftemplating.version>
+        <jsf-ext.version>0.2</jsf-ext.version>
+        <woodstock.version>5.0.0-M1</woodstock.version>
+
+
+        <!-- Other -->
+
+        <dbschema.version>6.7</dbschema.version>
+        <schema2beans.version>6.7</schema2beans.version>
+        <derby.version>10.13.1.3</derby.version>
+        <wsdl4j.version>1.5.0</wsdl4j.version>
+        <easymock.version>3.5</easymock.version>
+        <maven-rar-plugin.version>2.4</maven-rar-plugin.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>jakarta.ejb</groupId>
-                <artifactId>jakarta.ejb-api</artifactId>
-                <version>${javax.ejb-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.interceptor</groupId>
-                <artifactId>jakarta.interceptor-api</artifactId>
-                <version>${jakarta.interceptor-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.transaction</groupId>
-                <artifactId>jakarta.transaction-api</artifactId>
-                <version>${javax.transaction-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.transaction.cdi</groupId>
-                <artifactId>javax.transaction.cdi-api</artifactId>
-                <version>${javax.transaction.cdi-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.rpc</groupId>
-                <artifactId>jakarta.xml.rpc-api</artifactId>
-                <version>${jakarta.xml.rpc-api.version}</version>
-            </dependency>
+            <!-- Jakarta Faces -->
             <dependency>
                 <groupId>jakarta.faces</groupId>
                 <artifactId>jakarta.faces-api</artifactId>
                 <version>${jakarta.faces-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>${cdi-api.version}</version>
-                <exclusions>
-                  <exclusion>
-                      <groupId>javax.inject</groupId>
-                      <artifactId>javax.inject</artifactId>
-                  </exclusion>
-              </exclusions>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.faces</artifactId>
+                <version>${mojarra.version}</version>
+            </dependency>
+            
+            <!-- Jakarta WebSocket -->
+            <dependency>
+                <groupId>jakarta.websocket</groupId>
+                <artifactId>jakarta.websocket-api</artifactId>
+                <version>${websocket-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.resource</groupId>
-                <artifactId>jakarta.resource-api</artifactId>
-                <version>${jakarta.resource-api.version}</version>
+                <groupId>org.glassfish.tyrus</groupId>
+                <artifactId>tyrus-bom</artifactId>
+                <version>${tyrus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            
+            <!-- Jakarta Concurrency -->
+            <dependency>
+                <groupId>jakarta.enterprise.concurrent</groupId>
+                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+                <version>${concurrent-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.enterprise.deploy</groupId>
-                <artifactId>jakarta.enterprise.deploy-api</artifactId>
-                <version>${javax.enterprise.deploy-api.version}</version>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.enterprise.concurrent</artifactId>
+                <version>${concurrent.version}</version>
             </dependency>
+            
+            <!-- Jakarta Interceptors -->
             <dependency>
-                <groupId>jakarta.security.jacc</groupId>
-                <artifactId>jakarta.security.jacc-api</artifactId>
-                <version>${jakarta.security.jacc-api.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>jakarta.interceptor</groupId>
+                <artifactId>jakarta.interceptor-api</artifactId>
+                <version>${jakarta.interceptor-api.version}</version>
+            </dependency>
+            
+            <!-- Jakarta EE Security + Authentication/Authorization -->
+            <dependency>
+                <groupId>jakarta.security.enterprise</groupId>
+                <artifactId>jakarta.security.enterprise-api</artifactId>
+                <version>${jakarta.security.enterprise-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.security.auth.message</groupId>
@@ -577,13 +246,43 @@
                 <version>${jakarta.security.auth.message-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.faces</artifactId>
-                <version>${mojarra.version}</version>
+                <groupId>jakarta.authorization</groupId>
+                <artifactId>jakarta.authorization-api</artifactId>
+                <version>${jakarta.authorization-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.persistence</groupId>
-                <artifactId>jakarta.persistence</artifactId>
+                <groupId>org.glassfish.soteria</groupId>
+                <artifactId>jakarta.security.enterprise</artifactId>
+                <version>${jakarta.security.enterprise.version}</version>
+            </dependency>
+            
+            <!-- Jakarta Messaging -->
+            <dependency>
+                <groupId>jakarta.jms</groupId>
+                <artifactId>jakarta.jms-api</artifactId>
+                <version>${jms-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.mq</groupId>
+                <artifactId>mq-distribution</artifactId>
+                <version>${mq.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>com.sun.messaging.mq</groupId>
+                <artifactId>imqjmx</artifactId>
+                <version>4.3</version>
+            </dependency>
+            
+            <!-- Jakarta Persistence -->
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
                 <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
@@ -623,32 +322,112 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
-                <artifactId>org.eclipse.persistence.antlr</artifactId>
-                <version>${eclipselink.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.persistence</groupId>
                 <artifactId>org.eclipse.persistence.asm</artifactId>
                 <version>${eclipselink.version}</version>
             </dependency>
+            
+            <!-- Jakarta Transactions -->
             <dependency>
-                <groupId>com.fasterxml.woodstox</groupId>
-                <artifactId>woodstox-core</artifactId>
-                <version>${woodstox.version}</version>
+                <groupId>jakarta.transaction</groupId>
+                <artifactId>jakarta.transaction-api</artifactId>
+                <version>${jakarta.transaction-api.version}</version>
+            </dependency>
+            
+            <!-- Jakarta Connectors -->
+            <dependency>
+                <groupId>jakarta.resource</groupId>
+                <artifactId>jakarta.resource-api</artifactId>
+                <version>${jakarta.resource-api.version}</version>
+            </dependency>
+            
+            <!-- Jakarta Batch -->
+            <dependency>
+                <groupId>jakarta.batch</groupId>
+                <artifactId>jakarta.batch-api</artifactId>
+                <version>${jakarta.batch-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.metro</groupId>
-                <artifactId>webservices-osgi</artifactId>
-                <version>${webservices.version}</version>
+                <groupId>com.ibm.jbatch</groupId>
+                <artifactId>com.ibm.jbatch.container</artifactId>
+                <version>${com.ibm.jbatch.container.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.metro</groupId>
-                <artifactId>webservices-extra-jdk-packages</artifactId>
-                <version>${webservices.version}</version>
+                <groupId>com.ibm.jbatch</groupId>
+                <artifactId>com.ibm.jbatch.spi</artifactId>
+                <version>${com.ibm.jbatch.spi.version}</version>
+            </dependency>
+            
+            <!-- Jakarta Validation -->
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator-cdi</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+            
+            <!-- Jakarta Expression Language -->
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.el</artifactId>
+                <version>${jakarta.el.version}</version>
+            </dependency>
+        
+            <!-- Jakarta Enterprise beans -->
+            <dependency>
+                <groupId>jakarta.ejb</groupId>
+                <artifactId>jakarta.ejb-api</artifactId>
+                <version>${jakarta.ejb-api.version}</version>
+            </dependency>
+            
+            <!-- Jakarta JSON -->
+            <dependency>
+                <groupId>jakarta.json</groupId>
+                <artifactId>jakarta.json-api</artifactId>
+                <version>${jsonp-api.version}</version>
             </dependency>
             <dependency>
+                <groupId>jakarta.json.bind</groupId>
+                <artifactId>jakarta.json.bind-api</artifactId>
+                <version>${json.bind-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.json</artifactId>
+                <version>${jsonp-ri.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jsonp-jaxrs</artifactId>
+                <version>${jsonp-jaxrs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse</groupId>
+                <artifactId>yasson</artifactId>
+                <version>${yasson.version}</version>
+            </dependency>
+            
+            <!-- Jakarta Server Pages -->
+            <dependency>
+                <groupId>jakarta.servlet.jsp</groupId>
+                <artifactId>jakarta.servlet.jsp-api</artifactId>
+                <version>${jsp-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.web</groupId>
+                <artifactId>jakarta.servlet.jsp</artifactId>
+                <version>${jsp-impl.version}</version>
+            </dependency>
+            
+            <!-- Jakarta XML Web Services -->
+            <dependency>
+                <!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
                 <groupId>org.glassfish.metro</groupId>
                 <artifactId>webservices-api-osgi</artifactId>
+                <version>${webservices.version}</version>
+            </dependency>
+            <dependency>
+                <!-- This is actually Metro -->
+                <groupId>org.glassfish.metro</groupId>
+                <artifactId>webservices-osgi</artifactId>
                 <version>${webservices.version}</version>
             </dependency>
             <dependency>
@@ -657,19 +436,9 @@
                 <version>${webservices.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-osgi</artifactId>
-                <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${jaxb-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.registry</groupId>
-                <artifactId>jakarta.xml.registry-api</artifactId>
-                <version>${jakarta.xml.registry-api.version}</version>
+                <groupId>com.fasterxml.woodstox</groupId>
+                <artifactId>woodstox-core</artifactId>
+                <version>${woodstox.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
@@ -677,9 +446,56 @@
                 <version>${stax2-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>wsdl4j</groupId>
-                <artifactId>wsdl4j</artifactId>
-                <version>${wsdl4j.version}</version>
+                <groupId>javax.xml.ws</groupId>
+                <artifactId>jaxws-api</artifactId>
+                <version>${jaxws-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.soap</groupId>
+                <artifactId>javax.xml.soap-api</artifactId>
+                <version>${soap-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.jws</groupId>
+                <artifactId>jakarta.jws-api</artifactId>
+                <version>${jakarta.jws-api.version}</version>
+            </dependency>
+            
+            <!-- Jakarta XML Binding -->
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jaxb-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-osgi</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            
+            <!-- Jakarta Standard Tag Library -->
+            <dependency>
+                <groupId>jakarta.servlet.jsp.jstl</groupId>
+                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                <version>${jstl-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.web</groupId>
+                <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+                <version>${jstl-impl.version}</version>
+            </dependency>
+            
+            <!-- CDI -->
+            <dependency>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>${cdi-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.inject</groupId>
+                        <artifactId>jakarta.inject</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld</groupId>
@@ -698,25 +514,33 @@
                 <version>${weld.version}</version>
             </dependency>
             <dependency>
-                 <groupId>org.jboss.classfilewriter</groupId>
-                 <artifactId>jboss-classfilewriter</artifactId>
-                 <version>${jboss.classfilewriter.version}</version>
-             </dependency>
-             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-shaded</artifactId>
                 <version>${weld.version}</version>
             </dependency>
-
             <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>jakarta.servlet.jsp</artifactId>
-                <version>${jsp-impl.version}</version>
+                <groupId>org.jboss.classfilewriter</groupId>
+                <artifactId>jboss-classfilewriter</artifactId>
+                <version>${jboss.classfilewriter.version}</version>
+            </dependency>
+            
+            
+            <!-- Admin console components -->
+            <dependency>
+                <groupId>org.glassfish.jsftemplating</groupId>
+                <artifactId>jsftemplating</artifactId>
+                <version>${jsftemplating.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
-                <version>${jakarta.el.version}</version>
+                <groupId>org.glassfish.jsftemplating</groupId>
+                <artifactId>jsftemplating-dt</artifactId>
+                <version>${jsftemplating.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.faces.extensions</groupId>
@@ -731,30 +555,13 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
-                <artifactId>webui-jsf</artifactId>
+                <artifactId>woodstock-webui-jsf</artifactId>
                 <version>${woodstock.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
-                <artifactId>webui-jsf-suntheme</artifactId>
+                <artifactId>woodstock-webui-jsf-suntheme</artifactId>
                 <version>${woodstock.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jsftemplating</groupId>
-                <artifactId>jsftemplating</artifactId>
-                <version>${jsftemplating.version}</version>
-
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jsftemplating</groupId>
-                <artifactId>jsftemplating-dt</artifactId>
-                <version>${jsftemplating.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>
@@ -776,145 +583,21 @@
                 <artifactId>dataprovider</artifactId>
                 <version>1.0</version>
             </dependency>
-            <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>1.3.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.messaging.mq</groupId>
-                <artifactId>imqjmx</artifactId>
-                <version>4.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.mq</groupId>
-                <artifactId>mq-distribution</artifactId>
-                <version>${mq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.jms</groupId>
-                <artifactId>jakarta.jms-api</artifactId>
-                <version>${jms-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.servlet.jsp</groupId>
-                <artifactId>jakarta.servlet.jsp-api</artifactId>
-                <version>${jsp-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.servlet.jsp.jstl</groupId>
-                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-                <version>${jstl-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-                <version>${jstl-impl.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.json</artifactId>
-                <version>${jsonp-ri.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jsonp-jaxrs</artifactId>
-                <version>${jsonp-jaxrs.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.json</groupId>
-                <artifactId>jakarta.json-api</artifactId>
-                <version>${jsonp-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.json.bind</groupId>
-                <artifactId>jakarta.json.bind-api</artifactId>
-                <version>${json.bind-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse</groupId>
-                <artifactId>yasson</artifactId>
-                <version>${yasson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.management.j2ee</groupId>
-                <artifactId>jakarta.management.j2ee-api</artifactId>
-                <version>${javax.management.j2ee-api.version}</version>
-            </dependency>
+            
+            <!-- HK2 -->
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
                 <version>${osgi-resource-locator.version}</version>
             </dependency>
+            
+            
+            <!--  Derby - embedded database -->
             <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-javaee-base</artifactId>
-                <version>1.0.9</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-web-container</artifactId>
-                <version>2.0.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-ejb-container</artifactId>
-                <version>1.0.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-jpa</artifactId>
-                <version>1.0.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-jpa-extension</artifactId>
-                <version>1.0.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-http</artifactId>
-                <version>1.0.8</version>
-            </dependency>
-	        <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-cdi</artifactId>
-                <version>1.0.6</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-jta</artifactId>
-                <version>1.0.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-jdbc</artifactId>
-                <version>1.0.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.fighterfish</groupId>
-                <artifactId>osgi-ee-resources</artifactId>
-                <version>2.0.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.ha</groupId>
-                <artifactId>ha-api</artifactId>
-                <version>${ha-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.websocket</groupId>
-                <artifactId>jakarta.websocket-api</artifactId>
-                <version>${websocket-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.enterprise.concurrent</groupId>
-                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
-                <version>${concurrent-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.enterprise.concurrent</artifactId>
-                <version>${concurrent.version}</version>
+                <groupId>org.glassfish.external</groupId>
+                <artifactId>derby</artifactId>
+                <version>${derby.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
@@ -926,103 +609,341 @@
                 <artifactId>schema2beans</artifactId>
                 <version>${schema2beans.version}</version>
             </dependency>
+            
+            
+            <!-- Other -->
+            <dependency>
+                <groupId>org.glassfish.ha</groupId>
+                <artifactId>ha-api</artifactId>
+                <version>${ha-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
                 <version>2.0.4</version>
             </dependency>
             <dependency>
-                <groupId>javax.batch</groupId>
-                <artifactId>javax.batch-api</artifactId>
-                <version>${javax.batch-api.version}</version>
+                <groupId>wsdl4j</groupId>
+                <artifactId>wsdl4j</artifactId>
+                <version>${wsdl4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibm.jbatch</groupId>
-                <artifactId>com.ibm.jbatch.container</artifactId>
-                <version>${com.ibm.jbatch.container.version}</version>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta.activation-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibm.jbatch</groupId>
-                <artifactId>com.ibm.jbatch.spi</artifactId>
-                <version>${com.ibm.jbatch.spi.version}</version>
+                <groupId>com.sun.activation</groupId>
+                <artifactId>jakarta.activation</artifactId>
+                <version>${jakarta.activation.version}</version>
             </dependency>
-            <!--
-                only used to satisfy findbugs,
-                can be removed once GLASSFISH-20835 is resolved
-            -->
-            <dependency>
-                <groupId>org.netbeans.external</groupId>
-                <artifactId>ddl</artifactId>
-                <version>RELEASE82</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.tyrus</groupId>
-                <artifactId>tyrus-bom</artifactId>
-                <version>${tyrus.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate.validator</groupId>
-                <artifactId>hibernate-validator-cdi</artifactId>
-                <version>${hibernate-validator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.soteria</groupId>
-                <artifactId>jakarta.security.enterprise</artifactId>
-                <version>${jakarta.security.enterprise.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.security.enterprise</groupId>
-                <artifactId>jakarta.security.enterprise-api</artifactId>
-                <version>${jakarta.security.enterprise-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.external</groupId>
-                <artifactId>derby</artifactId>
-                <version>${derby.version}</version>
-                <type>zip</type>
-           </dependency>
-           <dependency>
-               <groupId>jakarta.activation</groupId>
-               <artifactId>jakarta.activation-api</artifactId>
-               <version>${jakarta.activation-api.version}</version>
-           </dependency>
-           <dependency>
-               <groupId>com.sun.activation</groupId>
-               <artifactId>jakarta.activation</artifactId>
-               <version>${jakarta.activation.version}</version>
-           </dependency>
-           <dependency>
-               <groupId>javax.xml.ws</groupId>
-               <artifactId>jaxws-api</artifactId>
-               <version>${jaxws-api.version}</version>
-           </dependency>
-           <dependency>
-               <groupId>javax.xml.soap</groupId>
-               <artifactId>javax.xml.soap-api</artifactId>
-               <version>${soap-api.version}</version>
-           </dependency>
-           <dependency>
-               <groupId>jakarta.jws</groupId>
-               <artifactId>jakarta.jws-api</artifactId>
-               <version>${jakarta.jws-api.version}</version>
-           </dependency>
-      </dependencies>
+        </dependencies>
     </dependencyManagement>
 
-    <profiles>
-         <profile>
-            <id>javaee-api</id>
-            <activation>
-                <property>
-                    <name>release-phase-all</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <modules>
-                <module>javaee-api</module>
-            </modules>
-        </profile>
-    </profiles>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.glassfish.copyright</groupId>
+                    <artifactId>glassfish-copyright-maven-plugin</artifactId>
+                    <configuration>
+                        <exclude combine.children="append">
+                            <pattern>connectors/descriptors/src/main/resources/glassfish/lib/dtds/</pattern>
+                            <pattern>connectors/descriptors/src/main/resources/glassfish/lib/schemas/</pattern>
+                            <pattern>admingui/war/src/main/webapp/3rd-party-license</pattern>
+                            <pattern>packager/legal/</pattern>
+                            <pattern>common/annotation-framework/src/main/java/org/glassfish/apf/skip-annotation-class-list</pattern>
+                            <pattern>admingui/common/src/main/resources/applications/appEdit/</pattern>
+                            <pattern>.layout</pattern>
+                            <pattern>admingui/war/src/main/webapp/j_security_check</pattern>
+                            <pattern>appclient/client/acc/src/test/resources/topSecret.stuff</pattern>
+                        </exclude>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-rar-plugin</artifactId>
+                    <version>${maven-rar-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.glassfish.build</groupId>
+                <artifactId>spec-version-maven-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
+                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar,
+                        jakarta.persistence.jar</excludes>
+                    <specs>
+                        <spec>
+                            <artifact>
+                                <groupId>com.sun.mail</groupId>
+                                <artifactId>jakarta.mail</artifactId>
+                                <version>${mail.version}</version>
+                            </artifact>
+                            <jarType>impl</jarType>
+                            <specVersion>2.0</specVersion>
+                            <implVersion>2.0.0</implVersion>
+                            <apiPackage>jakarta.mail</apiPackage>
+                            <implNamespace>com.sun.mail</implNamespace>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>org.glassfish</groupId>
+                                <artifactId>jakarta.json</artifactId>
+                                <version>${jsonp-ri.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>impl</jarType>
+                            <specVersion>1.1</specVersion>
+                            <implVersion>${jsonp-ri.version}</implVersion>
+                            <apiPackage>jakarta.json</apiPackage>
+                            <implNamespace>org.glassfish</implNamespace>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>org.eclipse</groupId>
+                                <artifactId>yasson</artifactId>
+                                <version>${yasson.version}</version>
+                            </artifact>
+                            <nonFinal>true</nonFinal>
+                            <jarType>impl</jarType>
+                            <specVersion>0.9</specVersion>
+                            <implVersion>${yasson.version}</implVersion>
+                            <apiPackage>jakarta.json.bind</apiPackage>
+                            <implNamespace>org.eclipse</implNamespace>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>org.glassfish</groupId>
+                                <artifactId>jakarta.faces</artifactId>
+                                <version>${mojarra.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>impl</jarType>
+                            <specVersion>2.2</specVersion>
+                            <implVersion>${mojarra.version}</implVersion>
+                            <apiPackage>jakarta.faces</apiPackage>
+                            <implNamespace>org.glassfish</implNamespace>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.authorization</groupId>
+                                <artifactId>jakarta.authorization-api</artifactId>
+                                <version>${jakarta.authorization-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.authorization-api.version}</specVersion>
+                            <specImplVersion>${jakarta.authorization-api.version}</specImplVersion>
+                            <apiPackage>jakarta.authorization</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.security.auth.message</groupId>
+                                <artifactId>jakarta.security.auth.message-api</artifactId>
+                                <version>${jakarta.security.auth.message-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.security.auth.message-api.version}</specVersion>
+                            <specImplVersion>${jakarta.security.auth.message-api.version}</specImplVersion>
+                            <apiPackage>jakarta.security.auth.message</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.servlet.jsp.jstl</groupId>
+                                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                                <version>${jstl-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>2.0</specVersion>
+                            <specImplVersion>${jstl-impl.version}</specImplVersion>
+                            <apiPackage>jakarta.servlet.jsp.jstl</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.transaction</groupId>
+                                <artifactId>jakarta.transaction-api</artifactId>
+                                <version>${jakarta.transaction-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.transaction-api.version}</specVersion>
+                            <specImplVersion>${jakarta.transaction-api.version}</specImplVersion>
+                            <apiPackage>jakarta.transaction</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.batch</groupId>
+                                <artifactId>jakarta.batch-api</artifactId>
+                                <version>${jakarta.batch-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>1.0</specVersion>
+                            <specImplVersion>${jakarta.batch-api.version}</specImplVersion>
+                            <apiPackage>jakarta.batch</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.jms</groupId>
+                                <artifactId>jakarta.jms-api</artifactId>
+                                <version>${jms-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jms-api.version}</specVersion>
+                            <specImplVersion>${jms-api.version}</specImplVersion>
+                            <apiPackage>jakarta.jms</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.enterprise.concurrent</groupId>
+                                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+                                <version>${concurrent-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${concurrent-api.version}</specVersion>
+                            <specImplVersion>${concurrent-api.version}</specImplVersion>
+                            <apiPackage>jakarta.enterprise.concurrent</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.servlet</groupId>
+                                <artifactId>jakarta.servlet-api</artifactId>
+                                <version>${servlet-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>3.1</specVersion>
+                            <specImplVersion>${servlet-api.version}</specImplVersion>
+                            <apiPackage>jakarta.servlet</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.annotation</groupId>
+                                <artifactId>jakarta.annotation-api</artifactId>
+                                <version>${jakarta.annotation-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.annotation-api.version}</specVersion>
+                            <specImplVersion>${jakarta.annotation-api.version}</specImplVersion>
+                            <apiPackage>jakarta.annotation</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.websocket</groupId>
+                                <artifactId>jakarta.websocket-api</artifactId>
+                                <version>${websocket-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>2.0</specVersion>
+                            <specImplVersion>${websocket-api.version}</specImplVersion>
+                            <apiPackage>jakarta.websocket</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.ws.rs</groupId>
+                                <artifactId>jakarta.ws.rs-api</artifactId>
+                                <version>${jax-rs-api.impl.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jax-rs-api.spec.version}</specVersion>
+                            <specImplVersion>${jax-rs-api.impl.version}</specImplVersion>
+                            <apiPackage>jakarta.ws.rs</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.ejb</groupId>
+                                <artifactId>jakarta.ejb-api</artifactId>
+                                <version>${jakarta.ejb-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.ejb-api.version}</specVersion>
+                            <specImplVersion>${jakarta.ejb-api.version}</specImplVersion>
+                            <apiPackage>jakarta.ejb</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.interceptor</groupId>
+                                <artifactId>jakarta.interceptor-api</artifactId>
+                                <version>${jakarta.interceptor-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.interceptor-api.version}</specVersion>
+                            <specImplVersion>${jakarta.interceptor-api.version}</specImplVersion>
+                            <apiPackage>jakarta.interceptor</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.resource</groupId>
+                                <artifactId>jakarta.resource-api</artifactId>
+                                <version>${jakarta.resource-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.resource-api.version}</specVersion>
+                            <specImplVersion>${jakarta.resource-api.version}</specImplVersion>
+                            <apiPackage>jakarta.resource</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.servlet.jsp</groupId>
+                                <artifactId>jakarta.servlet.jsp-api</artifactId>
+                                <version>${jsp-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>2.3</specVersion>
+                            <specImplVersion>2.3.1</specImplVersion>
+                            <apiPackage>jakarta.servlet.jsp</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>org.glassfish</groupId>
+                                <artifactId>jakarta.el</artifactId>
+                                <version>${jakarta.el.version}</version>
+                            </artifact>
+                            <jarType>impl</jarType>
+                            <specVersion>3.0</specVersion>
+                            <implVersion>3.0.0</implVersion>
+                            <apiPackage>jakarta.el</apiPackage>
+                            <implNamespace>com.sun.el</implNamespace>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.security.enterprise</groupId>
+                                <artifactId>jakarta.security.enterprise-api</artifactId>
+                                <version>${jakarta.security.enterprise-api.version}</version>
+                            </artifact>
+                            <nonFinal>false</nonFinal>
+                            <jarType>api</jarType>
+                            <specVersion>${jakarta.security.enterprise-api.version}</specVersion>
+                            <specImplVersion>${jakarta.security.enterprise.version}</specImplVersion>
+                            <apiPackage>javax.security.enterprise</apiPackage>
+                            <implNamespace>org.glassfish.soteria</implNamespace>
+                        </spec>
+                    </specs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

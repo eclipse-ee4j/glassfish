@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package connector;
 
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.ResourceAdapter;
-import javax.validation.constraints.*;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.validation.constraints.*;
 
 /**
  * This class is supposed to implemented as a JavaBean

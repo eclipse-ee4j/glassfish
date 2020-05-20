@@ -18,11 +18,11 @@ package com.sun.s1peqe.security.integration.bankadmin.daomanager;
 
 import java.util.Properties;
 import javax.naming.*;
-import javax.ejb.SessionContext;
-import javax.ejb.CreateException;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.CreateException;
 import javax.naming.NamingException;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EJBHome;
 import javax.rmi.PortableRemoteObject;
 
 import java.util.logging.*;
@@ -86,7 +86,7 @@ public class BeanTestClient
           ejbObject=((CustomerRemoteHome)ejbHome).createCustomer(customerID,customerID);
 	  System.out.println("Remote interface of Customer Bean"+ejbObject.getClass().getName());
           
-      }catch(javax.ejb.DuplicateKeyException e) {
+      }catch(jakarta.ejb.DuplicateKeyException e) {
           System.out.println("Exception:Customer already exists");
       }
       catch (Throwable e) {
@@ -109,7 +109,7 @@ public class BeanTestClient
 	  System.out.println("inside getting remote interface");
 	  try{
 		  try{ejbObject=((CustomerRemoteHome)ejbHome).findByPrimaryKey(customerID);
-		  }catch(javax.ejb.ObjectNotFoundException e){System.out.println("customer does not exist");}
+		  }catch(jakarta.ejb.ObjectNotFoundException e){System.out.println("customer does not exist");}
 		  if(ejbObject==null)
 		  {
 			  System.out.println("Creating customer..."+customerID);

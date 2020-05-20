@@ -22,14 +22,14 @@ import org.apache.catalina.Globals;
 import org.apache.catalina.core.RequestFacadeHelper;
 import org.apache.catalina.security.SecurityUtil;
 
-import javax.servlet.*;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.Part;
-import javax.servlet.http.PushBuilder;
+import jakarta.servlet.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
+import jakarta.servlet.http.PushBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.AccessControlException;
@@ -37,7 +37,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.SecurityPermission;
 import java.util.*;
-import javax.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.HttpServletMapping;
 
 
 /**

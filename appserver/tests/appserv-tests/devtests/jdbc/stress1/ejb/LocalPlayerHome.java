@@ -17,7 +17,7 @@
 package com.sun.s1asdev.jdbc.stress1.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface LocalPlayerHome extends EJBLocalHome {
     

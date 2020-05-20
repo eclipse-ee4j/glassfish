@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 public class Foo {

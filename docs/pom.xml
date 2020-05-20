@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ 
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ 
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+ 
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+ 
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ 
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main</groupId>
+        <artifactId>nucleus-parent</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+        <relativePath>../nucleus/parent</relativePath>
+    </parent>
+    <groupId>org.glassfish.docs</groupId>
+    <artifactId>docs</artifactId>
+    <version>5.1.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Eclipse GlassFish Documentation</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <modules>
+        <module>parent</module>
+        <module>website</module>
+        <module>add-on-component-development-guide</module>
+        <module>administration-guide</module>
+        <module>application-deployment-guide</module>
+        <module>application-development-guide</module>
+        <module>deployment-planning-guide</module>
+        <module>embedded-server-guide</module>
+        <module>error-messages-reference</module>
+        <module>ha-administration-guide</module>
+        <module>installation-guide</module>
+        <module>performance-tuning-guide</module>
+        <module>quick-start-guide</module>
+        <module>reference-manual</module>
+        <module>release-notes</module>
+        <module>security-guide</module>
+        <module>troubleshooting-guide</module>
+        <module>upgrade-guide</module>
+        <module>distribution</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>publish-site</id>
+            <modules>
+                <module>publish</module>
+            </modules>
+        </profile>
+    </profiles>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[1.8.0,1.9.0)</version>
+                                    <message>You need JDK8 or lower</message>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+	<pluginManagement>
+	    <plugins>
+		<plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-publish-plugin</artifactId>
+                    <version>3.0.0</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.glassfish.doc</groupId>
+		    <artifactId>glassfish-doc-maven-plugin</artifactId>
+		    <version>1.2</version>
+		</plugin>
+	    </plugins>
+	</pluginManagement>
+    </build>
+</project>

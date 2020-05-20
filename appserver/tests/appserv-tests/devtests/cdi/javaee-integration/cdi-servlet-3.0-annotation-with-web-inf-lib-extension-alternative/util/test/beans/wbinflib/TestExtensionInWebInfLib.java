@@ -16,7 +16,7 @@
 
 package test.beans.wbinflib;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 public class TestExtensionInWebInfLib implements Extension {
 //no-op

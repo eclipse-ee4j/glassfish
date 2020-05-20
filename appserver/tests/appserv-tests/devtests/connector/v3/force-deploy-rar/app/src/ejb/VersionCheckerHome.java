@@ -16,8 +16,8 @@
 
 package beans;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
 
 public interface VersionCheckerHome extends EJBLocalHome {
     VersionChecker create() throws CreateException;

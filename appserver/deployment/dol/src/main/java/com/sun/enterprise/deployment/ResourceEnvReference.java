@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ public interface ResourceEnvReference extends ContextParameter {
     public String getName();
     public void setName(String refName);
 
-    /* Gets the type(javax.jms.Queue, javax.jms.Topic) of the destination */
+    /* Gets the type(jakarta.jms.Queue, jakarta.jms.Topic) of the destination */
     public String getType();
     public void setType(String refType);
 

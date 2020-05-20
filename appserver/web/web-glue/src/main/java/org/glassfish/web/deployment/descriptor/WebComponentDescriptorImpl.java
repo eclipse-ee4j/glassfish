@@ -33,8 +33,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 /**
@@ -457,10 +457,10 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
                         packageName = clazzPackage.getName();
                     }
 
-                    // the processing is stopped at javax.servlet package as
+                    // the processing is stopped at jakarta.servlet package as
                     // a) there is no user defined class there
                     // b) there is no security annotations used there
-                    while (clazz != null && (!clazz.getName().startsWith("javax.servlet."))
+                    while (clazz != null && (!clazz.getName().startsWith("jakarta.servlet."))
                             && searchingMethods.size() > 0) {
                         Package p = clazz.getPackage();
                         Method[] methods = clazz.getDeclaredMethods(); 

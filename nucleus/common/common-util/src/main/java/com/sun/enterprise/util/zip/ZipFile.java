@@ -334,7 +334,6 @@ public class ZipFile {
     private static final int BUFFER_SIZE = 0x10000; //64k
     private File explodeDir = null;
     private ArrayList<String> files = null;
-    private static final String specialDir = "META-INF/";//NOI18N
     private byte[] buffer = new byte[BUFFER_SIZE];
     private ZipInputStream zipStream = null;
     private static final Logger _utillogger = CULoggerInfo.getLogger();

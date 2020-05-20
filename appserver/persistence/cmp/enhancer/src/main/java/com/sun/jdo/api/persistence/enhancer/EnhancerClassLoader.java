@@ -379,7 +379,7 @@ public class EnhancerClassLoader extends URLClassLoader {
             //    java/util,         (Collection)
             //    java/io,           (PrintWriter)
             //    javax/sql,         (PMF->javax.sql.DataSource)
-            //    javax/transaction  (Tx->javax.transaction.Synchronization)
+            //    javax/transaction  (Tx->jakarta.transaction.Synchronization)
             //
             //@olsen: delegate loading of "safe" classes to parent
             //if (metaData.isTransientClass(classPath)) {

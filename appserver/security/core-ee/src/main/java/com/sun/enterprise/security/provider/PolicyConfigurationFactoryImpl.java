@@ -17,7 +17,7 @@
 package com.sun.enterprise.security.provider;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import javax.security.jacc.*;
+import jakarta.security.jacc.*;
 
 import java.io.IOException;
 import java.util.logging.*;
@@ -121,7 +121,7 @@ public class PolicyConfigurationFactoryImpl extends PolicyConfigurationFactory {
     * when called by an AccessControlContext that has not been
     * granted the "setPolicy" SecurityPermission.
     *
-    * @throws javax.security.jacc.PolicyContextException
+    * @throws jakarta.security.jacc.PolicyContextException
     * if the implementation throws a checked exception that has not been
     * accounted for by the getPolicyConfiguration method signature.
     * The exception thrown
@@ -171,7 +171,7 @@ public class PolicyConfigurationFactoryImpl extends PolicyConfigurationFactory {
     * when called by an AccessControlContext that has not been
     * granted the "setPolicy" SecurityPermission.
     *
-    * @throws javax.security.jacc.PolicyContextException
+    * @throws jakarta.security.jacc.PolicyContextException
     * if the implementation throws a checked exception that has not been
     * accounted for by the inService method signature. The exception thrown
     * by the implementation class will be encapsulated (during construction)

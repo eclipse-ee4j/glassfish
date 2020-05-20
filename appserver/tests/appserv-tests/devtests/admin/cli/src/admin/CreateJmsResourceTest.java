@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,28 +61,28 @@ public class CreateJmsResourceTest extends AdminBaseDevTest {
     }
 
     private void createJmsResourceWithoutForce() {
-        report("createJmsResourceWithoutForce-0", asadmin("create-jms-resource", "--restype", "javax.jms.Queue", "--property", "imqDestinationName=myQueue", QUEUE1));
+        report("createJmsResourceWithoutForce-0", asadmin("create-jms-resource", "--restype", "jakarta.jms.Queue", "--property", "imqDestinationName=myQueue", QUEUE1));
         checkResource("checkJmsResourceWithoutForce-0", QUEUE1);
-        report("createJmsResourceWithoutForce-1", asadmin("create-jms-resource", "--restype", "javax.jms.QueueConnectionFactory", FACTORY1));
+        report("createJmsResourceWithoutForce-1", asadmin("create-jms-resource", "--restype", "jakarta.jms.QueueConnectionFactory", FACTORY1));
         checkResource("checkJmsResourceWithoutForce-0", FACTORY1);
     }
 
     private void createJmsResourceWithForce() {
-        report("createJmsResourceWithForce-0", asadmin("create-jms-resource", "--restype", "javax.jms.Queue", "--property", "imqDestinationName=myQueue", "--force", QUEUE1));
+        report("createJmsResourceWithForce-0", asadmin("create-jms-resource", "--restype", "jakarta.jms.Queue", "--property", "imqDestinationName=myQueue", "--force", QUEUE1));
         checkResource("checkJmsResourceWithForce-0", QUEUE1);
-        report("createJmsResourceWithForce-1", asadmin("create-jms-resource", "--restype", "javax.jms.QueueConnectionFactory", "--force", FACTORY1));
+        report("createJmsResourceWithForce-1", asadmin("create-jms-resource", "--restype", "jakarta.jms.QueueConnectionFactory", "--force", FACTORY1));
         checkResource("checkJmsResourceWithForce-1", FACTORY1);
-        report("createJmsResourceWithForce-2", !asadmin("create-jms-resource", "--restype", "javax.jms.QueueConnectionFactory", "--force=xyz", FACTORY2));
-        report("createJmsResourceWithForce-3", asadmin("create-jms-resource", "--restype", "javax.jms.Queue", "--property", "imqDestinationName=myQueue", "--force", QUEUE2));
+        report("createJmsResourceWithForce-2", !asadmin("create-jms-resource", "--restype", "jakarta.jms.QueueConnectionFactory", "--force=xyz", FACTORY2));
+        report("createJmsResourceWithForce-3", asadmin("create-jms-resource", "--restype", "jakarta.jms.Queue", "--property", "imqDestinationName=myQueue", "--force", QUEUE2));
         checkResource("checkJmsResourceWithForce-3", QUEUE1);
-        report("createJmsResourceWithForce-4", asadmin("create-jms-resource", "--restype", "javax.jms.QueueConnectionFactory", "--force", FACTORY2));
+        report("createJmsResourceWithForce-4", asadmin("create-jms-resource", "--restype", "jakarta.jms.QueueConnectionFactory", "--force", FACTORY2));
         checkResource("checkJmsResourceWithForce-4", FACTORY2);
     }
 
     // GLASSFISH-21655: When a CF is created with same JNDI name as that of an existing resource, there should not be a CF or a connection pool created
     private void createJmsCFWithDupName() {
-        asadmin("create-jms-resource", "--restype", "javax.jms.Topic", FACTORY3);
-        report("createJmsCFWithDupName-0", !asadmin("create-jms-resource", "--restype", "javax.jms.ConnectionFactory", FACTORY3));
+        asadmin("create-jms-resource", "--restype", "jakarta.jms.Topic", FACTORY3);
+        report("createJmsCFWithDupName-0", !asadmin("create-jms-resource", "--restype", "jakarta.jms.ConnectionFactory", FACTORY3));
         AsadminReturn result = asadminWithOutput("list-connector-connection-pools");
         report("createJmsCFWithDupName-1", !result.out.contains(POOL1));
     }

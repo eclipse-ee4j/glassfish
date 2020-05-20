@@ -37,7 +37,7 @@ import java.beans.PropertyVetoException;
 import java.util.*;
 import org.glassfish.api.admin.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Update Connector Work Security Map command

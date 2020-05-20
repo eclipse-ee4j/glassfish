@@ -22,8 +22,8 @@ import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
 
 /**
  *

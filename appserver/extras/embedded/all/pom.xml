@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,11 +22,11 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>glassfish-embedded-all</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <name>Embedded GlassFish All-In-One</name>
 
     <packaging>jar</packaging>
@@ -172,11 +172,6 @@
          <version>${project.version}</version>
          <optional>true</optional>
      </dependency>
-     <dependency>
-         <groupId>jakarta.enterprise.deploy</groupId>
-         <artifactId>jakarta.enterprise.deploy-api</artifactId>
-         <optional>true</optional>
-     </dependency>
      <!-- glassfish-common-web -->
      <dependency>
          <groupId>org.glassfish.main.security</groupId>
@@ -199,12 +194,6 @@
      <dependency>
          <groupId>org.glassfish.main.common</groupId>
          <artifactId>container-common</artifactId>
-         <version>${project.version}</version>
-         <optional>true</optional>
-     </dependency>
-     <dependency>
-         <groupId>org.glassfish.main.deployment</groupId>
-         <artifactId>deployment-client</artifactId>
          <version>${project.version}</version>
          <optional>true</optional>
      </dependency>
@@ -383,8 +372,8 @@
          <optional>true</optional>
      </dependency>
      <dependency>
-         <groupId>jakarta.security.jacc</groupId>
-         <artifactId>jakarta.security.jacc-api</artifactId>
+         <groupId>jakarta.authorization</groupId>
+         <artifactId>jakarta.authorization-api</artifactId>
          <optional>true</optional>
      </dependency>
      <dependency>
@@ -399,13 +388,18 @@
          <optional>true</optional>
      </dependency>
      <dependency>
+         <groupId>com.sun.activation</groupId>
+         <artifactId>jakarta.activation</artifactId>
+         <optional>true</optional>
+     </dependency>
+     <dependency>
          <groupId>jakarta.servlet</groupId>
          <artifactId>jakarta.servlet-api</artifactId>
          <optional>true</optional>
      </dependency>
      <dependency>
-         <groupId>org.eclipse.persistence</groupId>
-         <artifactId>jakarta.persistence</artifactId>
+         <groupId>jakarta.persistence</groupId>
+         <artifactId>jakarta.persistence-api</artifactId>
          <optional>true</optional>
      </dependency>
      <dependency>
@@ -465,13 +459,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>mejb-frag</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            <optional>true</optional>
-       </dependency>
-        <dependency>
             <groupId>org.glassfish.main.jaxr-ra</groupId>
             <artifactId>jaxr-ra-rar</artifactId>
             <version>${project.version}</version>
@@ -491,8 +478,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.batch</groupId>
-            <artifactId>javax.batch-api</artifactId>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -503,11 +490,6 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.enterprise.concurrent</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.rpc</groupId>
-            <artifactId>jakarta.xml.rpc-api</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-corba -->
@@ -735,15 +717,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.bean-validator</groupId>
-            <artifactId>bean-validator</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.bean-validator-cdi</groupId>
-            <artifactId>bean-validator-cdi</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator-cdi</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -828,13 +808,13 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.resources</groupId>
-            <artifactId>javamail-connector</artifactId>
+            <artifactId>mail-connector</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.resources</groupId>
-            <artifactId>javamail-runtime</artifactId>
+            <artifactId>mail-runtime</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -975,12 +955,6 @@
             <groupId>org.glassfish.main.persistence</groupId>
             <artifactId>jpa-container</artifactId>
             <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.antlr</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1457,6 +1431,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet-core</artifactId>
             <optional>true</optional>
         </dependency>
@@ -1633,13 +1612,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-osgi</artifactId>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

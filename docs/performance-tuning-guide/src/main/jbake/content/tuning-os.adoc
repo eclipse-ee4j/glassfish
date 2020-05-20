@@ -1,0 +1,916 @@
+type=page
+status=published
+title=Tuning the Operating System and Platform
+prev=tuning-java.html
+~~~~~~
+Tuning the Operating System and Platform
+========================================
+
+[[GSPTG00007]][[abeir]]
+
+
+[[tuning-the-operating-system-and-platform]]
+5 Tuning the Operating System and Platform
+------------------------------------------
+
+This chapter discusses tuning the operating system (OS) for optimum
+performance. It discusses the following topics:
+
+* link:#abeis[Server Scaling]
+* link:#gfpzp[Solaris 10 Platform-Specific Tuning Information]
+* link:#abeix[Tuning for the Solaris OS]
+* link:#abeje[Tuning for Solaris on x86]
+* link:#abeji[Tuning for Linux platforms]
+* link:#gfpzh[Tuning UltraSPARC CMT-Based Systems]
+
+[[abeis]][[GSPTG00074]][[server-scaling]]
+
+Server Scaling
+~~~~~~~~~~~~~~
+
+This section provides recommendations for optimal performance scaling
+server for the following server subsystems:
+
+* link:#abeit[Processors]
+* link:#abeiu[Memory]
+* link:#abeiv[Disk Space]
+* link:#abeiw[Networking]
+* link:#glglf[UDP Buffer Sizes]
+
+[[abeit]][[GSPTG00210]][[processors]]
+
+Processors
+^^^^^^^^^^
+
+The GlassFish Server automatically takes advantage of multiple CPUs. In
+general, the effectiveness of multiple CPUs varies with the operating
+system and the workload, but more processors will generally improve
+dynamic content performance.
+
+Static content involves mostly input/output (I/O) rather than CPU
+activity. If the server is tuned properly, increasing primary memory
+will increase its content caching and thus increase the relative amount
+of time it spends in I/O versus CPU activity. Studies have shown that
+doubling the number of CPUs increases servlet performance by 50 to 80
+percent.
+
+[[abeiu]][[GSPTG00211]][[memory]]
+
+Memory
+^^^^^^
+
+See the section Hardware and Software Requirements in the GlassFish
+Server Release Notes for specific memory recommendations for each
+supported operating system.
+
+[[abeiv]][[GSPTG00212]][[disk-space]]
+
+Disk Space
+^^^^^^^^^^
+
+It is best to have enough disk space for the OS, document tree, and log
+files. In most cases 2GB total is sufficient.
+
+Put the OS, swap/paging file, GlassFish Server logs, and document tree
+each on separate hard drives. This way, if the log files fill up the log
+drive, the OS does not suffer. Also, its easy to tell if the OS paging
+file is causing drive activity, for example.
+
+OS vendors generally provide specific recommendations for how much swap
+or paging space to allocate. Based on Oracle testing, GlassFish Server
+performs best with swap space equal to RAM, plus enough to map the
+document tree.
+
+[[abeiw]][[GSPTG00213]][[networking]]
+
+Networking
+^^^^^^^^^^
+
+To determine the bandwidth the application needs, determine the
+following values:
+
+* The number of peak concurrent users (N ~peak~) the server needs to
+handle.
+* The average request size on your site, r. The average request can
+include multiple documents. When in doubt, use the home page and all its
+associated files and graphics.
+* Decide how long, t, the average user will be willing to wait for a
+document at peak utilization.
+
+Then, the bandwidth required is:
+
+N~peak~r / t
+
+For example, to support a peak of 50 users with an average document size
+of 24 Kbytes, and transferring each document in an average of 5 seconds,
+requires 240 Kbytes (1920 Kbit/s). So the site needs two T1 lines (each
+1544 Kbit/s). This bandwidth also allows some overhead for growth.
+
+The server's network interface card must support more than the WAN to
+which it is connected. For example, if you have up to three T1 lines,
+you can get by with a 10BaseT interface. Up to a T3 line (45 Mbit/s),
+you can use 100BaseT. But if you have more than 50 Mbit/s of WAN
+bandwidth, consider configuring multiple 100BaseT interfaces, or look at
+Gigabit Ethernet technology.
+
+[[glglf]][[GSPTG00214]][[udp-buffer-sizes]]
+
+UDP Buffer Sizes
+^^^^^^^^^^^^^^^^
+
+GlassFish Server uses User Datagram Protocol (UDP) for the transmission
+of multicast messages to GlassFish Server instances in a cluster. For
+peak performance from a GlassFish Server cluster that uses UDP
+multicast, limit the need to retransmit UDP messages. To limit the need
+to retransmit UDP messages, set the size of the UDP buffer to avoid
+excessive UDP datagram loss.
+
+[[sthref13]][[to-determine-an-optimal-udp-buffer-size]]
+
+To Determine an Optimal UDP Buffer Size
++++++++++++++++++++++++++++++++++++++++
+
+The size of UDP buffer that is required to prevent excessive UDP
+datagram loss depends on many factors, such as:
+
+* The number of instances in the cluster
+* The number of instances on each host
+* The number of processors
+* The amount of memory
+* The speed of the hard disk for virtual memory
+
+If only one instance is running on each host in your cluster, the
+default UDP buffer size should suffice. If several instances are running
+on each host, determine whether the UDP buffer is large enough by
+testing for the loss of UDP packets.
+
+
+[width="100%",cols="<100%",]
+|=======================================================================
+a|
+Note:
+
+On Linux systems, the default UDP buffer size might be insufficient even
+if only one instance is running on each host. In this situation, set the
+UDP buffer size as explained in link:#glglz[To Set the UDP Buffer Size
+on Linux Systems].
+
+|=======================================================================
+
+
+[[glgiw]]
+
+1.  Ensure that no GlassFish Server clusters are running. +
+If necessary, stop any running clusters as explained in
+"link:../ha-administration-guide/instances.html#GSHAG00110[To Stop a Cluster]" in GlassFish Server Open Source
+Edition High Availability Administration Guide.
+2.  Determine the absolute number of lost UDP packets when no clusters
+are running. +
+How you determine the number of lost packets depends on the operating
+system. For example:
+* On Linux systems, use the `netstat -su` command and look for the
+`packet receive errors` count in the `Udp` section.
+* On AIX systems, use the `netstat -s` command and look for the
+`fragments dropped (dup or out of space)` count in the `ip` section.
+3.  Start all the clusters that are configured for your installation of
+GlassFish Server. +
+Start each cluster as explained in "link:../ha-administration-guide/instances.html#GSHAG00109[To Start a
+Cluster]" in GlassFish Server Open Source Edition High Availability
+Administration Guide.
+4.  Determine the absolute number of lost UDP packets after the clusters
+are started.
+5.  If the difference in the number of lost packets is significant,
+increase the size of the UDP buffer.
+
+[[glglz]][[GSPTG00040]][[to-set-the-udp-buffer-size-on-linux-systems]]
+
+To Set the UDP Buffer Size on Linux Systems
++++++++++++++++++++++++++++++++++++++++++++
+
+On Linux systems, a default UDP buffer size is set for the client, but
+not for the server. Therefore, on Linux systems, the UDP buffer size
+might have to be increased. Setting the UDP buffer size involves setting
+the following kernel parameters:
+
+* `net.core.rmem_max`
+* `net.core.wmem_max`
+* `net.core.rmem_default`
+* `net.core.wmem_default`
+
+Set the kernel parameters in the `/etc/sysctl.conf` file or at runtime.
+
+If you set the parameters in the `/etc/sysctl.conf` file, the settings
+are preserved when the system is rebooted. If you set the parameters at
+runtime, the settings are not preserved when the system is rebooted.
+
+* To set the parameters in the `/etc/sysctl.conf` file, add or edit the
+following lines in the file: +
+[source,oac_no_warn]
+----
+net.core.rmem_max=rmem-max
+net.core.wmem_max=wmem-max
+net.core.rmem_default=rmem-default
+net.core.wmem_default=wmem-default
+----
+* To set the parameters at runtime, use the sysctl command. +
+[source,oac_no_warn]
+----
+$ /sbin/sysctl -w net.core.rmem_max=rmem-max \
+net.core.wmem_max=wmem-max \
+net.core.rmem_default=rmem-default \
+net.core.wmem_default=wmem-default
+----
+
+[[sthref14]]
+
+Example 5-1 Setting the UDP Buffer Size in the `/etc/sysctl.conf` File
+
+This example shows the lines in the `/etc/sysctl.conf` file for setting
+the kernel parameters for controlling the UDP buffer size to 524288.
+
+[source,oac_no_warn]
+----
+net.core.rmem_max=524288
+net.core.wmem_max=524288
+net.core.rmem_default=524288
+net.core.wmem_default=524288
+----
+
+[[GSPTG00034]][[glgjp]]
+
+
+Example 5-2 Setting the UDP Buffer Size at Runtime
+
+This example sets the kernel parameters for controlling the UDP buffer
+size to 524288 at runtime.
+
+[source,oac_no_warn]
+----
+$ /sbin/sysctl -w net.core.rmem_max=524288 \
+net.core.wmem_max=52428 \
+net.core.rmem_default=52428 \
+net.core.wmem_default=524288
+net.core.rmem_max = 524288
+net.core.wmem_max = 52428
+net.core.rmem_default = 52428
+net.core.wmem_default = 524288
+----
+
+[[gfpzp]][[GSPTG00075]][[solaris-10-platform-specific-tuning-information]]
+
+Solaris 10 Platform-Specific Tuning Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Solaris Dynamic Tracing (DTrace) is a comprehensive dynamic tracing
+framework for the Solaris Operating System (OS). You can use the DTrace
+Toolkit to monitor the system. The DTrace Toolkit is available through
+the OpenSolaris project from the
+http://hub.opensolaris.org/bin/view/Community+Group+dtrace/dtracetoolkit[DTraceToolkit
+page]
+(`http://hub.opensolaris.org/bin/view/Community+Group+dtrace/dtracetoolkit`).
+
+[[abeix]][[GSPTG00076]][[tuning-for-the-solaris-os]]
+
+Tuning for the Solaris OS
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* link:#abeiy[Tuning Parameters]
+* link:#abeja[File Descriptor Setting]
+
+[[abeiy]][[GSPTG00215]][[tuning-parameters]]
+
+Tuning Parameters
+^^^^^^^^^^^^^^^^^
+
+Tuning Solaris TCP/IP settings benefits programs that open and close
+many sockets. Since the GlassFish Server operates with a small fixed set
+of connections, the performance gain might not be significant.
+
+The following table shows Solaris tuning parameters that affect
+performance and scalability benchmarking. These values are examples of
+how to tune your system for best performance.
+
+[[sthref15]][[gacmm]]
+
+Table 5-1 Tuning Parameters for Solaris
+
+[width="235%",cols="<14%,<6%,<34%,<29%,<17%",options="header",]
+|=======================================================================
+|Parameter |Scope |Default |Tuned Value |Comments
+|`rlim_fd_max` |`/etc/system` |65536 |65536 |Limit of process open file
+descriptors. Set to account for expected load (for associated sockets,
+files, and pipes if any).
+
+|`rlim_fd_cur` |`/etc/system` |1024 |8192 | +
+
+|`sq_max_size` |`/etc/system` |2 |0 |Controls streams driver queue size;
+setting to 0 makes it infinite so the performance runs won't be hit by
+lack of buffer space. Set on clients too. Note that setting
+`sq_max_size` to 0 might not be optimal for production systems with high
+network traffic.
+
+|`tcp_close_wait_interval` |`ndd /dev/tcp` |240000 |60000 |Set on
+clients too.
+
+|`tcp_time_wait_interval` |`ndd /dev/tcp` |240000 |60000 |Set on clients
+too.
+
+|`tcp_conn_req_max_q` |`ndd /dev/tcp` |128 |1024 | +
+
+|`tcp_conn_req_max_q0` |`ndd /dev/tcp` |1024 |4096 | +
+
+|`tcp_ip_abort_interval` |`ndd /dev/tcp` |480000 |60000 | +
+
+|`tcp_keepalive_interval` |`ndd /dev/tcp` |7200000 |900000 |For high
+traffic web sites, lower this value.
+
+|`tcp_rexmit_interval_initial` |`ndd /dev/tcp` |3000 |3000 |If
+retransmission is greater than 30-40%, you should increase this value.
+
+|`tcp_rexmit_interval_max` |`ndd /dev/tcp` |240000 |10000 | +
+
+|`tcp_rexmit_interval_min` |`ndd /dev/tcp` |200 |3000 | +
+
+|`tcp_smallest_anon_port` |`ndd /dev/tcp` |32768 |1024 |Set on clients
+too.
+
+|`tcp_slow_start_initial` |`ndd /dev/tcp` |1 |2 |Slightly faster
+transmission of small amounts of data.
+
+|`tcp_xmit_hiwat` |`ndd /dev/tcp` |8129 |32768 |Size of transmit buffer.
+
+|`tcp_recv_hiwat` |`ndd /dev/tcp` |8129 |32768 |Size of receive buffer.
+
+|`tcp_conn_hash_size` |`ndd /dev/tcp` |512 |8192 |Size of connection
+hash table. See link:#abeiz[Sizing the Connection Hash Table].
+|=======================================================================
+
+
+[[abeiz]][[GSPTG00153]][[sizing-the-connection-hash-table]]
+
+Sizing the Connection Hash Table
+++++++++++++++++++++++++++++++++
+
+The connection hash table keeps all the information for active TCP
+connections. Use the following command to get the size of the connection
+hash table:
+
+[source,oac_no_warn]
+----
+ndd -get /dev/tcp tcp_conn_hash
+----
+
+This value does not limit the number of connections, but it can cause
+connection hashing to take longer. The default size is 512.
+
+To make lookups more efficient, set the value to half of the number of
+concurrent TCP connections that are expected on the server. You can set
+this value only in `/etc/system`, and it becomes effective at boot time.
+
+Use the following command to get the current number of TCP connections.
+
+[source,oac_no_warn]
+----
+netstat -nP tcp|wc -l
+----
+
+[[abeja]][[GSPTG00216]][[file-descriptor-setting]]
+
+File Descriptor Setting
+^^^^^^^^^^^^^^^^^^^^^^^
+
+On the Solaris OS, setting the maximum number of open files property
+using `ulimit` has the biggest impact on efforts to support the maximum
+number of RMI/IIOP clients.
+
+To increase the hard limit, add the following command to `/etc/system`
+and reboot it once:
+
+[source,oac_no_warn]
+----
+set rlim_fd_max = 8192
+----
+
+Verify this hard limit by using the following command:
+
+[source,oac_no_warn]
+----
+ulimit -a -H
+----
+
+Once the above hard limit is set, increase the value of this property
+explicitly (up to this limit) using the following command:
+
+[source,oac_no_warn]
+----
+ulimit -n 8192
+----
+
+Verify this limit by using the following command:
+
+[source,oac_no_warn]
+----
+ulimit -a
+----
+
+For example, with the default `ulimit` of 64, a simple test driver can
+support only 25 concurrent clients, but with `ulimit` set to 8192, the
+same test driver can support 120 concurrent clients. The test driver
+spawned multiple threads, each of which performed a JNDI lookup and
+repeatedly called the same business method with a think (delay) time of
+500 ms between business method calls, exchanging data of about 100 KB.
+These settings apply to RMI/IIOP clients on the Solaris OS.
+
+[[abeje]][[GSPTG00077]][[tuning-for-solaris-on-x86]]
+
+Tuning for Solaris on x86
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following are some options to consider when tuning Solaris on x86
+for GlassFish Server:
+
+* link:#abejg[File Descriptors]
+* link:#abejh[IP Stack Settings]
+
+Some of the values depend on the system resources available. After
+making any changes to `/etc/system`, reboot the machines.
+
+[[abejg]][[GSPTG00217]][[file-descriptors]]
+
+File Descriptors
+^^^^^^^^^^^^^^^^
+
+Add (or edit) the following lines in the `/etc/system` file:
+
+[source,oac_no_warn]
+----
+set rlim_fd_max=65536
+set rlim_fd_cur=65536
+set sq_max_size=0
+set tcp:tcp_conn_hash_size=8192
+set autoup=60
+set pcisch:pci_stream_buf_enable=0
+----
+
+These settings affect the file descriptors.
+
+[[abejh]][[GSPTG00218]][[ip-stack-settings]]
+
+IP Stack Settings
+^^^^^^^^^^^^^^^^^
+
+Add (or edit) the following lines in the `/etc/system` file:
+
+[source,oac_no_warn]
+----
+set ip:tcp_squeue_wput=1
+set ip:tcp_squeue_close=1
+set ip:ip_squeue_bind=1
+set ip:ip_squeue_worker_wait=10
+set ip:ip_squeue_profile=0
+----
+
+These settings tune the IP stack.
+
+To preserve the changes to the file between system reboots, place the
+following changes to the default TCP variables in a startup script that
+gets executed when the system reboots:
+
+[source,oac_no_warn]
+----
+ndd -set /dev/tcp tcp_time_wait_interval 60000
+ndd -set /dev/tcp tcp_conn_req_max_q 16384
+ndd -set /dev/tcp tcp_conn_req_max_q0 16384
+ndd -set /dev/tcp tcp_ip_abort_interval 60000
+ndd -set /dev/tcp tcp_keepalive_interval 7200000
+ndd -set /dev/tcp tcp_rexmit_interval_initial 4000
+ndd -set /dev/tcp tcp_rexmit_interval_min 3000
+ndd -set /dev/tcp tcp_rexmit_interval_max 10000
+ndd -set /dev/tcp tcp_smallest_anon_port 32768
+ndd -set /dev/tcp tcp_slow_start_initial 2
+ndd -set /dev/tcp tcp_xmit_hiwat 32768
+ndd -set /dev/tcp tcp_recv_hiwat 32768
+----
+
+[[abeji]][[GSPTG00078]][[tuning-for-linux-platforms]]
+
+Tuning for Linux platforms
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To tune for maximum performance on Linux, you need to make adjustments
+to the following:
+
+* link:#gkvjl[Startup Files]
+* link:#abejj[File Descriptors]
+* link:#abejk[Virtual Memory]
+* link:#abejl[Network Interface]
+* link:#abejm[Disk I/O Settings]
+* link:#abejn[TCP/IP Settings]
+
+[[gkvjl]][[GSPTG00219]][[startup-files]]
+
+Startup Files
+^^^^^^^^^^^^^
+
+The following parameters must be added to the `/etc/rc.d/rc.local` file
+that gets executed during system startup.
+
+[source,oac_no_warn]
+----
+<-- begin
+#max file count updated ~256 descriptors per 4Mb.
+Specify number of file descriptors based on the amount of system RAM.
+echo "6553"> /proc/sys/fs/file-max
+#inode-max 3-4 times the file-max
+#file not present!!!!!
+#echo"262144"> /proc/sys/fs/inode-max
+#make more local ports available
+echo 1024 25000> /proc/sys/net/ipv4/ip_local_port_range
+#increase the memory available with socket buffers
+echo 2621143> /proc/sys/net/core/rmem_max
+echo 262143> /proc/sys/net/core/rmem_default
+#above configuration for 2.4.X kernels
+echo 4096 131072 262143> /proc/sys/net/ipv4/tcp_rmem
+echo 4096 13107262143> /proc/sys/net/ipv4/tcp_wmem
+#disable "RFC2018 TCP Selective Acknowledgements," and
+"RFC1323 TCP timestamps" echo 0> /proc/sys/net/ipv4/tcp_sack
+echo 0> /proc/sys/net/ipv4/tcp_timestamps
+#double maximum amount of memory allocated to shm at runtime
+echo "67108864"> /proc/sys/kernel/shmmax
+#improve virtual memory VM subsystem of the Linux
+echo "100 1200 128 512 15 5000 500 1884 2"> /proc/sys/vm/bdflush
+#we also do a sysctl
+sysctl -p /etc/sysctl.conf
+-- end -->
+----
+
+Additionally, create an `/etc/sysctl.conf` file and append it with the
+following values:
+
+[source,oac_no_warn]
+----
+<-- begin
+ #Disables packet forwarding
+net.ipv4.ip_forward = 0
+#Enables source route verification
+net.ipv4.conf.default.rp_filter = 1
+#Disables the magic-sysrq key
+kernel.sysrq = 0
+fs.file-max=65536
+vm.bdflush = 100 1200 128 512 15 5000 500 1884 2
+net.ipv4.ip_local_port_range = 1024 65000
+net.core.rmem_max= 262143
+net.core.rmem_default = 262143
+net.ipv4.tcp_rmem = 4096 131072 262143
+net.ipv4.tcp_wmem = 4096 131072 262143
+net.ipv4.tcp_sack = 0
+net.ipv4.tcp_timestamps = 0
+kernel.shmmax = 67108864
+----
+
+[[abejj]][[GSPTG00220]][[file-descriptors-1]]
+
+File Descriptors
+^^^^^^^^^^^^^^^^
+
+You may need to increase the number of file descriptors from the
+default. Having a higher number of file descriptors ensures that the
+server can open sockets under high load and not abort requests coming in
+from clients.
+
+Start by checking system limits for file descriptors with this command:
+
+[source,oac_no_warn]
+----
+cat /proc/sys/fs/file-max
+8192
+----
+
+The current limit shown is 8192. To increase it to 65535, use the
+following command (as root):
+
+[source,oac_no_warn]
+----
+echo "65535"> /proc/sys/fs/file-max
+----
+
+To make this value to survive a system reboot, add it to
+`/etc/sysctl.conf` and specify the maximum number of open files
+permitted:
+
+[source,oac_no_warn]
+----
+fs.file-max = 65535
+----
+
+Note that the parameter is not `proc.sys.fs.file-max`, as one might
+expect.
+
+To list the available parameters that can be modified using `sysctl`:
+
+[source,oac_no_warn]
+----
+sysctl -a
+----
+
+To load new values from the `sysctl.conf` file:
+
+[source,oac_no_warn]
+----
+sysctl -p /etc/sysctl.conf
+----
+
+To check and modify limits per shell, use the following command:
+
+[source,oac_no_warn]
+----
+limit
+----
+
+The output will look something like this:
+
+[source,oac_no_warn]
+----
+cputime         unlimited
+filesize        unlimited
+datasize        unlimited
+stacksize       8192 kbytes
+coredumpsize    0 kbytes
+memoryuse       unlimited
+descriptors     1024
+memorylocked    unlimited
+maxproc         8146
+openfiles       1024
+----
+
+The `openfiles` and `descriptors` show a limit of 1024. To increase the
+limit to 65535 for all users, edit `/etc/security/limits.conf` as root,
+and modify or add the `nofile` setting (number of file) entries:
+
+[source,oac_no_warn]
+----
+*         soft    nofile                     65535
+*         hard    nofile                     65535
+----
+
+The character "`*`" is a wildcard that identifies all users. You could
+also specify a user ID instead.
+
+Then edit `/etc/pam.d/login` and add the line:
+
+[source,oac_no_warn]
+----
+session required /lib/security/pam_limits.so
+----
+
+On Red Hat, you also need to edit `/etc/pam.d/sshd` and add the
+following line:
+
+[source,oac_no_warn]
+----
+session required /lib/security/pam_limits.so
+----
+
+On many systems, this procedure will be sufficient. Log in as a regular
+user and try it before doing the remaining steps. The remaining steps
+might not be required, depending on how pluggable authentication modules
+(PAM) and secure shell (SSH) are configured.
+
+[[abejk]][[GSPTG00221]][[virtual-memory]]
+
+Virtual Memory
+^^^^^^^^^^^^^^
+
+To change virtual memory settings, add the following to `/etc/rc.local`:
+
+[source,oac_no_warn]
+----
+echo 100 1200 128 512 15 5000 500 1884 2> /proc/sys/vm/bdflush
+----
+
+For more information, view the man pages for `bdflush`.
+
+[[abejl]][[GSPTG00222]][[network-interface]]
+
+Network Interface
+^^^^^^^^^^^^^^^^^
+
+To ensure that the network interface is operating in full duplex mode,
+add the following entry into `/etc/rc.local`:
+
+[source,oac_no_warn]
+----
+mii-tool -F 100baseTx-FD eth0
+----
+
+where eth0 is the name of the network interface card (NIC).
+
+[[abejm]][[GSPTG00223]][[disk-io-settings]]
+
+Disk I/O Settings
+^^^^^^^^^^^^^^^^^
+
+ 
+
+[[gaclw]][[GSPTG00041]][[to-tune-disk-io-performance-for-non-scsi-disks]]
+
+To tune disk I/O performance for non SCSI disks
++++++++++++++++++++++++++++++++++++++++++++++++
+
+1.  Test the disk speed. +
+Use this command: +
+[source,oac_no_warn]
+----
+/sbin/hdparm -t /dev/hdX
+----
+2.  Enable direct memory access (DMA). +
+Use this command: +
+[source,oac_no_warn]
+----
+/sbin/hdparm -d1 /dev/hdX
+----
+3.  Check the speed again using the `hdparm` command. +
+Given that DMA is not enabled by default, the transfer rate might have
+improved considerably. In order to do this at every reboot, add the
+`/sbin/hdparm -d1 /dev/hdX` line to `/etc/conf.d/local.start`,
+`/etc/init.d/rc.local`, or whatever the startup script is called. +
+For information on SCSI disks, see:
+http://people.redhat.com/alikins/system_tuning.html#scsi[System Tuning
+for Linux Servers — SCSI]
+(`http://people.redhat.com/alikins/system_tuning.html#scsi`).
+
+[[abejn]][[GSPTG00224]][[tcpip-settings]]
+
+TCP/IP Settings
+^^^^^^^^^^^^^^^
+
+ 
+
+[[gacmd]][[GSPTG00042]][[to-tune-the-tcpip-settings]]
+
+To tune the TCP/IP settings
++++++++++++++++++++++++++++
+
+1.  Add the following entry to `/etc/rc.local` +
+[source,oac_no_warn]
+----
+echo 30> /proc/sys/net/ipv4/tcp_fin_timeout
+echo 60000> /proc/sys/net/ipv4/tcp_keepalive_time
+echo 15000> /proc/sys/net/ipv4/tcp_keepalive_intvl
+echo 0> /proc/sys/net/ipv4/tcp_window_scaling
+----
+2.  Add the following to `/etc/sysctl.conf` +
+[source,oac_no_warn]
+----
+# Disables packet forwarding
+net.ipv4.ip_forward = 0
+# Enables source route verification
+net.ipv4.conf.default.rp_filter = 1
+# Disables the magic-sysrq key
+kernel.sysrq = 0
+net.ipv4.ip_local_port_range = 1204 65000
+net.core.rmem_max = 262140
+net.core.rmem_default = 262140
+net.ipv4.tcp_rmem = 4096 131072 262140
+net.ipv4.tcp_wmem = 4096 131072 262140
+net.ipv4.tcp_sack = 0
+net.ipv4.tcp_timestamps = 0
+net.ipv4.tcp_window_scaling = 0
+net.ipv4.tcp_keepalive_time = 60000
+net.ipv4.tcp_keepalive_intvl = 15000
+net.ipv4.tcp_fin_timeout = 30
+----
+3.  Add the following as the last entry in `/etc/rc.local` +
+[source,oac_no_warn]
+----
+sysctl -p /etc/sysctl.conf
+----
+4.  Reboot the system.
+5.  Use this command to increase the size of the transmit buffer: +
+[source,oac_no_warn]
+----
+tcp_recv_hiwat ndd /dev/tcp 8129 32768
+----
+
+[[gfpzh]][[GSPTG00079]][[tuning-ultrasparc-cmt-based-systems]]
+
+Tuning UltraSPARC CMT-Based Systems
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use a combination of tunable parameters and other parameters to tune
+UltraSPARC CMT-based systems. These values are an example of how you
+might tune your system to achieve the desired result.
+
+[[gfpzv]][[GSPTG00225]][[tuning-operating-system-and-tcp-settings]]
+
+Tuning Operating System and TCP Settings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following table shows the operating system tuning for Solaris 10
+used when benchmarking for performance and scalability on UtraSPARC
+CMT-based systems (64-bit systems).
+
+[[sthref16]][[gkuaa]]
+
+Table 5-2 Tuning 64-bit Systems for Performance Benchmarking
+
+[width="244%",cols="<14%,<6%,<32%,<32%,<16%",options="header",]
+|=======================================================================
+|Parameter |Scope |Default Value |Tuned Value |Comments
+|`rlim_fd_max` |`/etc/system` |65536 |260000 |Process open file
+descriptors limit; should account for the expected load (for the
+associated sockets, files, pipes if any).
+
+|`hires_tick` |`/etc/system` | + |1 | +
+
+|`sq_max_size` |`/etc/system` |2 |0 |Controls streams driver queue size;
+setting to 0 makes it infinite so the performance runs won't be hit by
+lack of buffer space. Set on clients too. Note that setting
+`sq_max_size` to 0 might not be optimal for production systems with high
+network traffic.
+
+|`ip:ip_squeue_bind` | + | + |0 | +
+
+|`ip:ip_squeue_fanout` | + | + |1 | +
+
+|`ipge:ipge_taskq_disable` |`/etc/system` | + |0 | +
+
+|`ipge:ipge_tx_ring_size` |`/etc/system` | + |2048 | +
+
+|`ipge:ipge_srv_fifo_depth` |`/etc/system` | + |2048 | +
+
+|`ipge:ipge_bcopy_thresh` |`/etc/system` | + |384 | +
+
+|`ipge:ipge_dvma_thresh` |`/etc/system` | + |384 | +
+
+|`ipge:ipge_tx_syncq` |`/etc/system` | + |1 | +
+
+|`tcp_conn_req_max_q` |`ndd /dev/tcp` |128 |3000 | +
+
+|`tcp_conn_req_max_q0` |`ndd /dev/tcp` |1024 |3000 | +
+
+|`tcp_max_buf` |`ndd /dev/tcp` | + |4194304 | +
+
+|`tcp_cwnd_max` |`ndd/dev/tcp` | + |2097152 | +
+
+|`tcp_xmit_hiwat` |`ndd /dev/tcp` |8129 |400000 |To increase the
+transmit buffer.
+
+|`tcp_recv_hiwat` |`ndd /dev/tcp` |8129 |400000 |To increase the receive
+buffer.
+|=======================================================================
+
+
+Note that the IPGE driver version is 1.25.25.
+
+[[gfpzm]][[GSPTG00226]][[disk-configuration]]
+
+Disk Configuration
+^^^^^^^^^^^^^^^^^^
+
+If HTTP access is logged, follow these guidelines for the disk:
+
+* Write access logs on faster disks or attached storage.
+* If running multiple instances, move the logs for each instance onto
+separate disks as much as possible.
+* Enable the disk read/write cache. Note that if you enable write cache
+on the disk, some writes might be lost if the disk fails.
+* Consider mounting the disks with the following options, which might
+yield better disk performance: `nologging`, `directio`, `noatime`.
+
+[[gfpzk]][[GSPTG00227]][[network-configuration]]
+
+Network Configuration
+^^^^^^^^^^^^^^^^^^^^^
+
+If more than one network interface card is used, make sure the network
+interrupts are not all going to the same core. Run the following script
+to disable interrupts:
+
+[source,oac_no_warn]
+----
+allpsr=`/usr/sbin/psrinfo | grep -v off-line | awk '{ print $1 }'`
+   set $allpsr
+   numpsr=$#
+   while [ $numpsr -gt 0 ];
+   do
+       shift
+       numpsr=`expr $numpsr - 1`
+       tmp=1
+       while [ $tmp -ne 4 ];
+       do
+           /usr/sbin/psradm -i $1
+           shift
+           numpsr=`expr $numpsr - 1`
+           tmp=`expr $tmp + 1`
+       done
+   done
+----
+
+Put all network interfaces into a single group. For example:
+
+[source,oac_no_warn]
+----
+$ifconfig ipge0 group webserver
+$ifconfig ipge1 group webserver
+----

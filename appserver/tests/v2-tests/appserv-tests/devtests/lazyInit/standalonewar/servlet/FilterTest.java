@@ -16,8 +16,8 @@
 
 package test;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.net.*;
 import java.io.*;
 public class FilterTest implements Filter{
@@ -42,7 +42,7 @@ public class FilterTest implements Filter{
         System.out.println("[Filter.destroy]");
     }    
     
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, javax.servlet.ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
         System.out.println("[Filter.doFilter]");
 
         try {
@@ -75,7 +75,7 @@ public class FilterTest implements Filter{
     }    
     
     
-    public void init(javax.servlet.FilterConfig filterConfig) throws javax.servlet.ServletException {
+    public void init(jakarta.servlet.FilterConfig filterConfig) throws jakarta.servlet.ServletException {
         System.out.println("[Filter.init]");
         context = filterConfig.getServletContext();
     }

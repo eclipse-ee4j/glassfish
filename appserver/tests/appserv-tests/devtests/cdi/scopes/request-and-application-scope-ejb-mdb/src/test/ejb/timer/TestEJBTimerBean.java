@@ -16,10 +16,10 @@
 
 package test.ejb.timer;
 
-import javax.ejb.Schedule;
-import javax.ejb.Stateless;
-import javax.ejb.Timer;
-import javax.inject.Inject;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Timer;
+import jakarta.inject.Inject;
 
 import test.beans.BeanToTestTimerUse;
 import test.beans.TestApplicationScopedBean;

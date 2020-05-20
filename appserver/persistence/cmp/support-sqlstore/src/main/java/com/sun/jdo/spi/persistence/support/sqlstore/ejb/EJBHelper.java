@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
 import java.util.ResourceBundle;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
@@ -95,12 +95,12 @@ public class EJBHelper {
     }
 
    /** Translates local representation of the Transaction Status to
-    * javax.transaction.Status value. In a non-managed environment
+    * jakarta.transaction.Status value. In a non-managed environment
     * returns the value passed to it as an argument.
     *
     * @see TransactionHelper#translateStatus(int st)
     * @param 	st 	Status value
-    * @return 	the javax.transaction.Status value of the status
+    * @return 	the jakarta.transaction.Status value of the status
     */
     public static int translateStatus(int st) {
         return myHelper.translateStatus(st);
@@ -153,8 +153,8 @@ public class EJBHelper {
     * Synchronization sync)
     * @param jta the Transaction instance for the calling thread.
     * @param sync the internal Synchronization instance to register.
-    * @throws javax.transaction.RollbackException.
-    * @throws javax.transaction.SystemException.
+    * @throws jakarta.transaction.RollbackException.
+    * @throws jakarta.transaction.SystemException.
     */
     public static void registerSynchronization(Transaction jta, 
         Synchronization sync) throws RollbackException, SystemException {
@@ -201,7 +201,7 @@ public class EJBHelper {
      * for managing local transaction boundaries and synchronization
      * for local transaction completion.
      * 
-     * @return javax.transaction.TransactionManager
+     * @return jakarta.transaction.TransactionManager
      */
     public static TransactionManager getLocalTransactionManager() {
         return myHelper.getLocalTransactionManager();
@@ -351,8 +351,8 @@ public class EJBHelper {
         * Synchronization sync)
         * @param jta the Transaction instance for the calling thread.
         * @param sync the internal Synchronization instance to register.
-        * @throws javax.transaction.RollbackException.
-        * @throws javax.transaction.SystemException.
+        * @throws jakarta.transaction.RollbackException.
+        * @throws jakarta.transaction.SystemException.
         */
         public void registerSynchronization(Transaction jta, 
             Synchronization sync) throws RollbackException, SystemException { }
@@ -398,7 +398,7 @@ public class EJBHelper {
          * for managing local transaction boundaries and synchronization
          * for local transaction completion.
          * 
-         * @return javax.transaction.TransactionManager
+         * @return jakarta.transaction.TransactionManager
          */
         public TransactionManager getLocalTransactionManager() {
             throw new JDOFatalInternalException(I18NHelper.getMessage(

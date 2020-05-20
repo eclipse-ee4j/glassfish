@@ -28,8 +28,8 @@ import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.util.*;
 
 import javax.management.ObjectName;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -45,7 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.enterprise.util.Utility;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 // END SJSWS 6324431
 
 /**

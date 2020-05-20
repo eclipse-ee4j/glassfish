@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import javax.transaction.SystemException;
+import jakarta.transaction.SystemException;
 import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 
 /**
@@ -60,11 +60,11 @@ public class ConnectionSharingTest implements SimpleTest{
         ResultSet rs = null;
 
         out.println("<h4> connection-sharing test </h4>");
-        javax.transaction.UserTransaction ut = null;
+        jakarta.transaction.UserTransaction ut = null;
         try {
             out.println("<br>Starting test ...");
             InitialContext ic = new InitialContext();
-            ut = (javax.transaction.UserTransaction) ic.lookup("java:comp/UserTransaction");
+            ut = (jakarta.transaction.UserTransaction) ic.lookup("java:comp/UserTransaction");
             out.println("<br>Able to lookup UserTransaction");
             ut.begin();
             out.println("<br> Started UserTransaction");

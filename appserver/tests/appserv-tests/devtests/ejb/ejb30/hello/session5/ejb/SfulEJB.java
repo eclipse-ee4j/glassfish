@@ -16,10 +16,10 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session5;
 
-import javax.ejb.Stateful;
-import javax.ejb.Remote;
-import javax.interceptor.Interceptors;
-import javax.ejb.EJBException;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remote;
+import jakarta.interceptor.Interceptors;
+import jakarta.ejb.EJBException;
 
 @Stateful
 @Remote({Sful.class, Sful2.class})

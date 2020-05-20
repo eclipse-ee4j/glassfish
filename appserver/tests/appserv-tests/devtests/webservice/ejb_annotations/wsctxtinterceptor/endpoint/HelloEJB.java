@@ -18,14 +18,14 @@ package endpoint;
 
 import java.util.Map;
 
-import javax.jws.WebService;
-import javax.ejb.Stateless;
+import jakarta.jws.WebService;
+import jakarta.ejb.Stateless;
 
-import javax.annotation.Resource;
-import javax.xml.ws.WebServiceContext;
+import jakarta.annotation.Resource;
+import jakarta.xml.ws.WebServiceContext;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 @WebService(endpointInterface="endpoint.Hello")
 @Stateless

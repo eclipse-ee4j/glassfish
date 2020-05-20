@@ -16,7 +16,7 @@
 
 package test.beans.wbinflib;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class AnotherTestBeanInWebInfLib {
     @Inject

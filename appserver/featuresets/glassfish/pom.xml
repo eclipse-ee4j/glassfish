@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>featuresets</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>glassfish</artifactId>
     <name>Glassfish Featureset</name>
@@ -55,17 +55,6 @@
             <artifactId>sun-as-jsr88-dm</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>mejb</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -108,8 +97,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.batch</groupId>
-            <artifactId>javax.batch-api</artifactId>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -172,16 +161,6 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.enterprise.concurrent</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.rpc</groupId>
-            <artifactId>jakarta.xml.rpc-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -488,6 +467,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
             <artifactId>woodstox-core</artifactId>
             <exclusions>
@@ -594,8 +577,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>jakarta.xml.registry</groupId>
-            <artifactId>jakarta.xml.registry-api</artifactId>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -604,10 +587,18 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.jaxr-ra</groupId>
-            <artifactId>jaxr-ra-rar</artifactId>
-            <version>${project.version}</version>
-            <type>rar</type>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>javax.xml.soap-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -869,36 +860,6 @@
         <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>jakarta.activation</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.ws</groupId>
-            <artifactId>jaxws-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.soap</groupId>
-            <artifactId>javax.xml.soap-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.jws</groupId>
-            <artifactId>jakarta.jws-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

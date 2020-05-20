@@ -18,9 +18,9 @@ package team;
 
 import java.util.Collection;
 import java.rmi.RemoteException;
-import javax.ejb.FinderException;
+import jakarta.ejb.FinderException;
 
-public interface Player extends  javax.ejb.EJBObject   {
+public interface Player extends  jakarta.ejb.EJBObject   {
 
     public String getPlayerId() throws RemoteException;
     public String getName() throws RemoteException;

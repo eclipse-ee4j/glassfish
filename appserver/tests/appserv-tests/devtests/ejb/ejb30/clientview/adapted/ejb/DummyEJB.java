@@ -16,12 +16,12 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.*;
 import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Stateful(mappedName="com.sun.s1asdev.ejb.ejb30.clientview.adapted.DummyEJB")
 @Remote({DummyRemote.class, DummyRemote2.class})

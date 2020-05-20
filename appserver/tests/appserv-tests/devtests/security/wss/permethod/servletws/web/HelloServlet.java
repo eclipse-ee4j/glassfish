@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.wss.permethod.servlet;
 
-import javax.servlet.SingleThreadModel;
+import jakarta.servlet.SingleThreadModel;
 import javax.xml.rpc.server.ServiceLifecycle;
 
 public class HelloServlet implements 

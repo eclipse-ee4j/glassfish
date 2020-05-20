@@ -18,6 +18,7 @@ package org.glassfish.resourcebase.resources.util;
 
 import com.sun.enterprise.config.serverbeans.*;
 import com.sun.logging.LogDomains;
+import com.sun.enterprise.config.serverbeans.Module;
 import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceConstants;

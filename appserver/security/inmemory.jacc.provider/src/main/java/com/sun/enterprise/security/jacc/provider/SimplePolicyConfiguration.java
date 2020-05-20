@@ -32,14 +32,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.management.MBeanPermission;
-import javax.security.jacc.EJBRoleRefPermission;
-import javax.security.jacc.PolicyConfiguration;
-import javax.security.jacc.PolicyContext;
-import javax.security.jacc.PolicyContextException;
-import javax.security.jacc.PolicyContextHandler;
-import javax.security.jacc.WebResourcePermission;
-import javax.security.jacc.WebRoleRefPermission;
-import javax.security.jacc.WebUserDataPermission;
+import jakarta.security.jacc.EJBRoleRefPermission;
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyContextHandler;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebRoleRefPermission;
+import jakarta.security.jacc.WebUserDataPermission;
 
 /**
  *
@@ -138,14 +138,14 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * if called by an AccessControlContext that has not been
      * granted the "setPolicy" SecurityPermission.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the getContextID method signature. The exception thrown
      * by the implementation class will be encapsulated (during construction)
      * in the thrown PolicyContextException.
      */
     public String getContextID()
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         return id;
     }
 
@@ -173,14 +173,14 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the addToRole method signature. The exception thrown
      * by the implementation class will be encapsulated (during construction)
      * in the thrown PolicyContextException.
      */
     public void addToRole(String roleName, PermissionCollection permissions)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -219,14 +219,14 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the addToRole method signature. The exception thrown
      * by the implementation class will be encapsulated (during construction)
      * in the thrown PolicyContextException.
      */
     public void addToRole(String roleName, Permission permission)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -257,7 +257,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the addToUncheckedPolicy method signature.
      * The exception thrown
@@ -265,7 +265,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * in the thrown PolicyContextException.
      */
     public void addToUncheckedPolicy(PermissionCollection permissions)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -300,7 +300,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the addToUncheckedPolicy method signature.
      * The exception thrown
@@ -308,7 +308,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * in the thrown PolicyContextException.
      */
     public void addToUncheckedPolicy(Permission permission)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -339,7 +339,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the addToExcludedPolicy method signature.
      * The exception thrown
@@ -347,7 +347,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * in the thrown PolicyContextException.
      */
     public void addToExcludedPolicy(PermissionCollection permissions)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -382,7 +382,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the addToExcludedPolicy method signature.
      * The exception thrown
@@ -390,7 +390,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * in the thrown PolicyContextException.
      */
     public void addToExcludedPolicy(Permission permission)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -421,14 +421,14 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the removeRole method signature. The exception thrown
      * by the implementation class will be encapsulated (during construction)
      * in the thrown PolicyContextException.
      */
     public void removeRole(String roleName)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -463,7 +463,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the removeUncheckedPolicy method signature.
      * The exception thrown
@@ -471,7 +471,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * in the thrown PolicyContextException.
      */
     public void removeUncheckedPolicy()
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -497,7 +497,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" or "inService" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the removeExcludedPolicy method signature.
      * The exception thrown
@@ -505,7 +505,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * in the thrown PolicyContextException.
      */
     public void removeExcludedPolicy()
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
         try {
@@ -551,7 +551,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * if called with an argument PolicyConfiguration whose Policy context
      * is equivalent to that of this PolicyConfiguration.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the linkConfiguration method signature. The exception
      * thrown
@@ -559,7 +559,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * in the thrown PolicyContextException.
      */
     public void linkConfiguration(PolicyConfiguration link)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
 
         checkSetPolicyPermission();
         pcrLock.lock();
@@ -589,13 +589,13 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * if called by an AccessControlContext that has not been
      * granted the "setPolicy" SecurityPermission.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the delete method signature. The exception thrown
      * by the implementation class will be encapsulated (during construction)
      * in the thrown PolicyContextException.
      */
-    public void delete() throws javax.security.jacc.PolicyContextException {
+    public void delete() throws jakarta.security.jacc.PolicyContextException {
 
         checkSetPolicyPermission();
         SharedState.removeLinks(id);
@@ -639,14 +639,14 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * PolicyConfiguration Object is "deleted" when this
      * method is called.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the commit method signature. The exception thrown
      * by the implementation class will be encapsulated (during construction)
      * in the thrown PolicyContextException.
      */
     public void commit()
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         boolean initRoles = false;
         pcwLock.lock();
@@ -683,14 +683,14 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * if called by an AccessControlContext that has not been
      * granted the "setPolicy" SecurityPermission.
      *
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      * if the implementation throws a checked exception that has not been
      * accounted for by the inService method signature. The exception thrown
      * by the implementation class will be encapsulated (during construction)
      * in the thrown PolicyContextException.
      */
     public boolean inService()
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         pcrLock.lock();
         try {
             return stateIs(INSERVICE_STATE);
@@ -719,7 +719,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
     }
 
     protected static boolean inService(String pcid)
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         SimplePolicyConfiguration pc = SharedState.lookupConfig(pcid);
         if (pc == null) {
             return false;
@@ -798,7 +798,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
 
     /**
      * Adds the principal-2-role mapping to the roles in the roleTable
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      */
     private void commitRoleMapping() throws PolicyContextException {
         JACCRoleMapper roleMapper = null;
@@ -938,7 +938,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * @param d 
      * @param p
      * @return integer -1 if excluded, 0 if not implied, 1 if implied.
-     * @throws javax.security.jacc.PolicyContextException
+     * @throws jakarta.security.jacc.PolicyContextException
      */
     private int doImplies(ProtectionDomain d, Permission p)
             throws PolicyContextException {

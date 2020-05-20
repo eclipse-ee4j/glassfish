@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 
 /**

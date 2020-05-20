@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,7 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.jsp.api.ResourceInjector;
 import org.glassfish.web.LogFacade;
 
-import javax.servlet.jsp.tagext.JspTag;
-import java.lang.String;
+import jakarta.servlet.jsp.tagext.JspTag;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;

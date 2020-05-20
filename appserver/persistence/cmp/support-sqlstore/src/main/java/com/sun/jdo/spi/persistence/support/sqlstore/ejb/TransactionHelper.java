@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
@@ -68,15 +68,15 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
     Transaction getTransaction();
 
     /** Translate local representation of the Transaction Status to
-     * javax.transaction.Status value if necessary. Otherwise this method
+     * jakarta.transaction.Status value if necessary. Otherwise this method
      * should return the value passed to it as an argument.
      * <P>This method is used during afterCompletion callbacks to translate
      * the parameter value passed by the application server to the
      * afterCompletion method.  The return value must be one of:
-     * <code>javax.transaction.Status.STATUS_COMMITTED</code> or
-     * <code>javax.transaction.Status.STATUS_ROLLED_BACK</code>.
+     * <code>jakarta.transaction.Status.STATUS_COMMITTED</code> or
+     * <code>jakarta.transaction.Status.STATUS_ROLLED_BACK</code>.
      * @param 	st 	local Status value
-     * @return the javax.transaction.Status value of the status
+     * @return the jakarta.transaction.Status value of the status
      */
     int translateStatus(int st);
 
@@ -106,7 +106,7 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * The second element is com.sun.jdo.api.persistence.support.PersistenceManager 
      * object that has been associated with the Transaction context for the 
      * calling thread. 
-     * The third element is javax.transaction.Transaction object that has been 
+     * The third element is jakarta.transaction.Transaction object that has been 
      * associated with the given instance of PersistenceManager. 
      * The return value is passed unchanged to the postInvoke method.
      *
@@ -131,8 +131,8 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
     *
     * @param jta the Transaction instance for the calling thread.
     * @param sync the internal Synchronization instance to register.
-    * @throws javax.transaction.RollbackException.
-    * @throws javax.transaction.SystemException
+    * @throws jakarta.transaction.RollbackException.
+    * @throws jakarta.transaction.SystemException
     */
     void registerSynchronization(Transaction jta, Synchronization sync)
         throws RollbackException, SystemException;
@@ -170,7 +170,7 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * for managing local transaction boundaries and registering synchronization
      * for call backs during completion of a local transaction.
      * 
-     * @return javax.transaction.TransactionManager
+     * @return jakarta.transaction.TransactionManager
      */
     TransactionManager getLocalTransactionManager();
 

@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.ejb1.scoped;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.PerLookup;

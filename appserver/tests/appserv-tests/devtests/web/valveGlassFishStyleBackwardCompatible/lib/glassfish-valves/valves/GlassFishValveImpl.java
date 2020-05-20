@@ -17,8 +17,8 @@
 package valves;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 import org.apache.catalina.valves.ValveBase;

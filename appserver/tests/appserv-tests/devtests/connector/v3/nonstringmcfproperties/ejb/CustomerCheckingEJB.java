@@ -16,7 +16,7 @@
 
 package samples.ejb.subclassing.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.sql.*;
 
 public class CustomerCheckingEJB extends CustomerEJB

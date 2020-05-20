@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,13 +49,14 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.api.ServiceLocator;
+import com.sun.enterprise.config.serverbeans.Module;
 import org.jvnet.hk2.config.*;
 
 import org.glassfish.api.event.EventListener;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.resource.ResourceException;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.resource.ResourceException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;

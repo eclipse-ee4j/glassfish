@@ -16,7 +16,7 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ConnectionRequestInfo;
 
 /**
  * @author Tony Ng

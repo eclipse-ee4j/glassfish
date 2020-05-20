@@ -17,8 +17,8 @@
 package roster;
 
 import java.util.*;
-import javax.ejb.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import util.*;
 import team.*;

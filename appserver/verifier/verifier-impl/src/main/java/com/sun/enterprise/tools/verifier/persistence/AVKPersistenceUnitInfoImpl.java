@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,10 @@ package com.sun.enterprise.tools.verifier.persistence;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 
 import javax.sql.DataSource;
-import javax.persistence.spi.ClassTransformer;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.EntityManagerFactory;
 import javax.naming.NamingException;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.ValidatorFactory;
 
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.PersistenceUnitInfoImpl;
@@ -31,7 +31,7 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
 
 /**
- * This class implements {@link javax.persistence.spi.PersistenceUnitInfo}
+ * This class implements {@link jakarta.persistence.spi.PersistenceUnitInfo}
  * It inherits most of the implementation from its super class, except the
  * implementation that depends on runtime environment. See the details of methods
  * overridden in this class.

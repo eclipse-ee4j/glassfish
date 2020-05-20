@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejbc.redef.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 import org.omg.CORBA.ORB;

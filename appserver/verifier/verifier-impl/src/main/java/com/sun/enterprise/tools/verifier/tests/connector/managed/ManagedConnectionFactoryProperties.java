@@ -34,7 +34,7 @@ import com.sun.enterprise.deployment.ConnectionDefDescriptor;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
 
 /**
- * Test that the class declared implementing the javax.resource.spi.ManagedConnectionFactory
+ * Test that the class declared implementing the jakarta.resource.spi.ManagedConnectionFactory
  * interface implements the properties declared under the config-property
  * xml tag under the followind requirements :
  *      - Provide a getter and setter method ala JavaBeans
@@ -49,7 +49,7 @@ public class ManagedConnectionFactoryProperties
     implements ConnectorCheck 
 {
     /** <p>
-     * Test that the class declared implementing the javax.resource.spi.ManagedConnectionFactory
+     * Test that the class declared implementing the jakarta.resource.spi.ManagedConnectionFactory
      * interface implements the properties declared under the config-property
      * xml tag under the followind requirements :
      *      - Provide a getter and setter method ala JavaBeans

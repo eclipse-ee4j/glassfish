@@ -24,8 +24,8 @@ public class SingletonBean2 {
 	System.out.println("In SingletonBean2::init()");
         try {
             javax.naming.InitialContext ic = new javax.naming.InitialContext();
-	    javax.transaction.TransactionSynchronizationRegistry tr = 
-                 (javax.transaction.TransactionSynchronizationRegistry)
+	    jakarta.transaction.TransactionSynchronizationRegistry tr = 
+                 (jakarta.transaction.TransactionSynchronizationRegistry)
                  ic.lookup("java:comp/TransactionSynchronizationRegistry");
             System.out.println("In SingletonBean2::init() tx status: " + tr.getTransactionStatus());
             initTx = tr.getTransactionStatus();

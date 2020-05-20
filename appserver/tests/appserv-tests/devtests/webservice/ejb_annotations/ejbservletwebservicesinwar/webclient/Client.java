@@ -16,29 +16,29 @@
 
 package webclient;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import ejbclient.*;
 import webclient.*;
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 public class Client extends HttpServlet {
 
-        @javax.xml.ws.WebServiceRef(ejbclient.HelloEjbService.class)
+        @jakarta.xml.ws.WebServiceRef(ejbclient.HelloEjbService.class)
         ejbclient.Hello hiport1;
 
-    @javax.xml.ws.WebServiceRef(webclient.HelloService.class)
+    @jakarta.xml.ws.WebServiceRef(webclient.HelloService.class)
             webclient.Hello hiport2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
                 String ret1 = hiport1.sayHello("All");
                 String ret2 = hiport2.sayHello("All");

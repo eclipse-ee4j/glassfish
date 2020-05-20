@@ -62,7 +62,6 @@ public class TimerSchedule implements Serializable {
     private BitSet seconds = new BitSet(60);
     private BitSet minutes = new BitSet(60);
     private BitSet hours = new BitSet(24);
-    private BitSet days = new BitSet(31);
     private BitSet daysOfWeek = new BitSet(7);
     private BitSet daysOfMonth = new BitSet(31);
     private BitSet months = new BitSet(12);
@@ -80,7 +79,6 @@ public class TimerSchedule implements Serializable {
 
     private static final char rangeChar     = '-';
     private static final char incrementChar = '/';
-    private static final String TIMEZONE = "timezone";
     private static final String YEAR = "year";
     private static final String MONTH = "month";
     private static final String DAY_OF_MONTH = "dayOfMonth";
@@ -442,7 +440,6 @@ public class TimerSchedule implements Serializable {
                 // Both are specified - pick the closest date:
                 Calendar date1 = (Calendar)next.clone();
                 Calendar date2 = (Calendar)next.clone();
-                boolean changed = false;
 
                 //System.out.println("==> Processing 1 DAY_OF_MONTH ...");
                 if(skipToNextValue(date1, daysOfMonth, Calendar.DAY_OF_MONTH, Calendar.MONTH)) {

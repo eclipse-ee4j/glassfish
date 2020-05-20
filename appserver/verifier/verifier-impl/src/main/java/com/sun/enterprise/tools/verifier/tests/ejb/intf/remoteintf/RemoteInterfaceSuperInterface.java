@@ -104,7 +104,7 @@ public class RemoteInterfaceSuperInterface extends EjbTest implements EjbCheck {
                     // check the methods now.
                     if (RmiIIOPUtils.isValidRmiIIOPInterfaceMethods(intf)) {
                         // this interface is valid, continue
-                        if (intf.getName().equals("javax.ejb.EJBObject")) {
+                        if (intf.getName().equals("jakarta.ejb.EJBObject")) {
                             validRemoteInterface = true;
                             break;
                         }

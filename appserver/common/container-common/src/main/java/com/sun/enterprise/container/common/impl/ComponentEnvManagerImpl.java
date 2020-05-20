@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,9 +34,7 @@ import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.NamingObjectProxy;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
-import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.javaee.services.CommonResourceProxy;
 import org.glassfish.javaee.services.JMSCFResourcePMProxy;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
@@ -45,12 +43,12 @@ import org.jvnet.hk2.annotations.Service;
 import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import javax.transaction.TransactionManager;
-import javax.validation.*;
+import jakarta.transaction.TransactionManager;
+import jakarta.validation.*;
 import java.net.MalformedURLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

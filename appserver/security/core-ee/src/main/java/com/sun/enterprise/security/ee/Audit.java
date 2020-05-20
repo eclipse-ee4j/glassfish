@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,7 @@ import com.sun.enterprise.deployment.WebComponentDescriptor;
 
 import org.glassfish.security.common.Role;
 import org.glassfish.deployment.common.SecurityRoleMapper;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.sun.appserv.security.AuditModule;
 

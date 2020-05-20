@@ -14,9 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import javax.ejb.Stateful;
-import javax.ejb.Remote;
-import javax.ejb.TransactionManagementType;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remote;
+import jakarta.ejb.TransactionManagementType;
 
 import test.ejb.stateful.SFHello;
 

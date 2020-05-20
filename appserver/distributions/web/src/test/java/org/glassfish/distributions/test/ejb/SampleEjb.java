@@ -16,7 +16,7 @@
 
 package org.glassfish.distributions.test.ejb;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  * @author Jerome Dochez

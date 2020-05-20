@@ -45,7 +45,6 @@
             keep="${keep}"
             extension="${extension}"
             destdir="${build.classes.home}"
-            xendorsed="true"
             wsdl="${basedir}/${server.wsdl}">
             <binding dir="${basedir}/etc" includes="${server.binding}"/>
         </wsimport>
@@ -78,7 +77,6 @@
             failonerror="false"
             keep="${keep}"
             extension="${extension}"
-            xendorsed="true"
             destdir="${build.classes.home}"
             wsdl="${client.wsdl}">
             <binding dir="${basedir}/etc" includes="${client.binding}"/>

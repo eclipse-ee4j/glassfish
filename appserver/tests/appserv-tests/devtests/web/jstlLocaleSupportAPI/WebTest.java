@@ -20,7 +20,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 /*
  * Unit test for https://glassfish.dev.java.net/issues/show_bug.cgi?id=871
- * ("[JSTL] Remove dependency of javax.servlet.jsp.jstl.fmt.LocaleSupport on
+ * ("[JSTL] Remove dependency of jakarta.servlet.jsp.jstl.fmt.LocaleSupport on
  * RI classes"):
  *
  * Make sure this API still functions after removing its dependencies on the

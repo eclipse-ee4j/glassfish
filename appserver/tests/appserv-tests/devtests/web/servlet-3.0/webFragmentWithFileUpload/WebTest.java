@@ -80,8 +80,8 @@ public class WebTest {
                     sessionId = line.split(";")[0].split("=")[1];
                     continue;
                 }
-                if(line.contains("javax.faces.ViewState:0")) {
-                    String[] results = line.split("javax.faces.ViewState:0");
+                if(line.contains("jakarta.faces.ViewState:0")) {
+                    String[] results = line.split("jakarta.faces.ViewState:0");
                     viewId = results[1].trim().split(" ")[1].trim().split("\"")[1];
                     break;
                 }
@@ -109,7 +109,7 @@ public class WebTest {
             ba.write("--AaB03x\r\n".getBytes());
             ba.write("Content-Disposition: form-data; name=\"form:j_idt5\"\r\n\r\n".getBytes());
             ba.write("\r\n--AaB03x\r\n".getBytes());
-            ba.write("Content-Disposition: form-data; name=\"javax.faces.ViewState\"\r\n\r\n".getBytes());
+            ba.write("Content-Disposition: form-data; name=\"jakarta.faces.ViewState\"\r\n\r\n".getBytes());
             ba.write((viewId + "\r\n").getBytes());
             // Write boundary end
             ba.write("--AaB03x--\r\n".getBytes());

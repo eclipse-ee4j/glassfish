@@ -32,8 +32,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.deploy.shared.ModuleType;
-
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -243,23 +241,23 @@ public class DOLUtils {
     }
 
     public static ArchiveType earType() {
-        return getModuleType(ModuleType.EAR.toString());
+        return getModuleType("ear");
     }
 
     public static ArchiveType ejbType() {
-        return getModuleType(ModuleType.EJB.toString());
+        return getModuleType("ejb");
     }
 
     public static ArchiveType carType() {
-        return getModuleType(ModuleType.CAR.toString());
+        return getModuleType("car");
     }
 
     public static ArchiveType warType() {
-        return getModuleType(ModuleType.WAR.toString());
+        return getModuleType("war");
     }
 
     public static ArchiveType rarType() {
-        return getModuleType(ModuleType.RAR.toString());
+        return getModuleType("rar");
     }
 
     /**

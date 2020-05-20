@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,9 +54,9 @@ public class WebResourceType extends WebTest implements WebCheck {
 		String resType = next.getType();
 		logger.log(Level.FINE, "servlet resType: " + resType);
 		if ((resType.equals("javax.sql.DataSource")) ||
-		    (resType.equals("javax.jms.QueueConnectionFactory")) ||
-		    (resType.equals("javax.jms.TopicConnectionFactory")) ||
-		    (resType.equals("javax.mail.Session")) ||
+		    (resType.equals("jakarta.jms.QueueConnectionFactory")) ||
+		    (resType.equals("jakarta.jms.TopicConnectionFactory")) ||
+		    (resType.equals("jakarta.mail.Session")) ||
 		    (resType.equals("java.net.URL"))) { 
 		    foundIt = true;
 		} else {

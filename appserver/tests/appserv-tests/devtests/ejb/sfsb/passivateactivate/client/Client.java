@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,13 +17,10 @@
 package com.sun.s1asdev.ejb.sfsb.passivateactivate.client;
 
 import java.util.ArrayList;
-
-import java.io.Serializable;
 import javax.naming.*;
-import javax.jms.*;
-import javax.ejb.*;
+import jakarta.jms.*;
+import jakarta.ejb.*;
 import javax.rmi.PortableRemoteObject;
-import java.rmi.NoSuchObjectException;
 
 import com.sun.s1asdev.ejb.sfsb.passivateactivate.ejb.SFSBHome;
 import com.sun.s1asdev.ejb.sfsb.passivateactivate.ejb.SFSB;
@@ -211,7 +208,7 @@ public class Client {
 	    boolean gotException = false;
 
             // Test BMT SFSB remove called in a transaction
-            javax.transaction.UserTransaction ut = (javax.transaction.UserTransaction) 
+            jakarta.transaction.UserTransaction ut = (jakarta.transaction.UserTransaction) 
                      (new InitialContext()).lookup("java:comp/UserTransaction");
             ut.begin();
 	    sfsb.remove();

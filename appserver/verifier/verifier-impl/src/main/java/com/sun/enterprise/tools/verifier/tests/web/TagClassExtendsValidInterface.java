@@ -24,8 +24,8 @@ import com.sun.enterprise.tools.verifier.tests.ComponentNameConstructor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 
 /**
- * Tag class implements javax.servlet.jsp.tagext.JspTag for JSP version 2.0,
- * javax.servlet.jsp.tagext.Tag for earlier versions of JSP specification.
+ * Tag class implements jakarta.servlet.jsp.tagext.JspTag for JSP version 2.0,
+ * jakarta.servlet.jsp.tagext.Tag for earlier versions of JSP specification.
  *
  * @author sg133765
  */
@@ -55,9 +55,9 @@ public class TagClassExtendsValidInterface extends WebTest implements WebCheck {
                 Class c = loadClass(result, tagclass);
                 if (c!=null) {
                     if (tld.getSpecVersion().trim().equalsIgnoreCase("2.0")) {
-                        failed = !javax.servlet.jsp.tagext.JspTag.class.isAssignableFrom(c);
+                        failed = !jakarta.servlet.jsp.tagext.JspTag.class.isAssignableFrom(c);
                     } else {
-                        failed = !javax.servlet.jsp.tagext.Tag.class.isAssignableFrom(c);
+                        failed = !jakarta.servlet.jsp.tagext.Tag.class.isAssignableFrom(c);
                     }
                     if(failed) {
                         oneFailed = true;

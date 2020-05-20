@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.wss.ssl.client;
 
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 
 import com.sun.s1asdev.security.wss.ssl.ejbws.HelloEjb;
 import com.sun.s1asdev.security.wss.ssl.ejbws.WssSslEjbService;

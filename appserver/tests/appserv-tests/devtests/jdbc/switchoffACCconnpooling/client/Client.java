@@ -32,8 +32,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import java.util.HashSet;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

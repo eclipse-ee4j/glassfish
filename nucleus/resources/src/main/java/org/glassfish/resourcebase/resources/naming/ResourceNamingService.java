@@ -25,7 +25,7 @@ import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;

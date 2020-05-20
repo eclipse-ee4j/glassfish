@@ -17,8 +17,8 @@
 package client;
 
 import java.util.Map;
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.BindingProvider;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.BindingProvider;
 
 import endpoint.HelloImplService;
 import endpoint.HelloImpl;

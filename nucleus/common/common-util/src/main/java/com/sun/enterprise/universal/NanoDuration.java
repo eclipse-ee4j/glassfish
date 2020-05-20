@@ -80,5 +80,4 @@ public final class NanoDuration {
     private double numMicroSeconds = -1.0;
     private double numNanoSeconds = -1.0;
     private Duration duration;
-    private final LocalStringsImpl strings = new LocalStringsImpl(NanoDuration.class);
 }

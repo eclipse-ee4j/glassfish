@@ -18,6 +18,6 @@ package org.glassfish.tests.embedded.cdi_basic;
 
 //Simple RequestScoped TestBean to test CDI. 
 //This bean implements Serializable as it needs to be placed into a Stateful Bean
-@javax.enterprise.context.RequestScoped
+@jakarta.enterprise.context.RequestScoped
 public class TestRequestScopedBean
 {}

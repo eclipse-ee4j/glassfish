@@ -18,9 +18,9 @@ package roster;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import javax.ejb.EJBObject;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.RemoveException;
 import util.LeagueDetails;
 import util.PlayerDetails;
 import util.TeamDetails;

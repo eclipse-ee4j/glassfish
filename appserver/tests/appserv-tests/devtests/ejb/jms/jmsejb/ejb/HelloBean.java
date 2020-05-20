@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,12 @@
 
 package com.sun.s1asdev.ejb.jms.jmsejb;
 
-import java.util.Enumeration;
-import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
 import javax.naming.*;
-import javax.jms.*;
-import javax.transaction.UserTransaction;
+import jakarta.jms.*;
 
 public class HelloBean implements SessionBean {
     private String str;
@@ -86,11 +83,11 @@ public class HelloBean implements SessionBean {
                 session.commit();
                 throw new java.lang.IllegalStateException
                     ("Didn't get session.commit exception");
-            } catch(javax.jms.TransactionInProgressException tipe) {
+            } catch(jakarta.jms.TransactionInProgressException tipe) {
                 System.out.println
                     ("Successfully got tx in progress excep " +
                      "after calling session.commit in a global tx");
-            } catch(javax.jms.JMSException jmse) {
+            } catch(jakarta.jms.JMSException jmse) {
                 System.out.println
                     ("Got JMSException - it's also ok - " +
                      "after calling session.commit in a global tx");
@@ -110,7 +107,7 @@ public class HelloBean implements SessionBean {
                 session.commit();
                 throw new JMSException
                     ("Didn't get session.commit exception");
-            } catch(javax.jms.JMSException jmse) {
+            } catch(jakarta.jms.JMSException jmse) {
                 System.out.println("Successfully got session.commit " +
                                    "exception in ejb");
             }
@@ -119,7 +116,7 @@ public class HelloBean implements SessionBean {
                 session.rollback();
                 throw new JMSException
                     ("Didn't get session.rollback exception");
-            } catch(javax.jms.JMSException jmse) {
+            } catch(jakarta.jms.JMSException jmse) {
                 System.out.println("Successfully got session.rollback " +
                                    "exception in ejb");
             }
@@ -148,11 +145,11 @@ public class HelloBean implements SessionBean {
                         session.createObjectMessage();
                         throw new JMSException
                             ("Didn't get expected illegal state exception");
-                    } catch(javax.jms.IllegalStateException j1) {
+                    } catch(jakarta.jms.IllegalStateException j1) {
                         System.out.println
                             ("Successfully got illegal state exception " +
                              "when calling session method after close");
-                    } catch(javax.jms.JMSException j2) {
+                    } catch(jakarta.jms.JMSException j2) {
                         throw new JMSException("Got wrong jmsexception");
                     }
                     
@@ -160,11 +157,11 @@ public class HelloBean implements SessionBean {
                         session.getMessageListener();
                         throw new JMSException
                             ("Didn't get expected illegal state exception");
-                    } catch(javax.jms.IllegalStateException j3) {
+                    } catch(jakarta.jms.IllegalStateException j3) {
                         System.out.println
                             ("Successfully got illegal state exception " +
                              "when calling session method after close");
-                    } catch(javax.jms.JMSException j4) {
+                    } catch(jakarta.jms.JMSException j4) {
                         throw new JMSException("Got wrong jmsexception");
                     }
                 }

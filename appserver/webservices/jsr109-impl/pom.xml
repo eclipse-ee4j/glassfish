@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,45 +22,13 @@
     <parent>
         <groupId>org.glassfish.main.webservices</groupId>
         <artifactId>webservices</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jsr109-impl</artifactId>
     <packaging>glassfish-jar</packaging>
     
     <name>JSR-109 implementation to deploy Metro</name>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.metro</groupId>
-                                    <artifactId>webservices-api-osgi</artifactId>
-                                    <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
-                                    <version>${webservices.version}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>jakarta.xml.bind</groupId>
-                                    <artifactId>jakarta.xml.bind-api</artifactId>
-                                    <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
-                                    <version>${jaxb-api.version}</version>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <developers>
         <developer>
@@ -119,10 +87,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>jakarta.xml.rpc</groupId>
-            <artifactId>jakarta.xml.rpc-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-osgi</artifactId>
         </dependency>
@@ -141,6 +105,18 @@
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
+        </dependency>
+        <!-- THIS MUST GO AWAY -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <!-- AS SOON AS THE ONE BELOW (OR NEWER) IS ADOPTED BY THE REST OF GF -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0-M1</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>

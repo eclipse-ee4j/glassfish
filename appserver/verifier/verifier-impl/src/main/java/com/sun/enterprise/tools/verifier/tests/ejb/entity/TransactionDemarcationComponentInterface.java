@@ -76,7 +76,7 @@ import java.util.Enumeration;
 	    // in the bean's component interface and all the direct and indirect
 	    // superinterfaces of the component interface, excluding the "getEJBHome",
 	    //  "getHandle", "getPrimaryKey", "isIdentical" methods of the 
-	    // javax.ejb.EJBObject interface.
+	    // jakarta.ejb.EJBObject interface.
 
 	    if (descriptor instanceof EjbEntityDescriptor) {
 		boolean oneFailed = false;

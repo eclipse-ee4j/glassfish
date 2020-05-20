@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,13 +51,13 @@
       </resource-ref>
       <resource-ref>
         <res-ref-name>jmsRes</res-ref-name>
-        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <resource-ref>
-        <res-ref-name>javaMailRes</res-ref-name>
-        <res-type>javax.mail.Session</res-type>
+        <res-ref-name>mailRes</res-ref-name>
+        <res-type>jakarta.mail.Session</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>

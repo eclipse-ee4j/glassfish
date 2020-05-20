@@ -18,8 +18,8 @@ package test.beans.nonmock;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 
 import test.beans.TestBeanInterface;
 import test.ejb.HelloNoInterfaceLocalViewSfulEJB;

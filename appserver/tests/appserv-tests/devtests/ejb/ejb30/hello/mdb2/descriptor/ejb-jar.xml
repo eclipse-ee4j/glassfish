@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,9 +23,9 @@
     <message-driven>
       <display-name>MDB1</display-name>
       <ejb-name>MessageBean</ejb-name>
-      <messaging-type>javax.jms.MessageListener</messaging-type>
+      <messaging-type>jakarta.jms.MessageListener</messaging-type>
       <transaction-type>Container</transaction-type>
-      <message-destination-type>javax.jms.Queue</message-destination-type>
+      <message-destination-type>jakarta.jms.Queue</message-destination-type>
       <message-destination-link>MsgBeanInQueue</message-destination-link>
       <env-entry>
          <env-entry-name>com.sun.s1asdev.ejb.ejb30.hello.mdb2.MessageBean/stringValue1</env-entry-name>
@@ -59,7 +59,7 @@
         <description>test destination</description>
         <message-destination-ref-name>jms/ClientQueue
         </message-destination-ref-name>
-        <message-destination-type>javax.jms.Queue</message-destination-type>
+        <message-destination-type>jakarta.jms.Queue</message-destination-type>
         <message-destination-usage>Produces</message-destination-usage>
         <message-destination-link>MsgBeanOutQueue</message-destination-link>
       </message-destination-ref>

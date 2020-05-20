@@ -17,10 +17,10 @@
 package test;
 
 import java.io.*;
-import javax.annotation.Resource;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebServlet;
+import jakarta.annotation.Resource;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet("/mytest2")
 public class TestServlet2 extends HttpServlet {

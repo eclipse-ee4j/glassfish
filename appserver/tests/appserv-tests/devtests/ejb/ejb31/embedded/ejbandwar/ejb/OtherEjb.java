@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.ejb.sample;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  */

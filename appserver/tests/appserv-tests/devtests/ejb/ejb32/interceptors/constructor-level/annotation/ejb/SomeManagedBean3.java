@@ -16,15 +16,15 @@
 
 package com.acme;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 
-import javax.ejb.EJB;
-import javax.annotation.Resource;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.Interceptors;
+import jakarta.ejb.EJB;
+import jakarta.annotation.Resource;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.Interceptors;
 import org.omg.CORBA.ORB;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
 
 @Interceptors(InterceptorC.class)
 @ManagedBean("somemanagedbean3")

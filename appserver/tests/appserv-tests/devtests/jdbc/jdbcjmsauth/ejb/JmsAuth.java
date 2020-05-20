@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.jdbcjmsauth.ejb;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface JmsAuth extends EJBObject {

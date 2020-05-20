@@ -18,8 +18,8 @@ package com.sun.s1asdev.ejb.ejb30.hello.session.client;
 
 import java.io.*;
 import java.util.*;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import com.sun.s1asdev.ejb.ejb30.hello.session.*;
 
 public class Client {

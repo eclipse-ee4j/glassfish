@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.use_nonjtadatasou
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.use_nonjtadatasource.ejb.Tester;

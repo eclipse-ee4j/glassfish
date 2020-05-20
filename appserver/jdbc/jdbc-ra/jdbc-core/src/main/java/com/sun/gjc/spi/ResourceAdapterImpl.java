@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,13 @@ import com.sun.logging.LogDomains;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.resource.NotSupportedException;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.AuthenticationMechanism;
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.Connector;
-import javax.resource.spi.UnavailableException;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.NotSupportedException;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.AuthenticationMechanism;
+import jakarta.resource.spi.BootstrapContext;
+import jakarta.resource.spi.Connector;
+import jakarta.resource.spi.UnavailableException;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
 import javax.transaction.xa.XAResource;
 
 /**
@@ -46,7 +46,7 @@ import javax.transaction.xa.XAResource;
             credentialInterface=AuthenticationMechanism.CredentialInterface.PasswordCredential)
     }
 )
-public class ResourceAdapterImpl implements javax.resource.spi.ResourceAdapter {
+public class ResourceAdapterImpl implements jakarta.resource.spi.ResourceAdapter {
     private static ResourceAdapterImpl ra;
     private BootstrapContext bootstrapContext;
     private Timer timer;

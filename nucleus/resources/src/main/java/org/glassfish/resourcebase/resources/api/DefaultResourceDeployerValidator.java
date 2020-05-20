@@ -19,7 +19,7 @@ package org.glassfish.resourcebase.resources.api;
 import com.sun.enterprise.config.serverbeans.Resource;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Service
 @Singleton

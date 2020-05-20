@@ -38,8 +38,9 @@ import org.jvnet.hk2.annotations.Service;
 import com.sun.enterprise.config.serverbeans.*;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PerLookup;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import java.util.*;
 import org.glassfish.api.admin.AccessRequired;

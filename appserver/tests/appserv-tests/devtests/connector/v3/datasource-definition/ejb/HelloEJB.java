@@ -16,16 +16,16 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.EntityManager;
 import javax.naming.InitialContext;
-import javax.annotation.sql.*;
+import jakarta.annotation.sql.*;
 import javax.sql.DataSource;
 import java.sql.Connection;
 

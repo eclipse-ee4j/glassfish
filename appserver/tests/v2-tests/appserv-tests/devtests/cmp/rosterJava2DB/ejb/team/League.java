@@ -19,10 +19,10 @@ package team;
 import java.util.Collection;
 import java.rmi.RemoteException;
 import java.util.Set;
-import javax.ejb.FinderException;
+import jakarta.ejb.FinderException;
 
 
-public interface League extends  javax.ejb.EJBObject   {
+public interface League extends  jakarta.ejb.EJBObject   {
 
     public String getLeagueId() throws RemoteException;
     public String getName() throws RemoteException;

@@ -17,13 +17,13 @@
 package test;
 
 import java.io.*;
-import javax.annotation.security.RunAs;
-import javax.ejb.EJB;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.HttpConstraint;
-import javax.servlet.annotation.ServletSecurity;
-import javax.servlet.annotation.WebServlet;
+import jakarta.annotation.security.RunAs;
+import jakarta.ejb.EJB;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet("/mytest")
 @ServletSecurity(@HttpConstraint(rolesAllowed={"javaee"}))

@@ -16,10 +16,10 @@
 
 package test.util;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-import javax.transaction.UserTransaction;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Query;
+import jakarta.transaction.UserTransaction;
 
 import test.entity.Department;
 import test.entity.Employee;

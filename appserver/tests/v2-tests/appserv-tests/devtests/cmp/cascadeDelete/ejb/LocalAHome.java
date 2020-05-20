@@ -16,7 +16,7 @@
 
 package cascadeDelete;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 23, 2002 12:43:09 PM
@@ -24,11 +24,11 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface LocalAHome extends javax.ejb.EJBLocalHome {
+public interface LocalAHome extends jakarta.ejb.EJBLocalHome {
     
     public cascadeDelete.LocalA findByPrimaryKey(java.lang.Integer aKey)
-    throws javax.ejb.FinderException;
+    throws jakarta.ejb.FinderException;
     
-    public java.util.Collection findAll() throws javax.ejb.FinderException;
+    public java.util.Collection findAll() throws jakarta.ejb.FinderException;
     
 }

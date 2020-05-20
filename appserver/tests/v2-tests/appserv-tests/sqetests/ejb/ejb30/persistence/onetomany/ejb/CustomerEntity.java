@@ -16,7 +16,7 @@
 
 package pe.ejb.ejb30.persistence.toplinksample.ejb;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Collection;
 
 @Entity

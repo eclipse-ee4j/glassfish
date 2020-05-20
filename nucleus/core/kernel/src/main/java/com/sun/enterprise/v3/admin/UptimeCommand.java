@@ -33,7 +33,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.universal.Duration;
 import org.glassfish.api.admin.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * uptime command

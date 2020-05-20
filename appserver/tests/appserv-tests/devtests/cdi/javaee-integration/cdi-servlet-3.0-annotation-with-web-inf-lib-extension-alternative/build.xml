@@ -49,7 +49,7 @@
         <javac srcdir="util" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="1.6"/>
         <copy file="descriptor/beans-alternative.xml" tofile="${build.classes.dir}/META-INF/beans.xml"/>
         <mkdir dir="${build.classes.dir}/META-INF/services"/>
-        <copy file="services/javax.enterprise.inject.spi.Extension" tofile="${build.classes.dir}/META-INF/services/javax.enterprise.inject.spi.Extension"/>
+        <copy file="services/jakarta.enterprise.inject.spi.Extension" tofile="${build.classes.dir}/META-INF/services/jakarta.enterprise.inject.spi.Extension"/>
         <delete file="${build.classes.dir}/TestBean.class" /> <!-- This is included in the WAR below -->
 
         <jar destfile="lib/bean-lib.jar">

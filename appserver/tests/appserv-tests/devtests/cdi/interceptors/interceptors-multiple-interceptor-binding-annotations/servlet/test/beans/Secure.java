@@ -23,8 +23,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.inject.Qualifier;
-import javax.interceptor.InterceptorBinding;
+import jakarta.inject.Qualifier;
+import jakarta.interceptor.InterceptorBinding;
 
 @Qualifier
 @Target({ TYPE, METHOD })

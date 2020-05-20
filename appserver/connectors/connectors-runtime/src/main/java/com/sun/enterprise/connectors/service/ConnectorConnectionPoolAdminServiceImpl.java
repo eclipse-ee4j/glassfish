@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,9 +24,7 @@ import com.sun.enterprise.connectors.*;
 import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
 import com.sun.enterprise.connectors.util.*;
-import com.sun.enterprise.deployment.ConnectionDefDescriptor;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.ResourcePrincipal;
 import com.sun.enterprise.resource.listener.UnpooledConnectionEventListener;
 import com.sun.enterprise.resource.pool.PoolManager;
@@ -39,11 +37,11 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.config.types.Property;
 
 import javax.naming.NamingException;
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.ManagedConnection;
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.TransactionSupport;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.TransactionSupport;
 import javax.security.auth.Subject;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -435,7 +433,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @param mcf
      * @param prin
      * @return
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      */
     protected Subject getDefaultSubject(PoolInfo poolInfo, ManagedConnectionFactory mcf,
             ResourcePrincipal prin) throws ResourceException {
@@ -473,7 +471,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @param mcf
      * @param defaultSubject
      * @return
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      */
     protected ManagedConnection getManagedConnection(ManagedConnectionFactory mcf, 
             Subject defaultSubject, ConnectionRequestInfo cReqInfo) throws ResourceException {
@@ -493,7 +491,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * pool name.
      * @param poolName
      * @return
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      *//*
 
     protected ManagedConnectionFactory getManagedConnectionFactory(String poolName) 
@@ -1003,9 +1001,9 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                     int txSupport = connectorConnectionPool.getTransactionSupport();
 
                     //JSR-322 : check the runtime transaction level support of MCF and use appropriately.
-                    if (mcf instanceof javax.resource.spi.TransactionSupport) {
+                    if (mcf instanceof jakarta.resource.spi.TransactionSupport) {
                         TransactionSupport.TransactionSupportLevel mcfTS =
-                                ((javax.resource.spi.TransactionSupport) mcf).getTransactionSupport();
+                                ((jakarta.resource.spi.TransactionSupport) mcf).getTransactionSupport();
 
                         int containerTxSupport = ConnectionPoolObjectsUtils.convertSpecTxSupportToContainerTxSupport(mcfTS);
                         boolean isValidTxSupportLevel = ConnectionPoolObjectsUtils.isTxSupportConfigurationSane(

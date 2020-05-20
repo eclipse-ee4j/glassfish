@@ -18,10 +18,10 @@ package org.glassfish.tests.weball;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.annotation.Resource;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.annotation.Resource;
 
 /**
  * @author Vivek Pandey

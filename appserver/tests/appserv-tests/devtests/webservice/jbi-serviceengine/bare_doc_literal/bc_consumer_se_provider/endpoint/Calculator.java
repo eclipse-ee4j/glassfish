@@ -16,8 +16,8 @@
 
 package endpoint;
 
-import javax.jws.*;
-import javax.jws.soap.SOAPBinding;
+import jakarta.jws.*;
+import jakarta.jws.soap.SOAPBinding;
 
 @WebService(
     name="Calculator",

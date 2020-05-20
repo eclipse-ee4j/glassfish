@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,10 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
-import javax.ejb.MessageDriven;
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.ejb.Stateless;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Stateless;
 
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
@@ -36,7 +36,7 @@ import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the javax.ejb.Schedule
+ * This handler is responsible for handling the jakarta.ejb.Schedule
  * annotation on methods of a Bean class. 
  *
  * @author Marina Vatkina

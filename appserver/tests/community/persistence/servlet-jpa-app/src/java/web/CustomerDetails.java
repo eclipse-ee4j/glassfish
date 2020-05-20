@@ -26,15 +26,15 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.transaction.UserTransaction;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.transaction.UserTransaction;
 import persistence.*;
 
 /**

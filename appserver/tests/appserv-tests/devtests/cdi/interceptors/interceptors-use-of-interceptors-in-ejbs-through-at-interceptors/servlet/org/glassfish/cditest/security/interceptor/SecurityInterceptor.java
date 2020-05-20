@@ -21,11 +21,11 @@ import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.Resource;
-import javax.ejb.EJBContext;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJBContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 import java.io.Serializable;
 import org.glassfish.cditest.security.api.Secure;

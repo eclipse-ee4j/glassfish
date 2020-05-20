@@ -63,7 +63,7 @@ public class SessionSynchronizationInterface extends EjbTest implements EjbCheck
                         logger.log(Level.FINE, getClass().getName() + ".debug1",
                                 new Object[] {interfaces.getName()});
 
-                        if (interfaces.getName().equals("javax.ejb.SessionSynchronization") ) {
+                        if (interfaces.getName().equals("jakarta.ejb.SessionSynchronization") ) {
                             String transactionType = descriptor.getTransactionType();
                             if ((EjbSessionDescriptor.STATELESS.equals(stateType)) ||
                                     ((EjbSessionDescriptor.STATEFUL.equals(stateType))

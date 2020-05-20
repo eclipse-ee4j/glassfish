@@ -16,16 +16,16 @@
 
 package com.sun.s1asdev.ejb32.ejblite.async;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.io.*;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.annotation.WebServlet;
 import javax.naming.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.acme.*;
 

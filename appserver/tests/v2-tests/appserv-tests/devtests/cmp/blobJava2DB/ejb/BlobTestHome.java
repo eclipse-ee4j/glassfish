@@ -16,17 +16,17 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface BlobTestHome extends javax.ejb.EJBHome {
+public interface BlobTestHome extends jakarta.ejb.EJBHome {
     
-    public  BlobTest create(Integer i, java.lang.String name, byte[] b) throws java.rmi.RemoteException, javax.ejb.CreateException;
+    public  BlobTest create(Integer i, java.lang.String name, byte[] b) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
-    public  BlobTest findByPrimaryKey (Integer key) throws java.rmi.RemoteException, javax.ejb.FinderException;
+    public  BlobTest findByPrimaryKey (Integer key) throws java.rmi.RemoteException, jakarta.ejb.FinderException;
 
 }

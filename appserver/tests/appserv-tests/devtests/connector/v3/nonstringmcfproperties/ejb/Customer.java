@@ -16,7 +16,7 @@
 
 package samples.ejb.subclassing.ejb;
 
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBLocalObject;
 import java.rmi.RemoteException;
 
 public interface Customer extends EJBLocalObject

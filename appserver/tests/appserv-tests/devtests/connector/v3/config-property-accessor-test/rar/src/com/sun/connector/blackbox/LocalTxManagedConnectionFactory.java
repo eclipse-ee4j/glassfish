@@ -16,9 +16,9 @@
 
 package com.sun.connector.blackbox;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.*;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.*;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -139,7 +139,7 @@ public class LocalTxManagedConnectionFactory
                      System.out.println(" Sending ConnectionErrorOccured");
                  //count = 0;
                          mc.sendEvent(
-                     javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED,
+                     jakarta.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED,
                      null);
                  return null;
                      }
@@ -167,7 +167,7 @@ public class LocalTxManagedConnectionFactory
             System.out.println(" Sending ConnectionErrorOccured");
             //count = 0;
             mc.sendEvent(
-                    javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED,
+                    jakarta.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED,
                     null);
             conn = new HashSet();
             conn.add(mc);
@@ -228,7 +228,7 @@ public class LocalTxManagedConnectionFactory
         return this.ra;
     }
 
-    public void setResourceAdapter(javax.resource.spi.ResourceAdapter resourceAdapter) throws ResourceException {
+    public void setResourceAdapter(jakarta.resource.spi.ResourceAdapter resourceAdapter) throws ResourceException {
         this.ra = (ResourceAdapter)resourceAdapter;
     }
 

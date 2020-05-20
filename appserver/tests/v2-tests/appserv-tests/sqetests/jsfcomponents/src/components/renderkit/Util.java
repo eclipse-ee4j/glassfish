@@ -22,13 +22,13 @@
 
 package components.renderkit;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.Application;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
+import jakarta.faces.FactoryFinder;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.ApplicationFactory;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.el.MethodBinding;
+import jakarta.faces.el.ValueBinding;
 
 import java.util.Locale;
 
@@ -212,9 +212,9 @@ public class Util extends Object {
         if (null !=
             (bundleName = (String) component.getAttributes().get(bundleAttr))) {
             // verify there is a Locale for this modelReference
-            javax.servlet.jsp.jstl.fmt.LocalizationContext locCtx = null;
+            jakarta.servlet.jsp.jstl.fmt.LocalizationContext locCtx = null;
             if (null != (locCtx =
-                (javax.servlet.jsp.jstl.fmt.LocalizationContext)
+                (jakarta.servlet.jsp.jstl.fmt.LocalizationContext)
                 (Util.getValueBinding(bundleName)).getValue(context))) {
                 result = locCtx.getLocale();
 //		Assert.assert_it(null != result);

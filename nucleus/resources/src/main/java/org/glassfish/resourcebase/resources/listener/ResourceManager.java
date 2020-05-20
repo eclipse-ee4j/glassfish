@@ -36,8 +36,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.*;
 import org.jvnet.hk2.config.types.Property;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;

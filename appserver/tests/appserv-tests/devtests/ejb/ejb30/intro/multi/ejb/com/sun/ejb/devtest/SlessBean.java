@@ -16,10 +16,10 @@
 
 package com.sun.ejb.devtest;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
-import javax.ejb.Stateless;
-import javax.ejb.EJB;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.EJB;
 
 @Stateless
 public class SlessBean

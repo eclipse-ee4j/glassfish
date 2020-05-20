@@ -22,9 +22,9 @@
 
 package shopping;
 
-import javax.ejb.SessionContext;
-import javax.ejb.SessionBean;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.EJBException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,7 @@ public class RpaBean implements SessionBean {
     }
     
     
-    public void setSessionContext(javax.ejb.SessionContext sessionContext) {
+    public void setSessionContext(jakarta.ejb.SessionContext sessionContext) {
         sc = sessionContext;
     }
 

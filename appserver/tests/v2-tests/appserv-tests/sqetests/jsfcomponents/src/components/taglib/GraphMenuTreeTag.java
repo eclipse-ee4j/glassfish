@@ -23,12 +23,12 @@ package components.taglib;
 import components.components.GraphComponent;
 import components.model.Graph;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
-import javax.faces.webapp.UIComponentBodyTag;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.el.MethodBinding;
+import jakarta.faces.el.ValueBinding;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.webapp.UIComponentBodyTag;
 
 
 /**
@@ -131,7 +131,7 @@ public class GraphMenuTreeTag extends UIComponentBodyTag {
                 graphComponent.setActionListener(mb);
             } else {
                 Object params [] = {actionListener};
-                throw new javax.faces.FacesException();
+                throw new jakarta.faces.FacesException();
             }
         }
 

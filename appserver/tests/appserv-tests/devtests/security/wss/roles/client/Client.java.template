@@ -18,8 +18,8 @@ package com.sun.s1asdev.security.wss.roles.client;
 
 import java.util.Map;
 
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.BindingProvider;
+import jakarta.xml.ws.WebServiceRef;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

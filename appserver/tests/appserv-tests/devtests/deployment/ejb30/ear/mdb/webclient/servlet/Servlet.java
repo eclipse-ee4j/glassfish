@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,10 @@
 package com.sun.s1asdev.ejb.ejb30.hello.mdb;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.jms.*;
-import javax.annotation.Resource;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.jms.*;
+import jakarta.annotation.Resource;
 
 public class Servlet extends HttpServlet {
 
@@ -28,10 +28,10 @@ public class Servlet extends HttpServlet {
     private QueueConnectionFactory queueConFactory;
     
     @Resource(name="MsgBeanQueue") 
-    private javax.jms.Queue msgBeanQueue;
+    private jakarta.jms.Queue msgBeanQueue;
     
     @Resource(name="ClientQueue")
-    private javax.jms.Queue clientQueue;
+    private jakarta.jms.Queue clientQueue;
     
     private QueueConnection queueCon;
     private QueueSession queueSession;
@@ -50,7 +50,7 @@ public class Servlet extends HttpServlet {
         log("init()...");
     }
 
-    public void sendMsgs(javax.jms.Queue queue, Message msg, int num) throws JMSException {
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
@@ -94,7 +94,7 @@ public class Servlet extends HttpServlet {
 
             message.setBooleanProperty("flag", true);
             message.setIntProperty("num", 1);
-            sendMsgs((javax.jms.Queue) dest, message, numMessages);
+            sendMsgs((jakarta.jms.Queue) dest, message, numMessages);
 
             log("Waiting for queue message");
             Message recvdmessage = queueReceiver.receive(TIMEOUT);

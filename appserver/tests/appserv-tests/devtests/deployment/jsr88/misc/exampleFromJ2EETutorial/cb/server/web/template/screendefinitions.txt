@@ -18,7 +18,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<tt:definition name="coffeebreak" screen="${requestScope['javax.servlet.forward.servlet_path']}">
+<tt:definition name="coffeebreak" screen="${requestScope['jakarta.servlet.forward.servlet_path']}">
   <tt:screen screenId="/orderForm">
     <tt:parameter name="title" value="Coffee Break" direct="true"/>
     <tt:parameter name="banner" value="/banner.jsp" direct="false"/>

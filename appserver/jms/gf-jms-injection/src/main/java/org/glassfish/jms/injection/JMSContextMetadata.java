@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jms.JMSConnectionFactory;
-import javax.jms.JMSContext;
-import javax.jms.JMSPasswordCredential;
-import javax.jms.JMSSessionMode;
+import jakarta.jms.JMSConnectionFactory;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSPasswordCredential;
+import jakarta.jms.JMSSessionMode;
 import org.glassfish.internal.api.RelativePathResolver;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 

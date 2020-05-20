@@ -35,7 +35,7 @@ import java.util.Set;
 
 /**
  * Test for each message-listener , that "activationspec-class"
- * implements "javax.resource.spi.ActivationSpec".
+ * implements "jakarta.resource.spi.ActivationSpec".
  *
  * @author Anisha Malhotra 
  * @version 
@@ -47,7 +47,7 @@ implements ConnectorCheck
 
   /** <p>
    * Test for each message-listener , that "activationspec-class"
-   * implements "javax.resource.spi.ActivationSpec".
+   * implements "jakarta.resource.spi.ActivationSpec".
    * </p>
    *
    * @param descriptor deployment descriptor for the rar file
@@ -95,7 +95,7 @@ implements ConnectorCheck
              new Object[] {impl}));
         return result;
       }
-      if(!isImplementorOf(implClass, "javax.resource.spi.ActivationSpec"))
+      if(!isImplementorOf(implClass, "jakarta.resource.spi.ActivationSpec"))
       {
         oneFailed = true;
         result.addErrorDetails(smh.getLocalString
@@ -103,7 +103,7 @@ implements ConnectorCheck
              "For [ {0} ]",
              new Object[] {compName.toString()}));
         result.failed(smh.getLocalString(getClass().getName() + ".failed",
-              "Error: activationspec-class [ {0} ] does not implement javax.resource.spi.ActivationSpec.",
+              "Error: activationspec-class [ {0} ] does not implement jakarta.resource.spi.ActivationSpec.",
               new Object[] {impl}));
         return result;                
       }
@@ -115,7 +115,7 @@ implements ConnectorCheck
            "For [ {0} ]",
            new Object[] {compName.toString()}));	
       result.passed(smh.getLocalString(getClass().getName() + ".passed",
-            "Success: all activationspec-class implement javax.resource.spi.ActivationSpec"));
+            "Success: all activationspec-class implement jakarta.resource.spi.ActivationSpec"));
     }
     return result;
   }

@@ -18,7 +18,7 @@ package beans;
 
 import java.rmi.RemoteException;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 
 public interface MessageChecker extends EJBObject {
     int getMessageCount() throws RemoteException;

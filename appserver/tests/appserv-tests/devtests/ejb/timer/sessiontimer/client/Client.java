@@ -21,7 +21,7 @@ import javax.naming.*;
 
 import java.util.concurrent.*;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import com.sun.s1asdev.ejb.timer.sessiontimer.TimerSession;
 import com.sun.s1asdev.ejb.timer.sessiontimer.TimerSessionHome;

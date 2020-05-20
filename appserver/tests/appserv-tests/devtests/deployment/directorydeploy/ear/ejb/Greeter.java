@@ -26,7 +26,7 @@ package samples.ejb.stateless.simple.ejb;
  * to obtain references to the bean's remote interface (Greeter, in this case).
  *
  */
-public interface Greeter extends javax.ejb.EJBObject { 
+public interface Greeter extends jakarta.ejb.EJBObject { 
     /**
      * Returns a greeting.
      * @return returns a greeting as a string.

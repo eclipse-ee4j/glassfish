@@ -184,7 +184,7 @@
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <method>
@@ -239,7 +239,7 @@
         <method-intf>Remote</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
       <method>
@@ -270,7 +270,7 @@
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <method>
@@ -333,7 +333,7 @@
         <method-intf>Remote</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
       <method>
@@ -403,7 +403,7 @@
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <method>
@@ -453,7 +453,7 @@
         <method-intf>Remote</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
       <method>
@@ -507,7 +507,7 @@
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <method>
@@ -557,7 +557,7 @@
         <method-intf>Remote</method-intf>
         <method-name>isIdentical</method-name>
         <method-params>
-          <method-param>javax.ejb.EJBObject</method-param>
+          <method-param>jakarta.ejb.EJBObject</method-param>
         </method-params>
       </method>
       <method>
@@ -612,7 +612,7 @@
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <trans-attribute>NotSupported</trans-attribute>
@@ -777,7 +777,7 @@
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <trans-attribute>NotSupported</trans-attribute>
@@ -872,7 +872,7 @@
         <method-intf>Home</method-intf>
         <method-name>remove</method-name>
         <method-params>
-          <method-param>javax.ejb.Handle</method-param>
+          <method-param>jakarta.ejb.Handle</method-param>
         </method-params>
       </method>
       <trans-attribute>NotSupported</trans-attribute>

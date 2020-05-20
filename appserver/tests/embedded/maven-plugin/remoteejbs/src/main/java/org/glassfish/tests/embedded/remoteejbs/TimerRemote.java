@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.embedded.remoteejbs;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  * @author bhavanishankar@dev.java.net

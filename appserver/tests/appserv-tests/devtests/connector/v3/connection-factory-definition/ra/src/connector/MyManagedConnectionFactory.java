@@ -19,16 +19,16 @@ package connector;
 import java.io.PrintWriter;
 import java.util.Set;
 
-import javax.resource.ResourceException;
-import javax.resource.cci.Connection;
-import javax.resource.cci.ConnectionFactory;
-import javax.resource.spi.ConfigProperty;
-import javax.resource.spi.ConnectionManager;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.ManagedConnection;
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.ConnectionDefinition;
-import javax.resource.spi.TransactionSupport;
+import jakarta.resource.ResourceException;
+import jakarta.resource.cci.Connection;
+import jakarta.resource.cci.ConnectionFactory;
+import jakarta.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConnectionManager;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ConnectionDefinition;
+import jakarta.resource.spi.TransactionSupport;
 import javax.security.auth.Subject;
 
 @ConnectionDefinition(

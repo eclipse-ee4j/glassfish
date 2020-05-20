@@ -16,7 +16,7 @@
 
 package org.glassfish.jacc.test.uncoveredmethods;
 
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.WebServlet;
 
 
 @WebServlet(urlPatterns = {"/Example1"})

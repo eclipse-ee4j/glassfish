@@ -77,9 +77,9 @@ import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.api.invocation.InvocationManager ;
 import org.glassfish.hk2.api.PostConstruct;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /** 
  * This class is responsible for making various decisions for selecting

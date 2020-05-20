@@ -23,7 +23,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
 import java.lang.reflect.Method;
 
 /**
- * All finder methods should throw the javax.ejb.FinderException
+ * All finder methods should throw the jakarta.ejb.FinderException
  * 
  * @author  Jerome Dochez
  * @version 
@@ -45,14 +45,14 @@ public class FindMethodException extends QueryMethodTest {
      */
     protected boolean runIndividualQueryTest(Method method, EjbCMPEntityDescriptor descriptor, Class targetClass, Result result) {
 	ComponentNameConstructor compName = getVerifierContext().getComponentNameConstructor();    
-        if (methodThrowException(method, "javax.ejb.FinderException")) {
+        if (methodThrowException(method, "jakarta.ejb.FinderException")) {
 	    result.addGoodDetails(smh.getLocalString
 				       ("tests.componentNameConstructor",
 					"For [ {0} ]",
 					new Object[] {compName.toString()}));
             result.addGoodDetails(smh.getLocalString
 		("com.sun.enterprise.tools.verifier.tests.ejb.entity.cmp2.FindMethodException.passed",
-                "[ {0} ] throws the javax.ejb.FinderException",
+                "[ {0} ] throws the jakarta.ejb.FinderException",
 		new Object[] {method.getName()}));                   
             return true;
         } else {
@@ -62,7 +62,7 @@ public class FindMethodException extends QueryMethodTest {
 					new Object[] {compName.toString()}));
             result.addErrorDetails(smh.getLocalString
 		("com.sun.enterprise.tools.verifier.tests.ejb.entity.cmp2.FindMethodException.failed",
-                "Error : [ {0} ] does not throw the javax.ejb.FinderException",
+                "Error : [ {0} ] does not throw the jakarta.ejb.FinderException",
 		new Object[] {method.getName()}));                   
             return false;
         }

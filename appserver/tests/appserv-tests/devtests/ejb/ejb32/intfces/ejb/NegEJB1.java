@@ -16,9 +16,9 @@
 
 package ejb32.intrfaces;
 
-import javax.ejb.Local;
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 
 /*
     St1 can not be both local and remote

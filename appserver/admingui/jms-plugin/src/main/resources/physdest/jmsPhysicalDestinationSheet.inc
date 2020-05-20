@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,7 +81,7 @@
         <sun:property id="typeProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18njms.jmsPhysDestinations.type}">
             <h:outputText id="TypeStatic" rendered="#{edit}" value="#{pageSession.destType}"/>
             <h:inputHidden rendered="#{edit}" value="#{pageSession.destType}" />
-            <sun:dropDown id="type" rendered="#{!edit}" labels={"javax.jms.Topic" "javax.jms.Queue"} values={"topic" "queue"} selected="#{type}"/>
+            <sun:dropDown id="type" rendered="#{!edit}" labels={"jakarta.jms.Topic" "jakarta.jms.Queue"} values={"topic" "queue"} selected="#{type}"/>
         </sun:property>
 
         <sun:property id="maxNumMsgsProp" labelAlign="left" noWrap="#{false}" overlapLabel="#{false}" label="$resource{i18njms.jmsPhysDestinations.MaxNumMsgs}" helpText="$resource{i18njms.jmsPhysDestinations.MaxNumMsgsHelp}" >

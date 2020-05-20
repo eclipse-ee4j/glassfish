@@ -17,7 +17,7 @@
 package test.extension;
 
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class Interceptors
 {

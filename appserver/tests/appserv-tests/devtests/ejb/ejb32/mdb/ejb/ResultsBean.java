@@ -16,10 +16,10 @@
 
 package com.sun.s1asdev.ejb.ejb32.mdb.ejb;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Lock;
-import javax.ejb.LockType;
-import javax.ejb.Singleton;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Lock;
+import jakarta.ejb.LockType;
+import jakarta.ejb.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;

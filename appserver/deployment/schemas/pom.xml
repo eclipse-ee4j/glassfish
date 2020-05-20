@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.deployment</groupId>
         <artifactId>deployment</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>appserver-schemas</artifactId>
     <packaging>distribution-fragment</packaging>
@@ -75,9 +75,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.eclipse.persistence</groupId>
-                                    <artifactId>jakarta.persistence</artifactId>
-                                    <includes>javax/persistence/orm*.xsd, javax/persistence/persistence*.xsd</includes>
+                                    <groupId>jakarta.persistence</groupId>
+                                    <artifactId>jakarta.persistence-api</artifactId>
+                                    <includes>jakarta/persistence/orm*.xsd, jakarta/persistence/persistence*.xsd</includes>
                                     <outputDirectory>${jpa.schema.temp.location}</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
@@ -94,7 +94,7 @@
                         <configuration>
                             <tasks>
                               <copy todir="${project.build.outputDirectory}/glassfish/lib/schemas" flatten="true">
-                                    <fileset dir="${jpa.schema.temp.location}/javax/persistence" />
+                                    <fileset dir="${jpa.schema.temp.location}/jakarta/persistence" />
                                 </copy>
                             </tasks>
                         </configuration>

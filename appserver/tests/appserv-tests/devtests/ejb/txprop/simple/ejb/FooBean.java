@@ -20,13 +20,13 @@ import java.util.Date;
 import java.util.Collection;
 import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
-import javax.ejb.TimerService;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.TimerService;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import com.sun.s1asdev.ejb.txprop.simple.HelloHome;
 import com.sun.s1asdev.ejb.txprop.simple.Hello;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,9 +27,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJBException;
-import javax.interceptor.InvocationContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJBException;
+import jakarta.interceptor.InvocationContext;
 
 import com.sun.ejb.EJBUtils;
 import com.sun.ejb.containers.BaseContainer;
@@ -648,7 +648,7 @@ public class InterceptorManager {
 
     private void load2xLifecycleMethods(ArrayList<CallbackInterceptor>[] metaArray) {
 
-        if (javax.ejb.EnterpriseBean.class.isAssignableFrom(beanClass)) {
+        if (jakarta.ejb.EnterpriseBean.class.isAssignableFrom(beanClass)) {
             int sz = lcAnnotationClasses.length;
             for (int i = 0; i < sz; i++) {
                 if (pre30LCMethodNames[i] == null) {

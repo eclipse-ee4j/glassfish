@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@
     <jms-connection-factory>
         <description>global-scope resource to be modified by Web DD</description>
         <name>java:global/env/Servlet_ModByDD_JMSConnectionFactory</name>
-<!--        <interface-name>javax.jms.ConnectionFactory</interface-name>-->
+<!--        <interface-name>jakarta.jms.ConnectionFactory</interface-name>-->
         <resource-adapter>jmsra</resource-adapter>
         <user>admin</user>
         <password>admin</password>
@@ -51,7 +51,7 @@
     <jms-connection-factory>
         <description>global-scope resource defined in Web DD</description>
         <name>java:global/env/Web_DD_JMSConnectionFactory</name>
-        <interface-name>javax.jms.ConnectionFactory</interface-name>
+        <interface-name>jakarta.jms.ConnectionFactory</interface-name>
 <!--        <resource-adapter>jmsra</resource-adapter>-->
         <user>admin</user>
         <password>admin</password>
@@ -65,7 +65,7 @@
     <jms-connection-factory>
         <description>application-scope resource defined in Web DD</description>
         <name>java:app/env/Web_DD_JMSConnectionFactory</name>
-<!--        <interface-name>javax.jms.ConnectionFactory</interface-name>
+<!--        <interface-name>jakarta.jms.ConnectionFactory</interface-name>
         <resource-adapter>jmsra</resource-adapter>-->
         <user>admin</user>
         <password>admin</password>
@@ -79,7 +79,7 @@
     <jms-connection-factory>
         <description>module-scope resource defined in Web DD</description>
         <name>java:module/env/Web_DD_JMSConnectionFactory</name>
-        <interface-name>javax.jms.ConnectionFactory</interface-name>
+        <interface-name>jakarta.jms.ConnectionFactory</interface-name>
         <resource-adapter>jmsra</resource-adapter>
         <user>admin</user>
         <password>admin</password>
@@ -93,7 +93,7 @@
     <jms-connection-factory>
         <description>component-scope resource defined in Web DD</description>
         <name>java:comp/env/Web_DD_JMSConnectionFactory</name>
-        <interface-name>javax.jms.ConnectionFactory</interface-name>
+        <interface-name>jakarta.jms.ConnectionFactory</interface-name>
         <resource-adapter>jmsra</resource-adapter>
         <user>admin</user>
         <password>admin</password>

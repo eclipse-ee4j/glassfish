@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,18 +18,13 @@ package org.glassfish.ejb.embedded;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 
 import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.glassfish.deployment.common.ModuleExploder;

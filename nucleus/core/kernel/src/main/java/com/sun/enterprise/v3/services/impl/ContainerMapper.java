@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -379,7 +379,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     public void unregister(String contextRoot) {
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "MAPPER ({0}) UNREGISTER contextRoot: {1}",
+            LOGGER.log(Level.FINE, "MAPPER({0}) UNREGISTER contextRoot: {1}",
                     new Object[]{this, contextRoot});
         }
         for (String host : grizzlyService.hosts) {
@@ -389,7 +389,8 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     public void register(final Endpoint endpoint) {
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "MAPPER({0}) REGISTER endpoint: {1}", endpoint);
+            LOGGER.log(Level.FINE, "MAPPER({0}) REGISTER endpoint: {1}",
+                    new Object[]{this, endpoint});
         }
 
         mapMultipleAdapter = true;

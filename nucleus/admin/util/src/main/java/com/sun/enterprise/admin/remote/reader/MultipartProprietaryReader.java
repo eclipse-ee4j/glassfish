@@ -97,6 +97,7 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
                 String name = "noname";
                 if (cdParams.containsKey("name")) {
                     name = cdParams.getProperty("name");
+                    name = new String(name.getBytes("ISO8859-1"), "UTF-8");
                 } else if (cdParams.containsKey("filename")) {
                     name = cdParams.getProperty("filename");
                 }

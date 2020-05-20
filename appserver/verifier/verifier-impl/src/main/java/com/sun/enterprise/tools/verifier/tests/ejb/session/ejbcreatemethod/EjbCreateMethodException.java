@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
  * Compatibility Note: EJB 1.0 allowed the ejbCreate method to throw the 
  * java.rmi.RemoteException to indicate a non-application exception. This 
  * practice is deprecated in EJB 1.1---an EJB 1.1 compliant enterprise bean 
- * should throw the javax.ejb.EJBException or another RuntimeException to 
+ * should throw the jakarta.ejb.EJBException or another RuntimeException to 
  * indicate non-application exceptions to the Container (see Section 12.2.2). 
  * Note: Treat as a warning to user in this instance.
  */
@@ -56,7 +56,7 @@ public class EjbCreateMethodException extends EjbTest implements EjbCheck {
      * Compatibility Note: EJB 1.0 allowed the ejbCreate method to throw the 
      * java.rmi.RemoteException to indicate a non-application exception. This 
      * practice is deprecated in EJB 1.1---an EJB 1.1 compliant enterprise bean 
-     * should throw the javax.ejb.EJBException or another RuntimeException to 
+     * should throw the jakarta.ejb.EJBException or another RuntimeException to 
      * indicate non-application exceptions to the Container (see Section 12.2.2). 
      * Note: Treat as a warning to user in this instance.
      *   
@@ -97,7 +97,7 @@ public class EjbCreateMethodException extends EjbTest implements EjbCheck {
 			    // Compatibility Note: EJB 1.0 allowed the ejbCreate method to throw
 			    // the java.rmi.RemoteException to indicate a non-application 
 			    // exception. This practice is deprecated in EJB 1.1---an EJB 1.1 
-			    // compliant enterprise bean should throw the javax.ejb.EJBException
+			    // compliant enterprise bean should throw the jakarta.ejb.EJBException
 			    // or another RuntimeException to indicate non-application 
 			    // exceptions to the Container (see Section 12.2.2). 
 			    // Note: Treat as a warning to user in this instance.
@@ -142,7 +142,7 @@ public class EjbCreateMethodException extends EjbTest implements EjbCheck {
 							  "\n java.rmi.RemoteException to indicate a non-application" +
 							  "\n exception. This practice is deprecated in EJB 1.1" +
 							  "\n ---an EJB 1.1 compliant enterprise bean should" +
-							  "\n throw the javax.ejb.EJBException or another " +
+							  "\n throw the jakarta.ejb.EJBException or another " +
 							  "\n RuntimeException to indicate non-application exceptions" +
 							  "\n to the Container",
 							  new Object[] {methods[i].getName()}));

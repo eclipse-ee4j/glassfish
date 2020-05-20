@@ -16,14 +16,14 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 /**
  * @author mvatkina
  */
 
-public interface A1Home extends javax.ejb.EJBHome {
+public interface A1Home extends jakarta.ejb.EJBHome {
 
     public A1 findByPrimaryKey(java.lang.String pk)  
             throws FinderException, RemoteException;

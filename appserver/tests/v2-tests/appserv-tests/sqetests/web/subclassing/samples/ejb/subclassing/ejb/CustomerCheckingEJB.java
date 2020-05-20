@@ -10,7 +10,7 @@
 
 package samples.ejb.subclassing.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.sql.*;
 import javax.sql.DataSource;

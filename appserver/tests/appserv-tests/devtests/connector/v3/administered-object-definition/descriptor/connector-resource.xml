@@ -22,7 +22,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/javaee_7.xsd>
 	<description>global-scope resource defined in application DD</description>
 	<name>java:global/env/Application_Level_ConnectionFactory</name>
-	<class-name>javax.resource.cci.ConnectionFactory</class-name>
+	<class-name>jakarta.resource.cci.ConnectionFactory</class-name>
 	<resource-adapter>crd-ra</resource-adapter>
 	<property>
 		<name>transactionSupport</name>

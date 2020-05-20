@@ -16,15 +16,15 @@
 
 package test;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 public class FilterTest implements Filter{
     
     public void destroy() {
         System.out.println("[Filter.destroy]");
     }    
     
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, javax.servlet.ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
         System.out.println("[Filter.doFilter]");
           
         ((HttpServletRequest)request).getSession(true).setAttribute("FILTER", "PASS");
@@ -32,7 +32,7 @@ public class FilterTest implements Filter{
         
     }    
     
-    public void init(javax.servlet.FilterConfig filterConfig) throws javax.servlet.ServletException {
+    public void init(jakarta.servlet.FilterConfig filterConfig) throws jakarta.servlet.ServletException {
         System.out.println("[Filter.init]");
     }
 }

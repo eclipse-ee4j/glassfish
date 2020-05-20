@@ -17,16 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>nucleus-featuresets</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>atomic</artifactId>
-    <name>Glassfish Nucleus Atomic Featureset</name>
     <packaging>pom</packaging>
+
+    <name>Glassfish Nucleus Atomic Featureset</name>
     <description>This pom defines the set of modules for GlassFish Nucleus Atomic distribution</description>
 
     <dependencies>
@@ -56,7 +59,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.gogo.runtime</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -66,7 +69,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.gogo.shell</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -76,7 +79,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.gogo.command</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -88,7 +91,7 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.fileinstall</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -99,7 +102,18 @@
         <dependency>
            <groupId>org.apache.felix</groupId>
            <artifactId>org.apache.felix.configadmin</artifactId>
-            <exclusions>
+           <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Felix SCR always needs to be deployed as 3 bundles since 2.0.12 -->
+        <dependency>
+           <groupId>org.apache.felix</groupId>
+           <artifactId>org.apache.felix.scr</artifactId>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -107,14 +121,12 @@
             </exclusions>
         </dependency>
         <dependency>
-           <groupId>org.apache.felix</groupId>
-           <artifactId>org.apache.felix.scr</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.promise</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.function</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.osgi-platforms</groupId>
@@ -304,9 +316,12 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.bean-validator</groupId>
-            <artifactId>bean-validator</artifactId>
-            <version>${project.version}</version>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -315,9 +330,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.bean-validator-cdi</groupId>
-            <artifactId>bean-validator-cdi</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator-cdi</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -347,8 +361,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -795,6 +809,38 @@
             </exclusions>
         </dependency>
 
+        <!-- nucleus-xml-binding -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- nucleus-jersey -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -846,7 +892,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
             <exclusions>
@@ -855,7 +901,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-sse</artifactId>
@@ -916,7 +962,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
+<!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-processing</artifactId>
             <exclusions>
@@ -925,7 +972,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>

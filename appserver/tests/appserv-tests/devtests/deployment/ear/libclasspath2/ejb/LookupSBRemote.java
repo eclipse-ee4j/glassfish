@@ -17,7 +17,7 @@
 package libclasspath2.ejb;
 
 import java.io.IOException;
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 import libclasspath2.ResourceHelper;
 
 

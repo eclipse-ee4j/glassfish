@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public final class ConnectorConnectionPoolConfigTest
         extends ConfigMgrTestBase {
-    private static final String CONNECTOR_DEF_NAME = "javax.resource.cci.ConnectionFactory";
+    private static final String CONNECTOR_DEF_NAME = "jakarta.resource.cci.ConnectionFactory";
     private static final String RESOURCE_ADAPTOR_NAME = "cciblackbox-tx";
     private static final Map<String, String> OPTIONS = MapUtil.newMap(
             ConnectorConnectionPoolConfigKeys.IGNORE_MISSING_REFERENCES_KEY, "true");

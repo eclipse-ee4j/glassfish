@@ -18,9 +18,9 @@ package test.beans;
 
 import test.servlet.TransactionScopedTestServlet;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.inject.spi.PassivationCapable;
-import javax.transaction.TransactionScoped;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.transaction.TransactionScoped;
 import java.io.Serializable;
 
 @TransactionScoped

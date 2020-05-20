@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,17 +18,17 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
 import java.io.*;
 
-import javax.resource.AdministeredObjectDefinitions;
-import javax.resource.AdministeredObjectDefinition;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import jakarta.resource.AdministeredObjectDefinitions;
+import jakarta.resource.AdministeredObjectDefinition;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 import javax.naming.*;
-import javax.ejb.EJB;
-import javax.ejb.EJBs;
-import javax.ejb.EJBException;
-import javax.annotation.Resource;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
+import jakarta.ejb.EJBException;
+import jakarta.annotation.Resource;
+import jakarta.transaction.UserTransaction;
 
 @EJB(name = "helloStateless3", beanInterface = Hello.class)
 @EJBs({@EJB(name = "helloStateless4", beanName = "HelloEJB",
@@ -42,7 +42,7 @@ import javax.transaction.UserTransaction;
                         description="global-scope resource defined by @AdministeredObjectDefinition",
                         name = "java:global/env/Servlet_ModByDD_AdminObject",
                         resourceAdapter="#aod-ra",
-                        interfaceName = "javax.jms.Destination",
+                        interfaceName = "jakarta.jms.Destination",
                         className = "connector.MyAdminObject",
                         properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
                 ),
@@ -50,7 +50,7 @@ import javax.transaction.UserTransaction;
                 @AdministeredObjectDefinition(
                         description="global-scope resource defined by @AdministeredObjectDefinition",
                         name = "java:global/env/Servlet_AdminObject",
-                        interfaceName = "javax.jms.Destination",
+                        interfaceName = "jakarta.jms.Destination",
                         className = "connector.MyAdminObject",
                         resourceAdapter="#aod-ra",
                         properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
@@ -59,7 +59,7 @@ import javax.transaction.UserTransaction;
                 @AdministeredObjectDefinition(
                         description="application-scope resource defined by @AdministeredObjectDefinition",
                         name = "java:app/env/Servlet_AdminObject",
-                        interfaceName = "javax.jms.Destination",
+                        interfaceName = "jakarta.jms.Destination",
                         className = "connector.MyAdminObject",
                         resourceAdapter="#aod-ra",
                         properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
@@ -68,7 +68,7 @@ import javax.transaction.UserTransaction;
                 @AdministeredObjectDefinition(
                         description="module-scope resource defined by @AdministeredObjectDefinition",
                         name = "java:module/env/Servlet_AdminObject",
-                        interfaceName = "javax.jms.Destination",
+                        interfaceName = "jakarta.jms.Destination",
                         className = "connector.MyAdminObject",
                         resourceAdapter="#aod-ra",
                         properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
@@ -77,7 +77,7 @@ import javax.transaction.UserTransaction;
                 @AdministeredObjectDefinition(
                         description="component-scope resource defined by @AdministeredObjectDefinition",
                         name = "java:comp/env/Servlet_AdminObject",
-                        interfaceName = "javax.jms.Destination",
+                        interfaceName = "jakarta.jms.Destination",
                         className = "connector.MyAdminObject",
                         resourceAdapter="#aod-ra",
                         properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
@@ -173,7 +173,7 @@ public class Servlet extends HttpServlet {
                 sleepFor(2);
                 helloStateful.ping();
                 //throw new EJBException("Did not get ConcurrentAccessException");
-            } catch (javax.ejb.ConcurrentAccessException conEx) {
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
                 ;   //Everything is fine
             } catch (Throwable th) {
                 throw new EJBException("Got some wierd exception: " + th);

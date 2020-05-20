@@ -17,8 +17,8 @@
 package com.sun.s1asdev.deployment.noappxml.ejb;
 
 import com.sun.s1asdev.deployment.noappxml.util.Util;
-import javax.ejb.Stateful;
-import javax.ejb.Remote;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remote;
 
 @Stateful
 @Remote({Sful.class})

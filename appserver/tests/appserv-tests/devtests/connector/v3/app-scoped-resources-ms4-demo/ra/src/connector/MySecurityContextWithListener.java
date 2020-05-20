@@ -16,7 +16,7 @@
 
 package connector;
 
-import javax.resource.spi.work.WorkContextLifecycleListener;
+import jakarta.resource.spi.work.WorkContextLifecycleListener;
 
 
 public class MySecurityContextWithListener extends MySecurityContext implements WorkContextLifecycleListener {

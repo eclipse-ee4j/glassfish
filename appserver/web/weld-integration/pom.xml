@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
 	<groupId>org.glassfish.main.web</groupId>
     	<artifactId>web</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>weld-integration</artifactId>
@@ -60,7 +60,7 @@
                 <includes>
                     <include>**/faces-config.xml</include>
                     <include>**/com.sun.faces.spi.FacesConfigResourceProvider</include>
-                    <include>**/javax.enterprise.inject.spi.Extension</include>
+                    <include>**/jakarta.enterprise.inject.spi.Extension</include>
                 </includes>
             </resource>
         </resources>
@@ -77,8 +77,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -138,6 +138,14 @@
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
+        </dependency>
+        <!--
+            TODO: does this really belong here?
+            InjectionServicesImpl needs jakarta.xml.ws.WebServiceRef
+        -->
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.xml.ws</groupId>

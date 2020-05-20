@@ -18,12 +18,12 @@ package com.sun.s1asdev.orb.annotation;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
-import javax.annotation.Resource;
-import javax.annotation.Resources;
+import jakarta.annotation.Resource;
+import jakarta.annotation.Resources;
 import org.omg.CORBA.ORB;
 import org.omg.PortableServer.POA;
 

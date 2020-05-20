@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,9 @@ import com.sun.appserv.connectors.internal.api.*;
 
 import java.util.logging.*;
 import java.util.*;
-import java.lang.*;
 import java.lang.reflect.*;
-import javax.resource.spi.ResourceAdapter;
-import javax.resource.spi.ResourceAdapterAssociation;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.ResourceAdapterAssociation;
 
 
 /**

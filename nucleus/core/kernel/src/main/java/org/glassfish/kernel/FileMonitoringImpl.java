@@ -19,7 +19,7 @@ package org.glassfish.kernel;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.api.admin.FileMonitoring;
 

@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.rules.TestWatcher;
 
-import javax.ejb.embeddable.EJBContainer;
+import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.InitialContext;

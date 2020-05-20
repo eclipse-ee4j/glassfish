@@ -32,7 +32,7 @@ import java.util.Enumeration;
 /**
  * Optionally implemented SessionSynchronization interface transaction 
  * demarcation test.
- * If an enterprise bean implements the javax.ejb.SessionSynchronization
+ * If an enterprise bean implements the jakarta.ejb.SessionSynchronization
  * interface, the Application Assembler can specify only the following values
  * for the transaction attributes of the bean's methods:
  *   Required
@@ -45,7 +45,7 @@ public class TransactionDemarcationSessionSynchronizationInterface extends EjbTe
     /**
      * Optionally implemented SessionSynchronization interface transaction 
      * demarcation test.
-     * If an enterprise bean implements the javax.ejb.SessionSynchronization
+     * If an enterprise bean implements the jakarta.ejb.SessionSynchronization
      * interface, the Application Assembler can specify only the following values
      * for the transaction attributes of the bean's methods:
      *   Required
@@ -72,7 +72,7 @@ public class TransactionDemarcationSessionSynchronizationInterface extends EjbTe
                     Class[] interfaces = c.getInterfaces();
 
                     for (int i = 0; i < interfaces.length; i++) {
-                        if (interfaces[i].getName().equals("javax.ejb.SessionSynchronization")) {
+                        if (interfaces[i].getName().equals("jakarta.ejb.SessionSynchronization")) {
                             oneFound = true;
                             break;
                         }
@@ -89,7 +89,7 @@ public class TransactionDemarcationSessionSynchronizationInterface extends EjbTe
                 return result;
             }
 
-            // If an enterprise bean implements the javax.ejb.SessionSynchronization
+            // If an enterprise bean implements the jakarta.ejb.SessionSynchronization
             // interface, the Application Assembler can specify only the following
             // values for the transaction attributes of the bean's methods:
             //   Required, RequiresNew, Mandatory

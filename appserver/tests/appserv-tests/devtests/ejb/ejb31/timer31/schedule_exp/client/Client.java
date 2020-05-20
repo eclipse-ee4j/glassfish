@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,8 @@
 
 package com.sun.s1asdev.timer31.schedule_exp.client;
 
-import java.io.Serializable;
-import java.rmi.NoSuchObjectException;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.ejb.*;
-//import javax.jms.*;
+import jakarta.ejb.*;
 import javax.naming.*;
-import javax.rmi.PortableRemoteObject;
 
 import com.sun.s1asdev.ejb31.timer.schedule_exp.Stles;
 

@@ -28,8 +28,9 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.config.serverbeans.Module;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Ping Connection Pool Command

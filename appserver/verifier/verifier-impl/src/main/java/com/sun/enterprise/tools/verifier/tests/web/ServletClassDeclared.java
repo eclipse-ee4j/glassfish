@@ -99,7 +99,7 @@ public class ServletClassDeclared extends WebTest implements WebCheck {
                     String className = classEntryName.replace('/','.');
                     Class servletClass = loadClass(result, className);
                     if (!Modifier.isAbstract(servletClass.getModifiers()) &&
-                            isImplementorOf(servletClass, "javax.servlet.Servlet")) {
+                            isImplementorOf(servletClass, "jakarta.servlet.Servlet")) {
                         foundOne=true;
                         // let's find out if this servlet has associated deployment descriptors...
                         Set servlets = descriptor.getServletDescriptors();

@@ -16,14 +16,14 @@
 
 package com.sun.s1asdev.ejb.ejbflush;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface A2Local extends javax.ejb.EJBLocalObject {
+public interface A2Local extends jakarta.ejb.EJBLocalObject {
 
     public void setName(String name); 
  

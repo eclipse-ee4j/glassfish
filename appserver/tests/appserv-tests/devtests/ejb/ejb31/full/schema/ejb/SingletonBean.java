@@ -16,14 +16,14 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 @Startup
 @Singleton

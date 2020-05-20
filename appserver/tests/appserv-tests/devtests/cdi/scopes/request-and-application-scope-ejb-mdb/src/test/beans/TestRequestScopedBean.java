@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 //Simple TestBean to test CDI. 
 @RequestScoped

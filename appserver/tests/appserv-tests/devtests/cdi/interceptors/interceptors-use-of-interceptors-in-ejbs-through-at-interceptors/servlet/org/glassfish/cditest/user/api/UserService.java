@@ -21,7 +21,7 @@
 
 package org.glassfish.cditest.user.api;
 
-import javax.ejb.EJBException;
+import jakarta.ejb.EJBException;
 import org.glassfish.cditest.user.api.model.User;
 
 /**

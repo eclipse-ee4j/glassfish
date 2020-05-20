@@ -18,7 +18,7 @@ package org.glassfish.admin.rest.composite;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.GET;
+import jakarta.ws.rs.GET;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

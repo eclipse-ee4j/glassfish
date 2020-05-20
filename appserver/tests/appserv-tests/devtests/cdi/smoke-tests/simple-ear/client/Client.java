@@ -20,8 +20,8 @@ package com.acme;
 import java.net.*;
 import java.io.*;
 import java.util.*;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import javax.naming.InitialContext;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

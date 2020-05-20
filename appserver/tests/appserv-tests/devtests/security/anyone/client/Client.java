@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

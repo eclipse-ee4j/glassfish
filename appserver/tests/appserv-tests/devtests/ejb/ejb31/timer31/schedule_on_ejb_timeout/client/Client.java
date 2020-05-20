@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 

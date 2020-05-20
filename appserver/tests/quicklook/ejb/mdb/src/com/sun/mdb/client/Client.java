@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package com.sun.mdb.client;
 
-import javax.jms.*;
-import javax.annotation.Resource;
+import jakarta.jms.*;
+import jakarta.annotation.Resource;
 import javax.naming.InitialContext;
 
 public class Client {
@@ -39,10 +39,10 @@ public class Client {
     private static QueueConnectionFactory queueConFactory;
 
     @Resource(name="MsgBeanQueue", mappedName="jms/ejb_ejb30_hello_mdb_InQueue")
-    private static javax.jms.Queue msgBeanQueue;
+    private static jakarta.jms.Queue msgBeanQueue;
 
     @Resource(name="ClientQueue", mappedName="foo")
-    private static javax.jms.Queue clientQueue;
+    private static jakarta.jms.Queue clientQueue;
 
     private QueueConnection queueCon;
     private QueueSession queueSession;
@@ -65,9 +65,9 @@ public class Client {
 
 		System.out.println("Java SE mode...");
 		InitialContext ic = new InitialContext();
-		queueConFactory = (javax.jms.QueueConnectionFactory) ic.lookup("jms/ejb_ejb30_hello_mdb_QCF");
-		msgBeanQueue = (javax.jms.Queue) ic.lookup("jms/ejb_ejb30_hello_mdb_InQueue");
-		clientQueue = (javax.jms.Queue) ic.lookup("jms/ejb_ejb30_hello_mdb_OutQueue");
+		queueConFactory = (jakarta.jms.QueueConnectionFactory) ic.lookup("jms/ejb_ejb30_hello_mdb_QCF");
+		msgBeanQueue = (jakarta.jms.Queue) ic.lookup("jms/ejb_ejb30_hello_mdb_InQueue");
+		clientQueue = (jakarta.jms.Queue) ic.lookup("jms/ejb_ejb30_hello_mdb_OutQueue");
 		
 	    }
 
@@ -105,7 +105,7 @@ public class Client {
         }
     }
 
-    public void sendMsgs(javax.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue + 
@@ -125,7 +125,7 @@ public class Client {
 
         message.setBooleanProperty("flag", true);
         message.setIntProperty("num", 2);
-        sendMsgs((javax.jms.Queue) dest, message, num);
+        sendMsgs((jakarta.jms.Queue) dest, message, num);
 
         System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);

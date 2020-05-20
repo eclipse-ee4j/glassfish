@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -626,12 +626,12 @@ public class ParseDD extends VerifierTest {
 		if (nodeList != null) {
 		    for (int i = 0; i < nodeList.getLength(); i++) {
 			String value = ((Text)nodeList.item(i).getFirstChild()).getNodeValue();
-			if (!value.equals("javax.jms.Queue")
-			    && !value.equals("javax.jms.Topic")) {
+			if (!value.equals("jakarta.jms.Queue")
+			    && !value.equals("jakarta.jms.Topic")) {
 			    result.failed
 				(smh.getLocalString
 				 (getClass().getName() + ".failedDestinationType",
-				  "[EJB] destination-type cannot be {0}. It has to be either javax.jms.Topic or javax.jms.Queue",
+				  "[EJB] destination-type cannot be {0}. It has to be either jakarta.jms.Topic or jakarta.jms.Queue",
 				  new Object[] {value}));
 			    oneFailed = true;
 			}

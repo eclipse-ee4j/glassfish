@@ -16,7 +16,7 @@
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import javax.naming.InitialContext;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.event.Observes;
 
 public class TestEventObserver {
     public static int documentAfterBlogUpdate;

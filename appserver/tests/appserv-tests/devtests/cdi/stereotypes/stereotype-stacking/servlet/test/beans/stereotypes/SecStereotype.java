@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 import test.beans.interceptors.Secure;
 
-@javax.enterprise.inject.Stereotype
+@jakarta.enterprise.inject.Stereotype
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE })
 @Secure

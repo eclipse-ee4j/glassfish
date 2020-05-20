@@ -17,9 +17,9 @@
 package org.glassfish.tests.embedded.cdi_ejb_jpa;
 
 //Simple TestBean to test CDI. 
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 //This bean implements Serializable as it needs to be placed into a Stateful Bean
 @Stateless

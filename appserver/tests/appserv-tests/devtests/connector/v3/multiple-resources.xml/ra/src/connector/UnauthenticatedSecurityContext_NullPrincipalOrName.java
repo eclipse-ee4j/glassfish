@@ -18,7 +18,7 @@ package connector;
 
 import org.glassfish.security.common.PrincipalImpl;
 
-import javax.resource.spi.work.SecurityContext;
+import jakarta.resource.spi.work.SecurityContext;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.Subject;

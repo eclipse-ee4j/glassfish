@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,10 +39,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
 
 import org.glassfish.admingui.common.factories.NavigationNodeFactory;
 import org.glassfish.admingui.common.util.GuiUtil;

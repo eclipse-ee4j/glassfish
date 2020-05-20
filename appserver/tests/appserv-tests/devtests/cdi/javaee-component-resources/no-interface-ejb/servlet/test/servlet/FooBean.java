@@ -16,7 +16,7 @@
 
 package test.servlet;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import test.beans.TestBeanInterface;
 import test.beans.artifacts.InjectViaAtEJB;

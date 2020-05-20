@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.txisolation.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface SimpleBMP  extends EJBObject {

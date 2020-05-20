@@ -16,12 +16,12 @@
 
 package client;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 import com.example.hello1.*;
 import com.example.hello2.*;
@@ -32,12 +32,12 @@ public class Client extends HttpServlet {
        @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/containerresolver-app2/Hello2Service?wsdl") Hello2Service service2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
                 Hello1 port1 = service1.getHello1Port();
                 String ret = port1.sayHello1("Hi");

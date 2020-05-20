@@ -115,7 +115,7 @@ public class SessionTestClient {
             Thread.sleep(40000);
             //System.out.println("after getting activated"+remote[9].getMessage());
             stat.addStatus(testSuiteID+" "+"10 SFSB Creation",stat.PASS);
-        }catch(javax.ejb.CreateException e){
+        }catch(jakarta.ejb.CreateException e){
             System.out.println("Error while creating beans");
             e.printStackTrace();
             stat.addStatus(testSuiteID+" "+"10 SFSB Creation",stat.FAIL);            
@@ -172,7 +172,7 @@ public class SessionTestClient {
                 try{
                     remote[i].remove();
                     
-                }catch(javax.ejb.RemoveException e){
+                }catch(jakarta.ejb.RemoveException e){
                     System.out.println("Error while removing  :"+i+"SFSB");
                     if(i==5)
                         System.out.println("Bean 5 throws RemoveException");

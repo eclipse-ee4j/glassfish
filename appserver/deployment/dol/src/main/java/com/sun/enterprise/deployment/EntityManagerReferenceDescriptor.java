@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.types.EntityManagerReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import javax.persistence.PersistenceContextType;
-import javax.persistence.SynchronizationType;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.SynchronizationType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public class EntityManagerReferenceDescriptor extends
     }
 
     public String getInjectResourceType() {
-        return "javax.persistence.EntityManager";
+        return "jakarta.persistence.EntityManager";
     }
 
     public void setInjectResourceType(String resourceType) {

@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 /**
@@ -24,21 +24,21 @@ import javax.naming.*;
  */
 
 
-public abstract class ABean implements javax.ejb.EntityBean {
+public abstract class ABean implements jakarta.ejb.EntityBean {
     
-    private javax.ejb.EntityContext context;
+    private jakarta.ejb.EntityContext context;
     
     
     /**
-     * @see javax.ejb.EntityBean#setEntityContext(javax.ejb.EntityContext)
+     * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
-    public void setEntityContext(javax.ejb.EntityContext aContext) {
+    public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbActivate()
+     * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
         
@@ -46,7 +46,7 @@ public abstract class ABean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbPassivate()
+     * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
         
@@ -54,7 +54,7 @@ public abstract class ABean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbRemove()
+     * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: ABean ejbRemove");
@@ -62,7 +62,7 @@ public abstract class ABean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#unsetEntityContext()
+     * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
@@ -70,7 +70,7 @@ public abstract class ABean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbLoad()
+     * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
         
@@ -78,7 +78,7 @@ public abstract class ABean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbStore()
+     * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
         
@@ -97,7 +97,7 @@ public abstract class ABean implements javax.ejb.EntityBean {
     public abstract void setBlb(byte[] b);
 
     public java.lang.Integer ejbCreate(Integer id, java.lang.String name, java.util.Date date, byte[] b) 
-        throws javax.ejb.CreateException {
+        throws jakarta.ejb.CreateException {
 
         setId(id);
         setName(name);
@@ -108,7 +108,7 @@ public abstract class ABean implements javax.ejb.EntityBean {
     }
     
     public void ejbPostCreate(Integer id, java.lang.String name, java.util.Date date, byte[] b) 
-        throws javax.ejb.CreateException { }
+        throws jakarta.ejb.CreateException { }
     
     public void test() {
         java.util.Date d1 = getDate();

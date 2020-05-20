@@ -16,8 +16,8 @@
 
 package connector;
 
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.resource.spi.work.Work;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.work.Work;
 
 /**
  *

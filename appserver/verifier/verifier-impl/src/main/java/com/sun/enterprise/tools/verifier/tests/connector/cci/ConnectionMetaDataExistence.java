@@ -30,7 +30,7 @@ import com.sun.enterprise.tools.verifier.tests.*;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 /**
- * Test if a javax.resource.cci.ConnectionMetaData implementation has been provided in
+ * Test if a jakarta.resource.cci.ConnectionMetaData implementation has been provided in
  * the rar file
  *
  * @author  Jerome Dochez
@@ -42,7 +42,7 @@ public class ConnectionMetaDataExistence
 {
 
     /** <p>
-     * Test if a javax.resource.cci.ConnectionMetaData implementation has been 
+     * Test if a jakarta.resource.cci.ConnectionMetaData implementation has been 
      * provided in the rar file
      * </p>
      *
@@ -58,7 +58,7 @@ public class ConnectionMetaDataExistence
         if (isCCIImplemented(descriptor, result)) {
             //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //            File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-            findImplementorOf(descriptor, "javax.resource.cci.ConnectionMetaData", result);
+            findImplementorOf(descriptor, "jakarta.resource.cci.ConnectionMetaData", result);
         } else {
 	    result.addNaDetails(smh.getLocalString
 				  ("tests.componentNameConstructor",

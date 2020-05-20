@@ -35,7 +35,7 @@ import java.util.Set;
 
 /**
  * Test for each connection-definition, that "connectionfactory-impl-class"
- * implements javax.resource.Referenceable
+ * implements jakarta.resource.Referenceable
  *
  * @author Anisha Malhotra 
  * @version 
@@ -47,7 +47,7 @@ public class CheckConnectionFactoryImplReferenceable
 
   /** <p>
    * Test for each connection-definition, that "connectionfactory-impl-class"
-   * implements javax.resource.Referenceable
+   * implements jakarta.resource.Referenceable
    * </p>
    *
    * @param descriptor deployment descriptor for the rar file
@@ -102,7 +102,7 @@ public class CheckConnectionFactoryImplReferenceable
              new Object[] {connectionImpl}));
         return result;
       }
-      if(!isImplementorOf(implClass, "javax.resource.Referenceable"))
+      if(!isImplementorOf(implClass, "jakarta.resource.Referenceable"))
       {
         oneFailed = true;
         result.addErrorDetails(smh.getLocalString
@@ -110,7 +110,7 @@ public class CheckConnectionFactoryImplReferenceable
              "For [ {0} ]",
              new Object[] {compName.toString()}));
         result.failed(smh.getLocalString(getClass().getName() + ".failed",
-              "Error: connectionfactory-impl-class [ {0} ] does not implement javax.resource.Referenceable",
+              "Error: connectionfactory-impl-class [ {0} ] does not implement jakarta.resource.Referenceable",
               new Object[] {implClass.getName()}));
         return result;                
       }
@@ -122,7 +122,7 @@ public class CheckConnectionFactoryImplReferenceable
            "For [ {0} ]",
            new Object[] {compName.toString()}));	
       result.passed(smh.getLocalString(getClass().getName() + ".passed",
-            "Success: all connectionfactory-impl-class implement javax.resource.Referenceable"));                     
+            "Success: all connectionfactory-impl-class implement jakarta.resource.Referenceable"));                     
     }
     return result;
   }

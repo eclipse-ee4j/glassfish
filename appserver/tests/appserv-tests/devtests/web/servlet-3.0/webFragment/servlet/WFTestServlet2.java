@@ -18,10 +18,10 @@ package wftest;
 
 import java.io.*;
 import java.util.Enumeration;
-import javax.annotation.Resource;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebServlet;
+import jakarta.annotation.Resource;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet(name="wftestServlet2", urlPatterns={"/wftest2"})
 public class WFTestServlet2 extends HttpServlet {

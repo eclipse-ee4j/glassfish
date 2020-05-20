@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejbflush;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface TestHome extends EJBHome {

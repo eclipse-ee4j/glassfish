@@ -55,7 +55,7 @@ import java.text.MessageFormat;
 import org.glassfish.flashlight.client.ProbeClientMediator;
 import org.glassfish.flashlight.client.ProbeClientMethodHandle;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.TransactionFailure;

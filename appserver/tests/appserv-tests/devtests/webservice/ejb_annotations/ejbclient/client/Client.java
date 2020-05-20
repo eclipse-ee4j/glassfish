@@ -16,7 +16,7 @@
 
 package client;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import ejb.Hello; 
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

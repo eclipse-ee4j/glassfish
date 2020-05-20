@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.timer.sessiontimer;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 @Remote
 public interface TimerSingletonRemote {

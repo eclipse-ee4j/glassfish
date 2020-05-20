@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 @Local
 public interface Sless

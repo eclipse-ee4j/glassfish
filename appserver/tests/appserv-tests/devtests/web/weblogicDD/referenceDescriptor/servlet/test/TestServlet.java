@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,13 +18,13 @@ package test;
 
 import java.io.*;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.jms.Queue;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
+import jakarta.jms.Queue;
 import javax.naming.InitialContext;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
 import javax.sql.DataSource;
 
 @WebServlet("/mytest")

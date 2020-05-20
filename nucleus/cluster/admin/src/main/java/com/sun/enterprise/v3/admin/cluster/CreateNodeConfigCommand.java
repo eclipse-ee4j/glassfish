@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.HashMap;
 import com.sun.enterprise.util.net.NetUtils;
 import java.io.File;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Remote AdminCommand to create a config node.  This command is run only on DAS.

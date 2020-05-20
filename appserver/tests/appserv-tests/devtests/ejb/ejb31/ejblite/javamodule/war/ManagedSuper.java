@@ -16,12 +16,12 @@
 
 package com.acme;
 
-import javax.annotation.*;
-import javax.ejb.EJB;
-import javax.annotation.Resource;
+import jakarta.annotation.*;
+import jakarta.ejb.EJB;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 
 public class ManagedSuper {
 

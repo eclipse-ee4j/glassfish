@@ -18,7 +18,7 @@ package samples.ejb.bmp.robean.ejb;
 
 import java.rmi.RemoteException;
 
-public interface Customer extends javax.ejb.EJBObject {
+public interface Customer extends jakarta.ejb.EJBObject {
     public double getBalance() throws RemoteException;
 
     public void doCredit(double amount) throws RemoteException;

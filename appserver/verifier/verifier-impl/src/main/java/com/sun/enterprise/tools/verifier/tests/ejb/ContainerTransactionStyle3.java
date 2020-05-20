@@ -126,7 +126,7 @@ public class ContainerTransactionStyle3 extends EjbTest implements EjbCheck {
         try {
             ClassLoader jcl = getVerifierContext().getClassLoader();
             Class beanClass = Class.forName(descriptor.getEjbClassName(), false, jcl);
-            isTimedObject = javax.ejb.TimedObject.class.isAssignableFrom(beanClass);
+            isTimedObject = jakarta.ejb.TimedObject.class.isAssignableFrom(beanClass);
         } catch (ClassNotFoundException e) {} //continue
         
         initializeMethods();
@@ -141,7 +141,7 @@ public class ContainerTransactionStyle3 extends EjbTest implements EjbCheck {
                     MethodDescriptor.EJB_BEAN.equals(methodDescriptor.getEjbClassSymbol()) &&
                     methodDescriptor.getName().equals("ejbTimeout")) {
                 String[] params=methodDescriptor.getJavaParameterClassNames();
-                if(params.length==1 && params[0].trim().equals("javax.ejb.Timer"))
+                if(params.length==1 && params[0].trim().equals("jakarta.ejb.Timer"))
                     continue;//found a match
             }//if implements timer
             

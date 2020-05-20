@@ -16,8 +16,8 @@
 
 package connector;
 
-import javax.resource.spi.AdministeredObject;
-import javax.resource.spi.ConfigProperty;
+import jakarta.resource.spi.AdministeredObject;
+import jakarta.resource.spi.ConfigProperty;
 
 //@README : test to make sure that multiple admin objects are created (one with Interface_1 and
 // another with Interface_2 with all config properties

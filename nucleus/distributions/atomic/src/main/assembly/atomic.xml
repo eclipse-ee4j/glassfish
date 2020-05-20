@@ -96,7 +96,6 @@
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
-                <include>jakarta.annotation-api.jar</include>
                 <include>grizzly-npn-bootstrap.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/modules/endorsed</outputDirectory>
@@ -114,6 +113,8 @@
             <directory>${temp.dir}</directory>
             <includes>
                 <include>org.apache.felix.*.jar</include>
+                <include>org.osgi.util.function.jar</include>
+                <include>org.osgi.util.promise.jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.felix.bundlerepository.jar</exclude>
@@ -137,9 +138,10 @@
                 <exclude>org.apache.felix.gogo.runtime.jar</exclude>
                 <exclude>org.apache.felix.gogo.shell.jar</exclude>
                 <exclude>org.apache.felix.scr.jar</exclude>
+                <exclude>org.osgi.util.function.jar</exclude>
+                <exclude>org.osgi.util.promise.jar</exclude>
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
-                <exclude>jakarta.annotation-api.jar</exclude>
                 <exclude>grizzly-npn-bootstrap.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/modules</outputDirectory>

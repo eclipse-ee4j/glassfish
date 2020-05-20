@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.container.common.impl;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.NamingException;
 
 import org.glassfish.api.admin.ProcessEnvironment;

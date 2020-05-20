@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,23 +21,20 @@ import com.sun.gjc.common.DataSourceSpec;
 import com.sun.gjc.util.SecurityUtils;
 import com.sun.logging.LogDomains;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.security.PasswordCredential;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.resource.spi.ConfigProperty;
-import javax.resource.spi.ConnectionDefinition;
+import jakarta.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConnectionDefinition;
 
 /**
  * Driver Manager <code>ManagedConnectionFactory</code> implementation for Generic JDBC Connector.
@@ -78,7 +75,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @throws SecurityException if there ino <code>PasswordCredential</code> object
      *                           satisfying this request
      */
-    public javax.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
+    public jakarta.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
                                                                         ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         logFine("In createManagedConnection");
         if (dsObjBuilder == null) {
@@ -138,7 +135,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
 
         } catch (java.sql.SQLException sqle) {
             _logger.log(Level.SEVERE, "jdbc.exc_create_mc", sqle);
-            throw new javax.resource.spi.ResourceAllocationException("The connection could not be allocated: " +
+            throw new jakarta.resource.spi.ResourceAllocationException("The connection could not be allocated: " +
                     sqle.getMessage());
         }
 

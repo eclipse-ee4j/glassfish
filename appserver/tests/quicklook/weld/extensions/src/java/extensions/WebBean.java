@@ -21,8 +21,8 @@
 
 package extensions;
 
-import javax.annotation.Resource;
-import javax.enterprise.context.RequestScoped;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  *

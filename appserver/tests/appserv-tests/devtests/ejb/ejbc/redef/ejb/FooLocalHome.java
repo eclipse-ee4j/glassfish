@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejbc.redef;
 
-import javax.ejb.EJBLocalHome;
-import javax.ejb.CreateException;
-import javax.ejb.RemoveException;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.RemoveException;
 
 
 public interface FooLocalHome extends EJBLocalHome, FooLocalHomeSuper {

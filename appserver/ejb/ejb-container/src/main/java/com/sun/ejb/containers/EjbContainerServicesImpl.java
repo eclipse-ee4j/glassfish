@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,14 @@
 
 package com.sun.ejb.containers;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEJBException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEJBException;
 
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.api.EjbContainerServices;
@@ -37,7 +35,6 @@ import com.sun.ejb.Container;
 import com.sun.ejb.EJBUtils;
 import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
 import com.sun.enterprise.deployment.EjbInterceptor;
-import com.sun.logging.LogDomains;
 
 /**
  *
@@ -124,7 +121,7 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
             localObjectImpl.remove();
         } catch(EJBException e) {
             LogFacade.getLogger().log(Level.FINE, "EJBException during remove. ", e);    
-        } catch(javax.ejb.RemoveException re) {
+        } catch(jakarta.ejb.RemoveException re) {
             throw new NoSuchEJBException(re.getMessage(), re);
         }
 

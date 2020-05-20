@@ -69,7 +69,7 @@ public class DefaultConnectionManagerExistence
 	        
         //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());     
-        findImplementorOf(descriptor, "javax.resource.spi.ConnectionManager", result);
+        findImplementorOf(descriptor, "jakarta.resource.spi.ConnectionManager", result);
         return result;
     }
 }

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.perf.local2;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.*;
 
@@ -37,7 +37,7 @@ public class HelloEJB implements SessionBean {
 
     private long overhead;
 
-    javax.transaction.UserTransaction ut;
+    jakarta.transaction.UserTransaction ut;
 
     public HelloEJB(){}
 

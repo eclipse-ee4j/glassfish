@@ -20,7 +20,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 /*
  * Unit test for resource injection into
- * javax.servlet.http.HttpSessionListener
+ * jakarta.servlet.http.HttpSessionListener
  */
 public class WebTest {
 

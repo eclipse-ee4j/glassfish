@@ -16,8 +16,8 @@
 
 package remoteview;
 
-import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.ejb.*;
+import jakarta.annotation.*;
 
 @Singleton
 @Startup

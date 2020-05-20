@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,11 @@
 
 package org.glassfish.cdi.transaction;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 
 
 
-public class TransactionManager implements javax.transaction.TransactionManager {
+public class TransactionManager implements jakarta.transaction.TransactionManager {
     ThreadLocal transactionThreadLocal = new ThreadLocal();
 
     public void begin() throws NotSupportedException, SystemException {
@@ -41,11 +41,11 @@ public class TransactionManager implements javax.transaction.TransactionManager 
         return 0;  
     }
 
-    public javax.transaction.Transaction getTransaction() throws SystemException {
-        return (javax.transaction.Transaction) transactionThreadLocal.get();
+    public jakarta.transaction.Transaction getTransaction() throws SystemException {
+        return (jakarta.transaction.Transaction) transactionThreadLocal.get();
     }
 
-    public void resume(javax.transaction.Transaction transaction) throws InvalidTransactionException, IllegalStateException, SystemException {
+    public void resume(jakarta.transaction.Transaction transaction) throws InvalidTransactionException, IllegalStateException, SystemException {
         transactionThreadLocal.set(transaction);
     }
 
@@ -62,8 +62,8 @@ public class TransactionManager implements javax.transaction.TransactionManager 
         
     }
 
-    public javax.transaction.Transaction suspend() throws SystemException {
-        javax.transaction.Transaction transaction = (javax.transaction.Transaction)transactionThreadLocal.get();
+    public jakarta.transaction.Transaction suspend() throws SystemException {
+        jakarta.transaction.Transaction transaction = (jakarta.transaction.Transaction)transactionThreadLocal.get();
         transactionThreadLocal.set(null);
         return transaction;
     }

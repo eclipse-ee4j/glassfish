@@ -16,13 +16,13 @@
 
 package org.glassfish.tests.ejb.sample;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup; 
-import javax.ejb.SessionContext; 
-import javax.annotation.Resource;
-import javax.annotation.PreDestroy;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.DenyAll;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup; 
+import jakarta.ejb.SessionContext; 
+import jakarta.annotation.Resource;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.DenyAll;
 import javax.naming.InitialContext;
 
 /**

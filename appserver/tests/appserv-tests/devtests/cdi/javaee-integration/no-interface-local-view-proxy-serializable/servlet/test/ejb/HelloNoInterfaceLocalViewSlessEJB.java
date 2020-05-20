@@ -16,7 +16,7 @@
 
 package test.ejb;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 
 @Stateful
 public class HelloNoInterfaceLocalViewSlessEJB {

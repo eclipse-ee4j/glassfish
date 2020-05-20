@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.simpleMultiRoleMapping.ejb2;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * This is the business interface for Message enterprise bean.

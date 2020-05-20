@@ -26,11 +26,11 @@ import components.model.Graph;
 import components.model.Node;
 import components.renderkit.Util;
 
-import javax.faces.context.FacesContext;
-import javax.faces.webapp.UIComponentBodyTag;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTag;
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.webapp.UIComponentBodyTag;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.BodyTag;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 /**
  * <B>GraphMenuNodeTag</B> builds the graph as the nodes are processed.

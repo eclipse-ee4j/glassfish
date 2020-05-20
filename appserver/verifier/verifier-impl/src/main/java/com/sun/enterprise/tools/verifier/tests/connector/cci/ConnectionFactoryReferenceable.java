@@ -27,7 +27,7 @@ import com.sun.enterprise.tools.verifier.Result;
 import com.sun.enterprise.tools.verifier.tests.*;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 /**
- * Test if the connectionfactory-impl-class implements the javax.resource.Referenceable
+ * Test if the connectionfactory-impl-class implements the jakarta.resource.Referenceable
  * interface
  *
  * @author  Jerome Dochez
@@ -37,7 +37,7 @@ public class ConnectionFactoryReferenceable extends ConnectionFactoryTest implem
 
   /** <p>
    * Test if the connectionfactory-impl-class implements the 
-   * javax.resource.Referenceable interface
+   * jakarta.resource.Referenceable interface
    * </p>
    *
    * @paramm descriptor deployment descriptor for the rar file
@@ -53,7 +53,7 @@ public class ConnectionFactoryReferenceable extends ConnectionFactoryTest implem
       // failure to load the class are handled in the superclass
       if (c!=null) {
         // now check it does implement the interface 
-        testImplementationOf(c, "javax.resource.Referenceable", result); 
+        testImplementationOf(c, "jakarta.resource.Referenceable", result); 
       }
     }
     else

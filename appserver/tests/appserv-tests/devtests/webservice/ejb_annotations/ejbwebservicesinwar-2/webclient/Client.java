@@ -16,25 +16,25 @@
 
 package client;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 
 public class Client extends HttpServlet {
 
-        @javax.xml.ws.WebServiceRef(HelloService.class)
+        @jakarta.xml.ws.WebServiceRef(HelloService.class)
         Hello hiport;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
                 String ret = hiport.sayHello("All");
                 PrintWriter out = resp.getWriter();

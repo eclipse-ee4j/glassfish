@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,10 @@ import java.util.*;
 import java.util.logging.*;
 import java.rmi.RemoteException;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.*;
-import javax.resource.spi.XATerminator;
-import javax.resource.spi.work.WorkException;
+import jakarta.resource.spi.XATerminator;
+import jakarta.resource.spi.work.WorkException;
 
 import com.sun.appserv.util.cache.Cache;
 import com.sun.appserv.util.cache.BaseCache;
@@ -42,7 +42,7 @@ import com.sun.enterprise.transaction.monitoring.TransactionServiceStatsProvider
 import com.sun.logging.LogDomains;
 import com.sun.enterprise.util.i18n.StringManager;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.glassfish.hk2.api.PostConstruct;
@@ -62,7 +62,7 @@ import org.glassfish.external.probe.provider.StatsProviderManager;
 import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
 
 /**
- * Implementation of javax.transaction.TransactionManager interface.
+ * Implementation of jakarta.transaction.TransactionManager interface.
  * This class provides non-XA local transaction support and delegates 
  * to implementation of the JavaEETransactionManagerDelegate for XA 
  * or LAO optimization, and complete JTS implementation.
@@ -1127,7 +1127,7 @@ public class JavaEETransactionManagerSimplified
     }
 
     public TransactionAdminBean getTransactionAdminBean(Transaction tran)
-            throws javax.transaction.SystemException {
+            throws jakarta.transaction.SystemException {
 
         TransactionAdminBean tBean = null;
         if(tran instanceof JavaEETransaction){
@@ -1555,7 +1555,7 @@ public class JavaEETransactionManagerSimplified
     }
 
 /****************************************************************************/
-/** Implementation of javax.transaction.Synchronization *********************/
+/** Implementation of jakarta.transaction.Synchronization *********************/
 /****************************************************************************/
     private static class JTSSynchronization implements Synchronization {
         private TransactionInternal jtsTx;

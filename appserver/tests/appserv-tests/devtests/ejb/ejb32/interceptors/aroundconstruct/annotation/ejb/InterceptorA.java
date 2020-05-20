@@ -16,11 +16,11 @@
 
 package com.acme;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.AroundConstruct;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.AroundConstruct;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 public class InterceptorA {
 

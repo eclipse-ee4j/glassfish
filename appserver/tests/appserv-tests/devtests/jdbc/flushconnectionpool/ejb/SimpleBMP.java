@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.flushconnectionpool.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface SimpleBMP

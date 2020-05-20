@@ -29,8 +29,8 @@ import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.module.ServerAuthModule;
 import javax.security.auth.x500.X500Principal;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class HttpsTestAuthModule implements ServerAuthModule {
 
@@ -63,7 +63,7 @@ public class HttpsTestAuthModule implements ServerAuthModule {
                     (HttpServletRequest) messageInfo.getRequestMessage();
             X509Certificate certs[] =
                     (X509Certificate[]) request.getAttribute(
-                    "javax.servlet.request.X509Certificate");
+                    "jakarta.servlet.request.X509Certificate");
             if (certs == null || certs.length < 1) {
                 System.out.println("javax...certs is null or empty");
                 certs = (X509Certificate[]) request.getAttribute(

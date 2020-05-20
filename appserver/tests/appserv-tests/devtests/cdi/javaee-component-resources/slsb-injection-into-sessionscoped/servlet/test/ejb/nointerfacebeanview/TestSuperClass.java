@@ -16,7 +16,7 @@
 
 package test.ejb.nointerfacebeanview;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
  
 //marked as Alternative, otherwise there would

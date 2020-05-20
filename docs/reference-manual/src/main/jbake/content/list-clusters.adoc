@@ -1,0 +1,140 @@
+type=page
+status=published
+title=list-clusters
+next=list-commands.html
+prev=list-batch-runtime-configuration.html
+~~~~~~
+list-clusters
+=============
+
+[[list-clusters-1]][[GSRFM00153]][[list-clusters]]
+
+list-clusters
+-------------
+
+lists existing clusters in a domain
+
+[[sthref1371]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] list-clusters [--help] 
+[target]
+----
+
+[[sthref1372]]
+
+Description
+
+The `list-clusters` subcommand lists existing clusters in a domain. The
+list can be filtered by cluster, instance, node, or configuration. For
+each cluster that is listed, the subcommand indicates whether the
+cluster is running.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1373]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1374]]
+
+Operands
+
+target::
+  Filters the list of clusters by specifying the target for which the
+  clusters are to be listed. Valid values are as follows: +
+  `domain`;;
+    Lists all clusters in the domain (default).
+  cluster-name;;
+    Lists only the specified cluster.
+  instance-name;;
+    Lists the cluster of which the specified instance is a member.
+  node-name;;
+    Lists the clusters that contain an instance that resides on the
+    specified node. For example, if instance `pmdi1` in cluster `pmdc`
+    and instance `ymli1` in cluster `ymlc` reside on node `n1`, `pmdc`
+    and `ymlc` are listed.
+  configuration-name;;
+    Lists all clusters that contain instances whose configuration is
+    defined by the named configuration.
+
+[[sthref1375]]
+
+Examples
+
+[[GSRFM641]][[sthref1376]]
+
+Example 1   Listing All Clusters in a Domain
+
+This example lists all clusters in the current domain.
+
+[source,oac_no_warn]
+----
+asadmin> list-clusters
+pmdclust not running
+ymlclust not running
+
+Command list-clusters executed successfully.
+----
+
+[[GSRFM642]][[sthref1377]]
+
+Example 2   Displaying the Status of a Cluster
+
+This example displays status of the cluster `ymlclust`, which is not
+running.
+
+[source,oac_no_warn]
+----
+asadmin> list-clusters ymlclust
+ymlclust not running
+
+Command list-clusters executed successfully.
+----
+
+[[GSRFM643]][[sthref1378]]
+
+Example 3   Listing All Clusters That Are Associated With a Node
+
+This example lists the clusters that contain an instance that resides on
+the node `sj02`.
+
+[source,oac_no_warn]
+----
+asadmin> list-clusters sj02
+ymlclust not running
+
+Command list-clusters executed successfully.
+----
+
+[[sthref1379]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1380]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-cluster.html#create-cluster-1[`create-cluster`(1)],
+link:delete-cluster.html#delete-cluster-1[`delete-cluster`(1)],
+link:start-cluster.html#start-cluster-1[`start-cluster`(1)],
+link:stop-cluster.html#stop-cluster-1[`stop-cluster`(1)]
+
+

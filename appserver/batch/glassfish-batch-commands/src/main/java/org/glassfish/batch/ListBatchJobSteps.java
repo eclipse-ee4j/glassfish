@@ -27,12 +27,12 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.batch.operations.JobOperator;
-import javax.batch.operations.JobSecurityException;
-import javax.batch.operations.NoSuchJobExecutionException;
-import javax.batch.runtime.JobExecution;
-import javax.batch.runtime.Metric;
-import javax.batch.runtime.StepExecution;
+import jakarta.batch.operations.JobOperator;
+import jakarta.batch.operations.JobSecurityException;
+import jakarta.batch.operations.NoSuchJobExecutionException;
+import jakarta.batch.runtime.JobExecution;
+import jakarta.batch.runtime.Metric;
+import jakarta.batch.runtime.StepExecution;
 import java.util.*;
 import java.util.logging.Level;
 

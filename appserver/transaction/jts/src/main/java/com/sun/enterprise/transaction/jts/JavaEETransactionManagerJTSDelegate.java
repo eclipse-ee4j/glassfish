@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,10 +26,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.TimeUnit;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.*;
-import javax.resource.spi.XATerminator;
-import javax.resource.spi.work.WorkException;
+import jakarta.resource.spi.XATerminator;
+import jakarta.resource.spi.work.WorkException;
 
 import com.sun.enterprise.transaction.config.TransactionService;
 import com.sun.jts.jta.TransactionManagerImpl;
@@ -62,9 +62,8 @@ import com.sun.logging.LogDomains;
 import org.glassfish.api.admin.ServerEnvironment;
 
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 
@@ -213,7 +212,7 @@ public class JavaEETransactionManagerJTSDelegate
     public int getStatus() throws SystemException {
 
         JavaEETransaction tx = javaEETM.getCurrentTransaction();
-        int status = javax.transaction.Status.STATUS_NO_TRANSACTION;
+        int status = jakarta.transaction.Status.STATUS_NO_TRANSACTION;
 
         TransactionManager tm = tmLocal.get();
         if ( tx != null) 
@@ -550,7 +549,7 @@ public class JavaEETransactionManagerJTSDelegate
     }
 
     public TransactionAdminBean getTransactionAdminBean(Transaction t) 
-            throws javax.transaction.SystemException {
+            throws jakarta.transaction.SystemException {
         TransactionAdminBean tBean = null;
         if(t instanceof com.sun.jts.jta.TransactionImpl) {
             String id = ((com.sun.jts.jta.TransactionImpl)t).getTransactionId();

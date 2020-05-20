@@ -19,7 +19,7 @@ package dataregistry;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public interface LocalPartHome extends EJBLocalHome {

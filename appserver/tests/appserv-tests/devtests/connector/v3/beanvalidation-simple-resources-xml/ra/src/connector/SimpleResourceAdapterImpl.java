@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,24 +21,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import javax.naming.*;
-import javax.resource.NotSupportedException;
-import javax.resource.ResourceException;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.ResourceAdapter;
-import javax.resource.spi.XATerminator;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.resource.spi.UnavailableException;
-import javax.resource.spi.ResourceAdapterInternalException;
-import javax.resource.spi.work.ExecutionContext;
-import javax.resource.spi.work.Work;
-import javax.resource.spi.*;
-import javax.resource.spi.work.WorkManager;
+import jakarta.resource.NotSupportedException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.BootstrapContext;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.XATerminator;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.spi.UnavailableException;
+import jakarta.resource.spi.ResourceAdapterInternalException;
+import jakarta.resource.spi.work.ExecutionContext;
+import jakarta.resource.spi.work.Work;
+import jakarta.resource.spi.*;
+import jakarta.resource.spi.work.WorkManager;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.*;
 
 

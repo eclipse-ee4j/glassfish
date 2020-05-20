@@ -18,9 +18,9 @@ package wftest;
 
 import java.io.*;
 import java.util.Enumeration;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet(name="wftestServlet3", urlPatterns={"/test2"})
 public class WFTestServlet3 extends HttpServlet {

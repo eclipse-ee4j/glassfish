@@ -246,8 +246,6 @@ public class MultiLruCache extends BaseCache {
      * to provide a robust cache replacement algorithm.
      */
     protected void handleOverflow() {
-        LruCacheItem l = null;
-
     }
 
     int getListsLength() {

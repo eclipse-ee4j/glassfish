@@ -16,10 +16,10 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.jws.*;
-import javax.jws.soap.SOAPBinding;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.jws.*;
+import jakarta.jws.soap.SOAPBinding;
 import common.IncomeTaxDetails;
 
 @WebService(

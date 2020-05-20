@@ -16,8 +16,8 @@
 
 package mypack;
 
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.tagext.BodyTagSupport;
+import jakarta.servlet.jsp.PageContext;
 
 
 public class MyBody extends BodyTagSupport {

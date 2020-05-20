@@ -16,12 +16,12 @@
 
 package com.sun.jdbcra.spi;
 
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.NotSupportedException;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.NotSupportedException;
 import javax.transaction.xa.XAResource;
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.ResourceAdapterInternalException;
+import jakarta.resource.spi.BootstrapContext;
+import jakarta.resource.spi.ResourceAdapterInternalException;
 
 /**
  * <code>ResourceAdapter</code> implementation for Generic JDBC Connector.
@@ -29,7 +29,7 @@ import javax.resource.spi.ResourceAdapterInternalException;
  * @version	1.0, 02/08/05
  * @author	Evani Sai Surya Kiran
  */
-public class ResourceAdapter implements javax.resource.spi.ResourceAdapter {
+public class ResourceAdapter implements jakarta.resource.spi.ResourceAdapter {
 
     public String raProp = null;
 

@@ -16,7 +16,7 @@
 
 package com.sun.s1peqe.transaction.txhung.ejb.test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface TestRemote extends EJBObject {

@@ -26,7 +26,7 @@ import components.model.Node;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 
-import javax.faces.event.ActionEvent;
+import jakarta.faces.event.ActionEvent;
 
 import java.util.Iterator;
 

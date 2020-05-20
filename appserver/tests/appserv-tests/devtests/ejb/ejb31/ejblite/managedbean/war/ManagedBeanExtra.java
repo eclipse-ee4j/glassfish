@@ -16,10 +16,10 @@
 
 package com.acme;
 
-import javax.annotation.*;
-import javax.interceptor.Interceptors;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.annotation.*;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 @ManagedBean
 public class ManagedBeanExtra {

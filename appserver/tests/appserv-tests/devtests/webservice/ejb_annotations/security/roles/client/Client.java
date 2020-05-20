@@ -17,8 +17,8 @@
 package client;
 
 import java.util.Map;
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.BindingProvider;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.BindingProvider;
 
 import endpoint.HelloImplService;
 import endpoint.HelloImpl;
@@ -63,8 +63,8 @@ public class Client {
                 if (username!=null && password!=null) {
                     BindingProvider bd = (BindingProvider) port;
                     Map<String, Object> requestContext = bd.getRequestContext();
-                    requestContext.put("javax.xml.ws.security.auth.username",username);
-                    requestContext.put("javax.xml.ws.security.auth.password",password);
+                    requestContext.put("jakarta.xml.ws.security.auth.username",username);
+                    requestContext.put("jakarta.xml.ws.security.auth.password",password);
                 }
                 
                 // @PermitAll invocation, it should always work

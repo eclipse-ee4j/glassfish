@@ -16,7 +16,7 @@
 
 package samples.ejb.installed_libraries_embedded.ejb;
 
-public interface Customer extends javax.ejb.EJBLocalObject
+public interface Customer extends jakarta.ejb.EJBLocalObject
 {
   public String getLastName() ;
 

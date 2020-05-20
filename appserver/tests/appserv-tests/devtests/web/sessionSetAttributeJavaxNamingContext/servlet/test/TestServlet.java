@@ -17,8 +17,8 @@
 package test;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 
 public class TestServlet extends HttpServlet {

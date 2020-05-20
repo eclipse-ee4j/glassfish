@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2;
 
-public interface SlessRemote extends javax.ejb.EJBObject
+public interface SlessRemote extends jakarta.ejb.EJBObject
 {
     public String hello() throws java.rmi.RemoteException;
 }

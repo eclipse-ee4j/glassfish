@@ -21,7 +21,7 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.security.jmac.config.ConfigHelper.AuthConfigRegistrationWrapper;
 import java.util.Map;
 import java.util.WeakHashMap;
-import javax.security.auth.message.config.RegistrationListener;
+import jakarta.security.auth.message.config.RegistrationListener;
 
 public class ClientPipeCloser {
     

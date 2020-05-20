@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,17 +25,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBObject;
-import javax.ejb.EntityBean;
-import javax.ejb.FinderException;
-import javax.ejb.NoSuchEntityException;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.RemoveException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EntityBean;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.RemoveException;
 
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.EjbInvocation;
@@ -56,6 +51,11 @@ import org.glassfish.persistence.ejb.entitybean.container.distributed.Distribute
 import org.glassfish.persistence.ejb.entitybean.container.distributed.ReadOnlyBeanRefreshEventHandler;
 
 import static com.sun.ejb.containers.EJBContextImpl.BeanState;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.NoSuchEntityException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 /**
  * The Container that manages instances of ReadOnly Beans. This container

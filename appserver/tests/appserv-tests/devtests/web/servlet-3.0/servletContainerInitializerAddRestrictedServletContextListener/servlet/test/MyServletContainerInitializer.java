@@ -17,7 +17,7 @@
 package test;
 
 import java.util.Set;
-import javax.servlet.*;
+import jakarta.servlet.*;
 
 public class MyServletContainerInitializer
         implements ServletContainerInitializer {

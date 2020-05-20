@@ -19,7 +19,7 @@ package request;
 import java.rmi.RemoteException;
 import java.util.Collection;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public interface Request extends EJBObject {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,9 +25,7 @@ import com.sun.gjc.util.SQLTraceDelegator;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.sql.Connection;
-import java.sql.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -51,7 +49,7 @@ public class Jdbc40ObjectsFactory extends JdbcObjectsFactory {
      */
     public ConnectionHolder getConnection(Connection conObject,
                                           ManagedConnectionImpl mcObject,
-                                          javax.resource.spi.ConnectionRequestInfo criObject,
+                                          jakarta.resource.spi.ConnectionRequestInfo criObject,
                                           boolean statementWrapping,
                                           SQLTraceDelegator sqlTraceDelegator) {
         ConnectionHolder connection = null;
@@ -81,7 +79,7 @@ public class Jdbc40ObjectsFactory extends JdbcObjectsFactory {
      * @return DataSource
      */
     public javax.sql.DataSource getDataSourceInstance(ManagedConnectionFactoryImpl mcfObject,
-                                                      javax.resource.spi.ConnectionManager cmObject) {
+                                                      jakarta.resource.spi.ConnectionManager cmObject) {
         return new DataSource40(mcfObject, cmObject);
     }
 

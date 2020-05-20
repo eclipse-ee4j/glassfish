@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
  *
  * This test case used to throw a java.lang.StringIndexOutOfBoundsException
  * when reconstructing the URI of a JSP that is the target of a 
- * RequestDispatcher.include() from the javax.servlet.include.XXX
+ * RequestDispatcher.include() from the jakarta.servlet.include.XXX
  * request attributes.
  */
 public class WebTest {

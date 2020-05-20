@@ -82,25 +82,25 @@ public class EjbUtils {
 
 
     /**
-     * Method exception javax.ejb.CreateException checked for compliance 
+     * Method exception jakarta.ejb.CreateException checked for compliance 
      * test.
      *
      * Verify the following:
      *
      *   The home/remote interface methods exception types must be legal types for
      *   CreateException.  
-     *   This means that their exception must throw javax.ejb.CreateException.
+     *   This means that their exception must throw jakarta.ejb.CreateException.
      *
      * @param methodExceptions the exceptions to be checked for throws
-     *        javax.ejb.CreateException 
+     *        jakarta.ejb.CreateException 
      *
-     * @return <code>boolean</code> true if exceptions throw javax.ejb.CreateException, false otherwise
+     * @return <code>boolean</code> true if exceptions throw jakarta.ejb.CreateException, false otherwise
      */
     public static boolean isValidCreateException(Class [] methodExceptions) {
-	// methods must throw javax.ejb.CreateException
+	// methods must throw jakarta.ejb.CreateException
 	boolean throwsCreateException = false;
 	for (int kk = 0; kk < methodExceptions.length; ++kk) {
-	    if ((methodExceptions[kk].getName().equals("javax.ejb.CreateException")) ||
+	    if ((methodExceptions[kk].getName().equals("jakarta.ejb.CreateException")) ||
 		(methodExceptions[kk].getName().equals("CreateException"))) {
 		throwsCreateException = true;
 		break;
@@ -144,7 +144,7 @@ public class EjbUtils {
 
 
     /**
-     * Method exception javax.ejb.ObjectNotFoundException checked for compliance 
+     * Method exception jakarta.ejb.ObjectNotFoundException checked for compliance 
      * test.
      *
      * Verify the following:
@@ -157,15 +157,15 @@ public class EjbUtils {
      *     exception.   Multi-object finders must not throw this exception.
      *
      * @param methodExceptions the exceptions to be checked for throws
-     *        javax.ejb.ObjectNotFoundException 
+     *        jakarta.ejb.ObjectNotFoundException 
      *
-     * @return <code>boolean</code> true if exceptions throw javax.ejb.ObjectNotFoundException, false otherwise
+     * @return <code>boolean</code> true if exceptions throw jakarta.ejb.ObjectNotFoundException, false otherwise
      */
     public static boolean isValidObjectNotFoundExceptionException(Class [] methodExceptions) {
-	// methods must throw javax.ejb.ObjectNotFoundException
+	// methods must throw jakarta.ejb.ObjectNotFoundException
 	boolean throwsObjectNotFoundException = false;
 	for (int kk = 0; kk < methodExceptions.length; ++kk) {
-	    if ((methodExceptions[kk].getName().equals("javax.ejb.ObjectNotFoundException")) ||
+	    if ((methodExceptions[kk].getName().equals("jakarta.ejb.ObjectNotFoundException")) ||
 		(methodExceptions[kk].getName().equals("ObjectNotFoundException"))) {
 		throwsObjectNotFoundException = true;
 		break;
@@ -178,25 +178,25 @@ public class EjbUtils {
 
 
     /**
-     * Method exception javax.ejb.FinderException checked for compliance 
+     * Method exception jakarta.ejb.FinderException checked for compliance 
      * test.
      *
      * Verify the following:
      *
      *   The home/remote interface methods exception types must be legal types for
      *   FinderException  
-     *   This means that their exception must throw javax.ejb.FinderException
+     *   This means that their exception must throw jakarta.ejb.FinderException
      *
      * @param methodExceptions the exceptions to be checked for throws
-     *        javax.ejb.FinderException 
+     *        jakarta.ejb.FinderException 
      *
-     * @return <code>boolean</code> true if exceptions throw javax.ejb.FinderException, false otherwise
+     * @return <code>boolean</code> true if exceptions throw jakarta.ejb.FinderException, false otherwise
      */
     public static boolean isValidFinderException(Class [] methodExceptions) {
-	// methods must throw javax.ejb.FinderException
+	// methods must throw jakarta.ejb.FinderException
 	boolean throwsFinderException = false;
 	for (int kk = 0; kk < methodExceptions.length; ++kk) {
-	    if ((methodExceptions[kk].getName().equals("javax.ejb.FinderException")) ||
+	    if ((methodExceptions[kk].getName().equals("jakarta.ejb.FinderException")) ||
 		(methodExceptions[kk].getName().equals("FinderException"))) {
 		throwsFinderException = true;
 		break;
@@ -279,8 +279,8 @@ public class EjbUtils {
      *   An application exception must not be defined as a subclass of the
      *   java.lang.RuntimeException, or of the java.rmi.RemoteException. These are
      *   reserved for system exceptions.
-     *   The javax.ejb.CreateException, javax.ejb.RemoveException,
-     *   javax.ejb.FinderException, and subclasses thereof, are considered to be
+     *   The jakarta.ejb.CreateException, jakarta.ejb.RemoveException,
+     *   jakarta.ejb.FinderException, and subclasses thereof, are considered to be
      *   application exceptions.
      *
      * @param methodExceptions the exceptions to be checked for throws

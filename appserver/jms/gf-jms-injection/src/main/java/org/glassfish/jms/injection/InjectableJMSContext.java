@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,19 +20,19 @@ import java.io.Serializable;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PreDestroy;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSConnectionFactory;
-import javax.jms.JMSContext;
-import javax.jms.JMSPasswordCredential;
-import javax.jms.JMSSessionMode;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Inject;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSConnectionFactory;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSPasswordCredential;
+import jakarta.jms.JMSSessionMode;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.transaction.Transaction;
-import javax.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.SystemException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -40,7 +40,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LoggerInfo;
-import javax.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.context.ContextNotActiveException;
 
 /**
  * This bean is the JMSContext wrapper which user gets by injection.

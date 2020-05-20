@@ -18,10 +18,10 @@ package test.artifacts;
 
 import java.util.Enumeration;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.servlet.ServletRequest;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.servlet.ServletRequest;
 
 @RequestScoped
 public class HttpParams {

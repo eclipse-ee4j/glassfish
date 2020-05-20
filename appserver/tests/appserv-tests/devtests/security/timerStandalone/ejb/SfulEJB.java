@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.security.timerStandalone;
 
-import javax.ejb.Stateful;
-import javax.ejb.Remote;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remote;
 
 @Stateful
 @Remote({Sful.class})

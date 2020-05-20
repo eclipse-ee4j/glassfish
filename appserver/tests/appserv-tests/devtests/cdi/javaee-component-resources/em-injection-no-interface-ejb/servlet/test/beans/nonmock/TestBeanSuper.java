@@ -16,7 +16,7 @@
 
 package test.beans.nonmock;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import test.beans.TestBeanInterface;
 import test.ejb.TestNoInterfaceEJB;

@@ -50,7 +50,7 @@ import com.sun.enterprise.tools.verifier.tests.*;
  *   ejbRemove() methods which take no arguments. This is a requirement of the EJB container, 
  *   but generally can be stubbed out with an empty implementations.
  *
- *   The Stateless Session Bean must implement the javax.ejb.SessionBean interface either 
+ *   The Stateless Session Bean must implement the jakarta.ejb.SessionBean interface either 
  *   directly or indirectly.
  *
  *   All the exceptions defined in the throws clause of the matching method of the session bean 
@@ -119,11 +119,11 @@ public class EJBServiceImplBeanChk extends WSTest implements WSCheck {
           }
 
           // it should be a stateless session bean
-          boolean isSLSB = (javax.ejb.SessionBean.class).isAssignableFrom(bean);
+          boolean isSLSB = (jakarta.ejb.SessionBean.class).isAssignableFrom(bean);
           boolean implementsSEI = sei.isAssignableFrom(bean);
 
           if (!isSLSB) {
-            //result.fail does not implement javax.ejb.SessionBean interface
+            //result.fail does not implement jakarta.ejb.SessionBean interface
             result.addErrorDetails(smh.getLocalString ("tests.componentNameConstructor",
                                    "For [ {0} ]", new Object[] {compName.toString()}));
             result.failed(smh.getLocalString

@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 import org.jvnet.hk2.annotations.Service;

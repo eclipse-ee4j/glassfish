@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -177,45 +177,6 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
         this.mtomThreshold = mtomThreshold;
     }
 
-    public ServiceReferenceDescriptor(ServiceReferenceDescriptor other) {
-        super(other);
-        serviceInterface = other.serviceInterface;
-        mappedName = other.mappedName;
-        wsdlFileUri = other.wsdlFileUri;
-        wsdlFileUrl = other.wsdlFileUrl;
-        addressing = other.addressing;
-        mtomEnabled = other.mtomEnabled;
-        respectBinding = other.respectBinding;
-        mappingFileUri = other.mappingFileUri;
-        mappingFile = other.mappingFile;
-        serviceNamespaceUri = other.serviceNamespaceUri;
-        serviceLocalPart = other.serviceLocalPart;
-        serviceNameNamespacePrefix = other.serviceNameNamespacePrefix;
-        otherAnnotations = other.otherAnnotations;
-        portsInfo = new HashSet(); // ServiceRefPortInfo
-        for (Iterator i = other.portsInfo.iterator(); i.hasNext();) {
-            ServiceRefPortInfo port = new ServiceRefPortInfo(
-                    (ServiceRefPortInfo)i.next());
-            port.setServiceReference(this); // reset reference
-            portsInfo.add(port);
-        }
-        handlers = new LinkedList(); // WebServiceHandler
-        for (Iterator i = other.handlers.iterator(); i.hasNext();) {
-            handlers.add(new WebServiceHandler
-                    ((WebServiceHandler)i.next()));
-        }
-        handlerChain = new LinkedList(); // WebServiceHandlerChain
-        for (Iterator i = other.handlerChain.iterator(); i.hasNext();) {
-            handlerChain.add(new WebServiceHandlerChain((WebServiceHandlerChain)i.next()));
-        }
-        callProperties = new HashSet(); // NameValuePairDescriptor
-        for (Iterator i = other.callProperties.iterator(); i.hasNext();) {
-            callProperties.add(new NameValuePairDescriptor(
-                    (NameValuePairDescriptor)i.next()));
-        }
-        serviceImplClassName = other.serviceImplClassName;
-    }
-
     public ServiceReferenceDescriptor(String name, String description, 
                                       String service) {
         super(name, "", description);
@@ -250,7 +211,7 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
     }
 
     public boolean hasGenericServiceInterface() {
-        return "javax.xml.rpc.Service".equals(serviceInterface);
+        return false;
     }
 
     public boolean hasGeneratedServiceInterface() {

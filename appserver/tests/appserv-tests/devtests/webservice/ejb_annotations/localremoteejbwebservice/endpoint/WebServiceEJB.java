@@ -16,8 +16,8 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.ejb.*;
+import jakarta.jws.WebService;
+import jakarta.ejb.*;
 
 @WebService
 @Stateless

@@ -16,8 +16,8 @@
 
 package org.glassfish.sse.videoplayer;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.inject.Singleton;
+import jakarta.faces.bean.ApplicationScoped;
+import jakarta.inject.Singleton;
 
 /**
  * @author Jitendra Kotamraju

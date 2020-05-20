@@ -16,9 +16,9 @@
 
 package test;
 
-import javax.el.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import jakarta.el.*;
+import jakarta.servlet.jsp.*;
+import jakarta.servlet.jsp.tagext.*;
 import java.io.*;
 
 public class Test extends SimpleTagSupport {

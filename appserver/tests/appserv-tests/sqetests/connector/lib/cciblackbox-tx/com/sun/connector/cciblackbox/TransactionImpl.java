@@ -18,9 +18,9 @@ package com.sun.connector.cciblackbox;
 
 import java.sql.SQLException;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionEvent;
-import javax.resource.spi.EISSystemException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionEvent;
+import jakarta.resource.spi.EISSystemException;
 
 /**
  * This class captures the common methods between the spi and cci

@@ -18,8 +18,8 @@ package org.glassfish.soteria.test;
 
 import static javax.security.enterprise.identitystore.CredentialValidationResult.Status.VALID;
 import java.io.IOException;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.AuthenticationException;
 import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
@@ -27,8 +27,8 @@ import javax.security.enterprise.authentication.mechanism.http.HttpMessageContex
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.stream.*;
 import java.util.List;
 import java.util.ArrayList;

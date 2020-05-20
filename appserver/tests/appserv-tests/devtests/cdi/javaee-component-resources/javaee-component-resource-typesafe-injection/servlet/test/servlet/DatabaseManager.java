@@ -16,8 +16,8 @@
 
 package test.servlet;
 
-import javax.annotation.Resource;
-import javax.enterprise.inject.Produces;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.inject.Produces;
 import javax.sql.DataSource;
 
 import test.beans.artifacts.TestDatabase;

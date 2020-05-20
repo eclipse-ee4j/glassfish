@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.api.admin.FileMonitoring;
 import org.glassfish.hk2.api.PostConstruct;

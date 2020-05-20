@@ -16,11 +16,11 @@
 
 package test;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 
-@javax.servlet.annotation.WebListener
+@jakarta.servlet.annotation.WebListener
 public class TestHttpSessionListener implements HttpSessionListener {
     @Inject  MyBean myBean;
 

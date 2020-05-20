@@ -16,7 +16,7 @@
 
 package gf;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 
 public class TestServlet {

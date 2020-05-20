@@ -33,7 +33,7 @@ import com.sun.enterprise.deployment.web.UserDataConstraint;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.internal.api.Globals;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;

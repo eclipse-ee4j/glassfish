@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb32.mdb.ejb;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 /**
  * @author David Blevins

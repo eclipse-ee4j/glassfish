@@ -23,8 +23,7 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.ArchiveType;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
-import javax.enterprise.deploy.shared.ModuleType;
+import jakarta.inject.Singleton;
 
 import java.util.Enumeration;
 import java.io.IOException;
@@ -133,9 +132,9 @@ public class JPASniffer  extends GenericSniffer {
      *
      */
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals(ModuleType.WAR.toString()) ||
-            archiveType.toString().equals(ModuleType.EJB.toString()) ||
-            archiveType.toString().equals(ModuleType.CAR.toString())) {
+        if (archiveType.toString().equals("war") ||
+            archiveType.toString().equals("ejb") ||
+            archiveType.toString().equals("car")) {
             return true;
         }
         return false;

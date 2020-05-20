@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Properties;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Start-up context for the ACC.  Note that this context is used also for

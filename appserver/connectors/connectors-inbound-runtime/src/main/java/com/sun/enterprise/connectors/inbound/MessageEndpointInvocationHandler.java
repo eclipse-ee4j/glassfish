@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,8 @@ import org.glassfish.ejb.api.MessageBeanProtocolManager;
 
 /**
  * This class handles the implementation of two interfaces:
- * 1) javax.resource.spi.endpoint.MessageEndpoint;
- * 2) any message listener type (e.g. javax.jms.MessageListener,
+ * 1) jakarta.resource.spi.endpoint.MessageEndpoint;
+ * 2) any message listener type (e.g. jakarta.jms.MessageListener,
  * OR javax.xml.messaging.OnewayListener)
  *
  * @author Qingqing Ouyang
@@ -49,7 +49,7 @@ public final class MessageEndpointInvocationHandler
     private MessageBeanProtocolManager messageBeanPM_;
 
     private static final String MESSAGE_ENDPOINT
-            = "javax.resource.spi.endpoint.MessageEndpoint";
+            = "jakarta.resource.spi.endpoint.MessageEndpoint";
 
     private static final String THROW_TRANSACTED_EXCEPTIONS_PROP
             = "resourceadapter.throw.transacted.exceptions";

@@ -16,16 +16,16 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb2;
 
-import javax.ejb.Stateful;
-import javax.ejb.Local;
-import javax.ejb.Remove;
-import javax.annotation.PreDestroy;
-import javax.ejb.EJBException;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remove;
+import jakarta.annotation.PreDestroy;
+import jakarta.ejb.EJBException;
 import javax.naming.InitialContext;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionContext;
 
 @Local({Hello2.class})
-@Stateful public class HelloStateful implements Hello2, javax.ejb.SessionBean {
+@Stateful public class HelloStateful implements Hello2, jakarta.ejb.SessionBean {
 
     private String msg;
 
@@ -44,7 +44,7 @@ import javax.ejb.SessionContext;
     }
     */
 
-    public void setSessionContext(javax.ejb.SessionContext sc) {
+    public void setSessionContext(jakarta.ejb.SessionContext sc) {
         System.out.println("In HelloStateful:setSessionContext");
         try {
             SessionContext sc2 = (SessionContext) 

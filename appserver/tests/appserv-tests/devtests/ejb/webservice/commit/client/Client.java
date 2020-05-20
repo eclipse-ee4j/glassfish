@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.webservice.commit.client;
 
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

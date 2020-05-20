@@ -21,7 +21,7 @@
 
 package foo;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  *

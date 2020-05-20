@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,7 +68,7 @@ public class DDTest extends TestCase {
 
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setName("java:global/env/AdminObject");
-            desc.setInterfaceName("javax.jms.Destination");
+            desc.setInterfaceName("jakarta.jms.Destination");
             desc.setClassName("connector.MyAdminObject");
             desc.setDescription("global-scope resource defined in application DD");
             desc.setResourceAdapter("aod-ra");
@@ -77,7 +77,7 @@ public class DDTest extends TestCase {
             
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setName("java:app/env/AdminObject");
-            desc.setInterfaceName("javax.jms.Destination");
+            desc.setInterfaceName("jakarta.jms.Destination");
             desc.setClassName("connector.MyAdminObject");
             desc.setDescription("application-scope resource defined in application DD");
             desc.setResourceAdapter("aod-ra");
@@ -144,7 +144,7 @@ public class DDTest extends TestCase {
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("global-scope resource defined in EJB DD");
         desc.setName("java:global/env/StatefulEJB_AdminObject");
-        desc.setInterfaceName("javax.jms.Destination");
+        desc.setInterfaceName("jakarta.jms.Destination");
         desc.setClassName("connector.MyAdminObject");
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -153,7 +153,7 @@ public class DDTest extends TestCase {
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in EJB DD");
         desc.setName("java:module/env/StatefulEJB_AdminObject");
-        desc.setInterfaceName("javax.jms.Destination");
+        desc.setInterfaceName("jakarta.jms.Destination");
         desc.setClassName("connector.MyAdminObject");
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -162,7 +162,7 @@ public class DDTest extends TestCase {
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("component-scope resource defined in EJB DD");
         desc.setName("java:comp/env/StatefulEJB_AdminObject");
-        desc.setInterfaceName("javax.jms.Destination");
+        desc.setInterfaceName("jakarta.jms.Destination");
         desc.setClassName("connector.MyAdminObject");
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -179,7 +179,7 @@ public class DDTest extends TestCase {
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("global-scope resource defined in EJB DD");
         desc.setName("java:global/env/HelloEJB_AdminObject");
-        desc.setInterfaceName("javax.jms.Destination");
+        desc.setInterfaceName("jakarta.jms.Destination");
         desc.setClassName("connector.MyAdminObject");
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -188,7 +188,7 @@ public class DDTest extends TestCase {
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in EJB DD");
         desc.setName("java:module/env/HelloEJB_AdminObject");
-        desc.setInterfaceName("javax.jms.Destination");
+        desc.setInterfaceName("jakarta.jms.Destination");
         desc.setClassName("connector.MyAdminObject");
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -197,7 +197,7 @@ public class DDTest extends TestCase {
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("component-scope resource defined in EJB DD");
         desc.setName("java:comp/env/HelloEJB_AdminObject");
-        desc.setInterfaceName("javax.jms.Destination");
+        desc.setInterfaceName("jakarta.jms.Destination");
         desc.setClassName("connector.MyAdminObject");
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -227,7 +227,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("global-scope resource defined in EJB DD");
                 desc.setName("java:global/env/Entity_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -236,7 +236,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/Entity_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -245,7 +245,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("component-scope resource defined in EJB DD");
                 desc.setName("java:comp/env/Entity_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -288,7 +288,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("global-scope resource defined in EJB DD");
                 desc.setName("java:global/env/MDB_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -297,7 +297,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/MDB_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -306,7 +306,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("component-scope resource defined in EJB DD");
                 desc.setName("java:comp/env/MDB_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -349,7 +349,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("global-scope resource defined in EJB DD");
                 desc.setName("java:global/env/Interceptor_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -358,7 +358,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/Interceptor_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -367,7 +367,7 @@ public class DDTest extends TestCase {
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("component-scope resource defined in EJB DD");
                 desc.setName("java:comp/env/Interceptor_AdminObject");
-                desc.setInterfaceName("javax.jms.Destination");
+                desc.setInterfaceName("jakarta.jms.Destination");
                 desc.setClassName("connector.MyAdminObject");
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -418,7 +418,7 @@ public class DDTest extends TestCase {
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setDescription("application-scope resource defined in Web DD");
             desc.setName("java:app/env/AdminObject");
-            desc.setInterfaceName("javax.jms.Destination");
+            desc.setInterfaceName("jakarta.jms.Destination");
             desc.setClassName("connector.MyAdminObject");
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
@@ -427,7 +427,7 @@ public class DDTest extends TestCase {
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setDescription("module-scope resource defined in Web DD");
             desc.setName("java:module/env/AdminObject");
-            desc.setInterfaceName("javax.jms.Destination");
+            desc.setInterfaceName("jakarta.jms.Destination");
             desc.setClassName("connector.MyAdminObject");
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");

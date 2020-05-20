@@ -16,7 +16,7 @@
 
 package test.beans.mock;
 
-import javax.enterprise.inject.Specializes;
+import jakarta.enterprise.inject.Specializes;
 
 import test.beans.artifacts.MockStereotype;
 import test.beans.artifacts.Transactional;

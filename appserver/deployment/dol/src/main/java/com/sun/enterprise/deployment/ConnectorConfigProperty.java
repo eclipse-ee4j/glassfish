@@ -35,17 +35,6 @@ public class ConnectorConfigProperty extends EnvironmentProperty {
     private final static Logger _logger = DOLUtils.getDefaultLogger();
 
     /**
-    ** copy constructor.
-    */
-    public ConnectorConfigProperty(ConnectorConfigProperty other) {
-        super(other);
-    }
-
-    public ConnectorConfigProperty(EnvironmentProperty other){
-        super(other);
-    }
-
-    /**
     ** Construct an connector  config-property if type String and empty string value and no description.
     */
 
@@ -68,19 +57,6 @@ public class ConnectorConfigProperty extends EnvironmentProperty {
 
     public ConnectorConfigProperty(String name, String value, String description, String type) {
     	super(name, value, description, type);
-    }
-
-    /**
-    ** Construct an connector config-property of given name value and description and type.
-    ** Throws an IllegalArgumentException if bounds checking is true and the value cannot be
-    ** reconciled with the given type.
-    */
-    public ConnectorConfigProperty(String name, String value, String description, String type,
-                                   boolean ignore, boolean supportsDynamicUpdates, boolean confidential) {
-    	super(name, value, description, type);
-        this.ignore = ignore;
-        this.supportsDynamicUpdates = supportsDynamicUpdates;
-        this.confidential = confidential;
     }
 
     public boolean isIgnore() {

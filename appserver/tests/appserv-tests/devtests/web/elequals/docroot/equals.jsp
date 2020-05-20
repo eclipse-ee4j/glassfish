@@ -17,8 +17,8 @@
 --%>
 
 <%
-javax.el.ValueExpression v1 =  org.apache.jasper.runtime.PageContextImpl.getValueExpression("${A+B}", pageContext, Object.class, null);
-javax.el.ValueExpression v2 =  org.apache.jasper.runtime.PageContextImpl.getValueExpression("${ A + B }", pageContext, Object.class, null);
+jakarta.el.ValueExpression v1 =  org.apache.jasper.runtime.PageContextImpl.getValueExpression("${A+B}", pageContext, Object.class, null);
+jakarta.el.ValueExpression v2 =  org.apache.jasper.runtime.PageContextImpl.getValueExpression("${ A + B }", pageContext, Object.class, null);
 out.write("Comparing ${A+B} with ${ A + B }: " + (v1.equals(v2)? "PASS\n": "FAIL\n"));
 
 v1 =  org.apache.jasper.runtime.PageContextImpl.getValueExpression("${A}", pageContext, Object.class, null);

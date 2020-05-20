@@ -30,7 +30,7 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.tools.verifier.tests.*;
 
 /**
- * Test if a javax.resource.cci.RecordFactory implementation has been provided in
+ * Test if a jakarta.resource.cci.RecordFactory implementation has been provided in
  * the rar file
  *
  * @author  Jerome Dochez
@@ -40,7 +40,7 @@ public class RecordFactoryExistence extends ConnectionFactoryTest implements Con
 {
 
     /** <p>
-     * Test if a javax.resource.cci.RecordFactory implementation has been 
+     * Test if a jakarta.resource.cci.RecordFactory implementation has been 
      * provided in the rar file
      * </p>
      *
@@ -55,7 +55,7 @@ public class RecordFactoryExistence extends ConnectionFactoryTest implements Con
         if (isCCIImplemented(descriptor, result)) {
             //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //            File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-            findImplementorOf(descriptor, "javax.resource.cci.RecordFactory", result);
+            findImplementorOf(descriptor, "jakarta.resource.cci.RecordFactory", result);
         } else {
 	     result.addNaDetails(smh.getLocalString
 				       ("tests.componentNameConstructor",

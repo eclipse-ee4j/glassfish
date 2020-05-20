@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,8 @@ package com.sun.ejb.portable;
 import java.io.*;
 import java.rmi.RemoteException;
 
-import javax.ejb.*;
-import javax.ejb.spi.HandleDelegate;
+import jakarta.ejb.*;
+import jakarta.ejb.spi.HandleDelegate;
 import javax.naming.NamingException;
 
 
@@ -43,7 +43,7 @@ public final class HandleImpl implements Handle, Serializable
 	this.ejbObject = ejbObject;
     }
 
-    // This is the public API from javax.ejb.Handle
+    // This is the public API from jakarta.ejb.Handle
     public EJBObject getEJBObject() throws RemoteException
     {
 	return ejbObject;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,35 +26,35 @@
     <property name="filedir" value="${rootdir}/packager_files"/>
 
     <target name="get.distribution.type">
-      <condition property="full.distribution">
-	<equals arg1="${bundlename}" arg2="org.glassfish.main.embedded.all"/>
-      </condition>
-      <condition property="web.distribution">
-	<equals arg1="${bundlename}" arg2="org.glassfish.main.embedded.web"/>
-      </condition>
-      <condition property="nucleus.distribution">
-	<equals arg1="${bundlename}" arg2="org.glassfish.main.embedded.nucleus"/>
-      </condition>
+        <condition property="full.distribution">
+            <equals arg1="${bundlename}" arg2="org.glassfish.main.embedded.all"/>
+        </condition>
+        <condition property="web.distribution">
+            <equals arg1="${bundlename}" arg2="org.glassfish.main.embedded.web"/>
+        </condition>
+        <condition property="nucleus.distribution">
+            <equals arg1="${bundlename}" arg2="org.glassfish.main.embedded.nucleus"/>
+        </condition>
     </target>
 
     <target name="create.distribution" depends="get.distribution.type">
         <antcall target="makeJarDir"/>
         <antcall target="removeJarsNotNeeded"/>
-	<antcall target="addDtds"/>
-   	<antcall target="addRars"/>
-	<antcall target="addEjbTimer"/>
+        <antcall target="addDtds"/>
+        <antcall target="addRars"/>
+        <antcall target="addEjbTimer"/>
         <antcall target="rejar"/>
         <attachArtifact file="${finaljar}"/>
-     </target>
+    </target>
 
-     <target name="makeJarDir">
+    <target name="makeJarDir">
         <echo message="creating jar directory..."/>
         <copy todir="${jardir}">
             <fileset dir="${zipdir}">
                 <include name="*.jar"/>
             </fileset>
         </copy>
-        
+
         <!-- The packager files are zips with jars inside -->
         <unzip dest="${jardir}">
             <fileset dir="${zipdir}">
@@ -74,37 +74,35 @@
             </patternset>
         </unzip>
 
-	<mkdir dir="${rootdir}/temp"/>
+        <mkdir dir="${rootdir}/temp" />
+    </target>
 
-     </target>
-
-     <target name="removeJarsNotNeeded">
-	<delete verbose="true" failonerror="true">
-	  <fileset dir="${jardir}" includes="ant-**.jar"/>
-	  <fileset dir="${jardir}" includes="weld-se-shaded**.jar"/>
-	</delete>
-	<delete file="${modulesdir}/autostart/osgi-cdi.jar" failonerror="false"/>
-     </target>
+    <target name="removeJarsNotNeeded">
+        <delete verbose="true" failonerror="true">
+            <fileset dir="${jardir}" includes="ant-**.jar" />
+            <fileset dir="${jardir}" includes="weld-se-shaded**.jar" />
+        </delete>
+    </target>
 
 
     <target name="addDtds" unless="nucleus.distribution">
         <echo message="adding dtds"/>
         <jar jarfile="${jardir}/dtds.jar" basedir="${jardir}/glassfish/lib" includes="dtds/**/*"/>
-	<jar jarfile="${jardir}/schemas.jar" basedir="${jardir}/glassfish/lib" includes="schemas/**/*"/>
+        <jar jarfile="${jardir}/schemas.jar" basedir="${jardir}/glassfish/lib" includes="schemas/**/*"/>
         <jar jarfile="${jardir}/nucleus-dtds.jar" basedir="${jardir}/lib" includes="dtds/**/*"/>
-	<jar jarfile="${jardir}/nucleus-schemas.jar" basedir="${jardir}/lib" includes="schemas/**/*"/>
+        <jar jarfile="${jardir}/nucleus-schemas.jar" basedir="${jardir}/lib" includes="schemas/**/*"/>
     </target>
-    
+
     <target name="rejar">
         <echo message="rejarring and processing metadata..."/>
         <taskdef name="rejar" classname="org.jvnet.maven.plugin.antrun.RejarTask" />
 
-	<defaultexcludes add="META-INF/**.RSA"/>
-	<defaultexcludes add="META-INF/**.inf"/>
-	<defaultexcludes add="META-INF/**.SF"/>
+        <defaultexcludes add="META-INF/**.RSA"/>
+        <defaultexcludes add="META-INF/**.inf"/>
+        <defaultexcludes add="META-INF/**.SF"/>
 
         <rejar destfile="${finaljar}" duplicate="preserve" >
-           <manifest>
+            <manifest>
                 <attribute name="Bundle-SymbolicName" value="${bundlename}"/>
                 <attribute name="Main-Class" value="com.sun.enterprise.glassfish.bootstrap.UberMain"/>
             </manifest>
@@ -115,9 +113,9 @@
 
 
     <target name="addExtraRars" if="full.distribution">
-	<echo message="Adding additional rars"/>
+        <echo message="Adding additional rars"/>
 
-	<!-- Include property files i.e., glassfish5/mq/lib/props/broker/*.properties of mq.zip in jmsra.rar --> 
+        <!-- Include property files i.e., glassfish6/mq/lib/props/broker/*.properties of mq.zip in jmsra.rar -->
         <unzip dest="${jardir}">
             <fileset dir="${zipdir}">
                 <include name="mq**.zip"/>
@@ -139,20 +137,20 @@
         <jar jarfile="${jardir}/__ds_jdbc_ra.rar" basedir="${jardir}/glassfish" includes="lib/install/applications/__ds_jdbc_ra/**/*"/>
         <jar jarfile="${jardir}/__dm_jdbc_ra.rar" basedir="${jardir}/glassfish" includes="lib/install/applications/__dm_jdbc_ra/**/*"/>
         <jar jarfile="${jardir}/__xa_jdbc_ra.rar" basedir="${jardir}/glassfish" includes="lib/install/applications/__xa_jdbc_ra/**/*"/>
-	<copy todir="${rootdir}/temp">
-          <fileset dir="${jardir}">
-    	    <include name="*.rar"/>
-  	  </fileset>
+        <copy todir="${rootdir}/temp">
+            <fileset dir="${jardir}">
+                <include name="*.rar"/>
+            </fileset>
         </copy>
-   <!--     <jar jarfile="${finaljar}" update="true" basedir="${jardir}" includes="__cp_jdbc_ra.rar, __ds_jdbc_ra.rar, __dm_jdbc_ra.rar, __xa_jdbc_ra.rar"/>  -->
+        <!--     <jar jarfile="${finaljar}" update="true" basedir="${jardir}" includes="__cp_jdbc_ra.rar, __ds_jdbc_ra.rar, __dm_jdbc_ra.rar, __xa_jdbc_ra.rar"/>  -->
     </target>
 
-  <target name="addEjbTimer" if="full.distribution">
+    <target name="addEjbTimer" if="full.distribution">
         <echo message="adding EJBTimer"/>
-	<copy file="${jardir}/glassfish/lib/install/applications/ejb-timer-service-app.war" todir= "${rootdir}/temp"/>
-<!--
-        <jar jarfile="${finaljar}" update="true"  basedir="${jardir}/glassfish5/glassfish/lib/install/applications" includes="ejb-timer-service-app.war"/>
+        <copy file="${jardir}/glassfish/lib/install/applications/ejb-timer-service-app.war" todir= "${rootdir}/temp"/>
+        <!--
+        <jar jarfile="${finaljar}" update="true"  basedir="${jardir}/glassfish6/glassfish/lib/install/applications" includes="ejb-timer-service-app.war"/>
 -->
-   </target>
+    </target>
 
 </project>

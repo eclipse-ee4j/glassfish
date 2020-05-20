@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,23 +16,23 @@
 
 package org.glassfish.test.jms.annotation.ejb;
 
-import javax.annotation.Resource;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSConnectionFactoryDefinition;
-import javax.jms.JMSConnectionFactoryDefinitions;
-import javax.jms.JMSDestinationDefinition;
-import javax.jms.JMSDestinationDefinitions;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Stateless;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSConnectionFactoryDefinition;
+import jakarta.jms.JMSConnectionFactoryDefinitions;
+import jakarta.jms.JMSDestinationDefinition;
+import jakarta.jms.JMSDestinationDefinitions;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Queue;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
+import jakarta.jms.Topic;
 import javax.naming.InitialContext;
 
 @JMSConnectionFactoryDefinitions(
@@ -40,7 +40,7 @@ import javax.naming.InitialContext;
         @JMSConnectionFactoryDefinition(
             description = "global-scope CF defined by @JMSConnectionFactoryDefinition",
             name = "java:global/env/annotation_CF",
-            interfaceName = "javax.jms.ConnectionFactory",
+            interfaceName = "jakarta.jms.ConnectionFactory",
             resourceAdapter = "jmsra",
             user = "admin",
             password = "admin",
@@ -51,7 +51,7 @@ import javax.naming.InitialContext;
         @JMSConnectionFactoryDefinition(
             description = "application-scope resource defined by @JMSConnectionFactoryDefinition",
             name = "java:app/env/annotation_CF",
-            interfaceName = "javax.jms.ConnectionFactory",
+            interfaceName = "jakarta.jms.ConnectionFactory",
             resourceAdapter = "jmsra",
             user = "admin",
             password = "admin",
@@ -62,7 +62,7 @@ import javax.naming.InitialContext;
         @JMSConnectionFactoryDefinition(
             description = "module-scope resource defined by @JMSConnectionFactoryDefinition",
             name = "java:module/env/annotation_CF",
-            interfaceName = "javax.jms.ConnectionFactory",
+            interfaceName = "jakarta.jms.ConnectionFactory",
             resourceAdapter = "jmsra",
             user = "admin",
             password = "admin",
@@ -73,7 +73,7 @@ import javax.naming.InitialContext;
         @JMSConnectionFactoryDefinition(
             description = "component-scope resource defined by @JMSConnectionFactoryDefinition",
             name = "java:comp/env/annotation_CF",
-            interfaceName = "javax.jms.ConnectionFactory",
+            interfaceName = "jakarta.jms.ConnectionFactory",
             resourceAdapter = "jmsra",
             user = "admin",
             password = "admin",
@@ -88,7 +88,7 @@ import javax.naming.InitialContext;
         @JMSDestinationDefinition(
             description = "global-scope queue defined by @JMSDestinationDefinition",
             name = "java:global/env/annotation_queue",
-            interfaceName = "javax.jms.Queue",
+            interfaceName = "jakarta.jms.Queue",
             resourceAdapter = "jmsra",
             destinationName = "myPhysicalQueue"
         ),
@@ -96,14 +96,14 @@ import javax.naming.InitialContext;
         @JMSDestinationDefinition(
             description = "application-scope topic defined by @JMSDestinationDefinition",
             name = "java:app/env/annotation_topic",
-            interfaceName = "javax.jms.Topic",
+            interfaceName = "jakarta.jms.Topic",
             resourceAdapter = "jmsra",
             destinationName = "myPhysicalTopic"
         ),
         @JMSDestinationDefinition(
             description = "module-scope topic defined by @JMSDestinationDefinition",
             name = "java:module/env/annotation_topic",
-            interfaceName = "javax.jms.Topic",
+            interfaceName = "jakarta.jms.Topic",
             resourceAdapter = "jmsra",
             destinationName = "myPhysicalTopic"
         ),
@@ -111,7 +111,7 @@ import javax.naming.InitialContext;
         @JMSDestinationDefinition(
             description = "component-scope queue defined by @JMSDestinationDefinition",
             name = "java:comp/env/annotation_queue",
-            interfaceName = "javax.jms.Queue",
+            interfaceName = "jakarta.jms.Queue",
             resourceAdapter = "jmsra",
             destinationName = "myPhysicalQueue"
         )

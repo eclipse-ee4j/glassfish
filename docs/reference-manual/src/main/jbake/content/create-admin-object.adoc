@@ -1,0 +1,148 @@
+type=page
+status=published
+title=create-admin-object
+next=create-application-ref.html
+prev=copy-config.html
+~~~~~~
+create-admin-object
+===================
+
+[[create-admin-object-1]][[GSRFM00012]][[create-admin-object]]
+
+create-admin-object
+-------------------
+
+adds the administered object with the specified JNDI name for a resource
+adapter
+
+[[sthref115]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] create-admin-object [--help] 
+[--target target] 
+--restype restype 
+[--classname classname] 
+--raname raname 
+[--enabled={true|false}] 
+[--description description] 
+[--property name=value[:name=value]*] 
+jndi_name
+----
+
+[[sthref116]]
+
+Description
+
+The `create-admin-object` subcommand creates the administered object
+with the specified JNDI name and the interface definition for a resource
+adapter.
+
+This subcommand is supported in remote mode only.
+
+[[sthref117]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Specifies the target on which you are creating the administered
+  object. Valid values are as follows: +
+  `server`;;
+    Creates the administered object for the default server instance
+    `server` and is the default value.
+  configuration_name;;
+    Creates the administered object for the named configuration.
+  cluster_name;;
+    Creates the administered object for every server instance in the
+    cluster.
+  instance_name;;
+    Creates the administered object for a particular server instance. +
+
+[width="100%",cols="100%",]
+|=======================================================================
+a|
+Note:
+
+The resource is always created for the domain as a whole, but the
+`resource-ref` for the resource is only created for the specified
+`--target`. This means that although the resource is defined at the
+domain level, it is only available at the specified target level. Use
+the `create-resource-ref` subcommand to refer to the resource in
+multiple targets if needed.
+
+|=======================================================================
+
+`--restype`::
+  Specifies the interface definition for the administered object. The
+  resource type must be an interface definition that is specified in the
+  `ra.xml` file of the resource adapter.
+`--classname`::
+  Specifies the class name of the administered object. Required if
+  multiple administered objects use the same interface definition.
+`--raname`::
+  Specifies the name of the resource adapter associated with this
+  administered object.
+`--enabled`::
+  Specifies if this object is enabled. Default is true.
+`--description`::
+  Text string describing the administered object.
+`--property`::
+  Description of the name/values pairs for configuring the resource.
+  Dependent on the resource adapter. For JMS properties, see
+  link:create-jms-resource.html#create-jms-resource-1[`create-jms-resource`(1)]
+  for JMS destination resources.
+
+[[sthref118]]
+
+Operands
+
+jndi_name::
+  JNDI name of the administered object to be created.
+
+[[sthref119]]
+
+Examples
+
+[[GSRFM457]][[sthref120]]
+
+Example 1   Creating an Administered Object
+
+In this example, `jmsra` is a system resource adapter with the admin
+object interfaces, `jakarta.jms.Queue` and `jakarta.jms.Topic`.
+
+[source,oac_no_warn]
+----
+asadmin> create-admin-object --restype jakarta.jms.Queue
+--raname jmsra --description "sample administered object"
+--property Name=sample_jmsqueue jms/samplequeue
+Command create-admin-object executed successfully
+----
+
+[[sthref121]]
+
+Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref122]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
+link:delete-admin-object.html#delete-admin-object-1[`delete-admin-object`(1)],
+link:list-admin-objects.html#list-admin-objects-1[`list-admin-objects`(1)]
+
+

@@ -31,19 +31,19 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.decorator.Decorator;
-import javax.ejb.MessageDriven;
-import javax.ejb.Stateful;
-import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.NormalScope;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Stereotype;
-import javax.inject.Scope;
-import javax.inject.Singleton;
-import javax.interceptor.Interceptor;
+import jakarta.decorator.Decorator;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.NormalScope;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.inject.Scope;
+import jakarta.inject.Singleton;
+import jakarta.interceptor.Interceptor;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class WeldUtils {
 
     // We don't want this connector module to depend on CDI API, as connector can be present in a distribution
     // which does not have CDI implementation. So, we use the class name as a string.
-    private static final String SERVICES_CLASSNAME = "javax.enterprise.inject.spi.Extension";
+    private static final String SERVICES_CLASSNAME = "jakarta.enterprise.inject.spi.Extension";
     public static final String META_INF_SERVICES_EXTENSION =
         "META-INF" + SEPARATOR_CHAR + SERVICES_DIR + SEPARATOR_CHAR + SERVICES_CLASSNAME;
 
@@ -120,7 +120,7 @@ public class WeldUtils {
         cdiEnablingAnnotations.add(MessageDriven.class.getName());
         cdiEnablingAnnotations.add(Stateful.class.getName());
         cdiEnablingAnnotations.add(Stateless.class.getName());
-        cdiEnablingAnnotations.add(javax.ejb.Singleton.class.getName());
+        cdiEnablingAnnotations.add(jakarta.ejb.Singleton.class.getName());
     }
 
     private static final List<String> excludedAnnotationTypes = new ArrayList<String>();

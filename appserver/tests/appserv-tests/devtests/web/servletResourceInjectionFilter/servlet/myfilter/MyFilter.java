@@ -17,9 +17,9 @@
 package myfilter;
 
 import java.io.*;
-import javax.servlet.*;
+import jakarta.servlet.*;
 import javax.naming.*;
-import javax.annotation.*;
+import jakarta.annotation.*;
 import javax.sql.DataSource;
 
 @Resource(name="myDataSource4", type=DataSource.class)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +17,9 @@
 package org.glassfish.admin.rest.model;
 
 import java.util.List;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.glassfish.admin.rest.composite.RestModel;
 import org.glassfish.admin.rest.composite.metadata.AttributeReference;
 import org.glassfish.admin.rest.composite.metadata.CreateOnly;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,16 +15,6 @@
  */
 
 package com.sun.ejb.base.stats;
-
-import org.glassfish.j2ee.statistics.CountStatistic;
-import org.glassfish.j2ee.statistics.TimeStatistic;
-
-import com.sun.ejb.spi.stats.MonitorableSFSBStoreManager;
-
-import com.sun.enterprise.admin.monitor.stats.CountStatisticImpl;
-import com.sun.enterprise.admin.monitor.stats.MutableCountStatisticImpl;
-import com.sun.enterprise.admin.monitor.stats.MutableTimeStatisticImpl;
-import com.sun.enterprise.admin.monitor.stats.TimeStatisticImpl;
 
 /**
  * An instance of this class is used by the StatefulContainer to update monitoring 

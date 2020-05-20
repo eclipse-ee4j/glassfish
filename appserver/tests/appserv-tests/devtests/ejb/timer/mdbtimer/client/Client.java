@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,9 @@
 
 package com.sun.s1asdev.ejb.timer.mdbtimer.client;
 
-import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
 import javax.naming.*;
-import javax.jms.*;
+import jakarta.jms.*;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -43,8 +41,8 @@ public class Client {
     private QueueSession queueSession;
     private QueueSender queueSender;
     private QueueReceiver queueReceiver;
-    private javax.jms.Queue clientDest;
-    private javax.jms.Queue targetDest;
+    private jakarta.jms.Queue clientDest;
+    private jakarta.jms.Queue targetDest;
 
     private int numMessages = 2;
     public Client(String[] args) {
@@ -79,12 +77,12 @@ public class Client {
         queueSession = queueCon.createQueueSession
             (false, Session.AUTO_ACKNOWLEDGE); 
 
-        targetDest = (javax.jms.Queue) context.lookup("java:comp/env/jms/MsgBeanQueue");
+        targetDest = (jakarta.jms.Queue) context.lookup("java:comp/env/jms/MsgBeanQueue");
 
         // Producer will be specified when actual msg is sent.
         queueSender = queueSession.createSender(targetDest);        
 
-        clientDest = (javax.jms.Queue) context.lookup("java:comp/env/jms/ClientQueue");
+        clientDest = (jakarta.jms.Queue) context.lookup("java:comp/env/jms/ClientQueue");
 
         queueReceiver = queueSession.createReceiver(clientDest);
 

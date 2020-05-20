@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb31.aroundtimeout;
 
-import javax.interceptor.InvocationContext;
-import javax.annotation.PostConstruct;
+import jakarta.interceptor.InvocationContext;
+import jakarta.annotation.PostConstruct;
 
 public class InterceptorB {
 

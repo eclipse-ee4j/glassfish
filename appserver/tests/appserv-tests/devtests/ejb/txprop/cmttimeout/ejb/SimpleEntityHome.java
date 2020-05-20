@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.bmp;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface SimpleEntityHome

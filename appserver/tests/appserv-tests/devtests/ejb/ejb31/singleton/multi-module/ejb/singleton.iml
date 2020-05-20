@@ -31,7 +31,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../../../../../glassfishv3/glassfish/modules/javax.ejb.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../../../../glassfishv3/glassfish/modules/jakarta.ejb.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

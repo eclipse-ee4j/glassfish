@@ -28,12 +28,12 @@ import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.internal.api.ServerContext;
-import org.glassfish.jersey.jackson.JacksonFeature;
+//import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.jvnet.hk2.config.Dom;
 
-import javax.ws.rs.core.Feature;
+import jakarta.ws.rs.core.Feature;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +55,9 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
 
     @Override
     public Feature getJsonFeature() {
-        return new JacksonFeature();
+        RestLogging.restLogger.log(Level.SEVERE, "Hey, you... FIX ME!!! {0}", RestManagementResourceProvider.class.getName());
+        return super.getJsonFeature();
+//        return new JacksonFeature();
     }
 
     @Override

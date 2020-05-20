@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@ import org.glassfish.hk2.api.PerLookup;
  * import-sync-bundle applies the content under ${com.sun.aas.instanceRoot}/
  * directory. Synchronization cookie with DAS's timestamp should be created.
  * It also creates das.properties (if not present) under agent dir (ex.
- * installRoot/glassfish5/glassfish/nodes/<host-name>/agent/config/das.properties).
+ * installRoot/glassfish6/glassfish/nodes/<host-name>/agent/config/das.properties).
  *
  * Before running this command the instance should already have been registered in
  * DAS (server element created in DAS domain.xml) by running create-instance.
@@ -76,10 +76,10 @@ import org.glassfish.hk2.api.PerLookup;
  *
  * --node         name of the node; this is optional. The command fails if there
  * is more than one node under the default location
- * (installRoot/glassfish5/glassfish/nodes/<host-name>/)
+ * (installRoot/glassfish6/glassfish/nodes/<host-name>/)
  *
  * --nodedir      parent dir where node is created; this is optional. Default
- * location is installRoot/glassfish5/glassfish/nodes/
+ * location is installRoot/glassfish6/glassfish/nodes/
  *
  * --file         sync bundle created by export-sync-bundle
  *

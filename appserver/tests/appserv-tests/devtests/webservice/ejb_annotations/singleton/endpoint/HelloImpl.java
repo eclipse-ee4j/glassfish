@@ -16,8 +16,8 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.ejb.Singleton;
+import jakarta.jws.WebService;
+import jakarta.ejb.Singleton;
 import outsidepkg.RetVal;
 
 @WebService

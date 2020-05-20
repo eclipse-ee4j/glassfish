@@ -16,7 +16,7 @@
 
 package entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @author Marina Vatkina

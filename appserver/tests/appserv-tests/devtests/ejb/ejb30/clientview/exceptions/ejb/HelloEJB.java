@@ -16,18 +16,18 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.*;
 import javax.rmi.PortableRemoteObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
-import javax.annotation.Resource;
-import javax.transaction.TransactionRolledbackException;
-import static javax.transaction.Status.*;
-import javax.transaction.TransactionRequiredException;
-import javax.transaction.UserTransaction;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.transaction.TransactionRolledbackException;
+import static jakarta.transaction.Status.*;
+import jakarta.transaction.TransactionRequiredException;
+import jakarta.transaction.UserTransaction;
+import jakarta.annotation.PostConstruct;
 
 @Stateful
 @Remote({Hello.class})

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,9 @@ package com.sun.s1asdev.security.mdb.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
-import javax.jms.*;
-import javax.annotation.Resource;
+import jakarta.ejb.EJBHome;
+import jakarta.jms.*;
+import jakarta.annotation.Resource;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -46,12 +46,12 @@ public class Client {
     private static QueueConnectionFactory queueConFactory;
 
     @Resource(name="MsgBeanQueue", mappedName="jms/security_mdb_InQueue")
-    private static javax.jms.Queue msgBeanQueue;
+    private static jakarta.jms.Queue msgBeanQueue;
 
 //    @Resource(name="ClientQueue", mappedName="foo")
-//    private static javax.jms.Queue clientQueue;
+//    private static jakarta.jms.Queue clientQueue;
 @Resource(name="ClientQueue", mappedName="jms/security_mdb_OutQueue") 
-private static javax.jms.Queue clientQueue;
+private static jakarta.jms.Queue clientQueue;
 
 
     private QueueConnection queueCon;
@@ -107,7 +107,7 @@ private static javax.jms.Queue clientQueue;
         }
     }
 
-    public void sendMsgs(javax.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue + 
@@ -127,7 +127,7 @@ private static javax.jms.Queue clientQueue;
 
         message.setBooleanProperty("flag", true);
         message.setIntProperty("num", 2);
-        sendMsgs((javax.jms.Queue) dest, message, num);
+        sendMsgs((jakarta.jms.Queue) dest, message, num);
 
 /*        System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);

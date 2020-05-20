@@ -30,7 +30,7 @@ import com.sun.enterprise.tools.verifier.tests.*;
 
 
 /**
- * Test if the default implementation of the javax.resource.spi.ConnectionManager
+ * Test if the default implementation of the jakarta.resource.spi.ConnectionManager
  * provided implements the java.io.Serializable interface
  *
  * @author  Jerome Dochez
@@ -40,7 +40,7 @@ public class DefaultConnectionManagerSerializable extends ConnectorTest implemen
 
 
     /** <p>
-     * Test if the default implementation of the javax.resource.spi.ConnectionManager
+     * Test if the default implementation of the jakarta.resource.spi.ConnectionManager
      * provided implements the java.io.Serializable interface
      * </p>
      *
@@ -67,7 +67,7 @@ public class DefaultConnectionManagerSerializable extends ConnectorTest implemen
         // let's get first the the default implementation of the ConnectionManager
         //File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-        Class c = findImplementorOf(descriptor, "javax.resource.spi.ConnectionManager");
+        Class c = findImplementorOf(descriptor, "jakarta.resource.spi.ConnectionManager");
         
         if (c!=null) {
             // We found it, let's see if it implements the right interface
@@ -82,7 +82,7 @@ public class DefaultConnectionManagerSerializable extends ConnectorTest implemen
 	result.failed(smh.getLocalString
 		      ("com.sun.enterprise.tools.verifier.tests.connector.DefaultConnectionManagerExistence.failed", 
 		       "Error: There is no default implementation of the [ {0} ] provided",
-		       new Object[] {"javax.resource.spi.ConnectionManager"}));                            
+		       new Object[] {"jakarta.resource.spi.ConnectionManager"}));                            
         return result;
     }
 }

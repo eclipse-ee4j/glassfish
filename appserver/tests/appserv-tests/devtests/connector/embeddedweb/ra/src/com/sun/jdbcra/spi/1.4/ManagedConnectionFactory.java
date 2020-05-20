@@ -16,11 +16,11 @@
 
 package com.sun.jdbcra.spi;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
 import com.sun.jdbcra.spi.ConnectionManager;
 import com.sun.jdbcra.util.SecurityUtils;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.spi.security.PasswordCredential;
 import java.sql.DriverManager;
 import com.sun.jdbcra.common.DataSourceSpec;
 import com.sun.jdbcra.common.DataSourceObjectBuilder;
@@ -37,14 +37,14 @@ import java.util.logging.Level;
  * @author	Evani Sai Surya Kiran
  */
 
-public abstract class ManagedConnectionFactory implements javax.resource.spi.ManagedConnectionFactory, 
+public abstract class ManagedConnectionFactory implements jakarta.resource.spi.ManagedConnectionFactory, 
     java.io.Serializable {
     
     protected DataSourceSpec spec = new DataSourceSpec();
     protected transient DataSourceObjectBuilder dsObjBuilder;
     
     protected java.io.PrintWriter logWriter = null;
-    protected javax.resource.spi.ResourceAdapter ra = null;
+    protected jakarta.resource.spi.ResourceAdapter ra = null;
     
     private static Logger _logger;
     static {
@@ -62,7 +62,7 @@ public abstract class ManagedConnectionFactory implements javax.resource.spi.Man
             logWriter.println("In createConnectionFactory()");
         }
         com.sun.jdbcra.spi.DataSource cf = new com.sun.jdbcra.spi.DataSource(
-            (javax.resource.spi.ManagedConnectionFactory)this, null);
+            (jakarta.resource.spi.ManagedConnectionFactory)this, null);
         
         return cf;
     }
@@ -74,12 +74,12 @@ public abstract class ManagedConnectionFactory implements javax.resource.spi.Man
      * @param	cxManager	<code>ConnectionManager</code> passed by the application server
      * @return	Generic JDBC Connector implementation of <code>javax.sql.DataSource</code>
      */
-    public Object createConnectionFactory(javax.resource.spi.ConnectionManager cxManager) {
+    public Object createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager) {
         if(logWriter != null) {
-            logWriter.println("In createConnectionFactory(javax.resource.spi.ConnectionManager cxManager)");
+            logWriter.println("In createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager)");
         }
         com.sun.jdbcra.spi.DataSource cf = new com.sun.jdbcra.spi.DataSource(
-            (javax.resource.spi.ManagedConnectionFactory)this, cxManager);
+            (jakarta.resource.spi.ManagedConnectionFactory)this, cxManager);
         return cf; 
     }
     
@@ -100,7 +100,7 @@ public abstract class ManagedConnectionFactory implements javax.resource.spi.Man
      * @throws	ResourceAllocationException	if there is an error in allocating the 
      *						physical connection
      */
-    public abstract javax.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
+    public abstract jakarta.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
         ConnectionRequestInfo cxRequestInfo) throws ResourceException;
     
     /**
@@ -130,7 +130,7 @@ public abstract class ManagedConnectionFactory implements javax.resource.spi.Man
      * @return	<code>ResourceAdapter</code> associated with this <code>ManagedConnectionFactory</code> instance
      * @see	<code>setResourceAdapter</code>
      */
-    public javax.resource.spi.ResourceAdapter getResourceAdapter() {
+    public jakarta.resource.spi.ResourceAdapter getResourceAdapter() {
         if(logWriter != null) {
             logWriter.println("In getResourceAdapter");
         }
@@ -164,7 +164,7 @@ public abstract class ManagedConnectionFactory implements javax.resource.spi.Man
      *					parameter or the <code>Set</code> of <code>ManagedConnection</code>
      *					objects passed by the application server
      */
-    public javax.resource.spi.ManagedConnection matchManagedConnections(java.util.Set connectionSet, 
+    public jakarta.resource.spi.ManagedConnection matchManagedConnections(java.util.Set connectionSet, 
         javax.security.auth.Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         if(logWriter != null) {
             logWriter.println("In matchManagedConnections");
@@ -459,7 +459,7 @@ public abstract class ManagedConnectionFactory implements javax.resource.spi.Man
      *			<code>ManagedConnectionFactory</code> instance
      * @see	<code>getResourceAdapter</code>
      */
-    public void setResourceAdapter(javax.resource.spi.ResourceAdapter ra) {
+    public void setResourceAdapter(jakarta.resource.spi.ResourceAdapter ra) {
         this.ra = ra;   
     }
     

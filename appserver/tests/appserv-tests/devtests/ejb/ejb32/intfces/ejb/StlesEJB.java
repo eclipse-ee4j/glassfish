@@ -16,8 +16,8 @@
 
 package ejb32.intrfaces;
 
-import javax.annotation.Resource;
-import javax.ejb.*;
+import jakarta.annotation.Resource;
+import jakarta.ejb.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;

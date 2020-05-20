@@ -28,7 +28,7 @@ import org.glassfish.hk2.api.PerLookup;
 
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Service
 @PerLookup

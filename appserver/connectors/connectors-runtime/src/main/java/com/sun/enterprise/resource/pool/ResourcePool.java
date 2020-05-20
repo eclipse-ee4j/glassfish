@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,8 +26,8 @@ import com.sun.enterprise.resource.listener.PoolLifeCycleListener;
 import com.sun.enterprise.resource.pool.waitqueue.PoolWaitQueue;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import javax.resource.spi.RetryableUnavailableException;
-import javax.transaction.Transaction;
+import jakarta.resource.spi.RetryableUnavailableException;
+import jakarta.transaction.Transaction;
 
 /**
  * @author Tony Ng

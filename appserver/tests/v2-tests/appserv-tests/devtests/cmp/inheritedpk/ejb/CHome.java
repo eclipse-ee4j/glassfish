@@ -16,17 +16,17 @@
 
 package pkvalidation;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface CHome extends javax.ejb.EJBHome {
+public interface CHome extends jakarta.ejb.EJBHome {
     
-    public  C findByPrimaryKey(CPK pk)  throws java.rmi.RemoteException, javax.ejb.FinderException;
+    public  C findByPrimaryKey(CPK pk)  throws java.rmi.RemoteException, jakarta.ejb.FinderException;
     
-    public  C create(long i, java.lang.String name) throws java.rmi.RemoteException, javax.ejb.CreateException;
+    public  C create(long i, java.lang.String name) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
 }

@@ -16,8 +16,8 @@
 
 package components.taglib;
 
-import javax.faces.component.UIComponent;
-import javax.faces.webapp.UIComponentTag;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.webapp.UIComponentTag;
 
 
 /**
@@ -37,7 +37,7 @@ public class StylesheetTag extends UIComponentTag {
 
 
     public String getComponentType() {
-        return ("javax.faces.Output");
+        return ("jakarta.faces.Output");
     }
 
 

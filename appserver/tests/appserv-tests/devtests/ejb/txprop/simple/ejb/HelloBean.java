@@ -19,9 +19,9 @@ package com.sun.s1asdev.ejb.txprop.simple;
 import java.util.Enumeration;
 import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
 
 
 public class HelloBean implements SessionBean {

@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb32.mdb.ra;
 
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.InvalidPropertyException;
-import javax.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.InvalidPropertyException;
+import jakarta.resource.spi.ResourceAdapter;
 
 /**
  * @author David Blevins

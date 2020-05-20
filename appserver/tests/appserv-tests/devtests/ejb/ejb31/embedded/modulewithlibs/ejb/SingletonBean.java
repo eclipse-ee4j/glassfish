@@ -16,10 +16,10 @@
 
 package org.glassfish.tests.ejb.sample;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup; 
-import javax.annotation.PreDestroy;
-import javax.annotation.PostConstruct;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup; 
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author Marina Vatkina
@@ -28,7 +28,7 @@ import javax.annotation.PostConstruct;
 @Startup
 public class SingletonBean {
 
-    @javax.annotation.Resource(name="jdbc/__default") javax.sql.DataSource ds;
+    @jakarta.annotation.Resource(name="jdbc/__default") javax.sql.DataSource ds;
 
     @PostConstruct
     private void init() {

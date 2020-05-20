@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -189,9 +189,9 @@
 <handler id="gfr.getJmsDestResources" >
         createMap(result="#{requestScope.resMap}");
         mapPut(map="#{requestScope.resMap}"  key="target" value="domain");
-        mapPut(map="#{requestScope.resMap}"  key="resType" value="javax.jms.Queue");
+        mapPut(map="#{requestScope.resMap}"  key="resType" value="jakarta.jms.Queue");
         gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/list-jms-resources" attrs="#{requestScope.resMap}" method="get" result="#{requestScope.queue}");
-        mapPut(map="#{requestScope.resMap}"  key="resType" value="javax.jms.Topic");
+        mapPut(map="#{requestScope.resMap}"  key="resType" value="jakarta.jms.Topic");
         gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/list-jms-resources" attrs="#{requestScope.resMap}" method="get" result="#{requestScope.topic}");
         gf.listCombine(list="#{requestScope.queue.data.extraProperties.jmsResources}" list2="#{requestScope.topic.data.extraProperties.jmsResources}" result="#{requestScope.children}");
 </handler>   
@@ -199,13 +199,13 @@
 <handler id="gfr.getJmsConnectionFactories" >
         createMap(result="#{requestScope.rMap}");
         mapPut(map="#{requestScope.rMap}"  key="target" value="domain");
-        mapPut(map="#{requestScope.rMap}"  key="resType" value="javax.jms.ConnectionFactory");
+        mapPut(map="#{requestScope.rMap}"  key="resType" value="jakarta.jms.ConnectionFactory");
         gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/list-jms-resources" attrs="#{requestScope.rMap}" method="get" result="#{requestScope.c1}");
 
-        mapPut(map="#{requestScope.rMap}"  key="resType" value="javax.jms.TopicConnectionFactory");
+        mapPut(map="#{requestScope.rMap}"  key="resType" value="jakarta.jms.TopicConnectionFactory");
         gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/list-jms-resources" attrs="#{requestScope.rMap}" method="get" result="#{requestScope.c2}");
 
-        mapPut(map="#{requestScope.rMap}"  key="resType" value="javax.jms.QueueConnectionFactory");
+        mapPut(map="#{requestScope.rMap}"  key="resType" value="jakarta.jms.QueueConnectionFactory");
         gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/list-jms-resources" attrs="#{requestScope.rMap}" method="get" result="#{requestScope.c3}");
 
         gf.listCombine(list="#{requestScope.c1.data.extraProperties.jmsResources}" list2="#{requestScope.c2.data.extraProperties.jmsResources}" result="#{requestScope.tmplist}");

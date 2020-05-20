@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,14 +31,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.FinderException;
-import javax.ejb.ScheduleExpression;
-import javax.ejb.TimerConfig;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.Transaction;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.ScheduleExpression;
+import jakarta.ejb.TimerConfig;
+import jakarta.transaction.Status;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.Transaction;
 
 import com.sun.enterprise.admin.monitor.callflow.Agent;
 import com.sun.enterprise.admin.monitor.callflow.RequestType;
@@ -658,7 +658,7 @@ public class EJBTimerService {
                 throw new CreateException
                         ("Attempt to create an EJB Timer from a bean that is " +
                          "not a Timed Object.  EJB class " + ejbClass + 
-                         " must implement javax.ejb.TimedObject or " +
+                         " must implement jakarta.ejb.TimedObject or " +
                          " annotation a timeout method with @Timeout");
             }
         }
@@ -925,7 +925,7 @@ public class EJBTimerService {
     }
 
     //
-    // Logic used by TimerWrapper for javax.ejb.Timer methods.
+    // Logic used by TimerWrapper for jakarta.ejb.Timer methods.
     //
 
     protected void cancelTimer(TimerPrimaryKey timerId) 

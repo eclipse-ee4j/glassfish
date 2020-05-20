@@ -19,7 +19,7 @@ package com.sun.jdbcra.util;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;

@@ -17,7 +17,7 @@
 package test;
 
 import java.io.*;
-import javax.servlet.*;
+import jakarta.servlet.*;
 
 public class NewFilter implements Filter {
 

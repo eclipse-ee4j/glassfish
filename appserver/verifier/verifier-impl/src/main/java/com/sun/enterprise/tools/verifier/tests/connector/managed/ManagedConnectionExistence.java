@@ -31,7 +31,7 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.tools.verifier.tests.*;
 
 /**
- * Test the implementation of the javax.resource.spi.ManagedConnection 
+ * Test the implementation of the jakarta.resource.spi.ManagedConnection 
  * interface in the rar file
  *
  * @author  Jerome Dochez
@@ -43,7 +43,7 @@ public class ManagedConnectionExistence
 {
 
     /** <p>
-     * Test the implementation of the javax.resource.spi.ManagedConnection 
+     * Test the implementation of the jakarta.resource.spi.ManagedConnection 
      * interface in the rar file
      * </p>
      *
@@ -70,7 +70,7 @@ public class ManagedConnectionExistence
         }
 	//File jarFile = Verifier.getJarFile(descriptor.getModuleDescriptor().getArchiveUri());
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());
-        findImplementorOf(descriptor, "javax.resource.spi.ManagedConnection", result);
+        findImplementorOf(descriptor, "jakarta.resource.spi.ManagedConnection", result);
         return result;
     }
 }

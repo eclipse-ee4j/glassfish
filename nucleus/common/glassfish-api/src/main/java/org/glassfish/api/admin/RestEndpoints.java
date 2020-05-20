@@ -19,7 +19,7 @@ package org.glassfish.api.admin;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  *

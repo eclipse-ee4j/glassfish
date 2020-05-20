@@ -35,8 +35,8 @@ import org.glassfish.web.loader.LogFacade;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.glassfish.web.sniffer.WarDetector;
 import org.glassfish.loader.util.ASClassLoaderUtil;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.annotations.Service;
 

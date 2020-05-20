@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 
 @ManagedBean("ManagedBeanNoInt")

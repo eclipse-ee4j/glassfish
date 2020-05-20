@@ -16,9 +16,9 @@
 
 package test.ejb;
 
-import javax.annotation.Resource;
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 
 @Stateless(mappedName="sless_ejb")
 @Remote(Sless.class)

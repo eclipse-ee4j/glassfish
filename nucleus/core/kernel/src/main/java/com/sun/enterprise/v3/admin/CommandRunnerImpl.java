@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,12 +39,12 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Scope;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Scope;
+import jakarta.inject.Singleton;
 import javax.security.auth.Subject;
-import javax.validation.*;
+import jakarta.validation.*;
 import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;

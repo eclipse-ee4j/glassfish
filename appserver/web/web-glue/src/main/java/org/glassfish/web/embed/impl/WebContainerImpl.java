@@ -61,8 +61,8 @@ import org.glassfish.embeddable.web.config.WebContainerConfig;
 import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.jvnet.hk2.config.*;
 import org.jvnet.hk2.config.types.Property;
 

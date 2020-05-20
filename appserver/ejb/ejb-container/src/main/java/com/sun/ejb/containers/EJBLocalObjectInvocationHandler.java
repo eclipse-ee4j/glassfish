@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,8 @@ import java.lang.reflect.Method;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import javax.ejb.EJBException;
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBLocalObject;
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.InvocationInfo;
 import com.sun.ejb.containers.util.MethodMap;
@@ -148,7 +148,7 @@ public final class EJBLocalObjectInvocationHandler
             throw new IllegalStateException("Unknown method :" + method);
         }
 
-        if( (methodClass == javax.ejb.EJBLocalObject.class) ||
+        if( (methodClass == jakarta.ejb.EJBLocalObject.class) ||
             invInfo.ejbIntfOverride ) {
             return invokeEJBLocalObjectMethod(method.getName(), args);
         } else if( invInfo.targetMethod1 == null ) {

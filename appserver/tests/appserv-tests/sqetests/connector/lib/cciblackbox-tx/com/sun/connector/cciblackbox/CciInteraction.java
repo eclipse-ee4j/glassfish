@@ -26,12 +26,12 @@ import java.sql.SQLWarning;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.resource.ResourceException;
-import javax.resource.cci.IndexedRecord;
-import javax.resource.cci.Interaction;
-import javax.resource.cci.InteractionSpec;
-import javax.resource.cci.Record;
-import javax.resource.cci.ResourceWarning;
+import jakarta.resource.ResourceException;
+import jakarta.resource.cci.IndexedRecord;
+import jakarta.resource.cci.Interaction;
+import jakarta.resource.cci.InteractionSpec;
+import jakarta.resource.cci.Record;
+import jakarta.resource.cci.ResourceWarning;
 
 /**
  * This implementation class enables a component to execute EIS functions.
@@ -39,15 +39,15 @@ import javax.resource.cci.ResourceWarning;
  */
 public class CciInteraction implements Interaction {
 
-  protected javax.resource.cci.Connection connection;
+  protected jakarta.resource.cci.Connection connection;
 
   protected CallableStatement csmt;
 
-  public CciInteraction(javax.resource.cci.Connection con) {
+  public CciInteraction(jakarta.resource.cci.Connection con) {
     connection = con;
   }
 
-  public javax.resource.cci.Connection getConnection() {
+  public jakarta.resource.cci.Connection getConnection() {
     return connection;
   }
 

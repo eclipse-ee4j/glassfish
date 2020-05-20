@@ -1,0 +1,791 @@
+type=page
+status=published
+title=Subcommands for the asadmin Utility
+prev=part-appendixes.html
+~~~~~~
+Subcommands for the asadmin Utility
+===================================
+
+[[GSADG00023]][[gcode]]
+
+
+[[a-subcommands-for-the-asadmin-utility]]
+A Subcommands for the `asadmin` Utility
+---------------------------------------
+
+This appendix lists the `asadmin` subcommands that are included with
+this release of the GlassFish Server Open Source Edition 5.0 software.
+
+* link:#ggltk[General Administration Subcommands]
+* link:#CHDJGEEG[Batch Jobs Subcommands]
+* link:#CHDECJFC[Concurrent Resources Subcommands]
+* link:#giowb[Connectivity Subcommands]
+* link:#gitwu[Domain Subcommands]
+* link:#ggltm[Internet Connectivity Subcommands]
+* link:#ggltf[JavaMail Subcommands]
+* link:#gipen[JMS Subcommands]
+* link:#gitws[JNDI Subcommands]
+* link:#gglsk[JVM Subcommands]
+* link:#giuzl[Life Cycle Module Subcommands]
+* link:#gitxd[Logging and Monitoring Subcommands]
+* link:#giusq[ORB Subcommands]
+* link:#giuqr[Thread Pool Subcommands]
+* link:#gitxi[Transaction Service Subcommands]
+
+For information and instructions on using the `asadmin` application
+deployment subcommands, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
+Edition Application Deployment Guide].
+
+Online help for the `asadmin` subcommands can be invoked on the command
+line, for example, `asadmin create-domain` `help`. The
+link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual] also
+provides a collection of these help pages.
+
+
+[NOTE]
+=======================================================================
+
+The common options used with remote subcommands are described in the
+olink:GSRFM00263[`asadmin`(1M)] help page.
+
+=======================================================================
+
+
+[[ggltk]][[GSADG00610]][[general-administration-subcommands]]
+
+General Administration Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/add-resources.html#GSRFM00001[`add-resources`]::
+  Creates the resources named in the specified XML file. Supported in
+  remote mode only. For procedural information in this guide, see
+  link:general-administration.html#ggoeh[To Add Resources From an XML
+  File].
+link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`]::
+  Describes how the `asadmin` utility works.
+link:../reference-manual/attach.html#GSRFM825[`attach`]::
+  Attaches to subcommands that were started using the `asadmin --detach`
+  option or that contain progress information. For procedural
+  information in this guide, see
+  link:general-administration.html#CACDDHBA[To Run `asadmin` Subcommands
+  in `--detach` Mode].
+link:../reference-manual/configure-managed-jobs.html#GSRFM836[`configure-managed-jobs`]::
+  Configures how long information about subcommands (jobs) that were
+  started using the `asadmin --detach` option or that contain progress
+  information is kept. For procedural information in this guide, see
+  link:general-administration.html#CACDDHBA[To Run `asadmin` Subcommands
+  in `--detach` Mode].
+link:../reference-manual/create-module-config.html#GSRFM844[`create-module-config`]::
+  Adds the default configuration of a module to `domain.xml`.
+link:../reference-manual/create-service.html#GSRFM00057[`create-service`]::
+  Configures the starting of a domain administration server (DAS) on an
+  unattended boot. On Oracle Solaris 10, this subcommand uses the
+  Service Management Facility (SMF). For procedural information in this
+  guide, see link:domains.html#giusi[To Configure a DAS or an Instance
+  for Automatic Restart on Oracle Solaris].
+link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`]::
+  Creates or updates system properties. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:general-administration.html#ggonc[To Create System Properties].
+link:../reference-manual/delete-module-config.html#GSRFM854[`delete-module-config`]::
+  Removes the configuration of a module from `domain.xml`.
+link:../reference-manual/delete-system-property.html#GSRFM00110[`delete-system-property`]::
+  Deletes system properties of a domain or configuration, or server
+  instance. Supported in remote mode only. For procedural information in
+  this guide, see link:general-administration.html#ggomm[To Delete a
+  System Property].
+link:../reference-manual/get.html#GSRFM00139[`get`]::
+  Gets an attribute of an element in the `domain.xml` file. With the
+  `-m` option, gets the names and values of the monitorable or
+  configurable attributes. For procedural information in this guide, see
+  link:monitoring.html#ablwh[Guidelines for Using the `list` and `get`
+  Subcommands for Monitoring].
+link:../reference-manual/get-active-module-config.html#GSRFM859[`get-active-module-config`]::
+  Displays the current active configuration of a module.
+link:../reference-manual/list.html#GSRFM00145[`list`]::
+  Lists the configurable element. On Oracle Solaris, quotes are needed
+  when running subcommands with `*` as the option value or operand. For
+  procedural information in this guide, see
+  link:monitoring.html#ablwh[Guidelines for Using the `list` and `get`
+  Subcommands for Monitoring].
+link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`]::
+  Lists all the `asadmin` subcommands, local subcommands first, then
+  remote subcommands. You can specify that only remote subcommands or
+  only local subcommands be displayed. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:general-administration.html#ggoeg[To List Subcommands].
+link:../reference-manual/list-containers.html#GSRFM00161[`list-containers`]::
+  Lists application containers and the status of each container.
+  Supported in remote mode only. For procedural information in this
+  guide, see link:general-administration.html#ggocv[To List Containers].
+link:../reference-manual/list-jobs.html#GSRFM867[`list-jobs`]::
+  Lists information about subcommands that were started using the
+  `asadmin --detach` option or that contain progress information. For
+  procedural information in this guide, see
+  link:general-administration.html#CACDDHBA[To Run `asadmin` Subcommands
+  in `--detach` Mode].
+link:../reference-manual/list-modules.html#GSRFM00185[`list-modules`]::
+  Lists modules that are accessible to the GlassFish Server subsystem.
+  The status of each module is included. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:general-administration.html#ghlgf[To List Modules].
+link:../reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`]::
+  Lists the system properties of a domain or configuration. Supported in
+  remote mode only. For procedural information in this guide, see
+  link:general-administration.html#ggodt[To List System Properties].
+link:../reference-manual/list-timers.html#GSRFM00205[`list-timers`]::
+  List the timers owned by a specific server instance. Supported in
+  remote mode only. For procedural information in this guide, see
+  link:general-administration.html#giojd[To List Timers].
+link:../reference-manual/multimode.html#GSRFM00213[`multimode`]::
+  Provides an `asadmin>` prompt for running multiple subcommands while
+  preserving options and environment settings. Supported in local mode
+  only. For procedural information, see
+  link:general-administration.html#giobi[Using the `asadmin` Utility].
+link:../reference-manual/osgi.html#GSRFM877[`osgi`]::
+  Delegates the command line to the Apache Felix Gogo remote shell for
+  the execution of OSGi shell commands. For procedural information in
+  this guide, see link:overview.html#CJAGIGII[To Run Apache Felix Gogo
+  Remote Shell Commands].
+link:../reference-manual/osgi-shell.html#GSRFM890[`osgi-shell`]::
+  Provides interactive access to the Apache Felix Gogo remote shell for
+  the execution of OSGi shell commands. For procedural information in
+  this guide, see link:overview.html#CJAGIGII[To Run Apache Felix Gogo
+  Remote Shell Commands].
+link:../reference-manual/set.html#GSRFM00226[`set`]::
+  Sets the values of one or more configurable attributes. For procedural
+  information in this guide, see link:monitoring.html#ablvp[Configuring
+  Monitoring].
+link:../reference-manual/setup-local-dcom.html#GSRFM893[`setup-local-dcom`]::
+  Sets up the Distributed Component Object Model (DCOM) remote protocol
+  on the host where the subcommand is run. The DCOM remote protocol is
+  available only on Windows systems.
+link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`]::
+  Lists the status of existing components. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:general-administration.html#giyjd[To Show Component Status].
+link:../reference-manual/start-database.html#GSRFM00234[`start-database`]::
+  Starts the Apache Derby database server. Use this subcommand only for
+  working with applications deployed to the GlassFish Server. For
+  procedural information in this guide, see link:jdbc.html#ggndz[To Start
+  the Database].
+link:../reference-manual/stop-database.html#GSRFM00239[`stop-database`]::
+  Stops a process of the Apache Derby DB database server. For procedural
+  information in this guide, see link:jdbc.html#ggnbw[To Stop the
+  Database].
+link:../reference-manual/version.html#GSRFM00261[`version`]::
+  Displays the version information for the option specified in archive
+  or folder format. Supported in remote mode only. For procedural
+  information in this guide, see
+  link:general-administration.html#ghhox[To Display the GlassFish Server
+  Version].
+
+[[CHDJGEEG]][[GSADG1155]][[batch-jobs-subcommands]]
+
+Batch Jobs Subcommands
+~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/list-batch-jobs.html#GSRFM861[`list-batch-jobs`]::
+  Lists batch jobs and job details. For procedural information in this
+  guide, see link:batch.html#BABIBFDJ[To List Batch Jobs].
+link:../reference-manual/list-batch-job-executions.html#GSRFM884[`list-batch-job-executions`]::
+  Lists batch job executions and execution details. For procedural
+  information in this guide, see link:batch.html#BABFBGJB[To List Batch
+  Job Executions].
+link:../reference-manual/list-batch-job-steps.html#GSRFM895[`list-batch-job-steps`]::
+  Lists steps for a specific batch job execution. For procedural
+  information in this guide, see link:batch.html#BABGJIDD[To List Batch
+  Job Steps].
+link:../reference-manual/list-batch-runtime-configuration.html#GSRFM863[`list-batch-runtime-configuration`]::
+  Displays the configuration of the batch runtime. For procedural
+  information in this guide, see link:batch.html#BABBGHCJ[To List the
+  Batch Runtime Configuration].
+link:../reference-manual/set-batch-runtime-configuration.html#GSRFM897[`set-batch-runtime-configuration`]::
+  Configures the batch runtime. For procedural information in this
+  guide, see link:batch.html#BABFEJAD[To Configure the Batch Runtime].
+
+[[CHDECJFC]][[GSADG1156]][[concurrent-resources-subcommands]]
+
+Concurrent Resources Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-context-service.html#GSRFM838[`create-context-service`]::
+  Creates a context service resource. For procedural information in this
+  guide, see link:concurrent.html#DAFJACDI[To Create a Context Service].
+link:../reference-manual/create-managed-executor-service.html#GSRFM840[`create-managed-executor-service`]::
+  Creates a managed executor service resource. For procedural
+  information in this guide, see link:concurrent.html#DAFJIEGA[To Create
+  a Managed Executor Service].
+link:../reference-manual/create-managed-scheduled-executo.html#GSRFM680[`create-managed-scheduled-executor-service`]::
+  Creates a managed scheduled executor service resource. For procedural
+  information in this guide, see link:concurrent.html#DAFFGDGG[To Create
+  a Managed Scheduled Executor Service].
+link:../reference-manual/create-managed-thread-factory.html#GSRFM842[`create-managed-thread-factory`]::
+  Creates a managed thread factory resource. For procedural information
+  in this guide, see link:concurrent.html#DAFGFAEI[To Create a Managed
+  Thread Factory].
+link:../reference-manual/create-context-service.html#GSRFM838[`list-context-services`]::
+  Lists context service resources. For procedural information in this
+  guide, see link:concurrent.html#DAFDCFCB[To List Context Services].
+link:../reference-manual/create-managed-executor-service.html#GSRFM840[`list-managed-executor-services`]::
+  Lists managed executor service resources. For procedural information
+  in this guide, see link:concurrent.html#DAFIJDAE[To List Managed
+  Executor Services].
+link:../reference-manual/create-managed-scheduled-executo.html#GSRFM680[`list-managed-scheduled-executor-services`]::
+  Lists managed scheduled executor service resources. For procedural
+  information in this guide, see link:concurrent.html#DAFJBADD[To List
+  Managed Scheduled Executor Services].
+link:../reference-manual/create-managed-thread-factory.html#GSRFM842[`list-managed-thread-factories`]::
+  Lists managed thread factory resources. For procedural information in
+  this guide, see link:concurrent.html#DAFDGEGE[To List Managed Thread
+  Factories].
+link:../reference-manual/delete-context-service.html#GSRFM846[`delete-context-service`]::
+  Removes a context service resource. For procedural information in this
+  guide, see link:concurrent.html#DAFGGGEC[To Delete a Context Service].
+link:../reference-manual/delete-managed-executor-service.html#GSRFM848[`delete-managed-executor-service`]::
+  Removes a managed executor service resource. For procedural
+  information in this guide, see link:concurrent.html#DAFDAGAD[To Delete
+  a Managed Executor Service].
+link:../reference-manual/delete-managed-scheduled-executo.html#GSRFM850[`delete-managed-scheduled-executor-service`]::
+  Removes a managed scheduled executor service resource. For procedural
+  information in this guide, see link:concurrent.html#DAFEBEGC[To Delete
+  a Managed Scheduled Executor Service].
+link:../reference-manual/delete-managed-thread-factory.html#GSRFM852[`delete-managed-thread-factory`]::
+  Removes a managed thread factory resource. For procedural information
+  in this guide, see link:concurrent.html#DAFCEDEI[To Delete a Managed
+  Thread Factory].
+
+[[giowb]][[GSADG00611]][[connectivity-subcommands]]
+
+Connectivity Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-admin-object.html#GSRFM00012[`create-admin-object`]::
+  Creates an administered object. For procedural information in this
+  guide, see link:connectors.html#giolr[To Create an Administered
+  Object].
+link:../reference-manual/create-connector-connection-pool.html#GSRFM00018[`create-connector-connection-pool`]::
+  Adds a new connector connection pool with the specified connection
+  pool name. For procedural information in this guide, see
+  link:connectors.html#gioce[To Create a Connector Connection Pool].
+link:../reference-manual/create-connector-resource.html#GSRFM00019[`create-connector-resource`]::
+  Creates a connector resource. For procedural information in this
+  guide, see link:connectors.html#giogt[To Create a Connector Resource].
+link:../reference-manual/create-connector-security-map.html#GSRFM00020[`create-connector-security-map`]::
+  Creates a connector security map for the specified connector
+  connection pool. For procedural information, see
+  link:connectors.html#gitzz[To Create a Connector Security Map].
+link:../reference-manual/create-connector-work-security-m.html#GSRFM00021[`create-connector-work-security-map`]::
+  Creates a connector work security map for the specified resource
+  adapter. Supported in remote mode only. For procedural information in
+  this guide, see link:connectors.html#giofz[To Create a Connector Work
+  Security Map].
+link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-jdbc-resource`]::
+  Creates a new JDBC resource. Supported in remote mode only. For
+  procedural information in this guide, see link:jdbc.html#ggnda[To
+  Create a JDBC Resource].
+link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`]::
+  Registers a new JDBC connection pool with the specified JDBC
+  connection pool name. Supported in remote mode only. For procedural
+  information in this guide, see link:jdbc.html#ggnfv[To Create a JDBC
+  Connection Pool].
+link:../reference-manual/create-resource-adapter-config.html#GSRFM00054[`create-resource-adapter-config`]::
+  Creates configuration information for the connector module. Supported
+  in remote mode only. For procedural information in this guide, see
+  link:connectors.html#gioqx[To Create Configuration Information for a
+  Resource Adapter].
+link:../reference-manual/delete-admin-object.html#GSRFM00063[`delete-admin-object`]::
+  Deletes an administered object. For procedural information in this
+  guide, see link:connectors.html#gioma[To Delete an Administered
+  Object].
+link:../reference-manual/delete-connector-connection-pool.html#GSRFM00070[`delete-connector-connection-pool`]::
+  Removes the connector connection pool specified using the
+  `connector_connection_pool_name` operand. For procedural information
+  in this guide, see link:connectors.html#giocp[To Delete a Connector
+  Connection Pool].
+link:../reference-manual/delete-connector-resource.html#GSRFM00071[`delete-connector-resource`]::
+  Deletes connector resource. For procedural information in this guide,
+  see link:connectors.html#giofs[To Delete a Connector Resource].
+link:../reference-manual/delete-connector-security-map.html#GSRFM00072[`delete-connector-security-map`]::
+  Deletes a specified connector security map. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:connectors.html#gitvf[To Delete a Connector Security Map].
+link:../reference-manual/delete-connector-work-security-m.html#GSRFM00073[`delete-connector-work-security-map`]::
+  Deletes a specified connector work security map. Supported in remote
+  mode only. For procedural information in this guide, see
+  link:connectors.html#gioin[To Delete a Connector Work Security Map].
+link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-jdbc-connection-pool`]::
+  Deletes the specified JDBC connection pool. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jdbc.html#ggngb[To Delete a JDBC Connection Pool].
+link:../reference-manual/delete-jdbc-resource.html#GSRFM00089[`delete-jdbc-resource`]::
+  Deletes a JDBC resource. The specified JNDI name identifies the
+  resource to be deleted. Supported in remote mode only. For procedural
+  information in this guide, see link:jdbc.html#ggnhz[To Delete a JDBC
+  Resource].
+link:../reference-manual/delete-resource-adapter-config.html#GSRFM00106[`delete-resource-adapter-config`]::
+  Deletes configuration information for the connector module. Supported
+  in remote mode only. For procedural information in this guide, see
+  link:connectors.html#gionv[To Delete a Resource Adapter Configuration].
+link:../reference-manual/flush-connection-pool.html#GSRFM00135[`flush-connection-pool`]::
+  Reintializes all connections established in the specified connection.
+  For procedural information in this guide, see link:jdbc.html#gjiqp[To
+  Reset (Flush) a Connection Pool].
+link:../reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`]::
+  Lists administered objects. For procedural information in this guide,
+  see link:connectors.html#giokm[To List Administered Objects].
+link:../reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`]::
+  Lists the connector connection pools that have been created. For
+  procedural information in this guide, see link:connectors.html#giocg[To
+  List Connector Connection Pools].
+link:../reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`]::
+  Creates connector resources. For procedural information in this guide,
+  see link:connectors.html#giohs[To List Connector Resources].
+link:../reference-manual/list-connector-security-maps.html#GSRFM00159[`list-connector-security-maps`]::
+  Lists the connector security maps belonging to a specified connector
+  connection pool. For procedural information in this guide, see
+  link:connectors.html#gitwx[To List Connector Security Maps].
+link:../reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`]::
+  Lists the existing connector work security maps for a resource
+  adapter. Supported in remote mode only. For procedural information in
+  this guide, see link:connectors.html#gioir[To List Connector Work
+  Security Maps].
+link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`]::
+  Lists the existing JDBC connection pools. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jdbc.html#ggnby[To List JDBC Connection Pools].
+link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`]::
+  Lists the existing JDBC resources. Supported in remote mode only. For
+  procedural information in this guide, see link:jdbc.html#ggnhl[To List
+  JDBC Resources].
+link:../reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`]::
+  Lists configuration information for the connector modules. Supported
+  in remote mode only. For procedural information in this guide, see
+  link:connectors.html#giorn[To List Resource Adapter Configurations].
+link:../reference-manual/ping-connection-pool.html#GSRFM00214[`ping-connection-pool`]::
+  Tests if a JDBC connection pool is usable. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jdbc.html#ggnwn[To Contact (Ping) a Connection Pool].
+link:../reference-manual/update-connector-security-map.html#GSRFM00252[`update-connector-security-map`]::
+  Modifies a security map for the specified connector connection pool.
+  For procedural information in this guide, see
+  link:connectors.html#gityj[To Update a Connector Security Map].
+link:../reference-manual/update-connector-work-security-m.html#GSRFM00253[`update-connector-work-security-map`]::
+  Modifies a work security map that belongs to a specific resource
+  adapter (connector module). For procedure information in this guide,
+  see link:connectors.html#giogm[To Update a Connector Work Security
+  Map].
+
+[[gitwu]][[GSADG00612]][[domain-subcommands]]
+
+Domain Subcommands
+~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/backup-domain.html#GSRFM00003[`backup-domain`]::
+  Describes how to back up a domain. Supported in local mode only. For
+  procedural information in this guide, see link:domains.html#ggocq[To
+  Back Up a Domain].
+link:../reference-manual/create-domain.html#GSRFM00023[`create-domain`]::
+  Creates the configuration of a domain. A domain can exist independent
+  of other domains. Any user who has access to the `asadmin` utility on
+  a given host can create a domain and store its configuration in a
+  location of choice. For procedural information in this guide, see
+  link:domains.html#ggoei[To Create a Domain].
+link:../reference-manual/delete-domain.html#GSRFM00075[`delete-domain`]::
+  Deletes the specified domain. The domain must be stopped before it can
+  be deleted. For procedural information in this guide, see
+  link:domains.html#ggofa[To Delete a Domain].
+link:../reference-manual/list-backups.html#GSRFM00152[`list-backups`]::
+  Lists the existing domain backups. Supported in local mode only. For
+  procedural information in this guide, see link:domains.html#ghgod[To
+  List Domain Backups].
+link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`]::
+  Lists the existing domains and their statuses. If the domain directory
+  is not specified, the domains in the domain-root-dir, the default for
+  which is as-install`/domains`, are displayed. For procedural
+  information in this guide, see link:domains.html#ggoco[To List
+  Domains].
+link:../reference-manual/login.html#GSRFM00210[`login`]::
+  Allows you to log in to a domain. For procedural information in this
+  guide, see link:domains.html#ghhjz[To Log In to a Domain].
+link:../reference-manual/restart-domain.html#GSRFM00218[`restart-domain`]::
+  Restarts the Domain Administration Server (DAS) of the specified
+  domain. Supported in remote mode only. For procedural information in
+  this guide, see link:domains.html#ginqj[To Restart a Domain].
+link:../reference-manual/restore-domain.html#GSRFM00221[`restore-domain`]::
+  Recovers and domain from a backup file. Supported in local mode only.
+  For procedural information in this guide, see
+  link:domains.html#ggody[To Restore a Domain].
+link:../reference-manual/start-domain.html#GSRFM00235[`start-domain`]::
+  Starts a domain. If the domain directory is not specified, the default
+  `domain1` in the default domain-root-dir directory is started. If
+  there are two or more domains, the domain_name operand must be
+  specified. For procedural information in this guide, see
+  link:domains.html#ggoda[To Start a Domain].
+link:../reference-manual/stop-domain.html#GSRFM00240[`stop-domain`]::
+  Stops the domain administration server (DAS) of the specified domain.
+  Supported in remote mode only. For procedural information in this
+  guide, see link:domains.html#ggoch[To Stop a Domain].
+link:../reference-manual/uptime.html#GSRFM00258[`uptime`]::
+  Displays the length of time that the domain administration server
+  (DAS) has been running since the last restart. Supported in remote
+  mode only. For procedural information in this guide, see
+  link:domains.html#ghhnt[To Display Domain Uptime].
+
+[[ggltm]][[GSADG00613]][[internet-connectivity-subcommands]]
+
+Internet Connectivity Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-http.html#GSRFM00025[`create-http`]::
+  Creates a set of HTTP parameters for a protocol, which in turn
+  configures one or more network listeners. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:http_https.html#gjhqc[To Create an HTTP Configuration].
+link:../reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`]::
+  Creates a new HTTP listener socket. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#ggnfh[To
+  Create an Internet Connection].
+link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`]::
+  Creates a new HTTP listener socket. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#ggnfh[To
+  Create an Internet Connection].
+link:../reference-manual/create-protocol.html#GSRFM00051[`create-protocol`]::
+  Creates a protocol for a listener. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#gjhot[To
+  Create a Protocol].
+link:../reference-manual/create-transport.html#GSRFM00061[`create-transport`]::
+  Creates a transport for a listener. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#gjhps[To
+  Create a Transport].
+link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`]::
+  Creates the specified virtual server element. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:http_https.html#ggnfr[To Create a Virtual Server].
+link:../reference-manual/create-ssl.html#GSRFM00058[`create-ssl`]::
+  Creates and configures the SSL element in the selected HTTP listener
+  to enable secure communication on that listener/service. Supported in
+  remote mode only. For procedural information in this guide, see
+  link:http_https.html#ggnbj[To Configure an HTTP Listener for SSL].
+link:../reference-manual/delete-http.html#GSRFM00077[`delete-http`]::
+  Deletes an existing HTTP configuration. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:http_https.html#gjhqa[To Delete an HTTP Configuration].
+link:../reference-manual/delete-http-listener.html#GSRFM00082[`delete-http-listener`]::
+  Deletes the specified HTTP listener. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:http_https.html#ggndu[To Delete an HTTP Network Listener].
+link:../reference-manual/delete-network-listener.html#GSRFM00098[`delete-network-listener`]::
+  Deletes the specified HTTP listener. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:http_https.html#ggndu[To Delete an HTTP Network Listener].
+link:../reference-manual/delete-protocol.html#GSRFM00103[`delete-protocol`]::
+  Deletes and existing HTTP protocol. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#gjhnx[To
+  Delete a Protocol].
+link:../reference-manual/delete-ssl.html#GSRFM00109[`delete-ssl`]::
+  Deletes the SSL element in the selected HTTP listener. Supported in
+  remote mode only. For procedural information in this guide, see
+  link:http_https.html#ggncl[To Delete SSL From an HTTP Listener].
+link:../reference-manual/delete-transport.html#GSRFM00112[`delete-transport`]::
+  Deletes and existing HTTP transport. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:http_https.html#gjhqp[To Delete a Transport].
+link:../reference-manual/delete-virtual-server.html#GSRFM00113[`delete-virtual-server`]::
+  Deletes the specified virtual server element. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:http_https.html#ggnen[To Delete a Virtual Server].
+link:../reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`]::
+  Lists the existing HTTP listeners. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#ggnbv[To
+  List HTTP Network Listeners].
+link:../reference-manual/list-network-listeners.html#GSRFM00186[`list-network-listeners`]::
+  Lists the existing HTTP listeners. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#ggnbv[To
+  List HTTP Network Listeners].
+link:../reference-manual/list-protocols.html#GSRFM00195[`list-protocols`]::
+  Lists the existing HTTP protocols. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#gjhna[To
+  List Protocols].
+link:../reference-manual/list-transports.html#GSRFM00206[`list-transports`]::
+  Lists the existing HTTP transports. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#gjhmx[To
+  List Transports].
+link:../reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`]::
+  Lists the existing virtual servers. Supported in remote mode only. For
+  procedural information in this guide, see link:http_https.html#ggndw[To
+  List Virtual Servers].
+
+[[ggltf]][[GSADG00614]][[javamail-subcommands]]
+
+JavaMail Subcommands
+~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-javamail-resource.html#GSRFM00035[`create-javamail-resource`]::
+  Creates a JavaMail session resource. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:javamail.html#giowd[To Create a JavaMail Resource].
+link:../reference-manual/delete-javamail-resource.html#GSRFM00087[`delete-javamail-resource`]::
+  Deletes a JavaMail session resource. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:javamail.html#gioxj[To Delete a JavaMail Resource].
+link:../reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`]::
+  Creates JavaMail session resources. Supported in remote mode only. For
+  procedural information in this guide, see link:javamail.html#giowq[To
+  List JavaMail Resources].
+
+[[gipen]][[GSADG00615]][[jms-subcommands]]
+
+JMS Subcommands
+~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-jmsdest.html#GSRFM00038[`create-jmsdest`]::
+  Creates a JMS physical destination. Along with the physical
+  destination, you use the `create-jms-resource` subcommand to create a
+  JMS destination resource that has a `Name` property that specifies the
+  physical destination. Supported in remote mode only. For procedural
+  information in this guide, see link:jms.html#gioue[To Create a JMS
+  Physical Destination].
+link:../reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`]::
+  Creates a JMS host within the JMS service. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jms.html#gipbh[To Create a JMS Host].
+link:../reference-manual/create-jms-resource.html#GSRFM00040[`create-jms-resource`]::
+  Creates a JMS connection factory resource or JMS destination resource.
+  Supported in remote mode only. Supported in remote mode only. For
+  procedural information in this guide, see link:jms.html#giotd[To Create
+  a Connection Factory or Destination Resource].
+link:../reference-manual/delete-jmsdest.html#GSRFM00090[`delete-jmsdest`]::
+  Removes the specified JMS destination. Supported in remote mode only.
+  For procedural information in this guide, see link:jms.html#giouv[To
+  Delete a JMS Physical Destination].
+link:../reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`]::
+  Deletes a JMS host within the JMS service. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jms.html#gipbv[To Delete a JMS Host].
+link:../reference-manual/delete-jms-resource.html#GSRFM00092[`delete-jms-resource`]::
+  Deletes a JMS connection factory resource or JMS destination resource.
+  Supported in remote mode only. For procedural information in this
+  guide, see link:jms.html#giouw[To Delete a Connection Factory or
+  Destination Resource].
+link:../reference-manual/flush-jmsdest.html#GSRFM00136[`flush-jmsdest`]::
+  Purges the messages from a physical destination in the specified JMS
+  Service configuration of the specified target. Supported in remote
+  mode only. For procedural information in this guide, see
+  link:jms.html#giowx[To Purge Messages From a Physical Destination].
+link:../reference-manual/jms-ping.html#GSRFM00144[`jms-ping`]::
+  Checks if the JMS service (also known as the JMS provider) is up and
+  running. Supported in remote mode only. For procedural information in
+  this guide, see link:jms.html#gipnh[Troubleshooting the JMS Service].
+link:../reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`]::
+  Lists the JMS physical destinations. Supported in remote mode only.
+  For procedural information in this guide, see link:jms.html#gioyp[To
+  List JMS Physical Destinations].
+link:../reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]::
+  Lists the existing JMS hosts. Supported in remote mode only. For
+  procedural information in this guide, see link:jms.html#gipbz[To List
+  JMS Hosts].
+link:../reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`]::
+  Lists the existing JMS connection factory or destination resources.
+  Supported in remote mode only. For procedural information in this
+  guide, see link:jms.html#giosx[To List JMS Resources].
+
+[[gitws]][[GSADG00616]][[jndi-subcommands]]
+
+JNDI Subcommands
+~~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-custom-resource.html#GSRFM00022[`create-custom-resource`]::
+  Creates a custom JNDI resource. Supported in remote mode only. For
+  procedural information in this guide, see link:jndi.html#giowe[To
+  Create a Custom JNDI Resource].
+link:../reference-manual/create-jndi-resource.html#GSRFM00041[`create-jndi-resource`]::
+  Creates an external JNDI resource. Supported in remote mode only. For
+  procedural information in this guide, see link:jndi.html#gitxn[To
+  Register an External JNDI Resource].
+link:../reference-manual/delete-custom-resource.html#GSRFM00074[`delete-custom-resource`]::
+  Deletes a custom JNDI resource. Supported in remote mode only. For
+  procedural information in this guide, see link:jndi.html#gioxl[To
+  Delete a Custom JNDI Resource].
+link:../reference-manual/delete-jndi-resource.html#GSRFM00093[`delete-jndi-resource`]::
+  Deletes an external JNDI resource. Supported in remote mode only. For
+  procedural information in this guide, see link:jndi.html#gitvt[To
+  Delete an External JNDI Resource].
+link:../reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`]::
+  Lists the existing custom JNDI resources. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jndi.html#gioxb[To List Custom JNDI Resources].
+link:../reference-manual/list-jndi-entries.html#GSRFM00178[`list-jndi-entries`]::
+  Lists the entries in the JNDI tree. Supported in remote mode only. For
+  procedural information in this guide, see link:jndi.html#gitwc[To List
+  External JNDI Entries],
+link:../reference-manual/list-jndi-resources.html#GSRFM00179[`list-jndi-resources`]::
+  Lists the existing external JNDI resources. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jndi.html#gitvj[To List External JNDI Resources].
+
+[[gglsk]][[GSADG00617]][[jvm-subcommands]]
+
+JVM Subcommands
+~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]::
+  Creates a JVM option in the Java configuration or profiler elements of
+  the `domain.xml` file. Supported in remote mode only. For procedural
+  information in this guide, see link:jvm.html#ggnes[To Create JVM
+  Options].
+link:../reference-manual/create-profiler.html#GSRFM00050[`create-profiler`]::
+  Creates a profiler element. Supported in remote mode only. For
+  procedural information in this guide, see link:jvm.html#ggneb[To Create
+  a Profiler].
+link:../reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`]::
+  Deletes the specified JVM option from the Java configuration or
+  profiler elements of the `domain.xml` file. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jvm.html#ggnfi[To Delete JVM Options].
+link:../reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]::
+  Deletes the specified profiler element. Supported in remote mode only.
+  For procedural information in this guide, see link:jvm.html#ggnem[To
+  Delete a Profiler].
+link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`]::
+  Generates a report showing the threads, classes, and memory for the
+  virtual machine that runs GlassFish Server. For procedural information
+  in this guide, see link:jvm.html#ggnbu[To Generate a JVM Report].
+link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]::
+  Lists the command-line options that are passed to the Java application
+  launcher when GlassFish Server is started. Supported in remote mode
+  only. For procedural information in this guide, see
+  link:jvm.html#ggnce[To List JVM Options].
+
+[[giuzl]][[GSADG00618]][[life-cycle-module-subcommands]]
+
+Life Cycle Module Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`]::
+  Creates a new life cycle module. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:lifecycle-modules.html#giuus[To Create a Life Cycle Module].
+link:../reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`]::
+  Lists life cycle modules. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:lifecycle-modules.html#giuvh[To List Life Cycle Modules].
+link:../reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-module`]::
+  Deletes an existing life cycle module. Supported in remote mode only.
+  For procedural information in this guide, see
+  link:lifecycle-modules.html#giuux[To Delete a Life Cycle Module].
+
+[[gitxd]][[GSADG00619]][[logging-and-monitoring-subcommands]]
+
+Logging and Monitoring Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`]::
+  Collects all available log files and creates a ZIP archive. Supported
+  in remote mode only. For procedural information in this guide, see
+  link:logging.html#gklbi[To Collect Log Files into a ZIP Archive].
+link:../reference-manual/disable-monitoring.html#GSRFM00120[`disable-monitoring`]::
+  Disables the monitoring service. Supported in remote mode only. For
+  procedural information in this guide, see link:monitoring.html#gglcu[To
+  Disable Monitoring].
+link:../reference-manual/enable-monitoring.html#GSRFM00128[`enable-monitoring`]::
+  Enables the monitoring service. Supported in remote mode only. For
+  procedural information in this guide, see link:monitoring.html#ablvr[To
+  Enable Monitoring].
+link:../reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`]::
+  Lists log file attributes. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:logging.html#gklmn[Configuring the Logging Service].
+link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`]::
+  Lists the existing loggers. Supported in remote mode only. For
+  procedural information in this guide, see link:logging.html#gjirr[To
+  List Log Levels].
+link:../reference-manual/list-loggers.html#GSRFM869[`list-loggers`]::
+  Lists all public loggers in your distribution of GlassFish Server Open
+  Source Edition. Internal loggers are not listed. For procedural
+  information in this guide, see link:logging.html#CEGGICGF[To List
+  Loggers].
+link:../reference-manual/monitor.html#GSRFM00212[`monitor`]::
+  Displays monitoring information for the common GlassFish Server
+  resources. Supported in remote mode only. For procedural information
+  in this guide, see link:monitoring.html#gelol[To View Common Monitoring
+  Data].
+link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]::
+  Rotates the `server.log` file and stores the old data in a
+  time-stamped file. Supported in remote mode only. For procedural
+  information in this guide, see link:logging.html#gkmau[To Rotate Log
+  Files Manually].
+link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]::
+  Sets log file attributes. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:logging.html#gklmn[Configuring the Logging Service].
+link:../reference-manual/set-log-file-format.html#GSRFM879[`set-log-file-format`]::
+  Sets the formatter used to format log records in log files. For
+  procedural information in this guide, see
+  link:logging.html#CEGDJEBG[Setting the Log File Format].
+link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`]::
+  Sets the log level for a module. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:logging.html#gklml[Setting Log Levels].
+
+[[giusq]][[GSADG00620]][[orb-subcommands]]
+
+ORB Subcommands
+~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-listener`]::
+  Creates an IIOP listener. Supported in remote mode only. For
+  procedural information in this guide, see link:orb.html#gioyo[To Create
+  an IIOP Listener].
+link:../reference-manual/delete-iiop-listener.html#GSRFM00084[`delete-iiop-listener`]::
+  Deletes an IIOP listener. Supported in remote mode only. For
+  procedural information in this guide, see link:orb.html#giowj[To Delete
+  an IIOP Listener].
+link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`]::
+  Lists the existing IIOP listeners. Supported in remote mode only. For
+  procedural information in this guide, see link:orb.html#giowc[To List
+  IIOP Listeners].
+
+[[giuqr]][[GSADG00621]][[thread-pool-subcommands]]
+
+Thread Pool Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`]::
+  Creates a new thread pool. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:threadpools.html#ggkwj[To Create a Thread Pool].
+link:../reference-manual/delete-threadpool.html#GSRFM00111[`delete-threadpool`]::
+  Deletes the specified thread pool. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:threadpools.html#ggkwy[To Delete a Thread Pool].
+link:../reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`]::
+  Lists the existing thread pools. Supported in remote mode only. For
+  procedural information in this guide, see
+  link:threadpools.html#giuff[To List Thread Pools].
+
+[[gitxi]][[GSADG00622]][[transaction-service-subcommands]]
+
+Transaction Service Subcommands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link:../reference-manual/freeze-transaction-service.html#GSRFM00137[`freeze-transaction-service`]::
+  Freezes the transaction subsystem during which time all the in-flight
+  transactions are suspended. Supported in remote mode only. For
+  procedural information, see link:transactions.html#giufn[To Stop the
+  Transaction Service].
+link:../reference-manual/recover-transactions.html#GSRFM00216[`recover-transactions`]::
+  Manually recovers pending transactions. Supported in remote mode only.
+  For procedural information, see link:transactions.html#giuhe[To
+  Manually Recover Transactions].
+link:../reference-manual/rollback-transaction.html#GSRFM00223[`rollback-transaction`]::
+  Rolls back the named transaction. Supported in remote mode only. For
+  procedural information, see link:transactions.html#giugk[To Roll Back a
+  Transaction].
+link:../reference-manual/unfreeze-transaction-service.html#GSRFM00245[`unfreeze-transaction-service`]::
+  Resumes all the suspended in-flight transactions. Invoke this
+  subcommand on an already frozen transaction. Supported in remote mode
+  only. For procedural information, see link:transactions.html#giuet[To
+  Restart the Transaction Service].
+
+

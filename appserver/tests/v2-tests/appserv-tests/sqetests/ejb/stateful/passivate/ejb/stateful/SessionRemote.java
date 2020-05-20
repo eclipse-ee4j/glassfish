@@ -16,7 +16,7 @@
 
 package sqetests.ejb.stateful.passivate.ejb.stateful;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 import sqetests.ejb.stateful.passivate.util.*;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.HashMap;
  * @author dsingh
  */
 
-public interface SessionRemote extends javax.ejb.EJBObject {    
+public interface SessionRemote extends jakarta.ejb.EJBObject {    
     
     public void badMethod() throws RemoteException;   
     

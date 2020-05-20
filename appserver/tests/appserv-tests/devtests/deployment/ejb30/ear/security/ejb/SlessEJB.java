@@ -16,12 +16,12 @@
 
 package com.sun.s1asdev.deployment.ejb30.ear.security;
 
-import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.SessionContext;
-import javax.ejb.Local;
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 
 @Stateless
 @Remote({Sless.class})

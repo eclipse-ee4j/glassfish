@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,17 +16,14 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
-import java.rmi.RemoteException;
 import java.lang.reflect.Method;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.ejb.containers.BaseContainer;
-import com.sun.ejb.containers.EJBObjectImpl;
-import com.sun.ejb.containers.EJBLocalObjectImpl;
 import com.sun.ejb.containers.EJBTimerService;
 import com.sun.ejb.containers.EJBTimerServiceWrapper;
 import org.glassfish.persistence.ejb.entitybean.container.spi.CascadeDeleteNotifier;

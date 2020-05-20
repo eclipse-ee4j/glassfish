@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
 /** In memory {@link AdminCache} containing fixed amount of items. Rotation

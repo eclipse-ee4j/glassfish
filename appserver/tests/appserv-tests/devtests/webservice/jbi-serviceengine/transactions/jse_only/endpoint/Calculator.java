@@ -16,10 +16,10 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 
 @WebService(
     name="Calculator",

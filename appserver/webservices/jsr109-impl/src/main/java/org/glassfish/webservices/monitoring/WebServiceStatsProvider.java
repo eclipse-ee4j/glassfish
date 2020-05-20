@@ -26,6 +26,8 @@ import org.glassfish.webservices.deployment.DeployedEndpointData;
 
 import javax.servlet.ServletContext;
 import java.util.*;
+import java.util.logging.Level;
+import org.glassfish.webservices.LogUtils;
 
 
 /**
@@ -71,18 +73,19 @@ public class WebServiceStatsProvider {
     // sun-jaxws.xml undeployment
     @ProbeListener("glassfish:webservices:deployment-ri:undeploy")
     public synchronized void riUndeploy(@ProbeParam("adapter")ServletAdapter adapter) {
-        ServletContext ctxt = adapter.getServletContext();
-        String name = ctxt.getContextPath()+adapter.getValidPath();
-        DeployedEndpointData data = endpoints.remove(name);
-
-        String contextPath = adapter.getServletContext().getContextPath();
-        List<DeployedEndpointData> ri = riEndpoints.get(contextPath);
-        if (ri != null) {
-            ri.remove(data);
-            if (ri.isEmpty()) {
-                riEndpoints.remove(contextPath);
-            }
-        }
+        LogUtils.getLogger().log(Level.SEVERE, "!!! TODO: UNCOMMENT LINE(S) BELLOW !!! ({0})", WebServiceStatsProvider.class.getName());
+//        ServletContext ctxt = adapter.getServletContext();
+//        String name = ctxt.getContextPath()+adapter.getValidPath();
+//        DeployedEndpointData data = endpoints.remove(name);
+//
+//        String contextPath = adapter.getServletContext().getContextPath();
+//        List<DeployedEndpointData> ri = riEndpoints.get(contextPath);
+//        if (ri != null) {
+//            ri.remove(data);
+//            if (ri.isEmpty()) {
+//                riEndpoints.remove(contextPath);
+//            }
+//        }
     }
 
     // admin CLI doesn't pick-up Collection<DeployedEndpointData>. Hence

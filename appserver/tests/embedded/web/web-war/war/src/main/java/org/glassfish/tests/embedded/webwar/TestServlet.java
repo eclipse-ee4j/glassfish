@@ -18,9 +18,9 @@ package org.glassfish.tests.embedded.webwar;
 
 import java.io.*;
 import java.util.Enumeration;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet("/")
 public class TestServlet extends HttpServlet {

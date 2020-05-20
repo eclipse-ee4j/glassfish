@@ -16,9 +16,9 @@
 
 package test.ejb.session;
 
-import javax.ejb.Stateful;
-import javax.ejb.Remove;
-import javax.annotation.PreDestroy;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remove;
+import jakarta.annotation.PreDestroy;
 
 @Stateful(description="my stateful bean description")
 public class HelloStateful implements Hello2 {

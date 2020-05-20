@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2;
 
-import javax.annotation.PreDestroy;
-import javax.interceptor.InvocationContext;
-import javax.ejb.EJBException;
+import jakarta.annotation.PreDestroy;
+import jakarta.interceptor.InvocationContext;
+import jakarta.ejb.EJBException;
 
 public class MyCallbackHandler {
 

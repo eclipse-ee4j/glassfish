@@ -23,16 +23,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.resource.NotSupportedException;
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionEventListener;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.IllegalStateException;
-import javax.resource.spi.ManagedConnection;
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.ManagedConnectionMetaData;
-import javax.resource.spi.SecurityException;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.NotSupportedException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionEventListener;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.IllegalStateException;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ManagedConnectionMetaData;
+import jakarta.resource.spi.SecurityException;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import javax.sql.XAConnection;
 import javax.transaction.xa.XAResource;
@@ -212,7 +212,7 @@ public class CciManagedConnection implements ManagedConnection {
     }
   }
 
-  public javax.resource.spi.LocalTransaction getLocalTransaction() throws ResourceException {
+  public jakarta.resource.spi.LocalTransaction getLocalTransaction() throws ResourceException {
     if (!supportsLocalTx) {
       throw new NotSupportedException("Local transaction not supported");
     } else {

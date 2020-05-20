@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.markconnectionasbad.xa.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.sql.Connection;
 import java.sql.Statement;

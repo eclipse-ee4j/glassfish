@@ -21,24 +21,16 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} corresponding to {@link javax.enterprise.deploy.shared.ModuleType#WAR}
+ * {@link ArchiveType} 
  *
  * @author sanjeeb.sahoo@oracle.com
  */
 @Service(name = WarType.ARCHIVE_TYPE)
-@javax.inject.Singleton
+@jakarta.inject.Singleton
 public class WarType extends ArchiveType {
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#WAR#toString()}
-     * We have inlined the value here as opposed to initializing by calling a method on ModuleType.toString().
-     * This is done so that we can refer it in annotation attributes
-     */
+
     public static final String ARCHIVE_TYPE = "war";
 
-    /**
-     * same as what's returned by {@link javax.enterprise.deploy.shared.ModuleType#WAR#getExtension()}
-     * This has been inlined so that other modules can refer to it as a constant in annotation attributes for example.
-     */
     public static final String ARCHIVE_EXTENSION = ".war";
 
     public WarType() {

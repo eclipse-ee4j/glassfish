@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.transaction.api;
 
-import javax.transaction.SystemException;
+import jakarta.transaction.SystemException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
-import javax.resource.spi.XATerminator;
+import jakarta.resource.spi.XATerminator;
 
 /**
  * Transaction Manager extensions to support transaction inflow w/o resource adapter.

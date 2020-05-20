@@ -16,13 +16,13 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class SlessEJB implements Sless
 {
 
-    @javax.annotation.Resource javax.ejb.TimerService ts;
+    @jakarta.annotation.Resource jakarta.ejb.TimerService ts;
 
     public String hello() {
         System.out.println("In SlessEJB:hello()");

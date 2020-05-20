@@ -19,8 +19,8 @@ package org.glassfish.jacc.test.uncoveredmethods;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.Principal;
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.*;
 
 public class BaseServlet extends HttpServlet {
 

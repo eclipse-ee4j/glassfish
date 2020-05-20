@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.dcode;
 
-public interface Sful extends javax.ejb.EJBObject
+public interface Sful extends jakarta.ejb.EJBObject
 {
     public String hello() throws java.rmi.RemoteException;
 }

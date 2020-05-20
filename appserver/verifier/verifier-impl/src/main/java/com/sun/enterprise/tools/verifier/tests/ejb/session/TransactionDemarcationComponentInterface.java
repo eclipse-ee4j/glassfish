@@ -38,7 +38,7 @@ import java.util.Enumeration;
  * The transaction attributes must be specified for the methods defined
  * in the bean's component interface and all the direct and indirect 
  * superinterfaces of the component interface, excluding the methods of
- * the javax.ejb.EJBObject interface.
+ * the jakarta.ejb.EJBObject interface.
  */
 public class TransactionDemarcationComponentInterface extends EjbTest implements EjbCheck { 
     Result result  = null;
@@ -55,7 +55,7 @@ public class TransactionDemarcationComponentInterface extends EjbTest implements
      * The transaction attributes must be specified for the methods defined
      * in the bean's component interface and all the direct and indirect 
      * superinterfaces of the component interface, excluding the methods of
-     * the javax.ejb.EJBObject interface.
+     * the jakarta.ejb.EJBObject interface.
      *
      * @param descriptor the Enterprise Java Bean deployment descriptor
      *   
@@ -76,7 +76,7 @@ public class TransactionDemarcationComponentInterface extends EjbTest implements
 	    // The transaction attributes must be specified for the methods defined
 	    // in the bean's component interface and all the direct and indirect 
 	    // superinterfaces of the component interface, excluding the methods of
-	    // the javax.ejb.EJBObject interface.
+	    // the jakarta.ejb.EJBObject interface.
 	    if (descriptor instanceof EjbSessionDescriptor) {
                 String transactionType = descriptor.getTransactionType();
                 if (EjbDescriptor.CONTAINER_TRANSACTION_TYPE.equals(transactionType)) {

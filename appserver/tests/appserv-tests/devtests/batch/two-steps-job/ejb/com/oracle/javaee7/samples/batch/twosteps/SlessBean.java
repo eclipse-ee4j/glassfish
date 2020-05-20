@@ -14,13 +14,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
-import javax.batch.operations.JobOperator;
-import javax.batch.runtime.BatchRuntime;
-import javax.batch.runtime.JobExecution;
-import javax.ejb.Stateless;
-import javax.ejb.EJB;
+import jakarta.batch.operations.JobOperator;
+import jakarta.batch.runtime.BatchRuntime;
+import jakarta.batch.runtime.JobExecution;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.EJB;
 
 @Stateless
 public class SlessBean

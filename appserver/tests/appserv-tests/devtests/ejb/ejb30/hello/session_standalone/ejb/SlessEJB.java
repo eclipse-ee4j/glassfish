@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session_standalone;
 
-import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.ejb.*;
+import jakarta.annotation.Resource;
 
 @Stateless
 @Remote({Sless.class})

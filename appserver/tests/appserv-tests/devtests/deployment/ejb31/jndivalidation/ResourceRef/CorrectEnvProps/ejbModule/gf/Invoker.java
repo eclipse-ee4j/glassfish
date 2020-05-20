@@ -16,8 +16,8 @@
 
 package gf;
 
-import javax.annotation.Resource;
-import javax.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class Invoker {

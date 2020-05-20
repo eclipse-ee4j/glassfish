@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.core;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public interface SfulHome extends EJBLocalHome

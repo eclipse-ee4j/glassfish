@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.persistence.context.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import com.sun.s1asdev.ejb.ejb30.persistence.context.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

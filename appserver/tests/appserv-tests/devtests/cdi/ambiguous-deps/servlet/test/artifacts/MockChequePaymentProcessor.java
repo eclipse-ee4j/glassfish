@@ -16,7 +16,7 @@
 
 package test.artifacts;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 @Alternative @PayBy(PaymentMethod.CHEQUE)
 //Not enabled via beans.xml

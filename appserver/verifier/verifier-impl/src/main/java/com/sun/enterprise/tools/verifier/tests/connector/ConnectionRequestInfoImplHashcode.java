@@ -53,7 +53,7 @@ public class ConnectionRequestInfoImplHashcode extends ConnectorTest implements 
 	ComponentNameConstructor compName = getVerifierContext().getComponentNameConstructor();
         
 //        File f=Verifier.getArchiveFile(descriptor.getModuleDescriptor().getArchiveUri());     
-        Class c = findImplementorOf(descriptor, "javax.resource.spi.ConnectionRequestInfo");
+        Class c = findImplementorOf(descriptor, "jakarta.resource.spi.ConnectionRequestInfo");
         if (c == null) {
             result.addNaDetails(smh.getLocalString
 				  ("tests.componentNameConstructor",
@@ -62,7 +62,7 @@ public class ConnectionRequestInfoImplHashcode extends ConnectorTest implements 
             result.notApplicable(smh.getLocalString
 	    ("com.sun.enterprise.tools.verifier.tests.connector.ConnectorTest.optionalInterfaceMissing", 
             "Warning: There is no implementation of the optional [ {0} ] interface",
-            new Object[] {"javax.resource.spi.ConnectionRequestInfo"}));  
+            new Object[] {"jakarta.resource.spi.ConnectionRequestInfo"}));  
         } else {
             // An implementation of the interface is provided, let's check the equals method
             checkMethodImpl(c, "hashCode", null, "public int hashCode()", result);                    

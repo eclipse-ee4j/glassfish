@@ -39,7 +39,7 @@
   <echo message="common.xml: Compiling test source files" level="verbose"/>
   <javac srcdir="${basedir}/src"
     destdir="${build.base.dir}"
-    classpath="${env.S1AS_HOME}/modules/javax.servlet.jar:${env.S1AS_HOME}/osgi/felix/bin/felix.jar:${env.S1AS_HOME}/modules/jersey-core.jar"
+    classpath="${env.S1AS_HOME}/modules/jakarta.servlet.jar:${env.S1AS_HOME}/osgi/felix/bin/felix.jar:${env.S1AS_HOME}/modules/jersey-core.jar"
     debug="on"
     failonerror="true"/>
 </target>

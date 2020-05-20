@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,9 @@
 
 package com.sun.s1asdev.ejb.jms.jmsejb.client;
 
-import java.io.*;
-import java.util.*;
-import javax.ejb.EJBHome;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
-import org.omg.CORBA.ORB;
-import java.sql.*;
-import javax.sql.*;
-import javax.jms.*;
+import jakarta.jms.*;
 import com.sun.s1asdev.ejb.jms.jmsejb.HelloHome;
 import com.sun.s1asdev.ejb.jms.jmsejb.Hello;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

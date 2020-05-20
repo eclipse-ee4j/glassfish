@@ -16,7 +16,7 @@
 
 package wls_dd.wsdl_exposed_false.endpoint;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 /**
  * @author Rama Pulavarthi

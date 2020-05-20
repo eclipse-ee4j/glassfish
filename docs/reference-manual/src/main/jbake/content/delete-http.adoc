@@ -1,0 +1,101 @@
+type=page
+status=published
+title=delete-http
+next=delete-http-health-checker.html
+prev=delete-file-user.html
+~~~~~~
+delete-http
+===========
+
+[[delete-http-1]][[GSRFM00077]][[delete-http]]
+
+delete-http
+-----------
+
+removes HTTP parameters from a protocol
+
+[[sthref691]]
+
+Synopsis
+
+[source,oac_no_warn]
+----
+asadmin [asadmin-options] delete-http [--help]
+[--target target]
+protocol-name
+----
+
+[[sthref692]]
+
+Description
+
+The `delete-http` subcommand removes the specified HTTP parameter set
+from a protocol. This subcommand is supported in remote mode only.
+
+[[sthref693]]
+
+Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Deletes the HTTP parameter set only from the specified target. Valid
+  values are as follows: +
+  `server`;;
+    Deletes the HTTP parameter set from the default server instance.
+    This is the default value.
+  configuration-name;;
+    Deletes the HTTP parameter set from the specified configuration.
+  cluster-name;;
+    Deletes the HTTP parameter set from all server instances in the
+    specified cluster.
+  standalone-instance-name;;
+    Deletes the HTTP parameter set from the specified standalone server
+    instance.
+
+[[sthref694]]
+
+Operands
+
+protocol-name::
+  The name of the protocol from which to delete the HTTP parameter set.
+
+[[sthref695]]
+
+Examples
+
+[[GSRFM546]][[sthref696]]
+
+Example 1   Deleting an HTTP Parameter Set
+
+The following command deletes the HTTP parameter set from a protocol
+named `http-1`:
+
+[source,oac_no_warn]
+----
+asadmin> delete-http http-1
+Command delete-http executed successfully.
+----
+
+[[sthref697]]
+
+Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref698]]
+
+See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-http.html#create-http-1[`create-http`(1)]
+
+

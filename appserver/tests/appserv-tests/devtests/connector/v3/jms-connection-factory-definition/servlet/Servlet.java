@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,21 +21,21 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.EJBs;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSConnectionFactoryDefinition;
-import javax.jms.JMSConnectionFactoryDefinitions;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSConnectionFactoryDefinition;
+import jakarta.jms.JMSConnectionFactoryDefinitions;
 import javax.naming.InitialContext;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.UserTransaction;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.UserTransaction;
 
 @EJB(name = "helloStateless3", beanInterface = Hello.class)
 @EJBs({@EJB(name = "helloStateless4", beanName = "HelloEJB",
@@ -48,7 +48,7 @@ import javax.transaction.UserTransaction;
                 @JMSConnectionFactoryDefinition(
                         description = "global-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:global/env/Servlet_ModByDD_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -59,7 +59,7 @@ import javax.transaction.UserTransaction;
                 @JMSConnectionFactoryDefinition(
                         description = "global-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:global/env/Servlet_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -70,7 +70,7 @@ import javax.transaction.UserTransaction;
                 @JMSConnectionFactoryDefinition(
                         description = "application-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:app/env/Servlet_JMSConnectionFactory",
-                        interfaceName = "javax.jms.ConnectionFactory",
+                        interfaceName = "jakarta.jms.ConnectionFactory",
 //                        resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -81,7 +81,7 @@ import javax.transaction.UserTransaction;
                 @JMSConnectionFactoryDefinition(
                         description = "module-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:module/env/Servlet_JMSConnectionFactory",
-//                        interfaceName = "javax.jms.ConnectionFactory",
+//                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -92,7 +92,7 @@ import javax.transaction.UserTransaction;
                 @JMSConnectionFactoryDefinition(
                         description = "component-scope resource defined by @JMSConnectionFactoryDefinition",
                         name = "java:comp/env/Servlet_JMSConnectionFactory",
-//                        interfaceName = "javax.jms.ConnectionFactory",
+//                        interfaceName = "jakarta.jms.ConnectionFactory",
 //                        resourceAdapter = "jmsra",
                         user = "admin",
                         password = "admin",
@@ -204,7 +204,7 @@ public class Servlet extends HttpServlet {
                 sleepFor(2);
                 helloStateful.ping();
                 //throw new EJBException("Did not get ConcurrentAccessException");
-            } catch (javax.ejb.ConcurrentAccessException conEx) {
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
                 ;   //Everything is fine
             } catch (Throwable th) {
                 throw new Exception("Got some wierd exception: " + th);

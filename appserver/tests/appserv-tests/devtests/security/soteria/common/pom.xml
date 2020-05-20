@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.soteria.test</groupId>
         <artifactId>soteria</artifactId>
-        <version>5.1.0</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
     
     <artifactId>common</artifactId>

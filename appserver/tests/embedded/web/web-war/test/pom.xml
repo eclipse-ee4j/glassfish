@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests</groupId>
         <artifactId>embedded-web-war</artifactId>
-        <version>5.1.1-SNAPSHOT</version>
+        <version>5.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -142,7 +142,7 @@
         <dependency>
             <groupId>org.glassfish.transaction</groupId>
             <artifactId>jta</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>5.1.0</version>
             <scope>test</scope>
         </dependency>        
         <dependency>

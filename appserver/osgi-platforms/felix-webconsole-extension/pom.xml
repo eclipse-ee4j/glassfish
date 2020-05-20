@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.osgi-platforms</groupId>
         <artifactId>osgi-console-extensions</artifactId>
-        <version>5.1.1-SNAPSHOT</version>
+        <version>5.1.0</version>
     </parent>
     <artifactId>felix-webconsole-extension</artifactId>
     <packaging>glassfish-jar</packaging>

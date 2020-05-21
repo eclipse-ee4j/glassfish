@@ -156,7 +156,7 @@
         <stax2-api.version>4.1</stax2-api.version>
 
         <!-- Jakarta XML Binding -->
-        <jaxb.version>3.0.0-M2</jaxb.version>
+        <jaxb.version>3.0.0-M3</jaxb.version>
 
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0-RC1</jstl-api.version>

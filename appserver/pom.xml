@@ -167,7 +167,7 @@
 
 
         <!-- Admin console components -->
-        <jsftemplating.version>3.0.0-M1</jsftemplating.version>
+        <jsftemplating.version>3.0.0-M2</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>5.0.0-M1</woodstock.version>
 

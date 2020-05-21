@@ -142,7 +142,7 @@
                     <dependency>
                         <groupId>com.sun.xml.bind</groupId>
                         <artifactId>jaxb-xjc</artifactId>
-                        <version>3.0.0-M2</version>
+                        <version>${jakarta.jaxb-impl.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>

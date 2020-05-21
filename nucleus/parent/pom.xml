@@ -93,7 +93,7 @@
         <javassist.version>3.26.0-GA</javassist.version>
         <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
         <jakarta.el-api.version>4.0.0-RC1</jakarta.el-api.version>
-        <jakarta.inject-api.version>2.0.0-RC3</jakarta.inject-api.version>
+        <jakarta.inject-api.version>2.0.0-RC4</jakarta.inject-api.version>
         <hk2.version>3.0.0-M1</hk2.version>
         <hk2.plugin.version>3.0.0-M1</hk2.plugin.version>
         <jboss.logging.version>3.4.1.Final</jboss.logging.version>

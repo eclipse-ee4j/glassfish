@@ -66,8 +66,8 @@
     </target>
 
     <target name="run-pcftests" depends="init-common">
-        <property name="ISPCF" value="-Djavax.security.jacc.PolicyConfigurationFactory.provider=com.sun.s1asdev.security.jaccapi.DummyPolicyConfigurationFactory"/>
-        <property name="NOTPCF" value="-Djavax.security.jacc.PolicyConfigurationFactory.provider=javax.security.jacc.PolicyContextException"/>
+        <property name="ISPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=com.sun.s1asdev.security.jaccapi.DummyPolicyConfigurationFactory"/>
+        <property name="NOTPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=jakarta.security.jacc.PolicyContextException"/>
         <property name="PFL" value="-Djava.security.policy=${basedir}/config/java.policy"/>
         <property name="PFL2" value="-Djava.security.policy=${basedir}/config/java.policy2"/>
 

@@ -68,7 +68,7 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the policyProvider property.
      *
      * Corresponds to (and can be overridden by) the system property
-     * javax.security.jacc.policy.provider
+     * jakarta.security.jacc.policy.provider
      * 
      * @return possible object is
      *         {@link String }
@@ -89,7 +89,7 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the policyConfigurationFactoryProvider property.
      *
      * Corresponds to (and can be overridden by) the system property
-     * javax.security.jacc.PolicyConfigurationFactory.provider       
+     * jakarta.security.jacc.PolicyConfigurationFactory.provider
      *
      * @return possible object is
      *         {@link String }

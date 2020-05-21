@@ -89,11 +89,11 @@
         <grizzly.npn.version>1.9</grizzly.npn.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <jakarta.validation.version>3.0.0-M1</jakarta.validation.version>
-        <hibernate-validator.version>7.0.0.Alpha1</hibernate-validator.version>
+        <hibernate-validator.version>7.0.0.Alpha2</hibernate-validator.version>
         <javassist.version>3.26.0-GA</javassist.version>
         <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
-        <jakarta.el-api.version>3.0.2</jakarta.el-api.version>
-        <jakarta.inject-api.version>2.0.0-RC3</jakarta.inject-api.version>
+        <jakarta.el-api.version>4.0.0-RC1</jakarta.el-api.version>
+        <jakarta.inject-api.version>2.0.0-RC4</jakarta.inject-api.version>
         <hk2.version>3.0.0-M1</hk2.version>
         <hk2.plugin.version>3.0.0-M1</hk2.plugin.version>
         <jboss.logging.version>3.4.1.Final</jboss.logging.version>
@@ -106,7 +106,11 @@
         <jersey.version>3.0.0-M2</jersey.version>
         <jackson.version>2.10.2</jackson.version>
         <jettison.version>1.4.0</jettison.version>
-        <jaxb-api.version>3.0.0-RC2</jaxb-api.version>
+
+        <!-- Jakarta XML Binding -->
+        <jakarta.jaxb-api.version>3.0.0-RC3</jakarta.jaxb-api.version>
+        <jakarta.jaxb-impl.version>3.0.0-M3</jakarta.jaxb-impl.version>
+
         <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0-M1</jax-rs-api.impl.version>
         <mimepull.version>1.9.13</mimepull.version>
@@ -747,12 +751,12 @@
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${jaxb-api.version}</version>
+                <version>${jakarta.jaxb-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-osgi</artifactId>
-                <version>3.0.0-M2</version>
+                <version>${jakarta.jaxb-impl.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.annotation</groupId>

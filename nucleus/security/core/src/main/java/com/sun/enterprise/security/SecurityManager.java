@@ -83,7 +83,7 @@ public interface SecurityManager {
     public Subject getCurrentSubject();
 
     /**
-     * Purge ThreadLocals held by javax.security.jacc.PolicyContext
+     * Purge ThreadLocals held by jakarta.security.jacc.PolicyContext
      */
     public void resetPolicyContext();
     

@@ -14,17 +14,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package javax.security.jacc;
+package jakarta.security.jacc;
 
 import java.lang.reflect.*;
 import java.util.Enumeration;
 import java.security.*; 
-import javax.security.jacc.WebResourcePermission;
-import javax.security.jacc.WebUserDataPermission;
-import javax.security.jacc.WebRoleRefPermission;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebUserDataPermission;
+import jakarta.security.jacc.WebRoleRefPermission;
 
-import javax.security.jacc.HttpMethodSpec;
-import javax.security.jacc.URLPattern;
+import jakarta.security.jacc.HttpMethodSpec;
+import jakarta.security.jacc.URLPattern;
 
 import jakarta.servlet.http.HttpServletRequest;
 

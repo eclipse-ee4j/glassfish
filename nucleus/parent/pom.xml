@@ -106,7 +106,11 @@
         <jersey.version>3.0.0-M2</jersey.version>
         <jackson.version>2.10.2</jackson.version>
         <jettison.version>1.4.0</jettison.version>
-        <jaxb-api.version>3.0.0-RC2</jaxb-api.version>
+
+        <!-- Jakarta XML Binding -->
+        <jakarta.jaxb-api.version>3.0.0-RC3</jakarta.jaxb-api.version>
+        <jakarta.jaxb-impl.version>3.0.0-M3</jakarta.jaxb-impl.version>
+
         <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0-M1</jax-rs-api.impl.version>
         <mimepull.version>1.9.13</mimepull.version>
@@ -747,12 +751,12 @@
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${jaxb-api.version}</version>
+                <version>${jakarta.jaxb-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-osgi</artifactId>
-                <version>3.0.0-M2</version>
+                <version>${jakarta.jaxb-impl.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.annotation</groupId>

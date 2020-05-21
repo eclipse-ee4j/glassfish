@@ -89,7 +89,7 @@
         <grizzly.npn.version>1.9</grizzly.npn.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <jakarta.validation.version>3.0.0-M1</jakarta.validation.version>
-        <hibernate-validator.version>7.0.0.Alpha1</hibernate-validator.version>
+        <hibernate-validator.version>7.0.0.Alpha2</hibernate-validator.version>
         <javassist.version>3.26.0-GA</javassist.version>
         <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
         <jakarta.el-api.version>3.0.2</jakarta.el-api.version>

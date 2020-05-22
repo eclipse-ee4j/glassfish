@@ -31,7 +31,7 @@ import javax.security.auth.callback.*;
  */
 public class ServerLoginCallbackHandler implements CallbackHandler 
 {
-    private static final String GP_CB="javax.security.auth.message.callback.GroupPrincipalCallback";
+    private static final String GP_CB="jakarta.security.auth.message.callback.GroupPrincipalCallback";
     private static final String GPCBH_UTIL = "com.sun.enterprise.security.jmac.callback.ServerLoginCBHUtil";
     private static final String GPCBH_UTIL_METHOD="processGroupPrincipal";
     private String username = null;

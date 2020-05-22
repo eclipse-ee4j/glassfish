@@ -25,9 +25,9 @@ import java.util.StringTokenizer;
 import java.security.AccessController;
 
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.*;
-import javax.security.auth.message.config.*;
-import javax.security.auth.message.module.*;
+import jakarta.security.auth.message.*;
+import jakarta.security.auth.message.config.*;
+import jakarta.security.auth.message.module.*;
 import javax.security.auth.Subject;
 
 /**
@@ -102,7 +102,7 @@ public class ServletAuthConfigProvider implements AuthConfigProvider {
 
     private static String HTTP_SERVLET_LAYER = "HttpServlet";
     private static String MANDATORY_KEY = 
-        "javax.security.auth.message.MessagePolicy.isMandatory";
+        "jakarta.security.auth.message.MessagePolicy.isMandatory";
 
     private static String MANDATORY_CONTEXT_ID = "mandatory";
     private static String OPTIONAL_CONTEXT_ID = "optional";

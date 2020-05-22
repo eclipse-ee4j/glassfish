@@ -326,6 +326,6 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
      */
     private boolean isMandatory(MessageInfo messageInfo) {
         return Boolean.valueOf((String) messageInfo.getMap().get(
-                "javax.security.auth.message.MessagePolicy.isMandatory"));
+                "jakarta.security.auth.message.MessagePolicy.isMandatory"));
     }
 }

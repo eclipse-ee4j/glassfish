@@ -21,12 +21,12 @@ import java.security.cert.X509Certificate;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.callback.CallerPrincipalCallback;
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.callback.CallerPrincipalCallback;
+import jakarta.security.auth.message.module.ServerAuthModule;
 import javax.security.auth.x500.X500Principal;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -102,6 +102,6 @@ public class HttpsTestAuthModule implements ServerAuthModule {
 
     private boolean isMandatory(MessageInfo messageInfo) {
         return Boolean.valueOf((String) messageInfo.getMap().get(
-                "javax.security.auth.message.MessagePolicy.isMandatory"));
+                "jakarta.security.auth.message.MessagePolicy.isMandatory"));
     }
 }

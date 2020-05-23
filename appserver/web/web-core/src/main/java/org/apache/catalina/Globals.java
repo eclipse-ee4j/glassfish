@@ -242,10 +242,10 @@ public final class Globals {
         "com.sun.enterprise.http.jreplicaLocation";
 
     public static final String WRAPPED_REQUEST =
-        "__javax.security.auth.message.request";
+        "__jakarta.security.auth.message.request";
     
     public static final String WRAPPED_RESPONSE =
-        "__javax.security.auth.message.response"; 
+        "__jakarta.security.auth.message.response"; 
     
     
     /**

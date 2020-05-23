@@ -30,10 +30,10 @@ import java.util.StringTokenizer;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.*;
-import javax.security.auth.message.module.ServerAuthModule;
-import javax.security.auth.message.callback.CallerPrincipalCallback;
-import javax.security.auth.message.callback.GroupPrincipalCallback;
+import jakarta.security.auth.message.*;
+import jakarta.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.callback.CallerPrincipalCallback;
+import jakarta.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.Subject;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -75,7 +75,7 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
         "jakarta.servlet.http.authType";
 
     private static String IS_MANDATORY_INFO_KEY = 
-        "javax.security.auth.message.MessagePolicy.isMandatory";
+        "jakarta.security.auth.message.MessagePolicy.isMandatory";
 
     private static String AUTHORIZATION_HEADER = "authorization";
 

@@ -154,30 +154,16 @@
                         </goals>
                         <configuration>
                             <target>
+                                <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="maven.plugin.classpath"/>
                                 <property name="dest" location="${project.build.directory}/generated-sources/xjc"/>
                                 <mkdir dir="${dest}"/>
-                                <!-- see https://github.com/eclipse-ee4j/jaxb-ri/issues/1436 -->
-                                <java classpathref="maven.plugin.classpath" fork="true"
-                                      classname="com.sun.tools.xjc.XJCFacade">
-                                    <jvmarg value="-DenableExternalEntityProcessing=true"/>
-                                    <arg value="-dtd"/>
-                                    <arg line="-d ${dest}"/>
-                                    <arg line="-p org.glassfish.appclient.client.acc.config"/>
-                                    <arg value="${project.basedir}/${extracted-dtd-directory}/${dtd-for-jaxb-compilation}"/>
-                                    <arg line="-b ${project.basedir}/src/main/resources/configBindings.xml"/>
-                                </java>
-
-                                <!--
-                                <taskdef name="xjc" classname="com.sun.tools.xjc.XJC2Task" classpathref="maven.plugin.classpath"/>
                                 <xjc destdir="${dest}" fork="true"
                                      schema="${project.basedir}/${extracted-dtd-directory}/${dtd-for-jaxb-compilation}"
                                      package="org.glassfish.appclient.client.acc.config">
                                     <binding dir="${project.basedir}/src/main/resources" includes="configBindings.xml"/>
                                     <arg value="-dtd"/>
-                                    <arg line="-classpath ${cp}"/>
                                     <jvmarg value="-DenableExternalEntityProcessing=true"/>
-                                    <classpath path="${cp}"/>
-                                </xjc>-->
+                                </xjc>
                             </target>
                         </configuration>
                     </execution>

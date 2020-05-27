@@ -168,7 +168,9 @@
     
     function disableProtocolNameField() {
         var methodType = document.getElementById("$pageSession{protocolChoice}");
-        webui.suntheme.field.setDisabled("$pageSession{protocolNmField}", methodType.getSelectedValue() != '__create__');
+        require(['webui/suntheme/field'], function (myfield) {
+        	myfield.setDisabled("$pageSession{protocolNmField}", methodType.getSelectedValue() != '__create__');
+        });        
     }
     </script>
 </f:verbatim>

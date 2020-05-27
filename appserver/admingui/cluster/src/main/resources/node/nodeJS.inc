@@ -22,21 +22,36 @@
          var sshSheet = document.getElementById(sshSection);
          if (type == 'CONFIG'){
              sshSheet.style.display = 'none';
-             webui.suntheme.common.setVisible(sshDirId, false);
-             webui.suntheme.common.setVisible(configDirId, true);
+             
+             require(['webui/suntheme/common'], function (common) {
+             	 common.setVisible(sshDirId, false);
+             	 common.setVisible(configDirId, true);				
+			  });
+             
 
              if (installProp != null){
-                 webui.suntheme.common.setVisible(installProp, false);
-                 webui.suntheme.common.setVisible(archProp, false);
+
+             require(['webui/suntheme/common'], function (common) {
+                 common.setVisible(installProp, false);
+                 common.setVisible(archProp, false);
+			  });
+
              }
          }
          if (type == 'SSH'){
              sshSheet.style.display = 'block';
-             webui.suntheme.common.setVisible(sshDirId, true);
-             webui.suntheme.common.setVisible(configDirId, false);
+             
+             require(['webui/suntheme/common'], function (common) {
+              common.setVisible(sshDirId, true);
+              common.setVisible(configDirId, false);
+ 			  });
+             
+             
              if(installProp != null){
-                 webui.suntheme.common.setVisible(installProp, true);
-                 webui.suntheme.common.setVisible(archProp, true);
+             require(['webui/suntheme/common'], function (common) {
+                common.setVisible(installProp, true);
+                common.setVisible(archProp, true);
+ 			  });             
              }
          }
     }
@@ -176,18 +191,26 @@ function confirmEmptyPswd(ps1Id, emptyMsg) {
     function  showTestDir(validateId, testdirId ){
         var ss = document.getElementById(validateId).checked;
         if (ss){
-             webui.suntheme.common.setVisible(testdirId, true);
+			require(['webui/suntheme/common'], function (common) {
+			    common.setVisible(testdirId, true);
+			});        
         }else{
-            webui.suntheme.common.setVisible(testdirId, false);
+			require(['webui/suntheme/common'], function (common) {
+			    common.setVisible(testdirId, false);
+			}); 
         }
     }
 
     function show(compId){
-        webui.suntheme.common.setVisible(compId, true);
-    }
+			require(['webui/suntheme/common'], function (common) {
+			    common.setVisible(compId, true);
+			});    
+     }
 
     function hide(compId){
-        webui.suntheme.common.setVisible(compId, false);
+			require(['webui/suntheme/common'], function (common) {
+			    common.setVisible(compId, false);
+			});       
     }
 
     </script>

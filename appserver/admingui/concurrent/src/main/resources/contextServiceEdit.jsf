@@ -65,8 +65,10 @@
 <f:verbatim>
     <script type="text/javascript">
     function enableCtxInform(ctxId, val){
-    alert(val);
-        webui.suntheme.dropDown.setDisabled(ctxId, val);
+	    alert(val);
+	    require(['webui/suntheme/dropDown'], function (myDropDown) {
+	    	myDropDown.setDisabled(ctxId, val);
+	    });
     }
     </script>
 </f:verbatim>

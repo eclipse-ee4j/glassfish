@@ -709,7 +709,7 @@ admingui.nav = {
      */
     clearTreeSelection: function(treeId) {
         var tree = document.getElementById(treeId);
-        if (tree) {
+        if (tree && typeof(tree["clearAllHighlight"]) === "function") {
             tree.clearAllHighlight(treeId);
         }
     },

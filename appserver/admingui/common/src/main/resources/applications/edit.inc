@@ -98,7 +98,7 @@
             setPageSessionAttribute(key="javaWebStartEnabled" value="true");
             setPageSessionAttribute(key="implicitCdiEnabled" value="true");
             foreach (var="oneProp" list="#{pageSession.tableList}") {
-                if (#{requestScope.oneProp.name}=$constant{org.glassfish.deployment.client.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}){
+                if (#{requestScope.oneProp.name}=$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}){
                     setPageSessionAttribute(key="javaWebStartEnabled" value="#{requestScope.oneProp.value}");
                 }
                 if (#{requestScope.oneProp.name}=implicitCdiEnabled){

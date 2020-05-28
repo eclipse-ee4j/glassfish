@@ -79,7 +79,7 @@
         <findbugs.version>3.0.3</findbugs.version>
         <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
 
-        <webservices.version>3.0.0-M1</webservices.version>
+        <webservices.version>3.0.0-M2</webservices.version>
         <glassfish-corba.version>4.2.0</glassfish-corba.version>
         <stax-api.version>1.0-2</stax-api.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -100,7 +100,7 @@
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <jsch.version>0.1.56</jsch.version>
         <pfl.version>4.1.0</pfl.version>
-        <gmbal.version>4.0.0</gmbal.version>
+        <gmbal.version>4.0.2</gmbal.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.2</ant.version>
         <jersey.version>3.0.0-M2</jersey.version>
@@ -114,7 +114,7 @@
         <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0-M1</jax-rs-api.impl.version>
         <mimepull.version>1.9.13</mimepull.version>
-        <glassfish-management-api.version>3.2.2</glassfish-management-api.version>
+        <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <asm.version>7.3.1</asm.version>
         <shoal.version>1.6.53</shoal.version>
         <ha-api.version>3.1.12</ha-api.version>

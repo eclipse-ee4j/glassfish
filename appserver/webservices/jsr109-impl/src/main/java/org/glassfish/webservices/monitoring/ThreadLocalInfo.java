@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,7 @@
 
 package org.glassfish.webservices.monitoring;
 
-import org.glassfish.webservices.monitoring.MessageTraceImpl;
-
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class encapsulates all information contained in the thread local
@@ -27,32 +25,30 @@ import javax.servlet.http.HttpServletRequest;
  * @author Jerome Dochez
  */
 public class ThreadLocalInfo {
-    
-    final private String messageId;
-    final private HttpServletRequest request;
+
+    private final String messageId;
+    private final HttpServletRequest request;
     private MessageTraceImpl requestMessageTrace;
-    
-    /** Creates a new instance of ServletThreadLocalConfiguration */
+
     public ThreadLocalInfo(String messageId, HttpServletRequest request) {
         this.messageId = messageId;
         this.request = request;
     }
-    
+
     public String getMessageId() {
         return messageId;
     }
-    
+
     public HttpServletRequest getRequest() {
         return request;
     }
-    
+
     public void setRequestMessageTrace(MessageTraceImpl trace) {
         requestMessageTrace = trace;
     }
-    
+
     public MessageTraceImpl getRequestMessageTrace() {
         return requestMessageTrace;
     }
-    
-    
+
 }

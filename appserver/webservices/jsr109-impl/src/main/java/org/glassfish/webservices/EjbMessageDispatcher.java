@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,21 +16,15 @@
 
 package org.glassfish.webservices;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Common interface between jaxrpc 1.1 and jax-ws 2.0 for dispatching EJB
- * endpoint messages. 
+ * Common interface between jaxrpc 1.1 and jax-ws 2.0 for dispatching EJB endpoint messages.
  *
  * @author Bhakti Mehta
  */
 public interface EjbMessageDispatcher {
-    
-
-    public void invoke(HttpServletRequest req, 
-                       HttpServletResponse resp,
-                       ServletContext ctxt,
-                       EjbRuntimeEndpointInfo endpointInfo); 
+    void invoke(HttpServletRequest req, HttpServletResponse resp, ServletContext ctxt, EjbRuntimeEndpointInfo endpointInfo);
 }

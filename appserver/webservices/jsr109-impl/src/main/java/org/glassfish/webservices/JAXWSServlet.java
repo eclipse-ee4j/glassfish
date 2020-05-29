@@ -137,8 +137,7 @@ public class JAXWSServlet extends HttpServlet {
         try {
             ServletAdapter targetEndpoint = (ServletAdapter) getEndpointFor(request);
             if (targetEndpoint != null) {
-                logger.log(Level.SEVERE, "!!! TODO: UNCOMMENT LINE BELLOW !!! ({0})", JAXWSServlet.class.getName());
-//                targetEndpoint.handle(getServletContext(), request, response);
+                targetEndpoint.handle(getServletContext(), request, response);
             } else {
                 throw new ServletException("Service not found");
             }
@@ -191,8 +190,7 @@ public class JAXWSServlet extends HttpServlet {
         try {
             ServletAdapter targetEndpoint = (ServletAdapter) getEndpointFor(request);
             if (targetEndpoint != null && wsdlExposed) {
-                logger.log(Level.SEVERE, "!!! TODO: UNCOMMENT LINE BELLOW !!! ({0})", JAXWSServlet.class.getName());
-//                targetEndpoint.publishWSDL(getServletContext(), request, response);
+                targetEndpoint.publishWSDL(getServletContext(), request, response);
             } else {
                 String message = "Invalid wsdl request " + request.getRequestURL();
                 (new WsUtil()).writeInvalidMethodType(response, message);

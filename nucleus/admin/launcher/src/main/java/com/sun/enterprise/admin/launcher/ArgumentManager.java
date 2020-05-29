@@ -16,78 +16,74 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * API -- For now sticking with the draft1 API and behavior
- * This class will be handy for fixing error detection of bad input as below.
- * 
- * -name1 value1 -name2 value2 value3 value4 value5 -name3 -name4 -name5
- * --> "-name1":"value1",  "-name2":"value2", "default":"value5", "-name3":"-name4" 
- * 
+ * API -- For now sticking with the draft1 API and behavior This class will be handy for fixing error detection of bad
+ * input as below.
+ *
+ * -name1 value1 -name2 value2 value3 value4 value5 -name3 -name4 -name5 --> "-name1":"value1", "-name2":"value2",
+ * "default":"value5", "-name3":"-name4"
+ *
  * @author bnevins
  */
 
-public class ArgumentManager 
-{
-    public static Map<String,String> argsToMap(String[] sargs)
-    {
-        ArgumentManager mgr = new ArgumentManager(sargs);
-        return mgr.getArgs();
-    }
- 
-    public static Map<String,String> argsToMap(List<String>sargs)
-    {
-        ArgumentManager mgr = new ArgumentManager(sargs);
-        return mgr.getArgs();
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////
-    //////   ALL PRIVATE BELOW      ///////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    
-    private ArgumentManager(String[] sargs)
-    {
-        args = new ArrayList<String>();
-        
-        for(String s : sargs)
-            args.add(s);
+public class ArgumentManager {
+
+    private Map<String, String> map = new HashMap<>();
+    private List<String> args;
+
+    public static Map<String, String> argsToMap(String[] sargs) {
+        return new ArgumentManager(sargs).getArgs();
     }
 
-    private ArgumentManager(List<String> sargs)
-    {
-        args = sargs;
+    public static Map<String, String> argsToMap(List<String> sargs) {
+        return new ArgumentManager(sargs).getArgs();
     }
 
-    private Map<String, String> getArgs()
-    {
-        int len = args.size();
-        
+    ///////////////////////////////////////////////////////////////////////////
+    ////// ALL PRIVATE BELOW ///////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    private ArgumentManager(String[] arguments) {
+        args = new ArrayList<>();
+
+        for (String argument : arguments) {
+            args.add(argument);
+        }
+    }
+
+    private ArgumentManager(List<String> arguments) {
+        args = arguments;
+    }
+
+    private Map<String, String> getArgs() {
+        int argumentsSize = args.size();
+
         // short-circuit out of here!
-        if(len <= 0)
+        if (argumentsSize <= 0) {
             return map;
-        
-        for(int i = 0; i < len; i++)
-        {
+        }
+
+        for (int i = 0; i < argumentsSize; i++) {
             String name = args.get(i);
-            
-            if(name.startsWith("-"))
-            {
+
+            if (name.startsWith("-")) {
                 // throw it away if there is no value left
-                if(i + 1 < len)
-                {
+                if (i + 1 < argumentsSize) {
                     map.put(name, args.get(++i));
                 }
-            }
-            else
-            {
+            } else {
                 // default --> last one wins!
                 map.put("default", args.get(i));
             }
         }
+        
         return map;
     }
 
-    Map<String,String>  map     = new HashMap<String,String>();
-    List<String>        args;
+
 }

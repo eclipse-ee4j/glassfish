@@ -16,6 +16,10 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import static org.glassfish.api.admin.RuntimeType.DAS;
+import static org.glassfish.api.admin.RuntimeType.EMBEDDED;
+import static org.glassfish.api.admin.RuntimeType.INSTANCE;
+
 import org.glassfish.api.admin.RuntimeType;
 
 /**
@@ -25,29 +29,22 @@ import org.glassfish.api.admin.RuntimeType;
 public class GFLauncherFactory {
 
     /**
-     * 
+     *
      * @param type The type of server to launch.
-     * @return A launcher instance that can be used for launching the specified 
-     * server type.
-     * @throws com.sun.enterprise.admin.launcher.GFLauncherException 
+     * @return A launcher instance that can be used for launching the specified server type.
+     * @throws com.sun.enterprise.admin.launcher.GFLauncherException
      */
-    public static GFLauncher getInstance(RuntimeType type) throws GFLauncherException
-    {
-        switch(type)
-        {
-            case DAS:
-                return new GFDomainLauncher(
-                        new GFLauncherInfo(RuntimeType.DAS));
-            case EMBEDDED:
-                return new GFEmbeddedLauncher(
-                        new GFLauncherInfo(RuntimeType.EMBEDDED));
+    public static GFLauncher getInstance(RuntimeType type) throws GFLauncherException {
+        switch (type) {
+        case DAS:
+            return new GFDomainLauncher(new GFLauncherInfo(DAS));
+        case EMBEDDED:
+            return new GFEmbeddedLauncher(new GFLauncherInfo(EMBEDDED));
+        case INSTANCE:
+            return new GFInstanceLauncher(new GFLauncherInfo(INSTANCE));
 
-            case INSTANCE:
-                return new GFInstanceLauncher(
-                        new GFLauncherInfo(RuntimeType.INSTANCE));
-
-            default:
-                throw new GFLauncherException("Only domain, instance and embedded launching are currently supported.");
+        default:
+            throw new GFLauncherException("Only domain, instance and embedded launching are currently supported.");
         }
     }
 }

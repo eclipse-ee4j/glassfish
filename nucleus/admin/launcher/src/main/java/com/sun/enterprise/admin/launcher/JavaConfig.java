@@ -16,10 +16,18 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NATIVE_LIB_PREFIX;
+import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NATIVE_LIB_SUFFIX;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
-import static com.sun.enterprise.admin.launcher.GFLauncherConstants.*;
-import java.io.*;
-import java.util.*;
 
 /**
  *
@@ -40,53 +48,51 @@ class JavaConfig {
     }
 
     List<File> getEnvClasspath() {
-        if(useEnvClasspath()) {
+        if (useEnvClasspath()) {
             String s = System.getenv("CLASSPATH");
             s = stripQuotes(s);
             return GFLauncherUtils.stringToFiles(s);
-        }
-        else {
-            return new ArrayList<File>();
+        } else {
+            return new ArrayList<>();
         }
     }
 
     List<File> getPrefixClasspath() {
         String cp = map.get("classpath-prefix");
 
-        if(GFLauncherUtils.ok(cp)) {
+        if (ok(cp)) {
             return GFLauncherUtils.stringToFiles(cp);
-        }
-        else {
-            return new ArrayList<File>();
+        } else {
+            return new ArrayList<>();
         }
     }
 
     String getNativeLibraryPrefix() {
         String s = map.get(NATIVE_LIB_PREFIX);
 
-        if(!GFLauncherUtils.ok(s))
+        if (!ok(s)) {
             s = "";
+        }
 
         return s;
     }
 
-
     List<File> getSuffixClasspath() {
         String cp = map.get("classpath-suffix");
 
-        if(GFLauncherUtils.ok(cp)) {
+        if (ok(cp)) {
             return GFLauncherUtils.stringToFiles(cp);
-        }
-        else {
-            return new ArrayList<File>();
+        } else {
+            return new ArrayList<>();
         }
     }
 
     String getNativeLibrarySuffix() {
         String s = map.get(NATIVE_LIB_SUFFIX);
 
-        if(!GFLauncherUtils.ok(s))
+        if (!ok(s)) {
             s = "";
+        }
 
         return s;
     }
@@ -94,11 +100,10 @@ class JavaConfig {
     List<File> getSystemClasspath() {
         String cp = map.get("system-classpath");
 
-        if(GFLauncherUtils.ok(cp)) {
+        if (ok(cp)) {
             return GFLauncherUtils.stringToFiles(cp);
-        }
-        else {
-            return new ArrayList<File>();
+        } else {
+            return new ArrayList<>();
         }
     }
 
@@ -107,24 +112,25 @@ class JavaConfig {
         // Since our final command line is a List<String>, we can't have 2
         // options in one String -- the JVM will ignore the second option...
         // sample "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999"
-        List<String> empty = Collections.emptyList();
-        String s = map.get("debug-options");
+        
+        String debugOptions = map.get("debug-options");
 
-        if(!GFLauncherUtils.ok(s)) {
-            return empty;
+        if (!ok(debugOptions)) {
+            return emptyList();
         }
-        String[] ss = s.split(" ");
+        
+        String[] debugOptionsArray = debugOptions.split(" ");
 
-        if(ss.length <= 0) {
-            return empty;
+        if (debugOptionsArray.length <= 0) {
+            return emptyList();
         }
-        return Arrays.asList(ss);
+        
+        return asList(debugOptionsArray);
     }
 
     boolean isDebugEnabled() {
         return Boolean.parseBoolean(map.get("debug-enabled"));
     }
-
 
     private boolean useEnvClasspath() {
         String s = map.get("env-classpath-ignored");
@@ -134,8 +140,9 @@ class JavaConfig {
         // If there is no value -- return false
         // else use the opposite of whatever the value is
 
-        if(s == null || s.length() <= 0)
+        if (s == null || s.length() <= 0) {
             return false;
+        }
 
         return !Boolean.parseBoolean(s);
     }
@@ -150,8 +157,9 @@ class JavaConfig {
         // and for there to be an embedded quote character especially since we give
         // a SEVERE error message everytime.
 
-        if(!hasQuotes(s))
+        if (!hasQuotes(s)) {
             return s;
+        }
 
         String s2 = stripChar(s, "'");
         s2 = stripChar(s2, "\"");
@@ -161,11 +169,13 @@ class JavaConfig {
     }
 
     private boolean hasQuotes(String s) {
-        if(s == null)
+        if (s == null) {
             return false;
+        }
 
-        if(s.indexOf('\'') >= 0)
+        if (s.indexOf('\'') >= 0) {
             return true;
+        }
 
         return s.indexOf('"') >= 0;
     }
@@ -175,14 +185,16 @@ class JavaConfig {
 
         StringBuilder sb = new StringBuilder();
 
-        for(String s2 : ss)
+        for (String s2 : ss) {
             sb.append(s2);
+        }
 
         return sb.toString();
     }
 
     private Map<String, String> map;
 }
+
 /*
  * Sample java-config from a V2 domain.xml
  *  <java-config

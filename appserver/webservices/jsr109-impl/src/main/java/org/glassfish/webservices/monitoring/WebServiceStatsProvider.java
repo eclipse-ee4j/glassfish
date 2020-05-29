@@ -16,8 +16,6 @@
 
 package org.glassfish.webservices.monitoring;
 
-import static java.util.logging.Level.SEVERE;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +32,9 @@ import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedData;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.gmbal.ManagedOperation;
-import org.glassfish.webservices.LogUtils;
 import org.glassfish.webservices.deployment.DeployedEndpointData;
 
+import jakarta.servlet.ServletContext;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
 
@@ -80,7 +78,18 @@ public class WebServiceStatsProvider {
     // sun-jaxws.xml undeployment
     @ProbeListener("glassfish:webservices:deployment-ri:undeploy")
     public synchronized void riUndeploy(@ProbeParam("adapter") ServletAdapter adapter) {
-        LogUtils.getLogger().log(SEVERE, "!!! TODO: UNCOMMENT LINE(S) BELLOW !!! ({0})", WebServiceStatsProvider.class.getName());
+        ServletContext ctxt = adapter.getServletContext();
+        String name = ctxt.getContextPath()+adapter.getValidPath();
+        DeployedEndpointData data = endpoints.remove(name);
+
+        String contextPath = adapter.getServletContext().getContextPath();
+        List<DeployedEndpointData> ri = riEndpoints.get(contextPath);
+        if (ri != null) {
+            ri.remove(data);
+            if (ri.isEmpty()) {
+                riEndpoints.remove(contextPath);
+            }
+        }
     }
 
     // admin CLI doesn't pick-up Collection<DeployedEndpointData>. Hence

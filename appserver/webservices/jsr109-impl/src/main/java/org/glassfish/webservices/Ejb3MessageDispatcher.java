@@ -81,8 +81,7 @@ public class Ejb3MessageDispatcher implements EjbMessageDispatcher {
                 adapterInfo = (AdapterInvocationInfo) endpointInfo.prepareInvocation(true);
                 adapter = adapterInfo.getAdapter();
                 if (adapter != null) {
-                    logger.log(SEVERE, "!!! TODO: UNCOMMENT LINE BELLOW !!! ({0})", Ejb3MessageDispatcher.class.getName());
-//                    adapter.handle(null, req, resp);
+                    adapter.handle(null, req, resp);
                 } else {
                     logger.log(SEVERE, UNABLE_FIND_ADAPTER, endpointInfo.getEndpoint().getName());
                 }
@@ -109,8 +108,7 @@ public class Ejb3MessageDispatcher implements EjbMessageDispatcher {
             adapterInfo = (AdapterInvocationInfo) endpointInfo.prepareInvocation(true);
             adapter = adapterInfo.getAdapter();
             if (adapter != null) {
-                logger.log(SEVERE, "!!! TODO: UNCOMMENT LINE BELLOW !!! ({0})", Ejb3MessageDispatcher.class.getName());
-//                adapter.publishWSDL(ctxt, req, resp);
+                adapter.publishWSDL(ctxt, req, resp);
             } else {
                 String message = "Invalid wsdl request " + req.getRequestURL();
                 (new WsUtil()).writeInvalidMethodType(resp, message);

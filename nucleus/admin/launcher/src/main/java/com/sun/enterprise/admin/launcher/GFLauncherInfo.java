@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -59,6 +59,7 @@ public class GFLauncherInfo {
     // Start set by arguments, final form of arguments from caller
     
     private boolean debug; // --debug argument, e.g. ./asadmin start-domain --debug
+    private boolean suspend; // --suspend
     private boolean verbose; // --verbose argument e.g. ./asadmin start-domain --verbose
     private boolean watchdog;
     private boolean upgrade;
@@ -149,6 +150,31 @@ public class GFLauncherInfo {
     public void setDebug(boolean b) {
         debug = b;
     }
+    
+    /**
+    *
+    * @return true if debug mode is on.
+    */
+   public boolean isDebug() {
+       return debug;
+   }
+    
+    /**
+     * Starts the server in suspended debug mode
+     * 
+     * @param suspend
+     */
+    public void setSuspend(boolean suspend) {
+        this.suspend = suspend;
+    }
+    
+    /**
+    *
+    * @return true if suspend debug mode is on.
+    */
+    public boolean isSuspend() {
+        return suspend;
+    }
 
     /**
      * Starts the server in upgrade mode
@@ -199,13 +225,7 @@ public class GFLauncherInfo {
         return watchdog;
     }
 
-    /**
-     *
-     * @return true if debug mode is on.
-     */
-    public boolean isDebug() {
-        return debug;
-    }
+    
 
     /**
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,6 +37,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY
 import static com.sun.enterprise.util.io.FileUtils.copyFile;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -570,8 +571,17 @@ public abstract class GFLauncher {
     }
     
     private List<String> getDebugOptionsFromDomainXMLJavaConfig() {
-        if (callerParameters.isDebug() || domainXMLjavaConfig.isDebugEnabled()) {
-            return domainXMLjavaConfig.getDebugOptions();
+        if (callerParameters.isDebug() || callerParameters.isSuspend() || domainXMLjavaConfig.isDebugEnabled()) {
+            // Suspend setting from domain.xml can be overridden by caller
+            if (!callerParameters.isSuspend()) {
+                return domainXMLjavaConfig.getDebugOptions();
+            }
+            
+            return domainXMLjavaConfig.getDebugOptions()
+                                      .stream()
+                                      .filter(e -> e.startsWith("-agentlib:jdwp"))
+                                      .map(e -> e.replace("suspend=n", "suspend=y"))
+                                      .collect(toList());
         }
 
         return emptyList();
@@ -608,6 +618,8 @@ public abstract class GFLauncher {
                     }
                 }
             }
+            
+            
         }
     }
 

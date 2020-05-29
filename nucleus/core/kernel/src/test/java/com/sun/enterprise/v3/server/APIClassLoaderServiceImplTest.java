@@ -51,7 +51,7 @@ public class APIClassLoaderServiceImplTest {
 				.getClassLoader());
 		FakeModulesRegistry mr = new FakeModulesRegistry(classLoader);
 
-		apiClassLoaderService.mr = mr;
+		apiClassLoaderService.modulesRegistry = mr;
 
 		assertEquals(0, mr.getLifecycleListeners().size());
 

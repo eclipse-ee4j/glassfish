@@ -103,7 +103,7 @@
         <gmbal.version>4.0.2</gmbal.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.2</ant.version>
-        <jersey.version>3.0.0-M2</jersey.version>
+        <jersey.version>3.0.0-M4</jersey.version>
         <jackson.version>2.10.2</jackson.version>
         <jettison.version>1.4.0</jettison.version>
 

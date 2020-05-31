@@ -98,6 +98,11 @@ public class SystemPropertyConstants {
      * Field
      */
     public static final String INSTANCE_ROOT_PROPERTY = "com.sun.aas.instanceRoot";
+    
+    /**
+     * Field
+     */
+    public static final String DEBUG_MODE_PROPERTY = "com.sun.aas.debugMode";
 
     /**
      * The certificate nick name specified in the System-Jmx-Conenctor of the DAS with which a Node Agent synchronizes

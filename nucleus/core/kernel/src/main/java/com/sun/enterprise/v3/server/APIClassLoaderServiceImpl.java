@@ -16,8 +16,11 @@
 
 package com.sun.enterprise.v3.server;
 
+import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
+import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
 import static java.util.Collections.enumeration;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 import java.io.IOException;
 import java.net.URL;
@@ -85,11 +88,15 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
     private HK2Module APIModule;
     
     /*
-     * Implementation Note: 1. This class currently depends on a special which is configured such that it can load all
-     * public APIs. The APIClassLoader is a wrapper around such a module's loader. This is how we are indepdendent of actual
+     * Implementation Note: 
+     * 
+     * 1. This class currently depends on a special which is configured such that it can load all
+     * public APIs. The APIClassLoader is a wrapper around such a module's loader. This is how we are independent of actual
      * module system like OSGi. So far it has worked when we run in OSGi mode as well as when we run in a single classpath
-     * mode. 2. APIClassLoader maintains a blacklist, i.e., classes and resources that could not be loaded to avoid
-     * unnecessary delegation. It flushes that list everytime a new bundle is installed in the system. This takes care of
+     * mode. 
+     * 
+     * 2. APIClassLoader maintains a blacklist, i.e., classes and resources that could not be loaded to avoid
+     * unnecessary delegation. It flushes that list every time a new bundle is installed in the system. This takes care of
      * performance problem in typical production use of GlassFish.
      *
      * TODO: 1. We need to add an upper threshold for blacklist to avoid excessive use of memory. 2. Externalize punch-in
@@ -208,6 +215,8 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
         public Class<?> loadClass(String name) throws ClassNotFoundException {
             return loadClass(name, false);
         }
+        
+       
 
         @Override
         protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
@@ -232,7 +241,29 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                         
                         if (classProvidingModule != null) {
                             if (select(classProvidingModule)) {
-                                return classProvidingModule.getClassLoader().loadClass(name); // abort search if we fail to load.
+                                try {
+                                    return classProvidingModule.getClassLoader().loadClass(name); // abort search if we fail to load.
+                                } catch (ClassNotFoundException cnfe2) {
+                                    
+                                    // Only in debug mode, since the child classloader can legitimately  try other souces to load a class
+                                    if ((Boolean.valueOf(System.getProperty(DEBUG_MODE_PROPERTY)))) {
+                                        logger.logp(SEVERE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass", name, cnfe2);
+
+                                        if (cnfe2.getCause() != null) {
+                                            String message = prettyPrintExceptionMessage(cnfe2.getCause().getMessage());
+
+                                            if (message != null && !message.isEmpty()) {
+                                                logger.logp(SEVERE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass", 
+                                                        
+                                                    "\nFailed loading class " + name + " by API Class Loader\n\n" +    
+                                                    message + "\n");
+                                            }
+                                        }
+                                    }
+                                    
+                                    throw cnfe2;
+                                    
+                                }
                             } else {
                                 logger.logp(FINE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass",
                                         "Skipping loading {0} from module {1} as this module is not yet resolved.", new Object[] { name, classProvidingModule });
@@ -286,11 +317,11 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                 if (name.equals(MAILCAP)) {
                     // punch in for META-INF/mailcap files.
                     // see issue #8426
-                    for (HK2Module m : modulesRegistry.getModules()) {
-                        if (!select(m)) {
+                    for (HK2Module module : modulesRegistry.getModules()) {
+                        if (!select(module)) {
                             continue;
                         }
-                        if ((url = m.getClassLoader().getResource(name)) != null) {
+                        if ((url = module.getClassLoader().getResource(name)) != null) {
                             return url;
                         }
                     }

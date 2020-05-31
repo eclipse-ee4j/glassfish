@@ -30,6 +30,7 @@ import static com.sun.enterprise.universal.process.ProcessStreamDrainer.dispose;
 import static com.sun.enterprise.universal.process.ProcessStreamDrainer.redirect;
 import static com.sun.enterprise.universal.process.ProcessStreamDrainer.save;
 import static com.sun.enterprise.util.OS.isDarwin;
+import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
@@ -37,6 +38,8 @@ import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY
 import static com.sun.enterprise.util.io.FileUtils.copyFile;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 import static java.util.stream.Collectors.toList;
 
 import java.io.BufferedWriter;
@@ -52,7 +55,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
@@ -766,9 +768,12 @@ public abstract class GFLauncher {
         addIgnoreNull(cmdLine, domainXMLjavaConfigDebugOptions);
 
         String CLIStartTime = System.getProperty("WALL_CLOCK_START");
-
         if (CLIStartTime != null && CLIStartTime.length() > 0) {
             cmdLine.add("-DWALL_CLOCK_START=" + CLIStartTime);
+        }
+        
+        if (debugPort >= 0) {
+            cmdLine.add("-D" + DEBUG_MODE_PROPERTY + "=" + TRUE);
         }
 
         if (domainXMLjvmOptions != null) {
@@ -1029,7 +1034,8 @@ public abstract class GFLauncher {
         Map<String, String> props = new HashMap<>();
         props.put(INSTALL_ROOT_PROPERTY, getInfo().getInstallDir().getAbsolutePath());
         props.put(INSTANCE_ROOT_PROPERTY, getInfo().getInstanceRootDir().getAbsolutePath());
-        return this.propsToJvmOptions(props);
+        
+        return propsToJvmOptions(props);
     }
 
     String getClasspath() {
@@ -1061,9 +1067,9 @@ public abstract class GFLauncher {
 
     private void setupLogLevels() {
         if (callerParameters.isVerbose()) {
-            GFLauncherLogger.setConsoleLevel(Level.INFO);
+            GFLauncherLogger.setConsoleLevel(INFO);
         } else {
-            GFLauncherLogger.setConsoleLevel(Level.WARNING);
+            GFLauncherLogger.setConsoleLevel(WARNING);
         }
     }
 

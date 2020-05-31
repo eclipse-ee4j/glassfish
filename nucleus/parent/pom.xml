@@ -78,54 +78,76 @@
         <findbugs.exclude />
         <findbugs.version>3.0.3</findbugs.version>
         <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
-
-        <webservices.version>3.0.0-M2</webservices.version>
-        <glassfish-corba.version>4.2.0</glassfish-corba.version>
-        <stax-api.version>1.0-2</stax-api.version>
-        <slf4j.version>1.7.21</slf4j.version>
-        <management-api.version>1.1-rev-1</management-api.version>
-        <servlet-api.version>5.0.0-M1</servlet-api.version>
-        <grizzly.version>3.0.0-M1</grizzly.version>
-        <grizzly.npn.version>1.9</grizzly.npn.version>
-        <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <jakarta.validation.version>3.0.0-M1</jakarta.validation.version>
-        <hibernate-validator.version>7.0.0.Alpha2</hibernate-validator.version>
-        <javassist.version>3.26.0-GA</javassist.version>
+        
+        <!-- Jakarta API Versions -->
+        
+        <!-- Jakarta EL -->
         <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
         <jakarta.el-api.version>4.0.0-RC1</jakarta.el-api.version>
-        <jakarta.inject-api.version>2.0.0-RC4</jakarta.inject-api.version>
-        <hk2.version>3.0.0-M2</hk2.version>
-        <hk2.plugin.version>3.0.0-M2</hk2.plugin.version>
-        <jboss.logging.version>3.4.1.Final</jboss.logging.version>
-        <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
-        <jsch.version>0.1.56</jsch.version>
-        <pfl.version>4.1.0</pfl.version>
-        <gmbal.version>4.0.2</gmbal.version>
-        <antlr.version>2.7.8</antlr.version>
-        <ant.version>1.10.2</ant.version>
-        <jersey.version>3.0.0-M4</jersey.version>
-        <jackson.version>2.10.2</jackson.version>
-        <jettison.version>1.4.0</jettison.version>
 
+        <!-- Jakarta Servlet -->
+        <servlet-api.version>5.0.0-M1</servlet-api.version>        
+
+        <!-- Jakarta Validation -->
+        <jakarta.validation.version>3.0.0-M1</jakarta.validation.version>        
+        <hibernate-validator.version>7.0.0.Alpha2</hibernate-validator.version>
+
+        <!-- Jakarta Web Services -->
+        <webservices.version>3.0.0-M2</webservices.version>
+        
+        <!-- Jakarta Inject -->
+        <jakarta.inject-api.version>2.0.0-RC4</jakarta.inject-api.version> 
+              
         <!-- Jakarta XML Binding -->
         <jakarta.jaxb-api.version>3.0.0-RC3</jakarta.jaxb-api.version>
-        <jakarta.jaxb-impl.version>3.0.0-M3</jakarta.jaxb-impl.version>
-
+        <jakarta.jaxb-impl.version>3.0.0-M3</jakarta.jaxb-impl.version>  
+        
+        <!-- Jakarta REST -->
         <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0-M1</jax-rs-api.impl.version>
-        <mimepull.version>1.9.13</mimepull.version>
+        <jersey.version>3.0.0-M4</jersey.version>
+        
+        <!-- Jakarta Mail -->
+        <mail.version>2.0.0-RC5</mail.version>
+        
+        <!-- Jakarta Activation -->
+        <activation.version>2.0.0-RC3</activation.version>
+        
+        <!-- Jakarta Annotations -->
+        <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>
+
+        <!-- GlassFish Components -->                                   
+        <glassfish-corba.version>4.2.0</glassfish-corba.version>
+        <grizzly.version>3.0.0-M1</grizzly.version>
+        <grizzly.npn.version>1.9</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
-        <asm.version>7.3.1</asm.version>
+        <hk2.version>3.0.0-M2</hk2.version>
+        <hk2.plugin.version>3.0.0-M2</hk2.plugin.version>
+        <pfl.version>4.1.0</pfl.version>
+        <gmbal.version>4.0.2</gmbal.version>   
         <shoal.version>1.6.53</shoal.version>
         <ha-api.version>3.1.12</ha-api.version>
         <glassfishbuild.version>3.2.27</glassfishbuild.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.11</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
-        <mail.version>2.0.0-RC5</mail.version>
-        <activation.version>2.0.0-RC3</activation.version>
-        <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>
         <copyright-plugin.version>1.50</copyright-plugin.version>
+
+        <!-- 3rd party dependencies -->                             
+        <stax-api.version>1.0-2</stax-api.version>
+        <slf4j.version>1.7.21</slf4j.version>
+        <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
+        <javassist.version>3.26.0-GA</javassist.version>
+        <jboss.logging.version>3.4.1.Final</jboss.logging.version>
+        <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
+        <jsch.version>0.1.56</jsch.version>
+        <antlr.version>2.7.8</antlr.version>
+        <ant.version>1.10.2</ant.version>
+        <jackson.version>2.10.2</jackson.version>
+        <jettison.version>1.4.0</jettison.version>
+        <mimepull.version>1.9.13</mimepull.version>
+        <asm.version>7.3.1</asm.version>
+
         <testng.version>7.1.0</testng.version>
         <jdk.version>1.7.0-09</jdk.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>

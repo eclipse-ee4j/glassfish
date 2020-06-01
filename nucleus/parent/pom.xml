@@ -100,7 +100,7 @@
               
         <!-- Jakarta XML Binding -->
         <jakarta.jaxb-api.version>3.0.0-RC3</jakarta.jaxb-api.version>
-        <jakarta.jaxb-impl.version>3.0.0-M3</jakarta.jaxb-impl.version>  
+        <jakarta.jaxb-impl.version>3.0.0-M4</jakarta.jaxb-impl.version>
         
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
@@ -774,6 +774,12 @@
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
                 <version>${jakarta.jaxb-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>

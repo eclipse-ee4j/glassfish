@@ -578,15 +578,14 @@ public class WebServiceTesterServlet extends HttpServlet {
             logger.log(Level.SEVERE, LogUtils.CREATE_DIR_FAILED, classesDir);
         }
 
-        String[] wsimportArgs = new String[8];
+        String[] wsimportArgs = new String[7];
         wsimportArgs[0]="-d";
         wsimportArgs[1]=classesDir.getAbsolutePath();
         wsimportArgs[2]="-keep";
         wsimportArgs[3]=wsdlLocation.toExternalForm();
-        wsimportArgs[4]="-Xendorsed";
-        wsimportArgs[5]="-target";
-        wsimportArgs[6]="2.1";
-        wsimportArgs[7]="-extension";
+        wsimportArgs[4]="-target";
+        wsimportArgs[5]="2.1";
+        wsimportArgs[6]="-extension";
         WSToolsObjectFactory tools = WSToolsObjectFactory.newInstance();
         logger.log(Level.INFO, LogUtils.WSIMPORT_INVOKE, wsdlLocation);
         boolean success = tools.wsimport(System.out, wsimportArgs);

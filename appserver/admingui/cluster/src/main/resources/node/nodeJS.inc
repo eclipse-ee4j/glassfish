@@ -127,7 +127,7 @@
             return true;
         }
 
-        if (!c(nodeHostId, '#{reqMsg}')){
+        if (!checkRequired(nodeHostId, '#{reqMsg}')){
             return false;
         }
         if (atype == 'SSH'){

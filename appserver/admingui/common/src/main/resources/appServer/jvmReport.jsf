@@ -33,7 +33,10 @@
         setPageSessionAttribute(key="ep", value="/servers/server/#{pageSession.encodedInstanceName}/generate-jvm-report.json");
     />
     <sun:html id="html2"> 
-        <sun:head id="propertyhead" title="JVM Report" >
+        <sun:head id="head" title="#{guiTitle}" javaScript="true" debug="false" parseOnLoad="false">
+            <h:outputScript name="jsf.js" library="javax.faces" target="head" />       
+            <sun:script url="/resource/common/js/adminjsf.js" />
+            
         </sun:head>
         <sun:body id="body3">
             <sun:form id="propertyForm">

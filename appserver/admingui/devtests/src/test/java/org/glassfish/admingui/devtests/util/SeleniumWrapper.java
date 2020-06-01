@@ -20,8 +20,9 @@ import org.glassfish.admingui.devtests.BaseSeleniumTestClass;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebElement;
+
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 
 /**
  *

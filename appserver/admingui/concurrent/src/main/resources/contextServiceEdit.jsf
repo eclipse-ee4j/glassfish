@@ -66,8 +66,8 @@
     <script type="text/javascript">
     function enableCtxInform(ctxId, val){
 	    alert(val);
-	    require(['webui/suntheme/dropDown'], function (myDropDown) {
-	    	myDropDown.setDisabled(ctxId, val);
+	    require(['webui/suntheme/dropDown'], function (dropDown) {
+	    	dropDown.setDisabled(ctxId, val);
 	    });
     }
     </script>

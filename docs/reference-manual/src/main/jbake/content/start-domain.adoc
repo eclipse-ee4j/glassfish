@@ -81,7 +81,7 @@ asadmin-options::
   Specifies whether the domain is started with
   http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
   Platform Debugger Architecture (JPDA)]
-  (https://docs.oracle.com/en/java/javase/14/docs/specs/jpda/conninv.html)
+  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
   debugging enabled. With debugging enabled extra exceptions can be printed. +
   Possible values are as follows: +
   `true`;;
@@ -94,7 +94,7 @@ asadmin-options::
   Specifies whether the domain is started with
   http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
   Platform Debugger Architecture (JPDA)]
-  (https://docs.oracle.com/en/java/javase/14/docs/specs/jpda/conninv.html)
+  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
   debugging enabled and suspend the newly started VM before the main class loads. 
   When a debugger connects, it can send a JDWP command to resume the suspended VM.
   With debugging enabled extra exceptions can be printed.
@@ -216,6 +216,6 @@ link:restart-domain.html#restart-domain-1[`restart-domain`(1)],
 link:stop-domain.html#stop-domain-1[`stop-domain`(1)]
 
 Java Platform Debugger Architecture (JPDA)
-(https://docs.oracle.com/en/java/javase/14/docs/specs/jpda/conninv.html)
+(https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
 
 

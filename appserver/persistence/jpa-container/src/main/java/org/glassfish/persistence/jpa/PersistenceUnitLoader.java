@@ -378,12 +378,6 @@ public class PersistenceUnitLoader {
         props.put(ECLIPSELINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY,
                 System.getProperty(ECLIPSELINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY, "Glassfish")); // NOI18N
 
-        // TopLink specific properties:
-        // See https://glassfish.dev.java.net/issues/show_bug.cgi?id=249
-        final String TOPLINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY = "toplink.target-server"; // NOI18N
-        props.put(TOPLINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY,
-                System.getProperty(TOPLINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY, "Glassfish")); // NOI18N
-
         // Hibernate specific properties:
         final String HIBERNATE_TRANSACTION_MANAGER_LOOKUP_CLASS_PROPERTY = "hibernate.transaction.manager_lookup_class"; // NOI18N
         props.put(HIBERNATE_TRANSACTION_MANAGER_LOOKUP_CLASS_PROPERTY,

@@ -134,8 +134,8 @@
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.0.0-M2</jakarta.batch-api.version>
-        <com.ibm.jbatch.container.version>2.0.0-M1</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>2.0.0-M1</com.ibm.jbatch.spi.version>
+        <com.ibm.jbatch.container.version>2.0.0-M2</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0-M2</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
         <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>
@@ -152,8 +152,8 @@
         <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>5.1.0</woodstox.version>
-        <stax2-api.version>4.1</stax2-api.version>
+        <woodstox.version>5.3.0</woodstox.version>
+        <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0-RC1</jstl-api.version>
@@ -556,7 +556,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.6</version>
+                <version>2.7</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>

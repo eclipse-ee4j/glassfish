@@ -34,7 +34,6 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.*;
 import jakarta.enterprise.inject.spi.InjectionTarget;
-import jakarta.xml.ws.WebServiceRef;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
@@ -52,6 +51,8 @@ public class InjectionServicesImpl implements InjectionServices {
     private BundleDescriptor bundleContext;
 
     private DeploymentImpl deployment;
+
+    private WsInjectionHandler wsHandler;
 
     public InjectionServicesImpl(InjectionManager injectionMgr, BundleDescriptor context, DeploymentImpl deployment) {
         injectionManager = injectionMgr;
@@ -177,8 +178,8 @@ public class InjectionServicesImpl implements InjectionServices {
                     validateResourceClass(annotatedField, EntityManagerFactory.class);
                 } else if ( annotatedField.isAnnotationPresent( PersistenceContext.class ) ) {
                     validateResourceClass(annotatedField, EntityManager.class);
-                } else if ( annotatedField.isAnnotationPresent( WebServiceRef.class ) ) {
-                    validateWebServiceRef( annotatedField );
+                } else if ( getWsHandler().handles(annotatedField)) {
+                    getWsHandler().validateWebServiceRef(annotatedField);
                 }
             }
         }
@@ -250,37 +251,6 @@ public class InjectionServicesImpl implements InjectionServices {
         }
     }
 
-    private void validateWebServiceRef( AnnotatedField annotatedField ) {
-        WebServiceRef webServiceRef = annotatedField.getAnnotation(WebServiceRef.class);
-        if ( webServiceRef != null ) {
-            if ( jakarta.xml.ws.Service.class.isAssignableFrom(annotatedField.getJavaMember().getType())) {
-                return;
-            }
-
-            if ( annotatedField.getJavaMember().getType().isInterface() ) {
-                Class serviceClass = webServiceRef.value();
-                if ( serviceClass != null ) {
-                    if ( ! jakarta.xml.ws.Service.class.isAssignableFrom(serviceClass)) {
-                        throw new DefinitionException( "The type of the injection point " +
-                                                       annotatedField.getJavaMember().getName() +
-                                                       " is an interface: " +
-                                                       annotatedField.getJavaMember().getType().getName() +
-                                                       ".  The @WebSreviceRef value of " +
-                                                       serviceClass +
-                                                       " is not assignable from " +
-                                                       jakarta.xml.ws.Service.class.getName());
-                    }
-                }
-            } else {
-                throw new DefinitionException( "The type of the injection point " +
-                                                   annotatedField.getJavaMember().getName() +
-                                                   " is " +
-                                                   annotatedField.getJavaMember().getType().getName() +
-                                                   ".  This type is invalid for a field annotated with @WebSreviceRef");
-            }
-        }
-    }
-
     private void validateResourceClass(AnnotatedField annotatedField, Class resourceClass) {
         if ( ! annotatedField.getJavaMember().getType().isAssignableFrom( resourceClass ) ) {
             throwProducerDefinitionExeption( annotatedField.getJavaMember().getName(),
@@ -329,9 +299,8 @@ public class InjectionServicesImpl implements InjectionServices {
         } else if ( annotatedField.isAnnotationPresent( EJB.class ) ) {
             EJB ejb = annotatedField.getAnnotation( EJB.class );
             lookupName = getJndiName(ejb.lookup(), ejb.mappedName(), ejb.name());
-        } else if ( annotatedField.isAnnotationPresent( WebServiceRef.class ) ) {
-            WebServiceRef webServiceRef = annotatedField.getAnnotation( WebServiceRef.class );
-            lookupName = getJndiName(webServiceRef.lookup(), webServiceRef.mappedName(), webServiceRef.name());
+        } else if ( getWsHandler().handles(annotatedField) ) {
+            lookupName = getWsHandler().getJndiName(annotatedField);
         } else if ( annotatedField.isAnnotationPresent( PersistenceUnit.class ) ) {
             PersistenceUnit persistenceUnit = annotatedField.getAnnotation( PersistenceUnit.class );
             lookupName = getJndiName( persistenceUnit.unitName(), null, persistenceUnit.name() );
@@ -348,7 +317,7 @@ public class InjectionServicesImpl implements InjectionServices {
         return lookupName;
     }
 
-    private String getJndiName( String lookup, String mappedName, String name ) {
+    static String getJndiName( String lookup, String mappedName, String name ) {
         String jndiName = lookup;
         if ( jndiName == null || jndiName.length() == 0 ) {
             jndiName = mappedName;
@@ -360,7 +329,20 @@ public class InjectionServicesImpl implements InjectionServices {
         return jndiName;
     }
 
-
+    private WsInjectionHandler getWsHandler() {
+        if (wsHandler == null) {
+            try {
+                //TODO: define this properly so that the ServiceLocator can be used instead
+                // and (optional) dependency on webservices-apis can be dropped
+                wsHandler = (WsInjectionHandler) Class.forName("org.glassfish.weld.services.WsInjectionHandlerImpl").getConstructor().newInstance();
+            } catch (ReflectiveOperationException | SecurityException t) {
+                // not loaded due to missing jakarta.xml.ws packages => likely web profile
+                // let's use noop handler
+                wsHandler = WsInjectionHandler.NOOP;
+            }
+        }
+        return wsHandler;
+    }
 
     public void cleanup() {
 

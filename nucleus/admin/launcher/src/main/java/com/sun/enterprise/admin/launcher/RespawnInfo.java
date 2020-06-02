@@ -16,19 +16,28 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  *
  * @author bnevins
  */
 class RespawnInfo {
+
+    private String classname;
+    private String classpath;
+    private String[] args;
+
+    private static final String PREFIX = "-asadmin-";
+    private static final String SEPARATOR = ",,,";
+
     RespawnInfo(String cn, String cp, String[] a) {
         classname = cn;
         classpath = cp;
 
-        if(a == null)
+        if (a == null) {
             a = new String[0];
+        }
 
         args = a;
     }
@@ -41,26 +50,30 @@ class RespawnInfo {
     }
 
     private void validate() throws GFLauncherException {
-        if(!ok(classname))
+        if (!ok(classname)) {
             throw new GFLauncherException("respawninfo.empty", "classname");
-        if(!ok(classpath))
+        }
+        if (!ok(classpath))
+         {
             throw new GFLauncherException("respawninfo.empty", "classpath");
         // args are idiot-proof
+        }
     }
 
     private void putArgs(Map<String, String> map) throws GFLauncherException {
         int numArgs = args.length;
         StringBuilder argLine = new StringBuilder();
 
-        for(int i = 0; i < numArgs; i++) {
+        for (int i = 0; i < numArgs; i++) {
             String arg = args[i];
 
-            if(i != 0)
+            if (i != 0) {
                 argLine.append(SEPARATOR);
+            }
 
-            if(arg.indexOf(SEPARATOR) >= 0) {
-                // this should not happen.  Only the ultra-paranoid programmer would
-                // bother checking for it.  I guess that's me!
+            if (arg.indexOf(SEPARATOR) >= 0) {
+                // this should not happen. Only the ultra-paranoid programmer would
+                // bother checking for it. I guess that's me!
                 throw new GFLauncherException("respawninfo.illegalToken", arg, SEPARATOR);
             }
             argLine.append(args[i]);
@@ -68,15 +81,9 @@ class RespawnInfo {
 
         map.put(PREFIX + "args", argLine.toString());
     }
-    
+
     private boolean ok(String s) {
         return s != null && s.length() > 0;
     }
 
-    private String      classname;
-    private String      classpath;
-    private String[]    args;
-
-    private static final String PREFIX = "-asadmin-";
-    private static final String SEPARATOR = ",,,";
 }

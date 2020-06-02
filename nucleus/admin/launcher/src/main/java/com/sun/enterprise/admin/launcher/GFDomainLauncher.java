@@ -16,62 +16,69 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.universal.io.SmartFile;
+import static com.sun.enterprise.universal.io.SmartFile.sanitize;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+
 import java.io.File;
-import java.util.*;
-import static com.sun.enterprise.util.SystemPropertyConstants.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * GFDomainLauncher
- * This class is a package-private subclass of GFLauncher designed for
- * domain launching
+ * GFDomainLauncher This class is a package-private subclass of GFLauncher designed for domain launching
+ *
  * @author bnevins
  */
 class GFDomainLauncher extends GFLauncher {
+
+
+    /* sample profiler config
+     *
+           <java-config classpath-suffix="" debug-enabled="false" debug-options="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009" env-classpath-ignored="true" java-home="${com.sun.aas.javaRoot}" javac-options="-g" rmic-options="-iiop -poa -alwaysgenerate -keepgenerated -g" system-classpath="">
+            <profiler classpath="c:/dev/elf/dist/elf.jar" enabled="false" name="MyProfiler" native-library-path="c:/bin">
+              <jvm-options>-Dprofiler3=foo3</jvm-options>
+              <jvm-options>-Dprofiler2=foo2</jvm-options>
+              <jvm-options>-Dprofiler1=foof</jvm-options>
+            </profiler>
+     */
+
+    private static final String MAIN_CLASS = "com.sun.enterprise.glassfish.bootstrap.ASMain";
+    private static final String BOOTSTRAP_JAR = "glassfish.jar";
 
     GFDomainLauncher(GFLauncherInfo info) {
         super(info);
     }
 
+    @Override
     void internalLaunch() throws GFLauncherException {
         try {
             launchInstance();
-        }
-        catch (GFLauncherException ex) {
+        } catch (GFLauncherException ex) {
             throw ex;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new GFLauncherException(ex);
         }
     }
 
+    @Override
     List<File> getMainClasspath() throws GFLauncherException {
-        List<File> list = new ArrayList<File>();
-        File dir = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY),"modules");
+        List<File> list = new ArrayList<>();
+        File dir = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY), "modules");
 
         File bootjar = new File(dir, BOOTSTRAP_JAR);
-        if (!bootjar.exists() && !isFakeLaunch())
+        if (!bootjar.exists() && !isFakeLaunch()) {
             throw new GFLauncherException("nobootjar", dir.getPath());
+        }
 
-        if(bootjar.exists())
-            list.add(SmartFile.sanitize(bootjar));
+        if (bootjar.exists()) {
+            list.add(sanitize(bootjar));
+        }
 
         return list;
     }
 
+    @Override
     String getMainClass() throws GFLauncherException {
         return MAIN_CLASS;
     }
-    private static final String MAIN_CLASS = "com.sun.enterprise.glassfish.bootstrap.ASMain";
-    private static final String BOOTSTRAP_JAR = "glassfish.jar";
-}
 
-/* sample profiler config
- * 
-       <java-config classpath-suffix="" debug-enabled="false" debug-options="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009" env-classpath-ignored="true" java-home="${com.sun.aas.javaRoot}" javac-options="-g" rmic-options="-iiop -poa -alwaysgenerate -keepgenerated -g" system-classpath="">
-        <profiler classpath="c:/dev/elf/dist/elf.jar" enabled="false" name="MyProfiler" native-library-path="c:/bin">
-          <jvm-options>-Dprofiler3=foo3</jvm-options>
-          <jvm-options>-Dprofiler2=foo2</jvm-options>
-          <jvm-options>-Dprofiler1=foof</jvm-options>
-        </profiler>
- */
+}

@@ -16,46 +16,51 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.universal.io.SmartFile;
-import java.io.*;
-import java.util.*;
-import static com.sun.enterprise.util.SystemPropertyConstants.*;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sun.enterprise.universal.io.SmartFile;
 
 /**
  *
  * @author bnevins
  */
-class GFInstanceLauncher extends GFLauncher{
+class GFInstanceLauncher extends GFLauncher {
+
+    private static final String MAIN_CLASS = "com.sun.enterprise.glassfish.bootstrap.ASMain";
+    private static final String BOOTSTRAP_JAR = "glassfish.jar";
 
     GFInstanceLauncher(GFLauncherInfo info) {
         super(info);
     }
-    
+
     @Override
     void internalLaunch() throws GFLauncherException {
         try {
             launchInstance();
-        }
-        catch (GFLauncherException ex) {
+        } catch (GFLauncherException ex) {
             throw ex;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new GFLauncherException(ex);
         }
     }
 
     @Override
     List<File> getMainClasspath() throws GFLauncherException {
-        List<File> list = new ArrayList<File>();
-        File dir = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY),"modules");
+        List<File> list = new ArrayList<>();
+        File dir = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY), "modules");
 
         File bootjar = new File(dir, BOOTSTRAP_JAR);
-        if (!bootjar.exists() && !isFakeLaunch())
+        if (!bootjar.exists() && !isFakeLaunch()) {
             throw new GFLauncherException("nobootjar", dir.getPath());
+        }
 
-        if(bootjar.exists())
+        if (bootjar.exists()) {
             list.add(SmartFile.sanitize(bootjar));
+        }
 
         return list;
     }
@@ -64,7 +69,5 @@ class GFInstanceLauncher extends GFLauncher{
     String getMainClass() throws GFLauncherException {
         return MAIN_CLASS;
     }
-    
-    private static final String MAIN_CLASS = "com.sun.enterprise.glassfish.bootstrap.ASMain";
-    private static final String BOOTSTRAP_JAR = "glassfish.jar";
+
 }

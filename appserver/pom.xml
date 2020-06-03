@@ -103,7 +103,7 @@
 
         <!-- Jakarta WebSocket -->
         <websocket-api.version>2.0.0-M1</websocket-api.version>
-        <tyrus.version>2.0.0-M1</tyrus.version>
+        <tyrus.version>2.0.0-M2</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <concurrent-api.version>2.0.0-RC2</concurrent-api.version>
@@ -134,8 +134,8 @@
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.0.0-M2</jakarta.batch-api.version>
-        <com.ibm.jbatch.container.version>2.0.0-M1</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>2.0.0-M1</com.ibm.jbatch.spi.version>
+        <com.ibm.jbatch.container.version>2.0.0-M3</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0-M3</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
         <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>
@@ -152,15 +152,15 @@
         <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>5.1.0</woodstox.version>
-        <stax2-api.version>4.1</stax2-api.version>
+        <woodstox.version>5.3.0</woodstox.version>
+        <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0-RC1</jstl-api.version>
         <jstl-impl.version>2.0.0-M1</jstl-impl.version>
 
         <!-- CDI -->
-        <cdi-api.version>3.0.0-M3</cdi-api.version>
+        <cdi-api.version>3.0.0-M4</cdi-api.version>
         <weld.version>4.0.0.Alpha2</weld.version>
         <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
 
@@ -552,6 +552,11 @@
                 <groupId>com.sun.woodstock.dependlibs</groupId>
                 <artifactId>prototype</artifactId>
                 <version>1.7.3</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.7</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>

@@ -16,19 +16,43 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.util.io.FileUtils;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
+import com.sun.enterprise.util.io.FileUtils;
 
 /**
  *
  * @author Byron Nevins
  */
 class GFEmbeddedLauncher extends GFLauncher {
+
+    private boolean setup = false;
+    private File gfeJar, runServerJar;
+    private File installDir;
+    private File javaExe;
+    private File domainDir;
+    private String javaDbClassPath, logFilename;
+    private static final String GFE_RUNSERVER_JAR = "GFE_RUNSERVER_JAR";
+    private static final String GFE_RUNSERVER_CLASS = "GFE_RUNSERVER_CLASS";
+    private static final String GFE_JAR = "GFE_JAR";
+    private static final String INSTALL_HOME = "S1AS_HOME";
+    private static final String JAVA_HOME = "JAVA_HOME";
+    // private static final String DOMAIN_DIR = "GFE_DOMAIN";
+    private static final String GENERAL_MESSAGE = " *********  GENERAL MESSAGE ********\n"
+            + "You must setup four different environmental variables to run embedded" + " with asadmin.  They are\n" + "GFE_JAR - path to the embedded jar\n"
+            + "S1AS_HOME - path to installation directory.  This can be empty or not exist yet.\n"
+            + "JAVA_HOME - path to a JDK installation.  JRE installation is generally not good enough\n"
+            + "GFE_DEBUG_PORT - optional debugging port.  It will start suspended.\n" + "\n*********  SPECIFIC MESSAGE ********\n";
+
+    private String[] DERBY_FILES = { "derby.jar", "derbyclient.jar", };
+
+
     public GFEmbeddedLauncher(GFLauncherInfo info) {
         super(info);
 
@@ -38,8 +62,7 @@ class GFEmbeddedLauncher extends GFLauncher {
     void internalLaunch() throws GFLauncherException {
         try {
             launchInstance();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new GFLauncherException(ex);
         }
     }
@@ -52,8 +75,9 @@ class GFEmbeddedLauncher extends GFLauncher {
     @Override
     String getMainClass() throws GFLauncherException {
         String className = System.getenv(GFE_RUNSERVER_CLASS);
-        if (className == null)
+        if (className == null) {
             return "org.glassfish.tests.embedded.EmbeddedMain";
+        }
         return className;
     }
 
@@ -62,25 +86,23 @@ class GFEmbeddedLauncher extends GFLauncher {
         // remember -- this is designed exclusively for SQE usage
         // don't do it mmore than once -- that would be silly!
 
-
-        if (setup)
+        if (setup) {
             return;
-        else
+        } else {
             setup = true;
+        }
 
         try {
             setupFromEnv();
-        }
-        catch (GFLauncherException gfle) {
-            String msg = "";
+        } catch (GFLauncherException gfle) {
             throw new GFLauncherException(GENERAL_MESSAGE + gfle.getMessage());
         }
 
         setCommandLine();
 
-        /* it is NOT an error for there to be no domain.xml (yet).
-         * so eat exceptions.  Also just set the default to 4848 if we don't find
-         * the port...
+        /*
+         * it is NOT an error for there to be no domain.xml (yet). so eat exceptions. Also just set the default to 4848 if we
+         * don't find the port...
          */
 
         GFLauncherInfo info = getInfo();
@@ -90,8 +112,9 @@ class GFEmbeddedLauncher extends GFLauncher {
             String domainName = info.getDomainName();
             String instanceName = info.getInstanceName();
 
-            if (instanceName == null)
+            if (instanceName == null) {
                 instanceName = "server";
+            }
 
             File dom = new File(parent, domainName);
             File theConfigDir = new File(dom, "config");
@@ -105,8 +128,7 @@ class GFEmbeddedLauncher extends GFLauncher {
             logFile = new File(logFile, "server.log");
             logFilename = logFile.getAbsolutePath();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // temp todo
             e.printStackTrace();
         }
@@ -114,23 +136,21 @@ class GFEmbeddedLauncher extends GFLauncher {
         List<HostAndPort> adminAddresses = info.getAdminAddresses();
 
         if (adminAddresses == null || adminAddresses.isEmpty()) {
-            adminAddresses = new ArrayList<HostAndPort>();
+            adminAddresses = new ArrayList<>();
             adminAddresses.add(new HostAndPort("localhost", 4848, false));
             info.setAdminAddresses(adminAddresses);
         }
         GFLauncherLogger.addLogFileHandler(getLogFilename(), info);
 
-        //super.fixLogFilename();
+        // super.fixLogFilename();
 
-    /*
-    String domainName = parser.getDomainName();
-    if(GFLauncherUtils.ok(domainName)) {
-    info.setDomainName(domainName);
-    }
-     */
+        /*
+         * String domainName = parser.getDomainName(); if(GFLauncherUtils.ok(domainName)) { info.setDomainName(domainName); }
+         */
 
     }
 
+    @Override
     public String getLogFilename() throws GFLauncherException {
         return logFilename;
     }
@@ -138,8 +158,9 @@ class GFEmbeddedLauncher extends GFLauncher {
     @Override
     void setClasspath() {
         String classPath = gfeJar.getPath() + File.pathSeparator + javaDbClassPath;
-        if (runServerJar != null)
+        if (runServerJar != null) {
             classPath = classPath + File.pathSeparator + runServerJar.getPath();
+        }
         setClasspath(classPath);
     }
 
@@ -168,8 +189,7 @@ class GFEmbeddedLauncher extends GFLauncher {
 
         if (ok(debugPort)) {
             suspend = "y";
-        }
-        else {
+        } else {
             debugPort = "12345";
             suspend = "n";
         }
@@ -188,7 +208,7 @@ class GFEmbeddedLauncher extends GFLauncher {
 
         cmdLine.add("-XX:+UnlockDiagnosticVMOptions");
         cmdLine.add("-XX:+LogVMOutput");
-        cmdLine.add("-XX:LogFile="      + jvmLogFile.getPath());
+        cmdLine.add("-XX:LogFile=" + jvmLogFile.getPath());
     }
 
     private void setupFromEnv() throws GFLauncherException {
@@ -206,71 +226,76 @@ class GFEmbeddedLauncher extends GFLauncher {
         domainDir = getInfo().getDomainParentDir();
         domainDir = new File(domainDir, domainDirName);
 
-        if (!FileUtils.mkdirsMaybe(domainDir))
+        if (!FileUtils.mkdirsMaybe(domainDir)) {
             throw new GFLauncherException("Can not create directory: " + domainDir);
+        }
 
         domainDir = SmartFile.sanitize(domainDir);
     }
 
     private void setupJDK() throws GFLauncherException {
-        String err = "You must set the environmental variable JAVA_HOME to point " +
-                "at a valid JDK.  <jdk>/bin/javac[.exe] must exist.";
+        String err = "You must set the environmental variable JAVA_HOME to point " + "at a valid JDK.  <jdk>/bin/javac[.exe] must exist.";
 
         String jdkDirName = System.getenv(JAVA_HOME);
-        if (!ok(jdkDirName))
+        if (!ok(jdkDirName)) {
             throw new GFLauncherException(err);
+        }
 
         File jdkDir = new File(jdkDirName);
 
-        if (!jdkDir.isDirectory())
+        if (!jdkDir.isDirectory()) {
             throw new GFLauncherException(err);
+        }
 
-        if (File.separatorChar == '\\')
+        if (File.separatorChar == '\\') {
             javaExe = new File(jdkDir, "bin/java.exe");
-        else
+        } else {
             javaExe = new File(jdkDir, "bin/java");
+        }
 
-        if (!javaExe.isFile())
+        if (!javaExe.isFile()) {
             throw new GFLauncherException(err);
+        }
 
         javaExe = SmartFile.sanitize(javaExe);
     }
 
     private void setupInstallationDir() throws GFLauncherException {
-        String err = "You must set the environmental variable S1AS_HOME to point " +
-                "at a GlassFish installation or at an empty directory or at a " +
-                "location where an empty directory can be created.";
+        String err = "You must set the environmental variable S1AS_HOME to point " + "at a GlassFish installation or at an empty directory or at a "
+                + "location where an empty directory can be created.";
         String installDirName = System.getenv(INSTALL_HOME);
 
-        if (!ok(installDirName))
+        if (!ok(installDirName)) {
             throw new GFLauncherException(err);
+        }
 
         installDir = new File(installDirName);
 
-        if(!FileUtils.mkdirsMaybe(installDir))
+        if (!FileUtils.mkdirsMaybe(installDir)) {
             throw new GFLauncherException(err);
+        }
 
         installDir = SmartFile.sanitize(installDir);
     }
 
     private void setupEmbeddedJars() throws GFLauncherException {
-        String err = "You must set the environmental variable GFE_JAR to point " +
-                "at the Embedded jarfile.";
+        String err = "You must set the environmental variable GFE_JAR to point " + "at the Embedded jarfile.";
 
         String gfeJarName = System.getenv(GFE_JAR);
 
-        if (!ok(gfeJarName))
+        if (!ok(gfeJarName)) {
             throw new GFLauncherException(err);
+        }
 
         gfeJar = new File(gfeJarName);
 
-        if (!gfeJar.isFile() || gfeJar.length() < 1000000L)
+        if (!gfeJar.isFile() || gfeJar.length() < 1000000L) {
             throw new GFLauncherException(err);
+        }
 
         gfeJar = SmartFile.sanitize(gfeJar);
 
-         err = "You must set the environmental variable GFE_RUNSERVER_JAR to point " +
-                "at the server startup jar.";
+        err = "You must set the environmental variable GFE_RUNSERVER_JAR to point " + "at the server startup jar.";
 
         String runServerJarName = System.getenv(GFE_RUNSERVER_JAR);
 
@@ -280,8 +305,9 @@ class GFEmbeddedLauncher extends GFLauncher {
             }
             runServerJar = new File(runServerJarName);
 
-            if (!runServerJar.isFile())
+            if (!runServerJar.isFile()) {
                 throw new GFLauncherException(err);
+            }
 
             runServerJar = SmartFile.sanitize(runServerJar);
         }
@@ -290,61 +316,38 @@ class GFEmbeddedLauncher extends GFLauncher {
 
     private void setupJavaDB() throws GFLauncherException {
         // It normally will be in either:
-        //  * install-dir/javadb/lib
-        //  * install-dir/../javadb/lib
+        // * install-dir/javadb/lib
+        // * install-dir/../javadb/lib
 
         String relPath = "javadb/lib";
         File derbyLib = new File(installDir, relPath);
 
-        if(!derbyLib.isDirectory())
+        if (!derbyLib.isDirectory()) {
             derbyLib = new File(installDir.getParentFile(), relPath);
+        }
 
-        if(!derbyLib.isDirectory())
+        if (!derbyLib.isDirectory()) {
             throw new GFLauncherException("Could not find the JavaDB lib directory.");
+        }
 
-        // we have a valid directory.  Let's verify the right jars are there!
+        // we have a valid directory. Let's verify the right jars are there!
 
         javaDbClassPath = "";
-        boolean firstItem = true;
-        for(String fname : DERBY_FILES) {
+        for (String fname : DERBY_FILES) {
             File f = new File(derbyLib, fname);
 
             javaDbClassPath += File.pathSeparator;
             javaDbClassPath += f.getPath();
 
-            if(!f.exists())
+            if (!f.exists()) {
                 throw new GFLauncherException("Could not find the JavaDB jar: " + f);
+            }
         }
     }
 
     private boolean ok(String s) {
         return s != null && s.length() > 0;
     }
-    private boolean setup = false;
-    private File gfeJar, runServerJar;
-    private File installDir;
-    private File javaExe;
-    private File domainDir;
-    private String javaDbClassPath, logFilename;
-    private static final String GFE_RUNSERVER_JAR = "GFE_RUNSERVER_JAR";
-    private static final String GFE_RUNSERVER_CLASS = "GFE_RUNSERVER_CLASS";
-    private static final String GFE_JAR = "GFE_JAR";
-    private static final String INSTALL_HOME = "S1AS_HOME";
-    private static final String JAVA_HOME = "JAVA_HOME";
-    //private static final String DOMAIN_DIR       = "GFE_DOMAIN";
-    private static final String GENERAL_MESSAGE =
-            " *********  GENERAL MESSAGE ********\n" +
-            "You must setup four different environmental variables to run embedded" +
-            " with asadmin.  They are\n" +
-            "GFE_JAR - path to the embedded jar\n" +
-            "S1AS_HOME - path to installation directory.  This can be empty or not exist yet.\n" +
-            "JAVA_HOME - path to a JDK installation.  JRE installation is generally not good enough\n" +
-            "GFE_DEBUG_PORT - optional debugging port.  It will start suspended.\n" +
-            "\n*********  SPECIFIC MESSAGE ********\n";
 
-    private String[] DERBY_FILES =
-    {
-        "derby.jar",
-        "derbyclient.jar",
-    };
+
 }

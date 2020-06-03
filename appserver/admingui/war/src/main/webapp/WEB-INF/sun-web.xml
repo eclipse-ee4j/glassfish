@@ -37,6 +37,6 @@
 	<parameter-encoding default-charset="UTF-8" />
  </locale-charset-info>
 
-<class-loader delegate="true" extra-class-path="WEB-INF/extra/woodstock-webui-jsf-suntheme-5.0.0-M1.jar:WEB-INF/extra/dojo-ajax-nodemo-1.12.4.jar:WEB-INF/extra/woodstock-webui-jsf-5.0.0-M1.jar:WEB-INF/extra/json-2.0.jar:WEB-INF/extra/prototype-1.7.3.jar" />
+<class-loader delegate="true" extra-class-path="WEB-INF/extra/woodstock-webui-jsf-suntheme-5.0.0-M1.jar:WEB-INF/extra/dojo-ajax-nodemo-1.12.4.jar:WEB-INF/extra/woodstock-webui-jsf-5.0.0-M1.jar:WEB-INF/extra/json-2.0.jar:WEB-INF/extra/prototype-1.7.3.jar:WEB-INF/extra/commons-io-2.7.jar" />
 
 </sun-web-app>

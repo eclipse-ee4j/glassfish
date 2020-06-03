@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,36 +22,43 @@
 
 package org.glassfish.webservices.monitoring;
 
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.tools.ws.spi.WSToolsObjectFactory;
-import org.glassfish.jaxb.runtime.api.JAXBRIContext;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.glassfish.jaxb.runtime.api.JAXBRIContext;
+import org.glassfish.webservices.LogUtils;
+
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.tools.ws.spi.WSToolsObjectFactory;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.xml.ws.Service;
 import jakarta.xml.ws.WebEndpoint;
-import java.io.*;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.webservices.WebServiceContractImpl;
-import com.sun.enterprise.module.*;
-import org.glassfish.webservices.LogUtils;
 
 /**
  * This servlet is responsible for testing web-services.
@@ -571,15 +578,14 @@ public class WebServiceTesterServlet extends HttpServlet {
             logger.log(Level.SEVERE, LogUtils.CREATE_DIR_FAILED, classesDir);
         }
 
-        String[] wsimportArgs = new String[8];
+        String[] wsimportArgs = new String[7];
         wsimportArgs[0]="-d";
         wsimportArgs[1]=classesDir.getAbsolutePath();
         wsimportArgs[2]="-keep";
         wsimportArgs[3]=wsdlLocation.toExternalForm();
-        wsimportArgs[4]="-Xendorsed";
-        wsimportArgs[5]="-target";
-        wsimportArgs[6]="2.1";
-        wsimportArgs[7]="-extension";
+        wsimportArgs[4]="-target";
+        wsimportArgs[5]="2.1";
+        wsimportArgs[6]="-extension";
         WSToolsObjectFactory tools = WSToolsObjectFactory.newInstance();
         logger.log(Level.INFO, LogUtils.WSIMPORT_INVOKE, wsdlLocation);
         boolean success = tools.wsimport(System.out, wsimportArgs);

@@ -16,9 +16,8 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.api.admin.RuntimeType;
+import static com.sun.enterprise.admin.launcher.GFLauncherLogger.LAUNCH_FAILURE;
+import static org.glassfish.api.admin.RuntimeType.DAS;
 
 /**
  *
@@ -27,18 +26,16 @@ import org.glassfish.api.admin.RuntimeType;
 public class GFLauncherMain {
 
     /**
-     * JAVADOC IS PENDING FINAL API OF THE ARGS
+     *
      * @param args
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         try {
-            GFLauncher launcher = GFLauncherFactory.getInstance(RuntimeType.DAS);
+            GFLauncher launcher = GFLauncherFactory.getInstance(DAS);
             launcher.getInfo().addArgs(args);
             launcher.launch();
-        }
-        catch (GFLauncherException ex) {
-            GFLauncherLogger.severe(GFLauncherLogger.LAUNCH_FAILURE, ex);
+        } catch (GFLauncherException ex) {
+            GFLauncherLogger.severe(LAUNCH_FAILURE, ex);
         }
     }
 }

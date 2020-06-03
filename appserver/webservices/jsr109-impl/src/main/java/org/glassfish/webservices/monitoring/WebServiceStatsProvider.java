@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,46 +16,51 @@
 
 package org.glassfish.webservices.monitoring;
 
-import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.Statistic;
 import org.glassfish.external.statistics.Stats;
-import org.glassfish.gmbal.*;
+import org.glassfish.gmbal.AMXMetadata;
+import org.glassfish.gmbal.Description;
+import org.glassfish.gmbal.ManagedAttribute;
+import org.glassfish.gmbal.ManagedData;
+import org.glassfish.gmbal.ManagedObject;
+import org.glassfish.gmbal.ManagedOperation;
 import org.glassfish.webservices.deployment.DeployedEndpointData;
 
-import javax.servlet.ServletContext;
-import java.util.*;
-import java.util.logging.Level;
-import org.glassfish.webservices.LogUtils;
+import jakarta.servlet.ServletContext;
+import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
 
 /**
  * Provides statistics for Web Service endpoints.
  * 
- * For deployment - keeps track of 109 and sun-jaxws.xml style deployed
- * applications.
+ * For deployment - keeps track of 109 and sun-jaxws.xml style deployed applications.
  *
  * @author Jitendra Kotamraju
  */
-@AMXMetadata(type="web-service-mon", group="monitoring")
+@AMXMetadata(type = "web-service-mon", group = "monitoring")
 @ManagedObject
 @Description("Stats for Web Services deployed")
 public class WebServiceStatsProvider {
 
     // path (context path+url-pattern) --> deployed data
-    private final Map<String, DeployedEndpointData> endpoints =
-            new HashMap<String, DeployedEndpointData>();
+    private final Map<String, DeployedEndpointData> endpoints = new HashMap<String, DeployedEndpointData>();
 
     // Only RI endpoints
-    private final Map<String, List<DeployedEndpointData>> riEndpoints =
-            new HashMap<String, List<DeployedEndpointData>>();
+    private final Map<String, List<DeployedEndpointData>> riEndpoints = new HashMap<String, List<DeployedEndpointData>>();
 
     // sun-jaxws.xml deployment
     @ProbeListener("glassfish:webservices:deployment-ri:deploy")
-    public synchronized void riDeploy(@ProbeParam("adapter")ServletAdapter adapter) {
+    public synchronized void riDeploy(@ProbeParam("adapter") ServletAdapter adapter) {
         String contextPath = adapter.getServletContext().getContextPath();
-        String path = contextPath+adapter.getValidPath();
+        String path = contextPath + adapter.getValidPath();
         DeployedEndpointData data = endpoints.get(path);
         if (data == null) {
             data = new DeployedEndpointData(path, adapter);
@@ -72,20 +77,19 @@ public class WebServiceStatsProvider {
 
     // sun-jaxws.xml undeployment
     @ProbeListener("glassfish:webservices:deployment-ri:undeploy")
-    public synchronized void riUndeploy(@ProbeParam("adapter")ServletAdapter adapter) {
-        LogUtils.getLogger().log(Level.SEVERE, "!!! TODO: UNCOMMENT LINE(S) BELLOW !!! ({0})", WebServiceStatsProvider.class.getName());
-//        ServletContext ctxt = adapter.getServletContext();
-//        String name = ctxt.getContextPath()+adapter.getValidPath();
-//        DeployedEndpointData data = endpoints.remove(name);
-//
-//        String contextPath = adapter.getServletContext().getContextPath();
-//        List<DeployedEndpointData> ri = riEndpoints.get(contextPath);
-//        if (ri != null) {
-//            ri.remove(data);
-//            if (ri.isEmpty()) {
-//                riEndpoints.remove(contextPath);
-//            }
-//        }
+    public synchronized void riUndeploy(@ProbeParam("adapter") ServletAdapter adapter) {
+        ServletContext ctxt = adapter.getServletContext();
+        String name = ctxt.getContextPath()+adapter.getValidPath();
+        DeployedEndpointData data = endpoints.remove(name);
+
+        String contextPath = adapter.getServletContext().getContextPath();
+        List<DeployedEndpointData> ri = riEndpoints.get(contextPath);
+        if (ri != null) {
+            ri.remove(data);
+            if (ri.isEmpty()) {
+                riEndpoints.remove(contextPath);
+            }
+        }
     }
 
     // admin CLI doesn't pick-up Collection<DeployedEndpointData>. Hence
@@ -102,10 +106,11 @@ public class WebServiceStatsProvider {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         List<DeployedEndpointData> ri = riEndpoints.get(contextPath);
         if (ri != null) {
-            for(DeployedEndpointData de : ri) {
+            for (DeployedEndpointData de : ri) {
                 list.add(de.getStaticAsMap());
             }
         }
+        
         return list;
     }
 
@@ -116,7 +121,7 @@ public class WebServiceStatsProvider {
         final DeployedEndpointData[] data;
 
         MyStats(Map<String, DeployedEndpointData> curEndpoints) {
-            endpoints.putAll(curEndpoints);     // Take a snapshot of current endpoints
+            endpoints.putAll(curEndpoints); // Take a snapshot of current endpoints
             data = this.endpoints.values().toArray(new DeployedEndpointData[endpoints.size()]);
         }
 

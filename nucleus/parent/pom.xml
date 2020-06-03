@@ -108,7 +108,7 @@
         <jersey.version>3.0.0-M4</jersey.version>
         
         <!-- Jakarta Mail -->
-        <mail.version>2.0.0-RC5</mail.version>
+        <mail.version>2.0.0-RC6</mail.version>
         
         <!-- Jakarta Activation -->
         <activation.version>2.0.0-RC3</activation.version>

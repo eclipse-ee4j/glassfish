@@ -38,7 +38,7 @@
 <sun:head id="propertyhead" title="$resource{i18nc.logViewerRaw.PageTitle}" debug="false" parseOnLoad="false">
 	<h:outputScript name="jsf.js" library="jakarta.faces" target="head" />  
     <sun:script url="/resource/common/js/adminjsf.js" />
-</sun:head>
+</sun:head>s
 <sun:body onLoad="javascript: logViewerRaw('/download/log/?contentSourceId=LogViewer&start=0&instanceName=#{pageSession.encodedInstanceName}&restUrl=' + encodeURIComponent('#{sessionScope.REST_URL}'))" id="body3">
 <sun:form id="propertyForm">
 #include "/common/shared/alertMsg_1.inc"

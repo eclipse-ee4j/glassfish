@@ -1365,9 +1365,15 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
+            <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <optional>true</optional>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jettison</groupId>

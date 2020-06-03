@@ -215,7 +215,7 @@ spec:
               
               bash -xe ./gfbuild.sh build_re_dev
             '''
-            // archiveArtifacts artifacts: 'bundles/*.zip'
+            archiveArtifacts artifacts: 'bundles/*.zip'
             // junit testResults: 'test-results/build-unit-tests/results/junitreports/test_results_junit.xml'
             stash includes: 'bundles/*', name: 'build-bundles'
           }

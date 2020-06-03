@@ -16,15 +16,22 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
-import com.sun.enterprise.admin.cli.CLIConstants;
-import com.sun.enterprise.admin.cli.Environment;
-import com.sun.enterprise.admin.cli.ProgramOptions;
-import com.sun.enterprise.util.OS;
+import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
+import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
+import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
+import static com.sun.enterprise.util.StringUtils.ok;
+import static com.sun.enterprise.util.net.NetUtils.isRunning;
+import static java.util.logging.Level.FINER;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.logging.Logger;
+
+import org.glassfish.api.admin.CommandException;
+
+import com.sun.enterprise.admin.cli.CLIUtil;
+import com.sun.enterprise.admin.cli.Environment;
 import com.sun.enterprise.admin.launcher.GFLauncher;
 import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
@@ -34,40 +41,57 @@ import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.ServerDirs;
 import com.sun.enterprise.util.net.NetUtils;
-import org.glassfish.api.admin.CommandException;
-import static com.sun.enterprise.util.StringUtils.ok;
-import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
-import com.sun.enterprise.admin.cli.CLIUtil;
 
 /**
- * Java does not allow multiple inheritance.  Both StartDomainCommand and
- * StartInstanceCommand have common code but they are already in a different
- * hierarchy of classes.  The first common baseclass is too far away -- e.g.
- * no "launcher" variable, etc.
+ * Java does not allow multiple inheritance. Both StartDomainCommand and StartInstanceCommand have common code but they
+ * are already in a different hierarchy of classes. The first common baseclass is too far away -- e.g. no "launcher"
+ * variable, etc.
  *
- * Instead -- put common code in here and call it as common utilities
- * This class is designed to be thread-safe and IMMUTABLE
+ * Instead -- put common code in here and call it as common utilities This class is designed to be thread-safe and
+ * IMMUTABLE
+ *
  * @author bnevins
  */
 public class StartServerHelper {
-    public StartServerHelper(Logger logger0, boolean terse0,
-            ServerDirs serverDirs0, GFLauncher launcher0,
-            String masterPassword0, boolean debug0) {
-        logger = logger0;
-        terse = terse0;
-        launcher = launcher0;
+
+    // only set when actively trouble-shooting or investigating...
+    private static final boolean DEBUG_MESSAGES_ON = false;
+    private static final LocalStringsImpl strings = new LocalStringsImpl(StartServerHelper.class);
+
+    private final boolean terse;
+    private final GFLauncher launcher;
+    private final Logger logger;
+    private final File pidFile;
+    private final GFLauncherInfo info;
+    private final List<HostAndPort> addresses;
+    private final ServerDirs serverDirs;
+    private final String masterPassword;
+    private final String serverOrDomainName;
+    private final int debugPort;
+    private final boolean isDebugSuspend;
+    
+    public StartServerHelper(Logger logger, boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword) {
+        this(logger, terse, serverDirs, launcher, masterPassword, false);
+    }
+
+
+    public StartServerHelper(Logger logger, boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword, boolean debug) {
+        this.logger = logger;
+        this.terse = terse;
+        this.launcher = launcher;
         info = launcher.getInfo();
 
-        if (info.isDomain())
+        if (info.isDomain()) {
             serverOrDomainName = info.getDomainName();
-        else
+        } else {
             serverOrDomainName = info.getInstanceName();
+        }
 
         addresses = info.getAdminAddresses();
-        serverDirs = serverDirs0;
+        this.serverDirs = serverDirs;
         pidFile = serverDirs.getPidFile();
-        masterPassword = masterPassword0;
-        debug = debug0;
+        this.masterPassword = masterPassword;
+        
         // it will be < 0 if both --debug is false and debug-enabled=false in jvm-config
         debugPort = launcher.getDebugPort();
         isDebugSuspend = launcher.isDebugSuspend();
@@ -77,7 +101,6 @@ public class StartServerHelper {
         }
     }
 
-    // TODO check the i18n messages
     public void waitForServer() throws CommandException {
         long startWait = System.currentTimeMillis();
         if (!terse) {
@@ -88,79 +111,74 @@ public class StartServerHelper {
         boolean alive = false;
         int count = 0;
 
-        pinged:
-        while (!timedOut(startWait)) {
+        pinged: while (!timedOut(startWait)) {
             if (pidFile != null) {
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(FINER)) {
                     logger.finer("Check for pid file: " + pidFile);
+                }
                 if (pidFile.exists()) {
                     alive = true;
                     break pinged;
                 }
-            }
-            else {
-                // first, see if the admin port is responding
+            } else {
+                // First, see if the admin port is responding
                 // if it is, the DAS is up
-                for (HostAndPort addr : addresses) {
-                    if (NetUtils.isRunning(addr.getHost(), addr.getPort())) {
+                for (HostAndPort address : addresses) {
+                    if (isRunning(address.getHost(), address.getPort())) {
                         alive = true;
                         break pinged;
                     }
                 }
             }
 
-            // check to make sure the DAS process is still running
+            // Check to make sure the DAS process is still running
             // if it isn't, startup failed
             try {
-                Process p = launcher.getProcess();
-                int exitCode = p.exitValue();
+                Process glassFishProcess = launcher.getProcess();
+                int exitCode = glassFishProcess.exitValue();
                 // uh oh, DAS died
                 String sname;
 
-                if (info.isDomain())
+                if (info.isDomain()) {
                     sname = "domain " + info.getDomainName();
-                else
+                } else {
                     sname = "instance " + info.getInstanceName();
+                }
 
                 ProcessStreamDrainer psd = launcher.getProcessStreamDrainer();
                 String output = psd.getOutErrString();
-                if (ok(output))
-                    throw new CommandException(strings.get("serverDiedOutput",
-                            sname, exitCode, output));
-                else
-                    throw new CommandException(strings.get("serverDied",
-                            sname, exitCode));
-            }
-            catch (GFLauncherException ex) {
-                // should never happen
-            }
-            catch (IllegalThreadStateException ex) {
-                // process is still alive
-            }
+                if (ok(output)) {
+                    throw new CommandException(strings.get("serverDiedOutput", sname, exitCode, output));
+                } else {
+                    throw new CommandException(strings.get("serverDied", sname, exitCode));
+                }
+            } catch (GFLauncherException | IllegalThreadStateException ex) {
+                // should never happen or process is still alive
+            } 
 
-            // wait before checking again
+            // Wait before checking again
             try {
                 Thread.sleep(100);
-                if (!terse && count++ % 10 == 0)
+                if (!terse && count++ % 10 == 0) {
                     System.out.print(".");
-            }
-            catch (InterruptedException ex) {
+                }
+            } catch (InterruptedException ex) {
                 // don't care
             }
         }
 
-        if (!terse)
+        if (!terse) {
             System.out.println();
+        }
 
         if (!alive) {
             String msg;
-            String time = "" + (WAIT_FOR_DAS_TIME_MS / 1000);
-            if (info.isDomain())
-                msg = strings.get("serverNoStart", strings.get("DAS"),
-                        info.getDomainName(), time);
-            else
-                msg = strings.get("serverNoStart", strings.get("INSTANCE"),
-                        info.getInstanceName(), time);
+            String time = "" + WAIT_FOR_DAS_TIME_MS / 1000;
+            if (info.isDomain()) {
+                msg = strings.get("serverNoStart", strings.get("DAS"), info.getDomainName(), time);
+            } else {
+                msg = strings.get("serverNoStart", strings.get("INSTANCE"), info.getInstanceName(), time);
+            }
 
             throw new CommandException(msg);
         }
@@ -168,6 +186,7 @@ public class StartServerHelper {
 
     /**
      * Run a series of commands to prepare for a launch.
+     *
      * @return false if there was a problem.
      */
     public boolean prepareForLaunch() throws CommandException {
@@ -175,8 +194,9 @@ public class StartServerHelper {
         waitForParentToDie();
         setSecurity();
 
-        if (checkPorts() == false)
+        if (checkPorts() == false) {
             return false;
+        }
 
         deletePidFile();
 
@@ -188,32 +208,26 @@ public class StartServerHelper {
 
         try {
             logfile = launcher.getLogFilename();
-        }
-        catch (GFLauncherException ex) {
-            logfile = "UNKNOWN";        // should never happen
+        } catch (GFLauncherException ex) {
+            logfile = "UNKNOWN"; // should never happen
         }
 
         int adminPort = -1;
         String adminPortString = "-1";
 
         try {
-            if (addresses != null && addresses.size() > 0)
+            if (addresses != null && addresses.size() > 0) {
                 adminPort = addresses.get(0).getPort();
+            }
             // To avoid having the logger do this: port = 4,848
             // so we do the conversion to a string ourselves
             adminPortString = "" + adminPort;
-        }
-        catch (Exception e) {
-            //ignore
+        } catch (Exception e) {
+            // ignore
         }
 
-        logger.info(strings.get(
-                "ServerStart.SuccessMessage",
-                info.isDomain() ? "domain " : "instance",
-                serverDirs.getServerName(),
-                serverDirs.getServerDir(),
-                logfile,
-                adminPortString));
+        logger.info(strings.get("ServerStart.SuccessMessage", info.isDomain() ? "domain " : "instance", serverDirs.getServerName(), serverDirs.getServerDir(),
+                logfile, adminPortString));
 
         if (debugPort >= 0) {
             logger.info(strings.get("ServerStart.DebuggerMessage", "" + debugPort));
@@ -221,26 +235,25 @@ public class StartServerHelper {
     }
 
     /**
-     * If the parent is a GF server -- then wait for it to die.  This is part
-     * of the Client-Server Restart Dance!
-     * THe dying server called us with the system property AS_RESTART set to its pid
-     * @throws CommandException if we timeout waiting for the parent to die or
-     *  if the admin ports never free up
+     * If the parent is a GF server -- then wait for it to die. This is part of the Client-Server Restart Dance! THe dying
+     * server called us with the system property AS_RESTART set to its pid
+     *
+     * @throws CommandException if we timeout waiting for the parent to die or if the admin ports never free up
      */
     private void waitForParentToDie() throws CommandException {
         // we also come here with just a regular start in which case there is
         // no parent, and the System Property is NOT set to anything...
         String pids = System.getProperty("AS_RESTART");
 
-        if (!ok(pids))
+        if (!ok(pids)) {
             return;
+        }
 
         int pid = -1;
 
         try {
             pid = Integer.parseInt(pids);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             pid = -1;
         }
         waitForParentDeath(pid);
@@ -260,12 +273,13 @@ public class StartServerHelper {
     private void deletePidFile() {
         String msg = serverDirs.deletePidFile();
 
-        if (msg != null && logger.isLoggable(Level.FINER))
+        if (msg != null && logger.isLoggable(FINER)) {
             logger.finer(msg);
+        }
     }
 
     private void setSecurity() {
-        info.addSecurityToken(CLIConstants.MASTER_PASSWORD, masterPassword);
+        info.addSecurityToken(MASTER_PASSWORD, masterPassword);
     }
 
     private String adminPortInUse() {
@@ -275,20 +289,20 @@ public class StartServerHelper {
     private String adminPortInUse(List<HostAndPort> adminAddresses) {
         // it returns a String for logging --- if desired
         for (HostAndPort addr : adminAddresses) {
-            if (!NetUtils.isPortFree(addr.getHost(), addr.getPort()))
-                return strings.get("ServerRunning",
-                        Integer.toString(addr.getPort()));
+            if (!NetUtils.isPortFree(addr.getHost(), addr.getPort())) {
+                return strings.get("ServerRunning", Integer.toString(addr.getPort()));
+            }
         }
 
         return null;
     }
 
     // use the pid we received from the parent server and platform specific tools
-    // to see FOR SURE when the entire JVM process is gone.  This solves
+    // to see FOR SURE when the entire JVM process is gone. This solves
     // potential niggling bugs.
     private void waitForParentDeath(int pid) throws CommandException {
         if (pid < 0) {
-            // can not happen.  (Famous Last Words!)
+            // can not happen. (Famous Last Words!)
             new ParentDeathWaiterPureJava();
             return;
         }
@@ -300,9 +314,7 @@ public class StartServerHelper {
                 if (b == null) {
                     // this means we were unable to find out from the OS if the process
                     // is running or not
-                    debugMessage("ProcessUtils.isProcessRunning(" + pid + ") "
-                            + "returned null which means we can't get process "
-                            + "info on this platform.");
+                    debugMessage("ProcessUtils.isProcessRunning(" + pid + ") " + "returned null which means we can't get process " + "info on this platform.");
 
                     new ParentDeathWaiterPureJava();
                     return;
@@ -314,16 +326,14 @@ public class StartServerHelper {
                 // else parent is still breathing...
                 debugMessage("Wait one more second for parent to die...");
                 Thread.sleep(1000);
-            }while (!timedOut(start, CLIConstants.DEATH_TIMEOUT_MS));
+            } while (!timedOut(start, DEATH_TIMEOUT_MS));
 
-        }
-        catch (Exception e) {
-            // fall through.  Normal returns are in the block above
+        } catch (Exception e) {
+            // fall through. Normal returns are in the block above
         }
 
         // abnormal return path
-        throw new CommandException(
-                strings.get("deathwait_timeout", CLIConstants.DEATH_TIMEOUT_MS));
+        throw new CommandException(strings.get("deathwait_timeout", DEATH_TIMEOUT_MS));
     }
 
     private static boolean timedOut(long startTime) {
@@ -331,7 +341,7 @@ public class StartServerHelper {
     }
 
     private static boolean timedOut(long startTime, long span) {
-        return (System.currentTimeMillis() - startTime) > span;
+        return System.currentTimeMillis() - startTime > span;
     }
 
     private static void debugMessage(String s) {
@@ -341,68 +351,50 @@ public class StartServerHelper {
         // we will not even see AS_DEBUG!
         if (DEBUG_MESSAGES_ON) {
             Environment env = new Environment();
-            CLIUtil.writeCommandToDebugLog("restart-debug", env, new String[]{"DEBUG MESSAGE FROM RESTART JVM", s}, 99999);
+            CLIUtil.writeCommandToDebugLog("restart-debug", env, new String[] { "DEBUG MESSAGE FROM RESTART JVM", s }, 99999);
         }
     }
-    private final boolean terse;
-    private final GFLauncher launcher;
-    private final Logger logger;
-    private final File pidFile;
-    private final GFLauncherInfo info;
-    private final List<HostAndPort> addresses;
-    private final ServerDirs serverDirs;
-    private final String masterPassword;
-    private final String serverOrDomainName;
-    private final boolean debug;
-    private final int debugPort;
-    private final boolean isDebugSuspend;
-    // only set when actively trouble-shooting or investigating...
-    private final static boolean DEBUG_MESSAGES_ON = false;
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(StartServerHelper.class);
 
     /**
-     * bnevins
-     * the restart flag is set by the RestartDomain command in the local
-     * server.  The dying server has started a new JVM process and is
-     * running this code.  Our official parent process is the dying server.
-     * The ParentDeathWaiterPureJava waits for the parent process to disappear.
-     * see RestartDomainCommand in core/kernel for more details
+     * bnevins the restart flag is set by the RestartDomain command in the local server. The dying server has started a new
+     * JVM process and is running this code. Our official parent process is the dying server. The ParentDeathWaiterPureJava
+     * waits for the parent process to disappear. see RestartDomainCommand in core/kernel for more details
      */
     private class ParentDeathWaiterPureJava implements Runnable {
         @Override
-        @SuppressWarnings("empty-statement")
         public void run() {
             try {
                 // When parent process is almost dead, in.read returns -1 (EOF)
                 // as the pipe breaks.
 
-                while (System.in.read() >= 0);
-            }
-            catch (IOException ex) {
+                while (System.in.read() >= 0) {
+                    ;
+                }
+            } catch (IOException ex) {
                 // ignore
             }
 
             // The port may take some time to become free after the pipe breaks
-            while (adminPortInUse(addresses) != null)
+            while (adminPortInUse(addresses) != null) {
                 ;
+            }
             success = true;
         }
 
         private ParentDeathWaiterPureJava() throws CommandException {
             try {
-                Thread t = new Thread(this);
-                t.start();
-                t.join(CLIConstants.DEATH_TIMEOUT_MS);
-            }
-            catch (Exception e) {
+                Thread deathWaiterThread = new Thread(this);
+                deathWaiterThread.start();
+                deathWaiterThread.join(DEATH_TIMEOUT_MS);
+            } catch (Exception e) {
                 // ignore!
             }
 
-            if (!success)
-                throw new CommandException(
-                        strings.get("deathwait_timeout", CLIConstants.DEATH_TIMEOUT_MS));
+            if (!success) {
+                throw new CommandException(strings.get("deathwait_timeout", DEATH_TIMEOUT_MS));
+            }
         }
+
         boolean success = false;
     }
 }

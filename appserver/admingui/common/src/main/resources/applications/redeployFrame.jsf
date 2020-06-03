@@ -36,7 +36,7 @@
         //we want to show/preserver java-web-start-enabled, and preserveAppsScopedResourcs
 
         //if the jws prop does not exist,it is true by default. GLASSFISH-19109
-        mapPut(map="#{pageSession.deployMap}" key="$constant{org.glassfish.deployment.client.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}" value="true")
+        mapPut(map="#{pageSession.deployMap}" key="$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}" value="true")
         mapPut(map="#{pageSession.deployMap}" key="implicitCdiEnabled" value="true")
         gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json" method="GET" result="#{requestScope.propTable}");
         setPageSessionAttribute(key="listOfProps" value="#{requestScope.propTable.data.extraProperties.properties}");
@@ -44,8 +44,8 @@
             if ("#{requestScope.oneProp.name}=preserveAppScopedResources"){
                 mapPut(map="#{pageSession.deployMap}" key="preserveAppScopedResources" value="#{requestScope.oneProp.value}")
             }
-            if ("#{requestScope.oneProp.name}=$constant{org.glassfish.deployment.client.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}"){
-                mapPut(map="#{pageSession.deployMap}" key="$constant{org.glassfish.deployment.client.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}" value="#{requestScope.oneProp.value}")
+            if ("#{requestScope.oneProp.name}=$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}"){
+                mapPut(map="#{pageSession.deployMap}" key="$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}" value="#{requestScope.oneProp.value}")
             }
             if ("#{requestScope.oneProp.name}=implicitCdiEnabled"){
                 mapPut(map="#{pageSession.deployMap}" key="implicitCdiEnabled" value="#{requestScope.oneProp.value}")
@@ -128,7 +128,7 @@
                 <sun:checkbox id="implicitCdi"  selected="#{pageSession.deployMap['implicitCdiEnabled']}" selectedValue="true" />
             </sun:property>
             <sun:property id="jws"  labelAlign="left" noWrap="#{false}" overlapLabel="#{false}"  label="$resource{i18n.deploy.JavaWebStart}" helpText="$resource{i18n.deploy.JavaWebStartHelp}" >
-                <sun:checkbox selected="#{pageSession.deployMap['$constant{org.glassfish.deployment.client.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}']}" selectedValue="true" label=" " />
+                <sun:checkbox selected="#{pageSession.deployMap['$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}']}" selectedValue="true" label=" " />
             </sun:property>
             <sun:property id="availability" rendered="#{!pageSession.onlyDASExist}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.deploy.availability}" helpText="$resource{i18n.deploy.availabilityHelp}">
                 <sun:checkbox id="availability"  selected="#{pageSession.deployMap['availabilityEnabled']}" selectedValue="true" />

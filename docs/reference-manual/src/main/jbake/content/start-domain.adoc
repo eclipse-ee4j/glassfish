@@ -21,7 +21,7 @@ Synopsis
 [source,oac_no_warn]
 ----
 asadmin [asadmin-options] start-domain [--help] 
-[--debug={true|false}] [--domaindir domain-dir] 
+[--debug={true|false}] [--suspend={true|false}] [--domaindir domain-dir] 
 [--dry-run={true|false}] [--upgrade={true|false}] 
 [--verbose={true|false}] [--watchdog={true|false}] 
 [domain-name]
@@ -81,12 +81,27 @@ asadmin-options::
   Specifies whether the domain is started with
   http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
   Platform Debugger Architecture (JPDA)]
-  (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
-  debugging enabled. +
+  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
+  debugging enabled. With debugging enabled extra exceptions can be printed. +
   Possible values are as follows: +
   `true`;;
     The instance is started with JPDA debugging enabled and the port
     number for JPDA debugging is displayed.
+  `false`;;
+    The instance is started with JPDA debugging disabled (default).
+`--suspend`::
+`-s`::
+  Specifies whether the domain is started with
+  http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
+  Platform Debugger Architecture (JPDA)]
+  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
+  debugging enabled and suspend the newly started VM before the main class loads. 
+  When a debugger connects, it can send a JDWP command to resume the suspended VM.
+  With debugging enabled extra exceptions can be printed.
+  Possible values are as follows: +
+  `true`;;
+    The instance is started with JPDA debugging enabled and a suspendPolicy of `SUSPEND_ALL`.
+    The port number for JPDA debugging is displayed.
   `false`;;
     The instance is started with JPDA debugging disabled (default).
 `--dry-run`::
@@ -201,6 +216,6 @@ link:restart-domain.html#restart-domain-1[`restart-domain`(1)],
 link:stop-domain.html#stop-domain-1[`stop-domain`(1)]
 
 Java Platform Debugger Architecture (JPDA)
-(http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
+(https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
 
 

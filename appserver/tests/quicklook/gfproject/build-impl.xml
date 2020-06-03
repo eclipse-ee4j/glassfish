@@ -68,13 +68,6 @@
         <pathelement location="${test.class.output}"/>
     </path>
 
-    <path id = "boot.classpath">
-        <fileset dir="${glassfish.home}/modules/endorsed">
-            <include name="**/*.jar"/>
-        </fileset>        
-    </path>
-
-
     <!-- classpath at QL build time for building testing apps -->
     <path id="class.path">
         <fileset dir="${glassfish.home}/modules">
@@ -435,9 +428,6 @@
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
             <bootclasspath classpathref="boot.class.path"/>
-<sysproperty key="-Djava.endorsed.dirs" value="${glassfish.home}/modules/endorsed"/>
-
-
         </testng>
     </target>
 
@@ -452,9 +442,6 @@
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
             <bootclasspath classpathref="boot.class.path"/>
-<sysproperty key="-Djava.endorsed.dirs" value="${glassfish.home}/modules/endorsed"/>
-
-
         </testng>
     </target>
 

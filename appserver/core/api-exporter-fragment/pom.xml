@@ -144,6 +144,10 @@ jakarta.resource.spi; \
 jakarta.resource.spi.endpoint; \
 jakarta.resource.spi.security; \
 jakarta.resource.spi.work; \
+jakarta.security.auth.message; \
+jakarta.security.auth.message.callback; \
+jakarta.security.auth.message.config; \
+jakarta.security.auth.message.module; \
 jakarta.security.enterprise; \
 jakarta.security.enterprise.authentication.mechanism.http; \
 jakarta.security.enterprise.credential; \
@@ -249,10 +253,6 @@ javax.script; \
 javax.security.auth; \
 javax.security.auth.callback; \
 javax.security.auth.kerberos; \
-javax.security.auth.message; \
-javax.security.auth.message.callback; \
-javax.security.auth.message.config; \
-javax.security.auth.message.module; \
 javax.security.auth.login; \
 javax.security.auth.spi; \
 javax.security.auth.x500; \

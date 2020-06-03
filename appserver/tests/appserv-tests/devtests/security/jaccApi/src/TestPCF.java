@@ -14,11 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package javax.security.jacc;
+package jakarta.security.jacc;
 
-import javax.security.jacc.PolicyConfigurationFactory;
-import javax.security.jacc.PolicyConfiguration;
-import javax.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyConfigurationFactory;
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyContextException;
 import java.security.AccessControlException;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -49,7 +49,7 @@ public class TestPCF {
             //It should be one of the following:
             //    java.lang.ClassNotFoundException
             //    java.lang.ClassCastException
-            //    javax.security.jacc.PolicyContextException
+            //    jakarta.security.jacc.PolicyContextException
             if (ex.getClass().getName().equals(expectedException)) {
                 stat.addStatus(description, stat.PASS);
             } else {
@@ -76,7 +76,7 @@ public class TestPCF {
         } catch(Exception ex) {
             //It should be one of the following:
             //    java.lang.ClassNotFoundException
-            //    javax.security.jacc.PolicyContextException
+            //    jakarta.security.jacc.PolicyContextException
             if (ex.getClass().getName().equals(expectedException)) {
                 stat.addStatus(description, stat.PASS);
             } else {

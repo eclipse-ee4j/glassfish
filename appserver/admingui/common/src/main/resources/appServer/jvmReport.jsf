@@ -34,7 +34,7 @@
     />
     <sun:html id="html2"> 
         <sun:head id="propertyhead" title="JVM Report" javaScript="true" debug="false" parseOnLoad="false">
-            <h:outputScript name="jsf.js" library="javax.faces" target="head" />       
+            <h:outputScript name="jsf.js" library="jakarta.faces" target="head" />       
             <sun:script url="/resource/common/js/adminjsf.js" />
             
         </sun:head>

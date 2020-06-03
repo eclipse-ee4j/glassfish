@@ -139,13 +139,16 @@
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
-        <!--
-            TODO: does this really belong here?
-            InjectionServicesImpl needs jakarta.xml.ws.WebServiceRef
+        <!-- Since weld-integration artifact is part of web distro and we
+             don't want webservices-api-osgi to be part of web distro, we
+             mark this dependency as optional for it to be:
+              - excluded by packager
+              - optional for OSGi
         -->
         <dependency>
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-api-osgi</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>javax.xml.ws</groupId>

@@ -105,9 +105,9 @@ class JvmOptions {
         for (Map.Entry<String, String> entry : longProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
-                ss.add("--" + entry.getKey() + "=" + value);
+                options.add("--" + entry.getKey() + "=" + value);
             } else {
-                ss.add("--" + entry.getKey());
+                options.add("--" + entry.getKey());
             }
         }
         

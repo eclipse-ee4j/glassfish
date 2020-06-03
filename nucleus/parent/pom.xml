@@ -158,8 +158,6 @@
         <javaee.version.new>8</javaee.version.new>
         <jmockit.version>1.49</jmockit.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
-        <jakarta.activation-api.version>1.2.1</jakarta.activation-api.version>
-        <jakarta.activation.version>1.2.1</jakarta.activation.version>
     </properties>
 
     <build>

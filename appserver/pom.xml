@@ -158,9 +158,6 @@
         <soap-api.version>1.4.0</soap-api.version>
         <jakarta.jws-api.version>2.1.0</jakarta.jws-api.version>
 
-        <!-- Jakarta XML Binding -->
-        <jaxb.version>3.0.0-M2</jaxb.version>
-
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0-RC1</jstl-api.version>
         <jstl-impl.version>2.0.0-M1</jstl-impl.version>
@@ -631,16 +628,6 @@
                 <groupId>wsdl4j</groupId>
                 <artifactId>wsdl4j</artifactId>
                 <version>${wsdl4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.activation</groupId>
-                <artifactId>jakarta.activation-api</artifactId>
-                <version>${jakarta.activation-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.activation</groupId>
-                <artifactId>jakarta.activation</artifactId>
-                <version>${jakarta.activation.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

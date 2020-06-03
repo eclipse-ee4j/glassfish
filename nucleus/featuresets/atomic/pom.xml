@@ -1047,7 +1047,7 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>${jaxb-api.version}</version>
+            <version>${jakarta.jaxb-api.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1058,18 +1058,7 @@
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
-            <version>${jaxb.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-            <version>${jakarta.activation-api.version}</version>
+            <version>${jakarta.jaxb-impl.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1080,7 +1069,7 @@
         <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>jakarta.activation</artifactId>
-            <version>${jakarta.activation.version}</version>
+            <version>${activation.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

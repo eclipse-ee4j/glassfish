@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,8 +65,10 @@
 <f:verbatim>
     <script type="text/javascript">
     function enableCtxInform(ctxId, val){
-    alert(val);
-        webui.suntheme.dropDown.setDisabled(ctxId, val);
+	    alert(val);
+	    require(['webui/suntheme/dropDown'], function (dropDown) {
+	    	dropDown.setDisabled(ctxId, val);
+	    });
     }
     </script>
 </f:verbatim>

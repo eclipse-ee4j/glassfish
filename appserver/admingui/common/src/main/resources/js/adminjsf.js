@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,30 @@
 /*
  * Common utility
  */
+
+function checkPSWInCommon(secureAdminEnabled, id1, id2, alert1, alert2, confirmMessage) {
+	var ps1 = document.getElementById(id1); 
+	var ps2 =  document.getElementById(id2); 
+   
+    if (secureAdminEnabled) {
+        if ( (ps1==null || ps1=='') && (ps2==null || ps2=='')) {
+            return showAlert(alert1);
+        }
+    }
+    if (ps1.value != ps2.value){
+        return showAlert(alert2);
+    }
+    if ( (ps1==null || ps1.value=='') && (ps2==null || ps2.value=='')){
+        if ( getConfirm(this,confirmMessage) ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    return true;
+	
+	
+}
 
 /* To work around a timing issue where for Firefox 2.0.0.3 on Mac OS X
  * We need to put in a little delay before returning the var
@@ -93,24 +117,36 @@ function getField(theForm, fieldName) {
 
 // FIXME: suntheme should not be used -- prevents theme from changing
 function getTextElement(componentName) {
-    var el = webui.suntheme.field.getInputElement(componentName);
-    if (el == null) {
-        el = document.getElementById(componentName); // This may get too deep inside WS, but it should work as a fall back
-    }
-    return el;
+
+	require(['webui/suntheme/field'], function (field) {		
+		if(field === "undefined"){
+			return  document.getElementById(componentName);
+		}
+		
+	    var el = field.getInputElement(componentName);
+	    if (el == null) {
+	        el = document.getElementById(componentName); // This may get too deep inside WS, but it should work as a fall back
+	    }
+	    return el; 
+	});	
+
 }
 
 function getSelectElement(componentName) {
-    return webui.suntheme.dropDown.getSelectElement(componentName);
+	require(['webui/suntheme/dropDown'], function (dropDown) {
+	    return dropDown.getSelectElement(componentName);
+	    
+	});	
 }
 
 function getFileInputElement(componentName) {
-    var el = webui.suntheme.upload.getInputElement(componentName);
-    if (el == null) {
-        el = document.getElementById(componentName+"_com.sun.webui.jsf.upload");
-    }
-
-    return el;
+	require(['webui/suntheme/upload'], function (upload) {
+	    var el = upload.getInputElement(componentName);
+	    if (el == null) {
+	        el = document.getElementById(componentName+"_com.sun.webui.jsf.upload");
+	    }
+	    return el;	    
+	});	
 }
 
 function disableComponent(componentName, type) {
@@ -701,7 +737,7 @@ admingui.nav = {
      */
     clearTreeSelection: function(treeId) {
         var tree = document.getElementById(treeId);
-        if (tree) {
+        if (tree && typeof(tree["clearAllHighlight"]) === "function") {
             tree.clearAllHighlight(treeId);
         }
     },
@@ -1377,7 +1413,7 @@ function checkForBackslash(componentId, msg){
 function checkRequired(componentId, reqMsg){
     //component = document.getElementById(componentId);
     //var value = component.getProps().value;
-    var component = getTextElement(componentId);
+    var component = document.getElementById(componentId);
     var value = component.value;
     var result = (value != null) && (value != '') && (isWhitespace(value) == false);
     if (result == false) {
@@ -1863,7 +1899,7 @@ admingui.deploy = {
         }
         disableBtnComponent(filSelectBtnId);
         enableComponent(fileuploadId, 'file');
-        comp = getTextElement(radioChoosenId);
+        comp = document.getElementById(radioChoosenId);
         comp.value='client';
     },
 
@@ -1874,7 +1910,7 @@ admingui.deploy = {
         }
         enableBtnComponent(filSelectBtnId);
         disableComponent(fileuploadId, 'file');
-        comp = getTextElement(radioChoosenId);
+        comp = document.getElementById(radioChoosenId);
         comp.value='local';
     },
 
@@ -1979,7 +2015,15 @@ admingui.deploy = {
     },
 
     checkFileInputRequired : function (componentId, reqMsg){
-        var component = getFileInputElement(componentId);
+	    var component = document.getElementById(componentId);
+	    if (component == null) {
+	    	component = document.getElementById(componentId+"_com.sun.webui.jsf.upload");
+	    }
+	    
+       if(component == null){
+    	   return false;
+       }
+	    
         var value = component.value;
         var result = (value != '') && (isWhitespace(value) == false);
         if (result == false) {
@@ -1991,7 +2035,9 @@ admingui.deploy = {
             component.select();
             component.focus();
         }
-        return result;
+        
+        return result;    	        	
+
     },
 
 
@@ -2208,8 +2254,14 @@ admingui.ajax = {
         }
         contentNode.innerHTML = o.responseText;
         // FIXME: These 2 functions only need to be replaced after a FPR...
-        webui.suntheme.hyperlink.submit = admingui.woodstock.hyperLinkSubmit;
-        webui.suntheme.jumpDropDown.changed = admingui.woodstock.dropDownChanged;
+        require(['webui/suntheme/hyperlink'], function (hyperlink) {
+        	hyperlink.submit = admingui.woodstock.hyperLinkSubmit;
+        });
+        
+        require(['webui/suntheme/jumpDropDown'], function (jumpDropDown) {
+        	jumpDropDown.changed = admingui.woodstock.dropDownChanged;
+        });
+
         admingui.ajax.processElement(o, contentNode, true);
         admingui.ajax.processScripts(o);
         // Restore cursor
@@ -2266,11 +2318,14 @@ admingui.ajax = {
             contentNode = top.document.getElementById("content");
         }
 
-        if (typeof(webui) !== 'undefined') {
-            // FIXME: These 2 functions (should) only need be replaced after FPR...
-            webui.suntheme.hyperlink.submit = admingui.woodstock.hyperLinkSubmit;
-            webui.suntheme.jumpDropDown.changed = admingui.woodstock.dropDownChanged;
-        }
+        // FIXME: These 2 functions (should) only need be replaced after FPR...
+        require(['webui/suntheme/hyperlink'], function (hyperlink) {
+        	hyperlink.submit = admingui.woodstock.hyperLinkSubmit;
+        });
+        
+        require(['webui/suntheme/jumpDropDown'], function (jumpDropDown) {
+        	jumpDropDown.changed = admingui.woodstock.dropDownChanged;
+        });
 
         contentNode.innerHTML = xmlReq.responseText;
 
@@ -2331,7 +2386,14 @@ admingui.ajax = {
                 }
             }
         }
-        contentNode.innerHTML = result;
+        
+        if(!contentNode){
+        	var htmlElement = document.getElementsByTagName("html")[0]
+        	htmlElement.innerHTML = result;
+        }else{
+            contentNode.innerHTML = result;        	
+        }
+        
         if (viewState != null) {
             var form = document.getElementById(this.context.formid);
             if (!form) {
@@ -2350,8 +2412,13 @@ admingui.ajax = {
         }
 
         // FIXME: These 2 functions (should) only need be replaced after FPR...
-        webui.suntheme.hyperlink.submit = admingui.woodstock.hyperLinkSubmit;
-        webui.suntheme.jumpDropDown.changed = admingui.woodstock.dropDownChanged;
+        require(['webui/suntheme/hyperlink'], function (hyperlink) {
+        	hyperlink.submit = admingui.woodstock.hyperLinkSubmit;
+        });
+        
+        require(['webui/suntheme/jumpDropDown'], function (jumpDropDown) {
+        	jumpDropDown.changed = admingui.woodstock.dropDownChanged;
+        });
         var contextObj = {};
         admingui.ajax.processElement(contextObj, contentNode, true);
         admingui.ajax.processScripts(contextObj);
@@ -2590,6 +2657,7 @@ admingui.ajax = {
     }
 }
 
+
 admingui.woodstock = {
     hyperLinkSubmit: function(hyperlink, formId, params) {
         var form = document.getElementById(formId);
@@ -2634,46 +2702,52 @@ admingui.woodstock = {
     },
 
     dropDownChanged: function(jumpDropdown) {
+    	    	
         if (typeof(jumpDropdown) === "string") {
-            jumpDropdown = webui.suntheme.dropDown.getSelectElement(jumpDropdown);
+            
+            require(['webui/suntheme/dropDown'], function (dropDown) {
+                jumpDropdown = dropDown.getSelectElement(jumpDropdown);
+                
+                // Force WS "submitter" flag to true
+                var submitterFieldId = jumpDropdown.id + "_submitter";
+                var submitterField = document.getElementById(submitterFieldId);
+                if (!submitterField) {
+                    submitterFieldId = jumpDropdown.parentNode.id + "_submitter";
+                    submitterField = document.getElementById(submitterFieldId);
+                    if (!submitterField) {
+                        admingui.util.log("Unable to find dropDown submitter for: "
+                            + jumpDropdown.id);
+                        return false;
+                    }
+                }
+                submitterField.value = "true";
+
+                require(['webui/suntheme/props'], function (props) {
+                    // FIXME: Not sure why the following is done...
+                    var listItem = jumpDropdown.options;
+                    for (var cntr=0; cntr < listItem.length; ++cntr) {
+                        if (listItem[cntr].className == props.jumpDropDown.optionSeparatorClassName
+                            || listItem[cntr].className == props.jumpDropDown.optionGroupClassName) {
+                            continue;
+                        } else if (listItem[cntr].disabled) {
+                            // Regardless if the option is currently selected or not,
+                            // the disabled option style should be used when the option
+                            // is disabled. So, check for the disabled item first.
+                            // See CR 6317842.
+                        	listItem[cntr].className = props.jumpDropDown.optionDisabledClassName;
+                        } else if (listItem[cntr].selected) {
+                        	listItem[cntr].className = props.jumpDropDown.optionSelectedClassName;
+                        } else {
+                        	listItem[cntr].className = props.jumpDropDown.optionClassName;
+                        }
+                    }
+                    admingui.ajax.postAjaxRequest(jumpDropdown);
+                });
+            });
         }
 
-        // Force WS "submitter" flag to true
-        var submitterFieldId = jumpDropdown.id + "_submitter";
-        var submitterField = document.getElementById(submitterFieldId);
-        if (!submitterField) {
-            submitterFieldId = jumpDropdown.parentNode.id + "_submitter";
-            submitterField = document.getElementById(submitterFieldId);
-            if (!submitterField) {
-                admingui.util.log("Unable to find dropDown submitter for: "
-                    + jumpDropdown.id);
-                return false;
-            }
-        }
-        submitterField.value = "true";
-
-        // FIXME: Not sure why the following is done...
-        var listItem = jumpDropdown.options;
-        for (var cntr=0; cntr < listItem.length; ++cntr) {
-            if (listItem[cntr].className ==
-                webui.suntheme.props.jumpDropDown.optionSeparatorClassName
-                || listItem[cntr].className ==
-                webui.suntheme.props.jumpDropDown.optionGroupClassName) {
-                continue;
-            } else if (listItem[cntr].disabled) {
-                // Regardless if the option is currently selected or not,
-                // the disabled option style should be used when the option
-                // is disabled. So, check for the disabled item first.
-                // See CR 6317842.
-                listItem[cntr].className = webui.suntheme.props.jumpDropDown.optionDisabledClassName;
-            } else if (listItem[cntr].selected) {
-                listItem[cntr].className = webui.suntheme.props.jumpDropDown.optionSelectedClassName;
-            } else {
-                listItem[cntr].className = webui.suntheme.props.jumpDropDown.optionClassName;
-            }
-        }
-        admingui.ajax.postAjaxRequest(jumpDropdown);
         return false;
+
     },
 
     commonTaskHandler : function(treeNode, targetUrl) {
@@ -2731,3 +2805,33 @@ var globalEval = function(src) {
     };
     fn();
 };
+
+
+//Prevent to webui.suntheme.* related errors
+if (typeof(webui) === "undefined") {
+	webui = {};
+}
+
+if (typeof(suntheme) === "undefined") {
+	suntheme = {};
+}
+
+if (typeof(dropDown) === "undefined") {
+	dropDown = {
+			changed: function(){
+		        require(['webui/suntheme/dropDown'], function (dropDown) {
+		        	dropDown.changed();
+		        });
+			}	
+	};
+}
+
+if (typeof(upload) === "undefined") {
+	upload = {
+			setEncodingType: function(encodingType){
+		        require(['webui/suntheme/upload'], function (upload) {
+		        	upload.setEncodingType(encodingType);
+		        });
+			}	
+	};
+}	

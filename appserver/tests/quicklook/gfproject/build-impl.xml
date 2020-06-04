@@ -50,6 +50,11 @@
             <include name="**/amx-core.jar"/>
             <include name="**/amx-javaee.jar"/>
             <include name="**/gf-client.jar"/>
+            <include name="**/webservices-api-osgi.jar"/>
+            <include name="**/webservices-osgi.jar"/>
+            <include name="**/jakarta.xml.bind-api.jar"/>
+            <include name="**/jaxb-osgi.jar"/>
+            <include name="**/ha-api.jar"/>
         </fileset>
 	<fileset dir="${maven.repo.local}/com/beust/jcommander">
 	    <include name="**/1.72/jcommander-1.72.jar"/>
@@ -391,7 +396,9 @@
 
     <condition property="wsjar.available">
         <and>
+            <available file="${glassfish.home}/modules/webservices-api-osgi.jar"/>
             <available file="${glassfish.home}/modules/webservices-osgi.jar"/>
+            <available file="${glassfish.home}/modules/jakarta.xml.bind-api.jar"/>
             <available file="${glassfish.home}/modules/jaxb-osgi.jar"/>
         </and>
     </condition>

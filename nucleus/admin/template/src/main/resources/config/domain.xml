@@ -173,9 +173,6 @@
         <jvm-options>-Dfelix.fileinstall.disableConfigSave=false</jvm-options>
         <!-- End of OSGi bundle configurations -->
         <jvm-options>-XX:NewRatio=2</jvm-options>
-
-        <jvm-options>-Xbootclasspath/p:${com.sun.aas.installRoot}/modules/jakarta.xml.bind-api.jar</jvm-options>
-        <jvm-options>-Xbootclasspath/p:${com.sun.aas.installRoot}/modules/webservices-api-osgi.jar</jvm-options>
       </java-config>
       <network-config>
         <protocols>
@@ -321,9 +318,6 @@
              -->
              <jvm-options>-Dfelix.fileinstall.disableConfigSave=false</jvm-options>
              <!-- End of OSGi bundle configurations -->
-
-             <jvm-options>-Xbootclasspath/p:${com.sun.aas.installRoot}/modules/jakarta.xml.bind-api.jar</jvm-options>
-             <jvm-options>-Xbootclasspath/p:${com.sun.aas.installRoot}/modules/webservices-api-osgi.jar</jvm-options>
          </java-config>
          <availability-service/>
          <network-config>

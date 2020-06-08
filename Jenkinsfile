@@ -66,7 +66,7 @@ def generateStage(job) {
                                   export JAVA_HOME=/usr/lib/jvm/jdk11
                                   export PATH=${JAVA_HOME}/bin:${PATH}
                                   export CLASSPATH=$WORKSPACE/glassfish6/javadb
-                                  ./appserver/tests/gftest.sh run_test ${job}"
+                                  ./appserver/tests/gftest.sh run_test ${job}
                                 '''
                               }
                           }

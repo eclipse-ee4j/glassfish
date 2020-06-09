@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -80,9 +80,9 @@
         <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
 
         <jsftemplating.version>2.1.4</jsftemplating.version>
-        <webservices.version>2.4.3</webservices.version>
+        <webservices.version>2.4.4</webservices.version>
         <woodstox.version>5.1.0</woodstox.version>
-        <jaxb.version>2.3.2</jaxb.version>
+        <jaxb.version>2.3.3</jaxb.version>
         <stax2-api.version>4.1</stax2-api.version>
         <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>

@@ -21,20 +21,20 @@ env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
 // list of test ids
 def jobs = [
-  "cdi_all"
+  "cdi_all",
+  "ql_gf_full_profile_all",
+  "ql_gf_web_profile_all"
 ]
 
 
 def jobs_all = [
+  "web_jsp",
   "deployment_all",
   "ejb_group_1",
   "ejb_group_2",
   "ejb_group_3",
   "ejb_web_all",
-  "cdi_all",
-  "ql_gf_full_profile_all",
   "ql_gf_nucleus_all",
-  "ql_gf_web_profile_all",
   "nucleus_admin_all",
   "jdbc_all",
   "batch_all",

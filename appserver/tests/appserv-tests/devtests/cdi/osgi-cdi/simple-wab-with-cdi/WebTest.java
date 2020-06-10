@@ -51,7 +51,7 @@ public class WebTest {
 
     public void doTest() {
         try {
-            // invoke();
+            invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
             stat.addStatus(TEST_NAME, stat.FAIL);

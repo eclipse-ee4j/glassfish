@@ -33,6 +33,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -48,8 +49,12 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.glassfish.jaxb.runtime.api.JAXBRIContext;
 import org.glassfish.webservices.LogUtils;
+import org.glassfish.webservices.WebServiceContractImpl;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.tools.ws.spi.WSToolsObjectFactory;
 
@@ -69,6 +74,16 @@ public class WebServiceTesterServlet extends HttpServlet {
 
     private final WebServiceEndpoint svcEP;
     private static final Logger logger = LogUtils.getLogger();
+
+    //modules required by wsimport tool
+    private static final List<String> WSIMPORT_MODULES = Arrays.asList(new String[] {
+        "com.sun.activation.jakarta.activation",
+        "jakarta.annotation-api",
+        "jakarta.xml.bind-api",
+        "com.sun.xml.bind.jaxb-osgi",
+        "org.glassfish.metro.webservices-api-osgi",
+        "org.glassfish.metro.webservices-osgi",
+    });
 
     private static final Hashtable<String, Class> gsiClasses = new Hashtable<String, Class>();
     private static final Hashtable<String, Object> ports = new Hashtable<String, Object>();
@@ -564,7 +579,7 @@ public class WebServiceTesterServlet extends HttpServlet {
             deleteDir(new File(classesDir));
         }
     }
-    
+
     private String wsImport(URL wsdlLocation) throws IOException {
 
         File classesDir = new File(System.getProperty("java.io.tmpdir"));
@@ -578,23 +593,45 @@ public class WebServiceTesterServlet extends HttpServlet {
             logger.log(Level.SEVERE, LogUtils.CREATE_DIR_FAILED, classesDir);
         }
 
-        String[] wsimportArgs = new String[7];
-        wsimportArgs[0]="-d";
-        wsimportArgs[1]=classesDir.getAbsolutePath();
-        wsimportArgs[2]="-keep";
-        wsimportArgs[3]=wsdlLocation.toExternalForm();
-        wsimportArgs[4]="-target";
-        wsimportArgs[5]="2.1";
-        wsimportArgs[6]="-extension";
-        WSToolsObjectFactory tools = WSToolsObjectFactory.newInstance();
-        logger.log(Level.INFO, LogUtils.WSIMPORT_INVOKE, wsdlLocation);
-        boolean success = tools.wsimport(System.out, wsimportArgs);
+        // Metro uses the System.getProperty(java.class.path) to pass on to javac during wsimport
+        String oldCP = System.getProperty("java.class.path");
+        try {
+            WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance();
+            ModulesRegistry modulesRegistry = wscImpl.getModulesRegistry();
+            String classpath1 = classesDir.getAbsolutePath();
+            for (String module : WSIMPORT_MODULES) {
+                HK2Module m = modulesRegistry.getModules(module).iterator().next();
+                ModuleDefinition md = m.getModuleDefinition();
+                classpath1+=(File.pathSeparator + new File(md.getLocations()[0]).getAbsolutePath());
+            }
+            System.setProperty("java.class.path", classpath1);
 
-        if (success) {
-            logger.log(Level.INFO, LogUtils.WSIMPORT_OK);
-        } else {
-            logger.log(Level.SEVERE, LogUtils.WSIMPORT_FAILED);
-            return null;
+            String[] wsimportArgs = new String[7];
+            wsimportArgs[0]="-d";
+            wsimportArgs[1]=classesDir.getAbsolutePath();
+            wsimportArgs[2]="-keep";
+            wsimportArgs[3]=wsdlLocation.toExternalForm();
+            wsimportArgs[4]="-target";
+            wsimportArgs[5]="2.1";
+            wsimportArgs[6]="-extension";
+            WSToolsObjectFactory tools = WSToolsObjectFactory.newInstance();
+            logger.log(Level.INFO, LogUtils.WSIMPORT_INVOKE, wsdlLocation);
+            boolean success = tools.wsimport(System.out, wsimportArgs);
+
+            if (success) {
+                logger.log(Level.INFO, LogUtils.WSIMPORT_OK);
+            } else {
+                logger.log(Level.SEVERE, LogUtils.WSIMPORT_FAILED);
+                return null;
+            }
+
+        } finally {
+            //reset property value
+            if (oldCP == null) {
+                System.clearProperty("java.class.path");
+            } else {
+                System.setProperty("java.class.path", oldCP);
+            }
         }
         return classesDir.getAbsolutePath();
     }

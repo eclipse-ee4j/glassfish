@@ -395,7 +395,7 @@
              <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/grizzly-npn-bootstrap.jar</jvm-options>
              <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
-        </java-config>
+         </java-config>
          <availability-service>
              <web-container-availability/>
              <ejb-container-availability sfsb-store-pool-name="jdbc/hastore"/>

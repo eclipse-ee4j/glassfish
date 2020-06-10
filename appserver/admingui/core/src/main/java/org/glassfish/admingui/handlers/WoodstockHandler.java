@@ -154,11 +154,17 @@ public class WoodstockHandler {
                 if (prefix.length() <= 2) {
                     prefix = prefix + new SecureRandom().nextInt(100000);
                 }
+                
                 tmpFile = File.createTempFile(prefix, suffix);
-                tmpFile.deleteOnExit();
+                tmpFile.deleteOnExit();      
+                
+                //delete the file, otherwise FileUtils#moveTo throws file already exist error
+                tmpFile.delete();
+                
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(GuiUtil.getCommonMessage("log.writeToTmpFile"));
                 }
+                                
                 uploadedFile.write(tmpFile);
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(GuiUtil.getCommonMessage("log.afterWriteToTmpFile"));

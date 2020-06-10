@@ -28,6 +28,7 @@ echo TEST_RUN_LOG =  $TEST_RUN_LOG
 
 if [ "$#" -eq 0 ]; then
     declare -a arr=(
+       "web_jsp"
        "deployment_all" 
        "ejb_group_1" 
        "ejb_group_2" 

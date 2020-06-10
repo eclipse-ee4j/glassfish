@@ -21,6 +21,11 @@ env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
 // list of test ids
 def jobs = [
+  "cdi_all"
+]
+
+
+def jobs_all = [
   "deployment_all",
   "ejb_group_1",
   "ejb_group_2",
@@ -218,13 +223,13 @@ spec:
       }
     }
     
-//    stage('tests') {
-//      steps {
-//        script {
-//          parallel parallelStagesMap
-//        }
-//      }
-//    }
+    stage('tests') {
+      steps {
+        script {
+          parallel parallelStagesMap
+        }
+      }
+    }
   }
 }
 

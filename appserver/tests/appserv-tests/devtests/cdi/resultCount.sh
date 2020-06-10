@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,10 @@
 #
 
 
-#FILE=$APS_HOME/devtests/cdi/cdi.output
 FILE=$APS_HOME/test_resultsValid.xml
 echo "input file=$FILE"
 
-TOTAL=119
+TOTAL=115
 PASSED=`grep "\"pass\"" $FILE | wc -l`
 FAILED=`grep "\"fail\"" $FILE | wc -l`
 TOTAL_RUN=`expr $PASSED + $FAILED `

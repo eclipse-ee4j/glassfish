@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,22 +21,21 @@
 <property name="htmlfile" value="${env.APS_HOME}/test_results.html" />
 
 <target name="report">
-<echo message="Comparing results with expected results"/>
+    <echo message="Comparing results with expected results" />
 
- 
-    <xslt style="${stylesheet}"
-            in="${xmlfile}"
-            out="${htmlfile}"
-            basedir="."
-            destdir="."/>
-    <antcall target="report-sh"/>
-    <!--
-    <ant dir="${env.APS_HOME}/util/filediff" target="modifyReport"/>
-    -->
+    <if>
+        <available file="${xmlfile}" />
+        <then>
+            <xslt style="${stylesheet}" in="${xmlfile}" out="${htmlfile}" basedir="." destdir="." failOnNoResources="false" />
+        </then>
+    </if>
+      
+    
+    <antcall target="report-sh" />
 </target>
 
 <target name="report-sh">
     <exec executable="sh">
-        <arg value="./resultCount.sh"/>
+        <arg value="./resultCount.sh" />
     </exec>
 </target>

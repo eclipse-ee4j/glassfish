@@ -170,7 +170,11 @@
     <target name="cdi">
         <record name="cdi.output" action="start" />
 		<echo message="@@## Running all CDI developer tests##@@"/>
+        
+        <echo message="Running smoke-tests"/>
         <ant dir="smoke-tests" target="${cdi-target}"/>
+        
+        <echo message="Running qualifiers"/>
         <ant dir="qualifiers" target="${cdi-target}"/>
 
         <!--
@@ -181,13 +185,29 @@
         <ant dir="alternatives" target="${cdi-target}"/>
         <ant dir="ambiguous-deps" target="${cdi-target}"/>
         -->
+        
+        <echo message="Running events"/>
         <ant dir="events" target="${cdi-target}"/>
+        
+        <echo message="Running injection-point"/>
         <ant dir="injection-point" target="${cdi-target}"/>
+        
+        <echo message="Running interceptors"/>
         <ant dir="interceptors" target="${cdi-target}"/>
+        
+        <echo message="Running javaee-component-resources"/>
         <ant dir="javaee-component-resources" target="${cdi-target}"/>
+        
+        <echo message="Running javaee-integration"/>
         <ant dir="javaee-integration" target="${cdi-target}"/>
+        
+        <echo message="Running managed-beans"/>
         <ant dir="managed-beans" target="${cdi-target}"/>
+        
+        <echo message="Running portable-extensions"/>
         <ant dir="portable-extensions" target="${cdi-target}"/>
+        
+        <echo message="Running producer-methods"/>
         <ant dir="producer-methods" target="${cdi-target}"/>
 
         <!--
@@ -198,13 +218,25 @@
         <ant dir="programmatic-lookup" target="${cdi-target}"/>
         -->
 
+        <echo message="Running scopes"/>
         <ant dir="scopes" target="${cdi-target}"/>
+        
+        <echo message="Running specialization"/>
         <ant dir="specialization" target="${cdi-target}"/>
+        
+        <echo message="Running stereotypes"/>
         <ant dir="stereotypes" target="${cdi-target}"/>
+        
+        <echo message="Running transactions"/>
         <ant dir="transactions" target="${cdi-target}"/>
+        
+        <echo message="Running unproxyable-deps"/>
         <ant dir="unproxyable-deps" target="${cdi-target}"/>
+        
+        <echo message="Running unsatisfied-deps"/>
         <ant dir="unsatisfied-deps" target="${cdi-target}"/>
 
+        <echo message="Running implicit"/>
         <ant dir="implicit" target="${cdi-target}"/>
 
         <if>
@@ -213,9 +245,17 @@
                 <echo> Excluding testcase directory osgi-cdi for embedded mode</echo>
             </then>
             <else>
+                <!--
+                	Not running until figherfish is back
+                -->
+                <!--
                 <ant dir="osgi-cdi" target="${cdi-target}"/>
+                -->
             </else>
         </if>
+        
+        <echo message="***** DONE TESTING - GENERATING REPORT ******"/>
+        
         <!-- now generate report -->
         <antcall target="report"/>
 

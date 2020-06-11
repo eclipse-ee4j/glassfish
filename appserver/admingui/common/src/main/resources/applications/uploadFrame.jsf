@@ -42,7 +42,7 @@
         gf.onlyDASExist(onlyDAS="#{pageSession.onlyDASExist}");
     />
     </event>
-    <sun:form id="form">
+    <sun:form id="form" enctype="multipart/form-data">
             <!afterCreate
                 getClientId(component="$this{component}" clientId=>$attribute{formId})
             />

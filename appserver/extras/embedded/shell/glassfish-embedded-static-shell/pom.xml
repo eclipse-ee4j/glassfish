@@ -22,12 +22,12 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.0.0-M1</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
     <artifactId>glassfish-embedded-static-shell</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.0.0-M1</version>
     <name>Embedded GlassFish Static Shell</name>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>

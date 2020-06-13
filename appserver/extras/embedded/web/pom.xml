@@ -187,8 +187,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>org.glassfish.hk2.external</groupId>
-        <artifactId>jakarta.inject</artifactId>
+        <groupId>jakarta.inject</groupId>
+        <artifactId>jakarta.inject-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -682,11 +682,6 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>jakarta.management.j2ee</groupId>
-        <artifactId>jakarta.management.j2ee-api</artifactId>
-        <optional>true</optional>
-    </dependency>
-    <dependency>
         <groupId>jakarta.security.auth.message</groupId>
         <artifactId>jakarta.security.auth.message-api</artifactId>
         <optional>true</optional>
@@ -1137,8 +1132,8 @@
     </dependency>
     <!-- glassfish-jcdi -->
     <dependency>
-        <groupId>javax.enterprise</groupId>
-        <artifactId>cdi-api</artifactId>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>jakarta.enterprise.cdi-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>

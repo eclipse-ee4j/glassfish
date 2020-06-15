@@ -130,10 +130,10 @@
         <jakarta.transaction-api.version>2.0.0-RC2</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
-        <jakarta.resource-api.version>2.0.0-RC1</jakarta.resource-api.version>
+        <jakarta.resource-api.version>2.0.0-RC2</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
-        <jakarta.batch-api.version>2.0.0-M2</jakarta.batch-api.version>
+        <jakarta.batch-api.version>2.0.0-M3</jakarta.batch-api.version>
         <com.ibm.jbatch.container.version>2.0.0-M3</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>2.0.0-M3</com.ibm.jbatch.spi.version>
 
@@ -148,7 +148,7 @@
         <yasson.version>2.0.0-M2</yasson.version>
 
         <!-- Jakarta Server Pages -->
-        <jsp-api.version>3.0.0-M1</jsp-api.version>
+        <jsp-api.version>3.0.0-RC2</jsp-api.version>
         <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
 
         <!-- Used for Jakarta XML Web Services -->

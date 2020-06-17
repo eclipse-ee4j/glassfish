@@ -13,7 +13,7 @@ Eclipse GlassFish 5.1 is also Java EE 8 Compatible.
 
 This release contains new Jakarta EE 9 compatible APIs. This is an early alpha release of Eclipse GlassFish 6. See the download page to get your copy.
 
-### September 23, 2019 -- Eclipse GlassFish 5.1 is certified compatible with Eclipse Jakarta EE 8
+### September 10, 2019 -- Eclipse GlassFish 5.1 is certified compatible with Eclipse Jakarta EE 8
 
 Eclipse GlassFish 5.1 was certified as part of the release of the Jakarta EE 8 specification. This certification was completed without requiring any changes to Eclipse GlassFish 5.1, released in January of this same year.
 

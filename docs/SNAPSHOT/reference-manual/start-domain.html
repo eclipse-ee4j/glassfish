@@ -69,7 +69,7 @@
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin [asadmin-options] start-domain [--help]
-[--debug={true|false}] [--domaindir domain-dir]
+[--debug={true|false}] [--suspend={true|false}] [--domaindir domain-dir]
 [--dry-run={true|false}] [--upgrade={true|false}]
 [--verbose={true|false}] [--watchdog={true|false}]
 [domain-name]</code></pre>
@@ -147,8 +147,8 @@ options, see the <a href="asadmin.html#asadmin-1m"><code>asadmin</code>(1M)</a> 
 <p>Specifies whether the domain is started with
 <a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
 Platform Debugger Architecture (JPDA)</a>
-(<a href="http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html" class="bare">http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html</a>)
-debugging enabled.<br>
+(<a href="https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html" class="bare">https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html</a>)
+debugging enabled. With debugging enabled extra exceptions can be printed.<br>
 Possible values are as follows:<br></p>
 <div class="dlist">
 <dl>
@@ -156,6 +156,31 @@ Possible values are as follows:<br></p>
 <dd>
 <p>The instance is started with JPDA debugging enabled and the port
 number for JPDA debugging is displayed.</p>
+</dd>
+<dt class="hdlist1"><code>false</code></dt>
+<dd>
+<p>The instance is started with JPDA debugging disabled (default).</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1"><code>--suspend</code></dt>
+<dt class="hdlist1"><code>-s</code></dt>
+<dd>
+<p>Specifies whether the domain is started with
+<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
+Platform Debugger Architecture (JPDA)</a>
+(<a href="https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html" class="bare">https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html</a>)
+debugging enabled and suspend the newly started VM before the main class loads.
+When a debugger connects, it can send a JDWP command to resume the suspended VM.
+With debugging enabled extra exceptions can be printed.
+Possible values are as follows:<br></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>true</code></dt>
+<dd>
+<p>The instance is started with JPDA debugging enabled and a suspendPolicy of <code>SUSPEND_ALL</code>.
+The port number for JPDA debugging is displayed.</p>
 </dd>
 <dt class="hdlist1"><code>false</code></dt>
 <dd>
@@ -333,7 +358,7 @@ Command start-domain executed successfully.</code></pre>
 </div>
 <div class="paragraph">
 <p>Java Platform Debugger Architecture (JPDA)
-(<a href="http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html" class="bare">http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html</a>)</p>
+(<a href="https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html" class="bare">https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html</a>)</p>
 </div>
 </div>
 </div>

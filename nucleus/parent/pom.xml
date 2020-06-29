@@ -123,7 +123,7 @@
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <hk2.version>3.0.0-M2</hk2.version>
         <hk2.plugin.version>3.0.0-M2</hk2.plugin.version>
-        <pfl.version>4.1.0</pfl.version>
+        <pfl.version>4.1.1</pfl.version>
         <gmbal.version>4.0.2</gmbal.version>   
         <shoal.version>1.6.53</shoal.version>
         <ha-api.version>3.1.12</ha-api.version>
@@ -884,11 +884,6 @@
             <dependency>
                 <groupId>org.glassfish.pfl</groupId>
                 <artifactId>pfl-basic-tools</artifactId>
-                <version>${pfl.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.pfl</groupId>
-                <artifactId>pfl-asm</artifactId>
                 <version>${pfl.version}</version>
             </dependency>
             <dependency>

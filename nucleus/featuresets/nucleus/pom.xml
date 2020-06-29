@@ -258,16 +258,6 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.pfl</groupId>
-            <artifactId>pfl-asm</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.pfl</groupId>
             <artifactId>pfl-basic</artifactId>
             <exclusions>
                 <exclusion>

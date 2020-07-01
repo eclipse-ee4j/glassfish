@@ -40,46 +40,45 @@ for QuickLook tests</B></FONT></FONT></H1>
 QuickLook tests:</B></FONT></P>
 <P><BR>The QuickLook (QL) implements three profiles (web profile,
 dev_debug profile and glassfish profile) to run QL in 3 different
-scenarios: testing v3 web distribution, testing v3 web distribution
-in debug mode, testing v3 glassfish distribution.<BR><BR>First,
+scenarios: testing web distribution, testing web distribution
+in debug mode, testing glassfish distribution.<BR><BR>First,
 install/unzip the glassfish bundle to a directory. Let's call the
-full path to glassfish directory as {V3 Installation Dir}.&nbsp;
-Please do not install glassfish under v3/tests/quicklook since the
+full path to glassfish directory as {Installation Dir}.&nbsp;
+Please do not install glassfish under tests/quicklook since the
 &quot;clean&quot; target of QL will clean up all war files under
-quicklook directory. Change directory to <B>v3/tests/quicklook</B>.
+quicklook directory. Change directory to <B>appserver/tests/quicklook</B>.
 All italic text below indicate a command. <BR><BR>QL will work with
 the default admin password &quot;NULL&quot; (empty). Please clean up
 the previous ~/.asadminpass if it contains other password.<BR><BR><B>1.
-To Run QL in Glassfish Profile:</B><BR><BR>The v3 glassfish
-distribution includes extra modules such as EJB, jts and corba other
-than the modules in web distribution. The glassfish profile is the
+To Run QL in Glassfish Profile:</B><BR><BR>The glassfish
+full profile distribution includes extra modules such as EJB, jts and corba other
+than the modules in web distribution. The glassfish full profile is the
 <B>default</B> profile of QL. <BR><B>New:</B> Added cluster testing
 support for QL glassfish. 
 </P>
 <UL>
-	<LI><P STYLE="margin-bottom: 0in">For <B>glassfish</B> bundle of V3,
-	{V3 Installation Dir} is equivalent to /test/glassfish in the
+	<LI><P STYLE="margin-bottom: 0in">For <B>glassfish</B> bundle,
+	{Installation Dir} is equivalent to /test/glassfish in the
 	example above. 
 	</P>
 	<UL>
-		<LI><P STYLE="margin-bottom: 0in"><I>mvn -Dglassfish.home={V3
-		Installation Dir} test | tee run.log </I>
+		<LI><P STYLE="margin-bottom: 0in"><I>mvn -Dglassfish.home={Installation Dir} test | tee run.log </I>
 		</P>
 	</UL>
 	<LI><P STYLE="margin-bottom: 0in">For <B>glassfish-ips.zip</B>
-	bundle of V3, the same command can be used but {V3 Installation Dir}
+	bundle, the same command can be used but {Installation Dir}
 	is equivelent to in /test/glassfish6/glassfish: 
 	</P>
-	<LI><P>To run cluster tests only, you can go to <B>v3/tests/quicklook</B>
-	and do: <I>ant -Dglassfish.home={V3 Installation Dir} all_cluster</I></P>
+	<LI><P>To run cluster tests only, you can go to <B>tests/quicklook</B>
+	and do: <I>ant -Dglassfish.home={Installation Dir} all_cluster</I></P>
 </UL>
 <P STYLE="margin-bottom: 0in">The test results will be in test-output
 directory.</P>
 <P STYLE="margin-bottom: 0in"><A NAME="__DdeLink__0_178707749"></A><B>2.
 To Run QL in Web Profile:</B><BR>The web profile (-P test_wd) should
-be used for testing the v3 web distribution.</P>
+be used for testing the web distribution.</P>
 <UL>
-	<LI><P><I>mvn -Dglassfish.home={V3 Installation Dir} <B>-P test_wd
+	<LI><P><I>mvn -Dglassfish.home={Installation Dir} <B>-P test_wd
 	test</B> | tee run.log </I>
 	</P>
 </UL>
@@ -87,9 +86,9 @@ be used for testing the v3 web distribution.</P>
 </P>
 <P STYLE="margin-bottom: 0in"><B>3. To Run QL in Embedded
 Profile:</B><BR>The web profile (-P test_em) should be used for
-testing the v3 embedded mode.</P>
+testing the embedded mode.</P>
 <UL>
-	<LI><P><I>mvn -Dglassfish.home={V3 Installation Dir} <B>-P test_em
+	<LI><P><I>mvn -Dglassfish.home={Installation Dir} <B>-P test_em
 	test</B> | tee run.log </I>
 	</P>
 </UL>
@@ -97,29 +96,29 @@ testing the v3 embedded mode.</P>
 </P>
 <P STYLE="margin-bottom: 0in"><B>4. To Run QL in Glassfish</B>
 <B>Profile with Security Manager Turned On:</B><BR><BR>The web
-profile (-P test_wd_security) should be used for testing the v3 web
+profile (-P test_wd_security) should be used for testing the web
 distribution.</P>
 <UL>
-	<LI><P><I>mvn -Dglassfish.home={V3 Installation Dir} <B>-P
+	<LI><P><I>mvn -Dglassfish.home={Installation Dir} <B>-P
 	test_gd_security test</B> | tee run.log </I>
 	</P>
 </UL>
 <P><B>5. To Run QL in Web Profile with Security Manager Turned
 On:</B><BR><BR>The web profile (-P test_wd_security) should be used
-for testing the v3 web distribution.</P>
+for testing the web distribution.</P>
 <UL>
-	<LI><P><I>mvn -Dglassfish.home={V3 Installation Dir} <B>-P
+	<LI><P><I>mvn -Dglassfish.home={Installation Dir} <B>-P
 	test_wd_security test</B> | tee run.log </I>
 	</P>
 </UL>
-<P><B>6. To Run QL in V3 Debug Profile:</B><BR><BR>Usually, user
-wants to run QL against a running v3 instance started in debug mode.
+<P><B>6. To Run QL in Debug Profile:</B><BR><BR>Usually, user
+wants to run QL against a running instance started in debug mode.
 The dev_debug profile can be used (-P dev_debug) in this scenario. 
 </P>
 <UL>
-	<LI><P STYLE="margin-bottom: 0in">Start v3 in debug mode. For
+	<LI><P STYLE="margin-bottom: 0in">Start glassfish in debug mode. For
 	example: <I>java -jar modules/glassfish.jar</I></P>
-	<LI><P><I>mvn -Dglassfish.home={V3 Installation Dir} </I><I><B>-Pdev_debug</B></I>
+	<LI><P><I>mvn -Dglassfish.home={Installation Dir} </I><I><B>-Pdev_debug</B></I>
 	<I>test | tee run.log</I></P>
 </UL>
 <P>Note: The tests require restart domain (admincli) will be skipped
@@ -132,14 +131,14 @@ to run quicklook/ejb/slsbnicmt test suite against <B>glassfish</B>
 bundle:</P>
 <UL>
 	<UL>
-		<LI><P STYLE="margin-bottom: 0in"><I>{V3 Installation
+		<LI><P STYLE="margin-bottom: 0in"><I>{Installation
 		Dir}/bin/asadmin start-domain</I></P>
-		<LI><P STYLE="margin-bottom: 0in"><I>{V3 Installation
+		<LI><P STYLE="margin-bottom: 0in"><I>{Installation
 		Dir}/bin/asadmin start-database</I> 
 		</P>
 		<LI><P STYLE="margin-bottom: 0in"><I>cd ejb/slsbnicmt</I> 
 		</P>
-		<LI><P><I>ant -Dglassfish.home={V3 Installation Dir} all</I></P>
+		<LI><P><I>ant -Dglassfish.home={Installation Dir} all</I></P>
 	</UL>
 </UL>
 <P><B>8. Using Local Maven Repository in Non-Default
@@ -211,7 +210,7 @@ reference:</P>
 suite hellouniverse. All italic text indicate a command. Unix OS is
 used for the commands<BR><BR><I>% cp -r helloworld hellouniverse</I><BR><I>%
 cd hellouniverse</I><BR><BR>Please make the following changes to
-build.properties<BR>&nbsp;<BR>war.file=hellouniverse<BR>testsuite.name=basicweb<BR>testng.test.name=web_jsp_hello_universe<BR>contextroot=hellouniverse<BR>deploy.platform=v3<BR><BR>Please
+build.properties<BR>&nbsp;<BR>war.file=hellouniverse<BR>testsuite.name=basicweb<BR>testng.test.name=web_jsp_hello_universe<BR>contextroot=hellouniverse<BR><BR>Please
 make&nbsp; following changes to build.xml.&nbsp; Change Project
 name<BR>&lt;project name=&quot;hello-universe&quot; default=&quot;default&quot;
 basedir=&quot;.&quot;&gt;<BR>Under runtest target<BR>&lt;param
@@ -225,15 +224,14 @@ rename to src/test/HelloUniverseTestNG.java<BR><BR>Now all editing is
 complete, lets try to build/deploy/run from leaf level (hellouniverse
 level)<BR><BR>Assume we are using web.zip for glassfish. Make sure
 javadb and server are started&nbsp; (please use ant 1.6.5)<BR><I>% cd
-v3/test/quicklook</I><BR><I>% ant -Dglassfish.home={V3 Installation
-Dir} startDerby</I><BR><I>% ant -Dglassfish.home={V3 Installation
+test/quicklook</I><BR><I>% ant -Dglassfish.home={Installation
+Dir} startDerby</I><BR><I>% ant -Dglassfish.home={Installation
 Dir} start-server</I><BR><BR>Once the server and derby are started,
 go to <BR><I>% cd web/hellouniverse</I><BR><I>% ant&nbsp;
--Dglassfish.home={V3 Installation Dir} build </I><BR><BR>Make sure no
-errorss on consol<BR><I>% ant&nbsp; -Dglassfish.home={V3 Installation
+-Dglassfish.home={Installation Dir} build </I><BR><BR>Make sure no
+errorss on consol<BR><I>% ant&nbsp; -Dglassfish.home={Installation
 Dir} deploy </I><BR><BR>make sure no errors in server.log (while
-loading application)<BR><I>% ant&nbsp; -Dglassfish.home={V3
-Installation Dir}&nbsp; runtest</I></P>
+loading application)<BR><I>% ant&nbsp; -Dglassfish.home={Installation Dir}&nbsp; runtest</I></P>
 <P STYLE="margin-bottom: 0in">Now you should see 4 tests run and
 passed <BR>Please add &quot;all&quot; target to include &quot;build
 deploy runtest&quot;</P>

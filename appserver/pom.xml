@@ -103,7 +103,7 @@
 
         <!-- Jakarta WebSocket -->
         <websocket-api.version>2.0.0-M1</websocket-api.version>
-        <tyrus.version>2.0.0-M2</tyrus.version>
+        <tyrus.version>2.0.0-M3</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <concurrent-api.version>2.0.0-RC2</concurrent-api.version>

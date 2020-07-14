@@ -286,7 +286,7 @@ public class WebModule extends PwcWebModule implements Context {
 
         if (defaultCharset != null) {
             setRequestCharacterEncoding(defaultCharset);
-            setResponseCharacterEncoding(defaultCharset);
+            //setResponseCharacterEncoding(defaultCharset);
         }
     }
 

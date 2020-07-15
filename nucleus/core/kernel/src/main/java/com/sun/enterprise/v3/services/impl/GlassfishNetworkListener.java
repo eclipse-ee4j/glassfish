@@ -376,7 +376,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             serverVersion = serverInfo != null ? serverInfo : Version.getVersion();
             
             if (isXPoweredByEnabled) {
-                xPoweredBy = "Servlet/3.1 JSP/2.3 "
+                xPoweredBy = "Servlet/5.0 JSP/3.0"
                         + "(" + ((serverInfo != null && !serverInfo.isEmpty()) ? serverInfo : Version.getVersion())
                         + " Java/"
                         + System.getProperty("java.vm.vendor") + "/"

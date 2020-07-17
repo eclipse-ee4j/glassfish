@@ -400,7 +400,12 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
             injectionMgr = habitat.getService(InjectionManager.class);
             invocationMgr = habitat.getService(InvocationManager.class);
+            try {
             tldProviders = habitat.getAllServices(TldProvider.class);
+            }
+            catch (Exception e) {
+                    e.printStackTrace();
+                    }
 
             createStatsProviders();
 

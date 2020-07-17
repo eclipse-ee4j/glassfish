@@ -82,15 +82,15 @@
         <!-- Jakarta API Versions -->
         
         <!-- Jakarta EL -->
-        <jakarta.el.version>4.0.0-RC1</jakarta.el.version>
-        <jakarta.el-api.version>4.0.0-RC1</jakarta.el-api.version>
+        <jakarta.el.version>4.0.0-RC2</jakarta.el.version>
+        <jakarta.el-api.version>4.0.0-RC2</jakarta.el-api.version>
 
         <!-- Jakarta Servlet -->
         <servlet-api.version>5.0.0-M1</servlet-api.version>        
 
         <!-- Jakarta Validation -->
         <jakarta.validation.version>3.0.0-M1</jakarta.validation.version>        
-        <hibernate-validator.version>7.0.0.Alpha3</hibernate-validator.version>
+        <hibernate-validator.version>7.0.0.Alpha4</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <webservices.version>3.0.0-M2</webservices.version>

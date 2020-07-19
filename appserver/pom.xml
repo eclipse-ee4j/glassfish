@@ -156,8 +156,8 @@
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->
-        <jstl-api.version>2.0.0-RC1</jstl-api.version>
-        <jstl-impl.version>2.0.0-M1</jstl-impl.version>
+        <jstl-api.version>2.0.0-RC3</jstl-api.version>
+        <jstl-impl.version>2.0.0-M2</jstl-impl.version>
 
         <!-- CDI -->
         <cdi-api.version>3.0.0-M4</cdi-api.version>
@@ -359,7 +359,7 @@
                 <version>${hibernate-validator.version}</version>
             </dependency>
             
-            <!-- Jakarta Expression Language -->
+            <!-- Jakarta Expression Language Impl -->
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.el</artifactId>

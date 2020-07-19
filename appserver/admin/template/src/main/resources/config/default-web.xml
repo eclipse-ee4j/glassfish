@@ -293,6 +293,7 @@
         /lib/
         \lib\
         jakarta.el.jar
+        jakarta.el-api.jar
         jakarta.servlet-api.jar
         jakarta.servlet.jsp-api.jar
         jakarta.servlet.jsp.jstl-api.jar

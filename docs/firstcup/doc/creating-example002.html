@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Coding the dukes-age Example Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="creating-example001.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="coding-the-dukes-age-example-application">Coding the dukes-age Example Application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to code the <code>dukes-age</code> example application,
+a web application containing a JAX-RS RESTful web service endpoint.</p>
+</div>
+<div class="sect2">
+<h3 id="getting-started">Getting Started</h3>
+<div class="paragraph">
+<p>Before you start coding the example, you need to perform some
+configuration tasks:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Register the server with your NetBeans IDE as described in
+<a href="intro002.html#GIOEW">Add GlassFish Server as a Server in NetBeans
+IDE</a>.</p>
+</li>
+<li>
+<p>Install the Maven archetypes used to create the example
+applications.</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="install-the-maven-archetypes">Install the Maven Archetypes</h4>
+<div class="paragraph">
+<p>Maven archetypes are templates that create the structure of a particular
+application. There are two archetypes included in the example,
+<code>dukes-age-archetype</code> and <code>firstcup-war-archetype</code>. These archetypes
+create Java EE 8 web applications that you will then edit and deploy.</p>
+</div>
+<div class="paragraph">
+<p>Before you can create applications based on the archetypes, you must
+first install the archetypes and supporting projects to your local Maven
+repository by following these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In NetBeans IDE select <strong>File</strong>, then <strong>Open Project</strong>, navigate to the
+location where you installed the tutorial (usually
+<code>glassfish5/docs/firstcup</code>), select <code>example</code>, deselect the <strong>Open
+Required Projects</strong> check box, and click <strong>Open Project</strong>.</p>
+</li>
+<li>
+<p>Right-click the <code>firstcup</code> project in the Projects pane and select
+<strong>Build</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The required projects, including the archetypes, will be built.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-the-web-service">Creating the Web Service</h3>
+<div class="paragraph">
+<p>The <code>DukesAgeResource</code> endpoint is a simple RESTful web service. REST
+stands for <em>representational state transfer</em>, and software architectures
+that conform to the principles of REST are referred to as <em>RESTful</em>.
+RESTful web services are web-based applications that use the HTTP
+protocol to access, modify, or delete information contained within a
+<em>resource</em>. A RESTful web service resource is a source of specific
+information identifiable by a uniform resource identifier (URI), for
+example <code><a href="http://example.com/someResource" class="bare">http://example.com/someResource</a></code>, and may be manipulated by
+calling the HTTP protocol&#8217;s methods, for example GET or POST.</p>
+</div>
+<div class="paragraph">
+<p>Web services are designed to be independent of their clients. Typically
+RESTful web services are publicly available to a wide variety of
+clients, and the clients are located throughout the Internet. This is
+called "loose coupling", because the clients and servers are connected only
+by the standard HTTP-based requests and responses, and do not need to
+know each other&#8217;s implementation details. For this reason, <code>dukes-age</code>
+will be developed in its own application module and deployed separately
+from the <code>DukesBirthdayBean</code> enterprise bean and <code>firstcup-war</code> web
+client. The <code>dukes-age</code> web application could be deployed on a completely different machine
+without affecting the functionality of the <code>firstcup-war</code> web client.</p>
+</div>
+<div class="sect3">
+<h4 id="jax-rs-resources">JAX-RS Resources</h4>
+<div class="paragraph">
+<p>The <code>DukesAgeResource</code> class is a JAX-RS resource class that responds to HTTP GET
+requests and returns a <code>String</code> representing the age of Duke at the time
+of the request.</p>
+</div>
+<div class="paragraph">
+<p>The basic <code>DukesAgeResource</code> resource class is generated from the
+<code>dukes-age-archetype</code> Maven archetype. This class is annotated with the
+<code>javax.ws.rs.Path</code> annotation, which specifies the URL suffix to which
+the resource will respond. The <code>DukesAgeResource</code> class has a single method,
+<code>getText</code>, annotated with the <code>javax.ws.rs.GET</code> and
+<code>javax.ws.rs.Produces</code> annotations. The <code>@GET</code> annotation marks the method as a
+responder to HTTP GET requests, and <code>@Produces</code> specifies the MIME-type
+of the response sent back from <code>getText</code> to clients. In this case, the
+MIME-type is <code>text/plain</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="creating-the-dukes-age-application-using-the-maven-archetype">Creating the dukes-age Application Using the Maven Archetype</h4>
+<div class="paragraph">
+<p>In NetBeans IDE, create a new web project using the
+<code>dukes-age-archetype</code> Maven archetype.</p>
+</div>
+<div class="paragraph">
+<p>Create the Project in NetBeans IDE </p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the <strong>File</strong> menu, select <strong>New Project</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Categories</strong>, select <strong>Maven</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Projects</strong>, select <strong>Project from Archetype</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Search</strong> field, enter <code>dukes-age</code>.</p>
+</li>
+<li>
+<p>In the <strong>Known Archetypes</strong> field, select <code>dukes-age-archetype</code>.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Project Name</strong> field, enter <code>dukes-age</code>.</p>
+</li>
+<li>
+<p>In the <strong>Package</strong> field, enter <code>firstcup.dukesage.resource</code>.</p>
+</li>
+<li>
+<p>Click <strong>Finish</strong>.</p>
+<div class="paragraph">
+<p>You should now see the module you created in the Projects tab. The
+project is created in the <code>NetBeansProjects</code> directory under your home
+directory.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The <code>dukes-age-archetype</code> archetype creates the structure of the JAX-RS
+endpoint application, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>DukesAgeResource</code> resource class</p>
+</li>
+<li>
+<p>The <code>web.xml</code> deployment descriptor</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you create the basic application structure with the archetype, you
+will configure how the application will run, implement the functionality
+of the resource class, and then deploy the application.</p>
+</div>
+<div class="paragraph">
+<p>Configure the dukes-age Web Application</p>
+</div>
+<div class="paragraph">
+<p>Set the default URL that is brought up in a web browser when you run
+<code>dukes-age</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the <strong>Projects</strong> tab, right-click the <code>dukes-age</code> project and select
+<strong>Properties</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Categories</strong>, click <strong>Run</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Server</strong>, select the GlassFish Server instance you configured.</p>
+</li>
+<li>
+<p>Under <strong>Relative URL</strong> enter <code>/webapi/dukesAge</code>.</p>
+</li>
+<li>
+<p>Click <strong>OK</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Implement the getText Method</p>
+</div>
+<div class="paragraph">
+<p>Add code to <code>DukesAgeResource.getText</code> that calculates Duke&#8217;s age at the
+time of the request. To do this, use the <code>java.util.Calendar</code> and
+<code>java.util.GregorianCalendar</code> classes to create an object representing
+the date May 23, 1995, Duke&#8217;s birthday. Then create another <code>Calendar</code>
+object representing today&#8217;s date, and subtract today&#8217;s year from Duke&#8217;s
+birth year. If today&#8217;s date falls before May 23, subtract a year from
+this result. Then return the result as a <code>String</code> representation.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Expand the <strong>Source Packages</strong> node, expand the
+<code>firstcup.dukesage.resource</code> node, then double-click the
+<code>DukesAgeResource.java</code> file to open it in the editor window.</p>
+</li>
+<li>
+<p>Highlight the current code in <code>getText</code> and replace it with the
+following code:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">// Create a new Calendar for Duke's birthday
+Calendar dukesBirthday = new GregorianCalendar(1995, Calendar.MAY, 23);
+// Create a new Calendar for today
+Calendar now = GregorianCalendar.getInstance();
+
+// Subtract today's year from Duke's birth year, 1995
+int dukesAge = now.get(Calendar.YEAR) - dukesBirthday.get(Calendar.YEAR);
+dukesBirthday.add(Calendar.YEAR, dukesAge);
+
+// If today's date is before May 23, subtract a year from Duke's age
+if (now.before(dukesBirthday)) {
+    dukesAge--;
+}
+// Return a String representation of Duke's age
+return "" + dukesAge;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the editor window, right-click and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Save</strong> to save the file.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="starting-glassfish-server-and-the-database-server">Starting GlassFish Server and the Database Server</h4>
+<div class="paragraph">
+<p>Follow these steps to start GlassFish Server and Apache Derby.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <strong>Services</strong> tab.</p>
+</li>
+<li>
+<p>Expand <strong>Servers</strong>.</p>
+</li>
+<li>
+<p>Right-click the GlassFish Server instance and select <strong>Start</strong>.</p>
+<div class="paragraph">
+<p>Both the database server and the GlassFish Server instance will start.
+In the tab where the GlassFish Server instance is running, you can see
+the contents of the server log.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="building-and-deploying-the-web-service-endpoint">Building and Deploying the Web Service Endpoint</h4>
+<div class="paragraph">
+<p>Build <code>dukes-age.war</code>, the JAX-RS web application, and deploy it to your
+GlassFish Server instance.</p>
+</div>
+<div class="paragraph">
+<p>In the <strong>Projects</strong> tab, right-click <code>dukes-age</code> and select <strong>Run</strong>.</p>
+</div>
+<div class="paragraph">
+<p>After <code>dukes-age.war</code> deploys successfully to GlassFish Server, a web
+browser will load the URL of the <code>DukesAgeResource</code> path, and you&#8217;ll see
+the returned <code>String</code> representing Duke&#8217;s age.</p>
+</div>
+<div class="paragraph">
+<p>At this point, you&#8217;ve successfully created, deployed, and run your first
+Java EE application. Now you will create a web application that uses
+this web service data.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="creating-example001.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

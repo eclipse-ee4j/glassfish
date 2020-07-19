@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Overview of Enterprise Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="java-ee.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="java-ee002.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="overview-of-enterprise-applications">Overview of Enterprise Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes enterprise applications and how they are designed
+and developed.</p>
+</div>
+<div class="paragraph">
+<p>As stated above, the Java EE platform is designed to help developers
+create large-scale, multitiered, scalable, reliable, and secure network
+applications. A shorthand name for such applications is <strong>enterprise
+applications</strong>, so called because these applications are designed to
+solve the problems encountered by large enterprises. Enterprise
+applications are not only useful for large corporations, agencies, and
+governments, however. The benefits of an enterprise application are
+helpful, even essential, for individual developers and small
+organizations in an increasingly networked world.</p>
+</div>
+<div class="paragraph">
+<p>The features that make enterprise applications powerful, like security
+and reliability, often make these applications complex. The Java EE
+platform reduces the complexity of enterprise application development by
+providing a development model, API, and runtime environment that allow
+developers to concentrate on functionality.</p>
+</div>
+<div class="sect2">
+<h3 id="tiered-applications">Tiered Applications</h3>
+<div class="paragraph">
+<p>In a multitiered application, the functionality of the application is
+separated into isolated functional areas, called tiers. Typically,
+multitiered applications have a client tier, a middle tier, and a data
+tier (often called the enterprise information systems tier). The client
+tier consists of a client program that makes requests to the middle
+tier. The middle tier is divided into a web tier and a business tier,
+which handle client requests and process application data, storing it in
+a permanent data store in the data tier.</p>
+</div>
+<div class="paragraph">
+<p>Java EE application development concentrates on the middle tier to make
+enterprise application management easier, more robust, and more secure.</p>
+</div>
+<div class="sect3">
+<h4 id="the-client-tier">The Client Tier</h4>
+<div class="paragraph">
+<p>The client tier consists of application clients that access a Java EE
+server and that are usually located on a different machine from the
+server. The clients make requests to the server. The server processes
+the requests and returns a response back to the client. Many different
+types of applications can be Java EE clients, and they are not always,
+or even often, Java applications. Clients can be a web browser, a
+standalone application, or other servers, and they run on a different
+machine from the Java EE server.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-web-tier">The Web Tier</h4>
+<div class="paragraph">
+<p>The web tier consists of components that handle the interaction between
+clients and the business tier. Its primary tasks are the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Dynamically generate content in various formats for the client</p>
+</li>
+<li>
+<p>Collect input from users of the client interface and return
+appropriate results from the components in the business tier</p>
+</li>
+<li>
+<p>Control the flow of screens or pages on the client</p>
+</li>
+<li>
+<p>Maintain the state of data for a user&#8217;s session</p>
+</li>
+<li>
+<p>Perform some basic logic and hold some data temporarily in managed
+beans</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a href="#GCTOG">Table 2-1</a> lists some of the main Java EE technologies that
+are used in the web tier in Java EE applications.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref6"></a><a id="GCTOG"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 2-1 Web-Tier Java EE Technologies</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 25.2525%;">
+<col style="width: 74.7475%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Technology</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Purpose</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JavaServer Faces technology</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A user interface component framework for
+web applications that allows you to include UI components (such as
+fields and buttons) on a XHTML page, called a Facelets page; convert and
+validate UI component data; save UI component data to server-side data
+stores; and maintain component state</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expression Language</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A set of standard tags used in Facelets pages to
+refer to Java EE components</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java programming language classes that dynamically process
+requests and construct responses, usually for HTML pages</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contexts and Dependency Injection for Java EE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A set of contextual
+services that make it easy for developers to use enterprise beans along
+with JavaServer Faces technology in web applications</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="the-business-tier">The Business Tier</h4>
+<div class="paragraph">
+<p>The business tier consists of components that provide the business logic
+for an application. Business logic is code that provides functionality
+to a particular business domain, like the financial industry, or an
+e-commerce site. In a properly designed enterprise application, the core
+functionality exists in the business tier components.</p>
+</div>
+<div class="paragraph">
+<p>The following Java EE technologies are among those that are used in the
+business tier in Java EE applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enterprise JavaBeans (enterprise bean) components</p>
+</li>
+<li>
+<p>JAX-RS RESTful web services</p>
+</li>
+<li>
+<p>Java Persistence API entities</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-enterprise-information-systems-tier">The Enterprise Information Systems Tier</h4>
+<div class="paragraph">
+<p>The enterprise information systems (EIS) tier consists of database
+servers, enterprise resource planning systems, and other legacy data
+sources, like mainframes. These resources typically are located on a
+separate machine from the Java EE server, and are accessed by components
+on the business tier.</p>
+</div>
+<div class="paragraph">
+<p>The following Java EE technologies are used to access the EIS tier in
+Java EE applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Java Database Connectivity API (JDBC)</p>
+</li>
+<li>
+<p>The Java Persistence API</p>
+</li>
+<li>
+<p>The Java EE Connector Architecture</p>
+</li>
+<li>
+<p>The Java Transaction API (JTA)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="java-ee.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="java-ee002.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

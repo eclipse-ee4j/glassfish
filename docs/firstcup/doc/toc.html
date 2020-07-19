@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Java Platform, Enterprise Edition Your First Cup: An Introduction to the Java EE Platform Java Platform, Enterprise Edition, Release 8</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+
+		<td align="left">
+		<a href="title.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<h1 id="contents" class="sect0">Contents</h1>
+<div class="sect2">
+<h3 id="title-and-copyright-information"><a href="title.html">Title and Copyright Information</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="preface"><a href="preface.html#GCQYW">Preface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="preface.html#sthref2">Audience</a></p>
+</li>
+<li>
+<p><a href="preface.html#sthref3">Documentation Accessibility</a></p>
+</li>
+<li>
+<p><a href="preface.html#GCQYU">Before You Read This Book</a></p>
+</li>
+<li>
+<p><a href="preface.html#GCQXV">Related Books and Projects</a></p>
+</li>
+<li>
+<p><a href="preface.html#sthref5">Conventions</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction"><a href="intro.html#GCQYB">1 Introduction</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="intro001.html#GCQYJ">Goals of This Tutorial</a></p>
+</li>
+<li>
+<p><a href="intro002.html#GCQZL">Prerequisite Tasks for Completing This
+Tutorial</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="intro002.html#software-compatibility">Software Compatibility Notice</a></p>
+</li>
+<li>
+<p><a href="intro002.html#GCRNX">Get the Java EE 8 SDK</a></p>
+</li>
+<li>
+<p><a href="intro002.html#GCRNU">Install the NetBeans IDE Distribution for
+Java EE</a></p>
+</li>
+<li>
+<p><a href="intro002.html#GIOEW">Add GlassFish Server as a Server in NetBeans
+IDE</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="understanding-java-platform-enterprise-edition"><a href="java-ee.html#GCRLO">2 Understanding Java Platform, Enterprise Edition</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-ee001.html#GCRKY">Overview of Enterprise Applications</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-ee001.html#GCRKR">Tiered Applications</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-ee001.html#GCRLA">The Client Tier</a></p>
+</li>
+<li>
+<p><a href="java-ee001.html#GCRNL">The Web Tier</a></p>
+</li>
+<li>
+<p><a href="java-ee001.html#GCRLS">The Business Tier</a></p>
+</li>
+<li>
+<p><a href="java-ee001.html#GCRKW">The Enterprise Information Systems Tier</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="java-ee002.html#GCRKQ">Java EE Servers and Containers</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-ee002.html#GCRMB">The Web Container</a></p>
+</li>
+<li>
+<p><a href="java-ee002.html#GCRMA">The EJB Container</a></p>
+</li>
+<li>
+<p><a href="java-ee002.html#GCRLJ">The Application Client Container</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-your-first-java-ee-application"><a href="creating-example.html#GCRKP">3 Creating Your First Java EE Application</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="creating-example001.html#GKHQT">Architecture of the Example
+Applications</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="creating-example001.html#GCRLR">Tiers in the Example Applications</a></p>
+</li>
+<li>
+<p><a href="creating-example001.html#GCRLU">Java EE Technologies Used in the
+Example Applications</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="creating-example002.html#GCRKM">Coding the dukes-age Example
+Application</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="creating-example002.html#GCSKG">Getting Started</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="creating-example002.html#GCSKJ">Install the Maven Archetypes</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="creating-example002.html#GCRKN">Creating the Web Service</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="creating-example002.html#GCROM">JAX-RS Resources</a></p>
+</li>
+<li>
+<p><a href="creating-example002.html#GCROI">Creating the dukes-age
+Application Using the Maven Archetype</a></p>
+</li>
+<li>
+<p><a href="creating-example002.html#sthref9">Starting GlassFish Server and
+the Database Server</a></p>
+</li>
+<li>
+<p><a href="creating-example002.html#GCTOZ">Building and Deploying the Web
+Service Endpoint</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-your-second-web-application"><a href="web-application.html#GLCFC">4 Creating Your Second Web Application</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="web-application001.html#GJBCA">The firstcup-war Project</a></p>
+</li>
+<li>
+<p><a href="web-application002.html#GIMNT">Creating the Web Application Project
+Using the Archetype</a></p>
+</li>
+<li>
+<p><a href="web-application003.html#GJBCS">Modifying the Java Persistence API
+Entity</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="web-application003.html#GKKNN">Edit the Constructor of the
+FirstcupUser Entity</a></p>
+</li>
+<li>
+<p><a href="web-application003.html#GJBCM">Add a Named Query to the
+FirstcupUser Entity</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="web-application004.html#GCRLX">Modifying the Enterprise Bean</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="web-application004.html#GJBCU">Implement a Business Method to
+DukesBirthdayBean that Gets the Average Age Difference of firstcup-war
+Users</a></p>
+</li>
+<li>
+<p><a href="web-application004.html#GKGOT">Implement a Business Method for
+Calculating the Age Difference Between Duke and the User</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="web-application005.html#GCRLT">Modifying the Web Client</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="web-application005.html#GCRQX">Modify the DukesBDay Managed Bean
+Class</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="web-application005.html#sthref10">Call the dukes-age Web Service
+to Retrieve Duke&#8217;s Current Age</a></p>
+</li>
+<li>
+<p><a href="web-application005.html#GCRSA">Get the Age Difference from the
+DukesBirthdayBean Enterprise Bean</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="web-application005.html#GIMVD">Creating the Facelets Client</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="web-application005.html#GIMUG">Resource Libraries in
+firstcup-war</a></p>
+</li>
+<li>
+<p><a href="web-application005.html#GIMTW">The inputDate Composite Component</a></p>
+</li>
+<li>
+<p><a href="web-application005.html#GIMWV">Implement the inputDate Composite
+Component</a></p>
+</li>
+<li>
+<p><a href="web-application005.html#GIMUM">The Facelets Web Interface</a></p>
+</li>
+<li>
+<p><a href="web-application005.html#GIMTA">Add the Form to greeting.xhtml</a></p>
+</li>
+<li>
+<p><a href="web-application005.html#GIMVW">Add the Form to response.html</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="web-application006.html#GCTNX">Building, Packaging, Deploying, and
+Running the firstcup-war Web Application</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="web-application006.html#GCTOJ">Build, Package, and Deploy the
+firstcup-war Web Application</a></p>
+</li>
+<li>
+<p><a href="web-application006.html#GCTQC">Run the firstcup-war Application</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="next-steps"><a href="next-steps.html#GCRLL">5 Next Steps</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="next-steps001.html#GCRLH">The Java EE Tutorial</a></p>
+</li>
+<li>
+<p><a href="next-steps002.html#GKHRA">More Information on the Java EE Platform</a></p>
+</li>
+</ul>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+
+		<td align="left">
+		<a href="title.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

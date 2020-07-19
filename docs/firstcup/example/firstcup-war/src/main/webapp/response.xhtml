@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Response Page</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:outputText value="#{bundle.YouAre} "/>
+            <h:outputText value="#{bundle.SameAge}"
+                          rendered="#{dukesBDay.ageDiff == 0}"/>
+            <h:outputText value="#{dukesBDay.absAgeDiff}"
+                          rendered="#{dukesBDay.ageDiff lt 0}"/>
+            <h:outputText value=" #{bundle.Year} "
+                          rendered="#{dukesBDay.ageDiff == -1}"/>
+            <h:outputText value=" #{bundle.Years} "
+                          rendered="#{dukesBDay.ageDiff lt -1}"/>
+            <h:outputText value="#{bundle.Younger}"
+                          rendered="#{dukesBDay.ageDiff lt 0}"/>
+            <h:outputText value="#{dukesBDay.absAgeDiff}"
+                          rendered="#{dukesBDay.ageDiff gt 0}"/>
+            <h:outputText value=" #{bundle.Year} "
+                          rendered="#{dukesBDay.ageDiff == 1}"/>
+            <h:outputText value=" #{bundle.Years} "
+                          rendered="#{dukesBDay.ageDiff gt 1}"/>
+            <h:outputText value="#{bundle.Older}"
+                          rendered="#{dukesBDay.ageDiff gt 0}"/>
+            <p/>
+            <h:outputText 
+                value="#{bundle.AverageAge} #{dukesBDay.averageAgeDifference}."/>
+            <p/>
+            <h:commandButton id="back" value="#{bundle.Back}" action="greeting"/>
+        </h:form>
+    </h:body>
+</html>
+

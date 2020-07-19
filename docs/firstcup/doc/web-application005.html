@@ -1,0 +1,678 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Modifying the Web Client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="web-application004.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application006.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="modifying-the-web-client">Modifying the Web Client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To add the correct functionality to the web client, you need to perform
+the following tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Modify the <code>DukesBDay</code> managed bean class</p>
+</li>
+<li>
+<p>Modify the Facelets pages</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="modify-the-dukesbday-managed-bean-class">Modify the DukesBDay Managed Bean Class</h3>
+<div class="paragraph">
+<p><code>DukesBDay</code> is a CDI managed bean that acts as a backing bean. A managed
+bean is a lightweight container-managed object that supports a set of
+basic services. A backing bean is a managed bean that provides temporary
+data storage for the values of the components included on a particular
+JavaServer Faces page. The JavaServer Faces application instantiates the
+managed bean and stores it in scope. The section following this one
+describes more about managed beans and how to configure them.</p>
+</div>
+<div class="paragraph">
+<p>This section describes how to modify the <code>DukesBDay</code> class.</p>
+</div>
+<div class="sect3">
+<h4 id="call-the-dukes-age-web-service-to-retrieve-dukes-current-age">Call the dukes-age Web Service to Retrieve Duke&#8217;s Current Age</h4>
+<div class="paragraph">
+<p>Now modify the <code>getAge</code> method of <code>DukesBDay</code> to call the <code>dukes-age</code>
+web service using the JAX-RS Client API. This will retrieve Duke&#8217;s
+current age, so it can be compared to the user&#8217;s age.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Expand the <strong>Source Packages</strong> node, expand the <code>firstcup.web</code> node,
+then double-click the <code>DukesBDay.java</code> file to open it in the editor
+window.</p>
+</li>
+<li>
+<p>Find the <code>getAge</code> method and implement its functionality by copying
+and pasting the following code in bold:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    public int getAge() {
+        <strong>try {
+            Client client = ClientBuilder.newClient();
+            WebTarget target =
+            client.target("http://localhost:8080/dukes-age/webapi/dukesAge");
+            String response = target.request().get(String.class);
+            age = Integer.parseInt(response);
+        } catch (IllegalArgumentException | NullPointerException |
+                 WebApplicationException ex) {
+            logger.severe("processing of HTTP response failed");
+        }
+        return age;</strong>
+    }</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the editor window, right-click and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="get-the-age-difference-from-the-dukesbirthdaybean-enterprise-bean">Get the Age Difference from the DukesBirthdayBean Enterprise Bean</h4>
+<div class="paragraph">
+<p>Now modify the <code>processBirthday</code> method to get the difference in age
+between the user&#8217;s age and Duke&#8217;s age from the <code>DukesBirthdayBean</code> EJB,
+set the <code>absAgeDiff</code> variable to the absolute value of the age
+difference, and set a result string that will forward the user to the
+display page.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Find the <code>processBirthday</code> method and implement the functionality by
+copying and pasting the following code in bold:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    public String processBirthday() {
+        <strong>this.setAgeDiff(dukesBirthdayBean.getAgeDifference(yourBD));
+        logger.log(Level.INFO, "age diff from dukesbday {0}", ageDiff);
+        this.setAbsAgeDiff(Math.abs(this.getAgeDiff()));
+        logger.log(Level.INFO, "absAgeDiff {0}", absAgeDiff);
+    this.setAverageAgeDifference(dukesBirthdayBean.getAverageAgeDifference());
+    logger.log(Level.INFO, "averageAgeDifference {0}", averageAgeDifference);
+        return "/response.xhtml";</strong>
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method calls the <code>getAgeDifference</code> method of <code>DukesBirthdayBean</code>
+to get the age difference and store it in the <code>ageDiff</code> property, sets
+the absolute age difference stored in the <code>absAgeDiff</code> property, and
+sets the average age difference stored in the <code>averageAgeDifference</code>
+property. It returns the relative URL of the response page to which the
+user will be forwarded.</p>
+</div>
+</li>
+<li>
+<p>In the editor window, right-click and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-the-facelets-client">Creating the Facelets Client</h3>
+<div class="paragraph">
+<p>The Facelets client consists of a <em>resource library</em>, a <em>composite
+component</em>, and two XHTML files.</p>
+</div>
+<div class="sect3">
+<h4 id="resource-libraries-in-firstcup-war">Resource Libraries in firstcup-war</h4>
+<div class="paragraph">
+<p>A JavaServer Faces resource library is a collection of user-created
+components collected in a standard location in a web application.
+Resource libraries are identified according to a <em>resource identifier</em>, a
+string that represents a particular resource within a web application.
+Resources can be packaged either at the root of the web application or
+on the web application&#8217;s classpath.</p>
+</div>
+<div class="paragraph">
+<p>A resource packaged in the web application root must be in a
+subdirectory of a <code>resources</code> directory at the web application root.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">resources/<em>resource-identifier</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A resource packaged in the web application classpath must be in a
+subdirectory of the <code>META-INF/resources</code> directory within a web
+application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">META-INF/resources/<em>resource-identifier</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Resource identifiers are unique strings that conform to the following
+format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[<em>locale-prefix</em>/][<em>library-name</em> /]<em class="_library-version_/">resource-name</em> [/<em>resource-version</em>]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Elements of the resource identifier in brackets (<code>[]</code>) are optional. A
+resource name, identifying a particular resource (a file or a graphic,
+for example), is required. In <code>firstcup-war</code>, a resource library with
+the name <code>components</code> is packaged in the web application root, and this
+library contains one resource, a file called <code>inputDate.xhtml</code>. The
+resource identifier for this resource is therefore
+<code>components/inputDate.xhtml</code>, and it is located in the web application
+root at <code>resources/components/inputDate.xhtml</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-inputdate-composite-component">The inputDate Composite Component</h4>
+<div class="paragraph">
+<p>A composite component is a set of user-defined JavaServerFaces and
+Facelets components located in a resource. In <code>firstcup-war</code>, the
+<code>inputDate.xhtml</code> resource, located in the <code>components</code> resource
+library, is a composite component that contains tags for reading in a
+date the user enters in a form. Composite components consist of an
+<em>interface</em> definition and an <em>implementation</em>.</p>
+</div>
+<div class="paragraph">
+<p>The interface definition is specified with the <code>&lt;cc:interface&gt;</code> tag to
+define which attributes are exposed to pages that use the composite
+component. Attributes are identified with the <code>&lt;cc:attribute&gt;</code> tag.</p>
+</div>
+<div class="paragraph">
+<p>The <code>inputDate.xhtml</code> interface definition is as follows. It defines a
+single attribute, <code>date</code>, that must be specified in pages that use the
+<code>inputDate</code> composite component.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;cc:interface&gt;
+    &lt;cc:attribute name="date" /&gt;
+&lt;/cc:interface&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The implementation of the composite component is specified with the
+<code>&lt;cc:implementation&gt;</code> tag. The tags within the <code>&lt;cc:implementation&gt;</code> are
+the actual component tags that will be added to pages that use the
+composite component. They can be any HTML render kit, JavaServer Faces,
+or Facelets tags. The <code>#{cc.attrs.<code>attribute-name</code>}</code> expression is
+used to get the value of the specified attribute from the page or
+component that is using the composite component.</p>
+</div>
+<div class="paragraph">
+<p>The implementation of the <code>inputDate</code> composite component is as follows.
+An HTML input text component will store the entered text into the <code>date</code>
+attribute, accessed by the <code>#{cc.attrs.date}</code> expression. A JavaServer
+Faces <code>convertDateTime</code> component will convert the entered text to a
+date with the form of <code>MM/dd/yyyy</code> (04/13/2014, for example).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;cc:implementation&gt;
+    &lt;h:inputText id="getdate" value="#{cc.attrs.date}"&gt;
+        &lt;f:convertDateTime pattern="MM/dd/yyyy" /&gt;
+    &lt;/h:inputText&gt;
+    &lt;p/&gt;
+    &lt;h:message for="getdate" style="color:red" /&gt;
+&lt;/cc:implementation&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If there&#8217;s an error with the input of the <code>inputText</code> component, the
+form submission is unsuccessful, and a warning message is displayed. The
+message output is specified by the <code>&lt;h:message&gt;</code> tag, which is connected
+to the <code>inputText</code> component that has the id <code>getdate</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implement-the-inputdate-composite-component">Implement the inputDate Composite Component</h4>
+<div class="paragraph">
+<p>Modify the <code>inputDate</code> composite component in the <code>components</code> resource
+library.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Expand <strong>Web Pages</strong>, then <code>resources</code>, then <code>components</code>, and open
+<code>inputDate.xhtml</code>.</p>
+</li>
+<li>
+<p>Add the composite component interface definition between the opening
+and closing <code>&lt;cc:interface&gt;</code> tags in <code>inputDate.xhtml</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    &lt;cc:interface&gt;
+        <strong>&lt;cc:attribute name="date" /&gt;</strong>
+    &lt;/cc:interface&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add the composite component implementation between the opening and
+closing <code>cc:implementation</code> tags:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    &lt;cc:implementation&gt;
+        <strong>&lt;h:inputText id="getdate" value="#{cc.attrs.date}"&gt;
+            &lt;f:convertDateTime pattern="MM/dd/yyyy" /&gt;
+        &lt;/h:inputText&gt;
+        &lt;p/&gt;
+        &lt;h:message for="getdate" style="color:red" /&gt;</strong>
+    &lt;/cc:implementation&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the editor window, right-click and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-facelets-web-interface">The Facelets Web Interface</h4>
+<div class="paragraph">
+<p>The <code>firstcup-war</code> web application interface has two XHTML files. The
+<code>greeting.xhtml</code> file displays Duke&#8217;s current age and the form where the
+user can enter a birthday. The <code>response.xhtml</code> file displays the age
+difference between the user and Duke.</p>
+</div>
+<div class="paragraph">
+<p>The <code>greeting.xhtml</code> file contains several pieces of the <code>firstcup-war</code>
+application detailed previously. It uses the localized strings contained
+in <code>WebMessages.properties</code> and <code>WebMessages_es.properties</code>. It uses the
+<code>DukesBDay</code> managed bean to call both the <code>DukesAgeResource</code> JAX-RS web
+service and the <code>DukesBirthdayBean</code> enterprise bean. It uses the
+<code>inputDate</code> composite component to create the input for the user to
+enter a birthday.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s the content of the <code>greeting.xhtml</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE html
+      PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fc="http://xmlns.jcp.org/jsf/composite/components"&gt;
+    &lt;h:head&gt;
+        &lt;title&gt;Firstcup Greeting Page&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+        &lt;h:form&gt;
+            &lt;h2&gt;
+                &lt;h:outputText value="#{bundle.Welcome}"/&gt;
+            &lt;/h2&gt;
+            &lt;h:outputText value="#{bundle.DukeIs} "/&gt;
+            &lt;h:outputText value="#{dukesBDay.age} #{bundle.YearsOldToday}"/&gt;
+            &lt;p/&gt;
+            &lt;h:outputText value="#{bundle.Instructions}"/&gt;
+            &lt;p/&gt;
+            &lt;h:outputText value="#{bundle.YourBD} "/&gt;
+            &lt;fc:inputDate id="userBirthday" date="#{dukesBDay.yourBD}" /&gt;
+            &lt;p/&gt;
+            &lt;h:commandButton value="#{bundle.Submit}"
+                             action="#{dukesBDay.processBirthday}"/&gt;
+        &lt;/h:form&gt;
+
+    &lt;/h:body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>greeting.xhtml</code> file uses the HTML RenderKit and the <code>components</code>
+resource library tag libraries. The <code>components</code> tag library has a
+prefix of <code>fc</code>, and is used to specify the <code>inputDate</code> composite
+component in the form below. The
+<code>&lt;fc:inputDate id="userBirthday" date="#{dukesBDay.yourBD}" /&gt;</code> tag has
+the required <code>date</code> attribute, and it stores the value in the <code>yourBD</code>
+property in the <code>DukesBDay</code> managed bean by using the EL expression
+<code>#{dukesBDay.yourBD}</code>.</p>
+</div>
+<div class="paragraph">
+<p>The localized strings are referenced by the EL expressions
+<code>#{bundle.<code>property-name</code>}</code>. For example, the
+<code>&lt;h:outputText value="#{bundle.Welcome}"/&gt;</code> tag will display the
+following string in English locales:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Hi. I'm Duke. Let's find out who's older -- you or I.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>&lt;h:commandButton&gt;</code> tag creates a Submit button and specifies that a
+successful submission should render the <code>response.xhtml</code> file by setting
+the <code>action</code> attribute to <code>#{dukesBDay.processBirthday}</code>. The
+<code>processBirthday</code> method returns the value <code>"/response.xhtml"</code>. The
+<code>action</code> attribute is used to define navigation rules for forms in
+Facelets pages.</p>
+</div>
+<div class="paragraph">
+<p>The <code>response.xhtml</code> file displays the age difference between the user
+and Duke and the average age difference of all users so far. Different
+strings are displayed based on whether the user is the same age,
+younger, or older than Duke. The text can be displayed or not based on
+the conditions specified by the <code>rendered</code> attribute of the
+<code>&lt;h:outputText&gt;</code> tag. The conditions used in the <code>rendered</code> attribute
+are Expression Language (EL) alternatives to the Java programming
+language conditional operators to allow XML parsing of the XHTML file.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref11"></a><a id="GIMVG"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 4-1 Conditional Operator EL Language Alternatives</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 60%;">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 40%;">
+<col style="width: 35%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Logical Condition</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Java Programming Language Conditional Operator</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>EL
+Alternative</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AND</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>&amp;&amp;</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>&amp;&amp;</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EQUALS</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>==</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>==</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LESS THAN</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>&lt;</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lt</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GREATER THAN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gt</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Here&#8217;s the content of the <code>response.xhtml</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"&gt;
+    &lt;h:head&gt;
+        &lt;title&gt;Response Page&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+        &lt;h:form&gt;
+            &lt;h:outputText value="#{bundle.YouAre} "/&gt;
+            &lt;h:outputText value="#{bundle.SameAge}"
+                          rendered="#{dukesBDay.ageDiff == 0}"/&gt;
+            &lt;h:outputText value="#{dukesBDay.absAgeDiff}"
+                          rendered="#{dukesBDay.ageDiff lt 0}"/&gt;
+            &lt;h:outputText value=" #{bundle.Year} "
+                          rendered="#{dukesBDay.ageDiff == -1}"/&gt;
+            &lt;h:outputText value=" #{bundle.Years} "
+                          rendered="#{dukesBDay.ageDiff lt -1}"/&gt;
+            &lt;h:outputText value="#{bundle.Younger}"
+                          rendered="#{dukesBDay.ageDiff lt 0}"/&gt;
+            &lt;h:outputText value="#{dukesBDay.absAgeDiff}"
+                          rendered="#{dukesBDay.ageDiff gt 0}"/&gt;
+            &lt;h:outputText value=" #{bundle.Year} "
+                          rendered="#{dukesBDay.ageDiff == 1}"/&gt;
+            &lt;h:outputText value=" #{bundle.Years} "
+                          rendered="#{dukesBDay.ageDiff gt 1}"/&gt;
+            &lt;h:outputText value="#{bundle.Older}"
+                          rendered="#{dukesBDay.ageDiff gt 0}"/&gt;
+            &lt;p/&gt;
+            &lt;h:outputText
+                value="#{bundle.AverageAge} #{dukesBDay.averageAgeDifference}."/&gt;
+            &lt;p/&gt;
+            &lt;h:commandButton id="back" value="#{bundle.Back}" action="greeting"/&gt;
+        &lt;/h:form&gt;
+    &lt;/h:body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, the <code>#{bundle.SameAge}</code> string is displayed if the user and
+Duke have the same birthday, as specified by the condition
+<code>#{dukesBDay.ageDiff == 0}</code> in the <code>rendered</code> attribute. That is, the
+following string is displayed when the <code>ageDiff</code> property of <code>DukesBDay</code>
+equals <code>0</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">You are the same age as Duke!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The form also contains a <code>&lt;h:commandButton&gt;</code> tag that creates a <strong>Back</strong>
+button, which directs the user back to the <code>greeting.xhtml</code> page, as
+specified in the <code>action</code> attribute.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="add-the-form-to-greeting.xhtml">Add the Form to greeting.xhtml</h4>
+<div class="paragraph">
+<p>Add the form that provides the user interface for displaying Duke&#8217;s age
+and specifying the user&#8217;s birthday.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the <strong>Projects</strong> tab, double-click <code>greeting.xhtml</code> in the
+<code>firstcup-war</code> project and, in the editor window, replace the text
+between the <code>&lt;h:form&gt;</code> and <code>&lt;/h:form&gt;</code> tags with the following:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    &lt;h2&gt;
+        &lt;h:outputText value="#{bundle.Welcome}"/&gt;
+    &lt;/h2&gt;
+    &lt;h:outputText value="#{bundle.DukeIs} "/&gt;
+    &lt;h:outputText value="#{dukesBDay.age} #{bundle.YearsOldToday}"/&gt;
+    &lt;p/&gt;
+    &lt;h:outputText value="#{bundle.Instructions}"/&gt;
+    &lt;p/&gt;
+    &lt;h:outputText value="#{bundle.YourBD} "/&gt;
+    &lt;fc:inputDate id="userBirthday" date="#{dukesBDay.yourBD}" /&gt;
+    &lt;p/&gt;
+    &lt;h:commandButton value="#{bundle.Submit}"
+                     action="#{dukesBDay.processBirthday}"/&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the editor window, right-click and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="add-the-form-to-response.html">Add the Form to response.html</h4>
+<div class="paragraph">
+<p>Add a form that displays the age difference between Duke and the user,
+displays the average age difference of all users, and allows the user to
+navigate back to <code>greeting.xhtml</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the <strong>Projects</strong> tab, double-click <code>response.xhtml</code> in the
+<code>firstcup-war</code> project and, in the editor window, replace the text
+between the <code>&lt;h:form&gt;</code> and <code>&lt;/h:form&gt;</code> tags with the following:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    &lt;h:outputText value="#{bundle.YouAre} "/&gt;
+    &lt;h:outputText value="#{bundle.SameAge}"
+                  rendered="#{dukesBDay.ageDiff == 0}"/&gt;
+    &lt;h:outputText value="#{dukesBDay.absAgeDiff}"
+                  rendered="#{dukesBDay.ageDiff lt 0}"/&gt;
+    &lt;h:outputText value=" #{bundle.Year} "
+                  rendered="#{dukesBDay.ageDiff == -1}"/&gt;
+    &lt;h:outputText value=" #{bundle.Years} "
+                  rendered="#{dukesBDay.ageDiff lt -1}"/&gt;
+    &lt;h:outputText value="#{bundle.Younger}"
+                  rendered="#{dukesBDay.ageDiff lt 0}"/&gt;
+    &lt;h:outputText value="#{dukesBDay.absAgeDiff}"
+                  rendered="#{dukesBDay.ageDiff gt 0}"/&gt;
+    &lt;h:outputText value=" #{bundle.Year} "
+                  rendered="#{dukesBDay.ageDiff == 1}"/&gt;
+    &lt;h:outputText value=" #{bundle.Years} "
+                  rendered="#{dukesBDay.ageDiff gt 1}"/&gt;
+    &lt;h:outputText value="#{bundle.Older}"
+                  rendered="#{dukesBDay.ageDiff gt 0}"/&gt;
+    &lt;p/&gt;
+    &lt;h:outputText
+        value="#{bundle.AverageAge} #{dukesBDay.averageAgeDifference}." /&gt;
+    &lt;p/&gt;
+    &lt;h:commandButton id="back" value="#{bundle.Back}" action="greeting"/&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the editor window, right-click and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="web-application004.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application006.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

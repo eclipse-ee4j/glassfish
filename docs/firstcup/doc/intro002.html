@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Prerequisite Tasks for Completing This Tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="intro001.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="java-ee.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="prerequisite-tasks-for-completing-this-tutorial">Prerequisite Tasks for Completing This Tutorial</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To complete this tutorial, you need to complete the following tasks
+first:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#software-compatibility">See the software compatibility notice</a></p>
+</li>
+<li>
+<p><a href="#get-the-java-ee-8-sdk">Get the Java EE 8 SDK</a></p>
+</li>
+<li>
+<p><a href="#install-the-netbeans-ide-distribution-for-java-ee">Install the NetBeans IDE distribution for Java EE</a></p>
+</li>
+<li>
+<p><a href="#add-glassfish-server-as-a-server-in-netbeans-ide">Add GlassFish Server as a server in NetBeans IDE</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="software-compatibility">Software Compatibility Notice</h3>
+<div class="paragraph">
+<p>This tutorial is compatible with the following software:</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 55%;">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Software</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java Development Kit (JDK)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8 update 144 (8u144) or greater</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/glassfish/">GlassFish Server</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0 or greater</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://netbeans.org/">NetBeans IDE</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.2 or greater</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse.org/ide/">Eclipse IDE</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.7.0 or greater</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="get-the-java-ee-8-sdk">Get the Java EE 8 SDK</h3>
+<div class="paragraph">
+<p>To get the Java EE 8 SDK, go to
+<code><a href="http://www.oracle.com/technetwork/java/javaee/downloads/" class="bare">http://www.oracle.com/technetwork/java/javaee/downloads/</a></code>. Download and
+install the SDK. The location where you install it is typically
+<code>glassfish5</code> in your home directory, but you can change this.</p>
+</div>
+<div class="paragraph">
+<p>The tutorial is installed in the <code>docs/firstcup</code> directory of your SDK
+installation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="install-the-netbeans-ide-distribution-for-java-ee">Install the NetBeans IDE Distribution for Java EE</h3>
+<div class="paragraph">
+<p>To get NetBeans IDE, go to <code><a href="https://netbeans.org/downloads/" class="bare">https://netbeans.org/downloads/</a></code> and
+download the Java EE distribution. Install this distribution.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-glassfish-server-as-a-server-in-netbeans-ide">Add GlassFish Server as a Server in NetBeans IDE</h3>
+<div class="paragraph">
+<p>Once you have all the necessary downloads, you must configure NetBeans
+IDE and get the latest tutorial updates.</p>
+</div>
+<div class="paragraph">
+<p>To run this tutorial in NetBeans IDE, you must register your GlassFish
+Server installation as a NetBeans server instance. Follow these
+instructions to register the GlassFish Server in NetBeans IDE.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the <strong>Tools</strong> menu, select <strong>Servers</strong>.</p>
+</li>
+<li>
+<p>In the Servers dialog, click <strong>Add Server</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Choose Server</strong>, select <strong>GlassFish Server</strong> and click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Server Location</strong>, browse to or enter the location of your
+GlassFish Server installation.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Domain Location</strong>, select the default domain, <code>domain1</code>.</p>
+</li>
+<li>
+<p>Click <strong>Finish</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="intro001.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="java-ee.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

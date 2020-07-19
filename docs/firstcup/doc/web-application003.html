@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Modifying the Java Persistence API Entity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="web-application002.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application004.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="modifying-the-java-persistence-api-entity">Modifying the Java Persistence API Entity</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Java Persistence API allows you to create and use Java programming
+language classes that represent data in a database table. A Java
+Persistence API <em>entity</em> is a lightweight, persistent Java programming
+language object that represents data in a data store. To create or
+modify entities, or to remove them from the data store, call the
+operations of the Java Persistence API <em>entity manager</em>. To query
+entities, or to query the data encapsulated by the persistent fields or
+properties of a entity, use the Java Persistence Query Language (JPQL),
+a language similar to SQL that operates on entities.</p>
+</div>
+<div class="paragraph">
+<p>In <code>firstcup-war</code>, there is a single entity that defines one query.</p>
+</div>
+<div class="sect2">
+<h3 id="edit-the-constructor-of-the-firstcupuser-entity">Edit the Constructor of the FirstcupUser Entity</h3>
+<div class="paragraph">
+<p>Add code to the constructor for <code>FirstcupUser</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Expand the <strong>Source Packages</strong> node, expand the <code>firstcup.entity</code> node,
+then double-click the <code>FirstcupUser.java</code> file to open it in the editor
+window.</p>
+</li>
+<li>
+<p>Below the field definitions in the <code>FirstcupUser</code> class, add the
+following code in bold to the second, two-argument constructor:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    public FirstcupUser(Date date, int difference) {
+        <strong>Calendar cal = new GregorianCalendar();
+        cal.setTime(date);
+        birthday = cal;
+        ageDifference = difference;</strong>
+    }</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Right-click in the editor window and select <strong>Format</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-a-named-query-to-the-firstcupuser-entity">Add a Named Query to the FirstcupUser Entity</h3>
+<div class="paragraph">
+<p>Add a JPQL named query to the <code>FirstcupUser</code> entity that returns the
+average age difference of all <code>firstcup-war</code> users.</p>
+</div>
+<div class="paragraph">
+<p>This query uses the <code>AVG</code> aggregate function to return the average of
+all the values of the <code>ageDifference</code> property of the <code>FirstcupUser</code>
+entities.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Directly before the class definition, copy and paste in the
+following code:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@NamedQuery(name="findAverageAgeDifferenceOfAllFirstcupUsers",
+query="SELECT AVG(u.ageDifference) FROM FirstcupUser u")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@NamedQuery</code> annotation appears just before the class definition of
+the entity and has two required attributes: <code>name</code>, with the unique name
+for this query; and <code>query</code>, the JPQL query definition.</p>
+</div>
+</li>
+<li>
+<p>Right-click in the editor window and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="web-application002.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application004.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

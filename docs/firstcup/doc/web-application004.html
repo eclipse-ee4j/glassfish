@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Modifying the Enterprise Bean</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="web-application003.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application005.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="modifying-the-enterprise-bean">Modifying the Enterprise Bean</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>DukesBirthdayBean</code> is a <em>stateless session bean</em>. Stateless session beans
+are enterprise beans that do not maintain a conversational state with a
+client. With stateless session beans, the client makes isolated requests
+that do not depend on any previous state or requests. If an application
+requires conversational state, use <em>stateful session beans</em>.</p>
+</div>
+<div class="paragraph">
+<p><code>DukesBirthdayBean</code> is a local enterprise bean that uses a no-interface
+view:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <em>local enterprise bean</em> is visible only within the application in
+which it is deployed.</p>
+</li>
+<li>
+<p>Enterprise beans with a <em>no-interface</em> view do not need a separate
+business interface that the enterprise bean class implements. The
+enterprise bean class is the only coding artifact needed to create a
+local, no-interface enterprise bean.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>DukesBirthdayBean</code> will be packaged within the same WAR file as the
+Facelets web front end.</p>
+</div>
+<div class="sect2">
+<h3 id="implement-a-business-method-to-dukesbirthdaybean-that-gets-the-average-age-difference-of-firstcup-war-users">Implement a Business Method to DukesBirthdayBean that Gets the Average Age Difference of firstcup-war Users</h3>
+<div class="paragraph">
+<p>Add code to a business method to the <code>DukesBirthdayBean</code> session bean to
+call the <code>findAverageAgeDifferenceOfAllFirstcupUsers</code> named query in
+<code>FirstcupUser</code> that returns the average age difference of all users.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Expand the <strong>Source Packages</strong> node, expand the <code>firstcup.ejb</code> node,
+then double-click the <code>DukesBirthdayBean.java</code> file to open it in the
+editor window.</p>
+</li>
+<li>
+<p>Find the business method called <code>getAverageAgeDifference</code> and add
+the following code in bold by copying and pasting:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    public Double getAverageAgeDifference() {
+        <strong>Double avgAgeDiff = (Double)
+            em.createNamedQuery("findAverageAgeDifferenceOfAllFirstcupUsers")
+                                .getSingleResult();
+        logger.log(Level.INFO, "Average age difference is: {0}",  avgAgeDiff);
+        return avgAgeDiff;</strong>
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The named query in <code>FirstcupUser</code> is called by using the <code>createNamedQuery</code> method
+in <code>EntityManager</code>. Because this query returns
+a single number, the <code>getSingleResult</code> method is called on the returned
+<code>Query</code> object. The query returns a <code>Double</code>.</p>
+</div>
+</li>
+<li>
+<p>Right-click in the editor window and select <strong>Format</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="implement-a-business-method-for-calculating-the-age-difference-between-duke-and-the-user">Implement a Business Method for Calculating the Age Difference Between Duke and the User</h3>
+<div class="paragraph">
+<p>Add code to a business method that calculates the difference in age in
+years between Duke and the user and creates a new <code>FirstcupUser</code> entity.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Find the <code>getAgeDifference</code> business method and add the following
+code in bold:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    public int getAgeDifference(Date date) {
+        <strong>int ageDifference;
+
+        Calendar theirBirthday = new GregorianCalendar();
+        Calendar dukesBirthday = new GregorianCalendar(1995, Calendar.MAY, 23);
+
+        // Set the Calendar object to the passed-in Date
+        theirBirthday.setTime(date);
+
+        // Subtract the user's age from Duke's age
+        ageDifference = dukesBirthday.get(Calendar.YEAR)
+                - theirBirthday.get(Calendar.YEAR);
+        logger.log(Level.INFO, "Raw ageDifference is: {0}",  ageDifference);
+        // Check to see if Duke's birthday occurs before the user's. If so,
+        // subtract one from the age difference
+        if (dukesBirthday.before(theirBirthday) &amp;&amp; (ageDifference&gt; 0)) {
+            ageDifference--;
+        }
+
+        // Create and store the user's birthday in the database
+        FirstcupUser user = new FirstcupUser(date, ageDifference);
+        em.persist(user);
+
+        logger.log(Level.INFO, "Final ageDifference is: {0}",  ageDifference);
+
+        return ageDifference;</strong>
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method creates the <code>Calendar</code> objects used to calculate the
+difference in age between the user and Duke and performs the actual
+calculation of the difference in age.</p>
+</div>
+<div class="paragraph">
+<p>Similar to the <code>DukesAgeResource.getText</code> code, <code>getAgeDifference</code>
+subtracts Duke&#8217;s birthday year from the user&#8217;s birthday year to get a
+raw age difference. If Duke&#8217;s birthday falls before the user&#8217;s, and the
+raw difference is more than 0, it subtracts one year from the age
+difference.</p>
+</div>
+<div class="paragraph">
+<p>A new <code>FirstcupUser</code> entity is created with the user&#8217;s birthday and age
+difference, then stored in Derby by calling the <code>persist</code> method
+in <code>EntityManager</code>.</p>
+</div>
+<div class="paragraph">
+<p>The final age difference is returned as an <code>int</code>.</p>
+</div>
+</li>
+<li>
+<p>Right-click in the editor window and select <strong>Format</strong>.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, choose <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="web-application003.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="web-application005.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

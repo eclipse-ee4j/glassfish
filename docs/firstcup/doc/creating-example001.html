@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Architecture of the Example Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Java Platform, Enterprise Edition (Java EE) 8</b><br />
+  <b>Your First Cup: An Introduction to the Java EE Platform</b>
+      <!-- <p class="beta">Beta Draft (Pre-General Availability)</p> -->
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="creating-example.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="creating-example002.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="architecture-of-the-example-applications">Architecture of the Example Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The example applications consist of four main components:
+<code>DukesAgeResource</code>, a JAX-RS RESTful web service; <code>DukesBirthdayBean</code>,
+an enterprise bean; <code>FirstcupUser</code>, a Java Persistence API entity; and
+<code>firstcup-war</code>, a web application created with JavaServer Faces Facelets
+technology.</p>
+</div>
+<div id="GJBEW" class="paragraph">
+<div class="title"><strong>Figure 3-1 Architecture of the First Cup Example Applications</strong></div>
+<p><span class="image"><img src="img/firstcup-architecture.gif" alt="Architecture of First Cup example applications."></span></p>
+</div>
+<div class="paragraph">
+<p><code>DukesAgeResource</code> is a JAX-RS resource that calculates the age of Duke,
+the Java mascot. Duke was born May 23, 1995, when the first demo of Java
+technology was publicly released.</p>
+</div>
+<div class="paragraph">
+<p><code>DukesBirthdayBean</code> is a local, no-interface view stateless session bean
+that calculates the difference between the user&#8217;s age and Duke&#8217;s age and
+stores the user-submitted data in a Java Persistence API entity.</p>
+</div>
+<div class="paragraph">
+<p><code>FirstcupUser</code> is a Java Persistence API entity that represents a
+particular user&#8217;s birthday. It is stored in an Apache Derby table and
+managed by the <code>DukesBirthdayBean</code> business methods.</p>
+</div>
+<div class="paragraph">
+<p>The <code>firstcup-war</code> web application is a JavaServer Faces Facelets
+application that accesses <code>DukesAgeResource</code> to display Duke&#8217;s age,
+reads in a date provided by the user, accesses <code>DukesBirthdayBean</code> to
+calculate who is older, and then displays the difference in years
+between the user and Duke and the average age difference of all users.</p>
+</div>
+<div class="paragraph">
+<p>The <code>firstcup-war</code> web application consists of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>greeting.xhtml</code>: A Facelets-enabled XHTML page, which is a page that
+uses the JavaServer Faces Facelets tag libraries. Users can type their
+birth date in a field and submit it for comparison against Duke&#8217;s birth
+date.</p>
+</li>
+<li>
+<p><code>response.xhtml</code>: A Facelets-enabled XHTML page that tells the user
+whether he or she is older or younger than Duke, based on the date the
+user entered in the <code>greeting.xhtml</code> page, and displays the average age
+difference of all users.</p>
+</li>
+<li>
+<p><code>DukesBDay.java</code>: A CDI managed bean that defines properties to hold
+the user&#8217;s birth date, uses the JAX-RS Client API to get Duke&#8217;s current
+age from the <code>DukesAgeResource</code> web service, and calculates the age
+difference between the user and Duke from the enterprise bean.</p>
+</li>
+<li>
+<p><code>web.xml</code>: The web application&#8217;s deployment descriptor, which is used
+to configure certain aspects of a web application when it is installed.
+In this case, it is used to provide a mapping to the application&#8217;s
+<code>FacesServlet</code> instance, which accepts incoming requests, passes them to
+the life cycle for processing, and initializes resources. It also
+specifies <code>greeting.xhtml</code> as the welcome file for the application.</p>
+</li>
+<li>
+<p><code>WebMessages.properties</code> and <code>WebMessages_es.properties</code>: Java
+programming language properties files that contain the localized strings
+used in <code>greeting.xhtml</code> and <code>response.xhtml</code>. By default, the English
+language strings in <code>WebMessages.properties</code> are used, but Spanish
+language strings are also provided in <code>WebMessages_es.properties</code>.</p>
+</li>
+<li>
+<p><code>DukesBirthdayBean.java</code>: as described above, the enterprise bean
+packaged within the <code>firstcup-war</code> application. <code>DukesBirthdayBean</code>
+calculates the difference between the user&#8217;s birthday and Duke&#8217;s
+birthday.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="tiers-in-the-example-applications">Tiers in the Example Applications</h3>
+<div class="paragraph">
+<p>The example applications have a web tier component (the <code>firstcup-war</code>
+web client), three business tier components (the <code>DukesAgeResource</code> web
+service, the <code>FirstcupUser</code> entity, and the <code>DukesBirthdayBean</code>
+enterprise bean), and an enterprise information system (EIS) tier (the
+data in the Apache Derby database table). The user&#8217;s web browser is the
+client tier component, as it accesses the rest of the application
+through the web tier.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="java-ee-technologies-used-in-the-example-applications">Java EE Technologies Used in the Example Applications</h3>
+<div class="paragraph">
+<p>The <code>DukesAgeResource</code> web service is a JAX-RS resource. The
+<code>DukesBirthdayBean</code> enterprise bean is a stateless session bean. The
+<code>FirstcupUser</code> entity is a Java Persistence API entity. The <code>DukesBDay</code>
+CDI managed bean uses the JAX-RS client API to access the
+<code>DukesAgeResource</code> web service. The <code>firstcup-war</code> web client is a
+JavaServer Faces application that runs in the web container of the Java
+EE server.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="creating-example.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="creating-example002.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+	<a href="img/cpyr.adoc">
+		<img src="img/oracle.gif" height="10px" alt="Oracle Logo" />&nbsp;			
+		<span>Copyright&nbsp;&copy;&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+	</a>
+</span>
+<!-- <p align="center" class="beta">Beta Draft (Pre-General Availability)</p> -->
+
+</body>
+</html>

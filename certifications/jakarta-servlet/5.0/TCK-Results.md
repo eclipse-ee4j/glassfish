@@ -8,7 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Servlet.
 # Eclipse GlassFish 6.0, Full Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse Glassfish 6.0.0-M2-servlet5](https://github.com/eclipse-ee4j/glassfish/releases/tag/6.0.0-M2-servlet5
+  [Eclipse Glassfish 6.0.0-M2-servlet5](https://github.com/eclipse-ee4j/glassfish/releases/tag/6.0.0-M2-servlet5)
 - Specification Name, Version and download URL: <br/>
   [Jakarta Servlet 5.0](https://jakarta.ee/specifications/servlet/5.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>

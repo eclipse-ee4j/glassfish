@@ -102,7 +102,7 @@
         <mojarra.version>3.0.0-RC3</mojarra.version>
 
         <!-- Jakarta WebSocket -->
-        <websocket-api.version>2.0.0-M1</websocket-api.version>
+        <websocket-api.version>2.0.0</websocket-api.version>
         <tyrus.version>2.0.0-M3</tyrus.version>
 
         <!-- Jakarta Concurrency -->

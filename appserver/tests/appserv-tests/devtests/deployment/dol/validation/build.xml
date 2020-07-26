@@ -167,7 +167,7 @@
             <jvmarg value="-Djava.endorsed.dirs=${inst}/lib/endorsed"/>
             <jvmarg value="-Dcom.sun.aas.installRoot=${inst}"/>
             <jvmarg value="-Dwriteout.xml=true"/>
-            <jvmarg value="-Djavax.enterprise.system.tools.deployment.org.glassfish.deployment.common=FINE"/>
+            <jvmarg value="-Djakarta.enterprise.system.tools.deployment.org.glassfish.deployment.common=FINE"/>
 
             <classpath>
                 <path refid="gfv3.classpath"/>

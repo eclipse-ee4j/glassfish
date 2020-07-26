@@ -48,7 +48,7 @@ public class GMSAnnounceAfterStopClusterCommand implements AdminCommand {
     //    GMSAnnounceAfterStopClusterCommand.class, LogDomains.GMS_LOGGER);
 
     @LoggerInfo(subsystem = "CLSTR", description="Group Management Service Admin Logger", publish=true)
-    private static final String GMS_LOGGER_NAME = "javax.enterprise.cluster.gms.admin";
+    private static final String GMS_LOGGER_NAME = "jakarta.enterprise.cluster.gms.admin";
 
 
     @LogMessagesResourceBundle

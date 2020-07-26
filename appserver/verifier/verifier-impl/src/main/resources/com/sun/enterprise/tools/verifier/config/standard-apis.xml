@@ -1904,21 +1904,7 @@ The above command must not print any exceptions.
     <api name_version="JavaEE-Management_1.1">
         <api_ref api_name_version="J2EE-Management_1.0"/>
     </api>
-    
-    <api name_version="J2EE-Deployment_1.1">
-        <packages>
-            javax.enterprise.deploy.model
-            javax.enterprise.deploy.shared
-            javax.enterprise.deploy.shared.factories
-            <!-- The following is a list of spis targetted for J2EE product vendors and hence should not
-                accessed by components 
-            javax.enterprise.deploy.spi
-            javax.enterprise.deploy.spi.exceptions
-            javax.enterprise.deploy.spi.factories
-            javax.enterprise.deploy.spi.status
-            -->
-        </packages>
-    </api>
+
     <api name_version="JACC_1.0">
         <classes package="javax.security.jacc">
             <!-- interfaces -->

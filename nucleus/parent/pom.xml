@@ -77,7 +77,7 @@
         <findbugs.common>exclude-common.xml</findbugs.common>
         <findbugs.exclude />
         <findbugs.version>3.0.3</findbugs.version>
-        <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
+        <findbugs.glassfish.logging.validLoggerPrefixes>jakarta.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
         
         <!-- Jakarta API Versions -->
         

@@ -133,9 +133,9 @@
         <jakarta.resource-api.version>2.0.0-RC2</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
-        <jakarta.batch-api.version>2.0.0-M3</jakarta.batch-api.version>
-        <com.ibm.jbatch.container.version>2.0.0-M3</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>2.0.0-M3</com.ibm.jbatch.spi.version>
+        <jakarta.batch-api.version>2.0.0-M5</jakarta.batch-api.version>
+        <com.ibm.jbatch.container.version>2.0.0-M5</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0-M5</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
         <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>

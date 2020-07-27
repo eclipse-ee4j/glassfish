@@ -78,7 +78,7 @@ This example sets the log level of the web container logger to
 
 [source,oac_no_warn]
 ----
-asadmin> set-log-levels javax.enterprise.system.container.web=WARNING
+asadmin> set-log-levels jakarta.enterprise.system.container.web=WARNING
 Command set-log-level executed successfully.
 ----
 
@@ -91,8 +91,8 @@ and the log level of the EJB container logger to `SEVERE`:
 
 [source,oac_no_warn]
 ----
-asadmin set-log-levels javax.enterprise.system.container.web=FINE:
-javax.enterprise.system.container.ejb=SEVERE
+asadmin set-log-levels jakarta.enterprise.system.container.web=FINE:
+jakarta.enterprise.system.container.ejb=SEVERE
 Command set-log-level executed successfully.
 ----
 

@@ -7,13 +7,13 @@ asadmin deploy --type=osgi lib/osgi-servlet.jar
 
 See the output/server.log. You will see something like this:
 
-[#|2012-06-15T14:25:16.733+0530|INFO|44.0|javax.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|Registered servlet1 with mapping /aa/bb and servlet2 with mapping /aa|#]
+[#|2012-06-15T14:25:16.733+0530|INFO|44.0|jakarta.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|Registered servlet1 with mapping /aa/bb and servlet2 with mapping /aa|#]
 
-[#|2012-06-15T14:25:16.781+0530|INFO|44.0|javax.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|<html><body>Servlet 1 </body></html>|#]
+[#|2012-06-15T14:25:16.781+0530|INFO|44.0|jakarta.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|<html><body>Servlet 1 </body></html>|#]
 
-[#|2012-06-15T14:25:16.781+0530|INFO|44.0|javax.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|Unregistered servlet1|#]
+[#|2012-06-15T14:25:16.781+0530|INFO|44.0|jakarta.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|Unregistered servlet1|#]
 
-[#|2012-06-15T14:25:16.790+0530|INFO|44.0|javax.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|java.io.FileNotFoundException: http://localhost:8080/osgi/aa/bb
+[#|2012-06-15T14:25:16.790+0530|INFO|44.0|jakarta.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|java.io.FileNotFoundException: http://localhost:8080/osgi/aa/bb
 	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1434)
 	at java.net.URL.openStream(URL.java:1010)
 	at sahoo.osgihttp.test1.Activator.test(Activator.java:63)
@@ -66,8 +66,8 @@ See the output/server.log. You will see something like this:
 	at java.lang.Thread.run(Thread.java:662)
 |#]
 
-[#|2012-06-15T14:25:16.792+0530|INFO|44.0|javax.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|Started sahoo.issue_18808 [270]|#]
+[#|2012-06-15T14:25:16.792+0530|INFO|44.0|jakarta.enterprise.system.std.com.sun.enterprise.server.logging|_ThreadID=12;_ThreadName=admin-listener(2);|Started sahoo.issue_18808 [270]|#]
 
-[#|2012-06-15T14:25:16.892+0530|INFO|44.0|javax.enterprise.system.tools.admin.org.glassfish.deployment.admin|_ThreadID=12;_ThreadName=admin-listener(2);|issue_18808 was successfully deployed in 1,755 milliseconds.|#]
+[#|2012-06-15T14:25:16.892+0530|INFO|44.0|jakarta.enterprise.system.tools.admin.org.glassfish.deployment.admin|_ThreadID=12;_ThreadName=admin-listener(2);|issue_18808 was successfully deployed in 1,755 milliseconds.|#]
 
 

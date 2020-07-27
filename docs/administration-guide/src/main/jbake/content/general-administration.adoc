@@ -3196,7 +3196,7 @@ Line breaks and white space are added to enhance readability.
       "loggedDateTimeInMS":1300728893368,
       "loggedLevel":"INFO",
       "productName":"glassfish3.1",
-      "loggerName":"javax.enterprise.system.core.com.sun.enterprise.v3.admin.adapter",
+      "loggerName":"jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter",
       "nameValuePairs":"_ThreadID=238;_ThreadName=Thread-1;",
       "messageID":"",
       "Message":"The Admin Console application is loaded."
@@ -3206,7 +3206,7 @@ Line breaks and white space are added to enhance readability.
       "loggedDateTimeInMS":1300728893367,
       "loggedLevel":"INFO",
       "productName":"glassfish3.1",
-      "loggerName":"javax.enterprise.system.core.com.sun.enterprise.v3.server",
+      "loggerName":"jakarta.enterprise.system.core.com.sun.enterprise.v3.server",
       "nameValuePairs":"_ThreadID=238;_ThreadName=Thread-1;",
       "messageID":"CORE10010",
       "Message":" Loading application __admingui done in 40,063 ms"
@@ -3299,11 +3299,11 @@ Line breaks and white space are added to enhance readability.
  nameValuePairs="_ThreadID=25;_ThreadName=Thread-1;" 
  productName="glassfish3.1" recordNumber="475"/>
  <record loggedDateTimeInMS="1300728893368" loggedLevel="INFO" 
- loggerName="javax.enterprise.system.core.com.sun.enterprise.v3.admin.adapter" 
+ loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter" 
   messageID="" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;" 
   productName="glassfish3.1" recordNumber="474"/>
  <record loggedDateTimeInMS="1300728893367" loggedLevel="INFO" 
- loggerName="javax.enterprise.system.core.com.sun.enterprise.v3.server" 
+ loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.server" 
  messageid="core10010" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;" 
  productName="glassfish3.1" recordNumber="473"/>
 </records>

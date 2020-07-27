@@ -261,37 +261,37 @@ public class LoggingCommandTest extends AdminBaseDevTest {
 	private void testListLogLevleInServer(){
         String testName = "testListLogLevleInServer";
         AsadminReturn result = asadminWithOutput(LIST_LOG_LEVEL, SERVER);
-		reportExpectedResult(testName, result, "javax.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
+		reportExpectedResult(testName, result, "jakarta.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
     }
 
 	private void testListLogLevleInCluster(){
         String testName = "testListLogLevleInCluster";
         AsadminReturn result = asadminWithOutput(LIST_LOG_LEVEL, CLUSTER_NAME);
-		reportExpectedResult(testName, result, "javax.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
+		reportExpectedResult(testName, result, "jakarta.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
     }
 
 	private void testListLogLevleInStandaloneInstance(){
         String testName = "testListLogLevleInStandaloneInstance";
         AsadminReturn result = asadminWithOutput(LIST_LOG_LEVEL, STANDALONE_INSTANCE_NAME);
-		reportExpectedResult(testName, result, "javax.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
+		reportExpectedResult(testName, result, "jakarta.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
     }
 
 	private void testListLogLevleInServerConfig(){
         String testName = "testListLogLevleInServerConfig";
         AsadminReturn result = asadminWithOutput(LIST_LOG_LEVEL, SERVER+"-config");
-		reportExpectedResult(testName, result, "javax.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
+		reportExpectedResult(testName, result, "jakarta.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
     }
 
 	private void testListLogLevleInClusterConfig(){
         String testName = "testListLogLevleInClusterConfig";
         AsadminReturn result = asadminWithOutput(LIST_LOG_LEVEL, CLUSTER_NAME+"-config");
-		reportExpectedResult(testName, result, "javax.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
+		reportExpectedResult(testName, result, "jakarta.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
     }
 
 	private void testListLogLevleInStandaloneInstanceConfig(){
         String testName = "testListLogLevleInStandaloneInstanceConfig";
         AsadminReturn result = asadminWithOutput(LIST_LOG_LEVEL, STANDALONE_INSTANCE_NAME+"-config");
-		reportExpectedResult(testName, result, "javax.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
+		reportExpectedResult(testName, result, "jakarta.enterprise.system.ssl.security","java.util.logging.ConsoleHandler");        
     }
 
 	private void testCollectLogFilesInServer(){

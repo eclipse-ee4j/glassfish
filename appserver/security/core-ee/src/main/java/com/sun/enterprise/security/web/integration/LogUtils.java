@@ -33,7 +33,7 @@ private static final String LOGMSG_PREFIX = "AS-SECURITY";
     public static final String LOG_MESSAGES = "com.sun.enterprise.security.web.integration.LogMessages";
 
     @LoggerInfo(subsystem = "SECURITY", description = "Core-ee Security Logger", publish = true)
-    public static final String LOG_DOMAIN = "javax.enterprise.system.core.security.web";
+    public static final String LOG_DOMAIN = "jakarta.enterprise.system.core.security.web";
 
     private static final Logger LOGGER = Logger.getLogger(LOG_DOMAIN, LOG_MESSAGES);
 

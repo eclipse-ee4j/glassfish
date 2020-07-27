@@ -445,8 +445,8 @@ surprising pattern of security events can prevent serious problems.
 
 |Set logging for security and SSL messages. a|
 Consider setting module log levels for
-table.javax.enterprise.system.ssl.security and
-javax.enterprise.system.core.security. You can set a level from Severe
+table.jakarta.enterprise.system.ssl.security and
+jakarta.enterprise.system.core.security. You can set a level from Severe
 to Finest (the default is Info), but be aware that the finer logging
 levels may produce a large log file.
 

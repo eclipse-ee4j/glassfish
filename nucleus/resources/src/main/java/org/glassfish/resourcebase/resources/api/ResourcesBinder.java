@@ -48,7 +48,7 @@ public class ResourcesBinder {
 
     @LoggerInfo(subsystem="RESOURCE", description="Nucleus Resource", publish=true)
 
-    public static final String LOGGER = "javax.enterprise.resources.api";
+    public static final String LOGGER = "jakarta.enterprise.resources.api";
     private static final Logger logger = Logger.getLogger(LOGGER, LOGMESSAGE_RESOURCE);
 
     @Inject

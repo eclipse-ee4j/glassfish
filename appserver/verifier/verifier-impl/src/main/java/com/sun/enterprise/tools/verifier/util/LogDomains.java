@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class LogDomains {
 
     
-    private static final String DOMAIN_ROOT = "javax.enterprise.";
+    private static final String DOMAIN_ROOT = "jakarta.enterprise.";
 
     public static final String AVK_VERIFIER_LOGGER =
         DOMAIN_ROOT + "system.tools.avk.tools.verifier";

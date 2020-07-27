@@ -1057,7 +1057,7 @@ link:#gilry[Example 1-4].
 import org.glassfish.embeddable.*;
 ...
     String command = "set-log-level";
-    String weblevel = "javax.enterprise.system.container.web=FINE";
+    String weblevel = "jakarta.enterprise.system.container.web=FINE";
     CommandRunner commandRunner = glassfish.getCommandRunner();
     CommandResult commandResult = commandRunner.run(command, weblevel);
 ...
@@ -2019,8 +2019,8 @@ GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
 
 // Set the log levels. For example, set 'deployment' and 'server' log levels to FINEST
 Logger.getLogger("").getHandlers()[0].setLevel(Level.FINEST);
-Logger.getLogger("javax.enterprise.system.tools.deployment").setLevel(Level.FINEST);
-Logger.getLogger("javax.enterprise.system").setLevel(Level.FINEST);
+Logger.getLogger("jakarta.enterprise.system.tools.deployment").setLevel(Level.FINEST);
+Logger.getLogger("jakarta.enterprise.system").setLevel(Level.FINEST);
 
 // Start Embedded GlassFish and deploy an application.
 // You will see all the FINEST logs printed on the console.
@@ -2043,8 +2043,8 @@ This example shows the contents of a custom logging configuration file,
 ----
 handlers= java.util.logging.ConsoleHandler
 java.util.logging.ConsoleHandler.level = FINEST
-javax.enterprise.system.tools.deployment.level = FINEST
-javax.enterprise.system.level = FINEST
+jakarta.enterprise.system.tools.deployment.level = FINEST
+jakarta.enterprise.system.level = FINEST
 ----
 
 Pass the name of this custom logging configuration file to the `java`

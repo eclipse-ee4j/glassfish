@@ -324,7 +324,7 @@ public class Jira extends MonTest {
             // verify that changing mon-level does not cause any logging
 
             // don't just ASSUME it is set to INFO!!!
-            report(asadmin("set-log-levels", "javax.enterprise.system.tools.monitor=INFO"), "set-log-level-back");
+            report(asadmin("set-log-levels", "jakarta.enterprise.system.tools.monitor=INFO"), "set-log-level-back");
 
             // clear log
             listener.getLatest(3);
@@ -338,7 +338,7 @@ public class Jira extends MonTest {
             s = listener.getLatest(2);
             report(s.indexOf("monitor") < 0, prepend + "no-log-output");
 
-            report(asadmin("set-log-levels", "javax.enterprise.system.tools.monitor=FINE"), "set-log-level-to-fine");
+            report(asadmin("set-log-levels", "jakarta.enterprise.system.tools.monitor=FINE"), "set-log-level-to-fine");
             s = listener.getLatest(5);
             report(s.length() > 0, prepend + "set-log-level was noticed");
 
@@ -356,7 +356,7 @@ public class Jira extends MonTest {
             //report(s.indexOf("monitor") >= 0, prepend + "yes-log-output");
 
             // return to original state
-            report(asadmin("set-log-levels", "javax.enterprise.system.tools.monitor=INFO"), "set-log-level-back");
+            report(asadmin("set-log-levels", "jakarta.enterprise.system.tools.monitor=INFO"), "set-log-level-back");
             s = listener.getLatest(5);
             report(s.length() > 0, prepend + "set-log-level was noticed");
         }

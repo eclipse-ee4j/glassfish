@@ -656,46 +656,6 @@ performing directory deployment, see
 in a Directory Format</a>.</p>
 </div>
 <div class="paragraph">
-<p><a id="giiel"></a><a id="GSDPG00313"></a><a id="jsr-88-naming"></a></p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_jsr_88_naming">JSR 88 Naming</h5>
-<div class="paragraph">
-<p>There are two JSR 88 APIs that can be used to deploy applications in
-GlassFish Server.</p>
-</div>
-<div class="paragraph">
-<p>If you are using the following JSR 88 API, there is no file name:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">javax.enterprise.deploy.spi.DeploymentManager.distribute(Target[], InputStream, InputStream)</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Because there is no file name, the name of the application is taken from
-the <code>application-name</code> or <code>module-name</code> entry in the Java EE standard
-deployment descriptor. If the <code>application-name</code> or <code>module-name</code> entry
-is not present, GlassFish Server creates a temporary file name and uses
-that name to deploy the application. Neither the Administration Console
-nor the <code>asadmin</code> utility uses this API.</p>
-</div>
-<div class="paragraph">
-<p>If you are using the following preferred JSR 88 API, the name is derived
-from the <code>application-name</code> or <code>module-name</code> entry if present or the
-first portion of the file name (without the <code>.war</code> or <code>.jar</code> extension):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">javax.enterprise.deploy.spi.DeploymentManager.distribute(Target[], File, File)</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For more information about JSR 88, see
-<code>http://jcp.org/en/jsr/detail?id=88</code>.</p>
-</div>
-<div class="paragraph">
 <p><a id="gkhhv"></a><a id="GSDPG00324"></a><a id="module-and-application-versions"></a></p>
 </div>
 </div>

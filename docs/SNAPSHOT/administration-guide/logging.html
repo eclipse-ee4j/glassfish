@@ -280,7 +280,7 @@ message and the message number. For example: <code>AS-WEB-GLUE-00172</code></p>
 </li>
 <li>
 <p>LoggerName represents a hierarchical logger namespace that identifies
-the source of the log module. For example: <code>javax.enterprise.web</code></p>
+the source of the log module. For example: <code>jakarta.enterprise.web</code></p>
 </li>
 <li>
 <p>Key Value Pairs represents pairs of key names and values. For example:
@@ -299,7 +299,7 @@ header and are indented.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[2013-04-12T08:08:30.154-0700] [glassfish 4.0] [INFO] [AS-WEB-GLUE-00172] [javax.enterprise.web] [tid: _ThreadID=217 _ThreadName=admin-listener(21)]
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[2013-04-12T08:08:30.154-0700] [glassfish 4.0] [INFO] [AS-WEB-GLUE-00172] [jakarta.enterprise.web] [tid: _ThreadID=217 _ThreadName=admin-listener(21)]
 [timeMillis: 1365779310154] [levelValue: 800] [[
   Loading application [payroll] at [/payroll]]]</code></pre>
 </div>
@@ -335,7 +335,7 @@ Open Source Edition. For example: <code>glassfish</code></p>
 </li>
 <li>
 <p>LoggerName represents a hierarchical logger namespace that identifies
-the source of the log module. For example: <code>javax.enterprise.web.core</code></p>
+the source of the log module. For example: <code>jakarta.enterprise.web.core</code></p>
 </li>
 <li>
 <p>Key Value Pairs represents pairs of key names and values and can
@@ -355,7 +355,7 @@ start on a new line after the message header and are indented.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[#|2013-04-18T09:27:44.315-0700|INFO|glassfish 4.0|javax.enterprise.web.core|
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[#|2013-04-18T09:27:44.315-0700|INFO|glassfish 6.0|jakarta.enterprise.web.core|
 _ThreadID=15;_ThreadName=RunLevelControllerThread-1366302462682;_TimeMillis=1366302464315;_LevelValue=800;_MessageID=AS-WEB-CORE-00306;|
   Setting JAAS app name glassfish-web|#]</code></pre>
 </div>
@@ -398,41 +398,41 @@ subcommand.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">java.util.logging.ConsoleHandler     &lt;FINEST&gt;
-javax.enterprise.resource.corba     &lt;INFO&gt;
-javax.enterprise.resource.javamail  &lt;INFO&gt;
-javax.enterprise.resource.jdo       &lt;INFO&gt;
-javax.enterprise.resource.jms       &lt;INFO&gt;
-javax.enterprise.resource.jta       &lt;INFO&gt;
-javax.enterprise.resource.resourceadapter     &lt;INFO&gt;
-javax.enterprise.resource.sqltrace  &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.application  &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.config       &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.context      &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.facelets     &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.lifecycle    &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.managedbean  &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.renderkit    &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.resource     &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.taglib       &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.timing       &lt;INFO&gt;
-javax.enterprise.system.container.cmp         &lt;INFO&gt;
-javax.enterprise.system.container.ejb         &lt;INFO&gt;
-javax.enterprise.system.container.ejb.mdb     &lt;INFO&gt;
-javax.enterprise.system.container.web         &lt;INFO&gt;
-javax.enterprise.system.core.classloading     &lt;INFO&gt;
-javax.enterprise.system.core.config   &lt;INFO&gt;
-javax.enterprise.system.core.naming   &lt;INFO&gt;
-javax.enterprise.system.core.security &lt;INFO&gt;
-javax.enterprise.system.core.selfmanagement   &lt;INFO&gt;
-javax.enterprise.system.core.transaction      &lt;INFO&gt;
-javax.enterprise.system     &lt;INFO&gt;
-javax.enterprise.system.tools.admin   &lt;INFO&gt;
-javax.enterprise.system.tools.backup  &lt;INFO&gt;
-javax.enterprise.system.tools.deployment      &lt;INFO&gt;
-javax.enterprise.system.util          &lt;INFO&gt;
-javax.enterprise.system.webservices.registry  &lt;INFO&gt;
-javax.enterprise.system.webservices.rpc       &lt;INFO&gt;
-javax.enterprise.system.webservices.saaj      &lt;INFO&gt;
+jakarta.enterprise.resource.corba     &lt;INFO&gt;
+jakarta.enterprise.resource.javamail  &lt;INFO&gt;
+jakarta.enterprise.resource.jdo       &lt;INFO&gt;
+jakarta.enterprise.resource.jms       &lt;INFO&gt;
+jakarta.enterprise.resource.jta       &lt;INFO&gt;
+jakarta.enterprise.resource.resourceadapter     &lt;INFO&gt;
+jakarta.enterprise.resource.sqltrace  &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.application  &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.config       &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.context      &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.facelets     &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.lifecycle    &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.managedbean  &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.renderkit    &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.resource     &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.taglib       &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.timing       &lt;INFO&gt;
+jakarta.enterprise.system.container.cmp         &lt;INFO&gt;
+jakarta.enterprise.system.container.ejb         &lt;INFO&gt;
+jakarta.enterprise.system.container.ejb.mdb     &lt;INFO&gt;
+jakarta.enterprise.system.container.web         &lt;INFO&gt;
+jakarta.enterprise.system.core.classloading     &lt;INFO&gt;
+jakarta.enterprise.system.core.config   &lt;INFO&gt;
+jakarta.enterprise.system.core.naming   &lt;INFO&gt;
+jakarta.enterprise.system.core.security &lt;INFO&gt;
+jakarta.enterprise.system.core.selfmanagement   &lt;INFO&gt;
+jakarta.enterprise.system.core.transaction      &lt;INFO&gt;
+jakarta.enterprise.system     &lt;INFO&gt;
+jakarta.enterprise.system.tools.admin   &lt;INFO&gt;
+jakarta.enterprise.system.tools.backup  &lt;INFO&gt;
+jakarta.enterprise.system.tools.deployment      &lt;INFO&gt;
+jakarta.enterprise.system.util          &lt;INFO&gt;
+jakarta.enterprise.system.webservices.registry  &lt;INFO&gt;
+jakarta.enterprise.system.webservices.rpc       &lt;INFO&gt;
+jakarta.enterprise.system.webservices.saaj      &lt;INFO&gt;
 javax     &lt;INFO&gt;
 org.apache.catalina    &lt;INFO&gt;
 org.apache.coyote      &lt;INFO&gt;
@@ -937,14 +937,14 @@ levels in the DAS.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-log-levels
-javax.enterprise.system.container.cmp &lt;INFO&gt;
-javax.enterprise.system.tools.admin &lt;INFO&gt;
+jakarta.enterprise.system.container.cmp &lt;INFO&gt;
+jakarta.enterprise.system.tools.admin &lt;INFO&gt;
 java.util.logging.ConsoleHandler &lt;FINEST&gt;
-javax.enterprise.system.container.web &lt;INFO&gt;
-javax.enterprise.system.util &lt;INFO&gt;
-javax.enterprise.resource.webcontainer.jsf.timing &lt;INFO&gt;
+jakarta.enterprise.system.container.web &lt;INFO&gt;
+jakarta.enterprise.system.util &lt;INFO&gt;
+jakarta.enterprise.resource.webcontainer.jsf.timing &lt;INFO&gt;
 javax &lt;INFO&gt;
-javax.enterprise.resource.corba &lt;INFO&gt;
+jakarta.enterprise.resource.corba &lt;INFO&gt;
 ...
 Command list-log-levels executed successfully.</code></pre>
 </div>
@@ -963,13 +963,13 @@ instance <code>MyServer2</code>.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-log-levels MyServer2
 java.util.logging.ConsoleHandler &lt;FINEST&gt;
-javax.enterprise.resource.corba  &lt;INFO&gt;
-javax.enterprise.resource.javamail   &lt;INFO&gt;
-javax.enterprise.resource.jdo &lt;INFO&gt;
-javax.enterprise.resource.jms &lt;INFO&gt;
-javax.enterprise.resource.jta &lt;INFO&gt;
-javax.enterprise.resource.resourceadapter &lt;INFO&gt;
-javax.enterprise.resource.sqltrace &lt;FINE&gt;
+jakarta.enterprise.resource.corba  &lt;INFO&gt;
+jakarta.enterprise.resource.javamail   &lt;INFO&gt;
+jakarta.enterprise.resource.jdo &lt;INFO&gt;
+jakarta.enterprise.resource.jms &lt;INFO&gt;
+jakarta.enterprise.resource.jta &lt;INFO&gt;
+jakarta.enterprise.resource.resourceadapter &lt;INFO&gt;
+jakarta.enterprise.resource.sqltrace &lt;FINE&gt;
 ...
 Command list-log-levels executed successfully.</code></pre>
 </div>
@@ -1082,12 +1082,12 @@ are indicated in bold):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">javax.enterprise.system.tools.level=FINE
-javax.enterprise.system.container.ejb.level=FINE
-javax.enterprise.system.core.security.level=FINE
-javax.enterprise.system.tools.admin.level=FINE
-javax.enterprise.level=FINE
-javax.enterprise.system.container.web.level=FINE</code></pre>
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">jakarta.enterprise.system.tools.level=FINE
+jakarta.enterprise.system.container.ejb.level=FINE
+jakarta.enterprise.system.core.security.level=FINE
+jakarta.enterprise.system.tools.admin.level=FINE
+jakarta.enterprise.level=FINE
+jakarta.enterprise.system.container.web.level=FINE</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1125,11 +1125,11 @@ on the target instance <code>ManagedServer1</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set-log-levels --target ManagedServer1
-javax.enterprise.system.container.web=WARNING
-javax.enterprise.system.container.web package set with log level WARNING.
+jakarta.enterprise.system.container.web=WARNING
+jakarta.enterprise.system.container.web package set with log level WARNING.
 These logging levels are set for ManagedServer1.
 ManagedServer1 :
-javax.enterprise.system.container.web package set with log level WARNING.
+jakarta.enterprise.system.container.web package set with log level WARNING.
 These logging levels are set for ManagedServer1.
 
 Command set-log-levels executed successfully.</code></pre>
@@ -1147,10 +1147,10 @@ loggers in the DAS.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set-log-levels javax.enterprise.system.core.security=FINE:
-javax.enterprise.system.container.web=WARNING
-javax.enterprise.system.container.web package set with log level WARNING.
-javax.enterprise.system.core.security package set with log level FINE.
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set-log-levels jakarta.enterprise.system.core.security=FINE:
+jakarta.enterprise.system.container.web=WARNING
+jakarta.enterprise.system.container.web package set with log level WARNING.
+jakarta.enterprise.system.core.security package set with log level FINE.
 These logging levels are set for server.
 
 Command set-log-levels executed successfully.</code></pre>
@@ -1996,10 +1996,10 @@ readability.</p>
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-loggers
 Logger Name                            Subsystem         Logger Description
 ...
-javax.enterprise.monitoring            Monitoring        Monitoring Logger
-javax.enterprise.system.core.ee        AS-CORE           Java EE Core Kernel
-javax.enterprise.system.jmx            JMX               JMX System Logger
-javax.enterprise.system.tools.admin    ADMIN             Administration Services
+jakarta.enterprise.monitoring            Monitoring        Monitoring Logger
+jakarta.enterprise.system.core.ee        AS-CORE           Java EE Core Kernel
+jakarta.enterprise.system.jmx            JMX               JMX System Logger
+jakarta.enterprise.system.tools.admin    ADMIN             Administration Services
 ...
 Command list-loggers executed successfully.</code></pre>
 </div>

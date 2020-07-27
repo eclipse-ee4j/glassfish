@@ -393,13 +393,13 @@ implementation classes in as-install`/lib`.</p>
 <p>The GlassFish Server provides an SQL tracing logger to log the SQL
 operations in the form of <code>SQLTraceRecord</code> objects in the <code>server.log</code>
 file. The module name under which the SQL operation is logged is
-<code>javax.enterprise.resource.sqltrace</code>. SQL traces are logged as FINE
+<code>jakarta.enterprise.resource.sqltrace</code>. SQL traces are logged as FINE
 messages along with the module name to enable easy filtering of the SQL
 logs. A sample SQL trace record looks like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[#|2009-11-27T15:46:52.202+0530|FINE|glassfishv3.0|javax.enterprise.resource.sqltrace.com.sun.gjc.util
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[#|2009-11-27T15:46:52.202+0530|FINE|glassfish 6.0|jakarta.enterprise.resource.sqltrace.com.sun.gjc.util
 |_ThreadID=29;_ThreadName=Thread-1;ClassName=com.sun.gjc.util.SQLTraceLogger;MethodName=sqlTrace;
 |ThreadID=77 | ThreadName=p: thread-pool-1; w: 6 | TimeStamp=1259317012202
 | ClassName=com.sun.gjc.spi.jdbc40.PreparedStatementWrapper40 | MethodName=executeUpdate

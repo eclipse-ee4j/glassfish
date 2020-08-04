@@ -286,7 +286,6 @@ public class WebModule extends PwcWebModule implements Context {
 
         if (defaultCharset != null) {
             setRequestCharacterEncoding(defaultCharset);
-            //setResponseCharacterEncoding(defaultCharset);
         }
     }
 
@@ -502,14 +501,6 @@ public class WebModule extends PwcWebModule implements Context {
         if (webBundleDescriptor != null) {
             showArchivedRealPathEnabled = webBundleDescriptor.isShowArchivedRealPathEnabled();
             servletReloadCheckSecs = webBundleDescriptor.getServletReloadCheckSecs();
-            String reqEncoding = webBundleDescriptor.getRequestCharacterEncoding();
-            if (reqEncoding != null) {
-                setRequestCharacterEncoding(reqEncoding);
-            }
-            String resEncoding = webBundleDescriptor.getResponseCharacterEncoding();
-            if (resEncoding != null) {
-                setResponseCharacterEncoding(resEncoding);
-            }
         }
 
         // Start and register Tomcat mbeans

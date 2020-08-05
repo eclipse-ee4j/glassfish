@@ -160,8 +160,8 @@
         <jstl-impl.version>2.0.0-M2</jstl-impl.version>
 
         <!-- CDI -->
-        <cdi-api.version>3.0.0-M4</cdi-api.version>
-        <weld.version>4.0.0.Alpha2</weld.version>
+        <cdi-api.version>3.0.0</cdi-api.version>
+        <weld.version>4.0.0.Alpha3</weld.version>
         <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
 
 

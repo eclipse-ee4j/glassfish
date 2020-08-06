@@ -12,7 +12,7 @@ following is a summary of the TCK results for releases of Jakarta Servlet.
 - Specification Name, Version and download URL: <br/>
   [Jakarta Servlet 5.0](https://jakarta.ee/specifications/servlet/5.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Servlet TCK, 5.0](https://download.eclipse.org/jakartaee/servlet/5.0/eclipse-servlet-tck-5.0.0.zip), SHA-256: `c3d2e6200b16ab2b253022a5c11030eb5fd7b6ac6d244a49c83c9ddf73fa329b`
+  [Jakarta Servlet TCK, 5.0](https://download.eclipse.org/jakartaee/servlet/5.0/eclipse-servlet-tck-5.0.0.zip), SHA-256: ` 16cd8b951284b0871685ae7a6044e11cccf307c3220286e51da2bde1a6157500`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>
@@ -33,10 +33,10 @@ Test results:
 [javatest.batch] ********************************************************************************
 
 BUILD SUCCESSFUL
-Total time: 54 minutes 6 seconds
+Total time: 54 minutes 10 seconds
 SHA256_GF=ab42efbbf6fa45f1db9f69cb3afa98f6f05b71113d265fc83034c31bc23d2318
 SHA256_API=cbfbb73a69f9a4dbd76e69605824d60c7ef8576d3468059865e3c3b902aa200f
-SHA256_TCK=c3d2e6200b16ab2b253022a5c11030eb5fd7b6ac6d244a49c83c9ddf73fa329b
+SHA256_TCK=16cd8b951284b0871685ae7a6044e11cccf307c3220286e51da2bde1a6157500
 Product_download=https://github.com/eclipse-ee4j/glassfish/releases/download/6.0.0-M2-servlet5/glassfish.zip
 API_download=https://jakarta.oss.sonatype.org/content/repositories/staging/jakarta/servlet/jakarta.servlet-api/5.0.0/jakarta.servlet-api-5.0.0.jar
 TCK_download=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-servlet-tck-5.0.0.zip

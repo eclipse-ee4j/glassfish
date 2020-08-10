@@ -123,7 +123,7 @@
         <mq.version>6.0.0-M1</mq.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta-persistence-api.version>3.0.0-RC2</jakarta-persistence-api.version>
+        <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
         <eclipselink.version>3.0.0-M1</eclipselink.version>
 
         <!-- Jakarta Transactions -->

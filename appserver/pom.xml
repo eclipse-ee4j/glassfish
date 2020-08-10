@@ -110,7 +110,7 @@
         <concurrent.version>2.0.0-RC2</concurrent.version>
 
         <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta EE Security + Authentication/Authorization -->
         <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>

@@ -99,7 +99,7 @@
         <jakarta.inject-api.version>2.0.0-RC4</jakarta.inject-api.version> 
               
         <!-- Jakarta XML Binding -->
-        <jakarta.jaxb-api.version>3.0.0-RC3</jakarta.jaxb-api.version>
+        <jakarta.jaxb-api.version>3.0.0</jakarta.jaxb-api.version>
         <jakarta.jaxb-impl.version>3.0.0-M4</jakarta.jaxb-impl.version>
         
         <!-- Jakarta REST -->

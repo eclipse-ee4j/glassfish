@@ -89,8 +89,8 @@
         <servlet-api.version>5.0.0</servlet-api.version>        
 
         <!-- Jakarta Validation -->
-        <jakarta.validation.version>3.0.0-M1</jakarta.validation.version>        
-        <hibernate-validator.version>7.0.0.Alpha5</hibernate-validator.version>
+        <jakarta.validation.version>3.0.0</jakarta.validation.version>        
+        <hibernate-validator.version>7.0.0.Alpha6</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <webservices.version>3.0.0-M2</webservices.version>

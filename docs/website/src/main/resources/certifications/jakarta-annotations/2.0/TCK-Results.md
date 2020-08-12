@@ -13,7 +13,7 @@ following is a summary of the TCK results for releases of Jakarta Annotations.
 - Specification Name, Version and download URL: <br/>
   [Jakarta Annotations 2.0](https://jakarta.ee/specifications/annotations/2.0)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Annotations TCK 2.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-annotations-tck-2.0.0.zip), SHA-256: `987d86307d7291d7e0ff1aadd696dfcbfd0c5161c484ec0e403170e28c0f6dcc`
+  [Jakarta Annotations TCK 2.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-annotations-tck-2.0.0.zip), SHA-256: `a88dc8b869657044c9bc7be9d3b0670c357160b6391d7cb84b57245838c2c10d`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>

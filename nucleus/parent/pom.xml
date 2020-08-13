@@ -108,10 +108,10 @@
         <jersey.version>3.0.0-M6</jersey.version>
         
         <!-- Jakarta Mail -->
-        <mail.version>2.0.0-RC6</mail.version>
+        <mail.version>2.0.0</mail.version>
         
         <!-- Jakarta Activation -->
-        <activation.version>2.0.0-RC3</activation.version>
+        <activation.version>2.0.0</activation.version>
         
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>

@@ -28,7 +28,7 @@ import com.sun.enterprise.tools.verifier.tests.*;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
 
 /**
- * Verify that the Transaction Support for the ressource adapter is of an 
+ * Verify that the Transaction Support for the resource adapter is of an
  * acceptable value
  *
  * @author  Jerome Dochez
@@ -80,7 +80,7 @@ public class TransactionSupport extends ConnectorTest implements ConnectorCheck 
 				    new Object[] {compName.toString()}));
 	    result.failed(smh.getLocalString
 			  (getClass().getName() + ".nonexist",
-			   "Error: No Transaction support specified for ressource adapter",
+			   "Error: No Transaction support specified for resource adapter",
 			   new Object[] {connectorTransactionSupport}));        
             return result;
         }
@@ -96,7 +96,7 @@ public class TransactionSupport extends ConnectorTest implements ConnectorCheck 
 					new Object[] {compName.toString()}));	
 		result.passed(smh.getLocalString
 	            (getClass().getName() + ".passed",
-                    "Transaction support [ {0} ] for ressource adapter is supported",
+                    "Transaction support [ {0} ] for resource adapter is supported",
 	            new Object[] {connectorTransactionSupport}));
                return result;
             }     
@@ -109,7 +109,7 @@ public class TransactionSupport extends ConnectorTest implements ConnectorCheck 
 					new Object[] {compName.toString()}));
 	result.failed(smh.getLocalString
 	       (getClass().getName() + ".failed",
-                "Error: Deployment descriptor transaction-support [ {0} ] for ressource adapter is not valid",
+                "Error: Deployment descriptor transaction-support [ {0} ] for resource adapter is not valid",
 		new Object[] {connectorTransactionSupport}));        
         return result;
     }

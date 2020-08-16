@@ -33,7 +33,7 @@
 
 
   <!-- Init parameter to force the XML validation of JSF configuration  -->
-  <!-- ressources.                                                      -->
+  <!-- resources.                                                       -->
 
   <context-param>
       <param-name>com.sun.faces.validateXml</param-name>
@@ -53,7 +53,7 @@
   <!-- ================== Built In Servlet Definitions ==================== -->
 
 
-  <!-- The DefaultDervlet, which is responsible for serving static          -->
+  <!-- The DefaultServlet, which is responsible for serving static          -->
   <!-- resources.                                                           -->
   <!-- This servlet processes any requests that are not mapped to other     -->
   <!-- servlets with servlet mappings (defined either here or in your own   -->
@@ -293,6 +293,7 @@
         /lib/
         \lib\
         jakarta.el.jar
+        jakarta.el-api.jar
         jakarta.servlet-api.jar
         jakarta.servlet.jsp-api.jar
         jakarta.servlet.jsp.jstl-api.jar
@@ -311,7 +312,7 @@
         jakarta.management.j2ee-api.jar
         jakarta.persistence.jar
         jakarta.resource-api.jar
-        jakarta.security.auth.message-api.jar
+        jakarta.authentication-api.jar
         jakarta.authorization-api.jar
         jakarta.transaction-api.jar
         jakarta.xml.bind-api.jar

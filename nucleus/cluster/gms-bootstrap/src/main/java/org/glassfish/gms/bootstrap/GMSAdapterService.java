@@ -75,7 +75,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
     //    GMSAdapterService.class, LogDomains.CORE_LOGGER);
 
     @LoggerInfo(subsystem = "CLSTR", description="Group Management Service Logger")
-    private static final String GMSBS_LOGGER_NAME = "javax.enterprise.cluster.gms.bootstrap";
+    private static final String GMSBS_LOGGER_NAME = "jakarta.enterprise.cluster.gms.bootstrap";
 
 
     @LogMessagesResourceBundle

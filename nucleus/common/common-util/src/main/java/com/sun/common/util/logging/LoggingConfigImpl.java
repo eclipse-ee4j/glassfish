@@ -213,7 +213,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             key = propertyName;
         }
         String property = (String) props.setProperty(key, propertyValue);
-        if (propertyName.contains("javax.enterprise.system.container.web")) {
+        if (propertyName.contains("jakarta.enterprise.system.container.web")) {
             setWebLoggers(propertyValue);
         }
 
@@ -240,7 +240,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             key = propertyName;
         }
         String property = (String) props.setProperty(key, propertyValue);
-        if (propertyName.contains("javax.enterprise.system.container.web")) {
+        if (propertyName.contains("jakarta.enterprise.system.container.web")) {
             setWebLoggers(propertyValue);
         }
 
@@ -269,7 +269,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
                 key = e.getKey();
             }
             String property = (String) props.setProperty(key, e.getValue());
-            if (e.getKey().contains("javax.enterprise.system.container.web")) {
+            if (e.getKey().contains("jakarta.enterprise.system.container.web")) {
                 setWebLoggers(e.getValue());
             }
 
@@ -302,7 +302,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
                 key = e.getKey();
             }
             String property = (String) props.setProperty(key, e.getValue());
-            if (e.getKey().contains("javax.enterprise.system.container.web")) {
+            if (e.getKey().contains("jakarta.enterprise.system.container.web")) {
                 setWebLoggers(e.getValue());
             }
 

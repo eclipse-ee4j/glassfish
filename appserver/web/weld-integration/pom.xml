@@ -111,7 +111,7 @@
                     <artifactId>weld-spi</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>javax.enterprise</groupId>
+                    <groupId>jakarta.enterprise</groupId>
                     <artifactId>cdi-api</artifactId>
                 </exclusion>
                 <exclusion>

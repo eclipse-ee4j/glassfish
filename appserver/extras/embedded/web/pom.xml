@@ -682,8 +682,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>jakarta.security.auth.message</groupId>
-        <artifactId>jakarta.security.auth.message-api</artifactId>
+        <groupId>jakarta.authentication</groupId>
+        <artifactId>jakarta.authentication-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -1062,6 +1062,11 @@
     <dependency>
         <groupId>org.glassfish.web</groupId>
         <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>jakarta.el</groupId>
+        <artifactId>jakarta.el-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>

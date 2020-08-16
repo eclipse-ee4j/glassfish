@@ -51,7 +51,7 @@ public class BindableResourcesHelper {
 
     @LoggerInfo(subsystem="RESOURCE", description="Nucleus Resource", publish=true)
 
-    public static final String LOGGER = "javax.enterprise.resources.util";
+    public static final String LOGGER = "jakarta.enterprise.resources.util";
 
     private final Logger _logger = Logger.getLogger(LOGGER, LOGMESSAGE_RESOURCE);
 

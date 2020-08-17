@@ -96,7 +96,7 @@
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
-                <include>grizzly-npn-bootstrap.jar</include>
+                <include>grizzly-npn-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/modules/endorsed</outputDirectory>
         </fileSet>
@@ -143,6 +143,7 @@
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>grizzly-npn-bootstrap.jar</exclude>
+                <exclude>grizzly-npn-api.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/modules</outputDirectory>
         </fileSet>

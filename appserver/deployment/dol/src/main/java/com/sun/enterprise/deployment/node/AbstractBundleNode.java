@@ -100,7 +100,7 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
             // we are using schemas for this DDs
  
             bundleNode = appendChildNS(parent, getXMLRootTag().getQName(),
-                    TagNames.JAVAEE_NAMESPACE);    
+                    TagNames.JAKARTAEE_NAMESPACE);    
             addBundleNodeAttributes((Element) bundleNode, descriptor);
         } else {              
             bundleNode = appendChild(parent, getXMLRootTag().getQName());
@@ -208,17 +208,19 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
             return;
         if (uri.equals(TagNames.JAVAEE_NAMESPACE)) 
             return;
+        if (uri.equals(TagNames.JAKARTAEE_NAMESPACE))
+            return;
         if (uri.equals(W3C_XML_SCHEMA_INSTANCE)) 
             return;
         super.addPrefixMapping(prefix, uri);
     }
     
     /**
-     * @return the complete URL for JAVAEE schemas
+     * @return the complete URL for JAKARTAEE schemas
      */
     protected String getSchemaURL() {
        // by default, it comes from our web site
-       return TagNames.JAVAEE_NAMESPACE + "/" + getSystemID();
+       return TagNames.JAKARTAEE_NAMESPACE + "/" + getSystemID();
     }
        
     /**

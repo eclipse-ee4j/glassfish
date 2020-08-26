@@ -116,7 +116,7 @@
         <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>
         <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
-        <soteria.version>2.0.0-M2</soteria.version>
+        <soteria.version>2.0.0-M3</soteria.version>
 
         <!-- Jakarta Messaging -->
         <jms-api.version>3.0.0-RC1</jms-api.version>

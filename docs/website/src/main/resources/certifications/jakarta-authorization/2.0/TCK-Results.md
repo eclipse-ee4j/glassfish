@@ -12,7 +12,7 @@ following is a summary of the TCK results for releases of Jakarta Authorization.
 - Specification Name, Version and download URL: <br/>
   [Jakarta Authorization 2.0](https://jakarta.ee/specifications/authorization/2.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Authorization TCK 2.0.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-authorization-tck-2.0.0.zip), SHA-256: `01bbb9b8a906c06c4c66674178381c0f1ccc8091e86063b89435c27263e88eef`
+  [Jakarta Authorization TCK 2.0.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-authorization-tck-2.0.0.zip), SHA-256: `e92142d0d45fa523bb997114c86d28b06db1f725cfe8842d77566985e3116d21`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>
@@ -36,9 +36,9 @@ Test results:
 
 BUILD SUCCESSFUL
 Total time: 1 minute 4 seconds
-SHA256_API=03d6f53c6273aac7c908cd398505eaa719a918a04aa9ebb40d7775cc8a1d08a9
-SHA256_TCK=01bbb9b8a906c06c4c66674178381c0f1ccc8091e86063b89435c27263e88eef
-Product_download=https://github.com/eclipse-ee4j/glassfish/releases/download/6.0.0-M2-servlet5/glassfish.zip
+SHA256_API=89352076473046b40a6ba4b400477ad79d213cdee6e26fa73db085a88be8f481
+SHA256_TCK=e92142d0d45fa523bb997114c86d28b06db1f725cfe8842d77566985e3116d21
+Product_download=https://download.eclipse.org/ee4j/glassfish/weekly/glassfish-6.0.0-SNAPSHOT-2020-08-23.zip
 API_download=https://jakarta.oss.sonatype.org/content/repositories/staging/jakarta/authorization/jakarta.authorization-api/2.0.0/jakarta.authorization-api-2.0.0.jar
 TCK_download=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-authorization-tck-2.0.0.zip
 OS4=3.12.0 NAME="Alpine Linux" ID=alpine VERSION_ID=3.12.0 PRETTY_NAME="Alpine Linux v3.12" HOME_URL="https://alpinelinux.org/" BUG_REPORT_URL="https://bugs.alpinelinux.org/"

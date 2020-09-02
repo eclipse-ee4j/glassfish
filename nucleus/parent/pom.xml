@@ -103,7 +103,7 @@
         <jakarta.jaxb-impl.version>3.0.0-M4</jakarta.jaxb-impl.version>
         
         <!-- Jakarta REST -->
-        <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
+        <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0-M1</jax-rs-api.impl.version>
         <jersey.version>3.0.0-M6</jersey.version>
         
@@ -117,7 +117,7 @@
         <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>
 
         <!-- GlassFish Components -->                                   
-        <glassfish-corba.version>4.2.3-RC1</glassfish-corba.version>
+        <glassfish-corba.version>4.2.3-RC2</glassfish-corba.version>
         <grizzly.version>3.0.0-M1</grizzly.version>
         <grizzly.npn.version>1.9</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
@@ -133,9 +133,8 @@
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
         <copyright-plugin.version>1.50</copyright-plugin.version>
 
-        <!-- 3rd party dependencies -->                             
+        <!-- 3rd party dependencies -->
         <stax-api.version>1.0-2</stax-api.version>
-        <slf4j.version>1.7.21</slf4j.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <javassist.version>3.27.0-GA</javassist.version>
         <jboss.logging.version>3.4.1.Final</jboss.logging.version>
@@ -149,13 +148,12 @@
         <asm.version>7.3.1</asm.version>
 
         <testng.version>7.1.0</testng.version>
-        <jdk.version>1.7.0-09</jdk.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
-        <javaee.version.old>7</javaee.version.old>
-        <javaee.version.new>8</javaee.version.new>
+        <javaee.version.old>8</javaee.version.old>
+        <javaee.version.new>9</javaee.version.new>
         <jmockit.version>1.49</jmockit.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
     </properties>

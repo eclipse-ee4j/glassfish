@@ -30,7 +30,11 @@ public final class WsInjectionHandlerImpl implements WsInjectionHandler {
 
     @Override
     public boolean handles(AnnotatedField annotatedField) {
-        return annotatedField.isAnnotationPresent( WebServiceRef.class );
+        try {
+            return annotatedField.isAnnotationPresent( WebServiceRef.class );
+        } catch (NoClassDefFoundError error) { // in web profile class WebServiceRef is not available 
+            return false;
+        }
     }
 
     @Override

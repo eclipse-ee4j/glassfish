@@ -180,7 +180,7 @@
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
-                <include>grizzly-npn-bootstrap.jar</include>
+                <include>grizzly-npn-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/modules/endorsed</outputDirectory>
         </fileSet>
@@ -229,6 +229,7 @@
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>appserver-domain.jar</exclude>
                 <exclude>grizzly-npn-bootstrap.jar</exclude>
+                <exclude>grizzly-npn-api.jar</exclude>
                 <exclude>cli-optional.jar</exclude>
                 <exclude>appserver-cli.jar</exclude>
                 <exclude>cluster-cli.jar</exclude>

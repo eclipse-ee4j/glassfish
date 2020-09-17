@@ -71,6 +71,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
+import org.jboss.weld.manager.api.WeldInjectionTarget;
 
 
 @Service
@@ -216,7 +217,14 @@ public class JCDIServiceImpl implements JCDIService {
         }
 
         // Create the injection target
-        InjectionTarget it = weldManager.createInjectionTarget(ejbDesc);
+
+        InjectionTarget it = null;
+        if (ejbDesc.isMessageDriven()) {
+            // message driven beans are non-contextual and therefore createInjectionTarget is not appropriate
+            it = createMdbInjectionTarget(weldManager, ejbDesc);
+        } else {
+            it = weldManager.createInjectionTarget(ejbDesc);
+        }
 	if (null != jcdiCtx) {
         jcdiCtx.setInjectionTarget( it );
 	}
@@ -243,6 +251,17 @@ public class JCDIServiceImpl implements JCDIService {
 	}
     	return jcdiCtx;
         // Injection is not performed yet. Separate injectEJBInstance() call is required.
+    }
+    
+        private <T> InjectionTarget<T> createMdbInjectionTarget(WeldManager weldManager, org.jboss.weld.ejb.spi.EjbDescriptor<T> ejbDesc) {
+        AnnotatedType<T> type = weldManager.createAnnotatedType(ejbDesc.getBeanClass());
+        WeldInjectionTarget<T> target = weldManager.createInjectionTargetBuilder(type)
+                .setDecorationEnabled(false)
+                .setInterceptionEnabled(false)
+                .setTargetClassLifecycleCallbacksEnabled(false)
+                .setBean(weldManager.getBean(ejbDesc))
+                .build();
+        return weldManager.fireProcessInjectionTarget(type, target);
     }
 
     private BeanDeploymentArchive getBDAForBeanClass(BundleDescriptor bundleDesc, String beanClassName){

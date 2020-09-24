@@ -106,8 +106,8 @@
         <tyrus.version>2.0.0-M3</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <concurrent-api.version>2.0.0-RC2</concurrent-api.version>
-        <concurrent.version>2.0.0-RC2</concurrent.version>
+        <concurrent-api.version>2.0.0</concurrent-api.version>
+        <concurrent.version>2.0.0</concurrent.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
@@ -130,7 +130,7 @@
         <jakarta.transaction-api.version>2.0.0-RC2</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
-        <jakarta.resource-api.version>2.0.0-RC2</jakarta.resource-api.version>
+        <jakarta.resource-api.version>2.0.0-RC3</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.0.0</jakarta.batch-api.version>
@@ -141,18 +141,18 @@
         <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
-        <jsonp-api.version>2.0.0-RC3</jsonp-api.version>
-        <jsonp-ri.version>2.0.0-RC3</jsonp-ri.version>
-        <jsonp-jaxrs.version>2.0.0-RC3</jsonp-jaxrs.version>
-        <json.bind-api.version>2.0.0-RC2</json.bind-api.version>
-        <yasson.version>2.0.0-M2</yasson.version>
+        <jsonp-api.version>2.0.0</jsonp-api.version>
+        <jsonp-ri.version>2.0.0</jsonp-ri.version>
+        <jsonp-jaxrs.version>2.0.0</jsonp-jaxrs.version>
+        <json.bind-api.version>2.0.0</json.bind-api.version>
+        <yasson.version>2.0.0</yasson.version>
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.0.0-RC2</jsp-api.version>
         <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>5.3.0</woodstox.version>
+        <woodstox.version>6.2.1</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->

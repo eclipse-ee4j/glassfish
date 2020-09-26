@@ -67,9 +67,6 @@
         <module>webservices</module>
         <module>orb</module>
         <module>appclient</module>
-        <module>verifier/verifier-impl</module>
-        <module>verifier/verifier-scripts</module>
-        <module>verifier/verifier-jdk-extension-bundle</module>
         <module>ant-tasks</module>
     </modules>
 

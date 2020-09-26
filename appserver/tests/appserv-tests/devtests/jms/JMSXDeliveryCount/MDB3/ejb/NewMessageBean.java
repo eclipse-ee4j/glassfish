@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,14 +17,14 @@
 package org.glassfish.test.jms.jmsxdeliverycount.ejb;
 
 import java.util.logging.*;
-import javax.annotation.Resource;
-import javax.ejb.*;
-import javax.inject.Inject;
-import javax.jms.*;
+import jakarta.annotation.Resource;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
+import jakarta.jms.*;
 
 @MessageDriven(mappedName = "jms/jms_unit_test_Queue", activationConfig = {
     @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue"),
     @ActivationConfigProperty(propertyName = "endpointExceptionRedeliveryAttempts", propertyValue = "1")
 })
 public class NewMessageBean implements MessageListener {

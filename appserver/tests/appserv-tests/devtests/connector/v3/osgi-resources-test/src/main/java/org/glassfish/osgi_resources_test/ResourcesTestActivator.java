@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -140,29 +140,29 @@ public class ResourcesTestActivator implements BundleActivator {
 
         testJdbcResources("(jndi-name=jdbc/test-resource-1)", true);
 
-        createJmsResource("jms/osgi.ConnectionFactory", "javax.jms.QueueConnectionFactory");
-        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", javax.jms.QueueConnectionFactory.class, false, "-trial-1");
+        createJmsResource("jms/osgi.ConnectionFactory", "jakarta.jms.QueueConnectionFactory");
+        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", jakarta.jms.QueueConnectionFactory.class, false, "-trial-1");
         deleteJmsResource("jms/osgi.ConnectionFactory");
         //test it again to avoid stale service references (Refer issue : GLASSFISH-15790)
-        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", javax.jms.QueueConnectionFactory.class, true, "-trial-2");
+        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", jakarta.jms.QueueConnectionFactory.class, true, "-trial-2");
 
         //test it again to avoid stale service references (Refer issue : GLASSFISH-15790)
-        createJmsResource("jms/osgi.ConnectionFactory", "javax.jms.QueueConnectionFactory");
-        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", javax.jms.QueueConnectionFactory.class, false, "-trial-3");
+        createJmsResource("jms/osgi.ConnectionFactory", "jakarta.jms.QueueConnectionFactory");
+        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", jakarta.jms.QueueConnectionFactory.class, false, "-trial-3");
         deleteJmsResource("jms/osgi.ConnectionFactory");
-        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", javax.jms.QueueConnectionFactory.class, true, "-trial-4");
+        testJmsResources("(jndi-name=jms/osgi.ConnectionFactory)", jakarta.jms.QueueConnectionFactory.class, true, "-trial-4");
 
-        createJmsResource("jms/osgi.Admin.Object", "javax.jms.QueueConnectionFactory");
-        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", javax.jms.QueueConnectionFactory.class, false, "-trial-1");
+        createJmsResource("jms/osgi.Admin.Object", "jakarta.jms.QueueConnectionFactory");
+        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", jakarta.jms.QueueConnectionFactory.class, false, "-trial-1");
         deleteJmsResource("jms/osgi.Admin.Object");
         //test it again to avoid stale service references (Refer issue : GLASSFISH-15790)
-        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", javax.jms.QueueConnectionFactory.class, true, "-trial-2");
+        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", jakarta.jms.QueueConnectionFactory.class, true, "-trial-2");
 
-        createJmsResource("jms/osgi.Admin.Object", "javax.jms.Queue");
-        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", javax.jms.Queue.class, false, "-trial-3");
+        createJmsResource("jms/osgi.Admin.Object", "jakarta.jms.Queue");
+        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", jakarta.jms.Queue.class, false, "-trial-3");
         deleteJmsResource("jms/osgi.Admin.Object");
         //test it again to avoid stale service references (Refer issue : GLASSFISH-15790)
-        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", javax.jms.Queue.class, true, "-trial-4");
+        testJmsResources("(jndi-name=jms/osgi.Admin.Object)", jakarta.jms.Queue.class, true, "-trial-4");
     }
 
     private void setAttribute(String nameValue) {

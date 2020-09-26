@@ -16,9 +16,9 @@
 
 package org.glassfish.test.authpropagation;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ejb.*;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.ejb.*;
 import java.util.logging.Logger;
 
 @Singleton

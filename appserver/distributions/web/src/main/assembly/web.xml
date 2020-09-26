@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -180,8 +180,7 @@
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
-                <include>jakarta.annotation-api.jar</include>
-                <include>grizzly-npn-bootstrap.jar</include>
+                <include>grizzly-npn-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/modules/endorsed</outputDirectory>
         </fileSet>
@@ -198,27 +197,12 @@
             <directory>${temp.dir}</directory>
             <includes>
                 <include>org.apache.felix.*.jar</include>
+                <include>org.osgi.util.function.jar</include>
+                <include>org.osgi.util.promise.jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.felix.bundlerepository.jar</exclude>
             </excludes>
-            <outputDirectory>${install.dir.name}/glassfish/modules/autostart</outputDirectory>
-        </fileSet>
-
-        <!-- autostart -->
-        <fileSet>
-            <directory>${temp.dir}</directory>
-            <includes>
-                <include>osgi-cdi.jar</include>
-                <include>osgi-ee-resources.jar</include>
-                <include>osgi-ejb-container.jar</include>
-                <include>osgi-http.jar</include>
-                <include>osgi-javaee-base.jar</include>
-                <include>osgi-jdbc.jar</include>
-                <include>osgi-jpa.jar</include>
-                <include>osgi-jta.jar</include>
-                <include>osgi-web-container.jar</include>
-            </includes>
             <outputDirectory>${install.dir.name}/glassfish/modules/autostart</outputDirectory>
         </fileSet>
 
@@ -229,15 +213,6 @@
                 <include>*.jar</include>
             </includes>
             <excludes>
-                <exclude>osgi-cdi.jar</exclude>
-                <exclude>osgi-ee-resources.jar</exclude>
-                <exclude>osgi-ejb-container.jar</exclude>
-                <exclude>osgi-http.jar</exclude>
-                <exclude>osgi-javaee-base.jar</exclude>
-                <exclude>osgi-jdbc.jar</exclude>
-                <exclude>osgi-jpa.jar</exclude>
-                <exclude>osgi-jta.jar</exclude>
-                <exclude>osgi-web-container.jar</exclude>
                 <exclude>server-mgmt.jar</exclude>
                 <exclude>osgi-cli-interactive.jar</exclude>
                 <exclude>flashlight-agent.jar</exclude>
@@ -247,12 +222,14 @@
                 <exclude>org.apache.felix.gogo.runtime.jar</exclude>
                 <exclude>org.apache.felix.gogo.shell.jar</exclude>
                 <exclude>org.apache.felix.scr.jar</exclude>
+                <exclude>org.osgi.util.function.jar</exclude>
+                <exclude>org.osgi.util.promise.jar</exclude>
                 <exclude>org.apache.felix.eventadmin.jar</exclude>
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>appserver-domain.jar</exclude>
-                <exclude>jakarta.annotation-api.jar</exclude>
                 <exclude>grizzly-npn-bootstrap.jar</exclude>
+                <exclude>grizzly-npn-api.jar</exclude>
                 <exclude>cli-optional.jar</exclude>
                 <exclude>appserver-cli.jar</exclude>
                 <exclude>cluster-cli.jar</exclude>

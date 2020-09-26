@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,9 +20,9 @@ import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.ConnectionRequestInfoImpl;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -63,7 +63,7 @@ public class SecurityUtils {
      * @throws <code>SecurityException</code> if access to the <code>Subject</code> instance is denied
      */
     public static PasswordCredential getPasswordCredential(final ManagedConnectionFactory mcf,
-                                                           final Subject subject, javax.resource.spi.ConnectionRequestInfo info) throws ResourceException {
+                                                           final Subject subject, jakarta.resource.spi.ConnectionRequestInfo info) throws ResourceException {
 
         if (info == null) {
             if (subject == null) {
@@ -85,7 +85,7 @@ public class SecurityUtils {
                         });
                 if (pc == null) {
                     String msg = sm.getString("su.no_passwd_cred");
-                    throw new javax.resource.spi.SecurityException(msg);
+                    throw new jakarta.resource.spi.SecurityException(msg);
                 } else {
                     return pc;
                 }

@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public abstract class PartBean implements EntityBean {

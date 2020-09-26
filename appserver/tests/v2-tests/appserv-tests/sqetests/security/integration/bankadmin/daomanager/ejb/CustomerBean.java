@@ -16,16 +16,16 @@
 
 package com.sun.s1peqe.security.integration.bankadmin.daomanager;
 
-import javax.ejb.EntityContext;
+import jakarta.ejb.EntityContext;
 import java.util.Collection;
 import java.util.logging.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import com.sun.ejte.ccl.reporter.*;
 
 
 
-public abstract class CustomerBean extends EnterpriseBeanLogger implements javax.ejb.EntityBean
+public abstract class CustomerBean extends EnterpriseBeanLogger implements jakarta.ejb.EntityBean
 {
     AccountLocalHome accountHome=null;
     public javax.naming.Context jndiContext=null;
@@ -49,7 +49,7 @@ public abstract class CustomerBean extends EnterpriseBeanLogger implements javax
         //Business methods
 
     public String ejbCreateCustomer(String id,String name)
-    throws javax.ejb.CreateException
+    throws jakarta.ejb.CreateException
     {
         
         toXML("ejbCreateCustomer","Enter");
@@ -118,7 +118,7 @@ public abstract class CustomerBean extends EnterpriseBeanLogger implements javax
     }
 
     public void ejbPostCreateCustomer(String id,String name)
-    throws javax.ejb.CreateException
+    throws jakarta.ejb.CreateException
     {}
 
     public EntityContext ejbContext;

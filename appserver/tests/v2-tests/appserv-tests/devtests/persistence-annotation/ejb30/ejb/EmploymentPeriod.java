@@ -27,9 +27,9 @@ import java.util.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
-import javax.persistence.*;
-import static javax.persistence.GeneratorType.*;
-import static javax.persistence.AccessType.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.GeneratorType.*;
+import static jakarta.persistence.AccessType.*;
 /**
  *
  * @author ss141213

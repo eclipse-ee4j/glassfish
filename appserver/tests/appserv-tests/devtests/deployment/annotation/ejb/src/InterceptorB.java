@@ -16,11 +16,11 @@
 
 package test.ejb.stateless;
 
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
+import jakarta.ejb.SessionContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
 
 public class InterceptorB extends InterceptorA {
     @Resource SessionContext sessionCtx;

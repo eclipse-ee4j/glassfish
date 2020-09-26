@@ -19,10 +19,10 @@ package com.sun.connector.cciblackbox;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.EISSystemException;
-import javax.resource.spi.IllegalStateException;
-import javax.resource.spi.ManagedConnectionMetaData;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.EISSystemException;
+import jakarta.resource.spi.IllegalStateException;
+import jakarta.resource.spi.ManagedConnectionMetaData;
 
 /**
  * This class gives info about a ManagedConnection and the connected EIS 

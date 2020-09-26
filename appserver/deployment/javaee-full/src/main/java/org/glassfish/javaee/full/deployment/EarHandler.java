@@ -69,8 +69,8 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedAction;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import static javax.xml.stream.XMLStreamConstants.*;
 
 @Service(name=EarDetector.ARCHIVE_TYPE)

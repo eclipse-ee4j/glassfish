@@ -16,9 +16,9 @@ package com.oracle.javaee7.samples.batch.cmt.chunk;
 
 import java.io.Serializable;
 
-@javax.inject.Named("SimpleItemReader")
+@jakarta.inject.Named("SimpleItemReader")
 public class SimpleItemReader
-    implements javax.batch.api.chunk.ItemReader {
+    implements jakarta.batch.api.chunk.ItemReader {
 
     private int index = 0;
     

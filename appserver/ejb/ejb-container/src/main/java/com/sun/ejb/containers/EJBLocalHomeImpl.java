@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 import java.lang.reflect.Method;
 
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import java.util.logging.*;
 
@@ -93,7 +93,7 @@ public abstract class EJBLocalHomeImpl
     }
     
     /**
-     * This is the implementation of the javax.ejb.EJBLocalHome remove method.
+     * This is the implementation of the jakarta.ejb.EJBLocalHome remove method.
      */
     public final void remove(Object primaryKey)
         throws RemoveException, EJBException

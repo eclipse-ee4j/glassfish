@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.security.jauth;
 
-import javax.security.auth.message.MessagePolicy;
-import static javax.security.auth.message.MessagePolicy.*;
+import jakarta.security.auth.message.MessagePolicy;
+import static jakarta.security.auth.message.MessagePolicy.*;
   
 /*
  * This class is used to define the message authentication policy that informs

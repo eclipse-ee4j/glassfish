@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.perf.local;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class SfulEJB implements SessionBean
 {

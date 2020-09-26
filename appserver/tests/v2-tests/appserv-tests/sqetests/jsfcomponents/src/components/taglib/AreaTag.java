@@ -19,9 +19,9 @@ package components.taglib;
 import components.components.AreaComponent;
 import components.renderkit.Util;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.ValueHolder;
-import javax.faces.webapp.UIComponentTag;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.ValueHolder;
+import jakarta.faces.webapp.UIComponentTag;
 
 
 /**

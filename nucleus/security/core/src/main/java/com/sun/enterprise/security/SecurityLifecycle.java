@@ -33,10 +33,10 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.jvnet.hk2.config.ConfigListener;
 
 /**
@@ -164,7 +164,7 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
     
 
 /*    private void registerPolicyHandlers()
-            throws javax.security.jacc.PolicyContextException {
+            throws jakarta.security.jacc.PolicyContextException {
         PolicyContextHandler pch = PolicyContextHandlerImpl.getInstance();
         PolicyContext.registerHandler(PolicyContextHandlerImpl.ENTERPRISE_BEAN,
             pch, true);

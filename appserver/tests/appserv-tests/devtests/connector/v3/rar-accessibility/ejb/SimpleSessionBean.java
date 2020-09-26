@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.connector.rar_accessibility_test.ejb;
 
-import javax.ejb.EJBContext;
-import javax.ejb.SessionBean;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.SessionBean;
 import javax.naming.InitialContext;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -26,11 +26,11 @@ import java.sql.Statement;
 public class SimpleSessionBean implements SessionBean {
 
     private EJBContext ejbcontext;
-    private transient javax.ejb.SessionContext m_ctx = null;
+    private transient jakarta.ejb.SessionContext m_ctx = null;
     transient javax.sql.DataSource ds;
 
 
-    public void setSessionContext(javax.ejb.SessionContext ctx) {
+    public void setSessionContext(jakarta.ejb.SessionContext ctx) {
         m_ctx = ctx;
     }
 

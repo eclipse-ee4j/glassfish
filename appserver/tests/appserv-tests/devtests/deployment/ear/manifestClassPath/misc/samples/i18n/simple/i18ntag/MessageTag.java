@@ -18,10 +18,10 @@ package samples.i18n.simple.i18ntag;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.jsp.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
-import javax.servlet.jsp.tagext.*;
+import jakarta.servlet.jsp.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.jsp.tagext.*;
 
 /**
  * A simple message taghandler to display localized message from a resource bundle based on jsp request

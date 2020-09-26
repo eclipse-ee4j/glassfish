@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,6 @@ import javax.security.auth.callback.CallbackHandler;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 
-//import com.sun.xml.rpc.spi.runtime.StreamingHandler;
-
-import com.sun.xml.rpc.spi.runtime.StreamingHandler;
-import javax.xml.soap.SOAPMessage;
 
 /**
  * This class is the client container's interface to the AuthConfig subsystem
@@ -99,20 +95,9 @@ public class ServerAuthConfig extends BaseAuthConfig {
 	    (layer,provider,requestPolicy,responsePolicy,cbh);
     }
 
-   public ServerAuthContext 
-	getAuthContext(StreamingHandler handler, SOAPMessage message) {
-	return (ServerAuthContext) getContext(handler,message);
-    }
-
     public ServerAuthContext getAuthContext
-	(javax.xml.ws.handler.soap.SOAPMessageContext context) {
+	(jakarta.xml.ws.handler.soap.SOAPMessageContext context) {
 	return (ServerAuthContext) getContext(context);
-    }
-
-   public ServerAuthContext 
-	getAuthContextForOpCode(StreamingHandler handler, int opcode) throws
-	    ClassNotFoundException, NoSuchMethodException {
-	return (ServerAuthContext) getContextForOpCode(handler,opcode);
     }
 
 }

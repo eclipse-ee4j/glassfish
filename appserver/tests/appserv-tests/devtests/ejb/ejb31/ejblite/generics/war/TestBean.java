@@ -17,7 +17,7 @@
 package com.sun.s1as.devtests.ejb.generics;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 @Stateless
 public class TestBean extends AbstractBaseEJB<Object> {

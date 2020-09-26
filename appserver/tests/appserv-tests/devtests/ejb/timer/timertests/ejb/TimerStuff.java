@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.timer.timertests;
 import java.io.Serializable;
 import java.util.Date;
 import java.rmi.RemoteException;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface TimerStuff {
 

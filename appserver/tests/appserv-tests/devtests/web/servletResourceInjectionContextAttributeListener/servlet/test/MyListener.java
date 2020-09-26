@@ -16,13 +16,13 @@
 
 package test;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextAttributeListener;
-import javax.servlet.ServletContextAttributeEvent;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextAttributeListener;
+import jakarta.servlet.ServletContextAttributeEvent;
 
 import javax.naming.*;
-import javax.annotation.Resource;
-import javax.annotation.Resources;
+import jakarta.annotation.Resource;
+import jakarta.annotation.Resources;
 import javax.sql.DataSource;
 
 @Resource(name="myDataSource4", type=DataSource.class)

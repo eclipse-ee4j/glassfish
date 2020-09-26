@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.rollback_notclear_unsynchPC.client;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.rollback_notclear_unsynchPC.ejb.Tester;

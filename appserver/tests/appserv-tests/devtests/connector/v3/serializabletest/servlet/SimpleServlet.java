@@ -20,9 +20,9 @@ import com.sun.s1asdev.connector.serializabletest.ejb.SimpleSessionHome;
 import com.sun.s1asdev.connector.serializabletest.ejb.SimpleSession;
 
 import java.io.*;
-import javax.servlet.*;
+import jakarta.servlet.*;
 import javax.naming.*;
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 
 
 public class SimpleServlet extends HttpServlet {

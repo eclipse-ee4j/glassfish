@@ -16,9 +16,9 @@
 
 package com.sun.ejb.devtest;
 
-import javax.ejb.Stateful;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
 
 import javax.naming.InitialContext;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,7 +57,7 @@ public interface MessageBeanListener {
      * an 0-length array if there are 0 arguments.
      *
      * @throws Throwable  This is either an application exception as thrown
-     * from the message bean instance or a javax.ejb.EJBException in the case
+     * from the message bean instance or a jakarta.ejb.EJBException in the case
      * that the bean throws a system exception.  Note that exceptions are 
      * *always* propagated, regardless of transaction type.  
      */

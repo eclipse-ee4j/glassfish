@@ -17,8 +17,8 @@
 package ejb;
 
 import java.rmi.*;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 
 public class SimpleServerImpl implements SessionBean {
     SessionContext sc;

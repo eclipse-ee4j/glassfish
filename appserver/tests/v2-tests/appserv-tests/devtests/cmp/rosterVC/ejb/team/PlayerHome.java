@@ -18,10 +18,10 @@ package team;
 
 import java.util.Collection;
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.FinderException;
 
-public interface PlayerHome extends  javax.ejb.EJBHome   {
+public interface PlayerHome extends  jakarta.ejb.EJBHome   {
 
     public Player create (String id, String name, String position,
         double salary)

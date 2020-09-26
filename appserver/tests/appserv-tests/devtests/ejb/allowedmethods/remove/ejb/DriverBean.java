@@ -19,10 +19,10 @@ package com.sun.s1asdev.ejb.allowedmethods.remove;
 import java.util.Enumeration;
 import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
-import javax.ejb.RemoveException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.RemoveException;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 

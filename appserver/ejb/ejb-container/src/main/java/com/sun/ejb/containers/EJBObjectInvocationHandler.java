@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,27 +18,19 @@ package com.sun.ejb.containers;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Method;
 
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import java.rmi.RemoteException;
 
-import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.InvocationInfo;
-import com.sun.ejb.Container;
 import com.sun.ejb.containers.util.MethodMap;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.Utility;
-import com.sun.logging.LogDomains;
 
 /** 
  * Handler for EJBObject invocations through EJBObject proxy.
@@ -141,7 +133,7 @@ public final class EJBObjectInvocationHandler
                                           + method);
             }
             
-            if( (methodClass == javax.ejb.EJBObject.class) ||
+            if( (methodClass == jakarta.ejb.EJBObject.class) ||
                 invInfo.ejbIntfOverride ) {
                 return invokeEJBObjectMethod(method.getName(), args);
             } else if( invInfo.targetMethod1 == null ) {

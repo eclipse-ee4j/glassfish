@@ -16,12 +16,12 @@
 
 package components.components;
 
-import javax.faces.context.FacesContext;
-import javax.faces.component.UIOutput;
-import javax.faces.el.ValueBinding;
-import javax.faces.component.UIComponent;
-import javax.faces.context.ResponseWriter;
-import javax.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.el.ValueBinding;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.component.UIViewRoot;
 
 import java.io.IOException;
 import java.util.Iterator;

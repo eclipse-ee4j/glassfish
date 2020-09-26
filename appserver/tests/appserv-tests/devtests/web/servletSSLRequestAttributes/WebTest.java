@@ -30,9 +30,9 @@ import com.sun.ejte.ccl.reporter.*;
  * request attributes mandated by the Servlet spec when the request is over
  * HTTPS with SSL client auth turned on, namely:
  *
- *   javax.servlet.request.cipher_suite
- *   javax.servlet.request.key_size
- *   javax.servlet.request.X509Certificate
+ *   jakarta.servlet.request.cipher_suite
+ *   jakarta.servlet.request.key_size
+ *   jakarta.servlet.request.X509Certificate
  *
  * even if none of these attributes have been requested explicitly by a call
  * to ServletRequest.getAttribute().
@@ -45,13 +45,13 @@ public class WebTest {
     private static final String TEST_NAME = "servlet-ssl-request-attributes";
 
     private static final String SSL_CIPHER_SUITE
-        = "javax.servlet.request.cipher_suite";
+        = "jakarta.servlet.request.cipher_suite";
     private static final String SSL_KEY_SIZE
-        = "javax.servlet.request.key_size";
+        = "jakarta.servlet.request.key_size";
     private static final String SSL_CERTIFICATE
-        = "javax.servlet.request.X509Certificate";
+        = "jakarta.servlet.request.X509Certificate";
     private static final String SSL_SESSION_ID
-        = "javax.servlet.request.ssl_session_id";
+        = "jakarta.servlet.request.ssl_session_id";
 
     private static SimpleReporterAdapter stat
         = new SimpleReporterAdapter("appserv-tests");

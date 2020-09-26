@@ -193,7 +193,7 @@ public class MultipartProprietaryWriter implements ProprietaryWriter {
         }
         contentTypeWriter.writeContentType("multipart", ctType, boundary);
         // Write content
-        final Writer writer = new BufferedWriter(new OutputStreamWriter(os));
+        final Writer writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
 //        boolean isFirst = true;
         //Parameters
         if (parameters != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,11 +28,11 @@ import com.sun.enterprise.connectors.util.DriverLoader;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.naming.NamingException;
-import javax.resource.ResourceException;
-import javax.resource.spi.ManagedConnection;
-import javax.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -191,7 +191,7 @@ public class JdbcAdminServiceImpl extends ConnectorService {
      * connection pool refers to. This is used for connection validation.
      * @param poolInfo
      * @return all validation table names.
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      * @throws javax.naming.NamingException
      */
     public Set<String> getValidationTableNames(PoolInfo poolInfo)
@@ -261,7 +261,7 @@ public class JdbcAdminServiceImpl extends ConnectorService {
      * @param con
      * @param catalog database name used.
      * @return 
-     * @throws javax.resource.ResourceException
+     * @throws jakarta.resource.ResourceException
      */
     public static Set<String> getValidationTableNames(java.sql.Connection con, String catalog) 
             throws ResourceException {

@@ -18,19 +18,19 @@ package endpoint;
 
 import java.io.*;
 import java.util.Map;
-import javax.xml.ws.Provider;
-import javax.xml.ws.WebServiceProvider;
-import javax.xml.ws.ServiceMode;
-import javax.xml.ws.Service	;	
-import javax.xml.soap.SOAPMessage;
-import javax.ejb.Stateless;
+import jakarta.xml.ws.Provider;
+import jakarta.xml.ws.WebServiceProvider;
+import jakarta.xml.ws.ServiceMode;
+import jakarta.xml.ws.Service	;	
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.ejb.Stateless;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.ws.WebServiceException;
 
 
 import endpoint.jaxws.*;
@@ -44,14 +44,14 @@ public class HelloImpl implements Provider<Source> {
     private int combo;
     private int bodyIndex;
     
-    public javax.xml.bind.JAXBContext getJAXBContext(){
+    public jakarta.xml.bind.JAXBContext getJAXBContext(){
         return jaxbContext;
     }
     
-    private static javax.xml.bind.JAXBContext createJAXBContext(){
+    private static jakarta.xml.bind.JAXBContext createJAXBContext(){
         try{
-            return javax.xml.bind.JAXBContext.newInstance(ObjectFactory.class);
-        }catch(javax.xml.bind.JAXBException e){
+            return jakarta.xml.bind.JAXBContext.newInstance(ObjectFactory.class);
+        }catch(jakarta.xml.bind.JAXBException e){
             throw new WebServiceException(e.getMessage(), e);
         }
     }

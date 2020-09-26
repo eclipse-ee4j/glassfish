@@ -16,7 +16,7 @@
 
 package profile;
 
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 /**
  *
  * @author  swchan2
@@ -24,6 +24,6 @@ import javax.ejb.EJBHome;
 public interface ProfileInfoHome extends EJBHome{
     
     public ProfileInfoRemote create(String name) 
-        throws java.rmi.RemoteException, javax.ejb.CreateException;
+        throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
 }

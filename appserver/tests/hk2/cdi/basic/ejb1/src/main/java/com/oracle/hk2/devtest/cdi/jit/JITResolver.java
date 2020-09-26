@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.jit;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.hk2.api.Injectee;
 import org.glassfish.hk2.api.JustInTimeInjectionResolver;

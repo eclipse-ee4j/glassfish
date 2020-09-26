@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb32.ejblite.timer;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface TimerStuff {
 

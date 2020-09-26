@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,7 +55,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:resAdapterProp:db", "jmsra");
         waitForCondition("document.getElementById('propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db').value != ''", 10000);
 
-        selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db", "javax.jms.QueueConnectionFactory");
+        selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db", "jakarta.jms.QueueConnectionFactory");
         waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
 
         clickAndWait("propertyForm:title:topButtons:nextButton", TRIGGER_NEW_CONNECTOR_CONNECTION_POOL_STEP_2);
@@ -120,7 +120,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:resAdapterProp:db", "jmsra");
         waitForCondition("document.getElementById('propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db').value != ''", 10000);
 
-        selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db", "javax.jms.QueueConnectionFactory");
+        selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db", "jakarta.jms.QueueConnectionFactory");
         waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
 
         clickAndWait("propertyForm:title:topButtons:nextButton", TRIGGER_NEW_CONNECTOR_CONNECTION_POOL_STEP_2);
@@ -218,7 +218,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:resAdapterProp:db", "jmsra");
         waitForCondition("document.getElementById('propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db').value != ''", 10000);
 
-        selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db", "javax.jms.QueueConnectionFactory");
+        selectDropdownOption("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db", "jakarta.jms.QueueConnectionFactory");
         waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
 
         clickAndWait("propertyForm:title:topButtons:nextButton", TRIGGER_NEW_CONNECTOR_CONNECTION_POOL_STEP_2);

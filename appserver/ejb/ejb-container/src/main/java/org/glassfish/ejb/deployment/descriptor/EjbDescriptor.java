@@ -75,7 +75,7 @@ import org.glassfish.security.common.Role;
 import org.glassfish.internal.api.Globals;
 import com.sun.enterprise.container.common.spi.JCDIService;
 import org.glassfish.hk2.api.ServiceLocator;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * This abstract class encapsulates the meta-information describing

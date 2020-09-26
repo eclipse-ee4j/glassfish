@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.sfsb.stress.client;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 import java.util.Properties;

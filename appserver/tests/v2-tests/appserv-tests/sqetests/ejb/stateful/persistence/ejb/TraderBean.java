@@ -16,9 +16,9 @@
 
 package examples.sfsb;
 
-import javax.ejb.CreateException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -84,7 +84,7 @@ public class TraderBean implements SessionBean {
    * <code>TraderHome.create()</code>, the container allocates an instance of 
    * the EJBean and calls <code>ejbCreate()</code>.
    *
-   * @exception               javax.ejb.CreateException
+   * @exception               jakarta.ejb.CreateException
    *                          if there is a problem creating the bean
    * @see                     examples.ejb20.basic.statefulSession.Trader
    */

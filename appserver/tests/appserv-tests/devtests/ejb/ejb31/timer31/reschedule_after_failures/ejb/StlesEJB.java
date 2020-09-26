@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb31.timer.reschedule_after_failures;
 
-import javax.ejb.*;
-import javax.interceptor.InvocationContext;
-import javax.annotation.Resource;
+import jakarta.ejb.*;
+import jakarta.interceptor.InvocationContext;
+import jakarta.annotation.Resource;
 
 import java.util.Map;
 import java.util.Set;

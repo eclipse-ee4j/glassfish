@@ -16,10 +16,10 @@
 
 package org.glassfish.tests.paas.multipleshareddbservicetest;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,7 +29,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.DatabaseMetaData;
 import java.util.Enumeration;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 public final class EmployeeServlet extends HttpServlet {

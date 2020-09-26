@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import static org.testng.AssertJUnit.*;
 import org.testng.annotations.Test;
 
@@ -45,7 +45,7 @@ public class JmsTest extends RestTestBase {
         Map<String, String> ccp_attrs = new HashMap<String, String>() {
             {
                 put("name", poolName);
-                put("connectiondefinition", "javax.jms.ConnectionFactory");
+                put("connectiondefinition", "jakarta.jms.ConnectionFactory");
                 put("raname", "jmsra");
             }
         };
@@ -116,7 +116,7 @@ public class JmsTest extends RestTestBase {
             {
                 put("id", jndiName);
                 put("raname", "jmsra");
-                put("restype", "javax.jms.Topic");
+                put("restype", "jakarta.jms.Topic");
             }
         };
 

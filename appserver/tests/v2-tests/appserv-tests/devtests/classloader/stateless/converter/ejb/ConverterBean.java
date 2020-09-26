@@ -18,13 +18,13 @@ package com.sun.s1peqe.ejb.stateless.converter.ejb;
 
 import java.util.Collection;
 import java.rmi.RemoteException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.TimedObject;
-import javax.ejb.TimerService;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.TimedObject;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
+import jakarta.ejb.EJBException;
 import javax.xml.parsers.*;
 
 /**

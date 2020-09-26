@@ -18,9 +18,9 @@ package org.glassfish.jacc.test.mr8;
 
 import java.security.Principal;
 
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class HelloEJB implements Hello {

@@ -19,7 +19,7 @@ package com.sun.appserv.sqe.security.wss.annotations.client;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.sun.appserv.sqe.security.taxws.Tax;
 import com.sun.appserv.sqe.security.taxws.TaxService;
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 import javax.xml.rpc.Stub;
 
 /**

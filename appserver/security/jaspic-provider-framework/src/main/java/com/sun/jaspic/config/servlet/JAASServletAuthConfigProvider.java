@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,13 @@ import com.sun.jaspic.config.delegate.MessagePolicyDelegate;
 import com.sun.jaspic.config.helper.AuthContextHelper;
 import com.sun.jaspic.config.jaas.JAASAuthConfigProvider;
 import java.util.Map;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.config.AuthConfigFactory;
-import javax.security.auth.message.module.ServerAuthModule;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.config.AuthConfigFactory;
+import jakarta.security.auth.message.module.ServerAuthModule;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 public class JAASServletAuthConfigProvider extends JAASAuthConfigProvider {
 
     private static final String HTTP_SERVLET_LAYER = "HttpServlet";
-    private static final String MANDATORY_KEY = "javax.security.auth.message.MessagePolicy.isMandatory";
+    private static final String MANDATORY_KEY = "jakarta.security.auth.message.MessagePolicy.isMandatory";
     private static final String MANDATORY_AUTH_CONTEXT_ID = "mandatory";
     private static final String OPTIONAL_AUTH_CONTEXT_ID = "optional";
     private static final Class[] moduleTypes = new Class[] {ServerAuthModule.class};

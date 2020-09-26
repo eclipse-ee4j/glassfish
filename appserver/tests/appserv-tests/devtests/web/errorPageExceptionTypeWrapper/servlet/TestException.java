@@ -15,8 +15,8 @@
  */
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 /**
  * Generic exception class to use for testing error page assertions.

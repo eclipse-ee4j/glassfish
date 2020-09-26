@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,16 +25,13 @@ package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
-import javax.ejb.EJBObject;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EntityContext;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EntityContext;
 
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import javax.sql.DataSource;
 
 import com.sun.enterprise.deployment.*;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil; //TODO Dependency on connector-internal-api needs to be removed
@@ -372,13 +369,13 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * This will guarantee that PersistenceManager is not bound to
      * any transaction.
      *
-     * @return javax.transaction.Transaction object representing 
+     * @return jakarta.transaction.Transaction object representing 
      * the suspended transaction.
      * Returns null if the calling thread is not associated
      * with a transaction.
      */
-    public javax.transaction.Transaction suspendCurrentTransaction() {
-        javax.transaction.Transaction tx = null;
+    public jakarta.transaction.Transaction suspendCurrentTransaction() {
+        jakarta.transaction.Transaction tx = null;
         try {
             tx = getLocalTransactionManager().suspend();
         } catch (Exception ex) {
@@ -392,12 +389,12 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * This will guarantee that the transaction continues to run after
      * read-only bean accessed its PersistenceManager.
      *
-     * @param tx - The javax.transaction.Transaction object that 
+     * @param tx - The jakarta.transaction.Transaction object that 
      * represents the transaction to be resumed. If this object had been
      * returned by #suspendCurrentTransaction() call it will be null in
      * case calling thread was not associated with a transaction.
      */
-    public void resumeCurrentTransaction(javax.transaction.Transaction tx) {
+    public void resumeCurrentTransaction(jakarta.transaction.Transaction tx) {
         try {
             // Resume only real (i.e. not null transaction)
             if (tx != null) {

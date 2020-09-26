@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,29 +10,28 @@
 
 package samples.jms.soaptojms;
 
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.Name;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPPart;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.AttachmentPart;
+import jakarta.xml.soap.Name;
 
 import java.net.URL;
 import javax.activation.DataHandler;
 
 import com.sun.messaging.xml.MessageTransformer;
-//import com.sun.messaging.TopicConnectionFactory;
-import javax.jms.TopicConnectionFactory;
+import jakarta.jms.TopicConnectionFactory;
 
-import javax.jms.TopicConnection;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.Message;
-import javax.jms.TopicSession;
-import javax.jms.Topic;
-import javax.jms.TopicPublisher;
+import jakarta.jms.TopicConnection;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
+import jakarta.jms.Message;
+import jakarta.jms.TopicSession;
+import jakarta.jms.Topic;
+import jakarta.jms.TopicPublisher;
 
 import java.util.*;
 import java.io.*;
@@ -41,7 +40,7 @@ import java.io.*;
  * This example shows how to use the MessageTransformer utility to send SOAP
  * messages with JMS.
  * <p>
- * SOAP messages are constructed with javax.xml.soap API.  The messages
+ * SOAP messages are constructed with jakarta.xml.soap API.  The messages
  * are converted with MessageTransformer utility to convert SOAP to JMS
  * message types.  The JMS messages are then published to the JMS topics.
  */

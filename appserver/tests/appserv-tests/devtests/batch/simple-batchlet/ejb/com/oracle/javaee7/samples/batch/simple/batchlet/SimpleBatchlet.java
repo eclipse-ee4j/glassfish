@@ -14,12 +14,12 @@
  */
 package com.oracle.javaee7.samples.batch.simple.batchlet;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
-@javax.inject.Named
+@jakarta.inject.Named
 public class SimpleBatchlet
-    implements javax.batch.api.Batchlet {
+    implements jakarta.batch.api.Batchlet {
 
     @Override
     public String process() throws Exception {

@@ -16,13 +16,13 @@
 
 package taglib;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
 
 import javax.naming.*;
-import javax.annotation.Resource;
-import javax.annotation.Resources;
+import jakarta.annotation.Resource;
+import jakarta.annotation.Resources;
 import javax.sql.DataSource;
 
 @Resource(name="myDataSource4", type=DataSource.class)

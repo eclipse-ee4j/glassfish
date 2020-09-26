@@ -22,8 +22,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.ejb.*;
+import jakarta.annotation.Resource;
 
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
@@ -161,7 +161,7 @@ public class StatefulWrapperImpl implements StatefulWrapper {
         timerStuff.assertNoTimers();
     }
 
-    public void removeFoo() throws javax.ejb.RemoveException {
+    public void removeFoo() throws jakarta.ejb.RemoveException {
         if (foo != null) {
             foo.remove();
         }

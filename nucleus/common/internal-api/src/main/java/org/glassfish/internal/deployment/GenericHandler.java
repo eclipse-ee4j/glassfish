@@ -39,7 +39,7 @@ import java.net.URL;
 
 import com.sun.enterprise.util.io.FileUtils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Pretty generic implementation of some ArchiveHandler methods

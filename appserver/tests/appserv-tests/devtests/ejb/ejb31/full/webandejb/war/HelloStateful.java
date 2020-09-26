@@ -16,8 +16,8 @@
 
 package com.acme;
 
-import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.ejb.*;
+import jakarta.annotation.*;
 import java.util.concurrent.TimeUnit;
 
 @Stateful

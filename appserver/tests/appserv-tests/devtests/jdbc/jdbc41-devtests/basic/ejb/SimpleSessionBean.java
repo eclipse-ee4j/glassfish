@@ -16,13 +16,13 @@
 
 package com.sun.s1asdev.jdbc41.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.sql.*;
 import java.rmi.*;
 import java.util.*;
 import java.sql.*;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import java.util.concurrent.*;
 import java.lang.reflect.Method;
 

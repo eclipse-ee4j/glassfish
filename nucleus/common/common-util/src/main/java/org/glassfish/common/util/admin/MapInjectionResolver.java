@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 import org.glassfish.api.ExecutionContext;
 import org.glassfish.api.Param;
 import org.glassfish.api.ParamDefaultCalculator;
@@ -53,8 +53,6 @@ public class MapInjectionResolver extends InjectionResolver<Param> {
 
     public static final LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(MapInjectionResolver.class);
-    private static Validator beanValidator = null;
-
     
     public MapInjectionResolver(CommandModel model,
 					ParameterMap parameters) {

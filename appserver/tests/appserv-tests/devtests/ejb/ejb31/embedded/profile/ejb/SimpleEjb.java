@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.ejb.profile;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  * @author Marina Vatkina

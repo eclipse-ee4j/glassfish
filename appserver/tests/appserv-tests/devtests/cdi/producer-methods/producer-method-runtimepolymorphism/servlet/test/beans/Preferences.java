@@ -18,9 +18,9 @@ package test.beans;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.New;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.New;
+import jakarta.enterprise.inject.Produces;
 
 public class Preferences implements Serializable {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,36 +22,48 @@
 
 package org.glassfish.webservices.monitoring;
 
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.tools.ws.spi.WSToolsObjectFactory;
-import com.sun.xml.bind.api.JAXBRIContext;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebEndpoint;
-import java.io.*;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.glassfish.webservices.WebServiceContractImpl;
-import com.sun.enterprise.module.*;
+import org.glassfish.jaxb.runtime.api.JAXBRIContext;
 import org.glassfish.webservices.LogUtils;
+import org.glassfish.webservices.WebServiceContractImpl;
+
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.tools.ws.spi.WSToolsObjectFactory;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.ws.Service;
+import jakarta.xml.ws.WebEndpoint;
 
 /**
  * This servlet is responsible for testing web-services.
@@ -62,6 +74,16 @@ public class WebServiceTesterServlet extends HttpServlet {
 
     private final WebServiceEndpoint svcEP;
     private static final Logger logger = LogUtils.getLogger();
+
+    //modules required by wsimport tool
+    private static final List<String> WSIMPORT_MODULES = Arrays.asList(new String[] {
+        "com.sun.activation.jakarta.activation",
+        "jakarta.annotation-api",
+        "jakarta.xml.bind-api",
+        "com.sun.xml.bind.jaxb-osgi",
+        "org.glassfish.metro.webservices-api-osgi",
+        "org.glassfish.metro.webservices-osgi",
+    });
 
     private static final Hashtable<String, Class> gsiClasses = new Hashtable<String, Class>();
     private static final Hashtable<String, Object> ports = new Hashtable<String, Object>();
@@ -136,7 +158,7 @@ public class WebServiceTesterServlet extends HttpServlet {
         // For now support Tester servlet for JAXWS based services only
         try {
             Class seiClass = Thread.currentThread().getContextClassLoader().loadClass(seiClassName);
-            if(seiClass.getAnnotation(javax.jws.WebService.class) == null) {
+            if(seiClass.getAnnotation(jakarta.jws.WebService.class) == null) {
                 testerNotSupportedError(myEndpoint.getDescriptor().getServiceName(), out);
                 return;
             }
@@ -299,7 +321,7 @@ public class WebServiceTesterServlet extends HttpServlet {
                            "<h4>SOAP Request</h4>"));
                     dumpMessage(listener.getRequest(), out);
                 }
-                if (toInvoke.getAnnotation(javax.jws.Oneway.class) == null &&
+                if (toInvoke.getAnnotation(jakarta.jws.Oneway.class) == null &&
                         listener.getRespose() != null) {
                     // let's print the SOAP request
                     out.print(localStrings.getLocalString(
@@ -557,7 +579,7 @@ public class WebServiceTesterServlet extends HttpServlet {
             deleteDir(new File(classesDir));
         }
     }
-    
+
     private String wsImport(URL wsdlLocation) throws IOException {
 
         File classesDir = new File(System.getProperty("java.io.tmpdir"));
@@ -571,24 +593,45 @@ public class WebServiceTesterServlet extends HttpServlet {
             logger.log(Level.SEVERE, LogUtils.CREATE_DIR_FAILED, classesDir);
         }
 
-        String[] wsimportArgs = new String[8];
-        wsimportArgs[0]="-d";
-        wsimportArgs[1]=classesDir.getAbsolutePath();
-        wsimportArgs[2]="-keep";
-        wsimportArgs[3]=wsdlLocation.toExternalForm();
-        wsimportArgs[4]="-Xendorsed";
-        wsimportArgs[5]="-target";
-        wsimportArgs[6]="2.1";
-        wsimportArgs[7]="-extension";
-        WSToolsObjectFactory tools = WSToolsObjectFactory.newInstance();
-        logger.log(Level.INFO, LogUtils.WSIMPORT_INVOKE, wsdlLocation);
-        boolean success = tools.wsimport(System.out, wsimportArgs);
+        // Metro uses the System.getProperty(java.class.path) to pass on to javac during wsimport
+        String oldCP = System.getProperty("java.class.path");
+        try {
+            WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance();
+            ModulesRegistry modulesRegistry = wscImpl.getModulesRegistry();
+            String classpath1 = classesDir.getAbsolutePath();
+            for (String module : WSIMPORT_MODULES) {
+                HK2Module m = modulesRegistry.getModules(module).iterator().next();
+                ModuleDefinition md = m.getModuleDefinition();
+                classpath1+=(File.pathSeparator + new File(md.getLocations()[0]).getAbsolutePath());
+            }
+            System.setProperty("java.class.path", classpath1);
 
-        if (success) {
-            logger.log(Level.INFO, LogUtils.WSIMPORT_OK);
-        } else {
-            logger.log(Level.SEVERE, LogUtils.WSIMPORT_FAILED);
-            return null;
+            String[] wsimportArgs = new String[7];
+            wsimportArgs[0]="-d";
+            wsimportArgs[1]=classesDir.getAbsolutePath();
+            wsimportArgs[2]="-keep";
+            wsimportArgs[3]=wsdlLocation.toExternalForm();
+            wsimportArgs[4]="-target";
+            wsimportArgs[5]="2.1";
+            wsimportArgs[6]="-extension";
+            WSToolsObjectFactory tools = WSToolsObjectFactory.newInstance();
+            logger.log(Level.INFO, LogUtils.WSIMPORT_INVOKE, wsdlLocation);
+            boolean success = tools.wsimport(System.out, wsimportArgs);
+
+            if (success) {
+                logger.log(Level.INFO, LogUtils.WSIMPORT_OK);
+            } else {
+                logger.log(Level.SEVERE, LogUtils.WSIMPORT_FAILED);
+                return null;
+            }
+
+        } finally {
+            //reset property value
+            if (oldCP == null) {
+                System.clearProperty("java.class.path");
+            } else {
+                System.setProperty("java.class.path", oldCP);
+            }
         }
         return classesDir.getAbsolutePath();
     }

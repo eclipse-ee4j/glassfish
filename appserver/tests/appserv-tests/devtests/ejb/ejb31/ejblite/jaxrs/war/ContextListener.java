@@ -16,10 +16,10 @@
 
 package com.acme;
 
-import javax.servlet.annotation.WebListener;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.annotation.PostConstruct;
+import jakarta.servlet.annotation.WebListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.annotation.PostConstruct;
 import javax.naming.InitialContext;
 
 import java.lang.reflect.Method;

@@ -17,13 +17,13 @@
 package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 
-import javax.ejb.Stateful;
-import javax.interceptor.Interceptors;
-import javax.interceptor.ExcludeDefaultInterceptors;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.Stateful;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.ejb.EJBException;
 
 @Stateful
 @Interceptors({InterceptorC.class, InterceptorD.class})

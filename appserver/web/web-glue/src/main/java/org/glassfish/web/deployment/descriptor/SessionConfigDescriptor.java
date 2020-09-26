@@ -18,7 +18,7 @@ package org.glassfish.web.deployment.descriptor;
 
 import java.util.EnumSet;
 import java.util.Set;
-import javax.servlet.SessionTrackingMode;
+import jakarta.servlet.SessionTrackingMode;
 
 import com.sun.enterprise.deployment.web.CookieConfig;
 import com.sun.enterprise.deployment.web.SessionConfig;

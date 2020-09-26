@@ -16,10 +16,10 @@
 
 package com.acme;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
 
 
 public class InterceptorSuper {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,7 +64,7 @@ public interface MessageBeanProtocolManager {
      * on message delivery.
      *
      * @param method One of the methods used to deliver messages, e.g.
-     *               onMessage method for javax.jms.MessageListener.
+     *               onMessage method for jakarta.jms.MessageListener.
      *               Note that if the <code>method</code> is not one 
      *               of the methods for message delivery, the behavior 
      *               of this method is not defined.

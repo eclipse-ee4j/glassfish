@@ -20,9 +20,9 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.ConnectionManager;
-import javax.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ConnectionManager;
+import jakarta.resource.ResourceException;
 import javax.naming.Reference;
 
 import java.util.logging.Logger;
@@ -35,7 +35,7 @@ import java.util.logging.Level;
  * @author	Binod P.G
  */
 public class DataSource implements javax.sql.DataSource, java.io.Serializable,
-		com.sun.appserv.jdbcra.DataSource, javax.resource.Referenceable{ 
+		com.sun.appserv.jdbcra.DataSource, jakarta.resource.Referenceable{ 
 				   
     private ManagedConnectionFactory mcf;
     private ConnectionManager cm;				   				   

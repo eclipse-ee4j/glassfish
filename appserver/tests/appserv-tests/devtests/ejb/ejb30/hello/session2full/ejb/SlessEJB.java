@@ -16,11 +16,11 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2full;
 
-import javax.ejb.CreateException;
+import jakarta.ejb.CreateException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 public class SlessEJB 
 {
@@ -31,8 +31,8 @@ public class SlessEJB
         return "hello from SlessEJB";
     }
 
-    public String hello2() throws javax.ejb.CreateException {
-        throw new javax.ejb.CreateException();
+    public String hello2() throws jakarta.ejb.CreateException {
+        throw new jakarta.ejb.CreateException();
     }
 
     public String getId() {

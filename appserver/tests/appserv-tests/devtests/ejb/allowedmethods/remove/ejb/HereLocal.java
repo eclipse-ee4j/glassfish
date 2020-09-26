@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.allowedmethods.remove;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface HereLocal
     extends EJBLocalObject

@@ -17,7 +17,7 @@
 package com.sun.s1peqe.ejb.cmp.preselect.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 
 public interface ItemHome extends EJBHome {

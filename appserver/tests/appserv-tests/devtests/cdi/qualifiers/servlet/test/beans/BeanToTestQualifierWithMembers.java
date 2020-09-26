@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import test.artifacts.ChequePaymentProcessor;
 import test.artifacts.PayBy;

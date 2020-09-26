@@ -16,13 +16,13 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * @author mvatkina
  */
 
-public interface A1Local extends javax.ejb.EJBLocalObject {
+public interface A1Local extends jakarta.ejb.EJBLocalObject {
 
     public void setName(String name); 
 

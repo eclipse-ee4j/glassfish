@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public abstract class OrderBean implements EntityBean {

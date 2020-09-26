@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.embedded.ejb.basic;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  * @author Jerome Dochez

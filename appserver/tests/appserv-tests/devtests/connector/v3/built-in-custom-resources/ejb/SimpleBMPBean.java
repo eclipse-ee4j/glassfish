@@ -18,8 +18,8 @@ package com.sun.s1asdev.jdbc.CustomResourceFactories.ejb;
 
 import com.sun.s1asdev.custom.resource.CustomResourceJavaBean;
 
-import javax.annotation.Resource;
-import javax.ejb.*;
+import jakarta.annotation.Resource;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.rmi.RemoteException;
 import java.sql.*;

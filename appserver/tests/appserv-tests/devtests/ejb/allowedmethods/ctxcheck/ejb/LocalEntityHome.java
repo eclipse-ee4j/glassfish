@@ -16,10 +16,10 @@
 
 package com.sun.s1asdev.ejb.allowedmethods.ctxcheck;
 
-import javax.ejb.EJBLocalHome;
+import jakarta.ejb.EJBLocalHome;
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.FinderException;
 
 public interface LocalEntityHome
     extends EJBLocalHome

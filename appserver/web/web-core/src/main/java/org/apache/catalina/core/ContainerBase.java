@@ -32,7 +32,7 @@ import java.text.MessageFormat;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.naming.directory.DirContext;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import org.apache.catalina.Container;

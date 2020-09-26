@@ -47,7 +47,7 @@
       <resource-env-ref>
         <description>testing</description>
         <resource-env-ref-name>test.ejb.StatefulTest/ejbContext</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest</injection-target-class>
           <injection-target-name>ejbContext</injection-target-name>
@@ -55,7 +55,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>sfContext</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>StatefulTest2</injection-target-class>
           <injection-target-name>ejbContext</injection-target-name>
@@ -63,7 +63,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>test.ejb.StatefulTest/ejbContext2</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest</injection-target-class>
           <injection-target-name>ejbContext2</injection-target-name>
@@ -71,7 +71,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>sfContext2</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>StatefulTest2</injection-target-class>
           <injection-target-name>ejbContext2</injection-target-name>
@@ -79,7 +79,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>test.ejb.StatefulTest/ejbContext3</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest</injection-target-class>
           <injection-target-name>ejbContext3</injection-target-name>
@@ -137,7 +137,7 @@
       <resource-env-ref>
         <description>testing</description>
         <resource-env-ref-name>test.ejb.StatefulTest/ejbContext</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest</injection-target-class>
           <injection-target-name>ejbContext</injection-target-name>
@@ -145,7 +145,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>sfEjbContext</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest1</injection-target-class>
           <injection-target-name>ejbContext</injection-target-name>
@@ -153,7 +153,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>sfEjbContext2</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest1</injection-target-class>
           <injection-target-name>ejbContext2</injection-target-name>
@@ -161,7 +161,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>sfEjbContext3</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest1</injection-target-class>
           <injection-target-name>ejbContext3</injection-target-name>
@@ -200,7 +200,7 @@
       <resource-env-ref>
         <description>testing</description>
         <resource-env-ref-name>test.ejb.StatefulTest/ejbContext</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest</injection-target-class>
           <injection-target-name>ejbContext</injection-target-name>
@@ -208,7 +208,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>test.ejb.StatefulTest/ejbContext2</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest</injection-target-class>
           <injection-target-name>ejbContext2</injection-target-name>
@@ -216,7 +216,7 @@
       </resource-env-ref>
       <resource-env-ref>
         <resource-env-ref-name>test.ejb.StatefulTest/ejbContext3</resource-env-ref-name>
-        <resource-env-ref-type>javax.ejb.EJBContext</resource-env-ref-type>
+        <resource-env-ref-type>jakarta.ejb.EJBContext</resource-env-ref-type>
         <injection-target>
           <injection-target-class>test.ejb.StatefulTest</injection-target-class>
           <injection-target-name>ejbContext3</injection-target-name>

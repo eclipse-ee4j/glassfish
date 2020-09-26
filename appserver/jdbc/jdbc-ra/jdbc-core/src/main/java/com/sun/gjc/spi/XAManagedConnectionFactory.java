@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,15 +23,15 @@ import com.sun.gjc.spi.base.AbstractDataSource;
 import com.sun.gjc.util.SecurityUtils;
 import com.sun.logging.LogDomains;
 
-import javax.resource.ResourceException;
-import javax.resource.spi.ConnectionRequestInfo;
-import javax.resource.spi.ResourceAllocationException;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ResourceAllocationException;
+import jakarta.resource.spi.security.PasswordCredential;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.resource.spi.ConfigProperty;
-import javax.resource.spi.ConnectionDefinition;
+import jakarta.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConnectionDefinition;
 
 /**
  * XA <code>ManagedConnectionFactory</code> implementation for Generic JDBC Connector.
@@ -72,7 +72,7 @@ public class XAManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @throws ResourceAllocationException if there is an error in allocating the
      *                                     physical connection
      */
-    public javax.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
+    public jakarta.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
                                                                         ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         logFine("In createManagedConnection");
         PasswordCredential pc = SecurityUtils.getPasswordCredential(this, subject, cxRequestInfo);

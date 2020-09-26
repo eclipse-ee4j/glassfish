@@ -17,8 +17,8 @@
 package test;
 
 import java.io.IOException;
-import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 
 @WebFilter(urlPatterns={"/test"})
 public class FilterTest implements Filter {

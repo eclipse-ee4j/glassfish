@@ -22,10 +22,10 @@
 package com.acme;
 
 import java.sql.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.HashSet;
 
 /**

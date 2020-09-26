@@ -16,11 +16,11 @@
 
 package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.unsynchpc_flush.ejb;
 
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.SynchronizationType;
-import javax.persistence.TransactionRequiredException;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.SynchronizationType;
+import jakarta.persistence.TransactionRequiredException;
 
 
 @Stateless

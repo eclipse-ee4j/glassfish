@@ -32,8 +32,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.deploy.shared.ModuleType;
-
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -103,7 +101,7 @@ public class DOLUtils {
     // Reserve this range [AS-DEPLOYMENT-00001, AS-DEPLOYMENT-02000]
     // for message ids used in this deployment dol module
     @LoggerInfo(subsystem = "DEPLOYMENT", description="Deployment logger for dol module", publish=true)
-    private static final String DEPLOYMENT_LOGGER = "javax.enterprise.system.tools.deployment.dol";
+    private static final String DEPLOYMENT_LOGGER = "jakarta.enterprise.system.tools.deployment.dol";
 
     public static final Logger deplLogger =
         Logger.getLogger(DEPLOYMENT_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
@@ -243,23 +241,23 @@ public class DOLUtils {
     }
 
     public static ArchiveType earType() {
-        return getModuleType(ModuleType.EAR.toString());
+        return getModuleType("ear");
     }
 
     public static ArchiveType ejbType() {
-        return getModuleType(ModuleType.EJB.toString());
+        return getModuleType("ejb");
     }
 
     public static ArchiveType carType() {
-        return getModuleType(ModuleType.CAR.toString());
+        return getModuleType("car");
     }
 
     public static ArchiveType warType() {
-        return getModuleType(ModuleType.WAR.toString());
+        return getModuleType("war");
     }
 
     public static ArchiveType rarType() {
-        return getModuleType(ModuleType.RAR.toString());
+        return getModuleType("rar");
     }
 
     /**
@@ -637,11 +635,13 @@ public class DOLUtils {
 		    schema = (String) st.nextElement();
 		} else {
 		    schema = namespace;
-		    namespace = TagNames.JAVAEE_NAMESPACE;
+		    namespace = TagNames.JAKARTAEE_NAMESPACE;
 		}
                 if (namespace.equals(TagNames.J2EE_NAMESPACE)) 
                     continue;
                 if (namespace.equals(TagNames.JAVAEE_NAMESPACE)) 
+                    continue;
+                if (namespace.equals(TagNames.JAKARTAEE_NAMESPACE))
                     continue;
                 if (namespace.equals(W3C_XML_SCHEMA)) 
                     continue;

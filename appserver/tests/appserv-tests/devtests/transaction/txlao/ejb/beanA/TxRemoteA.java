@@ -16,7 +16,7 @@
 
 package com.sun.s1peqe.transaction.txlao.ejb.beanA;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface TxRemoteA extends EJBObject{

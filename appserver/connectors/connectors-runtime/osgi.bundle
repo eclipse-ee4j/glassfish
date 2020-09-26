@@ -30,7 +30,7 @@
 # we need to add it to the import list explicitly, as bnd can't
 # discover such dependencies.
 Import-Package: \
-    javax.resource.spi.endpoint, \
+    jakarta.resource.spi.endpoint, \
     *
 
 # dependent flashlight package resolved at runtime

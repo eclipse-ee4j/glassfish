@@ -387,7 +387,7 @@
              -->
              <jvm-options>-Dfelix.fileinstall.disableConfigSave=false</jvm-options>
              <!-- End of OSGi bundle configurations -->
-        </java-config>
+         </java-config>
          <availability-service>
              <web-container-availability/>
              <ejb-container-availability sfsb-store-pool-name="jdbc/hastore"/>

@@ -33,9 +33,9 @@ import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.model.UploadedFile;
 import com.sun.webui.jsf.component.Hyperlink;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.model.SelectItem;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.OptionGroup;
 import com.sun.webui.jsf.component.DropDown;
@@ -154,11 +154,17 @@ public class WoodstockHandler {
                 if (prefix.length() <= 2) {
                     prefix = prefix + new SecureRandom().nextInt(100000);
                 }
+                
                 tmpFile = File.createTempFile(prefix, suffix);
-                tmpFile.deleteOnExit();
+                tmpFile.deleteOnExit();      
+                
+                //delete the file, otherwise FileUtils#moveTo throws file already exist error
+                tmpFile.delete();
+                
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(GuiUtil.getCommonMessage("log.writeToTmpFile"));
                 }
+                                
                 uploadedFile.write(tmpFile);
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(GuiUtil.getCommonMessage("log.afterWriteToTmpFile"));

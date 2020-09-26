@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package myapp;
 
-import javax.ejb.Stateless;
-import javax.persistence.*;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.*;
 import java.util.*;
 
 @Stateless
@@ -65,7 +65,7 @@ public class TestEJB {
 	  em.persist(e5);
           em.flush();
 	  System.out.println("Error: not get BV ex for persist");
-	} catch(javax.validation.ConstraintViolationException ex){
+	} catch(jakarta.validation.ConstraintViolationException ex){
 	  System.out.println("Expected BV Ex");
 	  pass= true;
 	  String msg = ex.getMessage();
@@ -87,7 +87,7 @@ public class TestEJB {
 	  e.setName("myLongName3");
 	  em.flush();
 	  System.out.println("Error: not get BV ex for update");
-	} catch (javax.validation.ConstraintViolationException ex) {
+	} catch (jakarta.validation.ConstraintViolationException ex) {
 	  System.out.println("Expected BV Ex");
 	  pass= true;
 	  String msg = ex.getMessage();
@@ -110,7 +110,7 @@ public class TestEJB {
 	  em.flush();
 	  System.out.println("OK: not get BV ex for remove");
 	  pass= true;
-	} catch (javax.validation.ConstraintViolationException ex) {
+	} catch (jakarta.validation.ConstraintViolationException ex) {
 	  System.out.println("BV Ex");
 	  String msg = ex.getMessage();
 	  System.out.println("msg="+msg);

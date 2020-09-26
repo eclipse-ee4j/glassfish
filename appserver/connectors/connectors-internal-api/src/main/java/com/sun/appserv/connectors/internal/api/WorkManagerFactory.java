@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +18,11 @@ package com.sun.appserv.connectors.internal.api;
 
 import org.jvnet.hk2.annotations.Contract;
 
-import javax.resource.spi.work.WorkManager;
+import jakarta.resource.spi.work.WorkManager;
 
 @Contract
 public interface WorkManagerFactory {
-    /**
+    /**;
      * get the proxy work manager object for the rar
      * @param threadPoolId thread pool id
      * @param moduleName resource-adapter-name

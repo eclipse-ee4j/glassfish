@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,23 +18,23 @@ package mdb;
 
 import java.sql.Statement;
 
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.MessageDrivenBean;
+import jakarta.ejb.MessageDrivenContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import connector.MyMessageListener;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.io.*;
 import java.rmi.RemoteException;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.sql.*;
 import javax.sql.*;
-import javax.jms.*;
-import javax.transaction.*;
+import jakarta.jms.*;
+import jakarta.transaction.*;
 
 
 /**
@@ -45,7 +45,7 @@ public class MyMessageBean implements MessageDrivenBean,
     private transient MessageDrivenContext mdc = null;
     private Context context;
     
-    @javax.inject.Inject
+    @jakarta.inject.Inject
     private connector.TestCDIBean tb;
 
     /**
@@ -56,7 +56,7 @@ public class MyMessageBean implements MessageDrivenBean,
     /**
      * setMessageDrivenContext method, declared as public (but 
      * not final or static), with a return type of void, and 
-     * with one argument of type javax.ejb.MessageDrivenContext.
+     * with one argument of type jakarta.ejb.MessageDrivenContext.
      *
      * @param mdc    the context to set
      */
@@ -74,7 +74,7 @@ public class MyMessageBean implements MessageDrivenBean,
     /**
      * onMessage method, declared as public (but not final or 
      * static), with a return type of void, and with one argument
-     * of type javax.jms.Message.
+     * of type jakarta.jms.Message.
      *
      * Casts the incoming Message to a TextMessage and displays 
      * the text.

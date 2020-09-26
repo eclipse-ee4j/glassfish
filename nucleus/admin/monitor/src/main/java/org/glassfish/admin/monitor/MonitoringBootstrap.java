@@ -44,7 +44,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleState;
 import com.sun.enterprise.module.ModuleDefinition;
 import com.sun.enterprise.module.ModulesRegistry;
@@ -81,8 +81,8 @@ import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.LogManager;
 import org.jvnet.hk2.config.Transactions;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import static org.glassfish.admin.monitor.MLogger.*;
 
 
@@ -125,7 +125,7 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     private Domain domain;
 
 
-    Map<String,Module> map = Collections.synchronizedMap(new WeakHashMap<String,Module>());
+    Map<String,HK2Module> map = Collections.synchronizedMap(new WeakHashMap<String,HK2Module>());
     List<String> appList = Collections.synchronizedList(new ArrayList<String>());
 
     private static final String INSTALL_ROOT_URI_PROPERTY_NAME = "com.sun.aas.installRootURI";
@@ -176,7 +176,7 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
         // Iterate thru existing modules
         if (logger.isLoggable(Level.FINE))
             logger.log(Level.FINE, "Discovering the ProbeProviders");
-        for (Module m : registry.getModules()) {
+        for (HK2Module m : registry.getModules()) {
             if ((m.getState() == ModuleState.READY) || (m.getState() == ModuleState.RESOLVED)) {
                 if (logger.isLoggable(Level.FINE))
                     logger.fine(" In (discoverProbeProviders) ModuleState - " + m.getState() + " : " + m.getName());
@@ -223,17 +223,17 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
         amxg.listenForDomainRoot(ManagementFactory.getPlatformMBeanServer(), spmd);
     }
 
-    public void moduleResolved(Module module) {
+    public void moduleResolved(HK2Module module) {
         if (module == null) return;
         verifyModule(module);
     }
 
-    public synchronized void moduleStarted(Module module) {
+    public synchronized void moduleStarted(HK2Module module) {
         if (module == null) return;
         verifyModule(module);
     }
 
-    private synchronized void verifyModule(Module module) {
+    private synchronized void verifyModule(HK2Module module) {
         if (module == null) return;
         String str = module.getName();
         if (!map.containsKey(str)) {
@@ -264,20 +264,20 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
 
     // noop to satisfy interface
     @Override
-    public synchronized void moduleStopped(Module module) {
+    public synchronized void moduleStopped(HK2Module module) {
     }
 
     // noop to satisfy interface
     @Override
-    public void moduleInstalled(Module module) {
+    public void moduleInstalled(HK2Module module) {
     }
 
     // noop to satisfy interface
     @Override
-    public void moduleUpdated(Module module) {
+    public void moduleUpdated(HK2Module module) {
     }
 
-    private void addProvider(Module module) {
+    private void addProvider(HK2Module module) {
         if (logger.isLoggable(Level.FINE))
             logger.fine(" Adding the Provider - verified the module");
         ClassLoader mcl = module.getClassLoader();
@@ -420,8 +420,8 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
                     continue;
                 }
                 if (logger.isLoggable(Level.FINE))
-                    logger.fine (" Module found (containsKey)");
-                Module module = map.get(moduleName);
+                    logger.fine (" HK2Module found (containsKey)");
+                HK2Module module = map.get(moduleName);
 
                 if (module == null) {
                     logger.log(Level.SEVERE,
@@ -620,7 +620,7 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     private void enableMonitoringForProbeProviders(boolean isDiscoverXMLProviders) {
         //Process all ProbeProviders from modules loaded
         discoverProbeProviders();
-        //Start listening to any new Modules that are coming in now
+        //Start listening to any new HK2Modules that are coming in now
         registry.register(this);
         //Don't do this the first time, since we need to wait till the server starts
         // We should try to do this in a seperate thread, as we dont want to get held up in server start

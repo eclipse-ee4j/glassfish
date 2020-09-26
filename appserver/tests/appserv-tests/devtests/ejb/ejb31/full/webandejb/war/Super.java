@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class Super {

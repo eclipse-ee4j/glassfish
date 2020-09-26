@@ -18,8 +18,8 @@ package com.sun.devtest.security.plogin.converter.ejb;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBHome;
 
 /**
  * Home interface for the <code>ConverterBean</code>. Clients generally use home interface

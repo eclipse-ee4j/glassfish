@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,11 +24,11 @@ import com.sun.logging.LogDomains;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessorFactory;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.ValidationMode;
-import javax.persistence.spi.PersistenceUnitInfo;
-import javax.persistence.spi.PersistenceProvider;
-import javax.persistence.spi.PersistenceUnitTransactionType;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.ValidationMode;
+import jakarta.persistence.spi.PersistenceUnitInfo;
+import jakarta.persistence.spi.PersistenceProvider;
+import jakarta.persistence.spi.PersistenceUnitTransactionType;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
@@ -65,10 +65,10 @@ public class PersistenceUnitLoader {
     private static final String ECLIPSELINK_WEAVING_PROPERTY = "eclipselink.weaving"; // NOI18N
 
     /** Name of property used to specify validation mode */
-    private static final String VALIDATION_MODE_PROPERTY = "javax.persistence.validation.mode";
+    private static final String VALIDATION_MODE_PROPERTY = "jakarta.persistence.validation.mode";
 
     /** Name of property used to specify validator factory */
-    private static final String VALIDATOR_FACTORY = "javax.persistence.validation.factory";
+    private static final String VALIDATOR_FACTORY = "jakarta.persistence.validation.factory";
 
     private static final String DISABLE_UPGRADE_FROM_TOPLINK_ESSENTIALS = "org.glassfish.persistence.jpa.disable.upgrade.from.toplink.essentials";
 
@@ -376,13 +376,7 @@ public class PersistenceUnitLoader {
 
         final String ECLIPSELINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY = "eclipselink.target-server"; // NOI18N
         props.put(ECLIPSELINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY,
-                System.getProperty(ECLIPSELINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY, "SunAS9")); // NOI18N
-
-        // TopLink specific properties:
-        // See https://glassfish.dev.java.net/issues/show_bug.cgi?id=249
-        final String TOPLINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY = "toplink.target-server"; // NOI18N
-        props.put(TOPLINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY,
-                System.getProperty(TOPLINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY, "SunAS9")); // NOI18N
+                System.getProperty(ECLIPSELINK_SERVER_PLATFORM_CLASS_NAME_PROPERTY, "Glassfish")); // NOI18N
 
         // Hibernate specific properties:
         final String HIBERNATE_TRANSACTION_MANAGER_LOOKUP_CLASS_PROPERTY = "hibernate.transaction.manager_lookup_class"; // NOI18N

@@ -16,7 +16,7 @@
 
 package com.sun.connector.cciblackbox;
 
-import javax.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ConnectionRequestInfo;
 
 /**
  * This implementation class enables a resource adapter to pass its own

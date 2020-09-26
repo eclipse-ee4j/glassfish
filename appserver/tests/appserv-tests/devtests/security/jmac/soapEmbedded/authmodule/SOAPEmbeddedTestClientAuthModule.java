@@ -19,13 +19,13 @@ package com.sun.s1asdev.security.jmac.soapembedded;
 import java.util.Map;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.module.ClientAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.module.ClientAuthModule;
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPMessage;
 
 public class SOAPEmbeddedTestClientAuthModule implements ClientAuthModule {
     private CallbackHandler handler = null;
@@ -46,7 +46,7 @@ public class SOAPEmbeddedTestClientAuthModule implements ClientAuthModule {
             Subject clientSubject) throws AuthException {
         SOAPMessage reqMessage = (SOAPMessage)messageInfo.getRequestMessage();
         QName serviceName = (QName)messageInfo.getMap().get(
-                javax.xml.ws.Endpoint.WSDL_SERVICE);
+                jakarta.xml.ws.Endpoint.WSDL_SERVICE);
         System.out.println("serviceName = " + serviceName);
         if (serviceName == null) {
             throw new AuthException("serviceName is null");

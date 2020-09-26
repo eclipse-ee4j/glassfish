@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,7 @@
 
 package com.sun.ejb.containers.util.cache;
 
-import com.sun.appserv.util.cache.Cache;
-import com.sun.appserv.util.cache.CacheListener;
-import com.sun.appserv.util.cache.Constants;
 import com.sun.appserv.util.cache.LruCache;
-import com.sun.logging.*;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.logging.*;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.logging.annotation.LogMessageInfo;

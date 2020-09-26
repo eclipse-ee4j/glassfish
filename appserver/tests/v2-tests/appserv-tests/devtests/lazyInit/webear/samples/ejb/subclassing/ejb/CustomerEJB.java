@@ -10,12 +10,12 @@
 
 package samples.ejb.subclassing.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.sql.*;
 import javax.sql.DataSource;
 
-public class CustomerEJB implements javax.ejb.EntityBean
+public class CustomerEJB implements jakarta.ejb.EntityBean
 {
   //database fields
   String SSN;

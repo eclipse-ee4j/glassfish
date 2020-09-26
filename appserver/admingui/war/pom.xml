@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>org.glassfish.main.admingui</groupId>
@@ -47,7 +47,7 @@
                             <archive>
                                 <manifestEntries>
                                     <Glassfish-require-services>org.glassfish.api.admingui.ConsoleProvider</Glassfish-require-services>
-                                    <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, org.glassfish.main.deployment.deployment-client, jakarta.servlet-api, jakarta.servlet.jsp-api, com.sun.el.javax.el, com.sun.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
+                                    <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
                                 </manifestEntries>
                             </archive>
                         </configuration>
@@ -78,7 +78,7 @@
                                <jar jarfile="target/admingui.war" basedir="target/temp">
                                     <manifest>
                                       <attribute name="Glassfish-require-services" value="org.glassfish.api.admingui.ConsoleProvider" />
-                                      <attribute name="HK2-Import-Bundles" value="org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, org.glassfish.main.deployment.deployment-client, jakarta.servlet-api, jakarta.servlet.jsp-api, com.sun.el.javax.el, com.sun.jsftemplating, org.glassfish.main.admingui.dataprovider" />
+                                      <attribute name="HK2-Import-Bundles" value="org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider" />
                                     </manifest>
                                 </jar>
                                 <delete dir="target/temp" />
@@ -99,11 +99,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>console-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>

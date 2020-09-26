@@ -20,7 +20,7 @@ package ejb32.intrfaces;
     StflEJB1 exposes local interfaces St4 & St3
  */
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 
 @Stateful
 public class StflEJB1 implements St3, St4 {

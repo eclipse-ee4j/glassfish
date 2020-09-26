@@ -44,7 +44,7 @@ import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.component.*;
 import java.util.logging.Logger;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Remote AdminCommand to create an instance.  This command is run only on DAS.

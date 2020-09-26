@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.cdi.ejb.hello.session;
 
-import javax.ejb.Stateful;
-import javax.inject.Inject;
+import jakarta.ejb.Stateful;
+import jakarta.inject.Inject;
 
 @Stateful
 public class SfulEJB implements Sful

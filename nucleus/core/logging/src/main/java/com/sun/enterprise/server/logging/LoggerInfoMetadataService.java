@@ -34,17 +34,17 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 //import org.glassfish.admin.mbeanserver.LogMessagesResourceBundle;
 //import org.glassfish.admin.mbeanserver.LoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleDefinition;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleChangeListener;
 
 @Service
@@ -64,7 +64,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
     // Reset valid flag if teh set of modules changes, so meta-data will be recomputed
     private Set<String> currentModuleNames() {
         Set<String> currentNames = new HashSet<String>();
-        for (Module module : modulesRegistry.getModules()) {
+        for (HK2Module module : modulesRegistry.getModules()) {
             currentNames.add(module.getName());
         }
         // If new modules set changes, force recomputation of logger meta-datas
@@ -135,7 +135,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
     
     // If a module changed in any way, reset the valid flag so meta-data will be
     // recomputed when subsequently requested.
-    public synchronized void changed(Module sender)  {
+    public synchronized void changed(HK2Module sender)  {
         valid = false;
     }
     
@@ -170,7 +170,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
         
         private void initialize() {
             ClassLoader nullClassLoader = new NullClassLoader();
-            for (Module module : modulesRegistry.getModules()) {
+            for (HK2Module module : modulesRegistry.getModules()) {
                 ModuleDefinition moduleDef = module.getModuleDefinition();
                 // FIXME: We may optimize this by creating a manifest entry in the 
                 // jar file(s) to indicate that the jar contains logger infos. Jar files

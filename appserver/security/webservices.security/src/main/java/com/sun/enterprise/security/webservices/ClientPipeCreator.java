@@ -19,7 +19,7 @@ package com.sun.enterprise.security.webservices;
 import java.util.HashMap;
 
 import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.assembler.ClientPipelineHook;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 //import com.sun.xml.ws.assembler.ClientTubelineAssemblyContext;
 import com.sun.xml.ws.api.pipe.ClientPipeAssemblerContext;
 import com.sun.xml.ws.policy.PolicyMap;

@@ -16,9 +16,9 @@
 
 package connector;
 
-import javax.resource.spi.work.WorkContextProvider;
-import javax.resource.spi.work.WorkContext;
-import javax.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.work.WorkContextProvider;
+import jakarta.resource.spi.work.WorkContext;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
 import java.util.List;
 import java.util.ArrayList;
 

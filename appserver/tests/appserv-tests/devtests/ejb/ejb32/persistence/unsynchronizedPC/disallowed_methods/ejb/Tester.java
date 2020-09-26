@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.disallowed_method
 
 import java.util.Map;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface Tester {

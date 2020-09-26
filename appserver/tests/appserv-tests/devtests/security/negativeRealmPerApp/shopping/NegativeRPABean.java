@@ -25,9 +25,9 @@ package shopping;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Vector;
-import javax.ejb.EJBException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 
 /**
  *

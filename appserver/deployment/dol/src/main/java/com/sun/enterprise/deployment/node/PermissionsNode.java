@@ -27,8 +27,8 @@ import com.sun.enterprise.deployment.PermissionsDescriptor;
 
 public class PermissionsNode extends AbstractBundleNode {
 
-    public final static String SCHEMA_ID = "permissions_7.xsd";
-    public final static String SPEC_VERSION = "7";
+    public final static String SCHEMA_ID = "permissions_9.xsd";
+    public final static String SPEC_VERSION = "9";
     
     private final static List<String> systemIDs = initSystemIDs();
     

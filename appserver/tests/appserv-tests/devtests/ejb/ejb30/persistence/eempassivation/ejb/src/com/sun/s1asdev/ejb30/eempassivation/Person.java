@@ -16,11 +16,11 @@
 
 package com.sun.s1asdev.ejb30.eempassivation;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 @Entity
 @Table(name = "EJB30_PERSISTENCE_EEMPASSIVATION_PERSON")

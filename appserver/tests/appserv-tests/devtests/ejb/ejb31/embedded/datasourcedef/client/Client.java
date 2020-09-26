@@ -22,11 +22,11 @@ import org.glassfish.tests.ejb.sample.SimpleEntity;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
-import javax.ejb.*;
-import javax.ejb.embeddable.EJBContainer;
+import jakarta.ejb.*;
+import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

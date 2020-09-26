@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.glassfish.main.extras</groupId>
     <artifactId>extras</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>glassfish-embedded-web</artifactId>
-  <version>5.1.0-SNAPSHOT</version>
+  <version>6.0.0-SNAPSHOT</version>
   <name>Embedded GlassFish Web</name>
       <packaging>jar</packaging>
 
@@ -88,14 +88,33 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>org.glassfish.hk2.external</groupId>
-        <artifactId>asm-repackaged</artifactId>
-        <version>${hk2.version}</version>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>${asm.version}</version>
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>org.glassfish.external</groupId>
-        <artifactId>asm-all</artifactId>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-analysis</artifactId>
+        <version>${asm.version}</version>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-commons</artifactId>
+        <version>${asm.version}</version>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-tree</artifactId>
+        <version>${asm.version}</version>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-util</artifactId>
+        <version>${asm.version}</version>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -153,15 +172,13 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>org.glassfish.main.bean-validator</groupId>
-        <artifactId>bean-validator</artifactId>
-        <version>${project.version}</version>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>org.glassfish.main.bean-validator-cdi</groupId>
-        <artifactId>bean-validator-cdi</artifactId>
-        <version>${project.version}</version>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator-cdi</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -170,8 +187,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>org.glassfish.hk2.external</groupId>
-        <artifactId>jakarta.inject</artifactId>
+        <groupId>jakarta.inject</groupId>
+        <artifactId>jakarta.inject-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -193,7 +210,7 @@
     </dependency>
     <dependency>
         <groupId>org.glassfish.grizzly</groupId>
-        <artifactId>grizzly-npn-bootstrap</artifactId>
+        <artifactId>grizzly-npn-api</artifactId>
         <version>${grizzly.npn.version}</version>
         <optional>true</optional>
     </dependency>
@@ -420,11 +437,6 @@
         <version>${project.version}</version>
         <optional>true</optional>
     </dependency>
-    <dependency>
-        <groupId>jakarta.enterprise.deploy</groupId>
-        <artifactId>jakarta.enterprise.deploy-api</artifactId>
-        <optional>true</optional>
-    </dependency>
     <!-- nucleus-cluster -->
     <dependency>
         <groupId>org.glassfish.main.cluster</groupId>
@@ -502,12 +514,6 @@
     <dependency>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>container-common</artifactId>
-        <version>${project.version}</version>
-        <optional>true</optional>
-    </dependency>
-    <dependency>
-        <groupId>org.glassfish.main.deployment</groupId>
-        <artifactId>deployment-client</artifactId>
         <version>${project.version}</version>
         <optional>true</optional>
     </dependency>
@@ -676,13 +682,8 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>jakarta.management.j2ee</groupId>
-        <artifactId>jakarta.management.j2ee-api</artifactId>
-        <optional>true</optional>
-    </dependency>
-    <dependency>
-        <groupId>jakarta.security.auth.message</groupId>
-        <artifactId>jakarta.security.auth.message-api</artifactId>
+        <groupId>jakarta.authentication</groupId>
+        <artifactId>jakarta.authentication-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -702,13 +703,18 @@
         <optional>true</optional>
     </dependency>
     <dependency>
+        <groupId>com.sun.activation</groupId>
+        <artifactId>jakarta.activation</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
         <groupId>jakarta.servlet</groupId>
         <artifactId>jakarta.servlet-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>org.eclipse.persistence</groupId>
-        <artifactId>jakarta.persistence</artifactId>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -760,13 +766,13 @@
     </dependency>
     <dependency>
         <groupId>org.glassfish.main.resources</groupId>
-        <artifactId>javamail-connector</artifactId>
+        <artifactId>mail-connector</artifactId>
         <version>${project.version}</version>
         <optional>true</optional>
     </dependency>
     <dependency>
         <groupId>org.glassfish.main.resources</groupId>
-        <artifactId>javamail-runtime</artifactId>
+        <artifactId>mail-runtime</artifactId>
         <version>${project.version}</version>
         <optional>true</optional>
     </dependency>
@@ -805,12 +811,6 @@
         <groupId>org.glassfish.main.persistence</groupId>
         <artifactId>jpa-container</artifactId>
         <version>${project.version}</version>
-        <optional>true</optional>
-    </dependency>
-    <dependency>
-        <groupId>org.eclipse.persistence</groupId>
-        <artifactId>org.eclipse.persistence.antlr</artifactId>
-        <version>${eclipselink.version}</version>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -1065,6 +1065,11 @@
         <optional>true</optional>
     </dependency>
     <dependency>
+        <groupId>jakarta.el</groupId>
+        <artifactId>jakarta.el-api</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
         <groupId>org.glassfish</groupId>
         <artifactId>jakarta.el</artifactId>
         <optional>true</optional>
@@ -1132,8 +1137,8 @@
     </dependency>
     <!-- glassfish-jcdi -->
     <dependency>
-        <groupId>javax.enterprise</groupId>
-        <artifactId>cdi-api</artifactId>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>jakarta.enterprise.cdi-api</artifactId>
         <optional>true</optional>
     </dependency>
     <dependency>
@@ -1327,9 +1332,15 @@
         <optional>true</optional>
     </dependency>
     <dependency>
-        <groupId>com.fasterxml.jackson.module</groupId>
+        <groupId>org.glassfish.main.admingui</groupId>
         <artifactId>jackson-module-jaxb-annotations</artifactId>
-        <optional>true</optional>
+        <version>${project.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>*</groupId>
+                <artifactId>*</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
         <groupId>org.codehaus.jettison</groupId>

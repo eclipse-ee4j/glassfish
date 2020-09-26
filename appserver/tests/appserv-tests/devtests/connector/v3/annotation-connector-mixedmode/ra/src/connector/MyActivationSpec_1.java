@@ -16,9 +16,9 @@
 
 package connector;
 
-import javax.resource.spi.ResourceAdapter;
-import javax.resource.spi.Activation;
-import javax.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.Activation;
+import jakarta.resource.spi.ConfigProperty;
 
 /**
  * This class is supposed to implemented as a JavaBean
@@ -30,7 +30,7 @@ import javax.resource.spi.ConfigProperty;
 @Activation(
         messageListeners = {connector.MyMessageListener_1.class, connector.MyMessageListener.class}
 )
-public class MyActivationSpec_1 implements javax.resource.spi.ActivationSpec
+public class MyActivationSpec_1 implements jakarta.resource.spi.ActivationSpec
     {
 
     private String destinationName;

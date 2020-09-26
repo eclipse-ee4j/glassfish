@@ -14,8 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-@javax.enterprise.context.RequestScoped
+@jakarta.enterprise.context.RequestScoped
 public class Bar{
-@javax.inject.Inject
+@jakarta.inject.Inject
 Foo f;
 }

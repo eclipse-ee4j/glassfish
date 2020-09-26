@@ -449,39 +449,6 @@ performing directory deployment, see
 link:deploying-applications.html#gilcn[To Deploy an Application or Module
 in a Directory Format].
 
-[[giiel]][[GSDPG00313]][[jsr-88-naming]]
-
-JSR 88 Naming
-+++++++++++++
-
-There are two JSR 88 APIs that can be used to deploy applications in
-GlassFish Server.
-
-If you are using the following JSR 88 API, there is no file name:
-
-[source,oac_no_warn]
-----
-javax.enterprise.deploy.spi.DeploymentManager.distribute(Target[], InputStream, InputStream)
-----
-
-Because there is no file name, the name of the application is taken from
-the `application-name` or `module-name` entry in the Java EE standard
-deployment descriptor. If the `application-name` or `module-name` entry
-is not present, GlassFish Server creates a temporary file name and uses
-that name to deploy the application. Neither the Administration Console
-nor the `asadmin` utility uses this API.
-
-If you are using the following preferred JSR 88 API, the name is derived
-from the `application-name` or `module-name` entry if present or the
-first portion of the file name (without the `.war` or `.jar` extension):
-
-[source,oac_no_warn]
-----
-javax.enterprise.deploy.spi.DeploymentManager.distribute(Target[], File, File)
-----
-
-For more information about JSR 88, see
-`http://jcp.org/en/jsr/detail?id=88`.
 
 [[gkhhv]][[GSDPG00324]][[module-and-application-versions]]
 

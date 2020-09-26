@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,7 +41,7 @@
             getPreference(default="#{false}", root="glassfish/layout", key="hideRight", value="#{sessionScope.hideRight}");
         </ui:event>
         <sun:head id="head" title="#{guiTitle}" javaScript="true" debug="false" parseOnLoad="false">
-            <h:outputScript name="jsf.js" library="javax.faces" target="head" />
+            <h:outputScript name="jsf.js" library="jakarta.faces" target="head" />
         <f:verbatim>
             <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/yui/reset-fonts-grids.css"/>
             <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/yui/assets/skins/sam/resize.css"/>
@@ -55,10 +55,11 @@
             <script src="#{request.contextPath}/resources/yui/layout-min.js"></script>
         </f:verbatim>
 
+            <sun:script url="/resource/common/js/adminjsf.js" />
+            
             <!-- comment out for now since the file style.css doesn't exist.
              <link rel="stylesheet" type="text/css" href="#{request.contextPath}/style.css" />
             -->
-            <sun:script url="/resource/common/js/adminjsf.js" />
             <!insert name="guiTemplateExtraHead" />
             <!insert name="guiExtraHead" />
 

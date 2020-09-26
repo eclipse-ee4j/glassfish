@@ -17,8 +17,8 @@
 package com.sun.devtests.web;
 
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.annotation.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
 
 public class SharedLib2ServContInit implements ServletContainerInitializer {
     public SharedLib2ServContInit() {

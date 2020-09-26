@@ -19,15 +19,15 @@ package org.glassfish.jersey.examples.jersey_cdi.resources;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.PostConstruct;
 
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
 /**
  *
@@ -38,10 +38,10 @@ import javax.ws.rs.ext.Provider;
 public class JCDIBeanDependentExceptionMapper implements ExceptionMapper<JDCIBeanDependentException> {
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<UriInfo> uiFieldInjectProvider;
+    private @Context jakarta.inject.Provider<UriInfo> uiFieldInjectProvider;
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<ResourceContext> rcProvider;
+    private @Context jakarta.inject.Provider<ResourceContext> rcProvider;
 
     private UriInfo uiMethodInject;
 

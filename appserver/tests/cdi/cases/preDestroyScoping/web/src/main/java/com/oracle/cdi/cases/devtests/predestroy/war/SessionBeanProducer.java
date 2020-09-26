@@ -17,12 +17,12 @@
 package com.oracle.cdi.cases.devtests.predestroy.war;
 
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import com.oracle.cdi.cases.devtests.predestroy.lib.EventLog;
 import com.oracle.cdi.cases.devtests.predestroy.lib.PreDestroyConstants;

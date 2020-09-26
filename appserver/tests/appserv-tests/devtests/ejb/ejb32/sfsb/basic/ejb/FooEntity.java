@@ -20,7 +20,7 @@
 
 package com.acme;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class FooEntity {

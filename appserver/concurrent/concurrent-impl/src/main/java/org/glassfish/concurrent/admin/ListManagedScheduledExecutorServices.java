@@ -33,7 +33,7 @@ import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.*;
 import org.glassfish.concurrent.runtime.deployer.DefaultManagedScheduledExecutorService;
 

@@ -52,14 +52,14 @@
         <mkdir dir="${build.classes.dir}/META-INF"/>
         <mkdir dir="${build.classes.dir}/META-INF/services"/>
         <copy file="${cdi.extension}"
-              tofile="${build.classes.dir}/META-INF/services/javax.enterprise.inject.spi.Extension"
+              tofile="${build.classes.dir}/META-INF/services/jakarta.enterprise.inject.spi.Extension"
               failonerror="false"/>
         <copy file="${beans.xml}"
 	          tofile="${build.classes.dir}/META-INF/beans.xml"
               failonerror="false"/>
         <jar jarfile="lib/${extension.jar}" basedir="${build.classes.dir}" update="true" includes ="${build.classes.dir}">
             <metainf dir="${build.classes.dir}/META-INF">
-                <include name="services/javax.enterprise.inject.spi.Extension"/>
+                <include name="services/jakarta.enterprise.inject.spi.Extension"/>
             </metainf>
             <fileset dir="${build.classes.dir}/" casesensitive="yes">
                 <include name="**/*class*"/>

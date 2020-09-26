@@ -16,7 +16,7 @@
 
 package beans;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 

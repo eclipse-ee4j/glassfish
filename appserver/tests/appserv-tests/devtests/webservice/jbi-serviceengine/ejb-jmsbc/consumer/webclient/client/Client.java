@@ -16,12 +16,12 @@
 
 package client;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 import endpoint.ejb.*;
 
 public class Client extends HttpServlet {
@@ -30,12 +30,12 @@ public class Client extends HttpServlet {
        HelloEJBService service;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
                 System.out.println(" Service is :" + service);
 		Hello port = service.getHelloEJBPort();

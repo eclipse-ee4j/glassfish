@@ -17,8 +17,8 @@
 package com.sun.s1peqe.ejb.cmp.roster.ejb;
 
 import java.util.*;
-import javax.ejb.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import com.sun.s1peqe.ejb.cmp.roster.util.*;
 

@@ -49,7 +49,7 @@
             </security-identity>
             <resource-ref>
                 <res-ref-name>eis/EMBEDDEDCCIEIS</res-ref-name>
-                <res-type>javax.resource.cci.ConnectionFactory</res-type>
+                <res-type>jakarta.resource.cci.ConnectionFactory</res-type>
                 <res-auth>Application</res-auth>
                 <res-sharing-scope>Shareable</res-sharing-scope>
             </resource-ref>

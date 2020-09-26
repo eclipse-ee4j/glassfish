@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
 
     <groupId>org.glassfish.tests.embedded</groupId>
     <artifactId>maven-plugin</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Maven Plugin Tests</name>
 
@@ -128,7 +128,7 @@
                     <version>2.12</version>
                     <configuration>
                         <skip>true</skip>
-                        <forkMode>never</forkMode>
+                        <forkCount>0</forkCount> 
                     </configuration>
                     <executions>
                         <execution>
@@ -138,7 +138,7 @@
                             </goals>
                             <configuration>
                                 <skip>false</skip>
-                                <forkMode>never</forkMode>
+                                <forkCount>0</forkCount>
                                 <additionalClasspathElements>
                                     <additionalClasspathElement>target/classes</additionalClasspathElement>
                                 </additionalClasspathElements>
@@ -244,10 +244,10 @@
                 <scope>provided</scope>
             </dependency>                    
             <dependency>
-            <groupId>jakarta.jms</groupId>
-            <artifactId>jakarta.jms-api</artifactId>
+                <groupId>jakarta.jms</groupId>
+                <artifactId>jakarta.jms-api</artifactId>
                 <scope>provided</scope>
-                <version>2.0.2</version>
+                <version>3.0.0-RC1</version>
             </dependency>                    
         </dependencies>
     </dependencyManagement>

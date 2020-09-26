@@ -60,10 +60,10 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * This implements SecuritySupport used in PluggableFeatureFactory.
@@ -81,7 +81,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     public static final String SHARED_LOGMESSAGE_RESOURCE = "com.sun.enterprise.security.ssl.LogMessages";
     
     @LoggerInfo(subsystem = "SECURITY - SSL", description = "Security - SSL", publish = true)
-    public static final String SEC_SSL_LOGGER = "javax.enterprise.system.security.ssl";
+    public static final String SEC_SSL_LOGGER = "jakarta.enterprise.system.security.ssl";
 
     protected static final Logger _logger =
             Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);

@@ -16,7 +16,7 @@
 
 package cascadeDelete;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 23, 2002 12:43:03 PM
@@ -25,21 +25,21 @@ import javax.ejb.*;
  */
 
 
-public abstract class DBean implements javax.ejb.EntityBean {
+public abstract class DBean implements jakarta.ejb.EntityBean {
     
-    private javax.ejb.EntityContext context;
+    private jakarta.ejb.EntityContext context;
     
     
     /**
-     * @see javax.ejb.EntityBean#setEntityContext(javax.ejb.EntityContext)
+     * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
-    public void setEntityContext(javax.ejb.EntityContext aContext) {
+    public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbActivate()
+     * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
         
@@ -47,7 +47,7 @@ public abstract class DBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbPassivate()
+     * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
         
@@ -55,7 +55,7 @@ public abstract class DBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbRemove()
+     * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: D ejbRemove");
@@ -73,7 +73,7 @@ public abstract class DBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#unsetEntityContext()
+     * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
@@ -81,7 +81,7 @@ public abstract class DBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbLoad()
+     * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
         
@@ -89,7 +89,7 @@ public abstract class DBean implements javax.ejb.EntityBean {
     
     
     /**
-     * @see javax.ejb.EntityBean#ejbStore()
+     * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
         
@@ -113,13 +113,13 @@ public abstract class DBean implements javax.ejb.EntityBean {
     
     public abstract void setC(cascadeDelete.LocalC c);
     
-    public java.lang.Integer ejbCreate(java.lang.Integer id, java.lang.String name) throws javax.ejb.CreateException {
+    public java.lang.Integer ejbCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
         setId(id);
         setName(name);
         return null;
     }
     
-    public void ejbPostCreate(java.lang.Integer id, java.lang.String name) throws javax.ejb.CreateException {
+    public void ejbPostCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
     }
     
 }

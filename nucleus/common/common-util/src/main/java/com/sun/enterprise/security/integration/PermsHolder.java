@@ -44,12 +44,6 @@ public class PermsHolder {
      */
     private PermissionCollection declaredPermissionCollection = null;
 
-    /**
-     * EE restriction list
-     */
-    private PermissionCollection restrictPermissionCollection = null;
-
-    
     public PermsHolder() {
         
     }
@@ -73,7 +67,6 @@ public class PermsHolder {
     }
     
     public void setRestrictPermissions(PermissionCollection restrictPC) {
-        restrictPermissionCollection = restrictPC;
     }
     public PermissionCollection getCachedPerms(CodeSource codesource) {
 

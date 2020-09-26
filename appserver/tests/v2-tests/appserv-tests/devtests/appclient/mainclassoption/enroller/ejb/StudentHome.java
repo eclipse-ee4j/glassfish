@@ -16,10 +16,10 @@
 
 package com.sun.s1peqe.ejb.bmp.enroller.ejb;
 
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.FinderException;
 
 public interface StudentHome extends EJBHome {
 

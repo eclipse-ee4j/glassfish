@@ -17,8 +17,8 @@
 package test.beans.mock;
 
 
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Specializes;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Specializes;
 
 import test.beans.TestBeanInterface;
 import test.beans.nonmock.AnotherQualifierProducer;

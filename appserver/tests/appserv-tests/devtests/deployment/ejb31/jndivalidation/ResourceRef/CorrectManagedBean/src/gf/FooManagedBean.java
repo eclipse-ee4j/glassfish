@@ -16,7 +16,7 @@
 
 package gf;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 import javax.sql.DataSource;
 
 @ManagedBean("foomanagedbean")

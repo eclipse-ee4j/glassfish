@@ -16,8 +16,8 @@
 
 package template;
 
-import javax.servlet.jsp.tagext.*;
-import javax.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.tagext.*;
+import jakarta.servlet.jsp.PageContext;
 import java.util.*;
 
 

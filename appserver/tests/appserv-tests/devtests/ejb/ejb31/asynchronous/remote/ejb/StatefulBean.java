@@ -16,8 +16,8 @@
 
 package com.acme;
 
-import javax.ejb.*;
-import javax.annotation.*;
+import jakarta.ejb.*;
+import jakarta.annotation.*;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,9 +47,9 @@ public class StatefulBean implements RemoteAsync2, RemoteAsync3 {
 
     @Asynchronous
 	public Future<String> throwException(String exception) throws CreateException {
-	if( exception.equals("javax.ejb.CreateException") ) {
+	if( exception.equals("jakarta.ejb.CreateException") ) {
 	    throw new CreateException();
-	} else if ( exception.equals("javax.ejb.EJBException") ) {
+	} else if ( exception.equals("jakarta.ejb.EJBException") ) {
 	    throw new EJBException();
 	}
 

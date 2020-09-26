@@ -16,7 +16,7 @@
 
 package test.beans.nonmock;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import test.beans.TestBeanInterface;
 import test.beans.artifacts.LeakQualifier;

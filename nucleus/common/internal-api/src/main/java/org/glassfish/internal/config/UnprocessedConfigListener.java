@@ -26,7 +26,7 @@ import java.beans.PropertyChangeEvent;
 
 import org.glassfish.internal.api.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;

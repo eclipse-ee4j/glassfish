@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.timer.timertests;
 
 import java.io.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public class BarPrimaryKey implements Serializable
 {

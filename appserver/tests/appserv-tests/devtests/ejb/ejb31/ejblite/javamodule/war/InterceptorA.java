@@ -16,15 +16,15 @@
 
 package com.acme;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 
-import javax.ejb.EJB;
-import javax.annotation.Resource;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityManager;
+import jakarta.ejb.EJB;
+import jakarta.annotation.Resource;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
 
 
 public class InterceptorA extends InterceptorSuper {

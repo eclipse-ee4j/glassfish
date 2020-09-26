@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.bmp.readonly.ejb;
 
 import java.util.ArrayList;
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface Enroller extends EJBObject {

@@ -24,7 +24,7 @@ import com.sun.enterprise.ee.cms.core.GMSConstants;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
@@ -64,7 +64,7 @@ public class GMSAnnounceBeforeStopClusterCommand implements AdminCommand {
     //    GMSAnnounceBeforeStopClusterCommand.class, LogDomains.GMS_LOGGER);
 
     @LoggerInfo(subsystem = "CLSTR", description="Group Management Service Admin Logger", publish=true)
-    private static final String GMS_LOGGER_NAME = "javax.enterprise.cluster.gms.admin";
+    private static final String GMS_LOGGER_NAME = "jakarta.enterprise.cluster.gms.admin";
 
 
     @LogMessagesResourceBundle

@@ -16,11 +16,11 @@
 
 package com.acme;
 
-import javax.ejb.*;
-import javax.annotation.*;
-import javax.interceptor.*;
+import jakarta.ejb.*;
+import jakarta.annotation.*;
+import jakarta.interceptor.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class Bar {
 

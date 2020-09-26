@@ -29,9 +29,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
-import javax.inject.Inject;
-import javax.enterprise.deploy.shared.ModuleType;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
 
 import java.util.Enumeration;
 import java.util.Set;
@@ -88,7 +87,7 @@ public class JPACompositeSniffer extends JPASniffer {
      *
      */
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals(ModuleType.EAR.toString())) {
+        if (archiveType.toString().equals("ear")) {
             return true;
         }
         return false;

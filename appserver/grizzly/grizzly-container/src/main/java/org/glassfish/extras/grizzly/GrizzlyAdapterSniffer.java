@@ -16,7 +16,6 @@
 
 package org.glassfish.extras.grizzly;
 
-import javax.enterprise.deploy.shared.ModuleType;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
@@ -53,8 +52,8 @@ public class GrizzlyAdapterSniffer extends GenericSniffer {
      */
     @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals(ModuleType.WAR.toString()) ||
-            archiveType.toString().equals(ModuleType.EJB.toString())) {
+        if (archiveType.toString().equals("war") ||
+            archiveType.toString().equals("ejb")) {
             return true;
         }
         return false;

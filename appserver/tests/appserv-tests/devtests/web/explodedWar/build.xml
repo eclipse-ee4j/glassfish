@@ -59,7 +59,7 @@
             todir="${assemble.dir}/WEB-INF/lib/foo.jar/test"/>
         <copy file="${web.xml}" todir="${assemble.dir}/WEB-INF"/>
         <echo message="test.ServletContainerInitializerTest"
-            file="${assemble.dir}/WEB-INF/lib/foo.jar/META-INF/services/javax.servlet.ServletContainerInitializer"/>
+            file="${assemble.dir}/WEB-INF/lib/foo.jar/META-INF/services/jakarta.servlet.ServletContainerInitializer"/>
         
         <javac
             srcdir="."

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +16,11 @@
 
 package com.sun.s1asdev.ejb.mdb.singleton.client;
 
-import java.io.*;
 import java.util.*;
 import javax.naming.*;
-import javax.jms.*;
-import javax.annotation.*;
-import javax.ejb.*;
+import jakarta.jms.*;
+import jakarta.annotation.*;
+import jakarta.ejb.*;
 import com.sun.s1asdev.ejb.mdb.singleton.FooRemoteIF;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -51,7 +50,7 @@ public class Client {
     private QueueSession queueSession;
     private QueueSender queueSender;
     private QueueReceiver queueReceiver;
-    private javax.jms.Queue clientQueue;
+    private jakarta.jms.Queue clientQueue;
 
     private int numMessages = 1;
     private int numOfCalls = 120;
@@ -120,7 +119,7 @@ public class Client {
         }
     }
 
-    public void sendMsgs(javax.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
         throws JMSException {
         for(int i = 0; i < num; i++) {
             //System.out.println("Sending message " + i + " to " + queue + 
@@ -139,7 +138,7 @@ public class Client {
             //        Message message = topicSession.createTextMessage(destName);
             message.setBooleanProperty("flag", true);
             message.setIntProperty("num", i);
-            sendMsgs((javax.jms.Queue) dest, message, num);
+            sendMsgs((jakarta.jms.Queue) dest, message, num);
         }
 
         List<String> messageBeanInstances = new ArrayList<String>();

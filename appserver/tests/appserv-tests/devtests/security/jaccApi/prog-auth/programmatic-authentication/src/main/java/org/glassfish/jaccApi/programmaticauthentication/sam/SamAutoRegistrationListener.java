@@ -16,8 +16,8 @@
 
 package org.glassfish.jaccApi.programmaticauthentication.sam;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.annotation.WebListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.annotation.WebListener;
 
 import org.glassfish.jaccApi.common.BaseServletContextListener;
 import org.glassfish.jaccApi.common.JaspicUtils;

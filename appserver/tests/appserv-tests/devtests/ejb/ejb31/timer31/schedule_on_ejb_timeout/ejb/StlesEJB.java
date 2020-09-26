@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb31.timer.schedule_on_ejb_timeout;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Set;

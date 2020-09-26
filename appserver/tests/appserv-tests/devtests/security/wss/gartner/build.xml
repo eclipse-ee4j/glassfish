@@ -60,7 +60,7 @@
         <mkdir dir="${build.classes.dir}/client/META-INF/wsdl"/>
         <antcall target="wsgen">
             <param name="wsgen.args"
-                value="-wsdl -cp ${build.classes.dir}/ejbws:${s1astest.classpath}/modules/javax.ejb.jar -keep -d ${build.classes.dir}/ejbws com.sun.s1asdev.security.wss.gartner.PingEjb"/>
+                value="-wsdl -cp ${build.classes.dir}/ejbws:${s1astest.classpath}/modules/jakarta.ejb.jar -keep -d ${build.classes.dir}/ejbws com.sun.s1asdev.security.wss.gartner.PingEjb"/>
         </antcall>
 
         <antcall target="wsgen">

@@ -16,7 +16,7 @@
 
 package Data;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*; 
 
 
@@ -27,22 +27,22 @@ import javax.naming.*;
  */
 
 
-public class SPSessionBean implements javax.ejb.SessionBean {
-    private javax.ejb.SessionContext context;
+public class SPSessionBean implements jakarta.ejb.SessionBean {
+    private jakarta.ejb.SessionContext context;
     private LocalSuppliersHome suppliersHome = null;
     private LocalPartsHome partsHome = null;
     
     
     /**
-     * @see javax.ejb.SessionBean#setSessionContext(javax.ejb.SessionContext)
+     * @see jakarta.ejb.SessionBean#setSessionContext(jakarta.ejb.SessionContext)
      */
-    public void setSessionContext(javax.ejb.SessionContext aContext) {
+    public void setSessionContext(jakarta.ejb.SessionContext aContext) {
         context=aContext;
     }
     
     
     /**
-     * @see javax.ejb.SessionBean#ejbActivate()
+     * @see jakarta.ejb.SessionBean#ejbActivate()
      */
     public void ejbActivate() {
         
@@ -50,7 +50,7 @@ public class SPSessionBean implements javax.ejb.SessionBean {
     
     
     /**
-     * @see javax.ejb.SessionBean#ejbPassivate()
+     * @see jakarta.ejb.SessionBean#ejbPassivate()
      */
     public void ejbPassivate() {
         
@@ -58,7 +58,7 @@ public class SPSessionBean implements javax.ejb.SessionBean {
     
     
     /**
-     * @see javax.ejb.SessionBean#ejbRemove()
+     * @see jakarta.ejb.SessionBean#ejbRemove()
      */
     public void ejbRemove() {
         

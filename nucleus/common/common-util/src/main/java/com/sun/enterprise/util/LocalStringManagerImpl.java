@@ -30,13 +30,6 @@ import java.util.logging.*;
 
 public class LocalStringManagerImpl implements LocalStringManager {
 
-    // START OF IASRI 4660742
-    //WARNING: _logger must be initialized upon demand in this case. The
-    //reason is that this static init happens before the ServerContext
-    //is initialized
-    private static Logger _logger = null;
-    // END OF IASRI 4660742
-
     private Class defaultClass;
 
     /**

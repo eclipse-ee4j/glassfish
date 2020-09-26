@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +17,6 @@
 package com.sun.enterprise.security.jauth.callback;
 
 import java.math.BigInteger;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
-import javax.security.auth.callback.Callback;
 import javax.security.auth.x500.X500Principal;
 
 /**
@@ -28,19 +25,19 @@ import javax.security.auth.x500.X500Principal;
  * @version %I%, %G%
  */
 public class PrivateKeyCallback 
-        extends javax.security.auth.message.callback.PrivateKeyCallback {
+        extends jakarta.security.auth.message.callback.PrivateKeyCallback {
 
     /**
      * Marker interface for private key request types.
      */
     public static interface Request extends
-            javax.security.auth.message.callback.PrivateKeyCallback.Request { };
+            jakarta.security.auth.message.callback.PrivateKeyCallback.Request { };
 
     /**
      * Request type for private keys that are identified via an alias.
      */
     public static class AliasRequest extends
-            javax.security.auth.message.callback.PrivateKeyCallback.AliasRequest
+            jakarta.security.auth.message.callback.PrivateKeyCallback.AliasRequest
             implements Request {
 
         /**
@@ -64,7 +61,7 @@ public class PrivateKeyCallback
      * Request type for private keys that are identified via a SubjectKeyID
      */
     public static class SubjectKeyIDRequest extends
-            javax.security.auth.message.callback.PrivateKeyCallback.SubjectKeyIDRequest
+            jakarta.security.auth.message.callback.PrivateKeyCallback.SubjectKeyIDRequest
             implements Request {
 
         /**
@@ -89,7 +86,7 @@ public class PrivateKeyCallback
      * issuer/serial number.
      */
     public static class IssuerSerialNumRequest extends
-           javax.security.auth.message.callback.PrivateKeyCallback.IssuerSerialNumRequest
+           jakarta.security.auth.message.callback.PrivateKeyCallback.IssuerSerialNumRequest
            implements Request {
 
         /**

@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.ejb.timertest;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.InitialContext;
 
 /**

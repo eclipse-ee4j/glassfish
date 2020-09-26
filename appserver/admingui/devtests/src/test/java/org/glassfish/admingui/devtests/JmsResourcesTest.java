@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton", TRIGGER_NEW_JMS_CONN_FACT);
 
         setFieldValue("form:propertySheet:generalPropertySheet:jndiProp:jndiProp", poolName);
-        selectDropdownOption("form:propertySheet:generalPropertySheet:resTyped:resType", "javax.jms.TopicConnectionFactory");
+        selectDropdownOption("form:propertySheet:generalPropertySheet:resTyped:resType", "jakarta.jms.TopicConnectionFactory");
         setFieldValue("form:propertySheet:generalPropertySheet:descProp:descProp", description);
         selectDropdownOption("form:propertySheet:poolPropertySheet:transprop:trans", "LocalTransaction");
         clickAndWait("form:propertyContentPage:topButtons:newButton", TRIGGER_JMS_CONNECTION_FACTORIES);
@@ -77,7 +77,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton", TRIGGER_NEW_JMS_CONN_FACT);
 
         setFieldValue("form:propertySheet:generalPropertySheet:jndiProp:jndiProp", poolName);
-        selectDropdownOption("form:propertySheet:generalPropertySheet:resTyped:resType", "javax.jms.TopicConnectionFactory"); // i18n?
+        selectDropdownOption("form:propertySheet:generalPropertySheet:resTyped:resType", "jakarta.jms.TopicConnectionFactory"); // i18n?
         setFieldValue("form:propertySheet:generalPropertySheet:descProp:descProp", description);
         selectDropdownOption("form:propertySheet:poolPropertySheet:transprop:trans", "LocalTransaction"); //i18n
         

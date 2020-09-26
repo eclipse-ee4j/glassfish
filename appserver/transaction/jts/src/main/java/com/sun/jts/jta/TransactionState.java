@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,19 +18,16 @@ package com.sun.jts.jta;
 
 import java.util.*;
 import javax.transaction.xa.*;
-import javax.transaction.*;
 import org.omg.CosTransactions.*;
-import com.sun.jts.jta.NativeXAResource;
 import com.sun.jts.jtsxa.XID;
 import com.sun.jts.codegen.jtsxa.OTSResource;
 import com.sun.jts.jtsxa.OTSResourceImpl;
-import javax.transaction.SystemException;
-import javax.transaction.RollbackException;
-import javax.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
 import com.sun.jts.jtsxa.Utility;
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.CosTransactions.ControlImpl;
-import com.sun.jts.CosTransactions.TopCoordinator;
 import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 import com.sun.jts.CosTransactions.GlobalTID;
 
@@ -38,7 +35,6 @@ import com.sun.jts.CosTransactions.GlobalTID;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
 /**
  * keep track of per-transaction state
  *
@@ -291,7 +287,7 @@ public class TransactionState {
                 // throw RollbackException if try to register
                 // a new resource when a transaction is marked rollback
                 if (status !=
-                    javax.transaction.Status.STATUS_ACTIVE) {
+                    jakarta.transaction.Status.STATUS_ACTIVE) {
                     throw new RollbackException();
                 }
 

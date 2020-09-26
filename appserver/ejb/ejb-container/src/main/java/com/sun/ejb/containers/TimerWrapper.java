@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,13 +19,13 @@ package com.sun.ejb.containers;
 import java.util.Date;
 import java.io.Serializable;
 
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.NoMoreTimeoutsException;
-import javax.ejb.EJBException;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
-import javax.ejb.ScheduleExpression;
-import javax.ejb.FinderException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.NoMoreTimeoutsException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
+import jakarta.ejb.ScheduleExpression;
+import jakarta.ejb.FinderException;
 
 
 import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
@@ -55,7 +55,7 @@ public class TimerWrapper
     }
 
     /*
-     * Implementations of javax.ejb.Timer methods
+     * Implementations of jakarta.ejb.Timer methods
      */
     public void cancel() 
         throws IllegalStateException, NoSuchObjectLocalException, EJBException {
@@ -136,7 +136,7 @@ public class TimerWrapper
     }
 
     public ScheduleExpression getSchedule() throws java.lang.IllegalStateException, 
-            javax.ejb.NoSuchObjectLocalException, javax.ejb.EJBException {
+            jakarta.ejb.NoSuchObjectLocalException, jakarta.ejb.EJBException {
 
         checkCallPermission();
         ScheduleExpression schedule;
@@ -155,7 +155,7 @@ public class TimerWrapper
     }
 
     public boolean isCalendarTimer() throws java.lang.IllegalStateException,
-            javax.ejb.NoSuchObjectLocalException, javax.ejb.EJBException {
+            jakarta.ejb.NoSuchObjectLocalException, jakarta.ejb.EJBException {
 
         checkCallPermission();
 
@@ -168,7 +168,7 @@ public class TimerWrapper
 
 
     public boolean isPersistent() throws java.lang.IllegalStateException, 
-            javax.ejb.NoSuchObjectLocalException, javax.ejb.EJBException {
+            jakarta.ejb.NoSuchObjectLocalException, jakarta.ejb.EJBException {
 
         checkCallPermission();
         try {

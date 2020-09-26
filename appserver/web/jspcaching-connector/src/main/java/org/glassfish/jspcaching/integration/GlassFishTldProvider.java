@@ -24,10 +24,10 @@ import java.util.regex.Pattern;
 import com.sun.appserv.web.taglibs.cache.CacheTag;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.util.net.JarURIPattern;
-import com.sun.enterprise.module.Module;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.web.TldProvider;
 import org.glassfish.hk2.api.PostConstruct;
@@ -101,7 +101,7 @@ public class GlassFishTldProvider
          */
         Class jspCachingImplClass = CacheTag.class;
         URI[] uris = null;
-        Module m = null;
+        HK2Module m = null;
         if (jspCachingImplClass != null) {
             m = registry.find(jspCachingImplClass);
         }

@@ -16,17 +16,17 @@
 
 package client;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.ws.*;
-import javax.xml.ws.soap.*;
+import jakarta.xml.ws.*;
+import jakarta.xml.ws.soap.*;
 
 public class Client extends HttpServlet {
 
-        @javax.xml.ws.WebServiceRef(HelloService.class)
+        @jakarta.xml.ws.WebServiceRef(HelloService.class)
         @MTOM(enabled=true)
         @RespectBinding
         @Addressing (required = false,enabled=true)
@@ -34,12 +34,12 @@ public class Client extends HttpServlet {
         Hello hiport;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             try {
                 com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump=true;
                 String ret = hiport.sayHello("All");

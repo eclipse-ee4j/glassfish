@@ -21,18 +21,18 @@ import java.security.Principal;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.callback.CallerPrincipalCallback;
-import javax.security.auth.message.callback.PasswordValidationCallback;
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.callback.CallerPrincipalCallback;
+import jakarta.security.auth.message.callback.PasswordValidationCallback;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 import sun.misc.BASE64Decoder;
@@ -50,7 +50,7 @@ public class HttpServletFormTestAuthModule implements ServerAuthModule {
                throws AuthException {
         this.handler = handler;
         if (options != null) {
-            this.pc = (String)options.get("javax.security.jacc.PolicyContext");
+            this.pc = (String)options.get("jakarta.security.jacc.PolicyContext");
         }
     }
 
@@ -169,6 +169,6 @@ public class HttpServletFormTestAuthModule implements ServerAuthModule {
 
     private boolean isMandatory(MessageInfo messageInfo) {
         return Boolean.valueOf((String)messageInfo.getMap().get(
-            "javax.security.auth.message.MessagePolicy.isMandatory"));
+            "jakarta.security.auth.message.MessagePolicy.isMandatory"));
     }
 }

@@ -19,9 +19,9 @@ package com.sun.s1asdev.ejb.stubs.standaloneclient.client;
 import java.io.*;
 import java.util.*;
 
-import javax.ejb.EJBHome;
-import javax.ejb.Handle;
-import javax.ejb.EJBMetaData;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.Handle;
+import jakarta.ejb.EJBMetaData;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 

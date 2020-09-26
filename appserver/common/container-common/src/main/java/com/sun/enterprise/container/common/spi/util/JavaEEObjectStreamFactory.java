@@ -19,11 +19,11 @@ package com.sun.enterprise.container.common.spi.util;
 import com.sun.logging.*;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.io.*;
 import java.security.PrivilegedExceptionAction;

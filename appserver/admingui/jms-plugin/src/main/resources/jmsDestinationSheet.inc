@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,7 +42,7 @@
         </sun:property>
 
         <sun:property id="resTypeProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.common.resType}"  >
-            <sun:dropDown id="resType" selected="#{pageSession.valueMap['resType']}" labels={"javax.jms.Topic"  "javax.jms.Queue"}  required="#{true}"/>
+            <sun:dropDown id="resType" selected="#{pageSession.valueMap['resType']}" labels={"jakarta.jms.Topic"  "jakarta.jms.Queue"}  required="#{true}"/>
         </sun:property>
 
         <sun:property id="deploymentOrder" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}"  rendered="#{edit}" label="$resource{i18n.common.resource.deploymentOrder}" helpText="$resource{i18n.common.resource.deploymentOrderHelp}">

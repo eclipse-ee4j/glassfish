@@ -19,9 +19,9 @@ package org.glassfish.cditest.user.impl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ejb.EJBException;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Local;
+import jakarta.ejb.Stateless;
 
 import org.glassfish.cditest.security.api.Secure;
 import org.glassfish.cditest.user.api.UserService;
@@ -37,7 +37,7 @@ import org.glassfish.cditest.user.model.UserImpl;
  */
 @Stateless
 @Local
-@javax.interceptor.Interceptors(org.glassfish.cditest.security.interceptor.SecurityInterceptor.class)
+@jakarta.interceptor.Interceptors(org.glassfish.cditest.security.interceptor.SecurityInterceptor.class)
 public class UserServiceImpl implements UserService {
     private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 

@@ -28,7 +28,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
-import javax.transaction.SystemException;
+import jakarta.transaction.SystemException;
 import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 
 /**

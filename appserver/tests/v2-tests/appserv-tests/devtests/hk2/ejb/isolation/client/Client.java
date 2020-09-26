@@ -18,8 +18,8 @@ package com.oracle.s1asdev.hk2.simple.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJB;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBHome;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

@@ -16,10 +16,10 @@
 
 package endpoint;
 
-import javax.jws.*;
+import jakarta.jws.*;
 import common.IncomeTaxDetails;
 import java.util.Hashtable;
-import javax.jws.soap.SOAPBinding;
+import jakarta.jws.soap.SOAPBinding;
 
 @WebService(
     name="Calculator",

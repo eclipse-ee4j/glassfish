@@ -17,7 +17,7 @@
 package standaloneclient;
 
 import java.util.*;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import statelesshello.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;

@@ -16,9 +16,9 @@
 
 package ejb32.methodintf;
 
-import javax.ejb.*;
-import javax.interceptor.*;
-import javax.annotation.*;
+import jakarta.ejb.*;
+import jakarta.interceptor.*;
+import jakarta.annotation.*;
 
 @Stateless
 public class StlesEJB implements St {

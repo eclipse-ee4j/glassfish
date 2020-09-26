@@ -18,7 +18,7 @@ package pe.ejb.ejb30.persistence.toplinksample.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.rmi.*;
 import pe.ejb.ejb30.persistence.toplinksample.ejb.*;

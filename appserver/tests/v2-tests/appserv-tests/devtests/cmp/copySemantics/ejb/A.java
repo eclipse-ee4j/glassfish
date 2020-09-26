@@ -16,14 +16,14 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.util.*;
 
 /**
  * @author mvatkina
  */
 
-public interface A extends javax.ejb.EJBObject {
+public interface A extends jakarta.ejb.EJBObject {
     
     public void test() throws java.rmi.RemoteException;
     

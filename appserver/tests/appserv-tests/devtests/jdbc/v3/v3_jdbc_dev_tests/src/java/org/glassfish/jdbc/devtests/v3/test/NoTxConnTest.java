@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 import org.glassfish.jdbc.devtests.v3.util.TablesUtil;
 
@@ -159,7 +159,7 @@ public class NoTxConnTest implements SimpleTest {
         Connection noTxConn = null;
 
         out.println("<h4> NoTxConn Test2 </h4>");
-        javax.transaction.UserTransaction tx = null;
+        jakarta.transaction.UserTransaction tx = null;
         try {
             out.println("<br>Starting test ...");
             

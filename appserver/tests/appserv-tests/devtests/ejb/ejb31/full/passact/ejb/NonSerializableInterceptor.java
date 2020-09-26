@@ -16,10 +16,10 @@
 
 package com.acme;
 
-import javax.annotation.*;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
-import javax.ejb.EJBException;
+import jakarta.annotation.*;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.ejb.EJBException;
 
 public class NonSerializableInterceptor {
 

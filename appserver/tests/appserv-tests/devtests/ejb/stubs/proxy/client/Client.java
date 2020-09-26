@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.stubs.proxy.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 import org.omg.CORBA.ORB;
@@ -95,7 +95,7 @@ public class Client {
         try {
             h.throwAppException1();
             throw new Exception("didn't get exception for testException2");
-        } catch(javax.ejb.FinderException e) {
+        } catch(jakarta.ejb.FinderException e) {
             System.out.println("Successfully caught exception " + 
                                e.getClass() + " " + e.getMessage());
         }
@@ -103,7 +103,7 @@ public class Client {
         try {
             h.throwAppException2();
             throw new Exception("didn't get exception for testException3");
-        } catch(javax.ejb.FinderException e) {
+        } catch(jakarta.ejb.FinderException e) {
             System.out.println("Successfully caught exception " + 
                                e.getClass() + " " + e.getMessage());
         }

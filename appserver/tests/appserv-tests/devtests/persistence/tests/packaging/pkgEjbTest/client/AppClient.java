@@ -16,7 +16,7 @@
 
 package client;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 import java.util.Collection;
 import java.util.List;

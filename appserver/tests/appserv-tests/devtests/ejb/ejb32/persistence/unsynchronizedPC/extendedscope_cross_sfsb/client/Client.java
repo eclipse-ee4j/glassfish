@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.extendedscope_cross_sfsb.client;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.sun.s1asdev.ejb.ejb32.persistence.unsynchronizedPC.extendedscope_cross_sfsb.ejb.Tester;

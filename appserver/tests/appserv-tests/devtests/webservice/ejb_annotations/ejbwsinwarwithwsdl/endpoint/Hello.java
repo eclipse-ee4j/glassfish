@@ -16,14 +16,14 @@
 
 package endpoint;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.ejb.SessionContext;
-import javax.annotation.Resource;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.ejb.SessionContext;
+import jakarta.annotation.Resource;
 
 
 
-@javax.ejb.Stateless
+@jakarta.ejb.Stateless
 @WebService(serviceName = "HelloService", portName = "HelloPort", targetNamespace = "http://example.com/Hello", endpointInterface = "com.example.hello.Hello", wsdlLocation = "WEB-INF/wsdl/HelloService.wsdl")
 
 public class Hello {

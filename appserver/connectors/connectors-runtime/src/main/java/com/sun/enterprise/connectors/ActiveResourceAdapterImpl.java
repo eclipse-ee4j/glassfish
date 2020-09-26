@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,7 +35,7 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ManagedConnectionFactory;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,7 +76,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      *                   connection factory class.
      *                   values to domain.xml.
      */
-    public void init(javax.resource.spi.ResourceAdapter ra, ConnectorDescriptor desc,
+    public void init(jakarta.resource.spi.ResourceAdapter ra, ConnectorDescriptor desc,
                                          String moduleName, ClassLoader jcl) throws ConnectorRuntimeException {
         this.desc_ = desc;
         moduleName_ = moduleName;
@@ -527,7 +527,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      *
      * @return <code>ResourceAdapter</code>
      */
-    public javax.resource.spi.ResourceAdapter getResourceAdapter() {
+    public jakarta.resource.spi.ResourceAdapter getResourceAdapter() {
         throw new UnsupportedOperationException("1.0 RA will not have ResourceAdapter bean");
     }
 

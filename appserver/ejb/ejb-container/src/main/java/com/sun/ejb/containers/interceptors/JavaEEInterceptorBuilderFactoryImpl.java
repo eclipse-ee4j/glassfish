@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +18,9 @@ package com.sun.ejb.containers.interceptors;
 
 import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
 import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilderFactory;
-import com.sun.enterprise.container.common.spi.InterceptorInvoker;
 import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
 import com.sun.ejb.EJBUtils;
 import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
 import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;

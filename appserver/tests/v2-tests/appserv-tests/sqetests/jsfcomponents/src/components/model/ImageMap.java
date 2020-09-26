@@ -19,8 +19,8 @@ package components.model;
 
 import components.components.AreaSelectedEvent;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
 import java.util.HashMap;
 import java.util.Locale;

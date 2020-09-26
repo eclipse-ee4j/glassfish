@@ -44,5 +44,10 @@
 # In this case, org.apache.jk.server is one such package. It is used
 # when mod_jk configuration is used. Since, it is not always needed,
 # the import has been marked as optional. By Sahoo.
-Import-Package: org.apache.jk.core;org.apache.jk.server; resolution:=optional; password=GlassFish; version=${project.osgi.version}, *
+#
+# Bnd will examine the method bodies of classes looking for Class.forName with a String constant for 
+# the class name. Bnd will use this for purposes of the Import-Package manifest header.
+# This almost always causes "missing requirement" errors, so we need to exclude those
+# packages here. Note that as of early 2020 -noclassforname doesn't work with the Apache felix maven plugin
+Import-Package: !org.apache.xerces.impl, org.apache.jk.core;org.apache.jk.server; resolution:=optional; password=GlassFish; version=${project.osgi.version}, *
 

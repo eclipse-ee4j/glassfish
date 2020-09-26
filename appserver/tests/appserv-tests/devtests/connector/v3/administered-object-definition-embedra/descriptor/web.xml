@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,7 @@
     <administered-object>
        <description>global-scope resource to be modified by DD</description>
        <name>java:global/env/Servlet_ModByDD_AdminObject</name>
-       <interface-name>javax.jms.Destination</interface-name>
+       <interface-name>jakarta.jms.Destination</interface-name>
        <class-name>connector.MyAdminObject</class-name>
        <resource-adapter>#aod-ra</resource-adapter>
        <property>
@@ -50,7 +50,7 @@
     <administered-object>
        <description>global-scope resource defined in Web DD</description>
        <name>java:global/env/Web_DD_AdminObject</name>
-       <interface-name>javax.jms.Destination</interface-name>
+       <interface-name>jakarta.jms.Destination</interface-name>
        <class-name>connector.MyAdminObject</class-name>
        <resource-adapter>#aod-ra</resource-adapter>
        <property>
@@ -62,7 +62,7 @@
     <administered-object>
        <description>application-scope resource defined in Web DD</description>
        <name>java:app/env/Web_DD_AdminObject</name>
-       <interface-name>javax.jms.Destination</interface-name>
+       <interface-name>jakarta.jms.Destination</interface-name>
        <class-name>connector.MyAdminObject</class-name>
        <resource-adapter>#aod-ra</resource-adapter>
        <property>
@@ -74,7 +74,7 @@
      <administered-object>
        <description>module-scope resource defined in Web DD</description>
        <name>java:module/env/Web_DD_AdminObject</name>
-       <interface-name>javax.jms.Destination</interface-name>
+       <interface-name>jakarta.jms.Destination</interface-name>
        <class-name>connector.MyAdminObject</class-name>
        <resource-adapter>#aod-ra</resource-adapter>
        <property>

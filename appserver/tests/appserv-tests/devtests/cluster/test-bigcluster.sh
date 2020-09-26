@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,7 @@
 
 
 TESTHOME=`pwd`
-GFHOME=$TESTHOME/glassfish5
+GFHOME=$TESTHOME/glassfish6
 export INSTALL_LOC=$HOME/testnode
 export DOMAIN=domain1
 echo "DOMAIN is set to $DOMAIN. Reset this if working with another domain."
@@ -89,7 +89,7 @@ benchmark_commands() {
   grep 'time to parse domain.xml' $GFHOME/glassfish/domains/$DOMAIN/logs/server.log | 
     sed -e 's/^.*Total //' -e 's/|#]//' | tail -1
   echo 'size of domain.xml: ' `ls -l $GFHOME/glassfish/domains/$DOMAIN/config/domain.xml | awk '{ print $5 }'`
-  PIDFILE=$TESTHOME/glassfish5/glassfish/domains/domain1/config/pid
+  PIDFILE=$TESTHOME/glassfish6/glassfish/domains/domain1/config/pid
   # wait for pid file to be there, as restart-domain returns before it is actually there
   while [ ! -f $PIDFILE ]; do sleep 1; done
   daspid=`cat $PIDFILE`
@@ -192,14 +192,14 @@ create_local_clusters() {
 create_hosted_nodes() {
   echo Creating SSH nodes from the hosted_nodes file for domain $DOMAIN...
   grep -v '^#' $TESTHOME/hosted-nodes |
-    awk '{ printf "create-node-ssh --nodehost %s --installdir '$INSTALL_LOC'/glassfish5 --sshuser %s n-ssh-'$DOMAIN'-%d\n", $2, $1, ++n }' | 
+    awk '{ printf "create-node-ssh --nodehost %s --installdir '$INSTALL_LOC'/glassfish6 --sshuser %s n-ssh-'$DOMAIN'-%d\n", $2, $1, ++n }' | 
     asadmin
   asadmin list-nodes
 }
 
 install_hosted_nodes() {
   echo Installing GlassFish on nodes from hosted_nodes file...
-  asadmin install-node --installdir $INSTALL_LOC/glassfish5 `grep -v '^#' hosted-nodes | cut -d" " -f2`
+  asadmin install-node --installdir $INSTALL_LOC/glassfish6 `grep -v '^#' hosted-nodes | cut -d" " -f2`
 }
 
 cmd_on_hosted_nodes() {

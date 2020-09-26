@@ -35,8 +35,9 @@ public class ConfigApiLoggerInfo {
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "com.sun.enterprise.config.util.LogMessages";
 
-    @LoggerInfo(subsystem = "CONFIG-API", description = "Configuration API")
-    public static final String ADMIN_LOGGER = "javax.enterprise.config.api";
+    @LoggerInfo(subsystem = "CONFIG-API", description = "Configuration API", publish = true)
+    public static final String ADMIN_LOGGER = "jakarta.enterprise.config.api";
+
     private static final Logger adminLogger = Logger.getLogger(
             ADMIN_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 

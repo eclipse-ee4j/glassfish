@@ -27,8 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.security.auth.Subject;
 import org.glassfish.api.admin.*;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
@@ -67,7 +67,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 public class CommandSecurityChecker implements PostConstruct {
     
     @LoggerInfo(subsystem="ADMSECAUTHZ", description="Admin security authorization")
-    private static final String ADMSEC_AUTHZ_LOGGER_NAME = "javax.enterprise.system.tools.admin.security.authorization";
+    private static final String ADMSEC_AUTHZ_LOGGER_NAME = "jakarta.enterprise.system.tools.admin.security.authorization";
 
     @LogMessagesResourceBundle
     private static final String LOG_MESSAGES_RB = "com.sun.enterprise.admin.util.LogMessages";

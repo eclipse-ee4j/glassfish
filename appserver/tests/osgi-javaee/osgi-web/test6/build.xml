@@ -48,7 +48,7 @@
   	<mkdir dir="${basedir}/WEB-INF/classes"/>
   	<javac srcdir="${basedir}/src"
     	destdir="${basedir}/WEB-INF/classes"
-        classpath="${env.S1AS_HOME}/modules/javax.servlet.jar"
+        classpath="${env.S1AS_HOME}/modules/jakarta.servlet.jar"
     	debug="on"
 	failonerror="true"/>
     </target>

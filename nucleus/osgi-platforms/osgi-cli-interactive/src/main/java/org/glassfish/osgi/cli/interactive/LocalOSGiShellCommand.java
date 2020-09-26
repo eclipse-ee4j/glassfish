@@ -35,7 +35,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
 import jline.console.completer.NullCompleter;

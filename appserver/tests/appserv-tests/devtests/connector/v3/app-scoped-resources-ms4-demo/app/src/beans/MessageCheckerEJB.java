@@ -17,14 +17,14 @@
 package beans;
 
 import connector.MyAdminObject;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
-import javax.ejb.CreateException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.CreateException;
 import java.util.Properties;
 import java.sql.*;
 
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import javax.naming.*;
 import javax.sql.*;
 

@@ -17,7 +17,7 @@
 package com.sun.s1asdev.jdbc.stress1.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface LocalPlayer extends EJBLocalObject {
     public String getPlayerId();

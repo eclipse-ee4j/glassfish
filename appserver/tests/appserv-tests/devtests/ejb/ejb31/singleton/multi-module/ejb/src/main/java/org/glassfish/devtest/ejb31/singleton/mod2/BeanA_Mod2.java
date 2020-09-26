@@ -24,9 +24,9 @@ package org.glassfish.devtest.ejb31.singleton.multimodule.mod2;
 import org.glassfish.devtest.ejb31.singleton.multimodule.servlet.RemoteInitTracker;
 import org.glassfish.devtest.ejb31.singleton.multimodule.servlet.LocalInitTracker;
 
-import javax.ejb.Singleton;
-import javax.ejb.EJB;
-import javax.annotation.PostConstruct;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.EJB;
+import jakarta.annotation.PostConstruct;
 
 /**
  *

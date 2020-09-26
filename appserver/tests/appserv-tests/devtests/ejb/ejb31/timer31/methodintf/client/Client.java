@@ -16,7 +16,7 @@
 
 package client.timer31.methodintf;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 
 import ejb31.timer.methodintf.Stles;

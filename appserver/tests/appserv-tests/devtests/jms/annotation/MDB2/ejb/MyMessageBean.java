@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,32 +18,32 @@ package org.glassfish.test.jms.annotation.ejb;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJBException;
-import javax.ejb.MessageDriven;
-import javax.inject.Inject;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSConnectionFactory;
-import javax.jms.JMSConnectionFactoryDefinition;
-import javax.jms.JMSContext;
-import javax.jms.JMSDestinationDefinition;
-import javax.jms.JMSDestinationDefinitions;
-import javax.jms.JMSException;
-import javax.jms.JMSProducer;
-import javax.jms.JMSSessionMode;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import jakarta.annotation.Resource;
+import jakarta.ejb.ActivationConfigProperty;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.MessageDriven;
+import jakarta.inject.Inject;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSConnectionFactory;
+import jakarta.jms.JMSConnectionFactoryDefinition;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSDestinationDefinition;
+import jakarta.jms.JMSDestinationDefinitions;
+import jakarta.jms.JMSException;
+import jakarta.jms.JMSProducer;
+import jakarta.jms.JMSSessionMode;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Queue;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 
 @JMSConnectionFactoryDefinition(
     description = "application-scope CF defined by @JMSConnectionFactoryDefinition",
     name = "java:app/env/annotation_CF",
-    interfaceName = "javax.jms.ConnectionFactory",
+    interfaceName = "jakarta.jms.ConnectionFactory",
     resourceAdapter = "jmsra",
     user = "admin",
     password = "admin",
@@ -56,7 +56,7 @@ import javax.jms.TextMessage;
         @JMSDestinationDefinition(
             description = "application-scope test queue defined by @JMSDestinationDefinition",
             name = "java:app/env/annotation_testQueue",
-            interfaceName = "javax.jms.Queue",
+            interfaceName = "jakarta.jms.Queue",
             resourceAdapter = "jmsra",
             destinationName = "myPhysicalTestQueue"
         ),
@@ -64,7 +64,7 @@ import javax.jms.TextMessage;
         @JMSDestinationDefinition(
             description = "application-scope result queue defined by @JMSDestinationDefinition",
             name = "java:app/env/annotation_resultQueue",
-            interfaceName = "javax.jms.Queue",
+            interfaceName = "jakarta.jms.Queue",
             resourceAdapter = "jmsra",
             destinationName = "myPhysicalResultQueue"
         )
@@ -73,7 +73,7 @@ import javax.jms.TextMessage;
 
 @MessageDriven(mappedName = "java:app/env/annotation_testQueue", activationConfig = {
     @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue"),
     @ActivationConfigProperty(propertyName = "endpointExceptionRedeliveryAttempts", propertyValue = "1")
 })
 public class MyMessageBean implements MessageListener {

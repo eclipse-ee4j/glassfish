@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.persistence.extendedem;
 
-import javax.ejb.*;
-import javax.persistence.*;
+import jakarta.ejb.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="EJB30_PERSISTENCE_EXTENDEDEM_PERSON")

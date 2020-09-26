@@ -17,10 +17,10 @@
 package com.sun.s1peqe.ejb.bmp.enroller.ejb;
 
 import java.rmi.RemoteException; 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.sql.*;
 import javax.sql.*;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import java.util.*;
 import javax.naming.*;
 

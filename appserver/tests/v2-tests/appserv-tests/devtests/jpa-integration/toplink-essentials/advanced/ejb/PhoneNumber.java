@@ -17,8 +17,8 @@
 package oracle.toplink.essentials.testing.models.cmp3.advanced;
 
 import java.io.*;
-import javax.persistence.*;
-import static javax.persistence.FetchType.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.FetchType.*;
 
 /**
  * <p><b>Purpose</b>: Describes an Employee's phone number.

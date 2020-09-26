@@ -49,7 +49,7 @@
             <include name="**/glassfish-api.jar"/>
             <include name="**/amx-core.jar"/>
             <include name="**/amx-javaee.jar"/>
-            <include name="**/gf-client.jar"/>
+            <include name="**/gf-client-module.jar"/>
         </fileset>
 	<fileset dir="${maven.repo.local}/com/beust/jcommander">
 	    <include name="**/1.72/jcommander-1.72.jar"/>
@@ -57,13 +57,6 @@
         <pathelement location="${class.output}"/>
         <pathelement location="${test.class.output}"/>
     </path>
-
-    <path id = "boot.classpath">
-        <fileset dir="${glassfish.home}/modules/endorsed">
-            <include name="**/*.jar"/>
-        </fileset>        
-    </path>
-
 
     <!-- classpath at QL build time for building testing apps -->
     <path id="class.path">
@@ -340,7 +333,6 @@
         <classfileset dir="${test.class.output}" includes="**/${testng.testclient}.class"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-	<jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
 	<jvmarg value="-DASADMIN=${ASADMIN}" />
     </testng>
 </target>
@@ -355,7 +347,6 @@
         <xmlfileset dir="." includes="testng.xml"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-	<jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
 	<jvmarg value="-DASADMIN=${ASADMIN}" />
 	<jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
     </testng>
@@ -374,7 +365,6 @@
         <classfileset dir="${test.class.output}" includes="**/${testng.testclient}.class"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-        <jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
         <jvmarg value="-DASADMIN=${ASADMIN}" />
     </testng>
 </target>
@@ -390,19 +380,26 @@
 
 <!-- the following targets are for running the wsit tests -->
     <path id="wsit.classpath">
+        <pathelement location="${glassfish.home}/modules/jakarta.xml.bind-api.jar"/>
+        <pathelement location="${glassfish.home}/modules/jakarta.activation.jar"/>
+        <pathelement location="${glassfish.home}/modules/jakarta.mail.jar"/>
+        <pathelement location="${glassfish.home}/modules/jaxb-osgi.jar"/>
+        <pathelement location="${glassfish.home}/modules/webservices-api-osgi.jar"/>
+        <pathelement location="${glassfish.home}/modules/webservices-osgi.jar"/>
         <pathelement location="${java.home}/../lib/tools.jar"/>
     </path>
 
     <condition property="wsjar.available">
         <and>
+            <available file="${glassfish.home}/modules/webservices-api-osgi.jar"/>
             <available file="${glassfish.home}/modules/webservices-osgi.jar"/>
+            <available file="${glassfish.home}/modules/jakarta.xml.bind-api.jar"/>
             <available file="${glassfish.home}/modules/jaxb-osgi.jar"/>
         </and>
     </condition>
 
     <target name="declare-wsimport" if="wsjar.available">
       <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
-         <classpath refid="class.path"/>
          <classpath refid="wsit.classpath"/>
       </taskdef>
     </target>
@@ -422,11 +419,7 @@
             <classfileset dir="${build.classes.home}" includes="**/${testng.testclient}.class"/>
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-            <jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
             <bootclasspath classpathref="boot.class.path"/>
-<sysproperty key="-Djava.endorsed.dirs" value="${glassfish.home}/modules/endorsed"/>
-
-
         </testng>
     </target>
 
@@ -440,11 +433,7 @@
             <xmlfileset dir="." includes="testng.xml"/>
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-            <jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
             <bootclasspath classpathref="boot.class.path"/>
-<sysproperty key="-Djava.endorsed.dirs" value="${glassfish.home}/modules/endorsed"/>
-
-
         </testng>
     </target>
 

@@ -18,7 +18,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="javax.servlet.http.*" %>
+<%@ page import="jakarta.servlet.http.*" %>
 
 <%
     String user = (String)request.getParameter("username");

@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface TestHome extends EJBHome {

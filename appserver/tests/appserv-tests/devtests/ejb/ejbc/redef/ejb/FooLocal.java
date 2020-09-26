@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejbc.redef;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface FooLocal extends FooLocalSuper {
 

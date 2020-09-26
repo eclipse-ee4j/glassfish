@@ -18,7 +18,7 @@ package org.glassfish.security.services.common;
 
 import java.util.logging.Logger;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.ValidationService;

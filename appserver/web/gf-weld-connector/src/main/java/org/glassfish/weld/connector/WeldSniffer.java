@@ -22,8 +22,7 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.enterprise.deploy.shared.ModuleType;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -191,9 +190,9 @@ public class WeldSniffer extends GenericSniffer {
    *
    */
   public boolean supportsArchiveType(ArchiveType archiveType) {
-    if (archiveType.toString().equals(ModuleType.WAR.toString()) ||
-      archiveType.toString().equals(ModuleType.EJB.toString()) ||
-      archiveType.toString().equals(ModuleType.RAR.toString())) {
+    if (archiveType.toString().equals("war") ||
+      archiveType.toString().equals("ejb") ||
+      archiveType.toString().equals("rar")) {
       return true;
     }
     return false;

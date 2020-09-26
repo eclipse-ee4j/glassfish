@@ -24,7 +24,7 @@ import javax.xml.rpc.server.ServiceLifecycle;
 
 // Service Implementation Class - as outlined in JAX-RPC Specification
 
-public class HelloImpl implements javax.servlet.SingleThreadModel, ServiceLifecycle {
+public class HelloImpl implements jakarta.servlet.SingleThreadModel, ServiceLifecycle {
 
     private boolean gotInit = false;
    

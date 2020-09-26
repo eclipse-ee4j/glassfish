@@ -16,25 +16,20 @@
 
 package org.glassfish.diagnostics.context.impl;
 
+import org.glassfish.contextpropagation.ContextMap;
+import org.glassfish.contextpropagation.ContextViewFactory;
+import org.glassfish.contextpropagation.spi.ContextMapHelper;
+import org.glassfish.diagnostics.context.Context;
+import org.glassfish.diagnostics.context.ContextManager;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
-import mockit.Verifications;
-import mockit.Expectations;
-import mockit.integration.junit4.JMockit;
 
-import org.glassfish.contextpropagation.*;
-import org.glassfish.contextpropagation.spi.ContextMapHelper;
-
-import org.glassfish.diagnostics.context.Context;
-import org.glassfish.diagnostics.context.ContextManager;
-
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.runner.RunWith;
-import org.junit.Ignore;
-
-@RunWith(JMockit.class)
 public class ContextManagerImplUnitTest {
 
  /**

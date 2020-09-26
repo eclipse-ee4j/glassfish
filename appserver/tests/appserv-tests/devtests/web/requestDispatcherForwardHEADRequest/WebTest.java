@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
  * Unit test for:
  *
  *   https://glassfish.dev.java.net/issues/show_bug.cgi?id=2210
- *   ("ClassCastException: javax.servlet.http.NoBodyResponse, if target
+ *   ("ClassCastException: jakarta.servlet.http.NoBodyResponse, if target
  *   servlet of a HEAD request performs rd.forward()")
  */
 public class WebTest {

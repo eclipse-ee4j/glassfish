@@ -16,8 +16,8 @@
 
 package ejb_endpoint;
 
-import javax.jws.WebService;
-import javax.ejb.Stateless;
+import jakarta.jws.WebService;
+import jakarta.ejb.Stateless;
 
 @WebService(endpointInterface="ejb_endpoint.WSHello")
 @Stateless

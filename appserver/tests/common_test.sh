@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 #
-# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,6 +51,7 @@ test_init(){
   java -version
   ant -version
   mkdir -p ${WORKSPACE}/results/junitreports
+  printf "\n\n" 
 }
 
 zip_test_results(){
@@ -62,7 +63,7 @@ unzip_test_resources(){
   printf "\n%s \n\n" "===== UNZIP TEST RESOURCES ====="
   for i in "${@}"; do
     if [[ ${i} == *.zip* ]]; then
-      unzip -o ${i}
+      unzip -qq -o ${i}
     else
       tar --overwrite -xf ${i}
     fi
@@ -72,13 +73,13 @@ unzip_test_resources(){
 copy_test_artifacts(){
   printf "\n%s \n\n" "===== COPY TEST ARTIFACTS ====="
   mkdir -p ${WORKSPACE}/results/junitreports
-  tar -cvf ${WORKSPACE}/results/domainArchive.tar.gz ${S1AS_HOME}/domains
+  tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${S1AS_HOME}/domains
   cp ${S1AS_HOME}/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
   cp ${TEST_RUN_LOG} ${WORKSPACE}/results/
   cp ${APS_HOME}/test_results*.* ${WORKSPACE}/results/ || true
   cp `pwd`/*/*logs.zip ${WORKSPACE}/results/ || true
   cp `pwd`/*/*/*logs.zip ${WORKSPACE}/results/ || true
-  tar -cvf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results
+  tar -cf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results
 }
 
 generate_junit_report(){

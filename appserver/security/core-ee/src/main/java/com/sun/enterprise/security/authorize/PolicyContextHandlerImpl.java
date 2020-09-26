@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,7 @@
 package com.sun.enterprise.security.authorize;
 
 import java.security.SecurityPermission;
-import javax.security.jacc.PolicyContextHandler;
+import jakarta.security.jacc.PolicyContextHandler;
 
 /**
  * This class is created by the container and handed over to the 
@@ -28,11 +28,10 @@ import javax.security.jacc.PolicyContextHandler;
  */
 public class PolicyContextHandlerImpl implements PolicyContextHandler {
 
-    public static final String HTTP_SERVLET_REQUEST =
-        "javax.servlet.http.HttpServletRequest";
-    public static final String SOAP_MESSAGE = "javax.xml.soap.SOAPMessage";
-    public static final String ENTERPRISE_BEAN = "javax.ejb.EnterpriseBean";
-    public static final String EJB_ARGUMENTS = "javax.ejb.arguments";
+    public static final String HTTP_SERVLET_REQUEST = "jakarta.servlet.http.HttpServletRequest";
+    public static final String SOAP_MESSAGE = "jakarta.xml.soap.SOAPMessage";
+    public static final String ENTERPRISE_BEAN = "jakarta.ejb.EnterpriseBean";
+    public static final String EJB_ARGUMENTS = "jakarta.ejb.arguments";
     public static final String SUBJECT = "javax.security.auth.Subject.container";
     public static final String REUSE = "java.security.Policy.supportsReuse";
 

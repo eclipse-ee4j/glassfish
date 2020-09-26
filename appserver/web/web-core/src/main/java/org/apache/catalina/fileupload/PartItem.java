@@ -24,7 +24,7 @@ import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.util.RequestUtil;
 
-import javax.servlet.http.Part;
+import jakarta.servlet.http.Part;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;

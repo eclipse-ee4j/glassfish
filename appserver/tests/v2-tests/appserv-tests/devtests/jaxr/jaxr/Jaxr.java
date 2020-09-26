@@ -16,7 +16,7 @@
 
 package jaxr;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.io.Serializable;

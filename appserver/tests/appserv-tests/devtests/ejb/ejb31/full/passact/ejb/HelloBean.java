@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.*;
-import javax.interceptor.Interceptors;
-import javax.annotation.*;
+import jakarta.ejb.*;
+import jakarta.interceptor.Interceptors;
+import jakarta.annotation.*;
 import java.util.concurrent.Future;
 
 @Stateful

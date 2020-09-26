@@ -17,14 +17,14 @@
 package com.sun.s1asdev.ejb.ejb31.aroundtimeout;
 
 
-import javax.ejb.Stateless;
-import javax.ejb.Schedule;
-import javax.ejb.Timer;
-import javax.ejb.EJBException;
-import javax.interceptor.Interceptors;
-import javax.interceptor.ExcludeDefaultInterceptors;
-import javax.interceptor.ExcludeClassInterceptors;
-import javax.interceptor.InvocationContext;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Timer;
+import jakarta.ejb.EJBException;
+import jakarta.interceptor.Interceptors;
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.InvocationContext;
 
 
 // Define some aroundtimeout via annotations and some via

@@ -16,8 +16,8 @@
 
 package endpoint2;
 
-import javax.jws.WebService;
-import javax.jws.WebMethod;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
 
 @WebService(
     name="Hello2",

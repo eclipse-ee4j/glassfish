@@ -16,7 +16,7 @@
 
 package sqetests.ejb.stateful.passivate.ejb.stateful;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Oct 17, 2003 4:06:59 PM
@@ -24,10 +24,10 @@ import javax.ejb.*;
  * @author dsingh
  */
 
-public interface SessionLocalHome extends javax.ejb.EJBLocalHome {
+public interface SessionLocalHome extends jakarta.ejb.EJBLocalHome {
     
-    public SessionLocal create() throws javax.ejb.CreateException;
+    public SessionLocal create() throws jakarta.ejb.CreateException;
     
-    public SessionLocal create(java.lang.String initialMessage) throws javax.ejb.CreateException;
+    public SessionLocal create(java.lang.String initialMessage) throws jakarta.ejb.CreateException;
     
 }

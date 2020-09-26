@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb31.timer.reschedule_after_failures;
 
-@javax.ejb.Remote
+@jakarta.ejb.Remote
 public interface Stles {
 
     public void createTimers() throws Exception;

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
+import jakarta.ejb.Stateless;
+import jakarta.interceptor.Interceptors;
 
 
 //Default is @Local

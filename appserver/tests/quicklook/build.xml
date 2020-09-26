@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,7 @@
 
 -->
 
-<project name="GlassFish-V3-QuickLook" default="all" basedir=".">
+<project name="GlassFish-QuickLook" default="all" basedir=".">
     <property environment="env"/>
 
     <property file="build.properties"/>
@@ -25,7 +25,7 @@
     <import file="${basedir}/gfproject/db-targets.xml"/>
 	<import file="${basedir}/gfproject/utils.xml"/>
     
-    <description>Builds, tests, and runs the project V3 Quicklook</description>
+    <description>Builds, tests, and runs the project Quicklook</description>
     
     <presetdef name="javac">
         <javac includeantruntime="false" />
@@ -216,7 +216,7 @@
         <ant dir="admincli" target="build"/>
         <ant dir="adminconsole" target="build"/>
         <ant dir="rest" target="build"/>
-        <ant dir="osgitest/basicosgi" target="build"/>
+        <!--<ant dir="osgitest/basicosgi" target="build"/>-->
         <ant dir="web/helloworld" target="build-deploy"/>
         <ant dir="web/jsfastrologer" target="build-deploy"/>
         <ant dir="web/jsfinjection" target="build-deploy"/>
@@ -308,7 +308,6 @@
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Dhttp.host=${glassfish.http.host}"/>
             <jvmarg value="-Dhttp.port=${glassfish.http.port}"/>
-	    <jvmarg value="-Djava.endorsed.dirs=${glassfish.home}/modules/endorsed" />
 	    <jvmarg value="-DASADMIN=${ASADMIN}" />
 	    <jvmarg value="-DAPPCLIENT=${APPCLIENT}"/>
             <sysproperty key="glassfish.home" value="${glassfish.home}"/>
@@ -592,7 +591,7 @@
     <property name="APPCLIENT" value="${glassfish.home}\bin\appclient.bat"/>
 </target>
 
-<target name="start-server-hk2" depends="setOSConditions" if="v3">
+<target name="start-server-hk2" depends="setOSConditions">
    
     <echo>+-----------------------------+</echo>
     <echo>|                             |</echo>
@@ -621,7 +620,7 @@
     </exec>
 </target>
 
-<target name="start-server-felix" depends="setOSConditions" if="v3">
+<target name="start-server-felix" depends="setOSConditions">
   
     <echo>+-----------------------------+</echo>
     <echo>|                             |</echo>

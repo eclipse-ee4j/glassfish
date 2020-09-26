@@ -23,8 +23,8 @@ import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import com.sun.ejb.codegen.StaticRmiStubGenerator;
 import com.sun.ejb.containers.EJBTimerService;
@@ -236,9 +236,9 @@ public class EjbDeployer
         if (ejbBundle.containsCMPEntity()) {
             CMPService cmpService = cmpServiceProvider.get();
             if (cmpService == null) {
-                throw new RuntimeException("CMP Module is not available");
+                throw new RuntimeException("CMP HK2Module is not available");
             } else if (!cmpService.isReady()) {
-                throw new RuntimeException("CMP Module is not initialized");
+                throw new RuntimeException("CMP HK2Module is not initialized");
             }
         }
 

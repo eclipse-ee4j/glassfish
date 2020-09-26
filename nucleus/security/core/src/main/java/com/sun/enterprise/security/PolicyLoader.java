@@ -28,12 +28,12 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.i18n.StringManager;
 import java.util.List;
 import org.glassfish.api.admin.ServerEnvironment;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Loads the Default Policy File into the system.
@@ -58,12 +58,12 @@ public class PolicyLoader{
     }
     private static StringManager sm = StringManager.getManager(PolicyLoader.class);
 
-    private static final String POLICY_PROVIDER_14 = 
-        "javax.security.jacc.policy.provider";
+    private static final String POLICY_PROVIDER = 
+        "jakarta.security.jacc.policy.provider";
     private static final String POLICY_PROVIDER_13 = 
         "javax.security.jacc.auth.policy.provider";
     private static final String POLICY_CONF_FACTORY = 
-        "javax.security.jacc.PolicyConfigurationFactory.provider";
+        "jakarta.security.jacc.PolicyConfigurationFactory.provider";
     private static final String POLICY_PROP_PREFIX =
         "com.sun.enterprise.jaccprovider.property.";
     private boolean isPolicyInstalled = false;
@@ -72,7 +72,7 @@ public class PolicyLoader{
     /**
      * Attempts to install the policy-provider. The policy-provider
      * element in domain.xml is consulted for the class to use. Note
-     * that if the javax.security.jacc.policy.provider system property
+     * that if the jakarta.security.jacc.policy.provider system property
      * is set it will override the domain.xml configuration. This will
      * normally not be the case in S1AS.
      *
@@ -96,12 +96,12 @@ public class PolicyLoader{
         
 
         // check if system property is set
-        String javaPolicy = System.getProperty(POLICY_PROVIDER_14);
+        String javaPolicy = System.getProperty(POLICY_PROVIDER);
 
         if (javaPolicy !=null) {
             // inform user domain.xml is being ignored
             _logger.log(Level.INFO, SecurityLoggerInfo.policyProviderConfigOverrideMsg,
-                        new String[] { POLICY_PROVIDER_14, javaPolicy } );
+                        new String[] { POLICY_PROVIDER, javaPolicy } );
         } else {
             // otherwise obtain JACC policy-provider from domain.xml
             if (jacc != null) {

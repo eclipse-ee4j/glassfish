@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package org.glassfish.cdi.transaction;
 
 import junit.framework.TestCase;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 
@@ -43,9 +43,9 @@ public class TransactionalAnnotationTest extends TestCase {
     public void testTransactionalInterceptorMANDATORY() throws Exception {
         TransactionalInterceptorMandatory transactionalInterceptorMANDATORY =
                 new TransactionalInterceptorMandatory();
-        javax.transaction.TransactionManager transactionManager = new TransactionManager();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         transactionalInterceptorMANDATORY.setTestTransactionManager(transactionManager);
-        javax.interceptor.InvocationContext ctx =
+        jakarta.interceptor.InvocationContext ctx =
                 new InvocationContext(
                         BeanMandatory.class.getMethod("foo", String.class), null
                 );
@@ -75,9 +75,9 @@ public class TransactionalAnnotationTest extends TestCase {
     public void testTransactionalInterceptorNEVER() throws Exception {
         TransactionalInterceptorNever transactionalInterceptorNEVER =
                 new TransactionalInterceptorNever();
-        javax.transaction.TransactionManager transactionManager = new TransactionManager();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         transactionalInterceptorNEVER.setTestTransactionManager(transactionManager);
-        javax.interceptor.InvocationContext ctx =
+        jakarta.interceptor.InvocationContext ctx =
                 new InvocationContext(
                         BeanNever.class.getMethod("foo", String.class), null
                 );
@@ -99,9 +99,9 @@ public class TransactionalAnnotationTest extends TestCase {
     public void testTransactionalInterceptorNOT_SUPPORTED() throws Exception {
         TransactionalInterceptorNotSupported transactionalInterceptorNOT_SUPPORTED =
                 new TransactionalInterceptorNotSupported();
-        javax.transaction.TransactionManager transactionManager = new TransactionManager();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         transactionalInterceptorNOT_SUPPORTED.setTestTransactionManager(transactionManager);
-        javax.interceptor.InvocationContext ctx =
+        jakarta.interceptor.InvocationContext ctx =
                 new InvocationContext(
                         BeanNotSupported.class.getMethod("foo", String.class), null
                 );
@@ -111,9 +111,9 @@ public class TransactionalAnnotationTest extends TestCase {
     public void testTransactionalInterceptorREQUIRED() throws Exception {
         TransactionalInterceptorRequired transactionalInterceptorREQUIRED =
                 new TransactionalInterceptorRequired();
-        javax.transaction.TransactionManager transactionManager = new TransactionManager();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         transactionalInterceptorREQUIRED.setTestTransactionManager(transactionManager);
-        javax.interceptor.InvocationContext ctx =
+        jakarta.interceptor.InvocationContext ctx =
                 new InvocationContext(
                         BeanRequired.class.getMethod("foo", String.class), null
                 );
@@ -127,9 +127,9 @@ public class TransactionalAnnotationTest extends TestCase {
     public void testTransactionalInterceptorREQUIRES_NEW() throws Exception {
         TransactionalInterceptorRequiresNew transactionalInterceptorREQUIRES_NEW =
                 new TransactionalInterceptorRequiresNew();
-        javax.transaction.TransactionManager transactionManager = new TransactionManager();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         transactionalInterceptorREQUIRES_NEW.setTestTransactionManager(transactionManager);
-        javax.interceptor.InvocationContext ctx =
+        jakarta.interceptor.InvocationContext ctx =
                 new InvocationContext(
                         BeanRequiresNew.class.getMethod("foo", String.class), null
                 );
@@ -143,9 +143,9 @@ public class TransactionalAnnotationTest extends TestCase {
     public void testTransactionalInterceptorSUPPORTS() throws Exception {
         TransactionalInterceptorSupports transactionalInterceptorSUPPORTS =
                 new TransactionalInterceptorSupports();
-        javax.transaction.TransactionManager transactionManager = new TransactionManager();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         transactionalInterceptorSUPPORTS.setTestTransactionManager(transactionManager);
-        javax.interceptor.InvocationContext ctx =
+        jakarta.interceptor.InvocationContext ctx =
                 new InvocationContext(
                         BeanSupports.class.getMethod("foo", String.class), null
                 );
@@ -159,9 +159,9 @@ public class TransactionalAnnotationTest extends TestCase {
 
         TransactionalInterceptorRequired transactionalInterceptorREQUIRED =
                 new TransactionalInterceptorRequired();
-        javax.transaction.TransactionManager transactionManager = new TransactionManager();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         transactionalInterceptorREQUIRED.setTestTransactionManager(transactionManager);
-        javax.interceptor.InvocationContext ctx = new InvocationContext(
+        jakarta.interceptor.InvocationContext ctx = new InvocationContext(
                 BeanSpecExampleOfRollbackDontRollback.class.getMethod("throwSQLException"), null) {
             @Override
             public Object getTarget() {

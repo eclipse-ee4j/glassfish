@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 
 

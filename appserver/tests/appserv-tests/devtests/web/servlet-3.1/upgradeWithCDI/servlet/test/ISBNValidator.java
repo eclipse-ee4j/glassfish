@@ -16,7 +16,7 @@
 
 package test;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Validate the ISBN number as described in

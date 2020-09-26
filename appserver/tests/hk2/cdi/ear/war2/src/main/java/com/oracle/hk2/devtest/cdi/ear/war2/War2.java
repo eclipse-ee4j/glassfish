@@ -19,11 +19,11 @@ package com.oracle.hk2.devtest.cdi.ear.war2;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.oracle.hk2.devtest.cdi.ear.ejb1.Ejb1HK2Service;
 import com.oracle.hk2.devtest.cdi.ear.ejb2.Ejb2HK2Service;

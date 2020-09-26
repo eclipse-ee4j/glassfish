@@ -19,7 +19,7 @@ import javax.rmi.*;
 
 import java.util.Properties;
 
-import javax.ejb.EJBObject;
+import jakarta.ejb.EJBObject;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

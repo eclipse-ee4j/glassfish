@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-public class CciIndexedRecord implements javax.resource.cci.IndexedRecord {
+public class CciIndexedRecord implements jakarta.resource.cci.IndexedRecord {
 
   private String recordName;
 

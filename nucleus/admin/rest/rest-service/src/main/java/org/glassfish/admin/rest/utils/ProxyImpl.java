@@ -22,15 +22,15 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -75,7 +75,7 @@ public abstract class ProxyImpl implements Proxy {
                     response = resourceBuilder.request(MediaType.APPLICATION_JSON).get(Response.class);
                 }
                 Response.Status status = Response.Status.fromStatusCode(response.getStatus());
-                if (status.getFamily() == javax.ws.rs.core.Response.Status.Family.SUCCESSFUL) {
+                if (status.getFamily() == jakarta.ws.rs.core.Response.Status.Family.SUCCESSFUL) {
                     String jsonDoc = response.readEntity(String.class);
                     Map responseMap = MarshallingUtils.buildMapFromDocument(jsonDoc);
                     Map resultExtraProperties = (Map) responseMap.get("extraProperties");

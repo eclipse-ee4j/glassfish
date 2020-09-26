@@ -16,7 +16,7 @@
 
 package cascadeDelete;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Dec 23, 2002 12:43:06 PM
@@ -24,7 +24,7 @@ import javax.ejb.*;
  * @author mvatkina
  */
 
-public interface LocalB extends javax.ejb.EJBLocalObject {
+public interface LocalB extends jakarta.ejb.EJBLocalObject {
     
     public java.lang.Integer getId();
     

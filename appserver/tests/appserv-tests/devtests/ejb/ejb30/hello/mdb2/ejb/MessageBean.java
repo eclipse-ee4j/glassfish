@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,39 +16,39 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.mdb2;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.Timeout;
-import javax.ejb.Timer;
-import javax.ejb.TimerService;
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEJBException;
-import javax.ejb.EJB;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
-import javax.ejb.MessageDrivenContext;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Timeout;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.ejb.MessageDrivenContext;
 
 import javax.naming.InitialContext;
 
-import javax.jms.MessageListener;
-import javax.jms.Message;
-import javax.jms.Queue;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueConnection;
-import javax.jms.QueueSession;
-import javax.jms.QueueSender;
-import javax.jms.TextMessage;
-import javax.jms.Session;
-import javax.transaction.TransactionManager;
-import javax.transaction.Status;
-import javax.annotation.Resource;
+import jakarta.jms.MessageListener;
+import jakarta.jms.Message;
+import jakarta.jms.Queue;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.QueueSession;
+import jakarta.jms.QueueSender;
+import jakarta.jms.TextMessage;
+import jakarta.jms.Session;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Status;
+import jakarta.annotation.Resource;
 
 import java.util.Collection;
 
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 @MessageDriven(messageListenerInterface=MessageListener.class) 
-public class MessageBean implements javax.ejb.MessageDrivenBean {
+public class MessageBean implements jakarta.ejb.MessageDrivenBean {
 
     @EJB(name="hello1") private Hello1 hello1;
     @EJB private Hello2 hello2;
@@ -56,8 +56,8 @@ public class MessageBean implements javax.ejb.MessageDrivenBean {
     boolean onMessageInterceptorCalled = false;
     boolean timeoutInterceptorCalled = false;
 
-    @Resource javax.ejb.MessageDrivenContext ctx;
-    @Resource javax.ejb.TimerService injectedTimerService;
+    @Resource jakarta.ejb.MessageDrivenContext ctx;
+    @Resource jakarta.ejb.TimerService injectedTimerService;
 
     @Resource(name="jms/MyQueueConnectionFactory") 
         QueueConnectionFactory qcFactory;
@@ -94,7 +94,7 @@ public class MessageBean implements javax.ejb.MessageDrivenBean {
     }
 
     @Resource
-    private void setMDC(javax.ejb.MessageDrivenContext context) {
+    private void setMDC(jakarta.ejb.MessageDrivenContext context) {
 
         try {
             context.getTimerService();
@@ -107,7 +107,7 @@ public class MessageBean implements javax.ejb.MessageDrivenBean {
 
     }
 
-    public void setMessageDrivenContext(javax.ejb.MessageDrivenContext mdc) {
+    public void setMessageDrivenContext(jakarta.ejb.MessageDrivenContext mdc) {
         System.out.println("In MDB:setMessageDrivenContext");
     }
 
@@ -220,7 +220,7 @@ public class MessageBean implements javax.ejb.MessageDrivenBean {
     }
 
 
-    @Timeout private void timeout(javax.ejb.Timer t) {
+    @Timeout private void timeout(jakarta.ejb.Timer t) {
 
         QueueConnection connection = null;        
 

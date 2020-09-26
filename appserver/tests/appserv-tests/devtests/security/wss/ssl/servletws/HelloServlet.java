@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.security.wss.ssl.servletws;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @WebService(targetNamespace="http://servletws.ssl.wss.security.s1asdev.sun.com", serviceName="WssSslServletService")
 public class HelloServlet {

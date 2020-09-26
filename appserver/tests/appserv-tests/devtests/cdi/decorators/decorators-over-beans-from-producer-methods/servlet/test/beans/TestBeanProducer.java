@@ -16,9 +16,9 @@
 
 package test.beans;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.New;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.New;
+import jakarta.enterprise.inject.Produces;
 
 public class TestBeanProducer {
 

@@ -17,8 +17,8 @@
 package org.glassfish.tests.webapi;
 
 import java.io.PrintStream;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 public final class TestListener
   implements ServletContextListener

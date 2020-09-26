@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.*;
-import javax.annotation.*;
-import javax.annotation.security.*;
+import jakarta.ejb.*;
+import jakarta.annotation.*;
+import jakarta.annotation.security.*;
 import org.omg.CORBA.ORB;
 import java.util.concurrent.*;
 

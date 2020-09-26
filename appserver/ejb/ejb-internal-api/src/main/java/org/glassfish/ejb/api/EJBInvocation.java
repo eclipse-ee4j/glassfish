@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,7 @@ package org.glassfish.ejb.api;
 
 
 import java.lang.reflect.Method;
-import javax.ejb.EJBContext;
-import javax.xml.rpc.handler.MessageContext;
+import jakarta.ejb.EJBContext;
 
 /**
  * This interface provides access to the exported portions of the
@@ -81,23 +80,6 @@ public interface EJBInvocation {
     * @return true if the SecurityManager reports that the caller is in role
     */
    public boolean isCallerInRole(String role);
-
-    /**
-     * Used by JAXRPC pre/postHandler classes
-     * @param tie an instance of com.sun.xml.rpc.spi.runtime.Tie
-     */
-    public void setWebServiceTie(Object tie);
-
-
-    /**
-     * Used for setting JAXRPC message context.
-     */
-    public void setMessageContext(MessageContext msgContext);
-
-    /**
-     * @return instance of com.sun.xml.rpc.spi.runtime.Tie
-     */
-    public Object getWebServiceTie();
 
     public void setWebServiceMethod(Method method);
     public Method getWebServiceMethod();

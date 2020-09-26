@@ -16,11 +16,11 @@
 
 package test.ejb.stateful;
 
-import javax.ejb.EJB;
-import javax.ejb.Remote;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
 
 import test.ejb.stateless.*;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,13 +22,13 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
         <relativePath/>
     </parent>
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>GlassFish Nucleus Parent Project</name>
 
@@ -77,59 +77,84 @@
         <findbugs.common>exclude-common.xml</findbugs.common>
         <findbugs.exclude />
         <findbugs.version>3.0.3</findbugs.version>
-        <findbugs.glassfish.logging.validLoggerPrefixes>javax.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
+        <findbugs.glassfish.logging.validLoggerPrefixes>jakarta.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
+        
+        <!-- Jakarta API Versions -->
+        
+        <!-- Jakarta EL -->
+        <jakarta.el.version>4.0.0</jakarta.el.version>
+        <jakarta.el-api.version>4.0.0</jakarta.el-api.version>
 
-        <glassfish-corba.version>4.2.0</glassfish-corba.version>
-        <stax-api.version>1.0-2</stax-api.version>
-        <slf4j.version>1.7.21</slf4j.version>
-        <javax.validation.osgi.version>2.0.0</javax.validation.osgi.version>
-        <management-api.version>1.1-rev-1</management-api.version>
-        <servlet-api.version>4.0.3</servlet-api.version>
-        <grizzly.version>2.4.4</grizzly.version>
+        <!-- Jakarta Servlet -->
+        <servlet-api.version>5.0.0</servlet-api.version>        
+
+        <!-- Jakarta Validation -->
+        <jakarta.validation.version>3.0.0</jakarta.validation.version>        
+        <hibernate-validator.version>7.0.0.Alpha6</hibernate-validator.version>
+
+        <!-- Jakarta Web Services -->
+        <webservices.version>3.0.0-M3</webservices.version>
+        
+        <!-- Jakarta Inject -->
+        <jakarta.inject-api.version>2.0.0</jakarta.inject-api.version> 
+              
+        <!-- Jakarta XML Binding -->
+        <jakarta.jaxb-api.version>3.0.0</jakarta.jaxb-api.version>
+        <jakarta.jaxb-impl.version>3.0.0-M5</jakarta.jaxb-impl.version>
+        
+        <!-- Jakarta REST -->
+        <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
+        <jax-rs-api.impl.version>3.0.0-M1</jax-rs-api.impl.version>
+        <jersey.version>3.0.0-M6</jersey.version>
+        
+        <!-- Jakarta Mail -->
+        <mail.version>2.0.0</mail.version>
+        
+        <!-- Jakarta Activation -->
+        <activation.version>2.0.0</activation.version>
+        
+        <!-- Jakarta Annotations -->
+        <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>
+
+        <!-- GlassFish Components -->                                   
+        <glassfish-corba.version>4.2.3-RC2</glassfish-corba.version>
+        <grizzly.version>3.0.0-M1</grizzly.version>
         <grizzly.npn.version>1.9</grizzly.npn.version>
-        <jboss.logging.annotation.version>2.1.0.Final</jboss.logging.annotation.version>
-        <!-- Ensure that appserver/pom.xml's javax.validation property is of same value as the one below -->
-        <javax.validation.version>2.0.1.Final</javax.validation.version>
-        <hibernate-validator.version>6.0.10.Final</hibernate-validator.version>
-        <javassist.version>3.22.0-GA</javassist.version>
-        <jakarta.el.version>3.0.3</jakarta.el.version>
-        <jakarta.el-api.version>3.0.2</jakarta.el-api.version>
-        <hk2.version>2.5.0</hk2.version>
-        <hk2.plugin.version>2.5.0</hk2.plugin.version>
-        <jboss.logging.version>3.3.1.Final</jboss.logging.version>
-        <fasterxml.classmate.version>1.3.3</fasterxml.classmate.version>
-        <jsch.version>0.1.56</jsch.version>
-        <pfl.version>4.0.1</pfl.version>
-        <gmbal.version>4.0.0</gmbal.version>
-        <antlr.version>2.7.8</antlr.version>
-        <ant.version>1.10.2</ant.version>
-        <jersey.version>2.28</jersey.version>
-        <jackson.version>2.9.9</jackson.version>
-        <jettison.version>1.3.7</jettison.version>
-        <jaxb-api.version>2.3.2</jaxb-api.version>
-        <jax-rs-api.spec.version>2.1</jax-rs-api.spec.version>
-        <jax-rs-api.impl.version>2.1.5</jax-rs-api.impl.version>
-        <mimepull.version>1.9.11</mimepull.version>
-        <glassfish-management-api.version>3.2.1</glassfish-management-api.version>
-        <asm.version>6.1_ALPHA</asm.version>
+        <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
+        <hk2.version>3.0.0-M2</hk2.version>
+        <hk2.plugin.version>3.0.0-M2</hk2.plugin.version>
+        <pfl.version>4.1.0</pfl.version>
+        <gmbal.version>4.0.2</gmbal.version>   
         <shoal.version>1.6.53</shoal.version>
         <ha-api.version>3.1.12</ha-api.version>
         <glassfishbuild.version>3.2.27</glassfishbuild.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
-        <command-security-plugin.version>1.0.10</command-security-plugin.version>
+        <command-security-plugin.version>1.0.11</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
-        <mail.version>1.6.4</mail.version>
-        <jakarta.annotation-api.version>1.3.4</jakarta.annotation-api.version>
         <copyright-plugin.version>1.50</copyright-plugin.version>
-        <testng.version>6.11</testng.version>
-        <jdk.version>1.7.0-09</jdk.version>
+
+        <!-- 3rd party dependencies -->
+        <stax-api.version>1.0-2</stax-api.version>
+        <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
+        <javassist.version>3.27.0-GA</javassist.version>
+        <jboss.logging.version>3.4.1.Final</jboss.logging.version>
+        <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
+        <jsch.version>0.1.56</jsch.version>
+        <antlr.version>2.7.8</antlr.version>
+        <ant.version>1.10.2</ant.version>
+        <jackson.version>2.11.0</jackson.version>
+        <jettison.version>1.4.1</jettison.version>
+        <mimepull.version>1.9.13</mimepull.version>
+        <asm.version>7.3.1</asm.version>
+
+        <testng.version>7.1.0</testng.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
-        <javaee.version.old>7</javaee.version.old>
-        <javaee.version.new>8</javaee.version.new>
-        <jmockit.version>1.36</jmockit.version>
+        <javaee.version.old>8</javaee.version.old>
+        <javaee.version.new>9</javaee.version.new>
+        <jmockit.version>1.49</jmockit.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
     </properties>
 
@@ -177,7 +202,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.3.4</version>
+                    <version>4.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -226,7 +251,7 @@
                     <version>2.4.3</version>
                     <configuration>
                         <useSystemClassLoader>true</useSystemClassLoader>
-                        <forkMode>none</forkMode>
+                        <forkCount>0</forkCount>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -358,10 +383,10 @@
                         <configuration>
                             <resolutionFuzziness>groupId</resolutionFuzziness>
                             <includes>
-                                <include>javax.ejb</include>
+                                <include>jakarta.ejb</include>
                                 <include>jakarta.transaction</include>
-                                <include>javax.resource</include>
-                                <include>javax.enterprise.concurrent</include>
+                                <include>jakarta.resource</include>
+                                <include>jakarta.enterprise.concurrent</include>
                                 <include>jakarta.ws.rs</include>
                                 <include>javax.xml.registry</include>
                                 <include>jakarta.websocket</include>
@@ -476,7 +501,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>$${artifact.artifactId}.$${artifact.extension}</customClasspathLayout>
+                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
                         </manifest>
                     </archive>
                     <excludes>
@@ -501,8 +526,10 @@
                         <supportedProjectType>glassfish-jar</supportedProjectType>
                         <supportedProjectType>jar</supportedProjectType>
                     </supportedProjectTypes>
+                    <niceManifest>true</niceManifest>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -517,7 +544,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <useSystemClassLoader>true</useSystemClassLoader>
-                    <forkMode>none</forkMode>
+                    <forkCount>0</forkCount>
                 </configuration>
             </plugin>
             <plugin>
@@ -606,11 +633,21 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>${jakarta.inject-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-bom</artifactId>
                 <version>${hk2.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.metro</groupId>
+                <artifactId>webservices-extra-jdk-packages</artifactId>
+                <version>${webservices.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.validator</groupId>
@@ -657,11 +694,6 @@
                 <version>${osgi-resource-locator.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.ws.rs</groupId>
-                <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${jax-rs-api.impl.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.xml.stream</groupId>
                 <artifactId>stax-api</artifactId>
                 <version>${stax-api.version}</version>
@@ -684,52 +716,78 @@
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>osgi.cmpn</artifactId>
-                <version>6.0.0</version>
+                <version>7.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>osgi.annotation</artifactId>
-                <version>6.0.0</version>
+                <version>7.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>osgi.core</artifactId>
-                <version>6.0.0</version>
+                <version>7.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>osgi.enterprise</artifactId>
-                <version>6.0.0</version>
+                <version>7.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
-                <version>5.6.10</version>
+                <version>6.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>4.3.4</version>
+                <version>4.5.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.eventadmin</artifactId>
-                <version>1.4.10</version>
+                <version>1.5.0</version>
             </dependency>
-
+            
             <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-                <version>${jakarta.annotation-api.version}</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
                 <version>${jakarta.el-api.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>jakarta.ws.rs</groupId>
+                <artifactId>jakarta.ws.rs-api</artifactId>
+                <version>${jax-rs-api.impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jakarta.jaxb-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-osgi</artifactId>
+                <version>${jakarta.jaxb-impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>${jakarta.annotation-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
@@ -803,6 +861,11 @@
                 <version>${mail.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.sun.activation</groupId>
+                <artifactId>jakarta.activation</artifactId>
+                <version>${activation.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.glassfish.pfl</groupId>
                 <artifactId>pfl-basic</artifactId>
                 <version>${pfl.version}</version>
@@ -835,7 +898,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13</version>
             </dependency>
             <dependency>
                 <groupId>org.testng</groupId>
@@ -850,7 +913,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.5</version>
+                <version>2.7</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
@@ -860,12 +923,7 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-launcher</artifactId>
-                <version>1.8.2</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.servlet</groupId>
-                <artifactId>jakarta.servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
+                <version>1.10.8</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
@@ -895,7 +953,7 @@
             <dependency>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
-                <version>2.0.4</version>
+                <version>3.3.3</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.annotations</groupId>
@@ -910,33 +968,48 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.gogo.runtime</artifactId>
-                <version>1.0.10</version>
+                <version>1.1.2</version>
             </dependency>
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.gogo.shell</artifactId>
-               <version>1.0.0</version>
+               <version>1.1.2</version>
             </dependency>
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.gogo.command</artifactId>
-               <version>1.0.2</version>
+               <version>1.1.0</version>
             </dependency>
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.fileinstall</artifactId>
-               <version>3.6.4</version>
+               <version>3.6.6</version>
             </dependency>
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.configadmin</artifactId>
-               <version>1.8.16</version>
+               <version>1.9.16</version>
             </dependency>
+            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that.  
+                 Since Felix Core doesn't export these packages, we have to deploy them
+                 together with Felix SCR.
+            -->
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.scr</artifactId>
-               <version>2.0.12</version>
+               <version>2.1.20</version>
             </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.util.promise</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.util.function</artifactId>
+                <version>1.1.0</version>
+            </dependency>
+            
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.bundlerepository</artifactId>
@@ -951,11 +1024,31 @@
             <dependency>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8</version>
+                <version>3.2.0</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.external</groupId>
-                <artifactId>asm-all</artifactId>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-analysis</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-util</artifactId>
                 <version>${asm.version}</version>
             </dependency>
             <dependency>
@@ -964,9 +1057,9 @@
                 <version>${javassist.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${javax.validation.version}</version>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${jakarta.validation.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

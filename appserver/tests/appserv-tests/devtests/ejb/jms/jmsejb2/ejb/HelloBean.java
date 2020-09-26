@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,15 +16,12 @@
 
 package com.sun.s1asdev.ejb.jms.jmsejb2;
 
-import java.util.Enumeration;
-import java.io.Serializable;
 import java.rmi.RemoteException; 
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
 import javax.naming.*;
-import javax.jms.*;
-import javax.transaction.UserTransaction;
+import jakarta.jms.*;
 
 public class HelloBean implements SessionBean {
     private String str;

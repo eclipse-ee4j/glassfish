@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>org.glassfish.main.tests</groupId>
@@ -104,7 +104,7 @@
                     <pattern>appserv-tests/devtests/admin/cli/mac</pattern>
                     <pattern>appserv-tests/devtests/admin/cli/resources/ssh/identity</pattern>
                     <pattern>appserv-tests/devtests/security/web-mutual-ssl/certificate/testcert1.p12</pattern>
-                    <pattern>appserv-tests/devtests/web/servlet-3.0/servletContainerInitializerAddRestrictedServletContextListener/descriptor/services/javax.servlet.ServletContainerInitializer</pattern>
+                    <pattern>appserv-tests/devtests/web/servlet-3.0/servletContainerInitializerAddRestrictedServletContextListener/descriptor/services/jakarta.servlet.ServletContainerInitializer</pattern>
                     <pattern>appserv-tests/devtests/jdbc/JdbcCommon.properties</pattern> 
 		    <pattern>appserv-tests/devtests/connector/testdb</pattern>
 		    <pattern>appserv-tests/devtests/connector/connector1.5/ra/src/${admin.password.file}</pattern>

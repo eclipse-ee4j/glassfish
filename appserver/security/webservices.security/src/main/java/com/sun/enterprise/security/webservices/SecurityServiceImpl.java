@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,26 +19,20 @@ package com.sun.enterprise.security.webservices;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import com.sun.enterprise.security.jauth.AuthException;
 import com.sun.enterprise.security.web.integration.WebPrincipal;
 import com.sun.web.security.RealmAdapter;
-import com.sun.xml.rpc.spi.runtime.SOAPMessageContext;
-import com.sun.xml.rpc.spi.runtime.SystemHandlerDelegate;
-import com.sun.xml.ws.assembler.ClientPipelineHook;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.handler.HandlerInfo;
-import org.glassfish.webservices.Ejb2RuntimeEndpointInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import org.glassfish.webservices.EjbRuntimeEndpointInfo;
 import org.glassfish.webservices.SecurityService;
 import org.glassfish.webservices.WebServiceContextImpl;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.sun.enterprise.security.SecurityContext;
 import java.security.Principal;
@@ -49,19 +43,14 @@ import org.glassfish.webservices.monitoring.Endpoint;
 import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
-import com.sun.enterprise.security.jauth.ServerAuthContext;
-import com.sun.enterprise.security.jmac.provider.ClientAuthConfig;
 import com.sun.enterprise.security.jmac.provider.ServerAuthConfig;
 import com.sun.enterprise.web.WebModule;
-import com.sun.xml.rpc.spi.runtime.StreamingHandler;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.inject.Inject;
-import javax.security.jacc.PolicyContext;
-import javax.xml.soap.SOAPMessage;
+import jakarta.inject.Inject;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.xml.soap.SOAPMessage;
 
 /**
  *
@@ -169,11 +158,7 @@ public class SecurityServiceImpl implements SecurityService {
             } else {
                 sendAuthenticationEvents(true, hreq.getRequestURI(), webPrincipal);
             }
-            
-            if (epInfo instanceof Ejb2RuntimeEndpointInfo) {
-                // For JAXRPC based EJb endpoints the rest of the steps are not needed
-                return authenticated;
-            }
+
             //Setting if userPrincipal in WSCtxt applies for JAXWS endpoints only
             epInfo.prepareInvocation(false);
             WebServiceContextImpl ctxt = (WebServiceContextImpl) epInfo.getWebServiceContext();
@@ -237,88 +222,6 @@ public class SecurityServiceImpl implements SecurityService {
        PolicyContext.setContextID(null);
     }
 
-
-    public SystemHandlerDelegate getSecurityHandler(WebServiceEndpoint endpoint) {
-
-        if (!endpoint.hasAuthMethod()) {
-            try {
-                ServerAuthConfig config = ServerAuthConfig.getConfig(com.sun.enterprise.security.jauth.AuthConfig.SOAP,
-                        endpoint.getMessageSecurityBinding(),
-                        null);
-                if (config != null) {
-                    return new ServletSystemHandlerDelegate(config, endpoint);
-                }
-            } catch (Exception e) {
-                _logger.log(Level.SEVERE, LogUtils.SERVLET_SEC_CONFIG_FAILURE, e);
-            }
-        }
-        return null;
-    }
-
-    public boolean validateRequest(Object serverAuthConfig, StreamingHandler implementor, SOAPMessageContext context) {
-        ServerAuthConfig authConfig = (ServerAuthConfig) serverAuthConfig;
-        if (authConfig != null) {
-            ServerAuthContext sAC = authConfig.getAuthContext((StreamingHandler) implementor, context.getMessage());
-            req.set(new WeakReference<SOAPMessage>(context.getMessage()));
-            if (sAC != null) {
-                try {
-                    return WebServiceSecurity.validateRequest(context, sAC);
-                } catch (AuthException ex) {
-                    _logger.log(Level.SEVERE, LogUtils.EXCEPTION_THROWN, ex);
-                    if (req.get() != null) {
-                        req.get().clear();
-                        req.set(null);
-                    }
-                    throw new RuntimeException(ex);
-                }
-            }
-        }
-        return true;
-    }
-
-    public void secureResponse(Object serverAuthConfig, StreamingHandler implementor,SOAPMessageContext msgContext) {
-        if (serverAuthConfig != null) {
-            ServerAuthConfig config = (ServerAuthConfig)serverAuthConfig;
-            SOAPMessage reqmsg = (req.get() != null) ? req.get().get() : msgContext.getMessage();
-            try{
-                ServerAuthContext sAC = config.getAuthContext(implementor, reqmsg);
-                if (sAC != null) {
-                    try {
-                        WebServiceSecurity.secureResponse(msgContext, sAC);
-                    } catch (AuthException ex) {
-                        _logger.log(Level.SEVERE, LogUtils.EXCEPTION_THROWN, ex);
-                        throw new RuntimeException(ex);
-                    }
-                }
-            }finally{
-                if(req.get() != null){
-                    req.get().clear();
-                    req.set(null);
-                }
-            }
-
-        }
-    }
-
-    public HandlerInfo getMessageSecurityHandler(MessageSecurityBindingDescriptor binding, QName serviceName) {
-        HandlerInfo rvalue = null;
-        try {
-            ClientAuthConfig config = ClientAuthConfig.getConfig(com.sun.enterprise.security.jauth.AuthConfig.SOAP, binding, null);
-            if (config != null) {
-                // get understood headers from auth module.
-                QName[] headers = config.getMechanisms();
-                Map properties = new HashMap();
-                properties.put(MessageLayerClientHandler.CLIENT_AUTH_CONFIG, config);
-                properties.put(javax.xml.ws.handler.MessageContext.WSDL_SERVICE, serviceName);
-                rvalue = new HandlerInfo(MessageLayerClientHandler.class, properties, headers);
-            }
-
-        } catch (Exception ex) {
-            _logger.log(Level.SEVERE, LogUtils.EXCEPTION_THROWN, ex);
-            throw new RuntimeException(ex);
-        }
-        return rvalue;
-    }
 
     @Override
     public ClientPipelineHook getClientPipelineHook(ServiceReferenceDescriptor ref) {

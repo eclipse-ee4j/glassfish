@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.extension;
 
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.event.Observes;
 
 /**
  * This is a CDI bean which observes an event

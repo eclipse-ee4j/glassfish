@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.ejb.Stateful;
-import javax.annotation.PostConstruct;
-import javax.annotation.sql.*;
+import jakarta.ejb.Stateful;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.sql.*;
 import java.sql.*;
 import javax.sql.*;
 import javax.naming.*;

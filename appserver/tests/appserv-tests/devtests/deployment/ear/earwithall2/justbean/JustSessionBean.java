@@ -17,8 +17,8 @@
 package justbean;
 
 import java.rmi.RemoteException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
 
 public class JustSessionBean implements SessionBean {
  

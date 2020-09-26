@@ -17,8 +17,8 @@
 package test;
 
 import java.io.*;
-import javax.annotation.PreDestroy;
-import javax.servlet.*;
+import jakarta.annotation.PreDestroy;
+import jakarta.servlet.*;
 
 public class MyListener implements ServletContextAttributeListener {
 

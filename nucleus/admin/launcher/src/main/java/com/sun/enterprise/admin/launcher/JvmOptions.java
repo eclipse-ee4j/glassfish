@@ -16,14 +16,17 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import java.util.*;
+import static com.sun.enterprise.util.StringUtils.ok;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.StringUtils;
-
-import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
  *
@@ -31,9 +34,15 @@ import static com.sun.enterprise.util.StringUtils.ok;
  */
 class JvmOptions {
 
+    Map<String, String> sysProps = new HashMap<>();
+    Map<String, String> xxProps = new HashMap<>();
+    Map<String, String> xProps = new HashMap<>();
+    Map<String, String> plainProps = new HashMap<>();
+    int osgiPort = -1;
+
     JvmOptions(List<String> options) throws GFLauncherException {
         // We get them from domain.xml as a list of Strings
-        // -Dx=y   -Dxx  -XXfoo -XXgoo=zzz -client  -server
+        // -Dx=y -Dxx -XXfoo -XXgoo=zzz -client -server
         // Issue 4434 -- we might get a jvm-option like this:
         // <jvm-options>"-xxxxxx"</jvm-options> notice the literal double-quotes
 
@@ -42,88 +51,77 @@ class JvmOptions {
 
             if (s.startsWith("-D")) {
                 addSysProp(s);
-            }
-            else if (s.startsWith("-XX")) {
+            } else if (s.startsWith("-XX")) {
                 addXxProp(s);
-            }
-            else if (s.startsWith("-X")) {
+            } else if (s.startsWith("-X")) {
                 addXProp(s);
-            }
-            else if (s.startsWith("-")) {
+            } else if (s.startsWith("-")) {
                 addPlainProp(s);
-            }
-            else // TODO i18n
-            {
+            } else {
                 throw new GFLauncherException("UnknownJvmOptionFormat", s);
             }
         }
+
         filter(); // get rid of forbidden stuff
         setOsgiPort();
     }
 
     @Override
     public String toString() {
-        List<String> ss = toStringArray();
+        List<String> options = toList();
         StringBuilder sb = new StringBuilder();
-        for (String s : ss) {
-            sb.append(s).append('\n');
+        for (String option : options) {
+            sb.append(option).append('\n');
         }
+
         return sb.toString();
     }
 
-    List<String> toStringArray() {
-        List<String> ss = new ArrayList<String>();
-        Iterator<Map.Entry<String, String>> entryIterator = xxProps.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<String, String> entry = entryIterator.next();
+    List<String> toList() {
+        List<String> options = new ArrayList<>();
+        
+        for (Map.Entry<String, String> entry : xxProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
-                ss.add("-XX" + entry.getKey() + "=" + value);
-            }
-            else {
-                ss.add("-XX" + entry.getKey());
+                options.add("-XX" + entry.getKey() + "=" + value);
+            } else {
+                options.add("-XX" + entry.getKey());
             }
         }
-        entryIterator = xProps.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<String, String> entry = entryIterator.next();
+        
+        for (Map.Entry<String, String> entry : xProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
-                ss.add("-X" + entry.getKey() + "=" + value);
-            }
-            else {
-                ss.add("-X" + entry.getKey());
+                options.add("-X" + entry.getKey() + "=" + value);
+            } else {
+                options.add("-X" + entry.getKey());
             }
         }
 
-        entryIterator = plainProps.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<String, String> entry = entryIterator.next();
+        for (Map.Entry<String, String> entry : plainProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
-                ss.add("-" + entry.getKey() + "=" + value);
-            }
-            else {
-                ss.add("-" + entry.getKey());
+                options.add("-" + entry.getKey() + "=" + value);
+            } else {
+                options.add("-" + entry.getKey());
             }
         }
-        entryIterator = sysProps.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<String, String> entry = entryIterator.next();
+        
+        for (Map.Entry<String, String> entry : sysProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
-                ss.add("-D" + entry.getKey() + "=" + value);
-            }
-            else {
-                ss.add("-D" + entry.getKey());
+                options.add("-D" + entry.getKey() + "=" + value);
+            } else {
+                options.add("-D" + entry.getKey());
             }
         }
-        return postProcessOrdering(ss);
+        
+        return postProcessOrdering(options);
     }
 
     Map<String, String> getCombinedMap() {
         // used for resolving tokens
-        Map<String, String> all = new HashMap<String, String>(plainProps);
+        Map<String, String> all = new HashMap<>(plainProps);
         all.putAll(xProps);
         all.putAll(xxProps);
         all.putAll(sysProps);
@@ -172,34 +170,34 @@ class JvmOptions {
         xxProps.remove(":LogFile");
     }
 
-
     private List<String> postProcessOrdering(List<String> unsorted) {
         /*
-         * (1) JVM has one known order dependency. If these 3 are here, then
-         * unlock MUST appear first in the list -XX:+UnlockDiagnosticVMOptions
-         * -XX:+LogVMOutput -XX:LogFile=D:/as/domains/domain1/logs/jvm.log
+         * (1) JVM has one known order dependency. If these 3 are here, then unlock MUST appear first in the list
+         * -XX:+UnlockDiagnosticVMOptions -XX:+LogVMOutput -XX:LogFile=D:/as/domains/domain1/logs/jvm.log
          *
-         * June 2012 http://java.net/jira/browse/GLASSFISH-18777 JFR needs
-         * UnlockCommercialFeatures -- it is also order-dependent. New algorithm
-         * -- put -XX:+Unlock* first
+         * June 2012 http://java.net/jira/browse/GLASSFISH-18777 JFR needs UnlockCommercialFeatures -- it is also
+         * order-dependent. New algorithm -- put -XX:+Unlock* first
          *
-         * (2) TODO Get the name of the instance early. We no longer send in the
-         * instanceRoot as an arg so -- ????
+         * (2) TODO Get the name of the instance early. We no longer send in the instanceRoot as an arg so -- ????
          */
 
-        // go through the list hunting for the magic string.  If such a string is
-        // found then move it to the top.  In June 2012 I changed this to a less
+        // go through the list hunting for the magic string. If such a string is
+        // found then move it to the top. In June 2012 I changed this to a less
         // efficient but much more robust and simple algorithm...
 
-        List<String> sorted = new ArrayList<String>(unsorted.size());
+        List<String> sorted = new ArrayList<>(unsorted.size());
 
-        for (String s : unsorted)
-            if (hasMagic(s))
+        for (String s : unsorted) {
+            if (hasMagic(s)) {
                 sorted.add(s);
+            }
+        }
 
-        for (String s : unsorted)
-            if (!hasMagic(s))
+        for (String s : unsorted) {
+            if (!hasMagic(s)) {
                 sorted.add(s);
+            }
+        }
 
         return sorted;
     }
@@ -210,15 +208,13 @@ class JvmOptions {
     }
 
     /**
-     * Filters out unwanted properties and filters in interested properties that
-     * may need to be present by default in certain environments (OS, vm.vendor)
+     * Filters out unwanted properties and filters in interested properties that may need to be present by default in
+     * certain environments (OS, vm.vendor)
      *
-     * bnevins September 2009 There may be System Properties from V2 that cause
-     * havoc. E.g. the MBean Server sys prop from V2 will be removed by upgrade
-     * code in the server but the server will blow up before it starts with a
-     * CNFE! We need to remove it carefully. I.e. the user may want to set up
-     * their own MBean Server Factory so we just check to see if the value is
-     * identical to the V2 class...
+     * bnevins September 2009 There may be System Properties from V2 that cause havoc. E.g. the MBean Server sys prop from
+     * V2 will be removed by upgrade code in the server but the server will blow up before it starts with a CNFE! We need to
+     * remove it carefully. I.e. the user may want to set up their own MBean Server Factory so we just check to see if the
+     * value is identical to the V2 class...
      *
      */
     private void filter() {
@@ -235,8 +231,9 @@ class JvmOptions {
 
         String val = sysProps.get(key);
 
-        if (val != null && val.startsWith(forbiddenStart) && val.endsWith(forbiddenEnd))
+        if (val != null && val.startsWith(forbiddenStart) && val.endsWith(forbiddenEnd)) {
             sysProps.remove(key);
+        }
 
         if (OS.isDarwin() && System.getProperty("java.vm.vendor").equals("Apple Inc.")) {
             // on Mac OS, unless the property is specified in the domain.xml, we add
@@ -259,21 +256,16 @@ class JvmOptions {
         String s = sysProps.get("osgi.shell.telnet.port");
 
         // not configured
-        if (!ok(s))
+        if (!ok(s)) {
             return;
+        }
 
         try {
             osgiPort = Integer.parseInt(s);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // already handled -- it is already set to -1
         }
     }
-    Map<String, String> sysProps = new HashMap<String, String>();
-    Map<String, String> xxProps = new HashMap<String, String>();
-    Map<String, String> xProps = new HashMap<String, String>();
-    Map<String, String> plainProps = new HashMap<String, String>();
-    int osgiPort = -1;
 
     private static class NameValue {
 
@@ -282,14 +274,14 @@ class JvmOptions {
 
             if (index < 0) {
                 name = s;
-            }
-            else {
+            } else {
                 name = s.substring(0, index);
                 if (index + 1 < s.length()) {
                     value = s.substring(index + 1);
                 }
             }
         }
+
         private String name;
         private String value;
     }

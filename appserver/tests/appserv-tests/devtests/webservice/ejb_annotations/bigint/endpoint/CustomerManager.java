@@ -18,9 +18,9 @@ package endpoint;
 
 import java.math.BigInteger;
 import java.util.*;
-import javax.jws.*;
-import javax.ejb.*;
-import javax.persistence.*;
+import jakarta.jws.*;
+import jakarta.ejb.*;
+import jakarta.persistence.*;
 
 @Stateless
 @WebService

@@ -36,7 +36,7 @@ import java.util.Properties;
 import java.util.Map;
 import java.beans.PropertyVetoException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jvnet.hk2.annotations.Service;
 

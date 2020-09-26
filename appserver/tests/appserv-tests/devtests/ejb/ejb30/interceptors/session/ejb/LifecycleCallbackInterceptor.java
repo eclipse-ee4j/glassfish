@@ -16,14 +16,14 @@
 
 package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 
-import javax.interceptor.InvocationContext;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
-import javax.ejb.PrePassivate;
-import javax.ejb.PostActivate;
-import javax.ejb.EJB;
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.ejb.PrePassivate;
+import jakarta.ejb.PostActivate;
+import jakarta.ejb.EJB;
+import jakarta.annotation.Resource;
+import jakarta.ejb.SessionContext;
 
 public class LifecycleCallbackInterceptor {
 

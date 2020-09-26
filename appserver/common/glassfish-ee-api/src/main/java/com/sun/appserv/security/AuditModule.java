@@ -24,7 +24,7 @@ package com.sun.appserv.security;
 
 import com.sun.enterprise.security.BaseAuditModule;
 import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 /**
  * Base class that should be extended by all classes that wish to provide their
  * own Audit support.

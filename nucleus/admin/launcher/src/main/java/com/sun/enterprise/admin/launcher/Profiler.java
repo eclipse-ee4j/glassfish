@@ -16,19 +16,28 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
-import java.io.*;
-import java.util.*;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.stringToFiles;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * This class wraps the profiler element in java-config
- * Note that the V2 dtd says that there can be generic property elements in the
- * profiler element.  I don't know why anyone would use them -- but if they do I 
- * turn it into a "-D" System Property
+ * This class wraps the profiler element in java-config Note that the V2 dtd says that there can be generic property
+ * elements in the profiler element. I don't know why anyone would use them -- but if they do I turn it into a "-D"
+ * System Property
+ *
  * @author Byron Nevins
  */
 public class Profiler {
+
     Map<String, String> config;
+    private boolean enabled;
     List<String> jvmOptions;
 
     Profiler(Map<String, String> config, List<String> jvmOptions, Map<String, String> sysProps) {
@@ -40,46 +49,44 @@ public class Profiler {
 
     List<String> getJvmOptions() {
         if (!enabled) {
-            return Collections.emptyList();
+            return emptyList();
         }
         return jvmOptions;
     }
 
     Map<String, String> getConfig() {
         if (!enabled) {
-            return Collections.emptyMap();
+            return emptyMap();
         }
         return config;
     }
 
     List<File> getClasspath() {
         if (!enabled) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         String cp = config.get("classpath");
 
-        if (GFLauncherUtils.ok(cp)) {
-            return GFLauncherUtils.stringToFiles(cp);
+        if (ok(cp)) {
+            return stringToFiles(cp);
         }
-        else {
-            return Collections.emptyList();
-        }
+        
+        return emptyList();
     }
 
     List<File> getNativePath() {
         if (!enabled) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         String cp = config.get("native-library-path");
 
-        if (GFLauncherUtils.ok(cp)) {
-            return GFLauncherUtils.stringToFiles(cp);
+        if (ok(cp)) {
+            return stringToFiles(cp);
         }
-        else {
-            return Collections.emptyList();
-        }
+            
+        return emptyList();
     }
 
     boolean isEnabled() {
@@ -87,19 +94,21 @@ public class Profiler {
     }
 
     private List<String> getPropertiesAsJvmOptions(Map<String, String> props) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         Set<Map.Entry<String, String>> entries = props.entrySet();
 
         for (Map.Entry<String, String> entry : entries) {
             String name = entry.getKey();
             String value = entry.getValue();
 
-            if (value != null)
+            if (value != null) {
                 list.add("-D" + name + "=" + value);
-            else
+            } else {
                 list.add("-D" + name);
+            }
         }
+
         return list;
     }
-    private boolean enabled;
+
 }

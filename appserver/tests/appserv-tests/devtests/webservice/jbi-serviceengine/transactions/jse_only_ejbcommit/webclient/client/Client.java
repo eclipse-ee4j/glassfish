@@ -16,18 +16,18 @@
 
 package client;
 
-import javax.annotation.Resource;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.annotation.Resource;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.InitialContext;
-import javax.transaction.UserTransaction;
-import javax.transaction.Status;
+import jakarta.transaction.UserTransaction;
+import jakarta.transaction.Status;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import javax.sql.DataSource;
 
-import javax.xml.ws.*;
+import jakarta.xml.ws.*;
 import endpoint.ejb.*;
 
 public class Client extends HttpServlet {
@@ -37,12 +37,12 @@ public class Client extends HttpServlet {
        @Resource(mappedName="jdbc/__default") private DataSource ds;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws javax.servlet.ServletException {
+		throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws javax.servlet.ServletException {
+              throws jakarta.servlet.ServletException {
             UserTransaction ut = null;
             // Create Table with name CUSTOMER_cm. This name will be used in the EJB
 	    String tableName = "CUSTOMER_cm";

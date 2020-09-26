@@ -17,7 +17,7 @@
 package com.oracle.cdi.cases.devtests.predestroy.lib;
 
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

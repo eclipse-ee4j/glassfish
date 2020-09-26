@@ -16,7 +16,7 @@
 
 package com.oracle.hk2.devtest.cdi.ejb1.scoped;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;

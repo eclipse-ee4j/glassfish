@@ -16,7 +16,7 @@
 
 package org.glassfish.tests.ejb.autoclose;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  * @author Marina Vatkina
@@ -31,7 +31,7 @@ public class SimpleEjb { //implements Simple {
         return "hello";
     }
 
-    @javax.annotation.PreDestroy
+    @jakarta.annotation.PreDestroy
     private void onDestroy() {
         x.add("=====destroyed=====");
     }

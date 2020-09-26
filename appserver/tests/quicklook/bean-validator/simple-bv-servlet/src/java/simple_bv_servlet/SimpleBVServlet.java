@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +16,14 @@
 
 package simple_bv_servlet;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.ValidatorContext;
-import javax.validation.ValidatorFactory;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -75,7 +75,7 @@ public class SimpleBVServlet extends HttpServlet {
         out.print("</p>");
 
         ValidatorContext validatorContext = validatorFactory.usingContext();
-        javax.validation.Validator beanValidator = validatorContext.getValidator();
+        jakarta.validation.Validator beanValidator = validatorContext.getValidator();
 
         out.print("<h1>");
         out.print("Validating person class using validateValue with valid property");
@@ -147,7 +147,7 @@ public class SimpleBVServlet extends HttpServlet {
         out.print("</p>");
 
         ValidatorContext validatorContext = validatorFactory.usingContext();
-        javax.validation.Validator beanValidator = validatorContext.getValidator();
+        jakarta.validation.Validator beanValidator = validatorContext.getValidator();
 
         out.print("<h1>");
         out.print("Validating person class using validateValue with valid property");

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session;
 
-import javax.ejb.Stateful;
-import javax.ejb.RemoteInterface;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.RemoteInterface;
 
 @Stateful
 @RemoteInterface({Sful.class})

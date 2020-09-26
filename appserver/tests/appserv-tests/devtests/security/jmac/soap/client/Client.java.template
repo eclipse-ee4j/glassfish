@@ -18,8 +18,8 @@ package com.sun.s1asdev.security.jmac.soap.client;
 
 import java.util.Map;
 
-import javax.jws.HandlerChain;
-import javax.xml.ws.WebServiceRef;
+import jakarta.jws.HandlerChain;
+import jakarta.xml.ws.WebServiceRef;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

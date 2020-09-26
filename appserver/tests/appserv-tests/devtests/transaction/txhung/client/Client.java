@@ -60,7 +60,7 @@ public class Client {
             try {
                 result = t.testA1(xa);
 		System.out.println("TEST FAILED");
-            } catch (javax.ejb.CreateException e) {
+            } catch (jakarta.ejb.CreateException e) {
                 System.out.println("CreateException");
 		System.out.println("TEST FAILED");
             } catch (Exception e) {
@@ -77,7 +77,7 @@ public class Client {
             try {
                 result = t.testA1(nonxa);
 		System.out.println("TEST FAILED");
-            } catch (javax.ejb.CreateException e) {
+            } catch (jakarta.ejb.CreateException e) {
                 System.out.println("CreateException");
 		System.out.println("TEST FAILED");
             } catch (Exception e) {

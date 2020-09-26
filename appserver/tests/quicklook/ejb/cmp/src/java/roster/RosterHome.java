@@ -17,8 +17,8 @@
 package roster;
 
 import java.io.Serializable;
-import javax.ejb.CreateException;
-import javax.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
 
 public interface RosterHome extends EJBLocalHome {
  

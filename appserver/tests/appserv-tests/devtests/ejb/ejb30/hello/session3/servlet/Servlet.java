@@ -18,27 +18,27 @@ package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
-import javax.ejb.EJB;
-import javax.ejb.EJBs;
-import javax.ejb.EJBException;
-import javax.annotation.Resource;
-import javax.annotation.Resources;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
+import jakarta.ejb.EJBException;
+import jakarta.annotation.Resource;
+import jakarta.annotation.Resources;
 import javax.sql.DataSource;
 import java.sql.Connection;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import org.omg.CORBA.ORB;
 import org.omg.PortableServer.POA;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.EntityManager;
 
 @EJB(name="helloStateless3", beanInterface=Hello.class)
 @EJBs({ @EJB(name="helloStateless4", beanName="HelloEJB",
@@ -201,7 +201,7 @@ public class Servlet extends HttpServlet {
 		sleepFor(10);
 		helloStateful2.ping();
 		throw new EJBException("Did not get ConcurrentAccessException");
-	    } catch (javax.ejb.ConcurrentAccessException conEx) {
+	    } catch (jakarta.ejb.ConcurrentAccessException conEx) {
 		System.out.println("Got expected ConcurrentAccessException");   //Everything is fine
 	    } catch (Throwable th) {
 		throw new EJBException("Got some wierd exception: " + th);

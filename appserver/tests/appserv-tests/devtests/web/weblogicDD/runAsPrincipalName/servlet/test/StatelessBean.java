@@ -16,8 +16,8 @@
 
 package test;
 
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateless;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class StatelessBean {

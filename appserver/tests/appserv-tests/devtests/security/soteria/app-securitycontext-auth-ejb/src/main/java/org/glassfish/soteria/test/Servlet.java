@@ -18,19 +18,19 @@ package org.glassfish.soteria.test;
 
 import org.glassfish.soteria.SecurityContextImpl;
 
-import javax.annotation.security.DeclareRoles;
-import javax.ejb.EJB;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.ejb.EJB;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.credential.CallerOnlyCredential;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
 import static org.glassfish.soteria.Utils.notNull;

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.statementwrapper.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import javax.sql.*;
 import java.sql.*;
@@ -26,7 +26,7 @@ public class SimpleBMPBean
         implements SessionBean {
 
     protected DataSource ds;
-    private transient javax.ejb.SessionContext m_ctx = null;
+    private transient jakarta.ejb.SessionContext m_ctx = null;
 
     public void setSessionContext(SessionContext context) {
 	m_ctx = context;

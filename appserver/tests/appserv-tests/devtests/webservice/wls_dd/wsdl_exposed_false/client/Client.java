@@ -18,7 +18,7 @@ package wls_dd.wsdl_exposed_false.client;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
-import javax.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRef;
 
 /**
  * @author Rama Pulavarthi

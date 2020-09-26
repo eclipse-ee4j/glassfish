@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session5;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
-import javax.annotation.PostConstruct;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.annotation.PostConstruct;
 
 public class MyInterceptor2
 {

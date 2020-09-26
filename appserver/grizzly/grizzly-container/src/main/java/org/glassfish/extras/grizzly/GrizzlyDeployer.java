@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.LinkedList;
 import java.util.logging.Level;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.sun.logging.LogDomains;
 import java.util.ArrayList;

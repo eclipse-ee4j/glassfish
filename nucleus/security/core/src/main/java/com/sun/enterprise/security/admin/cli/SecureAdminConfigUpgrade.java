@@ -52,7 +52,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.config.support.GrizzlyConfigSchemaMigrator;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.api.Globals;
@@ -439,7 +439,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
     private static String CERTIFICATE_DN_PREFIX = "CN=";
 
     private static String CERTIFICATE_DN_SUFFIX =
-        ",OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US";
+        ",OU=GlassFish,O=Eclipse.org Foundation Inc,L=Ottawa,ST=Ontario,C=CA";
 
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 

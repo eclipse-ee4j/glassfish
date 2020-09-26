@@ -29,8 +29,8 @@ import org.glassfish.web.valve.GlassFishValveAdapter;
 import org.glassfish.web.valve.TomcatValveAdapter;
 
 import javax.management.ObjectName;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpUpgradeHandler;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

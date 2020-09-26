@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.security.auth.Subject;
-import javax.security.auth.message.config.*;
-import javax.security.auth.message.AuthStatus;
-import javax.xml.ws.WebServiceException;
+import jakarta.security.auth.message.config.*;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.xml.ws.WebServiceException;
 
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
@@ -41,7 +41,7 @@ import com.sun.xml.ws.api.message.Message;
 
 import com.sun.xml.ws.security.secconv.SecureConversationInitiator;
 import com.sun.xml.ws.security.secconv.WSSecureConversationException;
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 
 /**
  * This pipe is used to do client side security for app server
@@ -121,7 +121,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl
 
 	PacketMessageInfo info= new PacketMapMessageInfo(request,new Packet());
         
-        info.getMap().put(javax.xml.ws.Endpoint.WSDL_SERVICE,
+        info.getMap().put(jakarta.xml.ws.Endpoint.WSDL_SERVICE,
             helper.getProperty(PipeConstants.WSDL_SERVICE));
 
         AuthStatus status = AuthStatus.SEND_SUCCESS;

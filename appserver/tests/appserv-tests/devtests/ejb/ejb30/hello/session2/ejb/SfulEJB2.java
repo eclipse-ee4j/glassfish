@@ -16,23 +16,23 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session2;
 
-import javax.ejb.Stateful;
-import javax.ejb.Remote;
-import javax.ejb.EJB;
-import javax.annotation.PostConstruct;
-import javax.interceptor.Interceptors;
-import javax.ejb.EJBs;
-import javax.ejb.Remove;
-import javax.ejb.SessionSynchronization;
-import javax.annotation.PreDestroy;
-import javax.ejb.EJBException;
-import javax.ejb.SessionContext;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Remote;
+import jakarta.ejb.EJB;
+import jakarta.annotation.PostConstruct;
+import jakarta.interceptor.Interceptors;
+import jakarta.ejb.EJBs;
+import jakarta.ejb.Remove;
+import jakarta.ejb.SessionSynchronization;
+import jakarta.annotation.PreDestroy;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
 import javax.naming.InitialContext;
 
-import javax.annotation.Resource;
-import javax.transaction.UserTransaction;
+import jakarta.annotation.Resource;
+import jakarta.transaction.UserTransaction;
 
 import java.util.Collection;
 import java.util.HashSet;

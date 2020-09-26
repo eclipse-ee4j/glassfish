@@ -193,7 +193,7 @@ public class AdminMain {
         //JDK9 the major verion would be the real major version e.g in case
         // of JDK9 major version is 9.So in that case checking the major version only.
         if (major<9) {
-            if (minor < 6) {
+            if (minor < 8) {
                 System.err.println(strings.get( "OldJdk", "" + minor));
                 return ERROR;
             }

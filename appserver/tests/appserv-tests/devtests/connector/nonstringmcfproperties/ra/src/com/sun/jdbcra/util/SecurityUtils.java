@@ -19,9 +19,9 @@ package com.sun.jdbcra.util;
 import javax.security.auth.Subject;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import javax.resource.spi.security.PasswordCredential;
-import javax.resource.ResourceException;
-import javax.resource.spi.*;
+import jakarta.resource.spi.security.PasswordCredential;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.*;
 import com.sun.jdbcra.spi.ConnectionRequestInfo;
 import java.util.Set;
 import java.util.Iterator;
@@ -56,7 +56,7 @@ public class SecurityUtils {
      * @throws	<code>SecurityException</code>	if access to the <code>Subject</code> instance is denied
      */
     public static PasswordCredential getPasswordCredential(final ManagedConnectionFactory mcf,
-         final Subject subject, javax.resource.spi.ConnectionRequestInfo info) throws ResourceException {
+         final Subject subject, jakarta.resource.spi.ConnectionRequestInfo info) throws ResourceException {
 
 	if (info == null) {
             if (subject == null) {
@@ -77,7 +77,7 @@ public class SecurityUtils {
                         }
                     });
                 if (pc == null) {
-                    throw new javax.resource.spi.SecurityException("No PasswordCredential found");
+                    throw new jakarta.resource.spi.SecurityException("No PasswordCredential found");
                 } else {
                     return pc;
                 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,12 +34,12 @@ public class MethodMapTest {
         java.lang.Object.class,
         MethodMapTest1.class, MethodMapTest2.class, MethodMapTest3.class, 
         MethodMapTest4.class, MethodMapTest3.class, MethodMapTest6.class,
-        MethodMapTest.class, javax.ejb.EJBHome.class, 
-        javax.ejb.EJBObject.class, javax.ejb.EJBLocalObject.class,
-        javax.ejb.EJBLocalHome.class, javax.ejb.SessionBean.class,
-        javax.ejb.EnterpriseBean.class, java.util.Map.class,
-        javax.jms.QueueConnection.class, javax.jms.QueueSession.class,
-        javax.jms.Session.class, java.util.Date.class,
+        MethodMapTest.class, jakarta.ejb.EJBHome.class, 
+        jakarta.ejb.EJBObject.class, jakarta.ejb.EJBLocalObject.class,
+        jakarta.ejb.EJBLocalHome.class, jakarta.ejb.SessionBean.class,
+        jakarta.ejb.EnterpriseBean.class, java.util.Map.class,
+        jakarta.jms.QueueConnection.class, jakarta.jms.QueueSession.class,
+        jakarta.jms.Session.class, java.util.Date.class,
         javax.swing.Action.class, javax.swing.AbstractAction.class,
         javax.swing.JComboBox.class, javax.swing.JTextArea.class        
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -201,13 +201,13 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private String getDefaultInstallRoot() {
         String userDir = System.getProperty("user.home");
-        return new File(userDir, ".glassfish5-embedded").getAbsolutePath();
+        return new File(userDir, ".glassfish6-embedded").getAbsolutePath();
     }
 
     private String getDefaultInstanceRoot() {
         String userDir = System.getProperty("user.home");
         String fs = File.separator;
-        return new File(userDir, ".glassfish5-embedded" + fs + "domains" + fs + "domain1").getAbsolutePath();
+        return new File(userDir, ".glassfish6-embedded" + fs + "domains" + fs + "domain1").getAbsolutePath();
     }
 
     private boolean isOSGiEnv() {

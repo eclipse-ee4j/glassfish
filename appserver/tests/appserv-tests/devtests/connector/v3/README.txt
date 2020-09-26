@@ -67,8 +67,8 @@ svn co https://svn.java.net/svn/glassfish~svn/trunk/v2/appserv-tests/devtests/co
 set environment :
 export APS_HOME=<appserv-tests> directory
 export S1AS_HOME=<GlassFish Installation> directory
-Set CLASSPATH to contain javax.resource.jar.
-export CLASSPATH=$S1AS_HOME/modules/javax.resource.jar:$CLASSPATH
+Set CLASSPATH to contain jakarta.resource.jar.
+export CLASSPATH=$S1AS_HOME/modules/jakarta.resource.jar:$CLASSPATH
 Note: You need install and configure ant manually:
 export ANT_HOME=<your ant home directory>
 export PATH=$ANT_HOME/bin:$PATH 

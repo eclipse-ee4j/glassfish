@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.sfsb.lifecycle.ejb;
 
-import javax.ejb.PostActivate;
+import jakarta.ejb.PostActivate;
 
 public class LifecycleListener {
 

@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.webservice.commit;
 
-import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.ejb.*;
+import jakarta.annotation.Resource;
 
 @Stateful
 public class CommitStatefulBean 

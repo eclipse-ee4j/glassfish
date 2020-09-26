@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,8 +33,8 @@ import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.glassfish.resources.naming.SerializableObjectRefAddr;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import java.util.Collection;
@@ -77,7 +77,7 @@ public class ContextServiceDeployer implements ResourceDeployer {
         ContextServiceConfig config = new ContextServiceConfig(contextServiceRes);
 
         javax.naming.Reference ref= new  javax.naming.Reference(
-                javax.enterprise.concurrent.ContextService.class.getName(),
+                jakarta.enterprise.concurrent.ContextService.class.getName(),
                 "org.glassfish.concurrent.runtime.deployer.ConcurrentObjectFactory",
                 null);
         RefAddr addr = new SerializableObjectRefAddr(ContextServiceConfig.class.getName(), config);

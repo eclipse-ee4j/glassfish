@@ -23,7 +23,7 @@ package com.sun.connector.cciblackbox;
  *
  * @author Sheetal Vartak
  */
-public class CciConnectionSpec implements javax.resource.cci.ConnectionSpec {
+public class CciConnectionSpec implements jakarta.resource.cci.ConnectionSpec {
 
   private String user;
 

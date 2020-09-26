@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2009, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,29 +17,34 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.libpam4j</groupId>
     <artifactId>libpam4j</artifactId>
+
     <name>Java binding for libpam.so</name>
 
     <properties>
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.5.1</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -49,13 +54,12 @@
                         <Embed-Dependency>
                             *;scope=compile;inline=true
                         </Embed-Dependency>
-                        <!-- Export everything from the embedded jar 
-                             in the final bundle 
-                        -->
+                        
+                        <!-- Export everything from the embedded jar except the folder with so libs in the final bundle -->
+                        <Export-Package>!*-*,*;version=${project.version}</Export-Package>
+                        
                         <!-- Exclude unnecessary imports -->
-                        <Export-Package>*;version=${project.version}</Export-Package>
-                        <Import-Package/>
-                        <Private-Package>!*</Private-Package>
+                        <Import-Package />
                     </instructions>
                 </configuration>
                 <executions>
@@ -68,21 +72,6 @@
                     </execution>
                 </executions>
             </plugin>
-       </plugins>
+        </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>4.5.1</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 </project>

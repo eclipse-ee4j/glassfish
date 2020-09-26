@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.slsb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

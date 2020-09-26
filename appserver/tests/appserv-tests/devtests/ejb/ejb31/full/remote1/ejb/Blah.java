@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 public class Blah {
 

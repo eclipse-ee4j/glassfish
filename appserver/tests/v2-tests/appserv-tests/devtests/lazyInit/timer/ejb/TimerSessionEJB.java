@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,26 +17,24 @@
 package com.sun.s1asdev.ejb.timer.restore;
 
 import java.util.Iterator;
-import java.util.Collection;
 import java.util.Date;
 
-import javax.ejb.TimedObject;
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
-import javax.ejb.TimerService;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.jms.Session;
+import jakarta.ejb.TimedObject;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerHandle;
+import jakarta.ejb.TimerService;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.EJBException;
+import jakarta.jms.Session;
 import java.rmi.RemoteException;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueConnection;
-import javax.jms.Queue;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.Queue;
+import jakarta.jms.QueueSender;
+import jakarta.jms.QueueSession;
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
 import javax.naming.*;
 
 import com.sun.ejb.containers.TimerBean;

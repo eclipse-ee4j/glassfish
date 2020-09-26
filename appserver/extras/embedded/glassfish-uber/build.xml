@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,17 +22,17 @@
     <target name="all">
         <taskdef name="unjar" classname="org.jvnet.maven.plugin.antrun.UnJarTask"/>
         <unjar dest="target/classes/modules/@filebasename@_jar">
-            <fileset dir="target/module_jars/glassfish5/glassfish/modules">
+            <fileset dir="target/module_jars/glassfish6/glassfish/modules">
                 <include name="*.jar"/>
             </fileset>
         </unjar>
         <unjar dest="target/classes/modules/autostart/@filebasename@_jar">
-            <fileset dir="target/module_jars/glassfish5/glassfish/modules/autostart">
+            <fileset dir="target/module_jars/glassfish6/glassfish/modules/autostart">
                 <include name="*.jar"/>
             </fileset>
         </unjar>
         <unjar dest="target/classes/modules/endorsed/@filebasename@_jar">
-            <fileset dir="target/module_jars/glassfish5/glassfish/modules/endorsed">
+            <fileset dir="target/module_jars/glassfish6/glassfish/modules/endorsed">
                 <include name="*.jar"/>
             </fileset>
         </unjar>

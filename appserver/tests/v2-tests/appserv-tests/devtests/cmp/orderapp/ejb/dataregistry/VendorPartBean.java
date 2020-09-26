@@ -16,7 +16,7 @@
 
 package dataregistry;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 
 public abstract class VendorPartBean implements EntityBean {

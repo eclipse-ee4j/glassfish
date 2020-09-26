@@ -30,7 +30,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.GlassfishNamingManager;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.naming.NamingException;
@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.ManagedBean;
+import jakarta.annotation.ManagedBean;
 import java.lang.reflect.Constructor;
 import org.glassfish.api.admin.ProcessEnvironment;
 

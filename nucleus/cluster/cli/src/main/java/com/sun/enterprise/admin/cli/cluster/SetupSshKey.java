@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.logging.Level;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 import org.jvnet.hk2.annotations.Service;

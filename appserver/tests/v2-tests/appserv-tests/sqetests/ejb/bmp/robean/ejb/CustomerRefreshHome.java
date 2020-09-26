@@ -17,9 +17,9 @@
 package samples.ejb.bmp.robean.ejb;
 
 import java.rmi.RemoteException;
-import javax.ejb.FinderException;
+import jakarta.ejb.FinderException;
 
-public interface CustomerRefreshHome extends javax.ejb.EJBHome {
+public interface CustomerRefreshHome extends jakarta.ejb.EJBHome {
     public CustomerRefresh findByPrimaryKey(String SSN) throws FinderException, RemoteException; 
 }
 

@@ -24,9 +24,9 @@ import org.glassfish.api.admin.ServerEnvironment;
 import com.sun.enterprise.config.serverbeans.Module;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Service
 @Singleton

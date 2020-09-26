@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,26 +16,24 @@
 
 package org.glassfish.webservices;
 
-import org.glassfish.webservices.monitoring.*;
-
-import javax.xml.namespace.QName;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.http.HTTPBinding;
-
-import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.api.message.Message;
-import com.sun.xml.ws.api.pipe.PipeCloner;
-import com.sun.xml.ws.api.message.Packet;
-import com.sun.xml.ws.api.model.SEIModel;
-import com.sun.xml.ws.api.model.JavaMethod;
-import com.sun.xml.ws.api.model.wsdl.WSDLPort;
-import com.sun.xml.ws.api.server.WSEndpoint;
-import com.sun.xml.ws.api.pipe.ServerPipeAssemblerContext;
+import org.glassfish.webservices.monitoring.EndpointImpl;
+import org.glassfish.webservices.monitoring.HttpResponseInfoImpl;
+import org.glassfish.webservices.monitoring.JAXWSEndpointImpl;
+import org.glassfish.webservices.monitoring.ThreadLocalInfo;
+import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;
-
+import com.sun.xml.ws.api.message.Packet;
+import com.sun.xml.ws.api.model.SEIModel;
+import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.ws.api.pipe.Pipe;
+import com.sun.xml.ws.api.pipe.PipeCloner;
+import com.sun.xml.ws.api.pipe.ServerPipeAssemblerContext;
 import com.sun.xml.ws.api.pipe.helper.AbstractFilterPipeImpl;
+import com.sun.xml.ws.api.server.WSEndpoint;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * This pipe is used to do app server monitoring
@@ -48,8 +46,7 @@ public class MonitoringPipe extends AbstractFilterPipeImpl {
     private final WebServiceEndpoint endpoint;
     private final WebServiceEngineImpl wsEngine;
 
-    public MonitoringPipe(ServerPipeAssemblerContext ctxt, Pipe tail,
-                          WebServiceEndpoint ep) {
+    public MonitoringPipe(ServerPipeAssemblerContext ctxt, Pipe tail, WebServiceEndpoint ep) {
         super(tail);
         this.endpoint = ep;
         this.seiModel = ctxt.getSEIModel();
@@ -72,36 +69,33 @@ public class MonitoringPipe extends AbstractFilterPipeImpl {
     }
 
     public Packet process(Packet request) {
-        // if it is a JBI request then skip the monitoring logic. This is done 
-        // as HTTPServletRequest/Response is not available when the invocation 
+        // if it is a JBI request then skip the monitoring logic. This is done
+        // as HTTPServletRequest/Response is not available when the invocation
         // is from JavaEE service engine.
 
         String delegateClassName = request.webServiceContextDelegate.getClass().getName();
-        if (delegateClassName.equals("com.sun.enterprise.jbi.serviceengine." +
-                "bridge.transport.NMRServerConnection")) {
+        if (delegateClassName.equals("com.sun.enterprise.jbi.serviceengine." + "bridge.transport.NMRServerConnection")) {
             return next.process(request);
         }
-  
+
         // No monitoring available for restful services
-        if("http://www.w3.org/2004/08/wsdl/http".equals(endpoint.getProtocolBinding())) {
+        if ("http://www.w3.org/2004/08/wsdl/http".equals(endpoint.getProtocolBinding())) {
             return next.process(request);
         }
         SOAPMessageContext ctxt = new SOAPMessageContextImpl(request);
-        HttpServletRequest httpRequest =
-                (HttpServletRequest) request.get(javax.xml.ws.handler.MessageContext.SERVLET_REQUEST);
-        HttpServletResponse httpResponse =
-                (HttpServletResponse) request.get(javax.xml.ws.handler.MessageContext.SERVLET_RESPONSE);
+        HttpServletRequest httpRequest = (HttpServletRequest) request.get(jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST);
+        HttpServletResponse httpResponse = (HttpServletResponse) request.get(jakarta.xml.ws.handler.MessageContext.SERVLET_RESPONSE);
 
-        String messageId=null;
+        String messageId = null;
 
         JAXWSEndpointImpl endpt1;
-        if(endpoint.implementedByWebComponent()) {
-            endpt1 = (JAXWSEndpointImpl)wsEngine.getEndpoint(httpRequest.getServletPath());
+        if (endpoint.implementedByWebComponent()) {
+            endpt1 = (JAXWSEndpointImpl) wsEngine.getEndpoint(httpRequest.getServletPath());
         } else {
-            endpt1 = (JAXWSEndpointImpl)wsEngine.getEndpoint(httpRequest.getRequestURI());
+            endpt1 = (JAXWSEndpointImpl) wsEngine.getEndpoint(httpRequest.getRequestURI());
         }
         messageId = wsEngine.preProcessRequest(endpt1);
-        if (messageId!=null) {
+        if (messageId != null) {
             ctxt.put(EndpointImpl.MESSAGE_ID, messageId);
             ThreadLocalInfo config = new ThreadLocalInfo(messageId, httpRequest);
             wsEngine.getThreadLocal().set(config);
@@ -117,9 +111,8 @@ public class MonitoringPipe extends AbstractFilterPipeImpl {
 
         Packet pipeResponse = next.process(request);
 
-        //Make the response packet available in the MessageContext
-        ((SOAPMessageContextImpl)ctxt).setPacket(pipeResponse);
-
+        // Make the response packet available in the MessageContext
+        ((SOAPMessageContextImpl) ctxt).setPacket(pipeResponse);
 
         try {
             if (endpt1 != null) {
@@ -130,7 +123,7 @@ public class MonitoringPipe extends AbstractFilterPipeImpl {
             // temporary - need to send back SOAP fault message
         }
 
-        if (messageId!=null) {
+        if (messageId != null) {
             HttpResponseInfoImpl info = new HttpResponseInfoImpl(httpResponse);
             wsEngine.postProcessResponse(messageId, info);
         }

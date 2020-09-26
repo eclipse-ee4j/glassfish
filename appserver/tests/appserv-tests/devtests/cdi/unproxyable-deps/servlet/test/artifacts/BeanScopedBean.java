@@ -16,7 +16,7 @@
 
 package test.artifacts;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 //A request-scoped final class(therefore un-proxyable)

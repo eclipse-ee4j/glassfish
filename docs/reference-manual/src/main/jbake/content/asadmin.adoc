@@ -1,7 +1,7 @@
 type=page
 status=published
 title=asadmin
-next=capture-schema.html
+next=debug-asadmin.html
 prev=appclient.html
 ~~~~~~
 asadmin

@@ -16,7 +16,7 @@
 
 //Simple TestBean to test CDI. 
 //This bean implements Serializable as it needs to be placed into a Stateful Bean
-@javax.annotation.ManagedBean
+@jakarta.annotation.ManagedBean
 public class TestManagedBean {
     TestBean tb;
     boolean postConstructCalled = false;
@@ -24,13 +24,13 @@ public class TestManagedBean {
 
     //A Managed Bean needs to have a no-arg constructor
     public TestManagedBean() {}
-    @javax.inject.Inject //Constructor based Injection
+    @jakarta.inject.Inject //Constructor based Injection
     public TestManagedBean(TestBean tb){
         this.tb = tb;
     }
 
 
-    @javax.annotation.PostConstruct
+    @jakarta.annotation.PostConstruct
     public void init(){
         System.out.println("In ManagedBean:: PostConstruct");
         postConstructCalled = true;

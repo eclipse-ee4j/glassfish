@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import servlet_endpoint.ServletHelloService;
 import servlet_endpoint.ServletHello;
@@ -40,7 +40,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class Client {
     
     @Resource
-    static javax.transaction.UserTransaction ut;
+    static jakarta.transaction.UserTransaction ut;
     
     public static final int TIME_OUT = 1000 * 60;
     

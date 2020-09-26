@@ -16,7 +16,7 @@
 
 --%>
 
-${requestScope["javax.servlet.error.request_uri"]}
-${requestScope["javax.servlet.error.status_code"]}
+${requestScope["jakarta.servlet.error.request_uri"]}
+${requestScope["jakarta.servlet.error.status_code"]}
 ${pageContext.request.requestURI}
 ${pageContext.request.requestURL}

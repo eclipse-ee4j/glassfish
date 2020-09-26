@@ -21,16 +21,16 @@ import java.security.cert.X509Certificate;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessageInfo;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.callback.CallerPrincipalCallback;
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.callback.CallerPrincipalCallback;
+import jakarta.security.auth.message.module.ServerAuthModule;
 import javax.security.auth.x500.X500Principal;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class HttpsTestAuthModule implements ServerAuthModule {
 
@@ -63,7 +63,7 @@ public class HttpsTestAuthModule implements ServerAuthModule {
                     (HttpServletRequest) messageInfo.getRequestMessage();
             X509Certificate certs[] =
                     (X509Certificate[]) request.getAttribute(
-                    "javax.servlet.request.X509Certificate");
+                    "jakarta.servlet.request.X509Certificate");
             if (certs == null || certs.length < 1) {
                 System.out.println("javax...certs is null or empty");
                 certs = (X509Certificate[]) request.getAttribute(
@@ -102,6 +102,6 @@ public class HttpsTestAuthModule implements ServerAuthModule {
 
     private boolean isMandatory(MessageInfo messageInfo) {
         return Boolean.valueOf((String) messageInfo.getMap().get(
-                "javax.security.auth.message.MessagePolicy.isMandatory"));
+                "jakarta.security.auth.message.MessagePolicy.isMandatory"));
     }
 }

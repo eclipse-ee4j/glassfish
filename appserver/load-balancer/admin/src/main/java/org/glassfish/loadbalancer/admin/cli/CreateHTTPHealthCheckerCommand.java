@@ -48,7 +48,7 @@ import org.glassfish.api.admin.*;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.config.support.CommandTarget;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * This is a remote command that creates health-checker config for cluster or

@@ -37,7 +37,7 @@ services are ignored. For information about the Update Tool, see
 Administration Guide.
 
 In addition, the as-install`/modules/webservices-osgi.jar` and
-as-install`/modules/endorsed/webservices-api-osgi.jar` files must be in
+as-install`/modules/webservices-api-osgi.jar` files must be in
 the classpath of your web services application. IDEs such as NetBeans
 and Eclipse do this automatically.
 
@@ -225,7 +225,7 @@ com.sun.xml.ws.db.toplink.JAXBContextFactory.ECLIPSELINK_JAXB::
 For example: +
 [source,oac_no_warn]
 ----
-import javax.xml.ws.WebServiceFeature;
+import jakarta.xml.ws.WebServiceFeature;
 import org.jvnet.ws.databinding.DatabindingModeFeature;
 import com.sun.xml.ws.db.toplink.JAXBContextFactory;
 ...
@@ -236,7 +236,7 @@ WebServiceFeature[] features = {new DatabindingModeFeature(JAXBContextFactory.EC
 using the `@DatabindingMode` annotation. For example: +
 [source,oac_no_warn]
 ----
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 import org.jvnet.ws.databinding.DatabindingMode;
 import com.sun.xml.ws.db.toplink.JAXBContextFactory;
 ...

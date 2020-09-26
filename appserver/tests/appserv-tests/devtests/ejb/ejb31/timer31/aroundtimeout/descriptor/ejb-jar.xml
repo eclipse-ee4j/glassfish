@@ -126,7 +126,7 @@
       <method>
          <method-name>eg</method-name>
          <method-params>
-           <method-param>javax.ejb.Timer</method-param>
+           <method-param>jakarta.ejb.Timer</method-param>
          </method-params>
       </method>
     </interceptor-binding>

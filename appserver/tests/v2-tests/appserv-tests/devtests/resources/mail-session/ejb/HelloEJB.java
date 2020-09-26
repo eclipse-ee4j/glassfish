@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session3;
 
-import javax.mail.MailSessionDefinition;
-import javax.mail.MailSessionDefinitions;
-import javax.ejb.Stateless;
+import jakarta.mail.MailSessionDefinition;
+import jakarta.mail.MailSessionDefinitions;
+import jakarta.ejb.Stateless;
 import javax.naming.InitialContext;
 
 

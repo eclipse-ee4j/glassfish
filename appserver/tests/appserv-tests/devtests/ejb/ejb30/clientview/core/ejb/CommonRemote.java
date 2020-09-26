@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.core;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 
 public interface CommonRemote extends EJBObject
@@ -43,9 +43,9 @@ public interface CommonRemote extends EJBObject
     void testException2() throws RemoteException;
 
     // throws some checked exception
-    void testException3() throws javax.ejb.FinderException, RemoteException;
+    void testException3() throws jakarta.ejb.FinderException, RemoteException;
 
-    void testException4() throws javax.ejb.FinderException, RemoteException;
+    void testException4() throws jakarta.ejb.FinderException, RemoteException;
 
 
     void testPassByRef1(int a) throws RemoteException;

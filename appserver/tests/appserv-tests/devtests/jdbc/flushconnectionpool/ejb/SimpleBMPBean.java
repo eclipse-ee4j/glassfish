@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.flushconnectionpool.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.sql.*;
 import java.util.Map;

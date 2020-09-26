@@ -57,7 +57,7 @@ public class Client extends AdminBaseDevTest {
 
     public void prepare() {
         try {
-            asadmin("set-log-levels", "javax.enterprise.system.container.ejb=FINE");
+            asadmin("set-log-levels", "jakarta.enterprise.system.container.ejb=FINE");
             asadmin("create-cluster", CLUSTER_NAME);
             asadmin("create-local-instance", "--cluster", CLUSTER_NAME, CLUSTER_NAME+INSTANCE1_NAME);
             asadmin("create-local-instance", "--cluster", CLUSTER_NAME, CLUSTER_NAME+INSTANCE2_NAME);
@@ -71,10 +71,10 @@ public class Client extends AdminBaseDevTest {
 
     public void deploy(String path) {
         try {
-            asadmin("set-log-levels", "javax.enterprise.system.container.ejb=FINE", "--target", CLUSTER_NAME);
+            asadmin("set-log-levels", "jakarta.enterprise.system.container.ejb=FINE", "--target", CLUSTER_NAME);
             asadmin("deploy", "--target", CLUSTER_NAME, path);
             System.out.println("Deployed " + path);
-            asadmin("set-log-levels", "javax.enterprise.system.container.ejb=INFO", "--target", CLUSTER_NAME);
+            asadmin("set-log-levels", "jakarta.enterprise.system.container.ejb=INFO", "--target", CLUSTER_NAME);
         } catch (Exception e) {
             e.printStackTrace();
         }

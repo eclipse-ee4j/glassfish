@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.sfsb.lifecycle.ejb;
 
-import javax.ejb.EJBLocalHome;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
 
 public interface SFSBLocalHome
     extends EJBLocalHome

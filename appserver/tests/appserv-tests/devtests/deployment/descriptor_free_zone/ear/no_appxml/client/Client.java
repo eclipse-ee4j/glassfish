@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.deployment.noappxml.client;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import com.sun.s1asdev.deployment.noappxml.ejb.Sful;
 import com.sun.s1asdev.deployment.noappxml.ejb.Sless;
 

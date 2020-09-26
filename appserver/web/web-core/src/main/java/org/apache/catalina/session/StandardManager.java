@@ -25,7 +25,7 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.util.LifecycleSupport;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
@@ -121,7 +121,7 @@ public class StandardManager
      * A <code>null</code> value indicates that no persistence is desired.
      * If this pathname is relative, it will be resolved against the
      * temporary working directory provided by our context, available via
-     * the <code>javax.servlet.context.tempdir</code> context attribute.
+     * the <code>jakarta.servlet.context.tempdir</code> context attribute.
      */
     private String pathname = "SESSIONS.ser";
 

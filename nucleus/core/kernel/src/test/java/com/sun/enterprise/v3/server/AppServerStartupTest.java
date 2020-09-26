@@ -55,9 +55,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 import java.util.Collections;
 import java.util.HashMap;

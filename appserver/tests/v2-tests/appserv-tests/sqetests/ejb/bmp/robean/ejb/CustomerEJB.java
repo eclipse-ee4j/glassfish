@@ -16,12 +16,12 @@
 
 package samples.ejb.bmp.robean.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.*;
 import java.sql.*;
 import javax.sql.DataSource;
 
-public class CustomerEJB implements javax.ejb.EntityBean {
+public class CustomerEJB implements jakarta.ejb.EntityBean {
     //database fields
     double balance;
     EntityContext ejbContext = null;

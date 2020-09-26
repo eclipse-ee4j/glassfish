@@ -30,8 +30,8 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * For non-verbose mode:

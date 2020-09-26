@@ -16,7 +16,7 @@
 
 package sqetests.ejb.stateful.passivate.ejb.stateful;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 /**
  * Created Oct 17, 2003 4:06:59 PM
@@ -24,7 +24,7 @@ import javax.ejb.*;
  * @author dsingh
  */
 
-public interface SessionLocal extends javax.ejb.EJBLocalObject {
+public interface SessionLocal extends jakarta.ejb.EJBLocalObject {
     
 }
 

@@ -18,11 +18,11 @@ package com.sun.s1asdev.jdbc.dmmcf.ejb;
 
 import javax.naming.*;
 import javax.sql.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.sql.*;
 import java.util.Set;
 import java.util.HashSet;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 
 public class SimpleSessionBean implements SessionBean {
 

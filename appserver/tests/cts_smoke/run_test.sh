@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 #
-# Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -223,6 +223,7 @@ run_test_id(){
 }
 
 post_test_run(){
+  : # empty block not allowed in Bash
 }
 
 list_test_ids(){
@@ -260,7 +261,7 @@ cts_to_junit(){
 
 delete_workspace(){
   printf "\n%s \n\n" "===== DELETE WORKSPACE ====="
-    rm -rf ${WORKSPACE}/glassfish5 > /dev/null || true
+    rm -rf ${WORKSPACE}/glassfish6 > /dev/null || true
     rm -rf ${WORKSPACE}/servlettck > /dev/null  || true
     rm ${WORKSPACE}/servlettck.zip > /dev/null || true
     rm -rf ${WORKSPACE}/javaee-smoke > /dev/null || true

@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import javax.naming.InitialContext;
-import javax.annotation.*;
+import jakarta.annotation.*;
 
 @Singleton
 @Startup

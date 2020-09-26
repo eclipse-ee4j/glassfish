@@ -18,7 +18,7 @@ package samples.ejb.bmp.robean.ejb;
 
 import java.rmi.RemoteException;
 
-public interface Address extends javax.ejb.EJBObject {
+public interface Address extends jakarta.ejb.EJBObject {
     public String getName() throws RemoteException;
 
     public String getAddress() throws RemoteException;

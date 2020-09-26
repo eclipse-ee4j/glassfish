@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.persistence.context;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @NamedQuery(name="findPersonByName",

@@ -198,7 +198,6 @@ public class ASURLClassLoader
             doneCalled = true;
 
             // closes the jar handles and sets the url entries to null
-            int i = 0;
             for (URLEntry u : this.urlSet) {
                 if (u.zip != null) {
                     try {
@@ -214,7 +213,6 @@ public class ASURLClassLoader
                     u.table = null;
                 }
                 u = null;
-                i++;
             }
 
             closeOpenStreams();
@@ -509,18 +507,15 @@ public class ASURLClassLoader
             return null;
         }
 
-        int i = 0;
         synchronized(this) {
             for (final URLEntry u : this.urlSet) {
 
                 if (!u.hasItem(name)) {
-                    i++;
                     continue;
                 }
 
                 final URL url = findResource0(u, name);
                 if (url != null) return url;
-                i++;
             }
         }
 
@@ -812,10 +807,8 @@ public class ASURLClassLoader
         // search thru the JARs for a file of the form java/lang/Object.class
         String entryName = name.replace('.', '/') + ".class";
 
-        int i = 0;
         for (URLEntry u : this.urlSet) {
             if (!u.hasItem(entryName)) {
-                i++;
                 continue;
             }
 
@@ -832,7 +825,6 @@ public class ASURLClassLoader
                     return new ClassData(result, pdWithPemissions);
                 }
             }
-            i++;
         }
 
         // add to the not found classes list
@@ -850,7 +842,7 @@ public class ASURLClassLoader
      */
     private byte[] getClassData(InputStream istream) throws IOException {
 
-        BufferedInputStream bstream = new BufferedInputStream(istream);;
+        BufferedInputStream bstream = new BufferedInputStream(istream);
         byte[] buf = new byte[4096];
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int num = 0;

@@ -22,11 +22,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 
 
-@javax.enterprise.inject.Stereotype
+@jakarta.enterprise.inject.Stereotype
 @RequestScoped
 @Transactional(requiresNew=true)
 @Retention(RetentionPolicy.RUNTIME)

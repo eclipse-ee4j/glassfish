@@ -17,9 +17,9 @@
 package test;
 
 import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.annotation.PreDestroy;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.annotation.PreDestroy;
 
 public class TestServlet extends HttpServlet {
 

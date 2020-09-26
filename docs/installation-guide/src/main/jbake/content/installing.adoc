@@ -58,7 +58,7 @@ You are receiving a copy of the Javassist (Java Programming Assistant)
 Library in source form at
 `https://github.com/jboss-javassist/javassist/archive/rel_3_22_0_cr2.zip`
 and in object code form in the jar file
-`glassfish5/glassfish/modules/javassist.jar` included with the
+`glassfish6/glassfish/modules/javassist.jar` included with the
 distribution. The terms of the Oracle license do NOT apply to the
 Javassist (Java Programming Assistant) program; it is licensed under the
 following license, separately from the Oracle programs you receive. If
@@ -869,8 +869,8 @@ glassfish-5.0.zip
 ----
 * Windows systems: +
 Unzip using your favorite file compression utility. +
-Eclipse GlassFish Server 5.1 is extracted into a new `glassfish5` directory
-under your current directory. This `glassfish5` directory is referred to
+Eclipse GlassFish Server 5.1 is extracted into a new `glassfish6` directory
+under your current directory. This `glassfish6` directory is referred to
 throughout the GlassFish Server documentation set as as-install-parent.
 4.  Start GlassFish Server using the instructions in the
 link:../quick-start-guide/toc.html#GSQSG[GlassFish Server Open Source Edition Quick Start Guide]. +

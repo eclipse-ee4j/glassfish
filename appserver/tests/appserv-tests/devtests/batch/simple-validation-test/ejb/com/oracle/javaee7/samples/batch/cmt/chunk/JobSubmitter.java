@@ -10,7 +10,7 @@
 
 package com.oracle.javaee7.samples.batch.cmt.chunk;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 import java.util.Collection;
 import java.util.Map;
 import java.util.List;

@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import test.beans.qualifiers.Preferred;
 import test.beans.stereotypes.TxSecureStereotype;

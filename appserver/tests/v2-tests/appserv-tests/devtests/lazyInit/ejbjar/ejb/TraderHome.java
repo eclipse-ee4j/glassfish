@@ -17,8 +17,8 @@
 package examples.sfsb;
 
 import java.rmi.RemoteException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBHome;
 
 public interface TraderHome extends EJBHome {
 

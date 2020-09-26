@@ -16,7 +16,7 @@
 
 package connector;
 
-import javax.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConfigProperty;
 
 //@README : test to make sure that administed objects defined in ra.xml (no @AdministeredObject annotation)
 // are considered for @ConfigProperty annotation

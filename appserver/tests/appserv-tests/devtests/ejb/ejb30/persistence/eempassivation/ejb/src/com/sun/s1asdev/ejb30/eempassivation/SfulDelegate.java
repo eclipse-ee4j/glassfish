@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb30.eempassivation;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 @Local
 public interface SfulDelegate {

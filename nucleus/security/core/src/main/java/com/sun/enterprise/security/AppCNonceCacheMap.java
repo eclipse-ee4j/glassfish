@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 

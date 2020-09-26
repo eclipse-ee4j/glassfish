@@ -16,7 +16,7 @@
 
 package com.tests;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 
 @Tester @Interceptor
 public class TestAroundInvokeInterceptor {

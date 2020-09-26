@@ -17,7 +17,7 @@
 package com.sun.s1peqe.ejb.cmp.roster.ejb;
 
 import java.util.*;
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface LocalTeam extends EJBLocalObject {
     public String getTeamId();

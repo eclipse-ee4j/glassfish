@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -150,8 +150,8 @@ public interface TagNames {
     public static final String PERSISTENCE_UNIT_REF = "persistence-unit-ref";
     public static final String PERSISTENCE_UNIT_REF_NAME = "persistence-unit-ref-name";
 
-    public static final String JMS_QUEUE_DEST_TYPE = "javax.jms.Queue";
-    public static final String JMS_TOPIC_DEST_TYPE = "javax.jms.Topic";
+    public static final String JMS_QUEUE_DEST_TYPE = "jakarta.jms.Queue";
+    public static final String JMS_TOPIC_DEST_TYPE = "jakarta.jms.Topic";
 
     public static final String RESOURCE_TYPE = "res-type";
     public static final String RESOURCE_AUTHORIZATION = "res-auth";
@@ -202,6 +202,7 @@ public interface TagNames {
     public static final String J2EE_NAMESPACE = "http://java.sun.com/xml/ns/j2ee";
     public static final String JAVAEE_DEFAULTNAMESPACEPREFIX = "javaee";
     public static final String JAVAEE_NAMESPACE = "http://xmlns.jcp.org/xml/ns/javaee";
+    public static final String JAKARTAEE_NAMESPACE = "https://jakarta.ee/xml/ns/jakartaee";
     public static final String XML_NAMESPACE = "http://www.w3.org/XML/1998/namespace";
 
     public static final String WLS_WEB_APP_NAMESPACE = "http://xmlns.oracle.com/weblogic/weblogic-web-app";

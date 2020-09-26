@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,23 +35,18 @@ import java.util.Set;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.ConcurrentAccessException;
-import javax.ejb.ConcurrentAccessTimeoutException;
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
-import javax.ejb.IllegalLoopbackException;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.RemoveException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionSynchronization;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.SynchronizationType;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.SynchronizationType;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
 
 import com.sun.appserv.util.cache.CacheListener;
 import com.sun.ejb.ComponentContext;
@@ -85,7 +79,6 @@ import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.util.Utility;
-import com.sun.logging.LogDomains;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -101,7 +94,14 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 
 import static com.sun.ejb.containers.EJBContextImpl.BeanState;
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import static javax.persistence.SynchronizationType.*;
+import jakarta.ejb.ConcurrentAccessException;
+import jakarta.ejb.ConcurrentAccessTimeoutException;
+import jakarta.ejb.IllegalLoopbackException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionSynchronization;
+import java.util.HashMap;
+import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
+import org.glassfish.ejb.LogFacade;
 
 /**
  * This class provides container functionality specific to stateful
@@ -1171,11 +1171,11 @@ public final class StatefulSessionContainer
         ejbInv.method = removeMethod;
 
         // Method must be a remove method defined on one of :
-        // javax.ejb.EJBHome, javax.ejb.EJBObject, javax.ejb.EJBLocalHome,
-        // javax.ejb.EJBLocalObject
+        // jakarta.ejb.EJBHome, jakarta.ejb.EJBObject, jakarta.ejb.EJBLocalHome,
+        // jakarta.ejb.EJBLocalObject
         Class declaringClass = removeMethod.getDeclaringClass();
-        ejbInv.isHome = ((declaringClass == javax.ejb.EJBHome.class) ||
-                (declaringClass == javax.ejb.EJBLocalHome.class));
+        ejbInv.isHome = ((declaringClass == jakarta.ejb.EJBHome.class) ||
+                (declaringClass == jakarta.ejb.EJBLocalHome.class));
 
         try {
             preInvoke(ejbInv);
@@ -2014,9 +2014,9 @@ public final class StatefulSessionContainer
                         getContainerSync(context.getTransaction());
                 cSync.registerForTxCheckpoint(
                         (SessionContextImpl) context);
-            } catch (javax.transaction.RollbackException rollEx) {
+            } catch (jakarta.transaction.RollbackException rollEx) {
                 _logger.log(Level.WARNING, CANNOT_REGISTER_BEAN_FOR_CHECKPOINTING, rollEx);
-            } catch (javax.transaction.SystemException sysEx) {
+            } catch (jakarta.transaction.SystemException sysEx) {
                 _logger.log(Level.WARNING, CANNOT_REGISTER_BEAN_FOR_CHECKPOINTING, sysEx);
             }
         }

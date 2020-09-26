@@ -28,8 +28,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import org.glassfish.api.logging.LogLevel;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;
@@ -156,7 +156,7 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
     private HealthHistory hHistory;
 
     @LoggerInfo(subsystem = "CLSTR", description="Group Management Service Adapter Logger", publish=true)
-    private static final String GMS_LOGGER_NAME = "javax.enterprise.cluster.gms";
+    private static final String GMS_LOGGER_NAME = "jakarta.enterprise.cluster.gms";
 
 
     @LogMessagesResourceBundle

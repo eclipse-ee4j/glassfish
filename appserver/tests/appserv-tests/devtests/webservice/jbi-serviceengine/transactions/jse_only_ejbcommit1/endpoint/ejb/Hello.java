@@ -16,7 +16,7 @@
 
 package endpoint.ejb;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @WebService(
 targetNamespace="http://endpoint/ejb")

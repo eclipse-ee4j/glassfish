@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,13 @@
  */
 package com.oracle.jms.test;
 
-import javax.annotation.Resource;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
-import javax.jms.*;
-import javax.ejb.*;
-import javax.transaction.UserTransaction;
+import jakarta.annotation.Resource;
+import jakarta.faces.bean.ManagedBean;
+import jakarta.faces.bean.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.jms.*;
+import jakarta.ejb.*;
+import jakarta.transaction.UserTransaction;
 
 /**
  *

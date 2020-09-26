@@ -21,7 +21,7 @@ import org.junit.Assert;
 import org.glassfish.tests.embedded.ejb.SampleEjb;
 import org.glassfish.internal.embedded.*;
 
-import javax.ejb.embeddable.EJBContainer;
+import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.*;
 import java.util.Map;
 import java.util.HashMap;

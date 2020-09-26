@@ -19,8 +19,8 @@ package com.acme;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.ejb.*;
+import jakarta.annotation.Resource;
 
 @Singleton
 public class SgltTimerBean {

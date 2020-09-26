@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.admin.ee.synchronization.api.deployment;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.RemoteException;
 import java.io.IOException;
 import com.sun.enterprise.ee.synchronization.SynchronizationException;

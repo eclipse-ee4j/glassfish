@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.security.wss.roles.ejb;
 
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Local;
-import javax.ejb.Stateful;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.Local;
+import jakarta.ejb.Stateful;
 
 @Stateful
 @Local({SfulLocal.class})

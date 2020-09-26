@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.hello.session4.client;
 import java.io.*;
 import java.util.*;
 import javax.naming.InitialContext;
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 import com.sun.s1asdev.ejb.ejb30.hello.session4.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 

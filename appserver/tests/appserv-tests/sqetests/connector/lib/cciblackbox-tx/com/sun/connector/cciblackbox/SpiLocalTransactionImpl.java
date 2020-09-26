@@ -16,12 +16,12 @@
 
 package com.sun.connector.cciblackbox;
 
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 /**
  * @author Sheetal Vartak
  */
-public class SpiLocalTransactionImpl implements javax.resource.spi.LocalTransaction {
+public class SpiLocalTransactionImpl implements jakarta.resource.spi.LocalTransaction {
 
   private CciManagedConnection mc;
 

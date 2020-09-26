@@ -16,15 +16,15 @@
 
 package com.sun.jdbcra.spi;
 
-import javax.resource.ResourceException;
-import javax.resource.*;
-import javax.resource.spi.*;
-import javax.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.ResourceException;
+import jakarta.resource.*;
+import jakarta.resource.spi.*;
+import jakarta.resource.spi.ConnectionRequestInfo;
 import com.sun.jdbcra.spi.ConnectionManager;
 import com.sun.jdbcra.common.DataSourceSpec;
 import com.sun.jdbcra.common.DataSourceObjectBuilder;
 import com.sun.jdbcra.util.SecurityUtils;
-import javax.resource.spi.security.PasswordCredential;
+import jakarta.resource.spi.security.PasswordCredential;
 import com.sun.jdbcra.spi.ManagedConnectionFactory;
 import com.sun.jdbcra.common.DataSourceSpec;
 import java.util.logging.Logger;
@@ -63,7 +63,7 @@ public class XAManagedConnectionFactory extends ManagedConnectionFactory {
      * @throws	ResourceAllocationException	if there is an error in allocating the 
      *						physical connection
      */
-    public javax.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
+    public jakarta.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
         ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         if(logWriter != null) {
                 logWriter.println("In createManagedConnection");
@@ -79,7 +79,7 @@ public class XAManagedConnectionFactory extends ManagedConnectionFactory {
                 dataSourceObj = (javax.sql.XADataSource) dsObjBuilder.constructDataSourceObject();
             } catch(ClassCastException cce) {
 	        _logger.log(Level.SEVERE, "jdbc.exc_cce", cce);
-                throw new javax.resource.ResourceException(cce.getMessage());
+                throw new jakarta.resource.ResourceException(cce.getMessage());
             }
         }
         

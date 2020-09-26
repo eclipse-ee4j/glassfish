@@ -24,9 +24,9 @@ package components.taglib;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UIComponent;
-import javax.faces.el.ValueBinding;
-import javax.faces.webapp.UIComponentTag;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.el.ValueBinding;
+import jakarta.faces.webapp.UIComponentTag;
 
 
 /**

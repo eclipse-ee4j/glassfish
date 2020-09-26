@@ -21,11 +21,11 @@
 
 package org.glassfish.devtest.ejb31.singleton.multimodule.servlet;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.Local;
-import javax.ejb.Remote;
-import javax.annotation.PostConstruct;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.ejb.Local;
+import jakarta.ejb.Remote;
+import jakarta.annotation.PostConstruct;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;

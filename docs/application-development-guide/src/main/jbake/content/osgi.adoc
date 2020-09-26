@@ -299,14 +299,14 @@ services. Their service mappings are as follows.
 [width="100%",cols="12%,39%,12%,37%",options="header",]
 |=======================================================================
 |JMS Object |Service Interface |Service Properties |Comments
-|JMS Queue destination |`javax.jms.Queue` |`jndi-name` |`jndi-name` is
+|JMS Queue destination |`jakarta.jms.Queue` |`jndi-name` |`jndi-name` is
 set to the JNDI name of the queue
 
-|JMS Topic destination |`javax.jms.Topic` |`jndi-name` |`jndi-name` is
+|JMS Topic destination |`jakarta.jms.Topic` |`jndi-name` |`jndi-name` is
 set to the JNDI name of the topic
 
-|JMS connection factory |`javax.jms.QueueConnectionFactory` or
-`javax.jms.TopicConnectionFactory` or `javax.jms.ConnectionFactory`
+|JMS connection factory |`jakarta.jms.QueueConnectionFactory` or
+`jakarta.jms.TopicConnectionFactory` or `jakarta.jms.ConnectionFactory`
 |`jndi-name` a|
 `jndi-name` is set to the JNDI name of the topic.
 

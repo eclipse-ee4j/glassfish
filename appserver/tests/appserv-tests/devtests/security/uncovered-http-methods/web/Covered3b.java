@@ -16,10 +16,10 @@
 
 package org.glassfish.jacc.test.uncoveredmethods;
 
-import javax.servlet.annotation.HttpConstraint;
-import javax.servlet.annotation.ServletSecurity;
-import javax.servlet.annotation.ServletSecurity.TransportGuarantee;
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
+import jakarta.servlet.annotation.ServletSecurity.TransportGuarantee;
+import jakarta.servlet.annotation.WebServlet;
 
 
 @WebServlet(urlPatterns = {"/Covered3b"})

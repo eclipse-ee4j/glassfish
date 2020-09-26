@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.ee.remote_client;
 
-import javax.ejb.Stateful;
-import javax.ejb.EJB;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.EJB;
 import javax.naming.InitialContext;
 
 import com.sun.s1asdev.ejb.ejb30.ee.remote_sfsb.SfulDriver;

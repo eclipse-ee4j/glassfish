@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,15 +30,15 @@
     <property name="derby.jar.classpath.additions" value="../../javadb/lib/derby.jar ../../javadb/lib/derbyclient.jar ../../javadb/lib/derbynet.jar ../../javadb/lib/derbytools.jar ../../javadb/lib/derbyrun.jar"/>
     <property name="jaxr-ra.classpath.additions" value="../lib/install/applications/jaxr-ra/jaxr-ra.jar"/>
     <property name="resources-runtime.classpath.additions" value="../modules/resources-runtime.jar"/>
-    <property name="javamail-connector.classpath.additions" value="../modules/javamail-connector.jar"/>
-    <property name="javamail-runtime.classpath.additions" value="../modules/javamail-runtime.jar"/>
+    <property name="mail-connector.classpath.additions" value="../modules/mail-connector.jar"/>
+    <property name="mail-runtime.classpath.additions" value="../modules/mail-runtime.jar"/>
     <property name="jdbc-runtime.classpath.additions" value="../modules/jdbc-runtime.jar"/>
     <property name="jdbc-config.classpath.additions" value="../modules/jdbc-config.jar"/>
     <property name="aix.additions" value="../modules/aixporting-repackaged.jar"/>
     <property name="entitybean-container.additions" value="../modules/entitybean-container.jar"/>
     <property name="weld.classpath.additions" value="../modules/weld-osgi-bundle.jar"/>
     
-    <property name="classpath.additions" value=" ${resources-runtime.classpath.additions} ${javamail-connector.classpath.additions} ${javamail-runtime.classpath.additions} ${mq.classpath.additions} ${ds-jdbcra.classpath.additions} ${cp-jdbcra.classpath.additions} ${xa-jdbcra.classpath.additions} ${dm-jdbcra.classpath.additions} ${derby.jar.classpath.additions} ${jaxr-ra.classpath.additions} ${entitybean-container.additions} ${jdbc-runtime.classpath.additions} ${jdbc-config.classpath.additions} ${weld.classpath.additions}"/>
+    <property name="classpath.additions" value=" ${resources-runtime.classpath.additions} ${mail-connector.classpath.additions} ${mail-runtime.classpath.additions} ${mq.classpath.additions} ${ds-jdbcra.classpath.additions} ${cp-jdbcra.classpath.additions} ${xa-jdbcra.classpath.additions} ${dm-jdbcra.classpath.additions} ${derby.jar.classpath.additions} ${jaxr-ra.classpath.additions} ${entitybean-container.additions} ${jdbc-runtime.classpath.additions} ${jdbc-config.classpath.additions} ${weld.classpath.additions}"/>
     <property name="classpath.conditional.additions" value="${aix.additions}"/>
     <target name="fixup.library">
         <unzip src="${output.dir}/${output.file}" dest="${stage.dir}">
@@ -54,13 +54,10 @@
             <!-- replace incorrect entries ../modules/x.jar for JARs that will actually reside in the
                  endorsed subdirectory with ../modules/endorsed/x.jar                -->
 
-            <replacefilter token="../modules/jakarta.annotation-api.jar" value="../modules/endorsed/jakarta.annotation-api.jar"/>
-            <replacefilter token="../modules/jakarta.xml.bind-api.jar" value="../modules/endorsed/jakarta.xml.bind-api.jar"/>
-            <replacefilter token="../modules/webservices-api-osgi.jar" value="../modules/endorsed/webservices-api-osgi.jar"/>
             <replacefilter token="../modules/weld-se-shaded.jar" value="../lib/appclient/weld-se-shaded.jar"/>
 
             <!--
-                The javax.mail JAR will reference activation.jar, because it is
+                The jakarta.mail JAR will reference activation.jar, because it is
                 built to work with Java SE 1.4 and later. Prior to Java SE 6
                 activation was separate from the Java SE libraries and so
                 mail must refer to it explicitly.  But GlassFish requires 
@@ -68,7 +65,13 @@
                 So remove it so jar indexing (which would help
                 optimize Java Web Start) will not fail due to a missing JAR.
             -->
-            <replacefilter token=" ../modules/activation.jar" value=""/>
+            <!--
+                As of Jakarta Mail 2.0 and Jakarta EE 9, Jakarta Mail
+                references jakarta.activation.jar, which is NOT included
+                in Java SE, but IS included in GlassFish, so we don't
+                need to remove it here.
+            &lt;replacefilter token=" ../modules/activation.jar" value=""/&gt;>
+            -->
         </replace>
 
         <!-- define the classpath property -->
@@ -78,14 +81,14 @@
             Entries in zip (and JAR) files have two-second timestamp resolution.  The
             next sleep makes sure that the time stamp on the updated manifest
             file will later than the original manifest's time + two seconds;
-            this make sure the zip task will actually replacde the manifest
+            this make sure the zip task will actually replace the manifest
             in the JAR file.
 
             Also, the manifest task seems not to update the timestamp on the
             manifest file, so we need to explicitly touch it after updating
             the manifest.
         -->
-        <sleep seconds="3"/>
+        <sleep seconds="5"/>
         <manifest mode="update" file="${stage.dir}/META-INF/MANIFEST.MF">
             <attribute name="Class-Path" value="${classpath} ${classpath.additions} ${classpath.conditional.additions}"/>
             <attribute name="GlassFish-Conditional-Additions" value="${classpath.conditional.additions}"/>

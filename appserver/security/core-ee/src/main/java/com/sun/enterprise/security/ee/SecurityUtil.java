@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,7 @@ package com.sun.enterprise.security.ee;
 
 import java.security.*;
 
-import javax.security.jacc.*;
+import jakarta.security.jacc.*;
 //import com.sun.ejb.Invocation; 
 import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.util.IASSecurityException;
@@ -220,9 +220,9 @@ public class SecurityUtil{
 
 	    Policy.getPolicy().refresh();
 	} catch(java.lang.ClassNotFoundException cnfe){
-	    //String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound","Could not find PolicyConfigurationFactory class. Check javax.security.jacc.PolicyConfigurationFactory.provider property");
+	    //String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound","Could not find PolicyConfigurationFactory class. Check jakarta.security.jacc.PolicyConfigurationFactory.provider property");
 	    throw new IASSecurityException(cnfe);
-	} catch(javax.security.jacc.PolicyContextException pce){
+	} catch(jakarta.security.jacc.PolicyContextException pce){
 	    throw new IASSecurityException(pce);
 	}
     }
@@ -256,9 +256,9 @@ public class SecurityUtil{
 	    }
 
 	} catch(java.lang.ClassNotFoundException cnfe){
-	    String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound","Could not find PolicyConfigurationFactory class. Check javax.security.jacc.PolicyConfigurationFactory.provider property");
+	    String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound","Could not find PolicyConfigurationFactory class. Check jakarta.security.jacc.PolicyConfigurationFactory.provider property");
 	    throw new IASSecurityException(msg);
-	} catch(javax.security.jacc.PolicyContextException pce){
+	} catch(jakarta.security.jacc.PolicyContextException pce){
 	    throw new IASSecurityException(pce.toString());
 	}
     }
@@ -313,9 +313,9 @@ public class SecurityUtil{
             }
             
         } catch(java.lang.ClassNotFoundException cnfe){
-            String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound","Could not find PolicyConfigurationFactory class. Check javax.security.jacc.PolicyConfigurationFactory.provider property");
+            String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound","Could not find PolicyConfigurationFactory class. Check jakarta.security.jacc.PolicyConfigurationFactory.provider property");
             throw new IASSecurityException(msg);
-        } catch(javax.security.jacc.PolicyContextException pce){
+        } catch(jakarta.security.jacc.PolicyContextException pce){
             throw new IASSecurityException(pce.toString());
         }        
         return rvalue;

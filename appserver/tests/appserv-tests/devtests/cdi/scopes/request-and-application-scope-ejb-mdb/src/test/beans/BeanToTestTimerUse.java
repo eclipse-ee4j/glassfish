@@ -16,7 +16,7 @@
 
 package test.beans;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 //Simple TestBean to test CDI. 

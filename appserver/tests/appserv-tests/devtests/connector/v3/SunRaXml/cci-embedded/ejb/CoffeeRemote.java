@@ -16,7 +16,7 @@
 
 package com.sun.s1peqe.connector.cci;
 
-import javax.ejb.EJBLocalObject;
+import jakarta.ejb.EJBLocalObject;
 
 public interface CoffeeRemote extends EJBLocalObject {
     public void insertCoffee(String name, int quantity);

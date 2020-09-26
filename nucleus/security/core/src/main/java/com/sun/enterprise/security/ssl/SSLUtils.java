@@ -48,10 +48,10 @@ import java.security.Permission;
 import java.util.PropertyPermission;
 import javax.net.ssl.SSLSocketFactory;
 import org.jvnet.hk2.annotations.Service;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PostConstruct;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  *  Handy class containing static functions.

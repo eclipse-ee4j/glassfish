@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.Assert;
 import org.glassfish.tests.embedded.ejb.SampleEjb;
 
-import javax.ejb.embeddable.EJBContainer;
+import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import java.util.Map;
 import java.util.HashMap;

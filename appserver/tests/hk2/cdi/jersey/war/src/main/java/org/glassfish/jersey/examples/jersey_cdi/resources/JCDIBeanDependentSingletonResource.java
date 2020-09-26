@@ -19,18 +19,18 @@ package org.glassfish.jersey.examples.jersey_cdi.resources;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.ManagedBean;
-import javax.annotation.Resource;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Path;
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  *
@@ -44,10 +44,10 @@ public class JCDIBeanDependentSingletonResource {
     private @Resource(name="injectedResource") int injectedResource = 0;
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<UriInfo> uiFieldInjectProvider;
+    private @Context jakarta.inject.Provider<UriInfo> uiFieldInjectProvider;
 
     // TODO: this should be using proxiable injection support
-    private @Context javax.inject.Provider<ResourceContext> rcProvider;
+    private @Context jakarta.inject.Provider<ResourceContext> rcProvider;
 
     private UriInfo uiMethodInject;
 

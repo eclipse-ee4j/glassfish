@@ -16,9 +16,9 @@
 
 package com.acme;
 
-import javax.ejb.*;
-import javax.annotation.*;
-import javax.interceptor.*;
+import jakarta.ejb.*;
+import jakarta.annotation.*;
+import jakarta.interceptor.*;
 
 
 public class BaseBean {

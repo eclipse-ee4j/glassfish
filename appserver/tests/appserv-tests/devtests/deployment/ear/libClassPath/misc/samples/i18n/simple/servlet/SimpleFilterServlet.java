@@ -10,8 +10,8 @@
 
 package samples.i18n.simple.servlet;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 /**
  * A Simple Servlet to test the filter SimpleFilter

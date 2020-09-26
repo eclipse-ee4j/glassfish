@@ -26,17 +26,17 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.ws.handler.MessageContext;
 
 /**
  * @author Alexey Stashok
@@ -311,11 +311,11 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return 0;
         }
 
-        public javax.servlet.http.Part getPart(String s) {
+        public jakarta.servlet.http.Part getPart(String s) {
             return null;
         }
 
-        public Collection<javax.servlet.http.Part> getParts() {
+        public Collection<jakarta.servlet.http.Part> getParts() {
             return null;
         }
 
@@ -333,7 +333,7 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return true;
         }
 
-        public javax.servlet.DispatcherType getDispatcherType() {
+        public jakarta.servlet.DispatcherType getDispatcherType() {
             return null;
         }
 
@@ -344,13 +344,13 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
         public void setAsyncTimeout(long timeout) {
         }
 
-        public void addAsyncListener(javax.servlet.AsyncListener listener) {
+        public void addAsyncListener(jakarta.servlet.AsyncListener listener) {
         }
 
-        public void addAsyncListener(javax.servlet.AsyncListener listener, javax.servlet.ServletRequest request, javax.servlet.ServletResponse response) {
+        public void addAsyncListener(jakarta.servlet.AsyncListener listener, jakarta.servlet.ServletRequest request, jakarta.servlet.ServletResponse response) {
         }
 
-        public javax.servlet.AsyncContext getAsyncContext() {
+        public jakarta.servlet.AsyncContext getAsyncContext() {
             return null;
         }
 
@@ -362,15 +362,15 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return false;
         }
 
-        public javax.servlet.AsyncContext startAsync() {
+        public jakarta.servlet.AsyncContext startAsync() {
             return null;
         }
 
-        public javax.servlet.AsyncContext startAsync(javax.servlet.ServletRequest request, javax.servlet.ServletResponse response) {
+        public jakarta.servlet.AsyncContext startAsync(jakarta.servlet.ServletRequest request, jakarta.servlet.ServletResponse response) {
             return null;
         }
 
-        public javax.servlet.ServletContext getServletContext() {
+        public jakarta.servlet.ServletContext getServletContext() {
             return null;
         }
     }

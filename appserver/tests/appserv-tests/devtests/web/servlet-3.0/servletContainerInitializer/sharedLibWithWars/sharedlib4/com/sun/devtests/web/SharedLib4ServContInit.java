@@ -17,10 +17,10 @@
 package com.sun.devtests.web;
 
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.annotation.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
 
-@HandlesTypes(javax.jws.WebService.class)
+@HandlesTypes(jakarta.jws.WebService.class)
 public class SharedLib4ServContInit implements ServletContainerInitializer {
     public SharedLib4ServContInit() {
 	System.out.println("SHARED LIB 4 CONST");

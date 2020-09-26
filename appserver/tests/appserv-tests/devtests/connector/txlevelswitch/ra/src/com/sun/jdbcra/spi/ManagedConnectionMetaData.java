@@ -18,7 +18,7 @@ package com.sun.jdbcra.spi;
 
 import com.sun.jdbcra.spi.ManagedConnection;
 import java.sql.SQLException;
-import javax.resource.ResourceException;
+import jakarta.resource.ResourceException;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -28,7 +28,7 @@ import java.util.logging.Level;
  * @version	1.0, 02/08/03
  * @author	Evani Sai Surya Kiran
  */
-public class ManagedConnectionMetaData implements javax.resource.spi.ManagedConnectionMetaData {
+public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedConnectionMetaData {
 
     private java.sql.DatabaseMetaData dmd = null;
     private ManagedConnection mc;
@@ -111,7 +111,7 @@ public class ManagedConnectionMetaData implements javax.resource.spi.ManagedConn
      * @throws	<code>ResourceException</code>
      */
     public String getUserName() throws ResourceException {
-        javax.resource.spi.security.PasswordCredential pc = mc.getPasswordCredential();
+        jakarta.resource.spi.security.PasswordCredential pc = mc.getPasswordCredential();
         if(pc != null) {
             return pc.getUserName();
         }

@@ -16,7 +16,7 @@
 
 package com.acme;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 @Local
 public interface StatelessLocal2 {

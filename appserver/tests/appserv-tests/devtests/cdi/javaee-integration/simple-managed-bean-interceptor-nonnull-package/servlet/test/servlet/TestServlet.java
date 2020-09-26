@@ -20,12 +20,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebInitParam;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import test.beans.TestManagedBean;
 import test.interceptors.TestAroundInvokeInterceptor;
@@ -34,8 +34,8 @@ import test.interceptors.TestAroundInvokeInterceptor;
         urlPatterns={"/myurl"},
         initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
 public class TestServlet extends HttpServlet {
-    @javax.inject.Inject TestManagedBean tb1;
-    @javax.annotation.Resource TestManagedBean tb;
+    @jakarta.inject.Inject TestManagedBean tb1;
+    @jakarta.annotation.Resource TestManagedBean tb;
 
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {

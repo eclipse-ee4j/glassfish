@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.jdbc.pooling.ejb;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 import java.rmi.*;
 import javax.sql.DataSource;
 

@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 
-import javax.ejb.*;
-import javax.annotation.Resource;
-import javax.annotation.security.DenyAll;
+import jakarta.ejb.*;
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.DenyAll;
 
 @Local(SlessBusiness.class)
 @Stateless

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package test.beans.nonmock;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.jms.Queue;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.jms.Queue;
 
 import test.beans.TestBeanInterface;
 import test.beans.artifacts.Preferred;

@@ -19,7 +19,7 @@ package org.glassfish.nucleus.admin.rest;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import static org.testng.AssertJUnit.*;
 import org.testng.annotations.Test;
 
@@ -122,7 +122,7 @@ public class MonitoringTest extends RestTestBase {
     @Test(enabled=false)
     public void testInvalidResource() {
         Response response = get("/domain/server/foo");
-        assertTrue("Did not receive ", response.getStatus() == javax.ws.rs.core.Response.Status.NOT_FOUND.getStatusCode() ) ;
+        assertTrue("Did not receive ", response.getStatus() == jakarta.ws.rs.core.Response.Status.NOT_FOUND.getStatusCode() ) ;
     }
 
 

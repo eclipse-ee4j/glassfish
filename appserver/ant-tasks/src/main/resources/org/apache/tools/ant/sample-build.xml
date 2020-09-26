@@ -2,7 +2,7 @@
 <!DOCTYPE project >
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,12 +22,12 @@
 
 
     <target name="regular" description="Non-embedded tasks"> 
-        <glassfish-stop installdir = "/ws/v3/publish/glassfish5/" domain = "domain1" />
-        <glassfish-start installdir = "/ws/v3/publish/glassfish5/" domain = "domain1" />
-        <glassfish-stop installdir = "/ws/v3/publish/glassfish5/" domain = "domain1" />
-        <glassfish-admin installdir = "/ws/v3/publish/glassfish5/" command = "start-domain domain1" />
-	<glassfish-admin installdir = "/ws/v3/publish/glassfish5/" command = "create-http-listener --defaultvs=server --listenerport=9889 --listeneraddress=127.0.0. --listener_id=reg-listener"/>
-        <glassfish-undeploy installdir = "/ws/v3/publish/glassfish5/" name="test"/>
+        <glassfish-stop installdir = "/ws/v3/publish/glassfish6/" domain = "domain1" />
+        <glassfish-start installdir = "/ws/v3/publish/glassfish6/" domain = "domain1" />
+        <glassfish-stop installdir = "/ws/v3/publish/glassfish6/" domain = "domain1" />
+        <glassfish-admin installdir = "/ws/v3/publish/glassfish6/" command = "start-domain domain1" />
+	<glassfish-admin installdir = "/ws/v3/publish/glassfish6/" command = "create-http-listener --defaultvs=server --listenerport=9889 --listeneraddress=127.0.0. --listener_id=reg-listener"/>
+        <glassfish-undeploy installdir = "/ws/v3/publish/glassfish6/" name="test"/>
    </target>
 
    <target name="embedded" description="embedded tasks"> 

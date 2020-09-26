@@ -21,7 +21,7 @@
  */
 
 package shopping;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 /**
  *
  * @author  Harpreet Singh
@@ -29,6 +29,6 @@ import javax.ejb.EJBHome;
 public interface RpaHome extends EJBHome{
     
     public RpaRemote create(java.lang.String shopperName) 
-        throws java.rmi.RemoteException, javax.ejb.CreateException;
+        throws java.rmi.RemoteException, jakarta.ejb.CreateException;
     
 }

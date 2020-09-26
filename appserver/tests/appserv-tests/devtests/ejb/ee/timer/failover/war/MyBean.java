@@ -23,8 +23,8 @@ package com.acme;
 
 import java.util.Collection;
 import java.util.HashSet;
-import javax.ejb.*;
-import javax.annotation.Resource;
+import jakarta.ejb.*;
+import jakarta.annotation.Resource;
 
 /**
  *

@@ -16,7 +16,7 @@
 
 package com.acme.ejb32.timer.getalltimers;
 
-@javax.ejb.Remote
+@jakarta.ejb.Remote
 public interface StlesTimeout {
 
     public void createProgrammaticTimers();

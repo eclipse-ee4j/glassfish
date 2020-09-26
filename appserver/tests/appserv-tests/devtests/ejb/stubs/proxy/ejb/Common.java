@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.stubs.proxy;
 
-import javax.ejb.*;
+import jakarta.ejb.*;
 
 public interface Common extends EJBLocalObject
 {
@@ -42,5 +42,5 @@ public interface Common extends EJBLocalObject
     void testException2();
 
     // throws some checked exception
-    void testException3() throws javax.ejb.FinderException;
+    void testException3() throws jakarta.ejb.FinderException;
 }

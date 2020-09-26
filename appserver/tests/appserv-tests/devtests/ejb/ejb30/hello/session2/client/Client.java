@@ -18,11 +18,11 @@ package com.sun.s1asdev.ejb.ejb30.hello.session2.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.EJBs;
-import javax.ejb.NoSuchEJBException;
-import javax.ejb.EJBTransactionRequiredException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBs;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.EJBTransactionRequiredException;
 import javax.naming.InitialContext;
 import javax.naming.Context;
 import com.sun.s1asdev.ejb.ejb30.hello.session2.*;
@@ -225,7 +225,7 @@ public class Client extends ClientSuper {
             try {
                 sless1.hello2();
                 throw new Exception("Did not receive CreateException");
-            } catch(javax.ejb.CreateException ce) {
+            } catch(jakarta.ejb.CreateException ce) {
                 System.out.println("Successfully caught app exception");
             }
 

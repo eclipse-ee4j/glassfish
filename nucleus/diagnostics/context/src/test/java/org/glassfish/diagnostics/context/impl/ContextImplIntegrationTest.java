@@ -21,7 +21,7 @@ import org.glassfish.diagnostics.context.ContextManager;
 import org.junit.Test;
 import org.junit.Ignore;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class ContextImplIntegrationTest
     extends org.jvnet.hk2.testing.junit.HK2Runner

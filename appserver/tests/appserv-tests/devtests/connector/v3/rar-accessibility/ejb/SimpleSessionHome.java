@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.connector.rar_accessibility_test.ejb;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBLocalHome;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBLocalHome;
 
 public interface SimpleSessionHome extends EJBLocalHome {
     SimpleSession create()

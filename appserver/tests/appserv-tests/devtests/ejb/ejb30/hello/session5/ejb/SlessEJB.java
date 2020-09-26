@@ -16,8 +16,8 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session5;
 
-import javax.ejb.Stateless;
-import javax.ejb.Remote;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Remote;
 
 @Stateless(mappedName="ejb_ejb30_hello_session5_Sless")
 @Remote({Sless.class, Sless2.class})

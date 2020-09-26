@@ -17,8 +17,8 @@
 package wstoejb;
 
 import java.rmi.RemoteException;
-import javax.ejb.EJBHome;
-import javax.ejb.CreateException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.CreateException;
 
 /**
  * Simple interface to create a statefull session bean

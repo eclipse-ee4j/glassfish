@@ -16,16 +16,16 @@
 
 package com.sun.connector.cciblackbox;
 
-import javax.resource.ResourceException;
-import javax.resource.cci.IndexedRecord;
-import javax.resource.cci.MappedRecord;
+import jakarta.resource.ResourceException;
+import jakarta.resource.cci.IndexedRecord;
+import jakarta.resource.cci.MappedRecord;
 
 /**
  * This implementation class is used for creating IndexedRecord or MappedRecord
  * instances.
  */
 
-public class CciRecordFactory implements javax.resource.cci.RecordFactory {
+public class CciRecordFactory implements jakarta.resource.cci.RecordFactory {
 
   public CciRecordFactory() {
   }

@@ -16,9 +16,9 @@
 
 package com.sun.s1asdev.ejb.ejb30.hello.session4;
 
-import javax.ejb.Stateful;
-import javax.ejb.SessionContext;
-import javax.annotation.Resource;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.SessionContext;
+import jakarta.annotation.Resource;
 
 @Stateful(mappedName="ejb_ejb30_hello_session4_Sful")
 public class SfulEJB implements Sful, Sful2

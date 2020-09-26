@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,9 @@ package com.sun.s1asdev.ejb.mdb.cmt.client;
 
 import java.io.*;
 import java.util.*;
-import javax.ejb.EJBHome;
+import jakarta.ejb.EJBHome;
 import javax.naming.*;
-import javax.jms.*;
+import jakarta.jms.*;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -43,7 +43,7 @@ public class Client {
     private QueueSession queueSession;
     private QueueSender queueSender;
     private QueueReceiver queueReceiver;
-    private javax.jms.Queue clientQueue;
+    private jakarta.jms.Queue clientQueue;
 
     private TopicConnection topicCon;
     private TopicSession topicSession;
@@ -114,7 +114,7 @@ public class Client {
         }
     }
 
-    public void sendMsgs(javax.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue + 
@@ -143,7 +143,7 @@ public class Client {
         //        Message message = topicSession.createTextMessage(destName);
         message.setBooleanProperty("flag", true);
         message.setIntProperty("num", 2);
-        sendMsgs((javax.jms.Queue) dest, message, num);
+        sendMsgs((jakarta.jms.Queue) dest, message, num);
     }
 }
 

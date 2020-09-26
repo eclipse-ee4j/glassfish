@@ -17,7 +17,7 @@
 package org.glassfish.enterprise.iiop.impl;
 
 
-import javax.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.NoSuchObjectLocalException;
 
 import java.rmi.Remote;
 

@@ -22,7 +22,7 @@ public interface Sless
 {
     public String hello();
 
-    public String hello2() throws javax.ejb.CreateException;
+    public String hello2() throws jakarta.ejb.CreateException;
 
     public String getId();
 

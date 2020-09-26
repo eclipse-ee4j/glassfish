@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,22 +16,22 @@
 
 package com.acme;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.EJB;
-import javax.ejb.Schedule;
-import javax.ejb.Timer;
-import javax.interceptor.AroundTimeout;
-import javax.interceptor.InvocationContext;
-import javax.interceptor.Interceptors;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Timer;
+import jakarta.interceptor.AroundTimeout;
+import jakarta.interceptor.InvocationContext;
+import jakarta.interceptor.Interceptors;
 
-import javax.annotation.Resource;
-import javax.ejb.MessageDrivenContext;
-import javax.jms.MessageListener;
-import javax.jms.Message;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.security.*;
-import javax.ejb.EJBException;
+import jakarta.annotation.Resource;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.jms.MessageListener;
+import jakarta.jms.Message;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.security.*;
+import jakarta.ejb.EJBException;
 
 @Interceptors(InterceptorA.class)
 @MessageDriven(mappedName="jms/ejb_ejb31_timer31_mdb_InQueue", description="mymessagedriven bean description")

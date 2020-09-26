@@ -16,16 +16,16 @@
 
 package com.sun.s1asdev.ejb30.eempassivation;
 
-import javax.ejb.Stateful;
-import javax.ejb.PostActivate;
-import javax.ejb.PrePassivate;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.PostActivate;
+import jakarta.ejb.PrePassivate;
 
-import javax.persistence.PersistenceContextType;
-import javax.persistence.PersistenceContext;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.EntityManager;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 
 @Stateful
 public class SfulDelegateBean

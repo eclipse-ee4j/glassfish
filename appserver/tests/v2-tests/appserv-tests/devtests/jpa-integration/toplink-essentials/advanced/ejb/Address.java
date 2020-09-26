@@ -19,10 +19,10 @@
 package oracle.toplink.essentials.testing.models.cmp3.advanced;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import static javax.persistence.GenerationType.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.GenerationType.*;
 import java.util.*;
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * <p><b>Purpose</b>: Represents the mailing address on an Employee

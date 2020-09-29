@@ -67,9 +67,6 @@
         <module>webservices</module>
         <module>orb</module>
         <module>appclient</module>
-        <module>verifier/verifier-impl</module>
-        <module>verifier/verifier-scripts</module>
-        <module>verifier/verifier-jdk-extension-bundle</module>
         <module>ant-tasks</module>
     </modules>
 
@@ -98,8 +95,8 @@
 
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>3.0.0-RC1</jakarta.faces-api.version>
-        <mojarra.version>3.0.0-RC3</mojarra.version>
+        <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>
+        <mojarra.version>3.0.0-RC4</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <websocket-api.version>2.0.0</websocket-api.version>
@@ -124,10 +121,10 @@
 
         <!-- Jakarta Persistence -->
         <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
-        <eclipselink.version>3.0.0-M1</eclipselink.version>
+        <eclipselink.version>3.0.0-M2</eclipselink.version>
 
         <!-- Jakarta Transactions -->
-        <jakarta.transaction-api.version>2.0.0-RC2</jakarta.transaction-api.version>
+        <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
         <jakarta.resource-api.version>2.0.0-RC3</jakarta.resource-api.version>
@@ -152,7 +149,7 @@
         <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>5.3.0</woodstox.version>
+        <woodstox.version>6.2.1</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->

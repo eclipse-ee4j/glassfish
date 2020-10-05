@@ -3,16 +3,17 @@ TCK Results
 
 As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
-following is a summary of the TCK results for releases of Jakarta Authentication.
+following is a summary of the TCK results for releases of Jakarta Server Faces.
 
-# Eclipse GlassFish 6.0 Certification Summary
+# Eclipse Mojarra 3.0.0, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse Glassfish 6.0.0-M2-servlet5](https://download.eclipse.org/ee4j/glassfish/weekly/glassfish-6.0.0-SNAPSHOT-2020-09-20.zip)
+  Eclipse Mojarra 3.0.0, provides Jakarta Server Faces 3.0
+  [Eclipse Mojarra Project](https://github.com/eclipse-ee4j/mojarra)
 - Specification Name, Version and download URL: <br/>
-  [Jakarta Authentication 2.0](https://jakarta.ee/specifications/authentication/2.0/)
+  [Jakarta Server Faces, 3.0](https://jakarta.ee/specifications/faces/3.0)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Authentication TCK, 2.0.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-authentication-tck-2.0.0.zip), SHA-256: `26dfef951f1c92fccdf78a03bf30cbdec3aacb372f8e93ec158cfc4d98b3d6d8`
+  [Jakarta Server Faces 3.0, TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-faces-tck-3.0.0.zip), SHA-256: `67e7acb555ac2c8955b4157118ef86a5fbb57fb9a65e3d0d75992ec83004204e`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>
@@ -22,24 +23,25 @@ following is a summary of the TCK results for releases of Jakarta Authentication
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
   Alpine Linux v3.12
 
-
 Test results:
 
 ```
 [javatest.batch] ********************************************************************************
-[javatest.batch] Completed running 107 tests.
-[javatest.batch] Number of Tests Passed      = 107
+[javatest.batch] Completed running 5525 tests.
+[javatest.batch] Number of Tests Passed      = 5525
 [javatest.batch] Number of Tests Failed      = 0
 [javatest.batch] Number of Tests with Errors = 0
 [javatest.batch] ********************************************************************************
+```
 
-Total time: 5 minutes 50 seconds
-SHA256_GF=28ab3c5416f99f4c213c834d0e556a88500f2e13881dba291a08816eca45446b
-SHA256_API=396bd2869dd7d5a79ce495bb9412cc4e4d0422ea8e8d7422419d8ef38b891f8a
-SHA256_TCK=26dfef951f1c92fccdf78a03bf30cbdec3aacb372f8e93ec158cfc4d98b3d6d8
+```
+BUILD SUCCESSFUL
+Total time: 136 minutes 27 seconds
+SHA256_IMPL=aea9613798591152cacf3ffcc5c18a0d91a6836fab83f9705b0195e5bcc67447
+SHA256_TCK=bba2c7ea38babed1e2d94236c4391e01bf3bfed45934dc6505365126644084b0
 Product_download=https://download.eclipse.org/ee4j/glassfish/weekly/glassfish-6.0.0-SNAPSHOT-2020-09-20.zip
-API_download=https://jakarta.oss.sonatype.org/content/repositories/staging/jakarta/authentication/jakarta.authentication-api/2.0.0/jakarta.authentication-api-2.0.0.jar
-TCK_download=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-authentication-tck-2.0.0.zip
+IMPL_download=https://jakarta.oss.sonatype.org/content/repositories/staging/org/glassfish/jakarta.faces/3.0.0-RC4/jakarta.faces-3.0.0-RC4.jar
+TCK_download=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-faces-tck-3.0.0.zip
 OS4=3.12.0 NAME="Alpine Linux" ID=alpine VERSION_ID=3.12.0 PRETTY_NAME="Alpine Linux v3.12" HOME_URL="https://alpinelinux.org/" BUG_REPORT_URL="https://bugs.alpinelinux.org/"
 JDK_VERSION=java version "1.8.0_202" Java(TM) SE Runtime Environment (build 1.8.0_202-b08) Java HotSpot(TM) 64-Bit Server VM (build 25.202-b08, mixed mode)
 ```

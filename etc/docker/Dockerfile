@@ -7,7 +7,7 @@ RUN chmod +x /etc/entrypoint.sh && \
     #
     # install utilities
     #
-    yum install -y which unzip tar wget zip sendmail && \
+    yum install -y which unzip tar wget zip sendmail git-core && \
     update-ca-trust && \
     #
     # setup jdk

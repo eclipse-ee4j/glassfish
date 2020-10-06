@@ -6,9 +6,8 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
 ## Eclipse Tyrus 2.0.0-RC1, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  Eclipse GlassFish 6.0.0-SNAPSHOT-2020-10-04, contains
-  Eclipse Tyrus 2.0.0-RC1, provides WebSocket 2.0
-  [Eclipse Tyrus Project](https://github.com/eclipse-ee4j/tyrus)
+  Eclipse Tyrus 2.0.0-RC1, provides WebSocket 2.0, as included in Eclipse GlassFish 6.0.0-SNAPSHOT-2020-10-04 <br/>
+  [Eclipse Tyrus 2.0.0-RC1](https://github.com/eclipse-ee4j/tyrus/releases/tag/2.0.0-RC1) <br/>
   [Eclipse GlassFish Downloads](https://eclipse-ee4j.github.io/glassfish/download)
 
 - Specification Name, Version and download URL: <br/>

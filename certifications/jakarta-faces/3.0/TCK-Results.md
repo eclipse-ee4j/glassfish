@@ -36,11 +36,11 @@ Test results:
 
 ```
 BUILD SUCCESSFUL
-Total time: 136 minutes 27 seconds
-SHA256_IMPL=aea9613798591152cacf3ffcc5c18a0d91a6836fab83f9705b0195e5bcc67447
-SHA256_TCK=bba2c7ea38babed1e2d94236c4391e01bf3bfed45934dc6505365126644084b0
-Product_download=https://download.eclipse.org/ee4j/glassfish/weekly/glassfish-6.0.0-SNAPSHOT-2020-09-20.zip
-IMPL_download=https://jakarta.oss.sonatype.org/content/repositories/staging/org/glassfish/jakarta.faces/3.0.0-RC4/jakarta.faces-3.0.0-RC4.jar
+Total time: 136 minutes 33 seconds
+SHA256_IMPL=f0de1f4b119e54dcb04459de8cdac3835b79e8f2859e570a496e11d3be198aff
+SHA256_TCK=67e7acb555ac2c8955b4157118ef86a5fbb57fb9a65e3d0d75992ec83004204e
+Product_download=https://download.eclipse.org/ee4j/glassfish/weekly/glassfish-6.0.0-SNAPSHOT-2020-10-04.zip
+IMPL_download=https://jakarta.oss.sonatype.org/content/repositories/staging/org/glassfish/jakarta.faces/3.0.0-RC5/jakarta.faces-3.0.0-RC5.jar
 TCK_download=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-faces-tck-3.0.0.zip
 OS4=3.12.0 NAME="Alpine Linux" ID=alpine VERSION_ID=3.12.0 PRETTY_NAME="Alpine Linux v3.12" HOME_URL="https://alpinelinux.org/" BUG_REPORT_URL="https://bugs.alpinelinux.org/"
 JDK_VERSION=java version "1.8.0_202" Java(TM) SE Runtime Environment (build 1.8.0_202-b08) Java HotSpot(TM) 64-Bit Server VM (build 25.202-b08, mixed mode)

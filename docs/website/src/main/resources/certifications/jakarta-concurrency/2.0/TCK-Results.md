@@ -14,7 +14,7 @@ following is a summary of the TCK results for releases of Jakarta Concurrency.
 - [x] Specification Name, Version and download URL: <br/>
    [Jakarta Concurrency 2.0](https://jakarta.ee/specifications/concurrency/2.0/)
 - [x] TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Concurrency TCK 2.0.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-concurrency-tck-2.0.0.zip), SHA-256: 073de7b8f33895b663ae2dd1025ea1383de595566992c9818547e324f3f378c8
+  [Jakarta Concurrency TCK 2.0.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-concurrency-tck-2.0.0.zip), SHA-256: 59662088bc0a7e66b0042015c013b1ded0cf920f5d43519914f0588390443e26
 - [x] Public URL of TCK Results Summary: <br/>
   [TCK results summary](https://eclipse-ee4j.github.io/glassfish/certifications/jakarta-concurrency/2.0/TCK-Results)
 - [x] Any Additional Specification Certification Requirements: <br/>

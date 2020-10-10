@@ -34,7 +34,7 @@
       structures and datatypes that are necessary to use JSP files
       from a web application. 
       
-      The contents of this schema is used by the web-common_3_1.xsd 
+      The contents of this schema is used by the web-common_5_0.xsd 
       file to define JSP specific content. 
       
     </xsd:documentation>

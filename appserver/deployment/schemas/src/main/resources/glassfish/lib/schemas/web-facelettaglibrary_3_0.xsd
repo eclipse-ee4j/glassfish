@@ -41,7 +41,7 @@
       
       &lt;facelet-taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibary_2_3.xsd"
+      xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibary_3_0.xsd"
       version="3.0"&gt;
       
       ...
@@ -52,7 +52,7 @@
       version of the schema using xsi:schemaLocation attribute
       for jakartaee namespace with the following location:</p>
       
-      <p>https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibary_2_3.xsd</p>
+      <p>https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibary_3_0.xsd</p>
       
       ]]>
     </xsd:documentation>

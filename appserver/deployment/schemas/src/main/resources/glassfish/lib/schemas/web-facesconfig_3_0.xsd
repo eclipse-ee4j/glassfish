@@ -45,7 +45,7 @@
       <pre>&lt;faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="..."
-      version="2.2"&gt;
+      version="3.0"&gt;
       ...
       &lt;/faces-config&gt;</pre>
       

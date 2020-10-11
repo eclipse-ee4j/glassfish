@@ -51,7 +51,7 @@
       the schema using the xsi:schemaLocation attribute for the
       Jakarta EE namespace with the following location:
       
-      https://jakarta.ee/xml/ns/jakartaee/ejb-jar_3_2.xsd
+      https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd
       
       ]]>
     </xsd:documentation>

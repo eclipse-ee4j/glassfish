@@ -9,7 +9,7 @@ following is a summary of the TCK results for releases of Jakarta Server Faces.
 
 - Product Name, Version and download URL (if applicable): <br/>
   Eclipse Mojarra 3.0.0, provides Jakarta Server Faces 3.0
-  [Eclipse Mojarra Project](https://github.com/eclipse-ee4j/mojarra)
+  [Eclipse Mojarra Project](https://github.com/eclipse-ee4j/mojarra/releases/download/3.0.0-RC5-RELEASE/jakarta.faces-3.0.0-RC5.jar)
 - Specification Name, Version and download URL: <br/>
   [Jakarta Server Faces, 3.0](https://jakarta.ee/specifications/faces/3.0)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>

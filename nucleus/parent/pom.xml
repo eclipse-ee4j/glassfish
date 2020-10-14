@@ -114,7 +114,7 @@
         <activation.version>2.0.0</activation.version>
         
         <!-- Jakarta Annotations -->
-        <jakarta.annotation-api.version>2.0.0-RC1</jakarta.annotation-api.version>
+        <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
 
         <!-- GlassFish Components -->                                   
         <glassfish-corba.version>4.2.3-RC2</glassfish-corba.version>

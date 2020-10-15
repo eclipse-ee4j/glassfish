@@ -11,7 +11,7 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
 - Product Name, Version and download URL (if applicable) <br/>
   Eclipse Glassfish 6.0.0-SNAPSHOT-2020-10-04 https://download.eclipse.org/ee4j/glassfish/weekly/glassfish-6.0.0-SNAPSHOT-2020-10-04.zip
 - Specification Name, Version and download URL <br/>
-  Jakarta Transactions 2.0 https://github.com/jakartaee/specifications/pull/265
+  Jakarta Transactions 2.0 https://jakarta.ee/specifications/transactions/2.0/ (after jakartaee/specifications#265 is merged and the site updated)
 - TCK Version, digital SHA-256 fingerprint and download URL <br/>
   jakarta-transactions-tck-2.0.0, 1d37da3db272e8f1ba02058a63402fe55276724598e224f979e41a063e528a6d, https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-transactions-tck-2.0.0.zip
 - Public URL of TCK Results Summary <br/>

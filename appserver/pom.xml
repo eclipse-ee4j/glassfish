@@ -116,7 +116,7 @@
         <soteria.version>2.0.0-M3</soteria.version>
 
         <!-- Jakarta Messaging -->
-        <jms-api.version>3.0.0-RC1</jms-api.version>
+        <jms-api.version>3.0.0</jms-api.version>
         <mq.version>6.0.0-M2</mq.version>
 
         <!-- Jakarta Persistence -->

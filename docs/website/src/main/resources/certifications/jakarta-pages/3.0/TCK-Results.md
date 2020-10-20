@@ -18,8 +18,7 @@ following is a summary of the TCK results for releases of Jakarta Concurrency.
    [Jakarta Server Pages 3.0](https://jakarta.ee/specifications/pages/3.0/)
    
 - [x] TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  NB: Update to Promoted when available.
-  [Jakarta Server Pages TCK 3.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-900/jakarta-pages-tck-3.0.0.zip),  SHA-256: `2C90E6896D8321B82521A84746D6DB5EE900AF31B7850869B890DFDE08FEE8AF`
+  [Jakarta Server Pages TCK 3.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-pages-tck-3.0.0.zip),  SHA-256: `2C90E6896D8321B82521A84746D6DB5EE900AF31B7850869B890DFDE08FEE8AF`
 
 - [x] Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results)

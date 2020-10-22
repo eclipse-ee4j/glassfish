@@ -116,8 +116,8 @@
         <soteria.version>2.0.0-M3</soteria.version>
 
         <!-- Jakarta Messaging -->
-        <jms-api.version>3.0.0-RC1</jms-api.version>
-        <mq.version>6.0.0-M1</mq.version>
+        <jms-api.version>3.0.0</jms-api.version>
+        <mq.version>6.0.0-M2</mq.version>
 
         <!-- Jakarta Persistence -->
         <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
@@ -158,8 +158,8 @@
 
         <!-- CDI -->
         <cdi-api.version>3.0.0</cdi-api.version>
-        <weld.version>4.0.0.Alpha3</weld.version>
-        <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
+        <weld.version>4.0.0.Beta5</weld.version>
+        <jboss.classfilewriter.version>1.2.4.Final</jboss.classfilewriter.version>
 
 
 

@@ -96,7 +96,7 @@
 
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>
-        <mojarra.version>3.0.0-RC4</mojarra.version>
+        <mojarra.version>3.0.0</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <websocket-api.version>2.0.0</websocket-api.version>

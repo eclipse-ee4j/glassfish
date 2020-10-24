@@ -135,7 +135,7 @@
         <com.ibm.jbatch.spi.version>2.0.0-M7</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
-        <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>
+        <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
         <jsonp-api.version>2.0.0</jsonp-api.version>

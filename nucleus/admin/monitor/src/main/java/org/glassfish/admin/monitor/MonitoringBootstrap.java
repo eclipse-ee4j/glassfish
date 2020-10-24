@@ -96,14 +96,18 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     @SuppressWarnings("unused")
     @Inject @Optional
     private LogManager dependency0;  // The LogManager must come up prior to this service
-    @Inject
+    
     private MonitoringRuntimeDataRegistry mrdr;
+    
     @Inject
     private ModulesRegistry registry;
+    
     @Inject
     protected ProbeProviderFactory probeProviderFactory;
+    
     @Inject
     protected ProbeClientMediator pcm;
+    
     @Inject
     Events events;
 
@@ -114,10 +118,13 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     @Optional
     MonitoringService monitoringService = null;
+    
     @Inject
     private org.glassfish.flashlight.provider.ProbeRegistry probeRegistry;
+    
     @Inject
     ServiceLocator habitat;
+    
     @Inject
     Transactions transactions;
 
@@ -140,6 +147,7 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     @Override
     public void postConstruct() {
         domain = habitat.getService(Domain.class);
+        mrdr = habitat.getService(MonitoringRuntimeDataRegistry.class);
         transactions.addListenerForType(ContainerMonitoring.class, this);
         transactions.addListenerForType(MonitoringService.class, this);
         transactions.addListenerForType(ModuleMonitoringLevels.class, this);

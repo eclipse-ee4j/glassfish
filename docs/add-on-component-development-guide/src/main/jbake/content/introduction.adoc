@@ -1,20 +1,20 @@
 type=page
 status=published
-title=Introduction to the Development Environment for GlassFish Server Add-On Components
+title=Introduction to the Development Environment for Eclipse GlassFish Add-On Components
 next=writing-hk2-components.html
 prev=preface.html
 ~~~~~~
-Introduction to the Development Environment for GlassFish Server Add-On Components
+Introduction to the Development Environment for Eclipse GlassFish Add-On Components
 ==================================================================================
 
 [[GSACG00001]][[ghmlv]]
 
 
-[[introduction-to-the-development-environment-for-glassfish-server-add-on-components]]
-1 Introduction to the Development Environment for GlassFish Server Add-On Components
+[[introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components]]
+1 Introduction to the Development Environment for Eclipse GlassFish Add-On Components
 ------------------------------------------------------------------------------------
 
-GlassFish Server Open Source Edition enables an external vendor such as
+Eclipse GlassFish enables an external vendor such as
 an independent software vendor (ISV), original equipment manufacturer
 (OEM), or system integrator to incorporate GlassFish Server into a new
 product with the vendor's own brand name. External vendors can extend
@@ -67,7 +67,7 @@ You can create and offer new or updated add-on components at any time.
 GlassFish Server administrators can install add-on components and update
 or remove installed components after GlassFish Server is installed. For
 more information, see "link:../administration-guide/toc.html#GSADG00014[Extending and Updating GlassFish
-Server]" in GlassFish Server Open Source Edition Administration Guide.
+Server]" in Eclipse GlassFish Administration Guide.
 
 [[ghmrf]][[GSACG00088]][[osgi-alliance-module-management-subsystem]]
 
@@ -98,8 +98,8 @@ are compatible with the OSGi Service Platform Release 4 API.
 Hundred-Kilobyte Kernel
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-The http://hk2.dev.java.net/[Hundred-Kilobyte Kernel (HK2)]
-(`https://hk2.dev.java.net/`) is the lightweight and extensible kernel
+The https://github.com/eclipse-ee4j/glassfish-hk2[Hundred-Kilobyte Kernel (HK2)]
+(`https://github.com/eclipse-ee4j/glassfish-hk2`) is the lightweight and extensible kernel
 of GlassFish Server. HK2 consists of the following technologies:
 
 * Module subsystem. The HK2 module subsystem provides isolation between
@@ -232,9 +232,8 @@ runtime behavior of a component. GlassFish Server provides interfaces to
 enable an add-on component to store its configuration data in the same
 way as other GlassFish Server components. These interfaces are similar
 to interfaces that are defined in
-http://jcp.org/en/jsr/detail?id=222[Java Specification Request (JSR)
-222: Java Architecture for XML Binding (JAXB) 2.0]
-(`http://jcp.org/en/jsr/detail?id=222`). By using these interfaces to
+https://jakarta.ee/specifications/xml-binding/3.0/[Jakarta XML Binding 3.0]
+(`https://jakarta.ee/specifications/xml-binding/3.0/`). By using these interfaces to
 store configuration data, you ensure that the add-on component is fully
 integrated with GlassFish Server. As a result, administrators can
 configure an add-on component in the same way as they can configure
@@ -273,7 +272,7 @@ type without having to modify the web container code.
 
 For information about other high-availability, session persistence
 solutions, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
-Persistence and Failover]" in GlassFish Server Open Source Edition High
+Persistence and Failover]" in Eclipse GlassFish High
 Availability Administration Guide.
 
 For more information, see

@@ -15,13 +15,11 @@ Adding Configuration Data for a Component
 -------------------------------------------
 
 The configuration data of a component determines the characteristics and
-runtime behavior of a component. GlassFish Server provides interfaces to
+runtime behavior of a component. Eclipse GlassFish provides interfaces to
 enable an add-on component to store its configuration data in the same
 way as other GlassFish Server components. These interfaces are similar
 to interfaces that are defined in
-http://jcp.org/en/jsr/detail?id=222[Java Specification Request (JSR)
-222: Java Architecture for XML Binding (JAXB) 2.0]
-(`http://jcp.org/en/jsr/detail?id=222`). By using these interfaces to
+[Jakarta XML Binding](`https://jakarta.ee/specifications/xml-binding/`). By using these interfaces to
 store configuration data, you ensure that the add-on component is fully
 integrated with GlassFish Server. As a result, administrators can
 configure an add-on component in the same way as they can configure
@@ -333,9 +331,9 @@ validations that you specify for an attribute are performed when the
 attribute is initialized and every time the attribute is changed.
 
 To standardize the validation of configuration data, GlassFish Server
-uses http://jcp.org/en/jsr/detail?id=303[JSR 303: Bean Validation]
-(`http://jcp.org/en/jsr/detail?id=303`) for validating configuration
-data. JSR 303 defines a metadata model and API for the validation of
+uses https://jakarta.ee/specifications/bean-validation/[Jakarta Bean Validation]
+(`https://jakarta.ee/specifications/bean-validation/`) for validating configuration
+data. Jakarta Bean Validation defines a metadata model and API for the validation of
 JavaBeans components.
 
 To validate an attribute of an element, annotate the attribute's getter
@@ -343,9 +341,9 @@ method with the annotation in the `jakarta.validation.constraints` package
 that performs the validation that you require. The following table lists
 commonly used annotations for validating GlassFish Server configuration
 data. For the complete list of annotations, see the
-http://download.oracle.com/docs/cd/E17410_01/javaee/6/api/javax/validation/constraints/package-summary.html[`jakarta.validation.constraints`
+https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html[`jakarta.validation.constraints`
 package summary]
-(`http://docs.oracle.com/javaee/7/api/javax/validation/constraints/package-summary.html`).
+(`https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html`).
 
 [[sthref8]][[gjrlg]]
 

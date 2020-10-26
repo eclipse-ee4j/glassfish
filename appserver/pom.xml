@@ -110,7 +110,7 @@
         <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta EE Security + Authentication/Authorization -->
-        <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>
+        <jakarta.security.enterprise-api.version>2.0.0</jakarta.security.enterprise-api.version>
         <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
         <soteria.version>2.0.0-M3</soteria.version>

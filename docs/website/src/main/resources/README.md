@@ -8,6 +8,10 @@ Eclipse GlassFish 5.1 is also Java EE 8 Compatible.
 
 ## Latest News
 
+### October 24, 2020 -- Eclipse GLassFish 6.0 Release Candidate 1 is released
+
+This is the first release candidate of Eclipse GlassFish 6.0 and is available for [download](https://eclipse-ee4j.github.io/glassfish/download).
+This first Release Candidate is functionally complete and is the first version to pass the in progress Jakarta EE 9 Platform CTS and standalone TCKs for both Full Platform and Web Platform. Further development will be carried out before final release but no major functinal changes will be made. 
 
 ### June 23, 2020 -- Eclipse GlassFish 6.0 Milestone 1 is released
 

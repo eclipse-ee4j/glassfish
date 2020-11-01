@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.ejb</groupId>
         <artifactId>ejb</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.0.0-RC2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>gf-ejb-connector</artifactId>

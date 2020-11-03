@@ -1,5 +1,14 @@
 # Eclipse GlassFish Downloads
 
+## Eclipse GLassFish 6, Release Candidate 2
+
+This is the first release candidate for GlassFish 6.0 and is functionally complete and has passed an in-progress version of the Jakarta EE 9 TCK for both Web Profile and Full Profile.
+For more details on Jakarta EE 9, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/). We welcome your feedback! Please include the details provided in the **info** link when reporting any [issues](https://github.com/eclipse-ee4j/glassfish/issues).
+
+* [Eclipse GlassFish 6, Full Platform 6.0.0-RC2](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0-RC2.zip), - [info](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0-RC2.info)
+* [Eclipse Glassfish 6, Web Profile 6.0.0-RC2](https://download.eclipse.org/ee4j/glassfish/web-6.0.0-RC2.zip), - [info](https://download.eclipse.org/ee4j/glassfish/web-6.0.0-RC2.info)
+
+
 ## Eclipse GLassFish 6, Release Candidate 1
 
 This is the first release candidate for GlassFish 6.0 and is functionally complete and has passed an in-progress version of the Jakarta EE 9 TCK for both Web Profile and Full Profile.

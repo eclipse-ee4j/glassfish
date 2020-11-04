@@ -9,7 +9,7 @@ following is a summary of the TCK results for releases of Jakarta Enterprise Bea
 
 - Product Name, Version and download URL (if applicable): <br/>
   [Eclipse GlassFish 6.0](https://eclipse-ee4j.github.io/glassfish/download)
-  (https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0-RC2.zip)
+  [glassfish-6.0.0-RC2.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0-RC2.zip)
   Includes Jakarta Enterprise Beans 4.0
 
 - Specification Name, Version and download URL: <br/>

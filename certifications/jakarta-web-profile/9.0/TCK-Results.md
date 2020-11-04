@@ -1,7 +1,6 @@
 TCK Results
 ===========
 
-** These are Preliminary Results **
 
 As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
@@ -11,13 +10,13 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, W
 
 - Product Name, Version and download URL (if applicable): <br/>
   [Eclipse GlassFish 6.0, Web Profile](https://eclipse-ee4j.github.io/glassfish/download)
-  (https://download.eclipse.org/ee4j/glassfish/web-6.0.0-RC2.zip)
+  [web-6.0.0-RC2.zip](https://download.eclipse.org/ee4j/glassfish/web-6.0.0-RC2.zip)
 
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, Web Profile 9.0](https://jakarta.ee/specifications/webprofile/9/)
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta EE 9.0 Platform TCK` 9.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaeetck-9.0.0-RC1.zip), SHA-256: `75b2493a117e7f8fe775cc7e2e8a605a203611895091f4bb9aaabed57f813392`
+  [Jakarta EE 9.0 Platform TCK` 9.0](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaeetck-9.0.0.zip), SHA-256: `75b2493a117e7f8fe775cc7e2e8a605a203611895091f4bb9aaabed57f813392`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)

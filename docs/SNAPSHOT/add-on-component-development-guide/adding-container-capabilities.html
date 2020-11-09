@@ -61,7 +61,7 @@
 <h2 id="adding-container-capabilities">7 Adding Container Capabilities</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Applications run on GlassFish Server in containers. GlassFish Server
+<p>Applications run on Eclipse GlassFish Server in containers. GlassFish Server
 enables you to create containers that extend or replace the existing
 containers of GlassFish Server. Adding container capabilities enables
 you to run new types of applications and to deploy new archive types in
@@ -142,7 +142,7 @@ annotation&#8217;s <code>name</code> element:</p>
 <pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package com.example.containers;
 ...
 
-@Service @javax.inject.Named("com.example.containers.MyContainer")
+@Service @jakarta.inject.Named("com.example.containers.MyContainer")
 public class MyContainer implements Container {
 ...
 }</code></pre>
@@ -389,7 +389,7 @@ returns it as a <code>java.io.OutputStream</code>.</p>
 <h4 id="_implementing_the_code_archivehandler_code_interface">Implementing the <code>ArchiveHandler</code> Interface</h4>
 <div class="paragraph">
 <p>An archive handler is responsible for handling the particular layout of
-an archive. Java EE defines a set of archives (WAR, JAR, and RAR, for
+an archive. Jakarta EE defines a set of archives (WAR, JAR, and RAR, for
 example), and each of these archives has an <code>ArchiveHandler</code> instance
 associated with the archive type.</p>
 </div>
@@ -1057,9 +1057,9 @@ to the listing of each class or resource.</p>
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import jakarta.annotation.Resource;
 
 
@@ -1165,7 +1165,7 @@ public class SimpleGreeter {
 
 <span id="copyright">
         <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
-        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+        <span >Copyright&nbsp;&copy;&nbsp;2020,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
 </span>
 
 <p align="center" class="beta">DRAFT</p>

@@ -62,7 +62,7 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>asadmin</code> utility is a command-line tool for configuring and
-administering GlassFish Server. Extending the <code>asadmin</code> utility enables
+administering Eclipse GlassFish Server. Extending the <code>asadmin</code> utility enables
 you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other GlassFish Server components.
 A user can run <code>asadmin</code> subcommands either from a command prompt or
@@ -273,8 +273,7 @@ creating, deleting, and listing HTTP listeners:</p>
 obtain a complete list of the names of all <code>asadmin</code> subcommands that
 are installed, use the <a href="../reference-manual/list-commands.html#GSRFM00154"><code>list-commands</code></a> subcommand. For
 a complete list of <code>asadmin</code> subcommands that are supplied in GlassFish
-Server distributions, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source
-Edition Reference Manual</a>.</p>
+Server distributions, see the <a href="../reference-manual/toc.html#GSRFM">Eclipse GlassFish Reference Manual</a>.</p>
 </div>
 <div class="paragraph">
 <p><a id="ghrng"></a><a id="GSACG00196"></a><a id="ensuring-that-an-admincommand-implementation-is-stateless"></a></p>
@@ -1513,7 +1512,7 @@ value is a text string without quotes.</p>
 <dd>
 <p>Specifies the full product name without any release information, for
 example,
-<code>name="ProductNameFullPlain" content="Oracle GlassFish Server"</code>.</p>
+<code>name="ProductNameFullPlain" content="Eclipse GlassFish Server"</code>.</p>
 </dd>
 <dt class="hdlist1">`abbrev_product_name=`abbrev-product-name</dt>
 <dd>
@@ -1523,7 +1522,7 @@ information, for example,
 </dd>
 <dt class="hdlist1">`major_version=`major-version</dt>
 <dd>
-<p>Returns the product major version, for example, <code>3</code></p>
+<p>Returns the product major version, for example, <code>6</code></p>
 </dd>
 <dt class="hdlist1">`minor_version=`minor-version</dt>
 <dd>
@@ -1552,16 +1551,16 @@ the GlassFish Server CLI</p>
 </div>
 <div class="paragraph">
 <p>This example shows the content of the <code>BrandingVersion.properties</code> for
-defining the product name and release information of Oracle GlassFish
-Server 3.0.1, build 17. The abbreviated product name is
+defining the product name and release information of Eclipse GlassFish
+Server 6.0.0, build 17. The abbreviated product name is
 <code>glassfish-server</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">product_name=Oracle GlassFish Server
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">product_name=Eclise GlassFish Server
 abbrev_product_name=glassfish-server
-major_version=3
-minor_version=0.1
+major_version=6
+minor_version=0.0
 build_id=build 17</code></pre>
 </div>
 </div>
@@ -1571,12 +1570,12 @@ properties might also be required:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">LEGAL_COPYRIGHT                "Copyright 2008, 2009"
-LEGAL_COMPANY_NAME             "Oracle Corp."
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">LEGAL_COPYRIGHT                "Copyright 2020"
+LEGAL_COMPANY_NAME             "Eclipse Foundation"
 LEGAL_RIGHTS                   "All rights reserved."
-SIMPLE_COMPANY_NAME            "Oracle"
-COMPANY_CONTACT_URL            "http://www.oracle.com"
-PRODUCT_TRADEMARKS             "Oracle and Java are trademarks of Oracle Corp."</code></pre>
+SIMPLE_COMPANY_NAME            "Eclipse"
+COMPANY_CONTACT_URL            "http://www.glassfish.org"
+PRODUCT_TRADEMARKS             "GlassFish is a trademark of the Eclipse Foundation"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2587,7 +2586,7 @@ created type define a superset of options for both commands.</p>
 
 <span id="copyright">
         <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
-        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+        <span >Copyright&nbsp;&copy;&nbsp;2020,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
 </span>
 
 <p align="center" class="beta">DRAFT</p>

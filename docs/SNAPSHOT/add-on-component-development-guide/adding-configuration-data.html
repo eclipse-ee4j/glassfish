@@ -62,13 +62,11 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>The configuration data of a component determines the characteristics and
-runtime behavior of a component. GlassFish Server provides interfaces to
+runtime behavior of a component. Eclipse GlassFish provides interfaces to
 enable an add-on component to store its configuration data in the same
 way as other GlassFish Server components. These interfaces are similar
 to interfaces that are defined in
-<a href="http://jcp.org/en/jsr/detail?id=222">Java Specification Request (JSR)
-222: Java Architecture for XML Binding (JAXB) 2.0</a>
-(<code>http://jcp.org/en/jsr/detail?id=222</code>). By using these interfaces to
+[Jakarta XML Binding](<code>https://jakarta.ee/specifications/xml-binding/</code>). By using these interfaces to
 store configuration data, you ensure that the add-on component is fully
 integrated with GlassFish Server. As a result, administrators can
 configure an add-on component in the same way as they can configure
@@ -504,9 +502,9 @@ attribute is initialized and every time the attribute is changed.</p>
 </div>
 <div class="paragraph">
 <p>To standardize the validation of configuration data, GlassFish Server
-uses <a href="http://jcp.org/en/jsr/detail?id=303">JSR 303: Bean Validation</a>
-(<code>http://jcp.org/en/jsr/detail?id=303</code>) for validating configuration
-data. JSR 303 defines a metadata model and API for the validation of
+uses <a href="https://jakarta.ee/specifications/bean-validation/">Jakarta Bean Validation</a>
+(<code>https://jakarta.ee/specifications/bean-validation/</code>) for validating configuration
+data. Jakarta Bean Validation defines a metadata model and API for the validation of
 JavaBeans components.</p>
 </div>
 <div class="paragraph">
@@ -515,9 +513,9 @@ method with the annotation in the <code>jakarta.validation.constraints</code> pa
 that performs the validation that you require. The following table lists
 commonly used annotations for validating GlassFish Server configuration
 data. For the complete list of annotations, see the
-<a href="http://download.oracle.com/docs/cd/E17410_01/javaee/6/api/javax/validation/constraints/package-summary.html"><code>jakarta.validation.constraints</code>
+<a href="https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html"><code>jakarta.validation.constraints</code>
 package summary</a>
-(<code>http://docs.oracle.com/javaee/7/api/javax/validation/constraints/package-summary.html</code>).</p>
+(<code>https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html</code>).</p>
 </div>
 <div class="paragraph">
 <p><a id="sthref8"></a><a id="gjrlg"></a></p>
@@ -1298,7 +1296,7 @@ element is shown in <a href="#gkamb">Example 6-12</a>.</p>
 
 <span id="copyright">
         <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
-        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+        <span >Copyright&nbsp;&copy;&nbsp;2020,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
 </span>
 
 <p align="center" class="beta">DRAFT</p>

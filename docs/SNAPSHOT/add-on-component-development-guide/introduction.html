@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Introduction to the Development Environment for GlassFish Server Add-On Components</title>
+    <title>Introduction to the Development Environment for Eclipse GlassFish Add-On Components</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/style.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/96c4d89611.js"></script>
@@ -12,7 +12,7 @@
 <table id="doc-title" cellspacing="0" cellpadding="0">
   <tr>
   <td align="left" valign="top">
-  <b>Introduction to the Development Environment for GlassFish Server Add-On Components</b><br />
+  <b>Introduction to the Development Environment for Eclipse GlassFish Add-On Components</b><br />
       <p class="beta">DRAFT</p>
   </td>
   </tr>
@@ -58,10 +58,10 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="introduction-to-the-development-environment-for-glassfish-server-add-on-components">1 Introduction to the Development Environment for GlassFish Server Add-On Components</h2>
+<h2 id="introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components">1 Introduction to the Development Environment for Eclipse GlassFish Add-On Components</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>GlassFish Server Open Source Edition enables an external vendor such as
+<p>Eclipse GlassFish enables an external vendor such as
 an independent software vendor (ISV), original equipment manufacturer
 (OEM), or system integrator to incorporate GlassFish Server into a new
 product with the vendor&#8217;s own brand name. External vendors can extend
@@ -142,7 +142,7 @@ distributions.</p>
 GlassFish Server administrators can install add-on components and update
 or remove installed components after GlassFish Server is installed. For
 more information, see "<a href="../administration-guide/toc.html#GSADG00014">Extending and Updating GlassFish
-Server</a>" in GlassFish Server Open Source Edition Administration Guide.</p>
+Server</a>" in Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="paragraph">
 <p><a id="ghmrf"></a><a id="GSACG00088"></a><a id="osgi-alliance-module-management-subsystem"></a></p>
@@ -178,8 +178,8 @@ are compatible with the OSGi Service Platform Release 4 API.</p>
 <div class="sect2">
 <h3 id="_hundred_kilobyte_kernel">Hundred-Kilobyte Kernel</h3>
 <div class="paragraph">
-<p>The <a href="http://hk2.dev.java.net/">Hundred-Kilobyte Kernel (HK2)</a>
-(<code>https://hk2.dev.java.net/</code>) is the lightweight and extensible kernel
+<p>The <a href="https://github.com/eclipse-ee4j/glassfish-hk2">Hundred-Kilobyte Kernel (HK2)</a>
+(<code>https://github.com/eclipse-ee4j/glassfish-hk2</code>) is the lightweight and extensible kernel
 of GlassFish Server. HK2 consists of the following technologies:</p>
 </div>
 <div class="ulist">
@@ -365,9 +365,8 @@ runtime behavior of a component. GlassFish Server provides interfaces to
 enable an add-on component to store its configuration data in the same
 way as other GlassFish Server components. These interfaces are similar
 to interfaces that are defined in
-<a href="http://jcp.org/en/jsr/detail?id=222">Java Specification Request (JSR)
-222: Java Architecture for XML Binding (JAXB) 2.0</a>
-(<code>http://jcp.org/en/jsr/detail?id=222</code>). By using these interfaces to
+<a href="https://jakarta.ee/specifications/xml-binding/3.0/">Jakarta XML Binding 3.0</a>
+(<code>https://jakarta.ee/specifications/xml-binding/3.0/</code>). By using these interfaces to
 store configuration data, you ensure that the add-on component is fully
 integrated with GlassFish Server. As a result, administrators can
 configure an add-on component in the same way as they can configure
@@ -413,7 +412,7 @@ type without having to modify the web container code.</p>
 <div class="paragraph">
 <p>For information about other high-availability, session persistence
 solutions, see "<a href="../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011">Configuring High Availability Session
-Persistence and Failover</a>" in GlassFish Server Open Source Edition High
+Persistence and Failover</a>" in Eclipse GlassFish High
 Availability Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -484,7 +483,7 @@ and Delivering an Add-On Component</a>.</p>
 
 <span id="copyright">
         <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
-        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+        <span >Copyright&nbsp;&copy;&nbsp;2020,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
 </span>
 
 <p align="center" class="beta">DRAFT</p>

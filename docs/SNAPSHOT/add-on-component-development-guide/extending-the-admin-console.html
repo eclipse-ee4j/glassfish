@@ -62,12 +62,12 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Administration Console is a browser-based tool for administering
-GlassFish Server. It features an easy-to-navigate interface and online
+Eclipse GlassFish Server. It features an easy-to-navigate interface and online
 help. Extending the Administration Console enables you to provide a
 graphical user interface for administering your add-on component. You
 can use any of the user interface features of the Administration
 Console, such as tree nodes, links on the Common Tasks page, tabs and
-sub-tabs, property sheets, and JavaServer Faces pages. Your add-on
+sub-tabs, property sheets, and Jakarta Server Faces pages. Your add-on
 component implements a marker interface and provides a configuration
 file that describes how your customizations integrate with the
 Administration Console.</p>
@@ -75,14 +75,7 @@ Administration Console.</p>
 <div class="paragraph">
 <p>This chapter refers to a simple example called <code>console-sample-ip</code> that
 illustrates how to provide Administration Console features for a
-hypothetical add-on component. Instructions for obtaining and using this
-example are available at the example&#8217;s
-<a href="https://wikis.oracle.com/display/GlassFish/V3SampleIpProject">project
-page</a> (<code>https://wikis.oracle.com/display/GlassFish/V3SampleIpProject</code>).
-When you check out the code, it is placed in a directory named
-<code>glassfish-samples/v3/plugin/adminconsole/console-sample-ip/</code> in your
-current directory. In this chapter, path names for the example files are
-relative to this directory.</p>
+hypothetical add-on component.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -215,10 +208,6 @@ in a nonstandard location or give it a name other than
 return the URL where the file can be found.</p>
 </div>
 <div class="paragraph">
-<p>You can find this example code in the file
-<code>project/src/main/java/org/glassfish/admingui/plugin/SamplePlugin.java</code>.</p>
-</div>
-<div class="paragraph">
 <p><a id="ghmom"></a><a id="GSACG00098"></a><a id="about-administration-console-templates"></a></p>
 </div>
 </div>
@@ -227,8 +216,8 @@ return the URL where the file can be found.</p>
 <h3 id="_about_administration_console_templates">About Administration Console Templates</h3>
 <div class="paragraph">
 <p>GlassFish Server includes a set of templates that make it easier to
-create JavaServer Faces pages for your add-on component. These templates
-use Templating for JavaServer Faces Technology, which is also known as
+create Jakarta Server Faces pages for your add-on component. These templates
+use Templating for Jakarta Server Faces Technology, which is also known as
 JSFTemplating.</p>
 </div>
 <div class="paragraph">
@@ -238,19 +227,19 @@ sections of this chapter:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#ghoej">Creating a JavaServer Faces Page for Your Node</a></p>
+<p><a href="#ghoej">Creating a Jakarta Server Faces Page for Your Node</a></p>
 </li>
 <li>
-<p><a href="#ghovg">Creating JavaServer Faces Pages for Your Tabs</a></p>
+<p><a href="#ghovg">Creating Jakarta Server Faces Pages for Your Tabs</a></p>
 </li>
 <li>
-<p><a href="#ghoeu">Creating a JavaServer Faces Page for Your Task</a></p>
+<p><a href="#ghoeu">Creating a Jakarta Server Faces Page for Your Task</a></p>
 </li>
 <li>
-<p><a href="#ghoya">Creating a JavaServer Faces Page for Your Task Group</a></p>
+<p><a href="#ghoya">Creating a Jakarta Server Faces Page for Your Task Group</a></p>
 </li>
 <li>
-<p><a href="#ghpao">Creating a JavaServer Faces Page for Your Page Content</a></p>
+<p><a href="#ghpao">Creating a Jakarta Server Faces Page for Your Page Content</a></p>
 </li>
 <li>
 <p><a href="#ghmqe">Adding a Page to the Administration Console</a></p>
@@ -278,7 +267,7 @@ integration points:</p>
 <p>Elements on the Common Tasks page of the Administration Console</p>
 </li>
 <li>
-<p>JavaServer Faces pages</p>
+<p>Jakarta Server Faces pages</p>
 </li>
 <li>
 <p>Tabs and sub-tabs</p>
@@ -292,7 +281,7 @@ In the example, this file is in the directory
 describe how to create this file.</p>
 </div>
 <div class="paragraph">
-<p>In addition, create JavaServer Faces pages that contain JSF code
+<p>In addition, create Jakarta Server Faces pages that contain JSF code
 fragments to implement the integration points. In the example, these
 files are in the directory <code>project/src/main/resources/</code>. The content of
 these files depends on the integration point you are implementing. The
@@ -561,374 +550,284 @@ nodes under the Resources and Configuration nodes.</p>
 <div class="paragraph">
 <p><a id="ghoej"></a><a id="GSACG00158"></a><a id="creating-a-javaserver-faces-page-for-your-node"></a></p>
 </div>
-<div class="sect4">
-<h5 id="_creating_a_javaserver_faces_page_for_your_node">Creating a JavaServer Faces Page for Your Node</h5>
 <div class="paragraph">
-<p>A JavaServer Faces page for a tree node uses the tag <code>sun:treeNode</code>.
+<p>Creating a Jakarta Server Faces Page for Your Node</p>
+</div>
+A Jakarta Server Faces page for a tree node uses the tag `sun:treeNode`.
 This tag provides all the capabilities of the Project Woodstock tag
-<code>webuijsf:treeNode</code>.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00021"></a><a id="ghpmn"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-3 Example JavaServer Faces Page for a Tree Node</p>
-</div>
-<div class="paragraph">
-<p>In the example, the <code>sampleNode.jsf</code> file has the following content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;sun:treeNode
+`webuijsf:treeNode`.
+
+[[GSACG00021]][[ghpmn]]
+
+
+Example 3-3 Example Jakarta Server Faces Page for a Tree Node
+
+In the example, the `sampleNode.jsf` file has the following content:
+
+[source,oac_no_warn]
+----
+<sun:treeNode
         id="treenode1"
         text="SampleTop"
         url="/sample/page/testPage.jsf?name=SampleTop"
         imageURL="/resource/sample/images/sample.png"
-       &gt;
-    &lt;sun:treeNode
+       >
+    <sun:treeNode
             id="treenodebb"
             text="SampleBB"
             url="/sample/page/testPage.jsf?name=SampleBB"
-            imageURL="resource/sample/images/sample.png" /&gt;
-&lt;/sun:treeNode&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This file uses the <code>sun:treenode</code> tag to specify both a top-level tree
+            imageURL="resource/sample/images/sample.png" />
+</sun:treeNode>
+----
+
+This file uses the `sun:treenode` tag to specify both a top-level tree
 node and another node nested beneath it. In your own JavaServer Faces
-pages, specify the attributes of this tag as follows:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>id</code></dt>
-<dd>
-<p>A unique identifier for the tree node.</p>
-</dd>
-<dt class="hdlist1"><code>text</code></dt>
-<dd>
-<p>The node name that appears in the tree.</p>
-</dd>
-<dt class="hdlist1"><code>url</code></dt>
-<dd>
-<p>The location of the JavaServer Faces page that appears when you click
-the node. In the example, most of the integration points use a very
-simple JavaServer Faces page called <code>testPage.jsf</code>, which is in the
-<code>src/main/resources/page/</code> directory. Specify the integration point
-<code>id</code> value as the root of the URL; in this case, it is <code>sample</code> (see
-<a href="#ghmpg">Specifying the ID of an Add-On Component</a>). The rest of
-the URL is relative to the <code>src/main/resources/</code> directory, where
-<code>sampleNode.jsf</code> resides.<br>
-The <code>url</code> tag in this example passes a <code>name</code> parameter to the
-JavaServer Faces page.</p>
-</dd>
-<dt class="hdlist1"><code>imageURL</code></dt>
-<dd>
-<p>The location of a graphic to display next to the node name. In the
-example, the graphic is always <code>sample.png</code>, which is in the
-<code>src/main/resources/images/</code> directory. The URL for this image is an
-absolute path, <code>/resource/`sample</code>/images/sample.png`, where sample in
-the path is the integration point <code>id</code> value (see
-<a href="#ghmpg">Specifying the ID of an Add-On Component</a>).</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p><a id="ghotv"></a><a id="GSACG00189"></a><a id="adding-tabs-to-a-page"></a></p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_adding_tabs_to_a_page">Adding Tabs to a Page</h4>
-<div class="paragraph">
-<p>You can add a tab to an existing tab set, or you can create a tab set
+pages, specify the attributes of this tag as follows:
+
+`id`::
+  A unique identifier for the tree node.
+`text`::
+  The node name that appears in the tree.
+`url`::
+  The location of the JavaServer Faces page that appears when you click
+  the node. In the example, most of the integration points use a very
+  simple Jakarta Server Faces page called `testPage.jsf`, which is in the
+  `src/main/resources/page/` directory. Specify the integration point
+  `id` value as the root of the URL; in this case, it is `sample` (see
+  link:#ghmpg[Specifying the ID of an Add-On Component]). The rest of
+  the URL is relative to the `src/main/resources/` directory, where
+  `sampleNode.jsf` resides. +
+  The `url` tag in this example passes a `name` parameter to the
+  Jakarta Server Faces page.
+`imageURL`::
+  The location of a graphic to display next to the node name. In the
+  example, the graphic is always `sample.png`, which is in the
+  `src/main/resources/images/` directory. The URL for this image is an
+  absolute path, `/resource/`sample`/images/sample.png`, where sample in
+  the path is the integration point `id` value (see
+  link:#ghmpg[Specifying the ID of an Add-On Component]).
+
+[[ghotv]][[GSACG00189]][[adding-tabs-to-a-page]]
+
+Adding Tabs to a Page
+^^^^^^^^^^^^^^^^^^^^^
+
+You can add a tab to an existing tab set, or you can create a tab set
 for your own page. One way to add a tab or tab set is to use an
-integration point of type <code>org.glassfish.admingui:serverInstTab</code>, which
+integration point of type `org.glassfish.admingui:serverInstTab`, which
 adds a tab to the tab set on the main GlassFish Server page of the
 Administration Console. You can also create sub-tabs. Once again, the
-<code>parentId</code> element specifies where to place the tab or tab set.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00022"></a><a id="ghplc"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-4 Example Tab Integration Point</p>
-</div>
-<div class="paragraph">
-<p>In the example, the following <code>integration-point</code> element adds a new tab
-on the main GlassFish Server page of the Administration Console:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">        &lt;integration-point
+`parentId` element specifies where to place the tab or tab set.
+
+[[GSACG00022]][[ghplc]]
+
+
+Example 3-4 Example Tab Integration Point
+
+In the example, the following `integration-point` element adds a new tab
+on the main GlassFish Server page of the Administration Console:
+
+[source,oac_no_warn]
+----
+        <integration-point
             id="sampletab"
             parentid="serverinsttabs"
             type="org.glassfish.admingui:serverInstTab"
             priority="500"
             content="sampleTab.jsf"
-        /&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This example specifies the following values:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>id</code> value, <code>sampleTab</code>, specifies the integration point ID.</p>
-</li>
-<li>
-<p>The <code>parentId</code> value, <code>serverInstTabs</code>, specifies the tab set
+        />
+----
+
+This example specifies the following values:
+
+* The `id` value, `sampleTab`, specifies the integration point ID.
+* The `parentId` value, `serverInstTabs`, specifies the tab set
 associated with the server instance. The GlassFish Server page is the
-only one of the default Administration Console pages that has a tab set.</p>
-</li>
-<li>
-<p>The <code>type</code> value, <code>org.glassfish.admingui:serverInstTab</code>, specifies
-the integration point type as a tab associated with the server instance.</p>
-</li>
-<li>
-<p>The <code>priority</code> value, <code>500</code>, specifies the order of the tab within the
-tab set. This value is optional.</p>
-</li>
-<li>
-<p>The <code>content</code> value, <code>sampleTab.jsf</code>, specifies the JavaServer Faces
-page that displays the tab.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00023"></a><a id="ghplu"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-5 Example Tab Set Integration Points</p>
-</div>
-<div class="paragraph">
-<p>The following <code>integration-point</code> elements add a new tab with two
+only one of the default Administration Console pages that has a tab set.
+* The `type` value, `org.glassfish.admingui:serverInstTab`, specifies
+the integration point type as a tab associated with the server instance.
+* The `priority` value, `500`, specifies the order of the tab within the
+tab set. This value is optional.
+* The `content` value, `sampleTab.jsf`, specifies the Jakarta Server Faces
+page that displays the tab.
+
+[[GSACG00023]][[ghplu]]
+
+
+Example 3-5 Example Tab Set Integration Points
+
+The following `integration-point` elements add a new tab with two
 sub-tabs, also on the main GlassFish Server page of the Administration
-Console:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">        &lt;integration-point
+Console:
+
+[source,oac_no_warn]
+----
+        <integration-point
             id="sampletabwithsubtab"
             parentid="serverinsttabs"
             type="org.glassfish.admingui:serverInstTab"
             priority="300"
             content="sampleTabWithSubTab.jsf"
-        /&gt;
+        />
 
-        &lt;integration-point
+        <integration-point
             id="samplesubtab1"
             parentid="sampletabwithsubtab"
             type="org.glassfish.admingui:serverInstTab"
             priority="300"
             content="sampleSubTab1.jsf"
-        /&gt;
-        &lt;integration-point
+        />
+        <integration-point
             id="samplesubtab2"
             parentid="sampletabwithsubtab"
             type="org.glassfish.admingui:serverInstTab"
             priority="400"
             content="sampleSubTab2.jsf"
-        /&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>These examples specify the following values:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>id</code> values, <code>sampleTabWithSubTab</code>, <code>sampleSubTab1</code>, and
-<code>sampleSubTab2</code>, specify the integration point IDs for the tab and its
-sub-tabs.</p>
-</li>
-<li>
-<p>The <code>parentId</code> of the new tab, <code>serverInstTabs</code>, specifies the tab set
-associated with the server instance. The <code>parentId</code> of the two sub-tabs,
-<code>sampleTabWithSubTab</code>, is the <code>id</code> value of this new tab.</p>
-</li>
-<li>
-<p>The <code>type</code> value, <code>org.glassfish.admingui:serverInstTab</code>, specifies
+        />
+----
+
+These examples specify the following values:
+
+* The `id` values, `sampleTabWithSubTab`, `sampleSubTab1`, and
+`sampleSubTab2`, specify the integration point IDs for the tab and its
+sub-tabs.
+* The `parentId` of the new tab, `serverInstTabs`, specifies the tab set
+associated with the server instance. The `parentId` of the two sub-tabs,
+`sampleTabWithSubTab`, is the `id` value of this new tab.
+* The `type` value, `org.glassfish.admingui:serverInstTab`, specifies
 the integration point type for all the tabs as a tab associated with the
-server instance.</p>
-</li>
-<li>
-<p>The <code>priority</code> values specify the order of the tabs within the tab
+server instance.
+* The `priority` values specify the order of the tabs within the tab
 set. This value is optional. In this case, the priority value for
-<code>sampleTabWithSubTab</code> is <code>300</code>, which is higher than the value for
-<code>sampleTab</code>. That means that <code>sampleTabWithSubTab</code> appears to the left
-of <code>sampleTab</code> in the Administration Console. The priority values for
-<code>sampleSubTab1</code> and <code>sampleSubTab2</code> are <code>300</code> and <code>400</code> respectively, so
-<code>sampleSubTab1</code> appears to the left of <code>sampleSubTab2</code>.</p>
-</li>
-<li>
-<p>The <code>content</code> values, <code>sampleTabWithSubTab.jsf</code>, <code>sampleSubTab1.jsf</code>,
-and <code>sampleSubTab2.jsf</code>, specify the JavaServer Faces pages that display
-the tabs.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><a id="ghovg"></a><a id="GSACG00159"></a><a id="creating-javaserver-faces-pages-for-your-tabs"></a></p>
-</div>
-<div class="sect4">
-<h5 id="_creating_javaserver_faces_pages_for_your_tabs">Creating JavaServer Faces Pages for Your Tabs</h5>
-<div class="paragraph">
-<p>A JavaServer Faces page for a tab uses the tag <code>sun:tab</code>. This tag
+`sampleTabWithSubTab` is `300`, which is higher than the value for
+`sampleTab`. That means that `sampleTabWithSubTab` appears to the left
+of `sampleTab` in the Administration Console. The priority values for
+`sampleSubTab1` and `sampleSubTab2` are `300` and `400` respectively, so
+`sampleSubTab1` appears to the left of `sampleSubTab2`.
+* The `content` values, `sampleTabWithSubTab.jsf`, `sampleSubTab1.jsf`,
+and `sampleSubTab2.jsf`, specify the Jakarta Server Faces pages that display
+the tabs.
+
+[[ghovg]][[GSACG00159]][[creating-javaserver-faces-pages-for-your-tabs]]
+
+Creating Jakarta Server Faces Pages for Your Tabs
++++++++++++++++++++++++++++++++++++++++++++++
+
+A Jakarta Server Faces page for a tab uses the tag `sun:tab`. This tag
 provides all the capabilities of the Project Woodstock tag
-<code>webuijsf:tab</code>.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00024"></a><a id="ghpnt"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-6 Example JavaServer Faces Page for a Tab</p>
-</div>
-<div class="paragraph">
-<p>In the example, the <code>sampleTab.jsf</code> file has the following content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;sun:tab id="sampletab" immediate="true" text="Sample First Tab"&gt;
-    &lt;!command
+`webuijsf:tab`.
+
+[[GSACG00024]][[ghpnt]]
+
+
+Example 3-6 Example Jakarta Server Faces Page for a Tab
+
+In the example, the `sampleTab.jsf` file has the following content:
+
+[source,oac_no_warn]
+----
+<sun:tab id="sampletab" immediate="true" text="Sample First Tab">
+    <!command
         setSessionAttribute(key="serverInstTabs" value="sampleTab");
         gf.redirect(page="#{request.contextPath}/page/tabPage.jsf?name=Sample%20First%20Tab");
-    /&gt;
-&lt;/sun:tab&gt;</code></pre>
-</div>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 100%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>Note:</p>
-</div>
-<div class="paragraph">
-<p>In the actual file there are no line breaks in the <code>gf.redirect</code> value.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>In your own JavaServer Faces pages, specify the attributes of this tag
-as follows:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>id</code></dt>
-<dd>
-<p>A unique identifier for the tab, in this case <code>sampleTab</code>.</p>
-</dd>
-<dt class="hdlist1"><code>immediate</code></dt>
-<dd>
-<p>If set to true, event handling for this component should be handled
-immediately (in the Apply Request Values phase) rather than waiting
-until the Invoke Application phase.</p>
-</dd>
-<dt class="hdlist1"><code>text</code></dt>
-<dd>
-<p>The tab name that appears in the tab set.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>The JSF page displays tab content differently from the way the page for
-a node displays node content. It invokes two handlers for the <code>command</code>
-event: <code>setSessionAttribute</code> and <code>gf.redirect</code>. The <code>gf.redirect</code>
-handler has the same effect for a tab that the <code>url</code> attribute has for a
-node. It navigates to a simple JavaServer Faces page called
-<code>tabPage.jsf</code>, in the <code>src/main/resources/page/</code> directory, passing the
-text "Sample First Tab" to the page in a <code>name</code> parameter.</p>
-</div>
-<div class="paragraph">
-<p>The <code>sampleSubTab1.jsf</code> and <code>sampleSubTab2.jsf</code> files are almost
-identical to <code>sampleTab.jsf</code>. The most important difference is that each
-sets the session attribute <code>serverInstTabs</code> to the base name of the
-JavaServer Faces file that corresponds to that tab:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">setSessionAttribute(key="serverInstTabs" value="sampleTab");
+    />
+</sun:tab>
+----
+
+
+[width="100%",cols="<100%",]
+|======================================================================
+a|
+Note:
+
+In the actual file there are no line breaks in the `gf.redirect` value.
+
+|======================================================================
+
+
+In your own Jakarta Server Faces pages, specify the attributes of this tag
+as follows:
+
+`id`::
+  A unique identifier for the tab, in this case `sampleTab`.
+`immediate`::
+  If set to true, event handling for this component should be handled
+  immediately (in the Apply Request Values phase) rather than waiting
+  until the Invoke Application phase.
+`text`::
+  The tab name that appears in the tab set.
+
+The JSF page displays tab content differently from the way the page for
+a node displays node content. It invokes two handlers for the `command`
+event: `setSessionAttribute` and `gf.redirect`. The `gf.redirect`
+handler has the same effect for a tab that the `url` attribute has for a
+node. It navigates to a simple Jakarta Server Faces page called
+`tabPage.jsf`, in the `src/main/resources/page/` directory, passing the
+text "Sample First Tab" to the page in a `name` parameter.
+
+The `sampleSubTab1.jsf` and `sampleSubTab2.jsf` files are almost
+identical to `sampleTab.jsf`. The most important difference is that each
+sets the session attribute `serverInstTabs` to the base name of the
+Jakarta Server Faces file that corresponds to that tab:
+
+[source,oac_no_warn]
+----
+setSessionAttribute(key="serverInstTabs" value="sampleTab");
 
 setSessionAttribute(key="serverInstTabs" value="sampleSubTab1");
 
-setSessionAttribute(key="serverInstTabs" value="sampleSubTab2");</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><a id="ghmqw"></a><a id="GSACG00190"></a><a id="adding-a-task-to-the-common-tasks-page"></a></p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_adding_a_task_to_the_common_tasks_page">Adding a Task to the Common Tasks Page</h4>
-<div class="paragraph">
-<p>You can add either a single task or a group of tasks to the Common Tasks
+setSessionAttribute(key="serverInstTabs" value="sampleSubTab2");
+----
+
+[[ghmqw]][[GSACG00190]][[adding-a-task-to-the-common-tasks-page]]
+
+Adding a Task to the Common Tasks Page
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can add either a single task or a group of tasks to the Common Tasks
 page of the Administration Console. To add a task or task group, use an
-integration point of type <code>org.glassfish.admingui:commonTask</code>.</p>
-</div>
-<div class="paragraph">
-<p>See <a href="#ghozn">Adding a Task Group to the Common Tasks Page</a> for
-information on adding a task group.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00025"></a><a id="ghpox"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-7 Example Task Integration Point</p>
-</div>
-<div class="paragraph">
-<p>In the example <code>console-config.xml</code> file, the following
-<code>integration-point</code> element adds a task to the Deployment task group:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">        &lt;integration-point
+integration point of type `org.glassfish.admingui:commonTask`.
+
+See link:#ghozn[Adding a Task Group to the Common Tasks Page] for
+information on adding a task group.
+
+[[GSACG00025]][[ghpox]]
+
+
+Example 3-7 Example Task Integration Point
+
+In the example `console-config.xml` file, the following
+`integration-point` element adds a task to the Deployment task group:
+
+[source,oac_no_warn]
+----
+        <integration-point
                 id="samplecommontask"
                 parentid="deployment"
                 type="org.glassfish.admingui:commonTask"
                 priority="200"
                 content="sampleCommonTask.jsf"
-        /&gt;</code></pre>
-</div>
-</div>
+        />
+----
+
+This example specifies the following values:
+
+* The `id` value, `sampleCommonTask`, specifies the integration point
+ID.
+* The `parentId` value, `deployment`, specifies that the task is to be
+placed in the Deployment task group.
+* The `type` value, `org.glassfish.admingui:commonTask`, specifies the
+integration point type as a common task.
+* The `priority` value, `200`, specifies the order of the task within
+the task group.
+* The `content` value, `sampleCommonTask.jsf`, specifies the JavaServer
+Faces page that displays the task.
+
+[[ghoeu]][[GSACG00160]][[creating-a-javaserver-faces-page-for-your-task]]
+
+Creating a Jakarta Server Faces Page for Your Task
 <div class="paragraph">
-<p>This example specifies the following values:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>id</code> value, <code>sampleCommonTask</code>, specifies the integration point
-ID.</p>
-</li>
-<li>
-<p>The <code>parentId</code> value, <code>deployment</code>, specifies that the task is to be
-placed in the Deployment task group.</p>
-</li>
-<li>
-<p>The <code>type</code> value, <code>org.glassfish.admingui:commonTask</code>, specifies the
-integration point type as a common task.</p>
-</li>
-<li>
-<p>The <code>priority</code> value, <code>200</code>, specifies the order of the task within
-the task group.</p>
-</li>
-<li>
-<p>The <code>content</code> value, <code>sampleCommonTask.jsf</code>, specifies the JavaServer
-Faces page that displays the task.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><a id="ghoeu"></a><a id="GSACG00160"></a><a id="creating-a-javaserver-faces-page-for-your-task"></a></p>
-</div>
-<div class="sect4">
-<h5 id="_creating_a_javaserver_faces_page_for_your_task">Creating a JavaServer Faces Page for Your Task</h5>
-<div class="paragraph">
-<p>A JavaServer Faces page for a task uses the tag <code>sun:commonTask</code>. This
+<p>A Jakarta Server Faces page for a task uses the tag <code>sun:commonTask</code>. This
 tag provides all the capabilities of the Project Woodstock tag
 <code>webuijsf:commonTask</code>.</p>
 </div>
@@ -936,7 +835,7 @@ tag provides all the capabilities of the Project Woodstock tag
 <p><a id="GSACG00026"></a><a id="gjkgd"></a></p>
 </div>
 <div class="paragraph">
-<p>Example 3-8 Example JavaServer Faces Page for a Task</p>
+<p>Example 3-8 Example Jakarta Server Faces Page for a Task</p>
 </div>
 <div class="paragraph">
 <p>In the example, the <code>sampleCommonTask.jsf</code> file has the following
@@ -970,7 +869,7 @@ value.</p>
 </table>
 <div class="paragraph">
 <p>This file uses the <code>sun:commonTask</code> tag to specify the task. In your own
-JavaServer Faces pages, specify the attributes of this tag as follows:</p>
+Jakarta Server Faces pages, specify the attributes of this tag as follows:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -992,7 +891,6 @@ name.</p>
 </div>
 <div class="paragraph">
 <p><a id="ghozn"></a><a id="GSACG00191"></a><a id="adding-a-task-group-to-the-common-tasks-page"></a></p>
-</div>
 </div>
 </div>
 <div class="sect3">
@@ -1053,480 +951,389 @@ Faces page that displays the task.</p>
 <div class="paragraph">
 <p><a id="ghoya"></a><a id="GSACG00161"></a><a id="creating-a-javaserver-faces-page-for-your-task-group"></a></p>
 </div>
-<div class="sect4">
-<h5 id="_creating_a_javaserver_faces_page_for_your_task_group">Creating a JavaServer Faces Page for Your Task Group</h5>
 <div class="paragraph">
-<p>A JavaServer Faces page for a task group uses the tag
-<code>sun:commonTasksGroup</code>. This tag provides all the capabilities of the
-Project Woodstock tag <code>webuijsf:commonTasksGroup</code>.</p>
+<p>Creating a Jakarta Server Faces Page for Your Task Group</p>
 </div>
-<div class="paragraph">
-<p><a id="GSACG00028"></a><a id="ghpqe"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-10 Example JavaServer Faces Page for a Task Group</p>
-</div>
-<div class="paragraph">
-<p>In the example, the <code>sampleTaskGroup.jsf</code> file has the following
-content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;sun:commonTasksGroup title="My Own Sample Group"&gt;
-    &lt;sun:commonTask
+A Jakarta Server Faces page for a task group uses the tag
+`sun:commonTasksGroup`. This tag provides all the capabilities of the
+Project Woodstock tag `webuijsf:commonTasksGroup`.
+
+[[GSACG00028]][[ghpqe]]
+
+
+Example 3-10 Example Jakarta Server Faces Page for a Task Group
+
+In the example, the `sampleTaskGroup.jsf` file has the following
+content:
+
+[source,oac_no_warn]
+----
+<sun:commonTasksGroup title="My Own Sample Group">
+    <sun:commonTask
             text="Go To Sample Resource"
             toolTip="Go To Sample Resource"
             onClick="return admingui.woodstock.commonTaskHandler('form:tree:resources:treeNode1',
-            '#{request.contextPath}/sample/page/testPage.jsf?name=Sample%20Resource%20Page');"&gt;
-    &lt;/sun:commonTask&gt;
-    &lt;sun:commonTask
+            '#{request.contextPath}/sample/page/testPage.jsf?name=Sample%20Resource%20Page');">
+    </sun:commonTask>
+    <sun:commonTask
             text="Sample Configuration"
             toolTip="Go To Sample Configuration"
             onClick="return admingui.woodstock.commonTaskHandler('form:tree:configuration:sampleConfigNode',
-            '#{request.contextPath}/sample/page/testPage.jsf?name=Sample%20Configuration%20Page');"&gt;
-    &lt;/sun:commonTask&gt;
-&lt;/sun:commonTasksGroup&gt;</code></pre>
-</div>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 100%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>Note:</p>
-</div>
-<div class="paragraph">
-<p>In the actual file, there are no line breaks in the <code>onClick</code> attribute
-values.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>This file uses the <code>sun:commonTasksGroup</code> tag to specify the task group,
-and two <code>sun:commonTask</code> tags to specify the tasks in the task group.
-The <code>sun:commonTasksGroup</code> tag has only one attribute, <code>title</code>, which
-specifies the name of the task group.</p>
-</div>
-<div class="paragraph">
-<p><a id="ghmrg"></a><a id="GSACG00192"></a><a id="adding-content-to-a-page"></a></p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_adding_content_to_a_page">Adding Content to a Page</h4>
-<div class="paragraph">
-<p>You can add content for your add-on component to an existing top-level
+            '#{request.contextPath}/sample/page/testPage.jsf?name=Sample%20Configuration%20Page');">
+    </sun:commonTask>
+</sun:commonTasksGroup>
+----
+
+
+[width="100%",cols="<100%",]
+|=======================================================================
+a|
+Note:
+
+In the actual file, there are no line breaks in the `onClick` attribute
+values.
+
+|=======================================================================
+
+
+This file uses the `sun:commonTasksGroup` tag to specify the task group,
+and two `sun:commonTask` tags to specify the tasks in the task group.
+The `sun:commonTasksGroup` tag has only one attribute, `title`, which
+specifies the name of the task group.
+
+[[ghmrg]][[GSACG00192]][[adding-content-to-a-page]]
+
+Adding Content to a Page
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can add content for your add-on component to an existing top-level
 page, such as the Configuration page or the Resources page. To add
 content to one of these pages, use an integration point of type
-<code>org.glassfish.admingui:configuration</code> or
-<code>org.glassfish.admingui:resources</code>.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00029"></a><a id="ghpnu"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-11 Example Resources Page Implementation Point</p>
-</div>
-<div class="paragraph">
-<p>In the example <code>console-config.xml</code> file, the following
-<code>integration-point</code> element adds new content to the top-level Resources
-page:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">        &lt;integration-point
+`org.glassfish.admingui:configuration` or
+`org.glassfish.admingui:resources`.
+
+[[GSACG00029]][[ghpnu]]
+
+
+Example 3-11 Example Resources Page Implementation Point
+
+In the example `console-config.xml` file, the following
+`integration-point` element adds new content to the top-level Resources
+page:
+
+[source,oac_no_warn]
+----
+        <integration-point
                 id="sampleresourcelink"
                 parentid="propsheetsection"
                 type="org.glassfish.admingui:resources"
                 priority="100"
                 content="sampleResourceLink.jsf"
-        /&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This example specifies the following values:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>id</code> value, <code>sampleResourceLink</code>, specifies the integration point
-ID.</p>
-</li>
-<li>
-<p>The <code>parentId</code> value, <code>propSheetSection</code>, specifies that the content
-is to be a section of a property sheet on the page.</p>
-</li>
-<li>
-<p>The <code>type</code> value, <code>org.glassfish.admingui:resources</code>, specifies the
-integration point type as the Resources page.<br>
-To add content to the Configuration page, specify the <code>type</code> value as
-<code>org.glassfish.admingui:configuration</code>.</p>
-</li>
-<li>
-<p>The <code>priority</code> value, <code>100</code>, specifies the order of the content on the
-Resources page. The high value places it at the top of the page.</p>
-</li>
-<li>
-<p>The <code>content</code> value, <code>sampleResourceLink.jsf</code>, specifies the
+        />
+----
+
+This example specifies the following values:
+
+* The `id` value, `sampleResourceLink`, specifies the integration point
+ID.
+* The `parentId` value, `propSheetSection`, specifies that the content
+is to be a section of a property sheet on the page.
+* The `type` value, `org.glassfish.admingui:resources`, specifies the
+integration point type as the Resources page. +
+To add content to the Configuration page, specify the `type` value as
+`org.glassfish.admingui:configuration`.
+* The `priority` value, `100`, specifies the order of the content on the
+Resources page. The high value places it at the top of the page.
+* The `content` value, `sampleResourceLink.jsf`, specifies the
 JavaServer Faces page that displays the new content on the Resources
-page.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Another <code>integration-point</code> element in the <code>console-config.xml</code> file
-places similar content on the Configuration page.</p>
-</div>
-<div class="paragraph">
-<p><a id="ghpao"></a><a id="GSACG00162"></a><a id="creating-a-javaserver-faces-page-for-your-page-content"></a></p>
-</div>
-<div class="sect4">
-<h5 id="_creating_a_javaserver_faces_page_for_your_page_content">Creating a JavaServer Faces Page for Your Page Content</h5>
-<div class="paragraph">
-<p>A JavaServer Faces page for page content often uses the tag
-<code>sun:property</code> to specify a property on a property sheet. This tag
+page.
+
+Another `integration-point` element in the `console-config.xml` file
+places similar content on the Configuration page.
+
+[[ghpao]][[GSACG00162]][[creating-a-javaserver-faces-page-for-your-page-content]]
+
+Creating a Jakarta Server Faces Page for Your Page Content
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+A Jakarta Server Faces page for page content often uses the tag
+`sun:property` to specify a property on a property sheet. This tag
 provides all the capabilities of the Project Woodstock tag
-<code>webuijsf:property</code>.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00030"></a><a id="ghpoz"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-12 Example JavaServer Faces Page for a Resource Page Item</p>
-</div>
-<div class="paragraph">
-<p>In the example, the <code>sampleResourceLink.jsf</code> file has the following
-content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;sun:property&gt;
-    &lt;sun:hyperlink
+`webuijsf:property`.
+
+[[GSACG00030]][[ghpoz]]
+
+
+Example 3-12 Example Jakarta Server Faces Page for a Resource Page Item
+
+In the example, the `sampleResourceLink.jsf` file has the following
+content:
+
+[source,oac_no_warn]
+----
+<sun:property>
+    <sun:hyperlink
         toolTip="Sample Resource"
-        url="/sample/page/testPage.jsf?name=Sample%20Resource%20Page"&gt;
-        &lt;sun:image url="/resource/sample/images/sample.png" /&gt;
-        &lt;sun:staticText text="Sample Resource" /&gt;
-    &lt;/sun:hyperlink&gt;
-&lt;/sun:property&gt;
+        url="/sample/page/testPage.jsf?name=Sample%20Resource%20Page">
+        <sun:image url="/resource/sample/images/sample.png" />
+        <sun:staticText text="Sample Resource" />
+    </sun:hyperlink>
+</sun:property>
 
-&lt;sun:property&gt;
-    &lt;sun:hyperlink
+<sun:property>
+    <sun:hyperlink
         toolTip="Another"
-        url="/sample/page/testPage.jsf?name=Another"&gt;
-        &lt;sun:image url="/resource/sample/images/sample.png" /&gt;
-        &lt;sun:staticText text="Another" /&gt;
-    &lt;/sun:hyperlink&gt;
-&lt;/sun:property&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The file specifies two simple properties on the property sheet, one
-above the other. Each consists of a <code>sun:hyperlink</code> element (a link to a
-URL). Within each <code>sun:hyperlink</code> element is nested a <code>sun:image</code>
-element, specifying an image, and a <code>sun:staticText</code> element, specifying
-the text to be placed next to the image.</p>
-</div>
-<div class="paragraph">
-<p>Each <code>sun:hyperlink</code> element uses a <code>toolTip</code> attribute and a <code>url</code>
-attribute. Each <code>url</code> attribute references the <code>testPage.jsf</code> file that
+        url="/sample/page/testPage.jsf?name=Another">
+        <sun:image url="/resource/sample/images/sample.png" />
+        <sun:staticText text="Another" />
+    </sun:hyperlink>
+</sun:property>
+----
+
+The file specifies two simple properties on the property sheet, one
+above the other. Each consists of a `sun:hyperlink` element (a link to a
+URL). Within each `sun:hyperlink` element is nested a `sun:image`
+element, specifying an image, and a `sun:staticText` element, specifying
+the text to be placed next to the image.
+
+Each `sun:hyperlink` element uses a `toolTip` attribute and a `url`
+attribute. Each `url` attribute references the `testPage.jsf` file that
 is used elsewhere in the example, specifying different content for the
-<code>name</code> parameter.</p>
-</div>
-<div class="paragraph">
-<p>You can use many other kinds of user interface elements within a
-<code>sun:property</code> element.</p>
-</div>
-<div class="paragraph">
-<p><a id="ghmqe"></a><a id="GSACG00193"></a><a id="adding-a-page-to-the-administration-console"></a></p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_adding_a_page_to_the_administration_console">Adding a Page to the Administration Console</h4>
-<div class="paragraph">
-<p>Your add-on component may require new configuration tasks. In addition
+`name` parameter.
+
+You can use many other kinds of user interface elements within a
+`sun:property` element.
+
+[[ghmqe]][[GSACG00193]][[adding-a-page-to-the-administration-console]]
+
+Adding a Page to the Administration Console
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Your add-on component may require new configuration tasks. In addition
 to implementing commands that accomplish these tasks (see
-<a href="extending-asadmin.html#ghmrd">Chapter 4, "Extending the <code>asadmin</code>
-Utility"</a>), you can provide property sheets that enable users to
+link:extending-asadmin.html#ghmrd[Chapter 4, "Extending the `asadmin`
+Utility"]), you can provide property sheets that enable users to
 configure your component or to perform tasks such as creating and
-editing resources for it.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00031"></a><a id="ghple"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-13 Example JavaServer Faces Page for a Property Sheet</p>
-</div>
-<div class="paragraph">
-<p>Most of the user interface features used in the example reference the
-file <code>testPage.jsf</code> or (for tabs) the file <code>tabPage.jsf</code>. Both files are
-in the <code>src/main/resources/page/</code> directory. The <code>testPage.jsf</code> file
-looks like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;!composition template="/templates/default.layout" guiTitle="TEST Sample Page Title"&gt;
-&lt;!define name="content"&gt;
-&lt;sun:form id="propertyform"&gt;
+editing resources for it.
 
-&lt;sun:propertySheet id="propertysheet"&gt;
-    &lt;sun:propertySheetSection id="propertysection"&gt;
-       &lt;sun:property id="prop1" labelAlign="left" noWrap="true"
-                     overlapLabel="false" label="Test Page Name:"&gt;
-            &lt;sun:staticText text="$pageSession{pageName}"&gt;
-                &lt;!beforeCreate
-                    getRequestValue(key="name" value=&gt;$page{pageName});
-                /&gt;
-            &lt;/sun:staticText&gt;
-        &lt;/sun:property&gt;
-    &lt;/sun:propertySheetSection&gt;
-&lt;/sun:propertySheet&gt;
-&lt;sun:hidden id="helpkey" value="" /&gt;
+[[GSACG00031]][[ghple]]
 
-&lt;/sun:form&gt;
-&lt;/define&gt;
-&lt;/composition&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The page uses the <code>composition</code> directive to specify that the page uses
-the <code>default.layout</code> template and to specify a page title. The page uses
-additional directives, events, and tags to specify its content.</p>
-</div>
-<div class="paragraph">
-<p><a id="ghmqi"></a><a id="GSACG00102"></a><a id="adding-internationalization-support"></a></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_adding_internationalization_support">Adding Internationalization Support</h3>
-<div class="paragraph">
-<p>To add internationalization support for your add-on component to the
+
+Example 3-13 Example Jakarta Server Faces Page for a Property Sheet
+
+Most of the user interface features used in the example reference the
+file `testPage.jsf` or (for tabs) the file `tabPage.jsf`. Both files are
+in the `src/main/resources/page/` directory. The `testPage.jsf` file
+looks like this:
+
+[source,oac_no_warn]
+----
+<!composition template="/templates/default.layout" guiTitle="TEST Sample Page Title">
+<!define name="content">
+<sun:form id="propertyform">
+
+<sun:propertySheet id="propertysheet">
+    <sun:propertySheetSection id="propertysection">
+       <sun:property id="prop1" labelAlign="left" noWrap="true"
+                     overlapLabel="false" label="Test Page Name:">
+            <sun:staticText text="$pageSession{pageName}">
+                <!beforeCreate
+                    getRequestValue(key="name" value=>$page{pageName});
+                />
+            </sun:staticText>
+        </sun:property>
+    </sun:propertySheetSection>
+</sun:propertySheet>
+<sun:hidden id="helpkey" value="" />
+
+</sun:form>
+</define>
+</composition>
+----
+
+The page uses the `composition` directive to specify that the page uses
+the `default.layout` template and to specify a page title. The page uses
+additional directives, events, and tags to specify its content.
+
+[[ghmqi]][[GSACG00102]][[adding-internationalization-support]]
+
+Adding Internationalization Support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To add internationalization support for your add-on component to the
 Administration Console, you can place an event and handler like the
-following at the top of your page:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;!initPage
+following at the top of your page:
+
+[source,oac_no_warn]
+----
+<!initPage
     setResourceBundle(key="yourI18NKey" bundle="bundle.package.BundleName")
-/&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Replace the values <code>yourI18NKey</code> and <code>bundle.package.BundleName</code> with
-appropriate values for your component.</p>
-</div>
-<div class="paragraph">
-<p><a id="ghmqg"></a><a id="GSACG00103"></a><a id="changing-the-theme-or-brand-of-the-administration-console"></a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_changing_the_theme_or_brand_of_the_administration_console">Changing the Theme or Brand of the Administration Console</h3>
-<div class="paragraph">
-<p>To change the theme or brand of the Administration Console for your
+/>
+----
+
+Replace the values `yourI18NKey` and `bundle.package.BundleName` with
+appropriate values for your component.
+
+[[ghmqg]][[GSACG00103]][[changing-the-theme-or-brand-of-the-administration-console]]
+
+Changing the Theme or Brand of the Administration Console
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To change the theme or brand of the Administration Console for your
 add-on component, use the integration point type
-<code>org.glassfish.admingui:customtheme</code>. This integration point affects the
+`org.glassfish.admingui:customtheme`. This integration point affects the
 Cascading Style Sheet (CSS) files and images that are used in the
-Administration Console.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00032"></a><a id="ghpls"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-14 Example Custom Theme Integration Point</p>
-</div>
-<div class="paragraph">
-<p>For example, the following integration point specifies a custom theme:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">        &lt;integration-point
+Administration Console.
+
+[[GSACG00032]][[ghpls]]
+
+
+Example 3-14 Example Custom Theme Integration Point
+
+For example, the following integration point specifies a custom theme:
+
+[source,oac_no_warn]
+----
+        <integration-point
                 id="myownbrand"
                 type="org.glassfish.admingui:customtheme"
                 priority="2"
                 content="myOwnBrand.properties"
-        /&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>priority</code> attribute works differently when you specify it in a
+        />
+----
+
+The `priority` attribute works differently when you specify it in a
 branding integration point from the way it works in other integration
 points. You can place multiple branding add-on components in the
-<code>modules</code> directory, but only one theme can be applied to the
-Administration Console. The <code>priority</code> attribute determines which theme
+`modules` directory, but only one theme can be applied to the
+Administration Console. The `priority` attribute determines which theme
 is used. Specify a value from 1 to 100; the lower the number, the higher
 the priority. The integration point with the highest priority will be
-used.</p>
-</div>
-<div class="paragraph">
-<p>Additional integration point types also affect the theme or brand of the
-Administration Console:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>org.glassfish.admingui:masthead</code></dt>
-<dd>
-<p>Specifies the name and location of the include masthead file, which
-can be customized with a branding image. This include file will be
-integrated on the masthead of the Administration Console.</p>
-</dd>
-<dt class="hdlist1"><code>org.glassfish.admingui:loginimage</code></dt>
-<dd>
-<p>Specifies the name and location of the include file containing the
-branding login image code that will be integrated with the login page
-of the Administration Console.</p>
-</dd>
-<dt class="hdlist1"><code>org.glassfish.admingui:loginform</code></dt>
-<dd>
-<p>Specifies the name and location of the include file containing the
-customized login form code. This code also contains the login
-background image used for the login page for the Administration
-Console.</p>
-</dd>
-<dt class="hdlist1"><code>org.glassfish.admingui:versioninfo</code></dt>
-<dd>
-<p>Specifies the name and location of the include file containing the
-branding image that will be integrated with the content of the version
-popup window.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p><a id="GSACG00033"></a><a id="ghpla"></a></p>
-</div>
-<div class="paragraph">
-<p>Example 3-15 Example of Branding Integration Points</p>
-</div>
-<div class="paragraph">
-<p>For example, you might specify the following integration points. The
-content for each integration point is defined in an include file.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">       &lt;integration-point
+used.
+
+Additional integration point types also affect the theme or brand of the
+Administration Console:
+
+`org.glassfish.admingui:masthead`::
+  Specifies the name and location of the include masthead file, which
+  can be customized with a branding image. This include file will be
+  integrated on the masthead of the Administration Console.
+`org.glassfish.admingui:loginimage`::
+  Specifies the name and location of the include file containing the
+  branding login image code that will be integrated with the login page
+  of the Administration Console.
+`org.glassfish.admingui:loginform`::
+  Specifies the name and location of the include file containing the
+  customized login form code. This code also contains the login
+  background image used for the login page for the Administration
+  Console.
+`org.glassfish.admingui:versioninfo`::
+  Specifies the name and location of the include file containing the
+  branding image that will be integrated with the content of the version
+  popup window.
+
+[[GSACG00033]][[ghpla]]
+
+
+Example 3-15 Example of Branding Integration Points
+
+For example, you might specify the following integration points. The
+content for each integration point is defined in an include file.
+
+[source,oac_no_warn]
+----
+       <integration-point
                id="myownbrandmast"
                type="org.glassfish.admingui:masthead"
                priority="80"
                content="branding/masthead.inc"
-       /&gt;
-       &lt;integration-point
+       />
+       <integration-point
                id="myownbrandlogimg"
                type="org.glassfish.admingui:loginimage"
                priority="80"
                content="branding/loginimage.inc"
-       /&gt;
-       &lt;integration-point
+       />
+       <integration-point
                id="myownbrandlogfm"
                type="org.glassfish.admingui:loginform"
                priority="80"
                content="branding/loginform.inc"
-       /&gt;
-       &lt;integration-point
+       />
+       <integration-point
                id="myownbrandversinf"
                type="org.glassfish.admingui:versioninfo"
                priority="80"
                content="branding/versioninfo.inc"
-       /&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To provide your own CSS and images to modify the global look and feel of
+       />
+----
+
+To provide your own CSS and images to modify the global look and feel of
 the entire application (not just the Administration Console), use the
-theming feature of <a href="http://java.net/projects/woodstock/">Project
-Woodstock</a> (<code>http://java.net/projects/woodstock/</code>). Create a theme JAR
+theming feature of https://github.com/eclipse-ee4j/glassfish-woodstock[Project
+Woodstock] (`https://github.com/eclipse-ee4j/glassfish-woodstock`). Create a theme JAR
 file with all the CSS properties and image files that are required by
 your Woodstock component. Use a script provided by the Woodstock project
 to clone an existing theme, then modify the files and properties as
 necessary. Once you have created the theme JAR file, place it in the
-<code>WEB-INF/lib</code> directory of the Administration Console so that the
+`WEB-INF/lib` directory of the Administration Console so that the
 Woodstock theme component will load the theme. In addition, edit the
 properties file specified by your integration point
-(<code>MyOwnBrand.properties</code>, for example) to specify the name and version
-of your theme.</p>
-</div>
-<div class="paragraph">
-<p><a id="ghpkz"></a><a id="GSACG00104"></a><a id="creating-an-integration-point-type"></a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_creating_an_integration_point_type">Creating an Integration Point Type</h3>
-<div class="paragraph">
-<p>If your add-on component provides new content that you would like other
+(`MyOwnBrand.properties`, for example) to specify the name and version
+of your theme.
+
+[[ghpkz]][[GSACG00104]][[creating-an-integration-point-type]]
+
+Creating an Integration Point Type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your add-on component provides new content that you would like other
 people to extend, you may define your own integration point types. For
 example, if you add a new page that provides tabs of monitoring
 information, you might want to allow others to add their own tabs to
 complement your default tabs. This feature enables your page to behave
 like the existing Administration Console pages that you or others can
-extend.</p>
-</div>
-<div class="paragraph">
-<p><a id="sthref4"></a><a id="to-create-an-integration-point-type"></a></p>
-</div>
-<div class="sect3">
-<h4 id="_to_create_an_integration_point_type">To Create an Integration Point Type</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Decide on the name of your integration point type.<br>
+extend.
+
+[[sthref4]][[to-create-an-integration-point-type]]
+
+To Create an Integration Point Type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1.  Decide on the name of your integration point type. +
 The integration point type must be a unique identifier. You might use
 the package name of your integration point, with a meaningful name
-appended to the end, as in the following example:<br></p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>org.company.project:myMonitoringTabs</pre>
-</div>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>After you have an integration point ID, use handlers to insert the
-integration point implementation(s).<br>
-Include code like the following below the place in your JavaServer Faces
+appended to the end, as in the following example: +
+[source,oac_no_warn]
+----
+org.company.project:myMonitoringTabs
+----
+2.  After you have an integration point ID, use handlers to insert the
+integration point implementation(s). +
+Include code like the following below the place in your Jakarta Server Faces
 page where you would like to enable others to add their integration
-point implementations:<br></p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>&lt;event&gt;
-    &lt;!afterCreate
+point implementations: +
+[source,oac_no_warn]
+----
+<event>
+    <!afterCreate
         getUIComponent(clientid="clientid:of:root"
-                       component=&gt;$attribute{rootComp});
+                       component=>$attribute{rootComp});
         includeIntegrations(type="org.company.project:myMonitoringTabs"
                             root="#{rootComp}");
-    /&gt;
-&lt;/event&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Change <code>clientId:of:root</code> to match the <code>clientId</code> of the outermost
+    />
+</event>
+----
+Change `clientId:of:root` to match the `clientId` of the outermost
 component in which you want others to be able to add their content (in
 this example, the tab set is the most likely choice). Also include your
-integration point ID in place of <code>org.company.project:myMonitoringTabs</code>.
-If you omit the <code>root</code> argument to <code>includeIntegrations</code>, all components
-on the entire page can be used for the <code>parentId</code> of the integration
+integration point ID in place of `org.company.project:myMonitoringTabs`.
+If you omit the `root` argument to `includeIntegrations`, all components
+on the entire page can be used for the `parentId` of the integration
 points.
-3.  To enable others to use this integration point, document it at the
-<a href="https://wikis.oracle.com/display/GlassFish/V3IntegrationPoint">GlassFish
-Integration Point wiki page</a>
-(<code>https://wikis.oracle.com/display/GlassFish/V3IntegrationPoint</code>).<br>
-Document the integration point only if your content is publicly
-available.<br>
-You or others can now provide an integration point that will be
-integrated into this page.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre></pre>
-</div>
-</div>
+
+
+----
 </div>
 </div>
 </div>
@@ -1566,7 +1373,7 @@ integrated into this page.</p>
 
 <span id="copyright">
         <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
-        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+        <span >Copyright&nbsp;&copy;&nbsp;2020,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
 </span>
 
 <p align="center" class="beta">DRAFT</p>

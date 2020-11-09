@@ -22,7 +22,7 @@ failures, perform root cause analysis, and ensure that everything is
 functioning as expected. Monitoring data can also be useful in
 performance tuning and capacity planning.
 
-An add-on component typically generates statistics that the GlassFish
+An add-on component typically generates statistics that the Eclipse GlassFish
 Server can gather at run time. Adding monitoring capabilities enables an
 add-on component to provide statistics to GlassFish Server in the same
 way as components that are supplied in GlassFish Server distributions.
@@ -447,7 +447,7 @@ through the object's dotted name.
 
 For more information about the tree structure of monitorable objects,
 see "link:../administration-guide/monitoring.html#GSADG00727[How the Monitoring Tree Structure Works]" in
-GlassFish Server Open Source Edition Administration Guide.
+Eclipse GlassFish Administration Guide.
 
 To make an add-on component a monitorable object, you must add the
 add-on component to the monitorable object tree.
@@ -495,8 +495,7 @@ Ensure that the class that you write meets these requirements:
 multiple threads, the listener must be thread safe. However,GlassFish
 Server provides utility classes to perform some common operations such
 as `count`, `avg`, and `sum`.
-* The listener must have the same restrictions as a Java Platform,
-Enterprise Edition (Java EE) application. For example, the listener
+* The listener must have the same restrictions as a Jakarta EE application. For example, the listener
 cannot open server sockets, or create threads.
 
 A listener is called in the same thread as the event method. As a

@@ -113,7 +113,7 @@
         <jakarta.security.enterprise-api.version>2.0.0</jakarta.security.enterprise-api.version>
         <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
-        <soteria.version>2.0.0-M3</soteria.version>
+        <soteria.version>2.0.0</soteria.version>
 
         <!-- Jakarta Messaging -->
         <jms-api.version>3.0.0</jms-api.version>
@@ -250,6 +250,11 @@
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
                 <artifactId>jakarta.security.enterprise</artifactId>
+                <version>${soteria.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.soteria</groupId>
+                <artifactId>soteria.spi.bean.decorator.weld</artifactId>
                 <version>${soteria.version}</version>
             </dependency>
             

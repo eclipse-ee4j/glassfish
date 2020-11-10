@@ -1178,6 +1178,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.soteria</groupId>
+            <artifactId>soteria.spi.bean.decorator.weld</artifactId>
+            <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
+        </dependency>
+        <dependency>
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
             <exclusions>

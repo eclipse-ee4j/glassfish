@@ -117,7 +117,7 @@
 
         <!-- Jakarta Messaging -->
         <jms-api.version>3.0.0</jms-api.version>
-        <mq.version>6.0.0-M3</mq.version>
+        <mq.version>6.0.0-RC2</mq.version>
 
         <!-- Jakarta Persistence -->
         <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>

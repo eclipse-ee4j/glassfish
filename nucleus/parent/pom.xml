@@ -118,8 +118,8 @@
 
         <!-- GlassFish Components -->                                   
         <glassfish-corba.version>4.2.3-RC2</glassfish-corba.version>
-        <grizzly.version>3.0.0-M1</grizzly.version>
-        <grizzly.npn.version>1.9</grizzly.npn.version>
+        <grizzly.version>3.0.0</grizzly.version>
+        <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <hk2.version>3.0.0-RC1</hk2.version>
         <hk2.plugin.version>3.0.0-RC1</hk2.plugin.version>

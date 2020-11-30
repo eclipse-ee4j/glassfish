@@ -27,9 +27,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.annotation.PostConstruct;
-import jakarta.ejb.EJBException;
-import jakarta.interceptor.InvocationContext;
+
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 
 import com.sun.ejb.EJBUtils;
 import com.sun.ejb.containers.BaseContainer;
@@ -40,8 +40,10 @@ import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.MethodDescriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJBException;
+import jakarta.interceptor.InvocationContext;
 
 
 /**
@@ -69,7 +71,7 @@ public class InterceptorManager {
     private Logger _logger;
 
     private Class[] interceptorClasses;
-    
+
     private Class[] serializableInterceptorClasses;
 
     private Map<String, Integer> instanceIndexMap
@@ -222,7 +224,7 @@ public class InterceptorManager {
 
         for (InterceptorDescriptor interceptor : list) {
             String className = interceptor.getInterceptorClassName();
-            Set<LifecycleCallbackDescriptor> aroundInvokeDescs = 
+            Set<LifecycleCallbackDescriptor> aroundInvokeDescs =
                 interceptor.getAroundInvokeDescriptors();
             if(aroundInvokeDescs.isEmpty() ) {
                 continue;
@@ -233,10 +235,12 @@ public class InterceptorManager {
                 orderedAIInterceptors = interceptor.getOrderedAroundInvokeDescriptors(loader);
             } catch (Exception e) {
                throw new IllegalStateException("No AroundInvokeIntercetpors found "
-                   + " on class " + className, e); 
+                   + " on class " + className, e);
             }
+
             addAroundInvokeInterceptors(interceptors, interceptor,
-                    orderedAIInterceptors, className, loader);
+                orderedAIInterceptors, className,
+                interceptor.getInterceptorClass() != null ? interceptor.getInterceptorClass().getClassLoader() : loader);
         }
 
         AroundInvokeInterceptor[] inter = interceptors.toArray(
@@ -280,7 +284,7 @@ public class InterceptorManager {
 
         for (EjbInterceptor interceptor : list) {
             String className = interceptor.getInterceptorClassName();
-            Set<LifecycleCallbackDescriptor> aroundTimeoutDescs = 
+            Set<LifecycleCallbackDescriptor> aroundTimeoutDescs =
                 interceptor.getAroundTimeoutDescriptors();
             if(aroundTimeoutDescs.isEmpty() ) {
                 continue;
@@ -291,9 +295,9 @@ public class InterceptorManager {
                 orderedATInterceptors = interceptor.getOrderedAroundTimeoutDescriptors(loader);
             } catch (Exception e) {
                throw new IllegalStateException("No AroundTimeoutIntercetpors found "
-                   + " on class " + className, e); 
+                   + " on class " + className, e);
             }
-            addAroundInvokeInterceptors(interceptors, interceptor, 
+            addAroundInvokeInterceptors(interceptors, interceptor,
                     orderedATInterceptors, className, loader);
         }
 
@@ -305,7 +309,7 @@ public class InterceptorManager {
     private void addAroundInvokeInterceptors(
             List<AroundInvokeInterceptor> interceptors,
             InterceptorDescriptor interceptor,
-            List<LifecycleCallbackDescriptor> orderedInterceptors, 
+            List<LifecycleCallbackDescriptor> orderedInterceptors,
             String className,
             ClassLoader classLoaderToUse) {
 
@@ -315,8 +319,8 @@ public class InterceptorManager {
                 method = desc.getLifecycleCallbackMethodObject(classLoaderToUse);
             } catch(Exception e) {
                throw new IllegalStateException("No callback method of name " +
-                       desc.getLifecycleCallbackMethod() 
-               + " found on class " + className, e); 
+                       desc.getLifecycleCallbackMethod()
+               + " found on class " + className, e);
             }
 
             if (interceptor.getFromBeanClass()) {
@@ -328,8 +332,8 @@ public class InterceptorManager {
                     throw new IllegalStateException(getInternalErrorString(className));
                 }
                 Class clazz = interceptorClasses[index];
-                _logger.log(Level.FINE, "*[md.getDeclaredMethod() => " 
-                            + method + " FOR CLAZZ: " + clazz);  
+                _logger.log(Level.FINE, "*[md.getDeclaredMethod() => "
+                            + method + " FOR CLAZZ: " + clazz);
                 interceptors.add(new AroundInvokeInterceptor(index, method));
             }
         }
@@ -367,10 +371,10 @@ public class InterceptorManager {
             case AROUND_CONSTRUCT:
                 chain = callbackChain[eventType.ordinal()];
                 if (container != null) {
-                    invContext = new CallbackInvocationContext(beanClass, 
+                    invContext = new CallbackInvocationContext(beanClass,
                             interceptorInstances, chain, eventType, container, ctx);
                 } else {
-                    invContext = new CallbackInvocationContext(beanClass, 
+                    invContext = new CallbackInvocationContext(beanClass,
                             interceptorInstances, chain, eventType, interceptorInfo);
                 }
                 if (chain != null) {
@@ -382,7 +386,7 @@ public class InterceptorManager {
             case POST_ACTIVATE:
             case PRE_DESTROY:
                 chain = callbackChain[eventType.ordinal()];
-                invContext = new CallbackInvocationContext(targetObject, 
+                invContext = new CallbackInvocationContext(targetObject,
                         interceptorInstances, chain, eventType);
                 if (chain != null) {
                     chain.invokeNext(0, invContext);
@@ -402,9 +406,14 @@ public class InterceptorManager {
     private void buildEjbInterceptorChain()
             throws Exception {
 
-        Set<Class> listOfClasses = new HashSet<Class>();
-        for(String name : ejbDesc.getInterceptorClassNames()) {
-            listOfClasses.add( loader.loadClass(name));
+        Set<Class<?>> listOfClasses = new HashSet<>();
+
+        for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptorClasses()) {
+            if (ejbInterceptor.getInterceptorClass() != null) {
+                listOfClasses.add(ejbInterceptor.getInterceptorClass());
+            } else {
+                listOfClasses.add(loader.loadClass(ejbInterceptor.getInterceptorClassName()));
+            }
         }
 
         // Add framework interceptors to list, but check for existence of
@@ -430,7 +439,7 @@ public class InterceptorManager {
             throws Exception {
 
 
-        Set<Class> listOfClasses = new HashSet<Class>();
+        Set<Class<?>> listOfClasses = new HashSet<>();
         for(String name : interceptorInfo.getInterceptorClassNames()) {
             listOfClasses.add( loader.loadClass(name));
         }
@@ -460,20 +469,20 @@ public class InterceptorManager {
     }
 
 
-    private void initInterceptorClasses(Set<Class> classes) throws  Exception {
+    private void initInterceptorClasses(Set<Class<?>> classes) throws  Exception {
 
         int size = classes.size();
         interceptorClasses = new Class[size];
         serializableInterceptorClasses = new Class[size];
         int index = 0;
-        for (Class interClass : classes) {
+        for (Class<?> interClass : classes) {
 
             interceptorClasses[index] = interClass;
             serializableInterceptorClasses[index] = interClass;
             instanceIndexMap.put(interClass.getName(), index);
             if (!Serializable.class.isAssignableFrom(interClass)) {
 
-                serializableInterceptorClasses[index] = 
+                serializableInterceptorClasses[index] =
                     EJBUtils.loadGeneratedSerializableClass(interClass.getClassLoader(),
                             interClass.getName());
 
@@ -544,17 +553,17 @@ public class InterceptorManager {
         if (scanFor2xLifecycleMethods) {
             load2xLifecycleMethods(callbacks);
         }
-        
+
         //The next set of lines are to handle the case where
-        //  the app doesn't have a @PostConstruct or it 
+        //  the app doesn't have a @PostConstruct or it
         //  doesn't implement the EntrerpriseBean interface
         //  In this case we scan for ejbCreate() for MDBs and SLSBs
         boolean lookForEjbCreateMethod = container.scanForEjbCreateMethod();
-        
+
         if (lookForEjbCreateMethod) {
             loadOnlyEjbCreateMethod(callbacks, numPostConstructFrameworkCallbacks);
         }
-        
+
         callbackChain = new CallbackChainImpl[size];
         for (CallbackType eventType : CallbackType.values()) {
             int index = eventType.ordinal();
@@ -594,8 +603,7 @@ public class InterceptorManager {
 
         // move above callbackChain = new CallbackChainImpl[size];
 
-        CallbackInterceptor[] interceptors = (CallbackInterceptor[])
-            callbacks.toArray(new CallbackInterceptor[callbacks.size()]);
+        CallbackInterceptor[] interceptors = callbacks.toArray(new CallbackInterceptor[callbacks.size()]);
         callbackChain[index] = new CallbackChainImpl(interceptors);
 
     }
@@ -611,8 +619,8 @@ public class InterceptorManager {
                                                           InterceptorDescriptor inter,
                                                           ClassLoader classLoaderToUse) throws Exception {
         List<CallbackInterceptor> callbackList = new ArrayList<CallbackInterceptor>();
-        
-        List<LifecycleCallbackDescriptor> orderedCallbackMethods = 
+
+        List<LifecycleCallbackDescriptor> orderedCallbackMethods =
             inter.getOrderedCallbackDescriptors(eventType, classLoaderToUse);
 
         String className = inter.getInterceptorClassName();
@@ -623,7 +631,7 @@ public class InterceptorManager {
                 method = callbackDesc.getLifecycleCallbackMethodObject(classLoaderToUse);
             } catch(Exception e) {
                 throw new IllegalStateException("No callback method of name " +
-                   callbackDesc.getLifecycleCallbackMethod() 
+                   callbackDesc.getLifecycleCallbackMethod()
                    + " found on class " + className, e);
 	        }
 
@@ -657,7 +665,7 @@ public class InterceptorManager {
                 try {
                     Method method = beanClass.getMethod(
                             pre30LCMethodNames[i], (Class[]) null);
-                    if (method != null) {    
+                    if (method != null) {
                         CallbackInterceptor meta =
                                 new BeanCallbackInterceptor(method);
                         metaArray[i].add(meta);
@@ -670,8 +678,8 @@ public class InterceptorManager {
             }
         }
     }
-    
-    //TODO: load2xLifecycleMethods and loadOnlyEjbCreateMethod can be 
+
+    //TODO: load2xLifecycleMethods and loadOnlyEjbCreateMethod can be
     //  refactored to use a common method.
     private void loadOnlyEjbCreateMethod(
             ArrayList<CallbackInterceptor>[] metaArray,
@@ -687,7 +695,7 @@ public class InterceptorManager {
                 ArrayList<CallbackInterceptor> al = metaArray[i];
                 needToScan =  (al.size() == numPostConstructFrameworkCallbacks);
             }
-            
+
             if (! needToScan) {
                 // We already have found a @PostConstruct method
                 // So just ignore any ejbCreate() method
@@ -710,8 +718,9 @@ public class InterceptorManager {
             }
         }
     }
-    
 
+
+    @Override
     public String toString() {
         StringBuilder sbldr = new StringBuilder();
         sbldr.append("##########################################################\n");
@@ -793,6 +802,7 @@ class AroundInvokeChainImpl
         this.size = (interceptors == null) ? 0 : interceptors.length;
     }
 
+    @Override
     public Object invokeNext(int index, InterceptorManager.AroundInvokeContext inv)
             throws Throwable {
         return ( index < size ) ?
@@ -800,6 +810,7 @@ class AroundInvokeChainImpl
             inv.invokeBeanMethod();
     }
 
+    @Override
     public String toString() {
         StringBuilder bldr = new StringBuilder();
         for (AroundInvokeInterceptor inter : interceptors) {
@@ -828,6 +839,7 @@ class AroundInvokeInterceptor {
             } else {
                 java.security.AccessController
                         .doPrivileged(new java.security.PrivilegedExceptionAction() {
+                    @Override
                     public java.lang.Object run() throws Exception {
                         if (!finalM.isAccessible()) {
                             finalM.setAccessible(true);
@@ -850,6 +862,7 @@ class AroundInvokeInterceptor {
             // allow for private/protected field access.
             return java.security.AccessController
                     .doPrivileged(new java.security.PrivilegedExceptionAction() {
+                        @Override
                         public java.lang.Object run() throws Exception {
                             return method.invoke(interceptors[index], invCtx);
                         }
@@ -870,6 +883,7 @@ class AroundInvokeInterceptor {
         }
     }
 
+    @Override
     public String toString() {
         return "[" + index + "]: " + method;
     }
@@ -884,6 +898,7 @@ class BeanAroundInvokeInterceptor
         super(-1, method);
     }
 
+    @Override
     Object intercept(final InterceptorManager.AroundInvokeContext invCtx) throws Throwable {
         try {
 
@@ -892,6 +907,7 @@ class BeanAroundInvokeInterceptor
             // allow for private/protected field access.
             return java.security.AccessController
                     .doPrivileged(new java.security.PrivilegedExceptionAction() {
+                        @Override
                         public java.lang.Object run() throws Exception {
                             return method.invoke(invCtx.getTarget(), invCtx);
                         }
@@ -928,6 +944,7 @@ class CallbackInterceptor {
         } else {
             java.security.AccessController
                     .doPrivileged(new java.security.PrivilegedExceptionAction() {
+                @Override
                 public java.lang.Object run() throws Exception {
                     if (!finalM.isAccessible()) {
                         finalM.setAccessible(true);
@@ -941,7 +958,7 @@ class CallbackInterceptor {
 
     }
 
-    Object intercept(final CallbackInvocationContext invContext) 
+    Object intercept(final CallbackInvocationContext invContext)
         throws Throwable {
         try {
 
@@ -953,6 +970,7 @@ class CallbackInterceptor {
             // allow for private/protected field access.
             return java.security.AccessController
                     .doPrivileged(new java.security.PrivilegedExceptionAction() {
+                        @Override
                         public java.lang.Object run() throws Exception {
                             return method.invoke(interceptors[index],
                                                  invContext);
@@ -960,7 +978,7 @@ class CallbackInterceptor {
                     });
             } else {
                 return method.invoke(interceptors[index], invContext);
-                                     
+
             }
         } catch (java.lang.reflect.InvocationTargetException invEx) {
             throw invEx.getCause();
@@ -977,6 +995,7 @@ class CallbackInterceptor {
         return false;
     }
 
+    @Override
     public String toString() {
         return "callback[" + index + "]: " + method;
     }
@@ -990,7 +1009,8 @@ class BeanCallbackInterceptor
         super(-1, method);
     }
 
-    Object intercept(final CallbackInvocationContext invContext) 
+    @Override
+    Object intercept(final CallbackInvocationContext invContext)
         throws Throwable {
         try {
 
@@ -999,6 +1019,7 @@ class BeanCallbackInterceptor
             // allow for private/protected field access.
                java.security.AccessController
                     .doPrivileged(new java.security.PrivilegedExceptionAction() {
+                        @Override
                         public java.lang.Object run() throws Exception {
 
                             method.invoke(invContext.getTarget(),
@@ -1024,10 +1045,12 @@ class BeanCallbackInterceptor
         }
     }
 
+    @Override
     boolean isBeanCallback() {
         return true;
     }
 
+    @Override
     public String toString() {
         return "beancallback[" + index + "]: " + method;
     }

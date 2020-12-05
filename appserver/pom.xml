@@ -154,7 +154,7 @@
         
         <!-- CDI -->
         <cdi-api.version>3.0.0</cdi-api.version>
-        <weld.version>4.0.0.Beta5</weld.version>
+        <weld.version>4.0.0.CR1</weld.version>
         <jboss.classfilewriter.version>1.2.4.Final</jboss.classfilewriter.version>
 
 

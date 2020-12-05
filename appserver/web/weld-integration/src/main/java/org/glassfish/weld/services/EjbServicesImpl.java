@@ -22,15 +22,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.ejb.PostActivate;
-import jakarta.ejb.PrePassivate;
-import jakarta.enterprise.inject.spi.InterceptionType;
-import jakarta.enterprise.inject.spi.Interceptor;
-import jakarta.interceptor.AroundConstruct;
-import jakarta.interceptor.AroundInvoke;
-import jakarta.interceptor.AroundTimeout;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -49,10 +40,20 @@ import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.ejb.PostActivate;
+import jakarta.ejb.PrePassivate;
+import jakarta.enterprise.inject.spi.InterceptionType;
+import jakarta.enterprise.inject.spi.Interceptor;
+import jakarta.interceptor.AroundConstruct;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.AroundTimeout;
+
 /**
- * An implementation of th <code>EJBServices</code> Weld SPI. The Weld 
+ * An implementation of th <code>EJBServices</code> Weld SPI. The Weld
  * implementation uses this SPI to resolve EJB and register CDI Interceptors
- * for EJBs. 
+ * for EJBs.
  */
 public class EjbServicesImpl implements EjbServices {
     private ServiceLocator services;
@@ -66,10 +67,11 @@ public class EjbServicesImpl implements EjbServices {
     * Request a reference to an EJB session object from the container. If the
     * EJB being resolved is a stateful session bean, the container should ensure
     * the session bean is created before this method returns.
-    * 
+    *
     * @param ejbDescriptor the ejb to resolve
     * @return a reference to the session object
     */
+    @Override
     public SessionObjectReference resolveEjb(EjbDescriptor<?> ejbDescriptor) {
 
         SessionObjectReference sessionObj = null;
@@ -101,7 +103,7 @@ public class EjbServicesImpl implements EjbServices {
 	    return sessionObj;
 
     }
-   
+
 
     private String getDefaultGlobalJndiName(EjbDescriptor<?> ejbDesc) {
 
@@ -122,16 +124,16 @@ public class EjbServicesImpl implements EjbServices {
 
     }
 
+    @Override
     public void registerInterceptors(EjbDescriptor<?> ejbDesc, InterceptorBindings interceptorBindings) {
     	//no need to continue with this work around as jboss has provided the resolution for https://issues.jboss.org/browse/WELD-2184
-    	
+
         // Work around bug that ejbDesc might be internal 299 descriptor.
        /* if( ejbDesc instanceof org.jboss.weld.module.ejb.InternalEjbDescriptor ) {
             ejbDesc = ((org.jboss.weld.module.ejb.InternalEjbDescriptor<?>)ejbDesc).delegate();
         }*/
 
-         com.sun.enterprise.deployment.EjbDescriptor glassfishEjbDesc = (com.sun.enterprise.deployment.EjbDescriptor)
-                ((EjbDescriptorImpl<?>) ejbDesc).getEjbDescriptor();
+         com.sun.enterprise.deployment.EjbDescriptor glassfishEjbDesc = ((EjbDescriptorImpl<?>) ejbDesc).getEjbDescriptor();
 
         // Convert to EjbInterceptor
         // First create master list of EjbInterceptor descriptors
@@ -189,7 +191,7 @@ public class EjbServicesImpl implements EjbServices {
 
 
         // 299-provided list is organized as per-method.  Append each method chain to EjbDescriptor.
-        
+
         Class<?> ejbBeanClass = null;
 
         try {
@@ -199,7 +201,7 @@ public class EjbServicesImpl implements EjbServices {
             throw new IllegalStateException("Cannot load bean class " + glassfishEjbDesc.getEjbClassName(),
                     cnfe);
         }
-        
+
         Class<?> ejbBeanSuperClass = ejbBeanClass;
         while (!ejbBeanSuperClass.equals(java.lang.Object.class)) {
             for(Method m : ejbBeanSuperClass.getDeclaredMethods()) {
@@ -343,7 +345,7 @@ public class EjbServicesImpl implements EjbServices {
 
         EjbInterceptor ejbInt = new EjbInterceptor();
         ejbInt.setBundleDescriptor(bundle);
-        ejbInt.setInterceptorClassName(interceptor.getBeanClass().getName());
+        ejbInt.setInterceptorClass(interceptor.getBeanClass());
         ejbInt.setCDIInterceptor(true);
         ejbInt.setInterceptor( interceptor );
 
@@ -351,6 +353,7 @@ public class EjbServicesImpl implements EjbServices {
     }
 
 
+    @Override
     public void cleanup() {
         //Nothing to do here.
     }

@@ -93,19 +93,19 @@
         <hibernate-validator.version>7.0.0.Alpha6</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        <webservices.version>3.0.0-M3</webservices.version>
+        <webservices.version>3.0.0</webservices.version>
         
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.0</jakarta.inject-api.version> 
               
         <!-- Jakarta XML Binding -->
         <jakarta.jaxb-api.version>3.0.0</jakarta.jaxb-api.version>
-        <jakarta.jaxb-impl.version>3.0.0-M5</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-impl.version>3.0.0</jakarta.jaxb-impl.version>
         
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0</jax-rs-api.impl.version>
-        <jersey.version>3.0.0-RC2</jersey.version>
+        <jersey.version>3.0.0</jersey.version>
         
         <!-- Jakarta Mail -->
         <mail.version>2.0.0</mail.version>
@@ -118,14 +118,14 @@
 
         <!-- GlassFish Components -->                                   
         <glassfish-corba.version>4.2.3-RC2</glassfish-corba.version>
-        <grizzly.version>3.0.0-M1</grizzly.version>
-        <grizzly.npn.version>1.9</grizzly.npn.version>
+        <grizzly.version>3.0.0</grizzly.version>
+        <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
-        <hk2.version>3.0.0-M2</hk2.version>
-        <hk2.plugin.version>3.0.0-M2</hk2.plugin.version>
+        <hk2.version>3.0.0</hk2.version>
+        <hk2.plugin.version>3.0.0</hk2.plugin.version>
         <pfl.version>4.1.0</pfl.version>
         <gmbal.version>4.0.2</gmbal.version>   
-        <shoal.version>2.0.0-RC1</shoal.version>
+        <shoal.version>2.0.0</shoal.version>
         <ha-api.version>3.1.12</ha-api.version>
         <glassfishbuild.version>3.2.27</glassfishbuild.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>

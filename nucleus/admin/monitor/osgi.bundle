@@ -1,5 +1,6 @@
 #
 # Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2020 Payara Services Ltd.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +19,6 @@
                         com.sun.enterprise.admin.monitor.jndi; \
                         com.sun.enterprise.admin.monitor.util; \
                         com.sun.enterprise.management.support; \
-                        org.glassfish.flashlight; \
                         org.glassfish.flashlight.annotations; \
                         org.glassfish.flashlight.datatree.factory; \
                         org.glassfish.flashlight.statistics; \

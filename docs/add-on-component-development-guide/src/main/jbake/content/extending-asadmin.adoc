@@ -15,7 +15,7 @@ Extending the asadmin Utility
 ---------------------------------
 
 The `asadmin` utility is a command-line tool for configuring and
-administering GlassFish Server. Extending the `asadmin` utility enables
+administering Eclipse GlassFish Server. Extending the `asadmin` utility enables
 you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other GlassFish Server components.
 A user can run `asadmin` subcommands either from a command prompt or
@@ -142,8 +142,7 @@ You must also ensure that the name of your subcommand is unique. To
 obtain a complete list of the names of all `asadmin` subcommands that
 are installed, use the link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`] subcommand. For
 a complete list of `asadmin` subcommands that are supplied in GlassFish
-Server distributions, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+Server distributions, see the link:../reference-manual/toc.html#GSRFM[Eclipse GlassFish Reference Manual].
 
 [[ghrng]][[GSACG00196]][[ensuring-that-an-admincommand-implementation-is-stateless]]
 
@@ -1014,13 +1013,13 @@ The meaning of each keyword-value pair is as follows:
 `product_name=`product-name::
   Specifies the full product name without any release information, for
   example,
-  `name="ProductNameFullPlain" content="Oracle GlassFish Server"`.
+  `name="ProductNameFullPlain" content="Eclipse GlassFish Server"`.
 `abbrev_product_name=`abbrev-product-name::
   Specifies an abbreviated form of the product name without any release
   information, for example,
   `name="ProductNamePlain" content="GlassFish Server"`.
 `major_version=`major-version::
-  Returns the product major version, for example, `3`
+  Returns the product major version, for example, `6`
 `minor_version=`minor-version::
   Specifies the product minor version, for example, `0`.
 `build_id=`build-id::
@@ -1037,16 +1036,16 @@ Example 4-4 `BrandingVersion.properties` File for Changing the Brand in
 the GlassFish Server CLI
 
 This example shows the content of the `BrandingVersion.properties` for
-defining the product name and release information of Oracle GlassFish
-Server 3.0.1, build 17. The abbreviated product name is
+defining the product name and release information of Eclipse GlassFish
+Server 6.0.0, build 17. The abbreviated product name is
 `glassfish-server`.
 
 [source,oac_no_warn]
 ----
-product_name=Oracle GlassFish Server
+product_name=Eclise GlassFish Server
 abbrev_product_name=glassfish-server
-major_version=3
-minor_version=0.1
+major_version=6
+minor_version=0.0
 build_id=build 17
 ----
 
@@ -1055,12 +1054,12 @@ properties might also be required:
 
 [source,oac_no_warn]
 ----
-LEGAL_COPYRIGHT                "Copyright 2008, 2009"
-LEGAL_COMPANY_NAME             "Oracle Corp."
+LEGAL_COPYRIGHT                "Copyright 2020"
+LEGAL_COMPANY_NAME             "Eclipse Foundation"
 LEGAL_RIGHTS                   "All rights reserved."
-SIMPLE_COMPANY_NAME            "Oracle"
-COMPANY_CONTACT_URL            "http://www.oracle.com"
-PRODUCT_TRADEMARKS             "Oracle and Java are trademarks of Oracle Corp."
+SIMPLE_COMPANY_NAME            "Eclipse"
+COMPANY_CONTACT_URL            "http://www.glassfish.org"
+PRODUCT_TRADEMARKS             "GlassFish is a trademark of the Eclipse Foundation"
 ----
 
 [[ghmza]][[GSACG00114]][[examples-of-extending-the-asadmin-utility]]

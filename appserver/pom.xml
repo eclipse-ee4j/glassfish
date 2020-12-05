@@ -96,11 +96,11 @@
 
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>
-        <mojarra.version>3.0.0-RC4</mojarra.version>
+        <mojarra.version>3.0.0</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <websocket-api.version>2.0.0</websocket-api.version>
-        <tyrus.version>2.0.0-RC1</tyrus.version>
+        <tyrus.version>2.0.0</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <concurrent-api.version>2.0.0</concurrent-api.version>
@@ -110,18 +110,18 @@
         <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta EE Security + Authentication/Authorization -->
-        <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>
+        <jakarta.security.enterprise-api.version>2.0.0</jakarta.security.enterprise-api.version>
         <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
-        <soteria.version>2.0.0-M3</soteria.version>
+        <soteria.version>2.0.0</soteria.version>
 
         <!-- Jakarta Messaging -->
         <jms-api.version>3.0.0</jms-api.version>
-        <mq.version>6.0.0-M2</mq.version>
+        <mq.version>6.0.0</mq.version>
 
         <!-- Jakarta Persistence -->
         <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
-        <eclipselink.version>3.0.0-M2</eclipselink.version>
+        <eclipselink.version>3.0.0-RC1</eclipselink.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
@@ -135,7 +135,7 @@
         <com.ibm.jbatch.spi.version>2.0.0-M7</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
-        <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>
+        <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
         <jsonp-api.version>2.0.0</jsonp-api.version>
@@ -145,23 +145,23 @@
         <yasson.version>2.0.1</yasson.version>
 
         <!-- Jakarta Server Pages -->
-        <jsp-api.version>3.0.0-RC2</jsp-api.version>
-        <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
-
-        <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>6.2.1</woodstox.version>
-        <stax2-api.version>4.2.1</stax2-api.version>
+        <jsp-api.version>3.0.0</jsp-api.version>
+        <jsp-impl.version>3.0.0</jsp-impl.version>
 
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0</jstl-api.version>
-        <jstl-impl.version>2.0.0-M2</jstl-impl.version>
-
+        <jstl-impl.version>2.0.0</jstl-impl.version>
+        
         <!-- CDI -->
         <cdi-api.version>3.0.0</cdi-api.version>
         <weld.version>4.0.0.Beta5</weld.version>
         <jboss.classfilewriter.version>1.2.4.Final</jboss.classfilewriter.version>
 
 
+        
+        <!-- Used for Jakarta XML Web Services -->
+        <woodstox.version>6.2.1</woodstox.version>
+        <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Admin console components -->
         <jsftemplating.version>3.0.0-M2</jsftemplating.version>
@@ -250,6 +250,11 @@
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
                 <artifactId>jakarta.security.enterprise</artifactId>
+                <version>${soteria.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.soteria</groupId>
+                <artifactId>soteria.spi.bean.decorator.weld</artifactId>
                 <version>${soteria.version}</version>
             </dependency>
             

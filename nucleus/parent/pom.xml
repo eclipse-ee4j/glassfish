@@ -90,7 +90,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation.version>3.0.0</jakarta.validation.version>        
-        <hibernate-validator.version>7.0.0.Alpha6</hibernate-validator.version>
+        <hibernate-validator.version>7.0.0.CR1</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <webservices.version>3.0.0</webservices.version>

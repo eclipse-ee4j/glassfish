@@ -131,8 +131,8 @@
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.0.0</jakarta.batch-api.version>
-        <com.ibm.jbatch.container.version>2.0.0-M7</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>2.0.0-M7</com.ibm.jbatch.spi.version>
+        <com.ibm.jbatch.container.version>2.0.0</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
         <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>

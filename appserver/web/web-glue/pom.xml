@@ -136,21 +136,9 @@
             <artifactId>deployment-javaee-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-            <!--
         <dependency>
-              since our minimum requirement is still JDK5,
-              we need this dependency. When we we switch
-              to minimum JDK6 (which we do at some point toward EE6),
-              we can remove this.
-            <groupId>org.glassfish.external</groupId>
-            <artifactId>ant</artifactId>
-            <version>${ant.version}</version>
-        </dependency>
-            -->
-
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>jakarta.servlet.jsp</artifactId>
+            <groupId>org.glassfish.wasp</groupId>
+            <artifactId>wasp</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.el</groupId>

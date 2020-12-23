@@ -146,7 +146,7 @@
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.0.0</jsp-api.version>
-        <jsp-impl.version>3.0.0</jsp-impl.version>
+        <wasp.version>3.0.0</wasp.version>
 
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0</jstl-api.version>
@@ -408,9 +408,9 @@
                 <version>${jsp-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>jakarta.servlet.jsp</artifactId>
-                <version>${jsp-impl.version}</version>
+                <groupId>org.glassfish.wasp</groupId>
+                <artifactId>wasp</artifactId>
+                <version>${wasp.version}</version>
             </dependency>
             
             <!-- Jakarta XML Web Services -->
@@ -653,7 +653,7 @@
                 <version>2.1</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
-                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar,
+                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,wasp.jar,jakarta.enterprise.concurrent.jar,
                         jakarta.persistence.jar</excludes>
                     <specs>
                         <spec>

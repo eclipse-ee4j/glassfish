@@ -160,7 +160,7 @@ public class WebSniffer  extends GenericSniffer {
     // TODO(Sahoo): Ideally we should have separate sniffer for JSP, but since WebSniffer is already
     // handling JSPs, we must make sure that all JSP related modules get installed by WebSniffer as well.
     private String[] containerModuleNames = {"org.glassfish.main.web.glue",
-            "org.glassfish.web.jakarta.servlet.jsp"
+            "org.glassfish.wasp.wasp"
     };
 
     @Override

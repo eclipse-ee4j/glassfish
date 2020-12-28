@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.0.0-RC4</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -76,7 +76,7 @@
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
-                    <version>6.0.0-SNAPSHOT</version>
+                    <version>6.0.0-RC4</version>
                 </dependency>                
             </dependencies>
         </profile>

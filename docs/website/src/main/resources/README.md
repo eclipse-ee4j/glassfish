@@ -9,7 +9,7 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
-## December 8, 2020 -- Eclipse GlassFish 6 Stable Release
+## December 31, 2020 -- Eclipse GlassFish 6 Stable Release
 
 We are pleased to announce the stable release of Eclipse GlassFish 6.0. This release provides implementations
 of the Jakarta EE 9 Platform and Web Profile specifications. Download links are available from the [GlassFish Download page](https://eclipse-ee4j.github.io/glassfish/download). Eclipse GlassFish 6 implements the Jakarta EE 9 specification ([Jakarta EE 9 Platform](https://jakarta.ee/specifications/platform/9/), [Jakarta EE 9 Web Profile](https://jakarta.ee/specifications/webprofile/9/)).

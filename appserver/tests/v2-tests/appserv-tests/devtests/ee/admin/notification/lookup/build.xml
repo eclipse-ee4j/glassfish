@@ -379,7 +379,7 @@
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
 	<property name="ctxfactory" 
-            	value="com.sun.jndi.cosnaming.CNCtxFactory"/>
+            	value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
 	<echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"

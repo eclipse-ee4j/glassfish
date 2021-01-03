@@ -18,7 +18,7 @@ package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.corba.ee.spi.folb.ClusterInstanceInfo;
 import com.sun.corba.ee.spi.folb.SocketInfo;
-import com.sun.jndi.cosnaming.IiopUrl;
+import org.glassfish.jndi.cosnaming.IiopUrl;
 import com.sun.logging.LogDomains;
 import org.glassfish.internal.api.ORBLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;

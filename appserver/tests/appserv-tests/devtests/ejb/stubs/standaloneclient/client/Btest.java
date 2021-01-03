@@ -92,7 +92,7 @@ public class Btest{
     {
         Properties _props = new Properties();
         _props.put(Context.INITIAL_CONTEXT_FACTORY, 
-            "com.sun.jndi.cosnaming.CNCtxFactory");
+            "org.glassfish.jndi.cosnaming.CNCtxFactory");
         _props.put(Context.PROVIDER_URL, "iiop://achumba:3700");
 
         try {

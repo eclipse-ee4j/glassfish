@@ -1,1 +1,1 @@
-java.naming.factory.initial=com.sun.jndi.cosnaming.CNCtxFactory
+java.naming.factory.initial=org.glassfish.jndi.cosnaming.CNCtxFactory

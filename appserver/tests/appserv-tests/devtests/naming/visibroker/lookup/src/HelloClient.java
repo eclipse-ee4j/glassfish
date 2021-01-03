@@ -53,7 +53,7 @@ public class HelloClient
 	  
 	  /*	  Properties p2 = new Properties();
 	  p2.put( javax.naming.Context.INITIAL_CONTEXT_FACTORY, 
-		  "com.sun.jndi.cosnaming.CNCtxFactory" );
+		  "org.glassfish.jndi.cosnaming.CNCtxFactory" );
 	  p2.put("java.naming.corba.orb", orb);
 	  
 	  InitialContext ic = new InitialContext( p2);

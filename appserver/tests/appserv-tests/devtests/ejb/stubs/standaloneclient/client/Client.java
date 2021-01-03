@@ -117,7 +117,7 @@ public class Client {
     {
         Properties env = new Properties();
 
-//        env.put( Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory" );
+//        env.put( Context.INITIAL_CONTEXT_FACTORY, "org.glassfish.jndi.cosnaming.CNCtxFactory" );
         env.put( Context.INITIAL_CONTEXT_FACTORY, "com.sun.enterprise.naming.SerialInitContextFactory");
         
         env.put( Context.PROVIDER_URL, "iiop://" + host + ":" + port );

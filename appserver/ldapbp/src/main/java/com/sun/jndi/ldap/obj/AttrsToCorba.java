@@ -23,7 +23,7 @@ import javax.naming.directory.*;
 import java.util.Hashtable;
 import org.omg.CORBA.ORB;
 
-import com.sun.jndi.toolkit.corba.CorbaUtils;
+import org.glassfish.jndi.toolkit.corba.CorbaUtils;
 
 /**
   * A DirObjectFactory that returns a omg.org.CORBA.Object when given

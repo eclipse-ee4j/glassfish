@@ -39,4 +39,12 @@
             </resource>
         </resources>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>glassfish-corba-orb</artifactId>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>

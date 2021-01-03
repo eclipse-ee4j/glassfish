@@ -25,7 +25,7 @@ import java.rmi.Remote;
 import org.omg.CORBA.portable.ObjectImpl;
 import org.omg.CORBA.ORB;
 
-import com.sun.jndi.toolkit.corba.CorbaUtils;
+import org.glassfish.jndi.toolkit.corba.CorbaUtils;
 
 /**
   * An DirStateFactory that returns an Attributes when

@@ -210,7 +210,7 @@
       </dependency>
       <dependency>
           <groupId>org.glassfish.grizzly</groupId>
-          <artifactId>grizzly-npn-bootstrap</artifactId>
+          <artifactId>grizzly-npn-api</artifactId>
           <version>${grizzly.npn.version}</version>
           <optional>true</optional>
       </dependency>

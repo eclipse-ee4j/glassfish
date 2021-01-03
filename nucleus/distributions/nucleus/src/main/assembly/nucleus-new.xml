@@ -101,7 +101,7 @@
             <includes>
                 <include>jakarta.annotation-api.jar</include>
                 <include>jakarta.xml.bind-api.jar</include>
-                <include>grizzly-npn-bootstrap.jar</include>
+                <include>grizzly-npn-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/modules/endorsed</outputDirectory>
         </fileSet>

@@ -146,7 +146,7 @@
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.0.0</jsp-api.version>
-        <wasp.version>3.0.0</wasp.version>
+        <wasp.version>3.0.1</wasp.version>
 
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0</jstl-api.version>

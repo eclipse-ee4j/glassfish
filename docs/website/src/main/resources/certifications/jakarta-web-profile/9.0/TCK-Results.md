@@ -10,7 +10,7 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, W
 
 - Product Name, Version and download URL (if applicable): <br/>
   [Eclipse GlassFish 6.0, Web Profile](https://eclipse-ee4j.github.io/glassfish/download)
-  [web-6.0.0-RC2.zip](https://download.eclipse.org/ee4j/glassfish/web-6.0.0-RC2.zip)
+  [web-6.0.0.zip](https://download.eclipse.org/ee4j/glassfish/web-6.0.0.zip) SHA-256: `e191efd4c5d19468a483aacd563fe293b735df5a8b067ea8fb8151c3c689ef0f`
 
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, Web Profile 9.0](https://jakarta.ee/specifications/webprofile/9/)

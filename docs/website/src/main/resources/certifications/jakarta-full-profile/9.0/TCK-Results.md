@@ -10,7 +10,7 @@ following is a summary of the TCK results for releases of Jakarta EE Platform, F
 
 - Product Name, Version and download URL (if applicable): <br/>
   [Eclipse GlassFish 6.0](https://eclipse-ee4j.github.io/glassfish/download)
-  [glassfish-6.0.0-RC2.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0-RC2.zip)
+  [glassfish-6.0.0.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0.zip), SHA-256: `A528811169E2C97D13618C1985BF6A70160E251B1B8A68BB22D43D9EE367E2E0`
 
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, 9.0](https://jakarta.ee/specifications/platform/9/)
@@ -423,7 +423,7 @@ Stage Name: jsf
 Stage Name: jsonb
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 1082 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1082
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1062
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -479,7 +479,7 @@ Stage Name: securityapi
 Stage Name: servlet
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 1735 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1735
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1733
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************

@@ -90,7 +90,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation.version>3.0.0</jakarta.validation.version>        
-        <hibernate-validator.version>7.0.0.Alpha6</hibernate-validator.version>
+        <hibernate-validator.version>7.0.0.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <webservices.version>3.0.0</webservices.version>
@@ -117,12 +117,12 @@
         <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
 
         <!-- GlassFish Components -->                                   
-        <glassfish-corba.version>4.2.3-RC2</glassfish-corba.version>
+        <glassfish-corba.version>4.2.3</glassfish-corba.version>
         <grizzly.version>3.0.0</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
-        <hk2.version>3.0.0</hk2.version>
-        <hk2.plugin.version>3.0.0</hk2.plugin.version>
+        <hk2.version>3.0.1</hk2.version>
+        <hk2.plugin.version>3.0.1</hk2.plugin.version>
         <pfl.version>4.1.0</pfl.version>
         <gmbal.version>4.0.2</gmbal.version>   
         <shoal.version>2.0.0</shoal.version>

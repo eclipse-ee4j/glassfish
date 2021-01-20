@@ -113,7 +113,7 @@
         <jakarta.security.enterprise-api.version>2.0.0</jakarta.security.enterprise-api.version>
         <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
-        <soteria.version>2.0.0</soteria.version>
+        <soteria.version>2.0.1</soteria.version>
 
         <!-- Jakarta Messaging -->
         <jms-api.version>3.0.0</jms-api.version>
@@ -121,7 +121,7 @@
 
         <!-- Jakarta Persistence -->
         <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
-        <eclipselink.version>3.0.0-RC1</eclipselink.version>
+        <eclipselink.version>3.0.0</eclipselink.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
@@ -131,8 +131,8 @@
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.0.0</jakarta.batch-api.version>
-        <com.ibm.jbatch.container.version>2.0.0-M7</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>2.0.0-M7</com.ibm.jbatch.spi.version>
+        <com.ibm.jbatch.container.version>2.0.0</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
         <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>
@@ -154,7 +154,7 @@
         
         <!-- CDI -->
         <cdi-api.version>3.0.0</cdi-api.version>
-        <weld.version>4.0.0.Beta5</weld.version>
+        <weld.version>4.0.0.Final</weld.version>
         <jboss.classfilewriter.version>1.2.4.Final</jboss.classfilewriter.version>
 
 
@@ -164,9 +164,9 @@
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Admin console components -->
-        <jsftemplating.version>3.0.0-M2</jsftemplating.version>
+        <jsftemplating.version>3.0.0</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>5.0.0-M1</woodstock.version>
+        <woodstock.version>5.0.0</woodstock.version>
 
 
         <!-- Other -->

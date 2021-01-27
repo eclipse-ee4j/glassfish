@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -160,7 +160,7 @@ public class WebSniffer  extends GenericSniffer {
     // TODO(Sahoo): Ideally we should have separate sniffer for JSP, but since WebSniffer is already
     // handling JSPs, we must make sure that all JSP related modules get installed by WebSniffer as well.
     private String[] containerModuleNames = {"org.glassfish.main.web.glue",
-            "org.glassfish.web.jakarta.servlet.jsp"
+            "org.glassfish.wasp.wasp"
     };
 
     @Override

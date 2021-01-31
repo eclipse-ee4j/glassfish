@@ -16,11 +16,14 @@
 
 package org.glassfish.api.admin.config;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Defines a binding to a model class, used to retrieve metadata about this
- * model.
+ * Defines a binding to a model class, used to retrieve metadata about this model.
  *
  */
 @Documented
@@ -35,8 +38,8 @@ public @interface ModelBinding {
     public Class<?> type();
 
     /**
-     * Returns the getter method name defined on the {@link org.glassfish.api.admin.config.ModelBinding#type()}
-     * type annotated with model information like {@link org.jvnet.hk2.config.Attribute}
+     * Returns the getter method name defined on the {@link org.glassfish.api.admin.config.ModelBinding#type()} type
+     * annotated with model information like {@link org.jvnet.hk2.config.Attribute}
      *
      * @return the type getter method name
      */

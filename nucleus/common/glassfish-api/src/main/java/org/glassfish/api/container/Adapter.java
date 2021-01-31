@@ -18,14 +18,13 @@ package org.glassfish.api.container;
 
 import java.net.InetAddress;
 import java.util.List;
-import org.glassfish.grizzly.http.server.HttpHandler;
 
+import org.glassfish.grizzly.http.server.HttpHandler;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * Contract interface for registering adapters to a port. Each
- * adapter listens to a particular context root. Context root
- * can be / which makes this adapter the default web application
+ * Contract interface for registering adapters to a port. Each adapter listens to a particular context root. Context
+ * root can be / which makes this adapter the default web application
  *
  * @author Jerome Dochez
  *
@@ -35,44 +34,44 @@ public interface Adapter {
 
     /**
      * Get the underlying Grizzly {@link HttpHandler}.
-     * 
+     *
      * @return the underlying Grizzly {@link HttpHandler}.
      */
-    public abstract HttpHandler getHttpService();
+    HttpHandler getHttpService();
 
     /**
      * Returns the context root for this adapter
+     *
      * @return context root
      */
-    public abstract String getContextRoot();
+    String getContextRoot();
 
     /**
      * Returns the listener port for this adapter
+     *
      * @return listener port
      */
-    public abstract int getListenPort();
-
+    int getListenPort();
 
     /**
      * @return the {@link InetAddress} on which this adapter is listening
      */
-    public abstract InetAddress getListenAddress();
+    InetAddress getListenAddress();
 
     /**
      * Returns the virtual servers supported by this adapter
+     *
      * @return List&lt;String&gt; the virtual server list supported by the adapter
      */
-    public abstract List<String> getVirtualServers();
+    List<String> getVirtualServers();
 
     /**
      * Checks whether this adapter has been registered as a network endpoint.
      */
-    public abstract boolean isRegistered();
-
+    boolean isRegistered();
 
     /**
-     * Marks this adapter as having been registered or unregistered as a
-     * network endpoint
+     * Marks this adapter as having been registered or unregistered as a network endpoint
      */
-    public abstract void setRegistered(boolean isRegistered);
+    void setRegistered(boolean isRegistered);
 }

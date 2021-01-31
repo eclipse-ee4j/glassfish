@@ -16,42 +16,37 @@
 
 package org.glassfish.api;
 
-import org.jvnet.hk2.config.Attribute;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Param is a parameter to a command. This annotation can be placed on a field or
- * setter method to identify the parameters of a command and have those parameters
- * injected by the system before the command is executed.
+ * Param is a parameter to a command. This annotation can be placed on a field or setter method to identify the
+ * parameters of a command and have those parameters injected by the system before the command is executed.
  *
- * The system will check that all non optional parameters are satisfied before invoking
- * the command.
+ * The system will check that all non optional parameters are satisfied before invoking the command.
  *
  * @author Jerome Dochez
  */
 @Retention(RUNTIME)
-@Target({METHOD,FIELD})
+@Target({ METHOD, FIELD })
 public @interface Param {
 
     /**
-     * Returns the name of the parameter as it has be specified by the client when invoking
-     * the command. By default the name is deducted from the name of the annotated element.
-     * If the annotated element is a field, it is the filed name.
-     * If the annotated element is a method, it is the JavaBeans property name from the setter
-     * method name
+     * Returns the name of the parameter as it has be specified by the client when invoking the command. By default the name
+     * is deducted from the name of the annotated element. If the annotated element is a field, it is the filed name. If the
+     * annotated element is a method, it is the JavaBeans property name from the setter method name
      *
      * @return the parameter name.
      */
     public String name() default "";
 
     /**
-     * Returns a list of comma separated acceptable values for this parameter. The system
-     * will check that one of the value is used before invoking the command.
+     * Returns a list of comma separated acceptable values for this parameter. The system will check that one of the value
+     * is used before invoking the command.
      *
      * @return the list of comma separated acceptable values
      */
@@ -59,51 +54,50 @@ public @interface Param {
 
     /**
      * Returns true if the parameter is optional to the successful invocation of the command
+     *
      * @return true if the parameter is optional
      */
     public boolean optional() default false;
 
     /**
-     * Returns the short name associated with the parameter so that the user can specify
-     * -p as well as -password when invoking the command.
+     * Returns the short name associated with the parameter so that the user can specify -p as well as -password when
+     * invoking the command.
      *
      * @return the parameter short name
      */
     public String shortName() default "";
 
     /**
-     * Returns true if this is the primary parameter for the command which mean that the
-     * client does not have to pass the parameter name but just the value to the command.
+     * Returns true if this is the primary parameter for the command which mean that the client does not have to pass the
+     * parameter name but just the value to the command.
      *
      * @return true if this is the primary command parameter.
      */
     public boolean primary() default false;
 
     /**
-     * Returns the default value associated with the parameter
-     *  so that the user can specify
+     * Returns the default value associated with the parameter so that the user can specify
      *
      * @return the parameter default value
      */
     public String defaultValue() default "";
-    
+
     /**
-     * Returns a class that calculates the default value associated with the 
-     * parameter.
-     * 
+     * Returns a class that calculates the default value associated with the parameter.
+     *
      * @return a parameter default value calculator
      */
     public Class<? extends ParamDefaultCalculator> defaultCalculator() default ParamDefaultCalculator.class;
-    
+
     /**
      * Returns true if the parameter is a password
+     *
      * @return true if the parameter is password
      */
     public boolean password() default false;
 
     /**
-     * Returns the character used to separate items in a list.
-     * Applies to parameters of type List, Properties, and String[].
+     * Returns the character used to separate items in a list. Applies to parameters of type List, Properties, and String[].
      * The default separator is comma.
      *
      * @return the separator character
@@ -118,18 +112,15 @@ public @interface Param {
     public boolean multiple() default false;
 
     /**
-     * Returns true if this parameter is obsolete.
-     * Obsolete parameters produce warnings when used in asadmin,
-     * are ignored, and are not included in the command usage.
+     * Returns true if this parameter is obsolete. Obsolete parameters produce warnings when used in asadmin, are ignored,
+     * and are not included in the command usage.
      *
      * @return true if the parameter is obsolete
      */
     public boolean obsolete() default false;
 
     /**
-     * Returns an alias for the option.
-     * This supports renaming options and supporting both the old name
-     * and the new name.
+     * Returns an alias for the option. This supports renaming options and supporting both the old name and the new name.
      *
      * @return the parameter alias
      */

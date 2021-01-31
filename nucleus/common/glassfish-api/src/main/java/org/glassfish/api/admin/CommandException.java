@@ -19,36 +19,36 @@ package org.glassfish.api.admin;
 public class CommandException extends Exception {
 
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates new <code>CommandException</code> without detail message.
      */
     public CommandException() {
     }
 
-
     /**
-     * Constructs a <code>CommandException</code> with the specified
-     * detail message.
+     * Constructs a <code>CommandException</code> with the specified detail message.
+     *
      * @param msg the detail message.
      */
     public CommandException(String msg) {
         super(msg);
     }
 
-
     /**
-     * Constructs a new <code>CommandException</code> exception with the
-     * specified cause.
+     * Constructs a new <code>CommandException</code> exception with the specified cause.
      */
     public CommandException(Throwable cause) {
-	super(cause);
+        super(cause);
     }
 
-
     /**
-     * Constructs a new <code>CommandException</code> exception with the
-     * specified detailed message and cause.
+     * Constructs a new <code>CommandException</code> exception with the specified detailed message and cause.
      */
     public CommandException(String msg, Throwable cause) {
-	super(msg, cause);
+        super(msg, cause);
     }
 }

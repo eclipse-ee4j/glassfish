@@ -16,37 +16,37 @@
 
 package org.glassfish.api.admin.config;
 
-import org.jvnet.hk2.config.DataType;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-import java.lang.annotation.Documented;
-
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import org.jvnet.hk2.config.DataType;
 
 /**
  * Describes properties or system properties that might exist as sub-elements.
  */
-@Retention(SOURCE)  // not needed at runtime until we have something to make use of it
-@Target({TYPE})
+@Retention(SOURCE) // not needed at runtime until we have something to make use of it
+@Target({ TYPE })
 @Documented
 public @interface PropertyDesc {
     /** name of the property */
     String name();
 
     /** default value of the property */
-    String defaultValue()  default "\u0000";
+    String defaultValue() default "\u0000";
 
     /** freeform description */
-    String description()  default "\u0000";
+    String description() default "\u0000";
 
     /** the DataType class, can be Class&lt;? extends {@link DataType}> or String.class, Integer.class, etc */
-    Class  dataType()  default String.class;
-    
-    /** Possible values, might not be a complete list and/or there could be other alternatives
-       such as specific numbers, variables, etc.
+    Class dataType() default String.class;
+
+    /**
+     * Possible values, might not be a complete list and/or there could be other alternatives such as specific numbers,
+     * variables, etc.
      */
     String[] values() default {};
 }
-

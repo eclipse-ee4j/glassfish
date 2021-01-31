@@ -19,47 +19,47 @@ package org.glassfish.api.admin;
 import org.glassfish.api.ActionReport;
 
 /**
- * Defines the expected behaviour from the system when a supplemental command
- * (could be a local or remote invocation) fails to execute properly.
+ * Defines the expected behaviour from the system when a supplemental command (could be a local or remote invocation)
+ * fails to execute properly.
  *
- * @author Jerome Dochez 
+ * @author Jerome Dochez
  */
 public enum FailurePolicy {
-        
+
     /**
      * Ignore the failure, do not report to the user.
      */
     Ignore,
     /**
-     * Warn the user of the failure, does not change the overall exit code
-     * of the command execution.
+     * Warn the user of the failure, does not change the overall exit code of the command execution.
      */
     Warn,
     /**
-     * Return an error exit code to the user but do not rollback any successful
-     * invocations of the commands.
+     * Return an error exit code to the user but do not rollback any successful invocations of the commands.
      */
     Error;
 
     public static ActionReport.ExitCode applyFailurePolicy(FailurePolicy f, ActionReport.ExitCode e) {
         ActionReport.ExitCode result = ActionReport.ExitCode.FAILURE;
-        if(f == null)
+        if (f == null) {
             f = Error;
-        switch(f) {
-            case Ignore :
-                // If policy is to ignore, always return success
-                result = ActionReport.ExitCode.SUCCESS;
-                break;
-            case Warn :
-                // Switch failures to Warning; Leave Warnings and Successes as is
-                if(e.equals(ActionReport.ExitCode.FAILURE))
-                    result = ActionReport.ExitCode.WARNING;
-                else
-                    result = e;
-                break;
-            case Error :
+        }
+        switch (f) {
+        case Ignore:
+            // If policy is to ignore, always return success
+            result = ActionReport.ExitCode.SUCCESS;
+            break;
+        case Warn:
+            // Switch failures to Warning; Leave Warnings and Successes as is
+            if (e.equals(ActionReport.ExitCode.FAILURE)) {
+                result = ActionReport.ExitCode.WARNING;
+            } else {
                 result = e;
-                break;
+            }
+            break;
+        case Error:
+            result = e;
+            break;
         }
         return result;
     }

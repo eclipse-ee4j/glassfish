@@ -16,23 +16,22 @@
 
 package org.glassfish.api.admin;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 import org.glassfish.api.ActionReport;
 import org.jvnet.hk2.annotations.Service;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 /**
- * Convenience implementation that delegate to a provided system executor. This
- * provider will be looked up from the habitat by its type ClusterExecutor and the
- * "target" name. 
+ * Convenience implementation that delegate to a provided system executor. This provider will be looked up from the
+ * habitat by its type ClusterExecutor and the "target" name.
  */
 @Service
 public final class TargetBasedExecutor implements ClusterExecutor {
 
     @Inject
     @Named("GlassFishClusterExecutor")
-    private ClusterExecutor delegate=null;
+    private ClusterExecutor delegate = null;
 
     @Override
     public ActionReport.ExitCode execute(String commandName, AdminCommand command, AdminCommandContext context, ParameterMap parameters) {

@@ -18,12 +18,13 @@ package org.glassfish.api.admin.progress;
 
 import org.glassfish.api.admin.ProgressStatus;
 
-/** Change some value in ProgressStatus using set method.
+/**
+ * Change some value in ProgressStatus using set method.
  *
  * @author martinmares
  */
 public class ProgressStatusEventSet extends ProgressStatusEvent {
-    
+
     private Integer totalStepCount;
     private Integer currentStepCount;
 
@@ -36,7 +37,7 @@ public class ProgressStatusEventSet extends ProgressStatusEvent {
     public ProgressStatusEventSet(String progressStatusId) {
         super(progressStatusId);
     }
-    
+
     public Integer getTotalStepCount() {
         return totalStepCount;
     }
@@ -52,7 +53,7 @@ public class ProgressStatusEventSet extends ProgressStatusEvent {
     public void setCurrentStepCount(Integer currentStepCount) {
         this.currentStepCount = currentStepCount;
     }
-    
+
     @Override
     public ProgressStatus apply(ProgressStatus ps) {
         if (totalStepCount != null) {
@@ -81,15 +82,13 @@ public class ProgressStatusEventSet extends ProgressStatusEvent {
             return false;
         }
         final ProgressStatusEventSet other = (ProgressStatusEventSet) obj;
-        if ((this.totalStepCount == null) ? (other.totalStepCount != null) : !this.totalStepCount.equals(other.totalStepCount)) {
+        if (this.totalStepCount == null ? other.totalStepCount != null : !this.totalStepCount.equals(other.totalStepCount)) {
             return false;
         }
-        if ((this.currentStepCount == null) ? (other.currentStepCount != null) : !this.currentStepCount.equals(other.currentStepCount)) {
+        if (this.currentStepCount == null ? other.currentStepCount != null : !this.currentStepCount.equals(other.currentStepCount)) {
             return false;
         }
         return true;
     }
 
-    
-    
 }

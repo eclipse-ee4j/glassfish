@@ -23,10 +23,13 @@ import org.jvnet.hk2.annotations.Service;
 @Contract
 public class InvocationException extends RuntimeException {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private Exception ex;
 
     public InvocationException() {
-        super();
     }
 
     public InvocationException(String s) {

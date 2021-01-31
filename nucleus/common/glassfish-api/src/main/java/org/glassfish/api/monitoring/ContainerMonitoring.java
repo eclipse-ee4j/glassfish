@@ -16,18 +16,18 @@
 
 package org.glassfish.api.monitoring;
 
+import java.beans.PropertyVetoException;
+
+import org.glassfish.api.admin.config.Named;
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import org.jvnet.hk2.config.Configured;
-import org.glassfish.api.admin.config.Named;
 
 /**
- * Default monitoring configuration for containers. Containers can provide their
- * configuration through the ContainerMonitoring interface.
+ * Default monitoring configuration for containers. Containers can provide their configuration through the
+ * ContainerMonitoring interface.
  *
  * @author Nandini Ektare
  * @author Byron Nevins (3.1+)
@@ -35,23 +35,24 @@ import org.glassfish.api.admin.config.Named;
 @Configured
 public interface ContainerMonitoring extends ConfigBeanProxy, Named {
 
-    public static final String LEVEL_OFF = "OFF";
-    public static final String LEVEL_LOW = "LOW";
-    public static final String LEVEL_HIGH = "HIGH";
+    String LEVEL_OFF = "OFF";
+    String LEVEL_LOW = "LOW";
+    String LEVEL_HIGH = "HIGH";
 
     /**
-     * The monitoring level of this monitoring item 
+     * The monitoring level of this monitoring item
+     *
      * @return String with values HIGH/LOW/OFF
      */
-    @Attribute (defaultValue="OFF")
-    @NotNull
-    public String getLevel();
+    @Attribute(defaultValue = "OFF")
+    @NotNull String getLevel();
 
     /**
      * Set the level of this monitoring module
+     *
      * @param level new monitoring level
      */
 
-    public void setLevel(String level) throws PropertyVetoException;
+    void setLevel(String level) throws PropertyVetoException;
 
 }

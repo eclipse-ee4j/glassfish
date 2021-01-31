@@ -16,11 +16,11 @@
 
 package org.glassfish.api.admin.config;
 
+import java.io.IOException;
+import java.net.URL;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.net.URL;
-import java.io.IOException;
 
 /**
  * @author Jerome Dochez
@@ -30,8 +30,8 @@ import java.io.IOException;
 public interface ConfigParser {
 
     /**
-     * Parse a Container's configuration defined by it's XML template pointed by configuration URL.
-     * <br/> <br/>
+     * Parse a Container's configuration defined by it's XML template pointed by configuration URL. <br/>
+     * <br/>
      * Example:<br/>
      *
      * Inside your {@link org.glassfish.api.container.Sniffer}:
@@ -52,10 +52,10 @@ public interface ConfigParser {
      *     }
      * }
      * </pre>
-     * 
+     *
      * @return Confgured container
      * @throws IOException
      */
-    public <T extends Container> T parseContainerConfig(ServiceLocator habitat, URL configuration, Class<T> containerType) throws IOException;
+    <T extends Container> T parseContainerConfig(ServiceLocator habitat, URL configuration, Class<T> containerType) throws IOException;
 
 }

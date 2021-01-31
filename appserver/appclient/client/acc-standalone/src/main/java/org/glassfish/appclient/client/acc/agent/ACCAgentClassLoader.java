@@ -18,6 +18,7 @@ package org.glassfish.appclient.client.acc.agent;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -82,6 +83,10 @@ public class ACCAgentClassLoader extends URLClassLoader {
         super(urls, parent, factory);
     }
 
+    // a custom system class loader need to define this method in order to load the java agent.
+    public void appendToClassPathForInstrumentation(String path) throws MalformedURLException {
+        addURL(new File(path).toURI().toURL());
+    }
 
     @Override
     public synchronized Class<?> loadClass(String name) throws ClassNotFoundException {

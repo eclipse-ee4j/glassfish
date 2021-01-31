@@ -17,77 +17,72 @@
 package org.glassfish.api.admin;
 
 /**
- * Created by IntelliJ IDEA.
- * User: cmott
- * Date: Jul 29, 2010
- * Time: 6:56:38 PM
+ * Created by IntelliJ IDEA. User: cmott Date: Jul 29, 2010 Time: 6:56:38 PM
  */
-public class SSHCommandExecutionException extends CommandException{
-
+public class SSHCommandExecutionException extends CommandException {
 
     /**
-     * Creates a new <code>SSHCommandExecutionException</code> without
-     * detail message.
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Creates a new <code>SSHCommandExecutionException</code> without detail message.
      */
     public SSHCommandExecutionException() {
-        super();
     }
 
-
     /**
-     * Constructs a <code>SSHCommandExecutionException</code> with the specified
-     * detail message.
+     * Constructs a <code>SSHCommandExecutionException</code> with the specified detail message.
+     *
      * @param msg the detail message.
      */
     public SSHCommandExecutionException(String msg) {
         super(msg);
     }
 
-
     /**
-     * Constructs a new <code>SSHCommandExecutionException</code> exception with
-     * the specified cause.
+     * Constructs a new <code>SSHCommandExecutionException</code> exception with the specified cause.
      */
     public SSHCommandExecutionException(Throwable cause) {
-	super(cause);
+        super(cause);
     }
 
-
     /**
-     * Constructs a new <code>SSHCommandExecutionException</code> exception with
-     * the specified detailed message and cause.
+     * Constructs a new <code>SSHCommandExecutionException</code> exception with the specified detailed message and cause.
      */
     public SSHCommandExecutionException(String msg, Throwable cause) {
-	super(msg, cause);
+        super(msg, cause);
     }
 
     private String SSHSettings = null;
     private String fullCommand = null;
 
-    /* Stores the settings for the SSH connection that apply to node that was
-     * used in the command execution
+    /*
+     * Stores the settings for the SSH connection that apply to node that was used in the command execution
      */
-    public void setSSHSettings(String sshSettings){
+    public void setSSHSettings(String sshSettings) {
         SSHSettings = sshSettings;
     }
-    /* Returns the settings for the SSH connection that apply to node that was
-     * used in the command execution
+    /*
+     * Returns the settings for the SSH connection that apply to node that was used in the command execution
      */
 
     public String getSSHSettings() {
         return SSHSettings;
     }
-    /* Stores the fully qualified command that was run on the remote node over SSH
+    /*
+     * Stores the fully qualified command that was run on the remote node over SSH
      */
 
-    public void setCommandRun(String fullcommand){
-        fullCommand= fullcommand;
+    public void setCommandRun(String fullcommand) {
+        fullCommand = fullcommand;
     }
-    /* Returns the fully qualified command that was run on the remote node over SSH 
+    /*
+     * Returns the fully qualified command that was run on the remote node over SSH
      */
 
     public String getCommandRun() {
         return fullCommand;
     }
 }
-

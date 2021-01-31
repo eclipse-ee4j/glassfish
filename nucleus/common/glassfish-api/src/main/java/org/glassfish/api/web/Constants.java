@@ -17,10 +17,9 @@
 package org.glassfish.api.web;
 
 /**
- * Web container related constants that other modules (e.g., security)
- * depend on.
+ * Web container related constants that other modules (e.g., security) depend on.
  */
 public interface Constants {
 
-    public static final String ADMIN_VS = "__asadmin";
+    String ADMIN_VS = "__asadmin";
 }

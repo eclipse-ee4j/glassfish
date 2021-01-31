@@ -16,56 +16,59 @@
 
 package org.glassfish.api.admin;
 
-import org.glassfish.api.ActionReport;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
-/** Represents running (or finished) command instance.
+import org.glassfish.api.ActionReport;
+
+/**
+ * Represents running (or finished) command instance.
  *
  *
  * @author Martin Mares
  * @author Bhakti Mehta
  */
 public interface Job extends AdminCommandState, Serializable {
-    
-    /** Command progress only if it is supported by command
+
+    /**
+     * Command progress only if it is supported by command
      */
-    public CommandProgress getCommandProgress();
-    
-    public void setCommandProgress(CommandProgress commandProgress);
-    
-    public void complete(ActionReport report, Payload.Outbound outbound);
-    
-    /** Change state to reverting. Command Can use it to send info about reverting
-     * to Job management infrastructure.
+    CommandProgress getCommandProgress();
+
+    void setCommandProgress(CommandProgress commandProgress);
+
+    void complete(ActionReport report, Payload.Outbound outbound);
+
+    /**
+     * Change state to reverting. Command Can use it to send info about reverting to Job management infrastructure.
      */
-    public void revert();
-    
-    public AdminCommandEventBroker getEventBroker();
+    void revert();
 
-    public List<String> getSubjectUsernames();
+    AdminCommandEventBroker getEventBroker();
 
-    public String getName();
+    List<String> getSubjectUsernames();
 
-    public long getCommandExecutionDate();
+    String getName();
 
-    public Payload.Outbound getPayload();
+    long getCommandExecutionDate();
 
-    public File getJobsFile() ;
+    Payload.Outbound getPayload();
 
-    public void setJobsFile(File jobsFile) ;
+    File getJobsFile();
 
-    public String getScope();
+    void setJobsFile(File jobsFile);
 
-    public long getCommandCompletionDate();
-    
-    /** Job will be considered as retryable after fail. It means that checkpoint
-     * will not be deleted and revert or continue can be decided by the user.
+    String getScope();
+
+    long getCommandCompletionDate();
+
+    /**
+     * Job will be considered as retryable after fail. It means that checkpoint will not be deleted and revert or continue
+     * can be decided by the user.
      */
-    public void setFailToRetryable(boolean value);
-    
-    public ParameterMap getParameters();
-    
+    void setFailToRetryable(boolean value);
+
+    ParameterMap getParameters();
+
 }

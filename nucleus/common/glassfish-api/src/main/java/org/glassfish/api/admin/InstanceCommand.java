@@ -17,5 +17,5 @@
 package org.glassfish.api.admin;
 
 public interface InstanceCommand {
-    public String getCommandOutput();
+    String getCommandOutput();
 }

@@ -33,4 +33,4 @@ goto run
 set JAVA=java
 
 :run
-%JAVA% %WSIMPORT_OPTS% -cp "%~dp0..\modules\webservices-api-osgi.jar;%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jakarta.xml.bind-api.jar;%~dp0..\modules\jaxb-osgi.jar" com.sun.tools.ws.WsImport %*
+%JAVA% %WSIMPORT_OPTS% -cp "%~dp0..\modules\webservices-api-osgi.jar;%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jakarta.xml.bind-api.jar;%~dp0..\modules\jaxb-osgi.jar;%~dp0..\modules\jakarta.activation-api.jar" com.sun.tools.ws.WsImport %*

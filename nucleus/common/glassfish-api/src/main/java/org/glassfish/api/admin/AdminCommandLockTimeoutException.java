@@ -19,19 +19,21 @@ package org.glassfish.api.admin;
 import java.util.Date;
 
 /**
- * The AdminCommandLockTimeoutException is generated when a command 
- * can not acquire an AdminCommandLock within the allotted time.
+ * The AdminCommandLockTimeoutException is generated when a command can not acquire an AdminCommandLock within the
+ * allotted time.
  *
  * @author Chris Kasso
  */
 public class AdminCommandLockTimeoutException extends RuntimeException {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private Date timeOfAcquisition = null;
     private String lockOwner = null;
 
-    public AdminCommandLockTimeoutException(String message,
-                                            Date timeOfAcquisition,
-                                            String lockOwner) {
+    public AdminCommandLockTimeoutException(String message, Date timeOfAcquisition, String lockOwner) {
         super(message);
         this.lockOwner = lockOwner;
         this.timeOfAcquisition = timeOfAcquisition;

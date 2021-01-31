@@ -16,14 +16,12 @@
 
 package org.glassfish.api.admin.config;
 
-import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * ConfigExtension is an configuration extension that hooks itself under the
- * config configuration. This interface is just a tag interface that external
- * tools and third party software parts can subclass to be automatically stored
- * in the application server configuration file under the config element.
+ * ConfigExtension is an configuration extension that hooks itself under the config configuration. This interface is
+ * just a tag interface that external tools and third party software parts can subclass to be automatically stored in
+ * the application server configuration file under the config element.
  *
  * @author Jerome Dochez
  */

@@ -19,9 +19,9 @@ package org.glassfish.api.admin;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * This is an extensible facade class to support options
- * which can be passed from the client to server
- * and uses the CommandAspects
+ * This is an extensible facade class to support options which can be passed from the client to server and uses the
+ * CommandAspects
+ *
  * @author Bhakti Mehta
  */
 @Contract
@@ -30,7 +30,6 @@ public interface CommandAspectFacade {
     /**
      * Execute when command is finished successfully or not.
      */
-    void done( AdminCommand command, Job instance);
-
+    void done(AdminCommand command, Job instance);
 
 }

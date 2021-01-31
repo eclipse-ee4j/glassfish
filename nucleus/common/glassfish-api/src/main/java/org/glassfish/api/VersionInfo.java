@@ -25,12 +25,12 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface VersionInfo {
 
-    public String getAbbreviatedProductName();
-    
-    public String getVersionPrefix();
-    
-    public String getMajorVersion();
-    
-    public String getMinorVersion();
+    String getAbbreviatedProductName();
+
+    String getVersionPrefix();
+
+    String getMajorVersion();
+
+    String getMinorVersion();
 
 }

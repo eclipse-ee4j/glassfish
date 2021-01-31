@@ -16,20 +16,17 @@
 
 package org.glassfish.api.content;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 /**
- * Annotation that denote a class capable of handling
- * particular URL patterns. The definition of handling
- * is loose in this particular context as it can be
- * file servicing, or any other type of behaviour. The
- * type of handling the annotated class will usually be
- * defined by an interface the class implements
+ * Annotation that denote a class capable of handling particular URL patterns. The definition of handling is loose in
+ * this particular context as it can be file servicing, or any other type of behaviour. The type of handling the
+ * annotated class will usually be defined by an interface the class implements
  *
- * @see {link:FileServer} 
+ * @see {link:FileServer}
  *
  * @author Jerome Dochez
  */
@@ -37,8 +34,8 @@ import java.lang.annotation.ElementType;
 @Target(ElementType.TYPE)
 public @interface WebRequestHandler {
     /**
-     * Returns the URL pattern for URL request this class
-     * is capable of handling.
+     * Returns the URL pattern for URL request this class is capable of handling.
+     *
      * @return URL pattern
      */
     public String urlPattern() default "";

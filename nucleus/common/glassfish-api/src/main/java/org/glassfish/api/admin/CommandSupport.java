@@ -23,30 +23,24 @@ import java.security.PrivilegedAction;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.Job;
-import org.glassfish.api.admin.WrappedAdminCommand;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**
- * Utility class for command framework. Currently it just provides hooks for
- * command runner, to extend command functionality using aspects. It might be
- * extended in future with more listeners for command life cycle phases, and
- * additional utility methods. This class is in development and is subject
- * to change.
- * 
+ * Utility class for command framework. Currently it just provides hooks for command runner, to extend command
+ * functionality using aspects. It might be extended in future with more listeners for command life cycle phases, and
+ * additional utility methods. This class is in development and is subject to change.
+ *
  * @author andriy.zhdanov
- * 
+ *
  */
 public final class CommandSupport {
 
     /**
      * Get parameter value for a command.
-     * 
+     *
      * @param command
      * @param name parameter name
-     * 
+     *
      * @return parameter value or null in case of any problem.
      */
     public static String getParamValue(AdminCommand command, String name) {
@@ -55,16 +49,16 @@ public final class CommandSupport {
 
     /**
      * Get parameter value for a command.
-     * 
+     *
      * @param command
      * @param name parameter name
      * @param paramType expected return type
-     * 
+     *
      * @return parameter value or null in case of any problem.
      */
     public static <T> T getParamValue(AdminCommand command, String name, Class<T> paramType) {
         AdminCommand unwrappedCommand = getUnwrappedCommand(command);
-        Class<?> commandClass = unwrappedCommand.getClass(); 
+        Class<?> commandClass = unwrappedCommand.getClass();
         for (final Field field : commandClass.getDeclaredFields()) {
             Param param = field.getAnnotation(Param.class);
             if (param != null && name.equals(CommandModel.getParamName(param, field))) {
@@ -72,18 +66,14 @@ public final class CommandSupport {
                     break; // return null
                 }
                 try {
-                    AccessController.doPrivileged(new PrivilegedAction<Object>() {
-
-                        @Override
-                        public Object run() {
-                            field.setAccessible(true);
-                            return null;
-                        }
+                    AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                        field.setAccessible(true);
+                        return null;
                     });
                     Object value = field.get(unwrappedCommand);
                     return paramType.cast(value);
                 } catch (IllegalAccessException e) {
-                        throw new RuntimeException("Unexpected error", e);
+                    throw new RuntimeException("Unexpected error", e);
                 }
             }
         }
@@ -91,84 +81,54 @@ public final class CommandSupport {
     }
 
     /**
-     * Execute aspects when command is just completely initialized, i..e
-     * injected with parameters.
+     * Execute aspects when command is just completely initialized, i..e injected with parameters.
      */
-    public static void init(final ServiceLocator serviceLocator,
-        final AdminCommand command,
-            final AdminCommandContext context,
-            final Job instance) {
+    public static void init(final ServiceLocator serviceLocator, final AdminCommand command, final AdminCommandContext context, final Job instance) {
 
-        processAspects(serviceLocator, command, new Function() {
-            @Override
-            public AdminCommand apply(Annotation a,
-                    CommandAspectImpl<Annotation> aspect,
-                    AdminCommand command) {
-                aspect.init(a, command, context, instance);
-                return command;
-            }
+        processAspects(serviceLocator, command, (a, aspect, command1) -> {
+            aspect.init(a, command1, context, instance);
+            return command1;
         });
     }
 
     /**
      * Execute aspects when command is finished successfully or not.
      */
-    public static void done(final ServiceLocator serviceLocator,
-        final AdminCommand command,
-            final Job instance, boolean isNotify) {
+    public static void done(final ServiceLocator serviceLocator, final AdminCommand command, final Job instance, boolean isNotify) {
 
-        processAspects(serviceLocator, command, new Function() {
-            @Override
-            public AdminCommand apply(Annotation a,
-                    CommandAspectImpl<Annotation> aspect,
-                    AdminCommand command) {
-                aspect.done(a, command, instance);
-                return command;
-            }
+        processAspects(serviceLocator, command, (a, aspect, command1) -> {
+            aspect.done(a, command1, instance);
+            return command1;
         });
         if (isNotify) {
             CommandAspectFacade commandAspectFacade = serviceLocator.getService(CommandAspectFacade.class);
-            if (commandAspectFacade != null)
+            if (commandAspectFacade != null) {
                 commandAspectFacade.done(command, instance);
+            }
         }
     }
 
-
-    public static void done(final ServiceLocator serviceLocator,
-            final AdminCommand command,
-                final Job instance) {
-        done(serviceLocator, command, instance,false);
+    public static void done(final ServiceLocator serviceLocator, final AdminCommand command, final Job instance) {
+        done(serviceLocator, command, instance, false);
     }
-
 
     /**
      * Execute wrapping aspects, see {@link org.glassfish.api.AsyncImpl} for example.
      */
-    public static AdminCommand createWrappers(final ServiceLocator serviceLocator,
-        final CommandModel model,
-        final AdminCommand command,
+    public static AdminCommand createWrappers(final ServiceLocator serviceLocator, final CommandModel model, final AdminCommand command,
             final ActionReport report) {
 
-        return processAspects(serviceLocator, command, new Function() {
-            @Override
-            public AdminCommand apply(Annotation a,
-                CommandAspectImpl<Annotation> cai,
-                AdminCommand command) {
-                return cai.createWrapper(a, model, command, report);
-            }
-        });
+        return processAspects(serviceLocator, command, (a, cai, command1) -> cai.createWrapper(a, model, command1, report));
     }
 
-    private static AdminCommand processAspects(ServiceLocator serviceLocator,
-        AdminCommand command, Function function) {
+    private static AdminCommand processAspects(ServiceLocator serviceLocator, AdminCommand command, Function function) {
 
         Annotation annotations[] = getUnwrappedCommand(command).getClass().getAnnotations();
         // TODO: annotations from wrapper class
         for (Annotation a : annotations) {
             CommandAspect ca = a.annotationType().getAnnotation(CommandAspect.class);
             if (ca != null) {
-                CommandAspectImpl<Annotation> cai =
-                        serviceLocator.<CommandAspectImpl<Annotation>>getService(ca.value());
+                CommandAspectImpl<Annotation> cai = serviceLocator.<CommandAspectImpl<Annotation>>getService(ca.value());
                 command = function.apply(a, cai, command);
             }
         }
@@ -179,13 +139,13 @@ public final class CommandSupport {
     // Get root of wrapped command.
     private static AdminCommand getUnwrappedCommand(AdminCommand wrappedCommand) {
         if (wrappedCommand instanceof WrappedAdminCommand) {
-            return ((WrappedAdminCommand)wrappedCommand).getWrappedCommand();
+            return ((WrappedAdminCommand) wrappedCommand).getWrappedCommand();
         }
         return wrappedCommand;
     }
 
     private interface Function {
-        public AdminCommand apply(Annotation ca, CommandAspectImpl<Annotation> cai, AdminCommand object);
+        AdminCommand apply(Annotation ca, CommandAspectImpl<Annotation> cai, AdminCommand object);
     }
 
 }

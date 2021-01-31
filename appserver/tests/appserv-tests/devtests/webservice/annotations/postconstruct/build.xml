@@ -99,7 +99,6 @@
           <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
                 includes="webclient/**">
              <classpath refid="classpath"/>
-             <compilerarg value="-Djava.endorsed.dirs=${env.S1AS_HOME}/modules/endorsed"/>
 
           </javac>
           <copy file="client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>

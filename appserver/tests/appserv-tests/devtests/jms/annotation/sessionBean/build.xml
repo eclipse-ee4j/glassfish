@@ -44,7 +44,6 @@
             debug="on"
             includeantruntime="false"
             failonerror="true">
-            <compilerarg value="-Djava.endorsed.dirs=${env.S1AS_HOME}/modules/endorsed"/>
         </javac>
         <antcall target="compile-common">
             <param name="src" value="client"/>

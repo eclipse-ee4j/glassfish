@@ -23,16 +23,18 @@ import org.glassfish.api.Param;
  */
 public class StateCommandParameters extends OpsParams {
 
-    @Param(primary=true)
+    @Param(primary = true)
     public String component = null;
 
-    @Param(optional=true)
+    @Param(optional = true)
     public String target;
 
+    @Override
     public String name() {
         return component;
     }
 
+    @Override
     public String libraries() {
         throw new IllegalStateException("We need to be able to get access to libraries when enabling/disabling");
     }

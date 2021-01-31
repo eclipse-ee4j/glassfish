@@ -16,13 +16,17 @@
 
 package org.glassfish.api.admin;
 
-
 /**
  * A specialized CommandException that indicates an authentication failure.
  *
  * @author Bill Shannon
  */
 public class AuthenticationException extends CommandException {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
     public AuthenticationException(String msg) {
         super(msg);

@@ -163,12 +163,6 @@
             </and>
         </condition>
         <property name="javadoc.encoding.used" value="${source.encoding}"/>
-        <condition else="" property="javac.compilerargs.jaxws" value="-Djava.endorsed.dirs='${jaxws.endorsed.dir}'">
-            <and>
-                <isset property="jaxws.endorsed.dir"/>
-                <available file="nbproject/jaxws-build.xml"/>
-            </and>
-        </condition>
     </target>
     <target name="-post-init">
         <!-- Empty placeholder for easier customization. -->

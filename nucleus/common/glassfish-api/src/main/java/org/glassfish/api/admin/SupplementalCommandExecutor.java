@@ -16,13 +16,13 @@
 
 package org.glassfish.api.admin;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.Param;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.component.MultiMap;
-
-import java.io.File;
-import java.util.*;
 
 /**
  * An executor responsible for executing supplemental commands registered for a main command
@@ -31,35 +31,34 @@ import java.util.*;
  */
 @Contract
 public interface SupplementalCommandExecutor {
-    
-    public Collection<SupplementalCommand> listSuplementalCommands(String commandName);
 
-    public ActionReport.ExitCode execute(Collection<SupplementalCommand> suplementals, Supplemental.Timing time,
-                             AdminCommandContext context, ParameterMap parameters, 
-                             MultiMap<String, File> optionFileMap);
-    
+    Collection<SupplementalCommand> listSuplementalCommands(String commandName);
+
+    ActionReport.ExitCode execute(Collection<SupplementalCommand> suplementals, Supplemental.Timing time, AdminCommandContext context,
+            ParameterMap parameters, MultiMap<String, File> optionFileMap);
+
     public interface SupplementalCommand {
-        
-        public void execute(AdminCommandContext ctxt);
-        
-        public AdminCommand getCommand();
 
-        public boolean toBeExecutedBefore();
+        void execute(AdminCommandContext ctxt);
 
-        public boolean toBeExecutedAfter();
+        AdminCommand getCommand();
 
-        public boolean toBeExecutedAfterReplication();
-        
-        public FailurePolicy onFailure();
+        boolean toBeExecutedBefore();
 
-        public List<RuntimeType> whereToRun();
+        boolean toBeExecutedAfter();
 
-        public ProgressStatus getProgressStatus();
+        boolean toBeExecutedAfterReplication();
 
-        public void setProgressStatus(ProgressStatus progressStatus);
-        
-        public Progress getProgressAnnotation();
-        
+        FailurePolicy onFailure();
+
+        List<RuntimeType> whereToRun();
+
+        ProgressStatus getProgressStatus();
+
+        void setProgressStatus(ProgressStatus progressStatus);
+
+        Progress getProgressAnnotation();
+
     }
-    
+
 }

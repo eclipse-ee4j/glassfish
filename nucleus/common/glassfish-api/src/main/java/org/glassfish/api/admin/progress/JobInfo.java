@@ -16,18 +16,19 @@
 
 package org.glassfish.api.admin.progress;
 
+import java.io.File;
+
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * This class contains information related to a job which will be persisted to jobs.xml
+ *
  * @author Bhakti Mehta
  */
 @XmlType
-public class JobInfo  {
+public class JobInfo {
 
     @XmlElement
     public String jobId;
@@ -48,20 +49,21 @@ public class JobInfo  {
     @XmlElement
     public long commandCompletionDate;
 
-
-    public JobInfo(String jobId,String jobName,long commandStartDate,String exitCode,String user,String message, File jobsFileLoc,String state,long commandCompletionDate) {
+    public JobInfo(String jobId, String jobName, long commandStartDate, String exitCode, String user, String message, File jobsFileLoc, String state,
+            long commandCompletionDate) {
         this.jobId = jobId;
         this.jobName = jobName;
         this.commandExecutionDate = commandStartDate;
         this.exitCode = exitCode;
         this.user = user;
-        this.message=message;
+        this.message = message;
         this.jobFile = jobsFileLoc;
         this.state = state;
         this.commandCompletionDate = commandCompletionDate;
     }
 
-    public JobInfo() {}
+    public JobInfo() {
+    }
 
     public File getJobsFile() {
         return jobFile;
@@ -71,6 +73,4 @@ public class JobInfo  {
         this.jobFile = jobsFile;
     }
 
-
 }
-

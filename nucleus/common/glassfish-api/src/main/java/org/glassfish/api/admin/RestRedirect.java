@@ -20,19 +20,20 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * annotation to redirect a rest request from CRUD operations on the configuration
- * tree to a command invocation (like deploy, undeploy).
+ * annotation to redirect a rest request from CRUD operations on the configuration tree to a command invocation (like
+ * deploy, undeploy).
  *
  * @author Jerome Dochez
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RestRedirect {
 
-    enum OpType { GET, PUT, POST, DELETE}
+    enum OpType {
+        GET, PUT, POST, DELETE
+    }
 
     /**
-     * Rest operation type that should trigger a redirect to an actual asadmin
-     * command invocation
+     * Rest operation type that should trigger a redirect to an actual asadmin command invocation
      *
      * @return the rest operation type for this redirect
      */

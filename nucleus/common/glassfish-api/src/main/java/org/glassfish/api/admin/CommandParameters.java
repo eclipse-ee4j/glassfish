@@ -17,11 +17,9 @@
 package org.glassfish.api.admin;
 
 /**
- * A marker interface to indicate classes that are used to pass
- * parameters to the parameters method of the CommandRunner.CommandInvocation
- * API.  Classes marked as CommandParameters should declare public fields
- * whose name is the parameter name and whose value is the parameter
- * value.
+ * A marker interface to indicate classes that are used to pass parameters to the parameters method of the
+ * CommandRunner.CommandInvocation API. Classes marked as CommandParameters should declare public fields whose name is
+ * the parameter name and whose value is the parameter value.
  */
 public interface CommandParameters {
 }

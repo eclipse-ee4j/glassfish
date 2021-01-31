@@ -16,12 +16,12 @@
 
 package org.glassfish.api.admin.config;
 
-import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Contract for upgrading legacy configuration values to their new location or simply removing them if they are no
- * longer supported.  Implementations should notify the user any of any changes.
+ * longer supported. Implementations should notify the user any of any changes.
  *
  * @author Justin Lee
  */

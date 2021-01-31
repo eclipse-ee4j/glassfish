@@ -257,6 +257,7 @@
                 <include>javaee.jar</include>
                 <include>appserv-rt.jar</include>
                 <include>gf-client.jar</include>
+                <include>grizzly-npn-bootstrap.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/lib</outputDirectory>
         </fileSet>

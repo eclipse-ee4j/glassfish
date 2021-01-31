@@ -20,18 +20,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * This interface can be implemented to provide a custom connection validation 
- * mechanism if custom-validation is chosen as the connection-validation-method.
+ * This interface can be implemented to provide a custom connection validation mechanism if custom-validation is chosen
+ * as the connection-validation-method.
  * 
  * @author Shalini M
  */
 public interface ConnectionValidation {
-  /**
-   * Check for validity of <code>java.sql.Connection</code>
-   *
-   * @param con       <code>java.sql.Connection</code>to be validated
-   * @throws SQLException if the connection is not valid
-   */
-   boolean isConnectionValid(Connection con) throws SQLException;
+    /**
+     * Check for validity of <code>java.sql.Connection</code>
+     *
+     * @param con <code>java.sql.Connection</code>to be validated
+     * @throws SQLException if the connection is not valid
+     */
+    boolean isConnectionValid(Connection con) throws SQLException;
 
 }

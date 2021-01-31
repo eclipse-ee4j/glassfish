@@ -27,27 +27,22 @@ import org.glassfish.api.Param;
 public abstract class OpsParams implements CommandParameters {
 
     /**
-     * There can be so far 6 types of events that can trigger deployment
-     * activities.
+     * There can be so far 6 types of events that can trigger deployment activities.
      *
-     * load when an already deployed application is being reloaded.
-     * deploy when a new application is deployed on DAS
-     * deploy_instance when a new application is deployed on instance
-     * unload when a loaded application is stopped
-     * undeploy when a deployed application is removed from the system.
-     * create_application_ref when an application reference is being created
-     * mt_provision when provisioning an application to tenant
-     * mt_unprovision when unprovisioning an application from tenant
+     * load when an already deployed application is being reloaded. deploy when a new application is deployed on DAS
+     * deploy_instance when a new application is deployed on instance unload when a loaded application is stopped undeploy
+     * when a deployed application is removed from the system. create_application_ref when an application reference is being
+     * created mt_provision when provisioning an application to tenant mt_unprovision when unprovisioning an application
+     * from tenant
      */
-    public enum Origin { 
-        load, deploy, deploy_instance, unload, undeploy, create_application_ref,        mt_provision, mt_unprovision;
+    public enum Origin {
+        load, deploy, deploy_instance, unload, undeploy, create_application_ref, mt_provision, mt_unprovision;
 
         // whether it's part of the deployment, on DAS or on instance
         public boolean isDeploy() {
             if (this == Origin.deploy || this == Origin.deploy_instance) {
                 return true;
-            }    
-            else {
+            } else {
                 return false;
             }
         }
@@ -56,33 +51,28 @@ public abstract class OpsParams implements CommandParameters {
         public boolean isLoad() {
             if (this == Origin.load) {
                 return true;
-            }    
-            else {
+            } else {
                 return false;
             }
         }
 
-        // whether the artifacts are already present and no need to 
+        // whether the artifacts are already present and no need to
         // generate
         public boolean isArtifactsPresent() {
-            if (this == Origin.load || this == Origin.deploy_instance || 
-                this == Origin.create_application_ref) {
+            if (this == Origin.load || this == Origin.deploy_instance || this == Origin.create_application_ref) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
 
         // whether we need to clean the artifacts
-        // we need to do this for undeployment and deployment failure 
+        // we need to do this for undeployment and deployment failure
         // clean up
         public boolean needsCleanArtifacts() {
-            if (this == Origin.undeploy || this == Origin.deploy 
-                || this == Origin.mt_unprovision) {
+            if (this == Origin.undeploy || this == Origin.deploy || this == Origin.mt_unprovision) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -91,8 +81,7 @@ public abstract class OpsParams implements CommandParameters {
         public boolean isUndeploy() {
             if (this == Origin.undeploy) {
                 return true;
-            }    
-            else {
+            } else {
                 return false;
             }
         }
@@ -101,8 +90,7 @@ public abstract class OpsParams implements CommandParameters {
         public boolean isUnload() {
             if (this == Origin.unload) {
                 return true;
-            }    
-            else {
+            } else {
                 return false;
             }
         }
@@ -111,37 +99,37 @@ public abstract class OpsParams implements CommandParameters {
         public boolean isCreateAppRef() {
             if (this == Origin.create_application_ref) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
     }
 
     /**
-     * There can be cases where the container code wants to find out  
-     * the command associated with the operation when the Origin information
-     * is not sufficient
+     * There can be cases where the container code wants to find out the command associated with the operation when the
+     * Origin information is not sufficient
      * 
      */
-    public enum Command { 
-        deploy, undeploy, enable, disable, _deploy, create_application_ref, delete_application_ref, startup_server, shutdown_server 
+    public enum Command {
+        deploy, undeploy, enable, disable, _deploy, create_application_ref, delete_application_ref, startup_server, shutdown_server
     }
 
     /**
      * Type of deployment operation, by default it's deployment
      */
-    public Origin origin = Origin.deploy; 
+    public Origin origin = Origin.deploy;
+
     public Origin getOrigin() {
-      return origin;
+        return origin;
     }
 
     /**
      * The command associated with this operation, by default it's deploy
      */
     public Command command = Command.deploy;
+
     public Command getCommand() {
-      return command;
+        return command;
     }
 
     public abstract String name();
@@ -151,6 +139,6 @@ public abstract class OpsParams implements CommandParameters {
     // internal hidden param
     // if this param is set to true, a classic style deployment will be
     // executed regardless of the virtualization settings
-    @Param(optional=true, defaultValue="false")
+    @Param(optional = true, defaultValue = "false")
     public Boolean _classicstyle = false;
 }

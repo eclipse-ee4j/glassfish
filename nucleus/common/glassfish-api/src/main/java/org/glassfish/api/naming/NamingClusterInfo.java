@@ -43,11 +43,9 @@ public interface NamingClusterInfo {
 
     public static final String CORBALOC = "corbaloc:";
 
-    void initGroupInfoService(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort,
-                              ORB orb, ServiceLocator services);
+    void initGroupInfoService(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort, ORB orb, ServiceLocator services);
 
-    void setClusterInstanceInfo(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort,
-                                boolean membershipChangeForced);
+    void setClusterInstanceInfo(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort, boolean membershipChangeForced);
 
     List<String> getNextRotation();
 

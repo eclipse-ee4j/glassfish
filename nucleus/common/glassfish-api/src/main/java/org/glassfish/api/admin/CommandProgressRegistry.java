@@ -26,11 +26,11 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface CommandProgressRegistry {
-    
+
     public String registr(CommandProgress cp);
-    
+
     public Collection<CommandProgress> list();
-    
+
     public CommandProgress get(String id);
-    
+
 }

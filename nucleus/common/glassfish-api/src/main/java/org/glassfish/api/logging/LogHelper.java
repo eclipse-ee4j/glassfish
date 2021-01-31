@@ -30,14 +30,14 @@ public final class LogHelper {
 
     /**
      * Logs a message with the given level, message, parameters and <code>Throwable</code>.
+     * 
      * @param logger the <code>Logger</code> object to be used for logging the message.
      * @param level the <code>Level</code> of the message to be logged.
      * @param messageId the key in the resource bundle of the <code>Logger</code> containing the localized text.
      * @param thrown the <code>Throwable</code> associated with the message to be logged.
      * @param params the parameters to the localized text.
      */
-    public static void log(Logger logger, Level level, String messageId,
-            Throwable thrown, Object... params) {
+    public static void log(Logger logger, Level level, String messageId, Throwable thrown, Object... params) {
         LogRecord rec = new LogRecord(level, messageId);
         rec.setLoggerName(logger.getName());
         rec.setResourceBundleName(logger.getResourceBundleName());
@@ -46,10 +46,11 @@ public final class LogHelper {
         rec.setThrown(thrown);
         logger.log(rec);
     }
-    
+
     /**
-     * Gets the formatted message given the message key and parameters.
-     * The ResourceBundle associated with the logger is searched for the specified key.
+     * Gets the formatted message given the message key and parameters. The ResourceBundle associated with the logger is
+     * searched for the specified key.
+     * 
      * @param logger
      * @param msgKey
      * @param params
@@ -59,12 +60,12 @@ public final class LogHelper {
         ResourceBundle rb = logger.getResourceBundle();
         if (rb != null) {
             try {
-                return MessageFormat.format(rb.getString(msgKey),params);
+                return MessageFormat.format(rb.getString(msgKey), params);
             } catch (java.util.MissingResourceException e) {
                 return msgKey;
             }
         }
         return msgKey;
     }
-    
+
 }

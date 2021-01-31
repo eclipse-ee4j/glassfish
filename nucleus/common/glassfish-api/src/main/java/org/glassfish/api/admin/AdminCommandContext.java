@@ -16,7 +16,6 @@
 
 package org.glassfish.api.admin;
 
-
 import java.io.Serializable;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
@@ -29,27 +28,30 @@ import org.glassfish.api.ExecutionContext;
  * @author Jerome Dochez
  */
 public interface AdminCommandContext extends ExecutionContext, Serializable {
-    
+
     /**
      * Returns the Reporter for this action
+     * 
      * @return ActionReport implementation suitable for the client
      */
     public ActionReport getActionReport();
+
     /**
      * Change the Reporter for this action
+     * 
      * @param newReport The ActionReport to set.
      */
     public void setActionReport(ActionReport newReport);
 
     /**
      * Returns the Logger
+     * 
      * @return the logger
      */
     public Logger getLogger();
 
     /**
-     * Returns the inbound payload, from the admin client, that accompanied
-     * the command request.
+     * Returns the inbound payload, from the admin client, that accompanied the command request.
      *
      * @return the inbound payload
      */
@@ -63,8 +65,8 @@ public interface AdminCommandContext extends ExecutionContext, Serializable {
     public void setInboundPayload(Payload.Inbound newInboundPayload);
 
     /**
-     * Returns a reference to the outbound payload so a command implementation
-     * can populate the payload for return to the admin client.
+     * Returns a reference to the outbound payload so a command implementation can populate the payload for return to the
+     * admin client.
      *
      * @return the outbound payload
      */
@@ -90,22 +92,20 @@ public interface AdminCommandContext extends ExecutionContext, Serializable {
      * @param subject
      */
     public void setSubject(Subject subject);
-    
-    /** 
-     * ProgressStatus can be used to inform about step by step progress 
-     * of the command. It is always ready to use but propagated to 
-     * the client only if {@code @Progress} annotation is on the command
-     * implementation.
+
+    /**
+     * ProgressStatus can be used to inform about step by step progress of the command. It is always ready to use but
+     * propagated to the client only if {@code @Progress} annotation is on the command implementation.
      */
     public ProgressStatus getProgressStatus();
-    
-    /** Simple event broker for inter command communication mostly
-     * from server to client. (Command to caller).
+
+    /**
+     * Simple event broker for inter command communication mostly from server to client. (Command to caller).
      */
     public AdminCommandEventBroker getEventBroker();
-    
-    
-    /** Id of current job. Only managed commands has job id.
+
+    /**
+     * Id of current job. Only managed commands has job id.
      */
     public String getJobId();
 

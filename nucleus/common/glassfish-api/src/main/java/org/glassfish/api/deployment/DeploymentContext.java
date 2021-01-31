@@ -37,19 +37,17 @@ import java.net.URISyntaxException;
 public interface DeploymentContext extends ApplicationContext, ExecutionContext {
 
     /**
-     * Application bits, at the raw level. Deployer's should avoid
-     * using such low level access as it binds the deployer to a particular directory
-     * layout. Instead Deployers should use the class loader obtained via the getClassLoader() API
+     * Application bits, at the raw level. Deployer's should avoid using such low level access as it binds the deployer to a
+     * particular directory layout. Instead Deployers should use the class loader obtained via the getClassLoader() API
      *
      * @return Abstraction to the application's source archive.
      */
     public ReadableArchive getSource();
 
     /**
-     * During the prepare phase, when a deployer need to have access to the class loader
-     * that will be used to load the application in the runtime container, it can call
-     * this API during the prepare phase. Otherswise, deployers should use the
-     * getClassLoader API.
+     * During the prepare phase, when a deployer need to have access to the class loader that will be used to load the
+     * application in the runtime container, it can call this API during the prepare phase. Otherswise, deployers should use
+     * the getClassLoader API.
      *
      * If a deployers needs to have access to the classloader during the prepare phase
      *
@@ -60,37 +58,34 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
 
     /**
      * Returns the DeployCommand parameters
+     * 
      * @param opsParamsType expected deployment operation parameters type.
      * @return the command parameters
      */
     public <U extends OpsParams> U getCommandParameters(Class<U> opsParamsType);
 
     /**
-     * Returns a scratch directory that can be used to store things in.
-     * The scratch directory will be persisted accross server restart but not 
-     * accross redeployment of the same application
+     * Returns a scratch directory that can be used to store things in. The scratch directory will be persisted accross
+     * server restart but not accross redeployment of the same application
      *
      * @param subDirName the sub directory name of the scratch dir
-     * @return the specific scratch subdirectory for this application based on 
-     *         passed in subDirName. Returns the root scratch dir if the 
-     *         passed in value is null.      
+     * @return the specific scratch subdirectory for this application based on passed in subDirName. Returns the root
+     * scratch dir if the passed in value is null.
      */
     public File getScratchDir(String subDirName);
-    
+
     /**
-     * Returns the directory where the original applications bits should be 
-     * stored. This is useful when users deploy an archive file that need to 
-     * be unzipped somewhere for the container to work with. 
+     * Returns the directory where the original applications bits should be stored. This is useful when users deploy an
+     * archive file that need to be unzipped somewhere for the container to work with.
      * 
      * @return the source directory for this application
      */
     public File getSourceDir();
 
     /**
-     * Stores a descriptor for the module in the context so other deployer's
-     * can have access to it. Module meta-data is usual not persistent which
-     * mean that any modification to it will not be available at the next
-     * server restart and will need to be reset.
+     * Stores a descriptor for the module in the context so other deployer's can have access to it. Module meta-data is
+     * usual not persistent which mean that any modification to it will not be available at the next server restart and will
+     * need to be reset.
      *
      * @param metaData the meta data itself
      */
@@ -104,7 +99,6 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
      */
     public <T> T getModuleMetaData(Class<T> metadataType);
 
-
     /**
      * Gets the archive handlers for modules
      *
@@ -113,10 +107,9 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
     public Map<String, ArchiveHandler> getModuleArchiveHandlers();
 
     /**
-     * Stores application level metadata in the context so other deployer's
-     * can have access to it. The transient meta-data is not persistent which
-     * mean that any modification to it will not be available at the next
-     * server restart and will need to be reset.
+     * Stores application level metadata in the context so other deployer's can have access to it. The transient meta-data
+     * is not persistent which mean that any modification to it will not be available at the next server restart and will
+     * need to be reset.
      *
      * @param metaDataKey key of the meta date.
      * @param metaData the meta data itself
@@ -130,20 +123,19 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
      * @param metadataType type of the meta date.
      * @return instance of T or null
      */
-    public  <T> T getTransientAppMetaData(String metaDataKey, Class<T> metadataType);
+    public <T> T getTransientAppMetaData(String metaDataKey, Class<T> metadataType);
 
     /**
-     * Add a new ClassFileTransformer to the context. Once all the deployers potentially
-     * invalidating the application class loader (as indicated by the
-     * @link {MetaData.invalidatesClassLoader()})
-     * the deployment backend will recreate the application's class loader registering
-     * all the ClassTransformers added by the deployers to this context.
+     * Add a new ClassFileTransformer to the context. Once all the deployers potentially invalidating the application class
+     * loader (as indicated by the
+     * 
+     * @link {MetaData.invalidatesClassLoader()}) the deployment backend will recreate the application's class loader
+     * registering all the ClassTransformers added by the deployers to this context.
      *
-     * @param transformer the new class file transformer to register to the new application
-     * class loader
-     * @throws UnsupportedOperationException if the class loader we use does not support the
-     * registration of a ClassFileTransformer. In such case, the deployer should either fail
-     * deployment or revert to a mode without the bytecode enhancement feature.
+     * @param transformer the new class file transformer to register to the new application class loader
+     * @throws UnsupportedOperationException if the class loader we use does not support the registration of a
+     * ClassFileTransformer. In such case, the deployer should either fail deployment or revert to a mode without the
+     * bytecode enhancement feature.
      */
     public void addTransformer(ClassFileTransformer transformer);
 
@@ -152,14 +144,14 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
      *
      * @return collection of metadata added to the context
      */
-    public Collection<Object> getModuleMetadata();  
+    public Collection<Object> getModuleMetadata();
 
     /**
      * Returns all the transient app metadata associated with this deployment
      *
      * @return collection of metadata added to the context
      */
-    public Map<String, Object> getTransientAppMetadata();  
+    public Map<String, Object> getTransientAppMetadata();
 
     /**
      * Returns the archive handler that's associated with this context
@@ -169,10 +161,8 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
     public ArchiveHandler getArchiveHandler();
 
     /**
-     * Gets the original source archive
-     * In case of archive deployment, this will return the archive before
-     * expanding. In case of directory deployment, this will return the same
-     * thing as getSource()
+     * Gets the original source archive In case of archive deployment, this will return the archive before expanding. In
+     * case of directory deployment, this will return the same thing as getSource()
      *
      * @return the original source archive
      */
@@ -195,9 +185,9 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
     /**
      * gets the app-libs specified for this archive<br>
      * This list includes --libraries as well EXTENSION_LIST specified in the manifest entries
+     * 
      * @return list of library URIs
-     * @throws URISyntaxException  when unable to get the library URIs
+     * @throws URISyntaxException when unable to get the library URIs
      */
-    public List<URI> getAppLibs()
-            throws URISyntaxException;
+    public List<URI> getAppLibs() throws URISyntaxException;
 }

@@ -16,43 +16,46 @@
 
 package com.sun.appserv.server;
 
-
 /**
- * This class defines the types of events that get fired by the application server. 
- * It also contains a LifecycleEventContext that can be used by the 
- * lifecycle modules.
+ * This class defines the types of events that get fired by the application server. It also contains a
+ * LifecycleEventContext that can be used by the lifecycle modules.
  */
 public class LifecycleEvent extends java.util.EventObject {
-    
+
     private int eventType;
     private Object eventData;
     private transient LifecycleEventContext ctx = null;
-    
-    // Lifecycle event types 
 
-    /** Server is initializing subsystems and setting up the runtime environment.
-    */
-    public final static int INIT_EVENT = 0; 
+    // Lifecycle event types
 
-    /** Server is starting up applications
+    /**
+     * Server is initializing subsystems and setting up the runtime environment.
      */
-    public final static int STARTUP_EVENT = 1; 
+    public final static int INIT_EVENT = 0;
 
-    /** Server is ready to service requests
+    /**
+     * Server is starting up applications
      */
-    public final static int READY_EVENT = 2; 
+    public final static int STARTUP_EVENT = 1;
 
-    /** Server is shutting down applications
+    /**
+     * Server is ready to service requests
      */
-    public final static int SHUTDOWN_EVENT = 3; 
+    public final static int READY_EVENT = 2;
 
-    /** Server is terminating the subsystems and the runtime environment.
+    /**
+     * Server is shutting down applications
      */
-    public final static int TERMINATION_EVENT = 4; 
+    public final static int SHUTDOWN_EVENT = 3;
 
-    
+    /**
+     * Server is terminating the subsystems and the runtime environment.
+     */
+    public final static int TERMINATION_EVENT = 4;
+
     /**
      * Construct new lifecycle event
+     * 
      * @param source The object on which the event initially occurred
      * @param eventType type of the event
      * @param ctx the underlying context for the lifecycle event
@@ -64,20 +67,23 @@ public class LifecycleEvent extends java.util.EventObject {
         this.eventData = eventData;
         this.ctx = ctx;
     }
-    
-    /** Get the type of event associated with this 
+
+    /**
+     * Get the type of event associated with this
      */
     public int getEventType() {
         return eventType;
     }
 
-    /** Get the data associated with the event.
+    /**
+     * Get the data associated with the event.
      */
     public Object getData() {
         return eventData;
     }
 
-    /** Get the ServerContext generating this lifecycle event 
+    /**
+     * Get the ServerContext generating this lifecycle event
      */
     public LifecycleEventContext getLifecycleEventContext() {
         return ctx;

@@ -29,8 +29,7 @@ import com.sun.enterprise.module.HK2Module;
 import java.util.Map;
 
 /**
- * A sniffer implementation is responsible for identifying a particular
- * application type and/or a particular file type.
+ * A sniffer implementation is responsible for identifying a particular application type and/or a particular file type.
  *
  * <p>
  * For clients who want to work with Sniffers, see <tt>SnifferManager</tt> in the kernel.
@@ -41,47 +40,42 @@ import java.util.Map;
 public interface Sniffer {
 
     /**
-     * Returns true if the passed file or directory is recognized by this
-     * sniffer.
+     * Returns true if the passed file or directory is recognized by this sniffer.
+     * 
      * @param context deployment context
      * @return true if the location is recognized by this sniffer
      */
     public boolean handles(DeploymentContext context);
 
     /**
-     * Returns true if the passed file or directory is recognized by this
-     * sniffer.
-     * @param source the file or directory abstracted as an archive
-     * resources from the source archive.
+     * Returns true if the passed file or directory is recognized by this sniffer.
+     * 
+     * @param source the file or directory abstracted as an archive resources from the source archive.
      * @return true if the location is recognized by this sniffer
      */
     public boolean handles(ReadableArchive source);
 
     /**
-     * Returns the array of patterns to apply against the request URL
-     * If the pattern matches the URL, the service method of the associated
-     * container will be invoked
+     * Returns the array of patterns to apply against the request URL If the pattern matches the URL, the service method of
+     * the associated container will be invoked
+     * 
      * @return array of patterns
      */
     public String[] getURLPatterns();
 
     /**
-     * Returns the list of annotations types that this sniffer is interested in.
-     * If an application bundle contains at least one class annotated with
-     * one of the returned annotations, the deployment process will not
-     * call the handles method but will invoke the containers deployers as if
-     * the handles method had been called and returned true.
+     * Returns the list of annotations types that this sniffer is interested in. If an application bundle contains at least
+     * one class annotated with one of the returned annotations, the deployment process will not call the handles method but
+     * will invoke the containers deployers as if the handles method had been called and returned true.
      *
      * @return list of annotations this sniffer is interested in or an empty array
      */
     public Class<? extends Annotation>[] getAnnotationTypes();
-    
+
     /**
-     * Returns the list of annotation names that this sniffer is interested in.
-     * If an application bundle contains at least one class annotated with
-     * one of the returned annotations, the deployment process will not
-     * call the handles method but will invoke the containers deployers as if
-     * the handles method had been called and returned true.
+     * Returns the list of annotation names that this sniffer is interested in. If an application bundle contains at least
+     * one class annotated with one of the returned annotations, the deployment process will not call the handles method but
+     * will invoke the containers deployers as if the handles method had been called and returned true.
      *
      * @param context deployment context
      * @return list of annotation names this sniffer is interested in or an empty array
@@ -90,18 +84,17 @@ public interface Sniffer {
 
     /**
      * Returns the container type associated with this sniffer
+     * 
      * @return the container type
      */
     public String getModuleType(); // This method should be renamed to getContainerType
 
-   /**                                          
-     * Sets up the container libraries so that any imported bundle from the
-     * connector jar file will now be known to the module subsystem
+    /**
+     * Sets up the container libraries so that any imported bundle from the connector jar file will now be known to the
+     * module subsystem
      *
-     * This method returns a {@link HK2Module}s for the module containing
-     * the core implementation of the container. That means that this module
-     * will be locked as long as there is at least one module loaded in the
-     * associated container.
+     * This method returns a {@link HK2Module}s for the module containing the core implementation of the container. That
+     * means that this module will be locked as long as there is at least one module loaded in the associated container.
      *
      * @param containerHome is where the container implementation resides
      * @param logger the logger to use
@@ -111,9 +104,8 @@ public interface Sniffer {
      */
     public HK2Module[] setup(String containerHome, Logger logger) throws IOException;
 
-   /**
-     * Tears down a container, remove all imported libraries from the module
-     * subsystem.
+    /**
+     * Tears down a container, remove all imported libraries from the module subsystem.
      *
      */
     public void tearDown();
@@ -121,19 +113,18 @@ public interface Sniffer {
     /**
      * Returns the list of Containers that this Sniffer enables.
      *
-     * The runtime will look up each container implementing
-     * using the names provided in the habitat.
+     * The runtime will look up each container implementing using the names provided in the habitat.
      *
      * @return list of container names known to the habitat for this sniffer
      */
     public String[] getContainersNames();
 
-    /** 
+    /**
      * @return whether this sniffer should be visible to user
      * 
      */
     public boolean isUserVisible();
-    
+
     /**
      * @return whether this sniffer represents a Java EE container type
      *
@@ -141,37 +132,29 @@ public interface Sniffer {
     public boolean isJavaEE();
 
     /**
-     * Returns a map of deployment configurations for this Sniffer from the
-     * specific archive source.  
+     * Returns a map of deployment configurations for this Sniffer from the specific archive source.
      * <p>
-     * Many sniffers (esp. Java EE sniffers) will choose to set the key of each 
-     * map entry to the relative path within the ReadableArchive of the 
-     * deployment descriptor and the value of that map entry to the
-     * descriptor's contents.
+     * Many sniffers (esp. Java EE sniffers) will choose to set the key of each map entry to the relative path within the
+     * ReadableArchive of the deployment descriptor and the value of that map entry to the descriptor's contents.
      * 
      * @param source the contents of the application's archive
      * @return map of configuration names to configurations for the application
-     * @throws java.io.IOException in case of errors searching or reading the
-     * archive for the deployment configuration(s)
+     * @throws java.io.IOException in case of errors searching or reading the archive for the deployment configuration(s)
      */
-    public Map<String,String> getDeploymentConfigurations(final ReadableArchive source) throws IOException;
+    public Map<String, String> getDeploymentConfigurations(final ReadableArchive source) throws IOException;
 
-    /** 
-     * @return the set of the sniffers that should not co-exist for the 
-     * same module. For example, ejb and appclient sniffers should not 
-     * be returned in the sniffer list for a certain module.
-     * This method will be used to validate and filter the retrieved sniffer
-     * lists for a certain module
+    /**
+     * @return the set of the sniffers that should not co-exist for the same module. For example, ejb and appclient sniffers
+     * should not be returned in the sniffer list for a certain module. This method will be used to validate and filter the
+     * retrieved sniffer lists for a certain module
      * 
      */
     public String[] getIncompatibleSnifferTypes();
 
     /**
      *
-     * This API is used to help determine if the sniffer should recognize 
-     * the current archive.
-     * If the sniffer does not support the archive type associated with 
-     * the current deployment, the sniffer should not recognize the archive.
+     * This API is used to help determine if the sniffer should recognize the current archive. If the sniffer does not
+     * support the archive type associated with the current deployment, the sniffer should not recognize the archive.
      *
      * @param archiveType the archive type to check
      * @return whether the sniffer supports the archive type

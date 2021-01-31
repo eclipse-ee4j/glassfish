@@ -22,25 +22,25 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a POJO class, a field, or a method as a named resource.  
- * Named resources can be annotated with {@code @AccessRequired} annotations
- * for declarative authorization.
+ * Marks a POJO class, a field, or a method as a named resource. Named resources can be annotated with
+ * {@code @AccessRequired} annotations for declarative authorization.
  * 
  * @author tjquinn
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD })
 public @interface NamedResource {
     /** can appear as a top-level resource (if singleton) or in an implied top-level collection (if not a singleton) */
     public boolean isPrimary() default false;
-    
+
     /** overides the default collection name for named resources of this type */
     public String subpath() default "?";
-    
+
     public String collectionName() default "";
-    
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Key {}
-    
+    @interface Key {
+    }
+
 }

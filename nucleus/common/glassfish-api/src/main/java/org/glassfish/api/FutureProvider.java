@@ -20,8 +20,7 @@ import java.util.concurrent.Future;
 import java.util.List;
 
 /**
- * Some operations may be asynchronous and need to provide their results
- * as a list of future objects
+ * Some operations may be asynchronous and need to provide their results as a list of future objects
  *
  * @author Jerome Dochez
  */

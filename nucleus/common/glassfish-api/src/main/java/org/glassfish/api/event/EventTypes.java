@@ -20,18 +20,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Extensible list of event types.
- * EventTypes are created through the create method and not directly.
+ * Extensible list of event types. EventTypes are created through the create method and not directly.
  * 
  * Events can be compared using == or equals although == is recommended.
  * 
  * @author dochez
  */
 public final class EventTypes<T> {
-    
-    private final static Map<String, EventTypes> EVENTS=new HashMap<String, EventTypes>();
 
-    
+    private final static Map<String, EventTypes> EVENTS = new HashMap<String, EventTypes>();
+
     // stock events.
     public static final String SERVER_STARTUP_NAME = "server_startup";
     public static final String SERVER_READY_NAME = "server_ready";
@@ -48,14 +46,14 @@ public final class EventTypes<T> {
     }
 
     public static <T> EventTypes<T> create(String name, Class<T> hookType) {
-        synchronized(EVENTS) {
+        synchronized (EVENTS) {
             if (!EVENTS.containsKey(name)) {
                 EVENTS.put(name, new EventTypes(name, hookType));
             }
         }
         return EVENTS.get(name);
-    }    
-    
+    }
+
     private final String name;
     private final Class<T> hookType;
 
@@ -63,7 +61,7 @@ public final class EventTypes<T> {
         this.name = name;
         this.hookType = hookType;
     }
-    
+
     public String type() {
         return name;
     }
@@ -72,14 +70,13 @@ public final class EventTypes<T> {
         return hookType;
     }
 
-
     public T getHook(EventListener.Event<T> e) {
         if (e.is(this)) {
             return e.hook();
         }
         return null;
     }
-    
+
     /**
      * {@inheritDoc}
      * <p/>
@@ -87,9 +84,12 @@ public final class EventTypes<T> {
      */
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (null == o) return false;
-        if (getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (null == o)
+            return false;
+        if (getClass() != o.getClass())
+            return false;
 
         return name.equals(((EventTypes) o).name);
     }
@@ -102,6 +102,6 @@ public final class EventTypes<T> {
     @Override
     public int hashCode() {
         return name.hashCode();
-    }      
-    
+    }
+
 }

@@ -28,9 +28,9 @@ import jakarta.inject.Qualifier;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Goes with {@link Service} annotation on a {@link NamedNamingObjectProxy}. Using this annotation
- * a {@link NamedNamingObjectProxy} indicates what namespace prefixes are handled by a proxy. This extra metadata
- * enables lazy instantiation of {@link NamedNamingObjectProxy} objects.
+ * Goes with {@link Service} annotation on a {@link NamedNamingObjectProxy}. Using this annotation a
+ * {@link NamedNamingObjectProxy} indicates what namespace prefixes are handled by a proxy. This extra metadata enables
+ * lazy instantiation of {@link NamedNamingObjectProxy} objects.
  *
  * @author sanjeeb.sahoo@oracle.com
  */

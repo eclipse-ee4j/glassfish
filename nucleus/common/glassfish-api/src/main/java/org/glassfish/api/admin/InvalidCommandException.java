@@ -26,27 +26,23 @@ public class InvalidCommandException extends CommandException {
     }
 
     /**
-     * Constructs an <code>InvalidCommandException</code> with the
-     * specified detail message.
+     * Constructs an <code>InvalidCommandException</code> with the specified detail message.
+     * 
      * @param msg the detail message.
      */
     public InvalidCommandException(String cmdName) {
         super(cmdName);
     }
 
-
     /**
-     * Constructs a new <code>InvalidCommandException</code> exception with the
-     * specified cause.
+     * Constructs a new <code>InvalidCommandException</code> exception with the specified cause.
      */
     public InvalidCommandException(Throwable cause) {
         super(cause);
     }
 
-
     /**
-     * Constructs a new <code>InvalidCommandException</code> exception with the
-     * specified detailed message and cause.
+     * Constructs a new <code>InvalidCommandException</code> exception with the specified detailed message and cause.
      */
     public InvalidCommandException(String msg, Throwable cause) {
         super(msg, cause);

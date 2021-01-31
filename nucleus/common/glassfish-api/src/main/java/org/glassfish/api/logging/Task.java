@@ -17,11 +17,8 @@
 package org.glassfish.api.logging;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dochez
- * Date: May 24, 2007
- * Time: 1:10:38 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: dochez Date: May 24, 2007 Time: 1:10:38 PM To change this template use File |
+ * Settings | File Templates.
  */
 public interface Task<T> {
 

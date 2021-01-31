@@ -33,14 +33,14 @@ import java.beans.PropertyVetoException;
 public interface Named extends ConfigBeanProxy {
 
     /**
-     *  Name of the configured object
+     * Name of the configured object
      *
      * @return name of the configured object
      */
-    @Attribute(required=true, key=true)
+    @Attribute(required = true, key = true)
     @NotNull
     public String getName();
 
     public void setName(String value) throws PropertyVetoException;
-    
+
 }

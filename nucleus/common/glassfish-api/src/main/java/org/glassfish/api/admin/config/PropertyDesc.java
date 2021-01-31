@@ -28,25 +28,25 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 /**
  * Describes properties or system properties that might exist as sub-elements.
  */
-@Retention(SOURCE)  // not needed at runtime until we have something to make use of it
-@Target({TYPE})
+@Retention(SOURCE) // not needed at runtime until we have something to make use of it
+@Target({ TYPE })
 @Documented
 public @interface PropertyDesc {
     /** name of the property */
     String name();
 
     /** default value of the property */
-    String defaultValue()  default "\u0000";
+    String defaultValue() default "\u0000";
 
     /** freeform description */
-    String description()  default "\u0000";
+    String description() default "\u0000";
 
     /** the DataType class, can be Class&lt;? extends {@link DataType}> or String.class, Integer.class, etc */
-    Class  dataType()  default String.class;
-    
-    /** Possible values, might not be a complete list and/or there could be other alternatives
-       such as specific numbers, variables, etc.
+    Class dataType() default String.class;
+
+    /**
+     * Possible values, might not be a complete list and/or there could be other alternatives such as specific numbers,
+     * variables, etc.
      */
     String[] values() default {};
 }
-

@@ -18,13 +18,14 @@ package org.glassfish.api.admin.progress;
 
 import org.glassfish.api.admin.ProgressStatus;
 
-/** {@code ProgressStatus} is changed
+/**
+ * {@code ProgressStatus} is changed
  *
  * @author mmares
  */
 //TODO: Move to AdminUtil if possible. It is now in API only because ProgressStatusImpl is here, too
 public abstract class ProgressStatusEvent {
-    
+
     private final String sourceId;
 
     public ProgressStatusEvent(String sourceId) {
@@ -37,7 +38,7 @@ public abstract class ProgressStatusEvent {
     public String getSourceId() {
         return sourceId;
     }
-    
+
     public abstract ProgressStatus apply(ProgressStatus ps);
-    
+
 }

@@ -17,9 +17,8 @@
 package org.glassfish.api.admin;
 
 /**
- * Represents command wrapped with {@link CommandWrapperImpl}. It should be enough to wrap
- * command without an overhead. E.g.:
- * <code>
+ * Represents command wrapped with {@link CommandWrapperImpl}. It should be enough to wrap command without an overhead.
+ * E.g.: <code>
  * new WrappedAdminCommand(command) {
  *     public void execute(...
  * }
@@ -57,7 +56,7 @@ public abstract class WrappedAdminCommand implements AdminCommand {
     protected AdminCommand getUnwrappedCommand() {
         AdminCommand unwrappedCommand = wrappedCommand;
         while (unwrappedCommand instanceof WrappedAdminCommand) {
-            unwrappedCommand = ((WrappedAdminCommand)unwrappedCommand).getWrappedCommand();
+            unwrappedCommand = ((WrappedAdminCommand) unwrappedCommand).getWrappedCommand();
         }
         return unwrappedCommand;
     }

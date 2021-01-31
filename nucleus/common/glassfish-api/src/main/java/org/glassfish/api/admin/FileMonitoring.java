@@ -30,20 +30,21 @@ public interface FileMonitoring {
 
     /**
      * Registers a FileChangeListener for a particular file
+     * 
      * @param file the file of interest
      * @param listener the listener to notify
      */
-    public void monitors(File file, FileChangeListener listener); 
+    public void monitors(File file, FileChangeListener listener);
 
     /**
-     * Informs the monitor that a file has been changed.  This is a hint to 
-     * the monitor to prevent missing changes that occur within the granularity
-     * of the operating system's file modification time, typically 1 second. 
+     * Informs the monitor that a file has been changed. This is a hint to the monitor to prevent missing changes that occur
+     * within the granularity of the operating system's file modification time, typically 1 second.
      */
     public void fileModified(File file);
 
     public interface FileChangeListener {
         public void changed(File changedFile);
+
         public void deleted(File deletedFile);
     }
 }

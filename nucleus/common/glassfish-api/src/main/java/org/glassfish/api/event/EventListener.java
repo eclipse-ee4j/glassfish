@@ -17,8 +17,8 @@
 package org.glassfish.api.event;
 
 /**
- * Code that wish to listen to glassfish events should implement this interface
- * and register it to the Events contract implementation.
+ * Code that wish to listen to glassfish events should implement this interface and register it to the Events contract
+ * implementation.
  * 
  * User: Jerome Dochez
  */
@@ -32,7 +32,7 @@ public interface EventListener {
         final T hook;
 
         public Event(EventTypes<T> type) {
-            if (type.getHookType()!=null) {
+            if (type.getHookType() != null) {
                 throw new IllegalArgumentException("Null event hook [" + type.getHookType() + "]");
             }
             inception = System.currentTimeMillis();
@@ -55,7 +55,7 @@ public interface EventListener {
         }
 
         public boolean is(EventTypes type) {
-            return type==this.type;
+            return type == this.type;
         }
 
         public T hook() {

@@ -22,12 +22,12 @@ import java.util.*;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 
 /**
- * A <strong>lot</strong> of methods need to be written in order to implement
- * ReadableArchive.  The no-op methods are implemented here to make ScatteredWar
- * easier to understand.
+ * A <strong>lot</strong> of methods need to be written in order to implement ReadableArchive. The no-op methods are
+ * implemented here to make ScatteredWar easier to understand.
+ * 
  * @author Byron Nevins
  */
-abstract public class ReadableArchiveAdapter implements ReadableArchive{
+abstract public class ReadableArchiveAdapter implements ReadableArchive {
 
     public long getEntrySize(String arg0) {
         return 0L;
@@ -69,11 +69,11 @@ abstract public class ReadableArchiveAdapter implements ReadableArchive{
         return null;
     }
 
-    public Collection<String> getDirectories() throws IOException  {
+    public Collection<String> getDirectories() throws IOException {
         return null;
     }
 
-    public boolean isDirectory (java.lang.String name) {
+    public boolean isDirectory(java.lang.String name) {
         return false;
     }
 

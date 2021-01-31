@@ -22,13 +22,11 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 /**
- * A marker annotation for annotations that indicate that an AdminCommand
- * functionality is to be extended in a certain way. The aspect implementation
- * is provided by a CommandAspectImpl service that is named with the name of the
+ * A marker annotation for annotations that indicate that an AdminCommand functionality is to be extended in a certain
+ * way. The aspect implementation is provided by a CommandAspectImpl service that is named with the name of the
  * annotation.
  * 
- * See empty CommandAspectBase implementation to extend and @Async annotation
- * for an example of how this is used.
+ * See empty CommandAspectBase implementation to extend and @Async annotation for an example of how this is used.
  * 
  * @author andriy.zhdanov
  */

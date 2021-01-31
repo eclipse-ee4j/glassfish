@@ -49,8 +49,7 @@ public interface WritableArchive extends Archive {
      * Create a new entry in the archive
      *
      * @param name the entry name
-     * @returns an @see java.io.OutputStream for a new entry in this
-     * current abstract archive.
+     * @returns an @see java.io.OutputStream for a new entry in this current abstract archive.
      */
     public OutputStream putNextEntry(String name) throws java.io.IOException;
 
@@ -60,8 +59,7 @@ public interface WritableArchive extends Archive {
     public void closeEntry() throws IOException;
 
     /**
-     * Returns an instance of this archive abstraction for an embedded
-     * archive within this archive.
+     * Returns an instance of this archive abstraction for an embedded archive within this archive.
      *
      * @param name is the entry name relative to the root for the archive
      * @return the Archive instance for this abstraction

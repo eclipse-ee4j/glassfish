@@ -19,9 +19,8 @@ package org.glassfish.api.event;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * Contract to register/unregister events listener.
- * This implementation is not meant to be used for performance sensitive 
- * message delivery.
+ * Contract to register/unregister events listener. This implementation is not meant to be used for performance
+ * sensitive message delivery.
  * 
  * @author Jerome Dochez
  */

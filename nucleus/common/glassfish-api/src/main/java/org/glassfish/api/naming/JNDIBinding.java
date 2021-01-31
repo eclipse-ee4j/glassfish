@@ -32,7 +32,6 @@ public interface JNDIBinding {
      */
     public String getName();
 
-
     /**
      * Returns the value to be bound against the logical name
      *

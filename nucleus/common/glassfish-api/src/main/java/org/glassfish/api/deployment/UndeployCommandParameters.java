@@ -28,40 +28,42 @@ import java.util.Properties;
 public class UndeployCommandParameters extends OpsParams {
 
     @Param(primary = true)
-    public String name=null;
+    public String name = null;
 
-    @Param(optional=true)
+    @Param(optional = true)
     public String target;
 
-    @Param(optional=true, defaultValue="false")
+    @Param(optional = true, defaultValue = "false")
     public Boolean keepreposdir;
 
-    @Param(optional=true, defaultValue="false")
+    @Param(optional = true, defaultValue = "false")
     public Boolean isredeploy = false;
+
     public Boolean isRedeploy() {
-      return isredeploy;
+        return isredeploy;
     }
 
-    @Param(optional=true)
+    @Param(optional = true)
     public Boolean droptables;
 
-    @Param(optional=true, defaultValue="false")
+    @Param(optional = true, defaultValue = "false")
     public Boolean cascade;
 
-    //used for internal purposes only, not to expose to user 
-    @Param(optional=true, defaultValue="false", name="_ignoreCascade")
+    // used for internal purposes only, not to expose to user
+    @Param(optional = true, defaultValue = "false", name = "_ignoreCascade")
     public Boolean _ignoreCascade = false;
 
     // used for internal purpose to carry the archive type information
     public String _type = null;
 
-    @Param(optional=true, separator=':')
-    public Properties properties=null;
+    @Param(optional = true, separator = ':')
+    public Properties properties = null;
+
     public Properties getProperties() {
-      return properties;
+        return properties;
     }
 
-    @Param(optional=true)
+    @Param(optional = true)
     public Boolean keepstate;
 
     public String name() {
@@ -79,4 +81,3 @@ public class UndeployCommandParameters extends OpsParams {
         throw new IllegalStateException("We need to be able to get access to libraries when undeploying");
     }
 }
-    

@@ -18,19 +18,17 @@ package org.glassfish.api.deployment.archive;
 
 import org.jvnet.hk2.annotations.Contract;
 
-
 /**
- * ArchiveType is an extension over ModuleType defined in jsr88 API.
- * It is analogous to type of an archive  or a module or deployment unit, whichever way you prefer to call them.
- * Adding a new archive type (or ArchiveType) is a very expensive operation.
- * For example, there has been no new archive types introduced in Java EE since RAR type.
- * Adding a new archive type involves writing an ArchiveHandler which involves writing logic to create class loaders.
- * Now, that's not same as adding adding a technology type like jersey or jpa.
+ * ArchiveType is an extension over ModuleType defined in jsr88 API. It is analogous to type of an archive or a module
+ * or deployment unit, whichever way you prefer to call them. Adding a new archive type (or ArchiveType) is a very
+ * expensive operation. For example, there has been no new archive types introduced in Java EE since RAR type. Adding a
+ * new archive type involves writing an ArchiveHandler which involves writing logic to create class loaders. Now, that's
+ * not same as adding adding a technology type like jersey or jpa.
  * <p/>
  * This is only a contract. Actual types are made available as services by appropriate containers.
  * <p/>
- * GlassFish deployment framework uses the word container to refer to services. Containers are actually defined in
- * Java EE platform spec. ArchiveType maps to the way containers are defined in the Java EE platform spec.
+ * GlassFish deployment framework uses the word container to refer to services. Containers are actually defined in Java
+ * EE platform spec. ArchiveType maps to the way containers are defined in the Java EE platform spec.
  *
  * @author Sanjeeb Sahoo
  */
@@ -58,7 +56,7 @@ public abstract class ArchiveType {
      * Ensure a correct value is passed as that's what is returned by {@link #toString()} which is sometimes used during
      * comparison as some old APIs like {@link ArchiveHandler#getArchiveType()} use String.
      *
-     * @param value     value of this archive type as reported in {@link #toString()}
+     * @param value value of this archive type as reported in {@link #toString()}
      * @param extension file extension for this type of archive
      */
     protected ArchiveType(String value, String extension) {

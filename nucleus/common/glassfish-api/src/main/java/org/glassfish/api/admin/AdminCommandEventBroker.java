@@ -16,76 +16,85 @@
 
 package org.glassfish.api.admin;
 
-/** Events broker for AdminCommands. It can be used to inform everybody who 
- * listen. Any object can be event. If ReST Provider is registered for particular
- * type, it is also transfered to remote client.
+/**
+ * Events broker for AdminCommands. It can be used to inform everybody who listen. Any object can be event. If ReST
+ * Provider is registered for particular type, it is also transfered to remote client.
  *
  * @author mmares
  */
 public interface AdminCommandEventBroker<T> {
-    
-    /** Local events are not transfered to remote listener using SSE
+
+    /**
+     * Local events are not transfered to remote listener using SSE
      */
     public static final String LOCAL_EVENT_PREFIX = "local/";
-    
-    /** Fire event under defined name. Any object can be event. 
+
+    /**
+     * Fire event under defined name. Any object can be event.
      * 
      * @param name Event name. Listener is registered to some name.
      * @param event Any object can be event
      */
     public void fireEvent(String name, Object event);
-    
-    /** Fire event under name of event.getClass.getName().
+
+    /**
+     * Fire event under name of event.getClass.getName().
      * 
      * @param event Any object can be event.
      */
     public void fireEvent(Object event);
-    
-    /** Register Listener for admin command events. 
+
+    /**
+     * Register Listener for admin command events.
      * 
      * @param regexpForName listen to events with name valid to this regular expression.
      * @param listener Listener will be called
      */
     public void registerListener(String regexpForName, AdminCommandListener<T> listener);
-    
-    /** Remove registered listener.
+
+    /**
+     * Remove registered listener.
      * 
      * @param listener Listener to remove
      */
     public void unregisterListener(AdminCommandListener listener);
-    
-    /** Returns true if exist exists registered listener for given eventName
+
+    /**
+     * Returns true if exist exists registered listener for given eventName
      */
     public boolean listening(String eventName);
-    
-    /** Pack of utility methods related to this instance of event broker.
+
+    /**
+     * Pack of utility methods related to this instance of event broker.
      */
     public EventBrokerUtils getUtils();
-    
-    /** Place relevant for utility methods
+
+    /**
+     * Place relevant for utility methods
      */
     public interface EventBrokerUtils {
-        
+
         public static final String USER_MESSAGE_NAME = "usermessage";
-        
+
         public void sendMessage(String message);
-        
+
     }
-    
-    /** Listener for AdminCommand events.
+
+    /**
+     * Listener for AdminCommand events.
      * 
      * @param <T> Type of event
      */
     public interface AdminCommandListener<T> {
-        
+
         public void onAdminCommandEvent(String name, T event);
-        
+
     }
-    
+
     public static class BrokerListenerRegEvent {
         public static final String EVENT_NAME_LISTENER_REG = LOCAL_EVENT_PREFIX + "listener/register";
         public static final String EVENT_NAME_LISTENER_UNREG = LOCAL_EVENT_PREFIX + "listener/unregister";
-        
+
         private final AdminCommandEventBroker broker;
         private final AdminCommandListener listener;
 
@@ -101,7 +110,7 @@ public interface AdminCommandEventBroker<T> {
         public AdminCommandListener getListener() {
             return listener;
         }
-        
+
     }
 
 }

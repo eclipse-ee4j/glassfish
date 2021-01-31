@@ -36,15 +36,15 @@ public interface ApplicationName extends ConfigBeanProxy, Payload {
     final static String NAME_APP_REGEX = "[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_\\./;:#]*";
 
     /**
-     *  Name of the configured object
+     * Name of the configured object
      *
      * @return name of the configured object
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_APP_REGEX, message="{app.invalid.name}", payload=ApplicationName.class)
+    @Pattern(regexp = NAME_APP_REGEX, message = "{app.invalid.name}", payload = ApplicationName.class)
     public String getName();
 
     public void setName(String value) throws PropertyVetoException;
-    
+
 }

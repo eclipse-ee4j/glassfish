@@ -30,8 +30,8 @@ import java.io.IOException;
 public interface ConfigParser {
 
     /**
-     * Parse a Container's configuration defined by it's XML template pointed by configuration URL.
-     * <br/> <br/>
+     * Parse a Container's configuration defined by it's XML template pointed by configuration URL. <br/>
+     * <br/>
      * Example:<br/>
      *
      * Inside your {@link org.glassfish.api.container.Sniffer}:

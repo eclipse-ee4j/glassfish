@@ -19,42 +19,46 @@ package org.glassfish.api.admin;
 import java.util.Date;
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
 
-/** Base interface of progress status implementation. Provides information
- * about overall progress.
+/**
+ * Base interface of progress status implementation. Provides information about overall progress.
  *
  * @author mmares
  */
 public interface CommandProgress extends ProgressStatus {
-    
+
     public static final String EVENT_PROGRESSSTATUS_CHANGE = "ProgressStatus/change";
     public static final String EVENT_PROGRESSSTATUS_STATE = "ProgressStatus/state";
-    
-    /** Timestamp of command complete event or {@code null} for running command
-     */ 
+
+    /**
+     * Timestamp of command complete event or {@code null} for running command
+     */
     public Date getEndTime();
-    
-    /** Timestamp of command creation
+
+    /**
+     * Timestamp of command creation
      */
     public Date getStartTime();
-    
-    /** Creates child for mirroring (supplemental commands)
+
+    /**
+     * Creates child for mirroring (supplemental commands)
      */
     public ProgressStatusMirroringImpl createMirroringChild(int allocatedSteps);
-    
-    /** Unique id of this command
+
+    /**
+     * Unique id of this command
      */
     public String getId();
-    
+
     public String getName();
-    
+
     public float computeCompletePortion();
-    
+
     public String getLastMessage();
-    
+
     public void setEventBroker(AdminCommandEventBroker eventBroker);
-    
+
     public int computeSumSteps();
-    
+
     public boolean isSpinnerActive();
-    
+
 }

@@ -20,6 +20,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Provides environment settings for the virtualization/PAAS features.
+ * 
  * @author
  */
 @Contract

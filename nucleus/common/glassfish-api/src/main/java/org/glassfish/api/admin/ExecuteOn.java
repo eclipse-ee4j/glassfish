@@ -16,15 +16,12 @@
 
 package org.glassfish.api.admin;
 
-
 import java.lang.annotation.*;
 
 /**
- * Annotation to qualify when an action like a command is targeted to be run
- * on a cluster or a set of instances.
+ * Annotation to qualify when an action like a command is targeted to be run on a cluster or a set of instances.
  * 
- * Some actions may run only on DAS, or only on instances, by default they run
- * on both the DAS and the instances.
+ * Some actions may run only on DAS, or only on instances, by default they run on both the DAS and the instances.
  *
  * @author Jerome Dochez
  */
@@ -38,44 +35,39 @@ public @interface ExecuteOn {
      *
      * @return array of target process types
      */
-    RuntimeType[] value() default { RuntimeType.DAS, RuntimeType.INSTANCE};
+    RuntimeType[] value() default { RuntimeType.DAS, RuntimeType.INSTANCE };
 
     /**
-     * Identifies the {@link ClusterExecutor} that is responsible for remotely executing
-     * commands on the target clusters or instances. The provider will be looked up
-     * in the habitat by its type.
+     * Identifies the {@link ClusterExecutor} that is responsible for remotely executing commands on the target clusters or
+     * instances. The provider will be looked up in the habitat by its type.
      * 
-     * @return a {@link ClusterExecutor} type or null to use the default executor that takes the
-     * "target" command parameter to 
+     * @return a {@link ClusterExecutor} type or null to use the default executor that takes the "target" command parameter
+     * to
      */
     Class<? extends ClusterExecutor> executor() default TargetBasedExecutor.class;
 
-
     /**
-     * Identifies the expected behaviour from the framework if any of the clustered
-     * invocation could not be invoked because the remote server was offline.
+     * Identifies the expected behaviour from the framework if any of the clustered invocation could not be invoked because
+     * the remote server was offline.
      *
-     * @return the action the framework should perform if any of the remote invocation
-     * of this command cannot be executed due to the server being offline.
+     * @return the action the framework should perform if any of the remote invocation of this command cannot be executed
+     * due to the server being offline.
      */
     FailurePolicy ifOffline() default FailurePolicy.Warn;
 
     /**
-     * Identifies the expected behavior from the framework if any of the clustered
-     * invocation could not be invoked because the remote server has never been
-     * started.
+     * Identifies the expected behavior from the framework if any of the clustered invocation could not be invoked because
+     * the remote server has never been started.
      *
-     * @return the action the framework should perform if any of the remote invocation
-     * of this command cannot be executed due to the server being offline.
+     * @return the action the framework should perform if any of the remote invocation of this command cannot be executed
+     * due to the server being offline.
      */
     FailurePolicy ifNeverStarted() default FailurePolicy.Ignore;
 
     /**
-     * Identifies the expected behavior from the framework if any of the clustered
-     * invocation failed.
+     * Identifies the expected behavior from the framework if any of the clustered invocation failed.
      *
-     * @return the action the framework should perform if any of the remote invocation
-     * of this command fails.
+     * @return the action the framework should perform if any of the remote invocation of this command fails.
      */
     FailurePolicy ifFailure() default FailurePolicy.Error;
 }

@@ -17,17 +17,16 @@
 package org.glassfish.api.jdbc;
 
 /**
- * This interface can be implemented to provide a mechanism to trace the SQL trace 
- * record objects. SQL trace record objects contain SQL statements 
- * executed by applications.
+ * This interface can be implemented to provide a mechanism to trace the SQL trace record objects. SQL trace record
+ * objects contain SQL statements executed by applications.
  * 
  * @author Shalini M
  */
 public interface SQLTraceListener {
     /**
      * Notify listeners with SQL trace information.
-     * @param record SQLTraceRecord that has information related
-     * to the SQL operation
+     * 
+     * @param record SQLTraceRecord that has information related to the SQL operation
      */
     public void sqlTrace(SQLTraceRecord record);
 

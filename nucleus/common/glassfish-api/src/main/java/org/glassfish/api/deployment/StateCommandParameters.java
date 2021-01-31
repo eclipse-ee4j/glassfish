@@ -23,10 +23,10 @@ import org.glassfish.api.Param;
  */
 public class StateCommandParameters extends OpsParams {
 
-    @Param(primary=true)
+    @Param(primary = true)
     public String component = null;
 
-    @Param(optional=true)
+    @Param(optional = true)
     public String target;
 
     public String name() {

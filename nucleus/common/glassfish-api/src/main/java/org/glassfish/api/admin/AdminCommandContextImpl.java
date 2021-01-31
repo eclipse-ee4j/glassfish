@@ -16,7 +16,6 @@
 
 package org.glassfish.api.admin;
 
-
 import java.io.Serializable;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -31,26 +30,23 @@ import org.glassfish.api.admin.progress.ProgressStatusImpl;
  *
  * @author Jerome Dochez
  */
-public class AdminCommandContextImpl implements  AdminCommandContext, Serializable {
-    
-    private  ActionReport report;
+public class AdminCommandContextImpl implements AdminCommandContext, Serializable {
+
+    private ActionReport report;
     transient private final Logger logger;
     transient private Payload.Inbound inboundPayload;
     transient private Payload.Outbound outboundPayload;
-    transient private Subject subject; // Subject is Serializable but we want up to date Subject when deserializing 
-    private ProgressStatus progressStatus; //new ErrorProgressStatus();
+    transient private Subject subject; // Subject is Serializable but we want up to date Subject when deserializing
+    private ProgressStatus progressStatus; // new ErrorProgressStatus();
     transient private final AdminCommandEventBroker eventBroker;
     private final String jobId;
 
     public AdminCommandContextImpl(Logger logger, ActionReport report) {
         this(logger, report, null, null, null, null);
     }
-    
-    public AdminCommandContextImpl(Logger logger, ActionReport report,
-                                   final Payload.Inbound inboundPayload,
-                                   final Payload.Outbound outboundPayload,
-                                   final AdminCommandEventBroker eventBroker,
-                                   final String jobId) {
+
+    public AdminCommandContextImpl(Logger logger, ActionReport report, final Payload.Inbound inboundPayload, final Payload.Outbound outboundPayload,
+            final AdminCommandEventBroker eventBroker, final String jobId) {
         this.logger = logger;
         this.report = report;
         this.inboundPayload = inboundPayload;
@@ -58,7 +54,7 @@ public class AdminCommandContextImpl implements  AdminCommandContext, Serializab
         this.eventBroker = eventBroker;
         this.jobId = jobId;
     }
-    
+
     @Override
     public ActionReport getActionReport() {
         return report;
@@ -121,14 +117,12 @@ public class AdminCommandContextImpl implements  AdminCommandContext, Serializab
     public String getJobId() {
         return this.jobId;
     }
-    
+
     static class ErrorProgressStatus implements ProgressStatus, Serializable {
-        
-        
+
         private static final String EXC_MESSAGE = "@Progress annotation is not present.";
         private String id = null;
-        
-        
+
         @Override
         public void setTotalStepCount(int totalStepCount) {
             throw new IllegalStateException(EXC_MESSAGE);
@@ -158,7 +152,7 @@ public class AdminCommandContextImpl implements  AdminCommandContext, Serializab
         public void progress(String message) {
             throw new IllegalStateException(EXC_MESSAGE);
         }
-        
+
         @Override
         public void progress(int steps, String message, boolean spinner) {
             throw new IllegalStateException(EXC_MESSAGE);

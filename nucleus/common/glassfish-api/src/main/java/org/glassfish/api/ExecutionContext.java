@@ -19,17 +19,16 @@ package org.glassfish.api;
 import java.util.logging.Logger;
 
 /**
- * Any execution type invocation should be passed with an instance of this 
- * context. Sub-classes should add specialized information required by the 
- * operation type.
+ * Any execution type invocation should be passed with an instance of this context. Sub-classes should add specialized
+ * information required by the operation type.
  *
  * @author Jerome Dochez
  */
 public interface ExecutionContext {
-    
+
     /**
-     * Returns the logger services implementation should use to log useful 
-     * information about their execution.
+     * Returns the logger services implementation should use to log useful information about their execution.
+     * 
      * @retun the services logger
      */
     public Logger getLogger();

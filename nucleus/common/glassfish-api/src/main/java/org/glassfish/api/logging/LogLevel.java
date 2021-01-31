@@ -38,8 +38,7 @@ public class LogLevel extends Level {
     /**
      * Log level to indicate a system-wide failure condition.
      */
-    public static final Level EMERGENCY = new LogLevel("EMERGENCY",
-            EMERGENCY_INT);
+    public static final Level EMERGENCY = new LogLevel("EMERGENCY", EMERGENCY_INT);
 
     /**
      * Log level to indicate a failure condition in one of the subsystems.

@@ -19,8 +19,7 @@ package org.glassfish.api.admin;
 import java.util.Date;
 
 /**
- * The AdminCommandLockException is generated when a command 
- * can not acquire an AdminCommandLock.
+ * The AdminCommandLockException is generated when a command can not acquire an AdminCommandLock.
  *
  * @author Chris Kasso
  */
@@ -29,9 +28,7 @@ public class AdminCommandLockException extends RuntimeException {
     private Date timeOfAcquisition = null;
     private String lockOwner = null;
 
-    public AdminCommandLockException(String message,
-                                     Date timeOfAcquisition,
-                                     String lockOwner) {
+    public AdminCommandLockException(String message, Date timeOfAcquisition, String lockOwner) {
         super(message);
         this.lockOwner = lockOwner;
         this.timeOfAcquisition = timeOfAcquisition;

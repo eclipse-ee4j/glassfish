@@ -25,19 +25,18 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Identify an I18n resource associated with the annotated element. The value() holds the name
- * of the resource as it stored in the LocalStrings.properties and can be used by the runtime
- * to generate appropriate localized meta-data.
+ * Identify an I18n resource associated with the annotated element. The value() holds the name of the resource as it
+ * stored in the LocalStrings.properties and can be used by the runtime to generate appropriate localized meta-data.
  *
  * @author Jerome Dochez
  */
 @Retention(RUNTIME)
-@Target({TYPE,METHOD,FIELD})
+@Target({ TYPE, METHOD, FIELD })
 public @interface I18n {
 
     /**
-     * Returns the string identify the i18n resource from the resource bundle associated with
-     * the class containing the annotation.
+     * Returns the string identify the i18n resource from the resource bundle associated with the class containing the
+     * annotation.
      *
      * @return a string identifying the resource in the bundle
      */

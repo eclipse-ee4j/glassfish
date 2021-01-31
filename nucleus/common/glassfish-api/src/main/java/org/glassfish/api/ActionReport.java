@@ -25,30 +25,29 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * An action report is an abstract class allowing any type of server side action
- * like a service execution, a command execution to report on its execution
- * to the originator of the action. 
+ * An action report is an abstract class allowing any type of server side action like a service execution, a command
+ * execution to report on its execution to the originator of the action.
  * 
- * Implementations of this interface should provide a good reporting 
- * experience based on the user's interface like a browser or a command line 
- * shell. 
+ * Implementations of this interface should provide a good reporting experience based on the user's interface like a
+ * browser or a command line shell.
  *
  * @author Jerome Dochez
  */
 @Contract
 public abstract class ActionReport implements Serializable {
-    
+
     private static final long serialVersionUID = -238144192513668688L;
 
-    public enum ExitCode { SUCCESS, WARNING, FAILURE ;
+    public enum ExitCode {
+        SUCCESS, WARNING, FAILURE;
 
         public boolean isWorse(final ExitCode other) {
             return (compareTo(other) > 0);
         }
     }
-    
+
     public abstract void setActionDescription(String message);
-    
+
     public abstract void setFailureCause(Throwable t);
 
     public abstract Throwable getFailureCause();
@@ -56,27 +55,26 @@ public abstract class ActionReport implements Serializable {
     public abstract void setMessage(String message);
 
     public abstract void appendMessage(String message);
-    
+
     public abstract void writeReport(OutputStream os) throws IOException;
 
     public abstract void setMessage(InputStream in);
 
     public abstract String getMessage();
-    
+
     public abstract MessagePart getTopMessagePart();
-    
+
     public abstract ActionReport addSubActionsReport();
-    
+
     public abstract void setActionExitCode(ExitCode exitCode);
 
     public abstract ExitCode getActionExitCode();
-    
+
     public abstract String getContentType();
 
     public abstract void setContentType(String s);
 
     public abstract List<? extends ActionReport> getSubActionsReport();
-
 
     /**
      * Report a failure to the logger and {@link ActionReport}.
@@ -85,11 +83,11 @@ public abstract class ActionReport implements Serializable {
      */
     public final void failure(Logger logger, String message, Throwable e) {
         if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, message,e );
+            logger.log(Level.FINE, message, e);
         }
         logger.log(Level.SEVERE, message);
-        if (e!=null) {
-            setMessage(message + " : "+ e.toString());
+        if (e != null) {
+            setMessage(message + " : " + e.toString());
             setFailureCause(e);
         } else {
             setMessage(message);
@@ -101,7 +99,7 @@ public abstract class ActionReport implements Serializable {
      * Short for {@code failure(logger,message,null)}
      */
     public final void failure(Logger logger, String message) {
-        failure(logger,message,null);
+        failure(logger, message, null);
     }
 
     /**
@@ -146,7 +144,7 @@ public abstract class ActionReport implements Serializable {
         public void appendMessage(String message) {
             // overkill Engineering seemingly but the strings might be HUGE
             // let the optimized JDK class handle it.
-            if(this.message == null)
+            if (this.message == null)
                 this.message = message;
             else {
                 StringBuilder sb = new StringBuilder(this.message);
@@ -174,7 +172,7 @@ public abstract class ActionReport implements Serializable {
         public List<MessagePart> getChildren() {
             return children;
         }
-        
+
         protected String findPropertyImpl(final String key) {
             String value = props.getProperty(key);
             if (value != null) {
@@ -188,20 +186,21 @@ public abstract class ActionReport implements Serializable {
             }
             return null;
         }
-        
-        /** Search in message parts properties then in extra properties and then
-         * in sub reports. Returns first occurrence of the key.
+
+        /**
+         * Search in message parts properties then in extra properties and then in sub reports. Returns first occurrence of the
+         * key.
          */
         public String findProperty(String key) {
             if (key == null) {
                 return null;
             }
             if (key.endsWith("_value")) {
-                key = key.substring(0, key.length() - 6); //Because of back compatibility
+                key = key.substring(0, key.length() - 6); // Because of back compatibility
             }
             return findPropertyImpl(key);
         }
-        
+
         protected String toString(int indent) {
             StringBuilder result = new StringBuilder();
             if (message != null && !message.isEmpty()) {
@@ -221,12 +220,12 @@ public abstract class ActionReport implements Serializable {
             }
             return result.toString();
         }
-        
+
         @Override
         public String toString() {
             return toString(0);
         }
-        
+
     }
 
     Properties extraProperties;
@@ -243,6 +242,7 @@ public abstract class ActionReport implements Serializable {
 
     /**
      * Gets a type that was set by the command implementation
+     * 
      * @param resultType the type requested
      * @return <T> the actual instance that was set
      */
@@ -251,20 +251,22 @@ public abstract class ActionReport implements Serializable {
     }
 
     /**
-     * Stores the supplies type and its instance. This is a way for the command implementation
-     * to pass information between Supplemental command(s) and the main command. For example, the Supplemental
-     * command for DeployCommand requires information on pay load, generated directories etc. In this case, the
-     * DeployCommand will be expected to set this information in, for example DeployResult, and set it in the
-     * ActionReport. The Supplemental Command will then retrieve the DeployResult for its use. 
+     * Stores the supplies type and its instance. This is a way for the command implementation to pass information between
+     * Supplemental command(s) and the main command. For example, the Supplemental command for DeployCommand requires
+     * information on pay load, generated directories etc. In this case, the DeployCommand will be expected to set this
+     * information in, for example DeployResult, and set it in the ActionReport. The Supplemental Command will then retrieve
+     * the DeployResult for its use.
+     * 
      * @param resultType the type
      * @param resultTypeInstance the actual instance
      */
     public <T> void setResultType(Class<T> resultType, T resultTypeInstance) {
         resultTypes.put(resultType, resultTypeInstance);
     }
-    
-    /** Search in message parts properties then in extra properties and then
-     * in sub reports. Returns first occurrence of the key.
+
+    /**
+     * Search in message parts properties then in extra properties and then in sub reports. Returns first occurrence of the
+     * key.
      */
     public String findProperty(String key) {
         MessagePart topMessagePart = getTopMessagePart();

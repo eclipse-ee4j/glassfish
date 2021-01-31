@@ -33,10 +33,11 @@ public interface ApplicationMetaDataProvider<T> {
      *
      * @return the meta data for this Deployer
      */
-    public MetaData getMetaData();    
+    public MetaData getMetaData();
 
     /**
      * Load the metadata associated with the deployment event
+     * 
      * @param dc the deployment context
      * @return the loaded metadata
      * @throws IOException when the underlying archive cannot be processed correctly

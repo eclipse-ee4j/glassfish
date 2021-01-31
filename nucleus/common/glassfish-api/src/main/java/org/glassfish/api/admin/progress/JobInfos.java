@@ -22,14 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class contains information of all the jobs which will be
- * persisted to jobs.xml
+ * This class contains information of all the jobs which will be persisted to jobs.xml
+ * 
  * @author Bhakti Mehta
  */
 @XmlRootElement(name = "jobs")
 public class JobInfos {
     private List<JobInfo> jobInfoList;
-
 
     @XmlElement(name = "job")
     public List<JobInfo> getJobInfoList() {

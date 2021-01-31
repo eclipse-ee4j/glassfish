@@ -17,8 +17,7 @@
 package org.glassfish.api.deployment;
 
 /**
- * Interface to an application container. mainly used to start and stop 
- * the application.
+ * Interface to an application container. mainly used to start and stop the application.
  *
  * @author Jerome Dochez
  */
@@ -31,22 +30,22 @@ public interface ApplicationContainer<T> {
      * @return deployment descriptor if they exist or null if not
      */
     public T getDescriptor();
-    
+
     /**
-     * Starts an application container. 
-     * ContractProvider starting should not throw an exception but rather should
-     * use their prefered Logger instance to log any issue they encounter while 
-     * starting. Returning false from a start mean that the container failed 
-     * to start
-     * @param startupContext the start up context 
+     * Starts an application container. ContractProvider starting should not throw an exception but rather should use their
+     * prefered Logger instance to log any issue they encounter while starting. Returning false from a start mean that the
+     * container failed to start
+     * 
+     * @param startupContext the start up context
      * @return true if the container startup was successful.
      *
      * @throws Exception if this application container could not be started
      */
     public boolean start(ApplicationContext startupContext) throws Exception;
-    
+
     /**
      * Stop the application container
+     * 
      * @return true if stopping was successful.
      * @param stopContext
      */
@@ -64,15 +63,15 @@ public interface ApplicationContainer<T> {
      *
      * @return true if resumption was successful, false otherwise
      *
-     * @throws Exception if this application container could not be
-     * resumed
+     * @throws Exception if this application container could not be resumed
      */
     public boolean resume() throws Exception;
 
     /**
      * Returns the class loader associated with this application
+     * 
      * @return ClassLoader for this app
      */
     public ClassLoader getClassLoader();
-    
+
 }

@@ -22,8 +22,8 @@ import java.io.File;
 import java.util.Set;
 
 /**
- * This is a contract which is used to locate all the jobs.xml files
- * on server startup
+ * This is a contract which is used to locate all the jobs.xml files on server startup
+ * 
  * @author Bhakti Mehta
  */
 @Contract
@@ -31,6 +31,7 @@ public interface JobLocator {
 
     /**
      * This method checks if there any any persisted and completed jobs
+     * 
      * @return A list of the job files located in the system
      */
     public Set<File> locateJobXmlFiles();

@@ -28,13 +28,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Needed because it's not otherwise possible to have more than one annotation of the same type.
  */
 @Retention(RUNTIME)
-@Target({METHOD})
+@Target({ METHOD })
 @Documented
 public @interface PropertiesDesc {
     /** name of the property */
     PropertyDesc[] props();
-    
+
     /** returns true if these describe &lt;system-property> */
     boolean systemProperties() default false;
 }
-

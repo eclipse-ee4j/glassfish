@@ -20,31 +20,30 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * The <code>javax.sql.DataSource</code> implementation of SunONE application 
- * server will implement this interface. An application program would be able
- * to use this interface to do the extended functionality exposed by SunONE 
+ * The <code>javax.sql.DataSource</code> implementation of SunONE application server will implement this interface. An
+ * application program would be able to use this interface to do the extended functionality exposed by SunONE
  * application server.
- * <p>A sample code for getting driver's connection implementation would like 
- * the following.
+ * <p>
+ * A sample code for getting driver's connection implementation would like the following.
+ * 
  * <pre>
-     InitialContext ic = new InitialContext();
-     com.sun.appserv.DataSource ds = (com.sun.appserv.DataSOurce) ic.lookup("jdbc/PointBase"); 
-     Connection con = ds.getConnection();
-     Connection drivercon = ds.getConnection(con);
-
-     // Do db operations.
-
-     con.close();
-   </pre>
+ * InitialContext ic = new InitialContext();
+ * com.sun.appserv.DataSource ds = (com.sun.appserv.DataSOurce) ic.lookup("jdbc/PointBase");
+ * Connection con = ds.getConnection();
+ * Connection drivercon = ds.getConnection(con);
+ * 
+ * // Do db operations.
+ * 
+ * con.close();
+ * </pre>
  * 
  * @author Binod P.G
  */
 public interface DataSource extends javax.sql.DataSource {
 
     /**
-     * Retrieves the actual SQLConnection from the Connection wrapper 
-     * implementation of SunONE application server. If an actual connection is
-     * supplied as argument, then it will be just returned.
+     * Retrieves the actual SQLConnection from the Connection wrapper implementation of SunONE application server. If an
+     * actual connection is supplied as argument, then it will be just returned.
      *
      * @param con Connection obtained from <code>Datasource.getConnection()</code>
      * @return <code>java.sql.Connection</code> implementation of the driver.
@@ -53,11 +52,9 @@ public interface DataSource extends javax.sql.DataSource {
     public Connection getConnection(Connection con) throws SQLException;
 
     /**
-     * Gets a connection that is not in the scope of any transaction. This
-     * can be used to save performance overhead incurred on enlisting/delisting
-     * each connection got, irrespective of whether its required or not.
-     * Note here that this meethod does not fit in the connector contract
-     * per se.
+     * Gets a connection that is not in the scope of any transaction. This can be used to save performance overhead incurred
+     * on enlisting/delisting each connection got, irrespective of whether its required or not. Note here that this meethod
+     * does not fit in the connector contract per se.
      *
      * @return <code>java.sql.Connection</code>
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
@@ -65,41 +62,38 @@ public interface DataSource extends javax.sql.DataSource {
     public Connection getNonTxConnection() throws SQLException;
 
     /**
-     * Gets a connection that is not in the scope of any transaction. This
-     * can be used to save performance overhead incurred on enlisting/delisting
-     * each connection got, irrespective of whether its required or not.
-     * Note here that this meethod does not fit in the connector contract
-     * per se.
+     * Gets a connection that is not in the scope of any transaction. This can be used to save performance overhead incurred
+     * on enlisting/delisting each connection got, irrespective of whether its required or not. Note here that this meethod
+     * does not fit in the connector contract per se.
      *
      * @param user User name for authenticating the connection
      * @param password Password for authenticating the connection
      * @return <code>java.sql.Connection</code>
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
      */
-    public Connection getNonTxConnection( String userName, String password ) 
-        throws SQLException;
+    public Connection getNonTxConnection(String userName, String password) throws SQLException;
 
-
-     /**
-     * API to mark a connection as bad. If the application can determine that the connection
-     * is bad, using this api, it can notify the resource-adapter which inturn will notify the
-     * connection-pool. Connection-pool will drop and create a new connection.
-     * eg:
+    /**
+     * API to mark a connection as bad. If the application can determine that the connection is bad, using this api, it can
+     * notify the resource-adapter which inturn will notify the connection-pool. Connection-pool will drop and create a new
+     * connection. eg:
+     * 
      * <pre>
         com.sun.appserv.jdbc.DataSource ds=
            (com.sun.appserv.jdbc.DataSource)context.lookup("dataSource");
-	  	Connection con = ds.getConnection();
-	  	Statement stmt = null;
-	  	try{
-	 		 stmt = con.createStatement();
-	 		 stmt.executeUpdate("Update");
-	 	}catch(BadConnectionException e){
-	 		dataSource.markConnectionAsBad(con) //marking it as bad for removal
-	 	}finally{
-	 		stmt.close();
-	 		con.close(); //Connection will be destroyed while close or Tx completion
-	    }
+      	Connection con = ds.getConnection();
+      	Statement stmt = null;
+      	try{
+     		 stmt = con.createStatement();
+     		 stmt.executeUpdate("Update");
+     	}catch(BadConnectionException e){
+     		dataSource.markConnectionAsBad(con) //marking it as bad for removal
+     	}finally{
+     		stmt.close();
+     		con.close(); //Connection will be destroyed while close or Tx completion
+        }
      * </pre>
+     * 
      * @param conn <code>java.sql.Connection</code>
      */
     public void markConnectionAsBad(Connection conn);

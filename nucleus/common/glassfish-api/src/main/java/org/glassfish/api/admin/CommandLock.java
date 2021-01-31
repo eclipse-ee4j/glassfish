@@ -19,14 +19,11 @@ package org.glassfish.api.admin;
 import java.lang.annotation.*;
 
 /**
- * Annotation used to indicate what type of lock to acquire before
- * executing an admin command.  By default (witout this annotation),
- * admin commands acquire a shared lock, allowing multiple admin commands
- * to execute in parallel.  Some commands, such as the synchronization
- * command and the quiesce command require the exclusive lock to prevent
- * any other admin commands from executing.  Admin commands that are
- * "read-only" and don't change any configuration state don't need any
- * lock.
+ * Annotation used to indicate what type of lock to acquire before executing an admin command. By default (witout this
+ * annotation), admin commands acquire a shared lock, allowing multiple admin commands to execute in parallel. Some
+ * commands, such as the synchronization command and the quiesce command require the exclusive lock to prevent any other
+ * admin commands from executing. Admin commands that are "read-only" and don't change any configuration state don't
+ * need any lock.
  *
  * @author Bill Shannon
  */
@@ -38,7 +35,9 @@ public @interface CommandLock {
     /**
      * The type of command lock.
      */
-    public enum LockType { NONE, SHARED, EXCLUSIVE };
+    public enum LockType {
+        NONE, SHARED, EXCLUSIVE
+    };
 
     /**
      * Returns the type of lock to acquire.

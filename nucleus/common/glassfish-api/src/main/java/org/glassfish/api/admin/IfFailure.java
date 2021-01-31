@@ -19,8 +19,8 @@ package org.glassfish.api.admin;
 import java.lang.annotation.*;
 
 /**
- * Annotation used to indicate what type of failure action should be performed if the
- * annotated method was to return a failure error code or throw an exception.
+ * Annotation used to indicate what type of failure action should be performed if the annotated method was to return a
+ * failure error code or throw an exception.
  *
  * @author Jerome Dochez
  */
@@ -30,10 +30,10 @@ import java.lang.annotation.*;
 public @interface IfFailure {
 
     /**
-     * Returns the intent action to perform if the annotated method does not execute
-     * successfully (expressed by a faulty error code or an exception thrown).
+     * Returns the intent action to perform if the annotated method does not execute successfully (expressed by a faulty
+     * error code or an exception thrown).
      *
-     * @return the intent action to perform 
+     * @return the intent action to perform
      */
     FailurePolicy value();
 }

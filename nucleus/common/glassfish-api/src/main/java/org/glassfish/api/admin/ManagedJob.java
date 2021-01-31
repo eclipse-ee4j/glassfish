@@ -19,8 +19,7 @@ package org.glassfish.api.admin;
 import java.lang.annotation.*;
 
 /**
- * This annotation will be added for commands which need to
- * be managed by Job Manager
+ * This annotation will be added for commands which need to be managed by Job Manager
  *
  * @author Bhakti Mehta
  */

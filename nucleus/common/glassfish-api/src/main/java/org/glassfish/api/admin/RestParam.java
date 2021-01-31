@@ -26,5 +26,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RestParam {
     String name();
+
     String value();
 }

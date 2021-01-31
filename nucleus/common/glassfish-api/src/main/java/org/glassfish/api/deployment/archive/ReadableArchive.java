@@ -31,8 +31,7 @@ import java.net.URI;
 public interface ReadableArchive extends Archive {
 
     /**
-     * Returns the InputStream for the given entry name
-     * The file name must be relative to the root of the module.
+     * Returns the InputStream for the given entry name The file name must be relative to the root of the module.
      *
      * @param name the file name relative to the root of the module.
      * @return the InputStream for the given entry name or null if not found.
@@ -40,8 +39,7 @@ public interface ReadableArchive extends Archive {
     public InputStream getEntry(String name) throws IOException;
 
     /**
-     * Returns the existence of the given entry name
-     * The file name must be relative to the root of the module.
+     * Returns the existence of the given entry name The file name must be relative to the root of the module.
      *
      * @param name the file name relative to the root of the module.
      * @return the existence the given entry name.
@@ -64,13 +62,10 @@ public interface ReadableArchive extends Archive {
     public void open(URI uri) throws IOException;
 
     /**
-     * Returns an instance of this archive abstraction for an embedded
-     * archive within this archive.
+     * Returns an instance of this archive abstraction for an embedded archive within this archive.
      *
      * @param name is the entry name relative to the root for the archive
-     * @return
-     *      the Archive instance for this abstraction,
-     *      or null if no such entry exists.
+     * @return the Archive instance for this abstraction, or null if no such entry exists.
      */
     public ReadableArchive getSubArchive(String name) throws IOException;
 
@@ -106,12 +101,10 @@ public interface ReadableArchive extends Archive {
     public ReadableArchive getParentArchive();
 
     /**
-     * Returns any data that could have been calculated as part of
-     * the descriptor loading.
+     * Returns any data that could have been calculated as part of the descriptor loading.
      *
      * @param dataType the type of the extra data
-     * @return the extra data or null if there are not an instance of
-     * type dataType registered.
+     * @return the extra data or null if there are not an instance of type dataType registered.
      */
     public <U> U getExtraData(Class<U> dataType);
 

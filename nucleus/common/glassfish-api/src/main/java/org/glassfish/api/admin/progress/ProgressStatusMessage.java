@@ -21,9 +21,9 @@ package org.glassfish.api.admin.progress;
  * @author martinmares
  */
 public interface ProgressStatusMessage {
-    
+
     public String getSourceId();
-    
+
     public String getMessage();
-    
+
 }

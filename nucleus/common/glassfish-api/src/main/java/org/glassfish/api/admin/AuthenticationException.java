@@ -16,7 +16,6 @@
 
 package org.glassfish.api.admin;
 
-
 /**
  * A specialized CommandException that indicates an authentication failure.
  *

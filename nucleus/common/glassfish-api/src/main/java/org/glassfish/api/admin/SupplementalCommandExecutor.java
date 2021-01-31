@@ -31,17 +31,16 @@ import java.util.*;
  */
 @Contract
 public interface SupplementalCommandExecutor {
-    
+
     public Collection<SupplementalCommand> listSuplementalCommands(String commandName);
 
-    public ActionReport.ExitCode execute(Collection<SupplementalCommand> suplementals, Supplemental.Timing time,
-                             AdminCommandContext context, ParameterMap parameters, 
-                             MultiMap<String, File> optionFileMap);
-    
+    public ActionReport.ExitCode execute(Collection<SupplementalCommand> suplementals, Supplemental.Timing time, AdminCommandContext context,
+            ParameterMap parameters, MultiMap<String, File> optionFileMap);
+
     public interface SupplementalCommand {
-        
+
         public void execute(AdminCommandContext ctxt);
-        
+
         public AdminCommand getCommand();
 
         public boolean toBeExecutedBefore();
@@ -49,7 +48,7 @@ public interface SupplementalCommandExecutor {
         public boolean toBeExecutedAfter();
 
         public boolean toBeExecutedAfterReplication();
-        
+
         public FailurePolicy onFailure();
 
         public List<RuntimeType> whereToRun();
@@ -57,9 +56,9 @@ public interface SupplementalCommandExecutor {
         public ProgressStatus getProgressStatus();
 
         public void setProgressStatus(ProgressStatus progressStatus);
-        
+
         public Progress getProgressAnnotation();
-        
+
     }
-    
+
 }

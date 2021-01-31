@@ -18,7 +18,8 @@ package org.glassfish.api.admin.progress;
 
 import org.glassfish.api.admin.ProgressStatus;
 
-/** Progress method was called.
+/**
+ * Progress method was called.
  *
  * @author martinmares
  */
@@ -72,7 +73,7 @@ public class ProgressStatusEventCreateChild extends ProgressStatusEvent {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     @Override
     public ProgressStatus apply(ProgressStatus ps) {
         ProgressStatus chld;
@@ -121,5 +122,5 @@ public class ProgressStatusEventCreateChild extends ProgressStatusEvent {
         }
         return true;
     }
-    
+
 }

@@ -17,25 +17,20 @@
 package org.glassfish.api.admin;
 
 /**
- * Resolves password alias expressions of the form ${ALIAS=aliasName} using
- * an internal password alias store while also accepting passwords themselves
- * which are not translated.
+ * Resolves password alias expressions of the form ${ALIAS=aliasName} using an internal password alias store while also
+ * accepting passwords themselves which are not translated.
  * 
  * @author tjquinn
  */
 public interface PasswordAliasResolver {
-   
+
     /**
-     * Returns the password from the argument, processing (if present)
-     * an expression of the form ${ALIAS=aliasName} using
-     * a PasswordAliasStore.  If the argument is not such an expression
-     * then the returned value is the character array
-     * for that string.  If the argument is an alias expression then
-     * the alias name is resolved using an internal
-     * PasswordAliasStore and the corresponding password is returned.
+     * Returns the password from the argument, processing (if present) an expression of the form ${ALIAS=aliasName} using a
+     * PasswordAliasStore. If the argument is not such an expression then the returned value is the character array for that
+     * string. If the argument is an alias expression then the alias name is resolved using an internal PasswordAliasStore
+     * and the corresponding password is returned.
      *
-     * @param aliasExpressionOrPassword either a password or a password
-     * alias expression
+     * @param aliasExpressionOrPassword either a password or a password alias expression
      * @return the resolved password
      */
     char[] resolvePassword(String aliasExpressionOrPassword);

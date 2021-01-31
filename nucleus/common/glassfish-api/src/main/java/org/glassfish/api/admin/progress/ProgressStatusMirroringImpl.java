@@ -20,18 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.api.admin.ProgressStatus;
 
-/** This implementation is used for modeling of command execution with 
- * supplemental commands. It only mirrors all sizes (total steps and current
- * steps from its children.
+/**
+ * This implementation is used for modeling of command execution with supplemental commands. It only mirrors all sizes
+ * (total steps and current steps from its children.
  * 
  *
  * @author mmares
  */
 //TODO: Move to kernel if possible. It is now in API only because ProgressStatusImpl is here, too
 public class ProgressStatusMirroringImpl extends ProgressStatusBase {
-    
-    //private Collection<ProgressStatusBase> mirroreds = new ArrayList<ProgressStatusBase>();
-    
+
+    // private Collection<ProgressStatusBase> mirroreds = new ArrayList<ProgressStatusBase>();
+
     public ProgressStatusMirroringImpl(String name, ProgressStatusBase parent, String id) {
         super(name, -1, parent, id);
     }
@@ -41,39 +41,39 @@ public class ProgressStatusMirroringImpl extends ProgressStatusBase {
         String childId = (id == null ? "" : id) + "." + (children.size() + 1);
         return new ProgressStatusImpl(name, totalStepCount, this, childId);
     }
-    
+
     @Override
     public void setTotalStepCount(int totalStepCount) {
         throw new UnsupportedOperationException();
     }
-    
+
     @Override
     public void progress(int steps, String message) {
         throw new UnsupportedOperationException();
     }
-    
+
     @Override
     public void setCurrentStepCount(int stepCount) {
         throw new UnsupportedOperationException();
     }
-    
-    /** Ignores allocated steps. It's mirroring implementation.
+
+    /**
+     * Ignores allocated steps. It's mirroring implementation.
      */
     @Override
-    public synchronized ProgressStatus createChild(String name, 
-            int allocatedSteps, int totalStepCount) {
+    public synchronized ProgressStatus createChild(String name, int allocatedSteps, int totalStepCount) {
         ProgressStatusBase result = doCreateChild(name, totalStepCount);
         children.add(new ChildProgressStatus(allocatedSteps, result));
         fireEvent(new ProgressStatusEventCreateChild(id, name, result.getId(), 0, totalStepCount));
         return result;
     }
-    
+
     @Override
     protected synchronized void fireEvent(ProgressStatusEvent event) {
         recount();
         super.fireEvent(event);
     }
-    
+
     private void recount() {
         int newTotalStepCount = 0;
         boolean unknown = false;
@@ -91,7 +91,7 @@ public class ProgressStatusMirroringImpl extends ProgressStatusBase {
             }
             newCurrentStepCount += mirr.getCurrentStepCount();
         }
-        //Event
+        // Event
         ProgressStatusEventSet event = new ProgressStatusEventSet(id);
         if (newCurrentStepCount != currentStepCount) {
             currentStepCount = newCurrentStepCount;
@@ -105,12 +105,12 @@ public class ProgressStatusMirroringImpl extends ProgressStatusBase {
             super.fireEvent(event);
         }
     }
-    
+
     @Override
     protected synchronized float computeCompleteSteps() {
         return currentStepCount;
     }
-    
+
     @Override
     public synchronized float computeCompletePortion() {
         if (isComplete()) {
@@ -125,5 +125,5 @@ public class ProgressStatusMirroringImpl extends ProgressStatusBase {
         }
         return ((float) currentStepCount) / ((float) totalStepCount);
     }
-    
+
 }

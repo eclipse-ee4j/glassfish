@@ -23,29 +23,26 @@ import java.util.Collection;
  * @author tjquinn
  */
 public interface AdminCommandSecurity {
-    
+
     /**
-     * Behavior required of all command classes which provide any of their
-     * own custom authorization enforcement. The system will invoke the
-     * class's {@code getAccessChecks} method after it has injected {@code @Inject}
-     * and {@code @Param} fields and after it has invoked any {@code @PostConstruct}
-     * methods.  The getAccessChecks method returns one or more {@link AccessCheck}
-     * objects, indicating additional authorization checking that secure
-     * admin should perform beyond what is triggered by the annotations.
+     * Behavior required of all command classes which provide any of their own custom authorization enforcement. The system
+     * will invoke the class's {@code getAccessChecks} method after it has injected {@code @Inject} and {@code @Param}
+     * fields and after it has invoked any {@code @PostConstruct} methods. The getAccessChecks method returns one or more
+     * {@link AccessCheck} objects, indicating additional authorization checking that secure admin should perform beyond
+     * what is triggered by the annotations.
      */
     public interface AccessCheckProvider {
-        
+
         /**
-         * Returns the {@code AccessCheck}s the command has computed at runtime 
-         * which should be included in the authorization, added to checks that 
-         * secure admin infers from the command's CRUD or RestEndpoint characteristics
-         * or {@code AccessRequired} annotations.
+         * Returns the {@code AccessCheck}s the command has computed at runtime which should be included in the authorization,
+         * added to checks that secure admin infers from the command's CRUD or RestEndpoint characteristics or
+         * {@code AccessRequired} annotations.
          * 
-         * @return the {@code AccessCheck}s 
+         * @return the {@code AccessCheck}s
          */
         Collection<? extends AccessRequired.AccessCheck> getAccessChecks();
     }
-    
+
     public interface Preauthorization {
         public boolean preAuthorization(AdminCommandContext context);
     }

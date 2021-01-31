@@ -17,8 +17,8 @@
 package com.sun.appserv.server;
 
 /**
- * Exception thrown by application server lifecycle modules and subsystems. These exceptions
- * are generally considered fatal to the operation of application server.
+ * Exception thrown by application server lifecycle modules and subsystems. These exceptions are generally considered
+ * fatal to the operation of application server.
  */
 public final class ServerLifecycleException extends Exception {
 
@@ -48,8 +48,7 @@ public final class ServerLifecycleException extends Exception {
     }
 
     /**
-     * Construct a new LifecycleException for the specified message
-     * and throwable.
+     * Construct a new LifecycleException for the specified message and throwable.
      *
      * @param message Message describing this exception
      * @param rootCause Throwable that caused this exception

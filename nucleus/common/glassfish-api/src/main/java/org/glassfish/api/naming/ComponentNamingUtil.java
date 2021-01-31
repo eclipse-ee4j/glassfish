@@ -24,15 +24,14 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ComponentNamingUtil {
 
-
     /**
-     * Utility for discovering the internal global name under which an application-wide
-     * resource is made available (e.g. for access from an app client)
-     * @param appName   name of application within which dependency is defined
-     * @param origJavaAppName  logical java:app name of the dependency 
+     * Utility for discovering the internal global name under which an application-wide resource is made available (e.g. for
+     * access from an app client)
+     * 
+     * @param appName name of application within which dependency is defined
+     * @param origJavaAppName logical java:app name of the dependency
      * @return
      */
     public String composeInternalGlobalJavaAppName(String appName, String origJavaAppName);
-
 
 }

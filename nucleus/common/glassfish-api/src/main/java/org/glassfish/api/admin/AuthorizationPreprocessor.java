@@ -21,37 +21,27 @@ import javax.security.auth.Subject;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * Defines the API for services which provide additional information to be 
- * used during authorization.  
+ * Defines the API for services which provide additional information to be used during authorization.
  * <p>
- * The implementations of this interface provide name/value pairs as Maps which will
- * become AzAttribute objects attached to the subject, the resource, or the action before
- * command security invokes the authorization service.  We use Maps here rather
- * than collections of AzAttributes to minimize dependencies on Az classes.
+ * The implementations of this interface provide name/value pairs as Maps which will become AzAttribute objects attached
+ * to the subject, the resource, or the action before command security invokes the authorization service. We use Maps
+ * here rather than collections of AzAttributes to minimize dependencies on Az classes.
  * 
  * @author tjquinn
  */
 @Contract
 public interface AuthorizationPreprocessor {
-    
+
     /**
-     * Optionally adds to the attributes that will be attached to the 
-     * Subject, the resource, and the action used for an upcoming authorization
-     * check.
+     * Optionally adds to the attributes that will be attached to the Subject, the resource, and the action used for an
+     * upcoming authorization check.
      * 
      * @param context map describing the authorization context (such as command parameter names and values)
      * @param subjectAttributes name/value pairs for attributes to be attached to the subject
      * @param resourceAttributes name/value pairs for attributes to be attached to the resource
      * @param actionAttributes name/value pairs for attributes to be attached to the action
      */
-    public void describeAuthorization(
-            Subject subject,
-            String resourceName,
-            String action,
-            AdminCommand command,
-            Map<String,Object> context,
-            Map<String,String> subjectAttributes,
-            Map<String,String> resourceAttributes,
-            Map<String,String> actionAttributes);
-    
+    public void describeAuthorization(Subject subject, String resourceName, String action, AdminCommand command, Map<String, Object> context,
+            Map<String, String> subjectAttributes, Map<String, String> resourceAttributes, Map<String, String> actionAttributes);
+
 }

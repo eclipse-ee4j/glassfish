@@ -35,29 +35,26 @@ import jakarta.inject.Inject;
 
 @Service
 @Singleton
-public class InvocationManagerImpl
-        implements InvocationManager {
+public class InvocationManagerImpl implements InvocationManager {
 
-    // This TLS variable stores an ArrayList. 
+    // This TLS variable stores an ArrayList.
     // The ArrayList contains ComponentInvocation objects which represent
     // the stack of invocations on this thread. Accesses to the ArrayList
     // dont need to be synchronized because each thread has its own ArrayList.
     private InheritableThreadLocal<InvocationArray<ComponentInvocation>> frames;
-    
-    private final ThreadLocal<Stack<ApplicationEnvironment>> applicationEnvironments =
-            new ThreadLocal<Stack<ApplicationEnvironment>>() {
+
+    private final ThreadLocal<Stack<ApplicationEnvironment>> applicationEnvironments = new ThreadLocal<Stack<ApplicationEnvironment>>() {
         @Override
         protected Stack<ApplicationEnvironment> initialValue() {
             return new Stack<ApplicationEnvironment>();
         }
-        
+
     };
-    
-    private Map<ComponentInvocationType,List<RegisteredComponentInvocationHandler>>  regCompInvHandlerMap
-            = new HashMap<ComponentInvocationType, List<RegisteredComponentInvocationHandler>>();
+
+    private Map<ComponentInvocationType, List<RegisteredComponentInvocationHandler>> regCompInvHandlerMap = new HashMap<ComponentInvocationType, List<RegisteredComponentInvocationHandler>>();
 
     private final ComponentInvocationHandler[] invHandlers;
-    
+
     public InvocationManagerImpl() {
         this(null);
     }
@@ -66,17 +63,15 @@ public class InvocationManagerImpl
     private InvocationManagerImpl(@Optional IterableProvider<ComponentInvocationHandler> handlers) {
         if (handlers == null) {
             invHandlers = null;
-        }
-        else {
+        } else {
             LinkedList<ComponentInvocationHandler> localHandlers = new LinkedList<ComponentInvocationHandler>();
             for (ComponentInvocationHandler handler : handlers) {
                 localHandlers.add(handler);
             }
-            
+
             if (localHandlers.size() > 0) {
                 invHandlers = localHandlers.toArray(new ComponentInvocationHandler[localHandlers.size()]);
-            }
-            else {
+            } else {
                 invHandlers = null;
             }
         }
@@ -98,9 +93,9 @@ public class InvocationManagerImpl
                     // get current invocation
                     ComponentInvocation parentInv = v.get(v.size() - 1);
                     /*
-                    TODO: The following is ugly. The logic of what needs to be in the
-                      new ComponentInvocation should be with the respective container
-                    */
+                     * TODO: The following is ugly. The logic of what needs to be in the new ComponentInvocation should be with the
+                     * respective container
+                     */
                     if (parentInv.getInvocationType() == ComponentInvocationType.SERVLET_INVOCATION) {
 
                         ComponentInvocation inv = new ComponentInvocation();
@@ -128,8 +123,7 @@ public class InvocationManagerImpl
         };
     }
 
-    public <T extends ComponentInvocation> void preInvoke(T inv)
-            throws InvocationException {
+    public <T extends ComponentInvocation> void preInvoke(T inv) throws InvocationException {
 
         InvocationArray<ComponentInvocation> v = frames.get();
         if (inv.getInvocationType() == ComponentInvocationType.SERVICE_STARTUP) {
@@ -148,17 +142,15 @@ public class InvocationManagerImpl
                 handler.beforePreInvoke(invType, prevInv, inv);
             }
         }
-        
-       
+
         List<RegisteredComponentInvocationHandler> setCIH = regCompInvHandlerMap.get(invType);
         if (setCIH != null) {
-            for (int i=0;i<setCIH.size();i++) {
+            for (int i = 0; i < setCIH.size(); i++) {
                 setCIH.get(i).getComponentInvocationHandler().beforePreInvoke(invType, prevInv, inv);
             }
         }
-  
 
-        //push this invocation on the stack
+        // push this invocation on the stack
         v.add(inv);
 
         if (invHandlers != null) {
@@ -166,17 +158,16 @@ public class InvocationManagerImpl
                 handler.afterPreInvoke(invType, prevInv, inv);
             }
         }
-        
+
         if (setCIH != null) {
-            for (int i=0;i<setCIH.size();i++) {
+            for (int i = 0; i < setCIH.size(); i++) {
                 setCIH.get(i).getComponentInvocationHandler().afterPreInvoke(invType, prevInv, inv);
-            }            
+            }
         }
 
     }
 
-    public <T extends ComponentInvocation> void postInvoke(T inv)
-            throws InvocationException {
+    public <T extends ComponentInvocation> void postInvoke(T inv) throws InvocationException {
 
         // Get this thread's ArrayList
         InvocationArray<ComponentInvocation> v = frames.get();
@@ -204,12 +195,10 @@ public class InvocationManagerImpl
 
             List<RegisteredComponentInvocationHandler> setCIH = regCompInvHandlerMap.get(invType);
             if (setCIH != null) {
-                for (int i=0;i<setCIH.size();i++) {
+                for (int i = 0; i < setCIH.size(); i++) {
                     setCIH.get(i).getComponentInvocationHandler().beforePostInvoke(invType, prevInv, curInv);
                 }
             }
-              
-            
 
         } finally {
             // pop the stack
@@ -220,13 +209,12 @@ public class InvocationManagerImpl
                     handler.afterPostInvoke(inv.getInvocationType(), prevInv, inv);
                 }
             }
-            
+
             ComponentInvocationType invType = inv.getInvocationType();
-            
 
             List<RegisteredComponentInvocationHandler> setCIH = regCompInvHandlerMap.get(invType);
             if (setCIH != null) {
-                for (int i=0;i<setCIH.size();i++) {
+                for (int i = 0; i < setCIH.size(); i++) {
                     setCIH.get(i).getComponentInvocationHandler().afterPostInvoke(invType, prevInv, curInv);
                 }
             }
@@ -244,8 +232,7 @@ public class InvocationManagerImpl
     }
 
     /**
-     * return the Invocation object of the component
-     * being called
+     * return the Invocation object of the component being called
      */
     public <T extends ComponentInvocation> T getCurrentInvocation() {
         ArrayList v = (ArrayList) frames.get();
@@ -257,16 +244,14 @@ public class InvocationManagerImpl
     }
 
     /**
-     * return the Inovcation object of the caller
-     * return null if none exist (e.g. caller is from
-     * another VM)
+     * return the Inovcation object of the caller return null if none exist (e.g. caller is from another VM)
      */
-    public <T extends ComponentInvocation> T getPreviousInvocation()
-            throws InvocationException {
+    public <T extends ComponentInvocation> T getPreviousInvocation() throws InvocationException {
 
         ArrayList v = frames.get();
         int i = v.size();
-        if (i < 2) return null;
+        if (i < 2)
+            return null;
         return (T) v.get(i - 2);
     }
 
@@ -286,8 +271,7 @@ public class InvocationManagerImpl
         }
 
         public boolean outsideStartup() {
-            return getInvocationAttribute()
-                    != ComponentInvocationType.SERVICE_STARTUP;
+            return getInvocationAttribute() != ComponentInvocationType.SERVICE_STARTUP;
         }
     }
 
@@ -305,29 +289,25 @@ public class InvocationManagerImpl
     @Override
     public void pushAppEnvironment(ApplicationEnvironment env) {
         Stack<ApplicationEnvironment> stack = applicationEnvironments.get();
-        
+
         stack.push(env);
     }
-    
+
     @Override
     public ApplicationEnvironment peekAppEnvironment() {
         Stack<ApplicationEnvironment> stack = applicationEnvironments.get();
-        
-        if (stack.isEmpty()) return null;
-        
+
+        if (stack.isEmpty())
+            return null;
+
         return stack.peek();
     }
 
     @Override
     public void popAppEnvironment() {
         Stack<ApplicationEnvironment> stack = applicationEnvironments.get();
-        
-        if (!stack.isEmpty()) stack.pop();
+
+        if (!stack.isEmpty())
+            stack.pop();
     }
 }
-
-
-
-
-
-

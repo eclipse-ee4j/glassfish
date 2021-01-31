@@ -21,26 +21,26 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Do NOT use this interface anymore, it no longer does anything
  *
- * @deprecated Use the {@link RunLevel} annotation on the Service instead of
- * 		implementing this interface.
+ * @deprecated Use the {@link RunLevel} annotation on the Service instead of implementing this interface.
  * 
  * @author Jerome Dochez
  */
 @Deprecated
 @Contract
 public interface Startup {
-  
-    /** 
-     * A startup service may be useful during the lifetime of the application 
-     * server, while others need to process a task and stop running at the 
-     * end of the server startup. 
-     * A startup service should indicate if it needs to be running during the 
-     * START sequence only or during the SERVER lifetime.
+
+    /**
+     * A startup service may be useful during the lifetime of the application server, while others need to process a task
+     * and stop running at the end of the server startup. A startup service should indicate if it needs to be running during
+     * the START sequence only or during the SERVER lifetime.
      */
-    public enum Lifecycle { START, SERVER }    
-    
+    public enum Lifecycle {
+        START, SERVER
+    }
+
     /**
      * Returns the life expectency of the service
+     * 
      * @return the life expectency.
      */
     public Lifecycle getLifecycle();

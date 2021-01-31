@@ -21,20 +21,21 @@ import java.util.*;
 import org.glassfish.api.admin.CommandProgress;
 import org.glassfish.api.admin.ProgressStatus;
 
-/** Basic <i>abstract</i> implementation of {@code ProgressStatus}.
+/**
+ * Basic <i>abstract</i> implementation of {@code ProgressStatus}.
  *
  * @author mmares
  */
 //TODO: Move to utils if possible. It is now in API only because ProgressStatusImpl is here, too
 public abstract class ProgressStatusBase implements ProgressStatus, Serializable {
-    
+
     private static final long serialVersionUID = -2501719606059507140L;
 
     public static class ChildProgressStatus implements Serializable {
-        
+
         private final int allocatedSteps;
         private final ProgressStatusBase progressStatus;
-        
+
         public ChildProgressStatus(int allocatedSteps, ProgressStatusBase progressStatus) {
             if (allocatedSteps > 0) {
                 this.allocatedSteps = allocatedSteps;
@@ -79,9 +80,9 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
         public String toString() {
             return "ChildProgressStatus{" + "allocatedSteps=" + allocatedSteps + ", progressStatus=" + progressStatus + '}';
         }
-        
+
     }
-    
+
     protected String name;
     protected String id;
     protected int totalStepCount = -1;
@@ -90,38 +91,36 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     protected boolean completed = false;
     protected Set<ChildProgressStatus> children = new HashSet<ChildProgressStatus>();
 
-    /** Construct unnamed {@code ProgressStatus}
+    /**
+     * Construct unnamed {@code ProgressStatus}
      * 
      * @param parent Parent {@code ProgressStatus}
      * @param id Is useful for event transfer
-     */ 
+     */
     protected ProgressStatusBase(ProgressStatusBase parent, String id) {
         this(null, -1, parent, id);
     }
-    
-    /** Construct named {@code ProgressStatus}.
+
+    /**
+     * Construct named {@code ProgressStatus}.
      * 
-     * @param name of the {@code ProgressStatus} implementation is used 
-     *        to identify source of progress messages.
+     * @param name of the {@code ProgressStatus} implementation is used to identify source of progress messages.
      * @param parent Parent {@code ProgressStatus}
      * @param id Is useful for event transfer
      */
     protected ProgressStatusBase(String name, ProgressStatusBase parent, String id) {
         this(name, -1, parent, id);
     }
-    
-    /** Construct named {@code ProgressStatus} with defined expected count 
-     * of steps.
+
+    /**
+     * Construct named {@code ProgressStatus} with defined expected count of steps.
      * 
-     * @param name of the {@code ProgressStatus} implementation is used 
-     *        to identify source of progress messages.
-     * @param totalStepCount How many steps are expected in this 
-     *        {@code ProgressStatus}
+     * @param name of the {@code ProgressStatus} implementation is used to identify source of progress messages.
+     * @param totalStepCount How many steps are expected in this {@code ProgressStatus}
      * @param parent Parent {@code ProgressStatus}
      * @param id Is useful for event transfer
      */
-    protected ProgressStatusBase(String name, int totalStepCount, 
-            ProgressStatusBase parent, String id) {
+    protected ProgressStatusBase(String name, int totalStepCount, ProgressStatusBase parent, String id) {
         this.name = name;
         this.totalStepCount = totalStepCount;
         this.parent = parent;
@@ -129,16 +128,17 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             id = UUID.randomUUID().toString();
         }
         this.id = id;
-    } 
-    
-    /** Fires {@link ProgressStatusEvent} to parent.
+    }
+
+    /**
+     * Fires {@link ProgressStatusEvent} to parent.
      */
     protected void fireEvent(ProgressStatusEvent event) {
         if (parent != null) {
             parent.fireEvent(event);
         }
     }
-    
+
     @Override
     public synchronized void setTotalStepCount(int totalStepCount) {
         if (completed || this.totalStepCount == totalStepCount) {
@@ -185,7 +185,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             fireEvent(new ProgressStatusEventProgress(id, steps, message, spinner));
         }
     }
-    
+
     @Override
     public synchronized void progress(int steps, String message) {
         progress(steps, message, false);
@@ -227,9 +227,9 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             fireEvent(new ProgressStatusEventComplete(id, message));
         }
     }
-    
-    /** Complete this {@code ProgressStatus} and all sub-ProgressStatuses 
-     * but does not fire event to parent statuses.
+
+    /**
+     * Complete this {@code ProgressStatus} and all sub-ProgressStatuses but does not fire event to parent statuses.
      */
     protected synchronized boolean completeSilently() {
         if (completed) {
@@ -254,9 +254,9 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     public boolean isComplete() {
         return completed;
     }
-    
+
     protected abstract ProgressStatusBase doCreateChild(String name, int totalStepCount);
-    
+
     protected void allocateStapsForChildProcess(int allocatedSteps) {
         if (allocatedSteps < 0) {
             allocatedSteps = 0;
@@ -274,9 +274,8 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             }
         }
     }
-    
-    public synchronized ProgressStatus createChild(String name, 
-            int allocatedSteps, int totalStepCount) {
+
+    public synchronized ProgressStatus createChild(String name, int allocatedSteps, int totalStepCount) {
         if (allocatedSteps < 0) {
             allocatedSteps = 0;
         }
@@ -296,11 +295,11 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     public ProgressStatus createChild(int allocatedSteps) {
         return createChild(null, allocatedSteps);
     }
-    
+
     public synchronized int getCurrentStepCount() {
         return this.currentStepCount;
     }
-    
+
     protected synchronized float computeCompleteSteps() {
         if (isComplete()) {
             return totalStepCount;
@@ -315,7 +314,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
         }
         return realStepCount;
     }
-    
+
     public synchronized float computeCompletePortion() {
         if (isComplete()) {
             return 1;
@@ -338,7 +337,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             return 1;
         }
     }
-    
+
     public synchronized int computeSumSteps() {
         int result = 0;
         for (ChildProgressStatus child : children) {
@@ -348,7 +347,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
         }
         return getCurrentStepCount() + result;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -364,10 +363,10 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             result.append(Math.round(realSteps)).append(" / ");
             result.append(totalStepCount < 0 ? "?" : String.valueOf(totalStepCount));
         }
-        
+
         return result.toString();
     }
-    
+
     public synchronized Collection<ProgressStatusBase> getChildren() {
         Collection<ProgressStatusBase> result = new ArrayList<ProgressStatusBase>(children.size());
         for (ChildProgressStatus chld : children) {
@@ -379,7 +378,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     public Set<ChildProgressStatus> getChildProgressStatuses() {
         return children;
     }
-    
+
     @Override
     public String getId() {
         return id;
@@ -388,12 +387,13 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     public String getName() {
         return name;
     }
-    
+
     public ProgressStatusBase getParrent() {
         return parent;
     }
-    
-    /** Recursive search for child by id.
+
+    /**
+     * Recursive search for child by id.
      */
     protected ProgressStatusBase findById(String id) {
         if (id == null || id.isEmpty()) {
@@ -410,8 +410,9 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
         }
         return null;
     }
-    
-    /** Returns spinner status or null if status was not possible to check.
+
+    /**
+     * Returns spinner status or null if status was not possible to check.
      */
     private boolean getSpinnerStatus() {
         if (parent == null) {
@@ -422,5 +423,5 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
         }
         return ((ProgressStatusBase) parent).getSpinnerStatus();
     }
-    
+
 }

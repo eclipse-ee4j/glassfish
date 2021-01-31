@@ -22,15 +22,14 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.Payload.Inbound;
 import org.glassfish.api.admin.Payload.Outbound;
 
-/** Most of {@link AdminCommandContext} attributes are used in any phase 
- * of command execution (supplemental commands, replication) but some 
- * of them must be different for every instance. This wrapper provides 
- * such staff.
+/**
+ * Most of {@link AdminCommandContext} attributes are used in any phase of command execution (supplemental commands,
+ * replication) but some of them must be different for every instance. This wrapper provides such staff.
  *
  * @author mmares
  */
 public class AdminCommandContextForInstance implements AdminCommandContext {
-    
+
     private AdminCommandContext wrapped;
     private ProgressStatus progressStatus;
 
@@ -100,10 +99,10 @@ public class AdminCommandContextForInstance implements AdminCommandContext {
     public AdminCommandEventBroker getEventBroker() {
         return wrapped.getEventBroker();
     }
+
     @Override
     public String getJobId() {
         return wrapped.getJobId();
     }
 
-    
 }

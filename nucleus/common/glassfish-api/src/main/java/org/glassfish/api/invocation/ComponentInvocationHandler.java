@@ -21,8 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  *
- * ComponentInvocationHandler handles pre and post activities for a particular
- *  type of ComponentInvocation
+ * ComponentInvocationHandler handles pre and post activities for a particular type of ComponentInvocation
  *
  * @author Mahesh Kannan
  *
@@ -38,9 +37,7 @@ public interface ComponentInvocationHandler {
      * @param newInv
      * @throws InvocationException
      */
-    public void beforePreInvoke(ComponentInvocationType invType,
-                          ComponentInvocation prevInv, ComponentInvocation newInv)
-        throws InvocationException;
+    public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv) throws InvocationException;
 
     /**
      * Called <b>after</b> the curInv has been pushed into the invocation stack.
@@ -50,9 +47,7 @@ public interface ComponentInvocationHandler {
      * @param curInv
      * @throws InvocationException
      */
-    public void afterPreInvoke(ComponentInvocationType invType,
-                          ComponentInvocation prevInv, ComponentInvocation curInv)
-        throws InvocationException;
+    public void afterPreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException;
 
     /**
      * Called <b>before</b> the curInv has been popped from the invocation stack.
@@ -62,9 +57,7 @@ public interface ComponentInvocationHandler {
      * @param curInv
      * @throws InvocationException
      */
-    public void beforePostInvoke(ComponentInvocationType invType,
-            ComponentInvocation prevInv, ComponentInvocation curInv)
-        throws InvocationException;
+    public void beforePostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException;
 
     /**
      * Called <b>after</b> the curInv has been popped from the invocation stack.
@@ -74,8 +67,6 @@ public interface ComponentInvocationHandler {
      * @param curInv
      * @throws InvocationException
      */
-    public void afterPostInvoke(ComponentInvocationType invType,
-            ComponentInvocation prevInv, ComponentInvocation curInv)
-        throws InvocationException;
+    public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException;
 
 }

@@ -23,8 +23,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 /**
- * This holds the late status of the instance, the commands that are Queued up while the instance was starting
- * etc.
+ * This holds the late status of the instance, the commands that are Queued up while the instance was starting etc.
  *
  * @author Vijay Ramachandran
  */
@@ -95,7 +94,8 @@ public class InstanceState {
 
         public static StateType makeStateType(String s) {
             for (StateType st : StateType.values()) {
-                if (s.equals(st.getDescription())) return st;
+                if (s.equals(st.getDescription()))
+                    return st;
             }
             return null;
         }

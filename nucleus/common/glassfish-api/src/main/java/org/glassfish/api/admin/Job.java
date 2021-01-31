@@ -22,27 +22,29 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
-/** Represents running (or finished) command instance.
+/**
+ * Represents running (or finished) command instance.
  *
  *
  * @author Martin Mares
  * @author Bhakti Mehta
  */
 public interface Job extends AdminCommandState, Serializable {
-    
-    /** Command progress only if it is supported by command
+
+    /**
+     * Command progress only if it is supported by command
      */
     public CommandProgress getCommandProgress();
-    
+
     public void setCommandProgress(CommandProgress commandProgress);
-    
+
     public void complete(ActionReport report, Payload.Outbound outbound);
-    
-    /** Change state to reverting. Command Can use it to send info about reverting
-     * to Job management infrastructure.
+
+    /**
+     * Change state to reverting. Command Can use it to send info about reverting to Job management infrastructure.
      */
     public void revert();
-    
+
     public AdminCommandEventBroker getEventBroker();
 
     public List<String> getSubjectUsernames();
@@ -53,19 +55,20 @@ public interface Job extends AdminCommandState, Serializable {
 
     public Payload.Outbound getPayload();
 
-    public File getJobsFile() ;
+    public File getJobsFile();
 
-    public void setJobsFile(File jobsFile) ;
+    public void setJobsFile(File jobsFile);
 
     public String getScope();
 
     public long getCommandCompletionDate();
-    
-    /** Job will be considered as retryable after fail. It means that checkpoint
-     * will not be deleted and revert or continue can be decided by the user.
+
+    /**
+     * Job will be considered as retryable after fail. It means that checkpoint will not be deleted and revert or continue
+     * can be decided by the user.
      */
     public void setFailToRetryable(boolean value);
-    
+
     public ParameterMap getParameters();
-    
+
 }

@@ -18,16 +18,16 @@ package org.glassfish.api.admin;
 
 import java.lang.annotation.Annotation;
 
-/** Interface denoting administrative commands that provide their
- * {@code Progress} annotation. It must be considered as Managed using
- * {@code Managed} annotation or by {@code CommandModelProvider}
+/**
+ * Interface denoting administrative commands that provide their {@code Progress} annotation. It must be considered as
+ * Managed using {@code Managed} annotation or by {@code CommandModelProvider}
  *
  * @author martinmares
  */
 public interface ProgressProvider {
-    
+
     public Progress getProgress();
-    
+
     public static class Utils {
         public static Progress provide(final String name, final int totalStepCount) {
             return new Progress() {
@@ -35,17 +35,19 @@ public interface ProgressProvider {
                 public String name() {
                     return name;
                 }
+
                 @Override
                 public int totalStepCount() {
                     return totalStepCount;
                 }
+
                 @Override
                 public Class<? extends Annotation> annotationType() {
                     return Progress.class;
                 }
             };
         }
-        
+
     }
-    
+
 }

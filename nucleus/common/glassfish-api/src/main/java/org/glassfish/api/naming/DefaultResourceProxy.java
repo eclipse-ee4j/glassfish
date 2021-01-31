@@ -12,28 +12,28 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */package org.glassfish.api.naming;
+ */
+package org.glassfish.api.naming;
 
 import java.util.List;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * Identifies a class that implements a default resource. Typically, this class
- * is also annotated with NamespacePrefixes which allows
- * a caller to get the logical name for the resource. 
+ * Identifies a class that implements a default resource. Typically, this class is also annotated with NamespacePrefixes
+ * which allows a caller to get the logical name for the resource.
  * 
  * @author Tom Mueller
  */
 @Contract
 public interface DefaultResourceProxy {
     String getPhysicalName();
+
     String getLogicalName();
-    
+
     static class Util {
         /*
-         * This utility method is useful for obtaining the logical name for
-         * the given physical name and a list of DefaultResourceProxies. If 
-         * the physicalName is not found, then null is returned. 
+         * This utility method is useful for obtaining the logical name for the given physical name and a list of
+         * DefaultResourceProxies. If the physicalName is not found, then null is returned.
          */
         public static String getLogicalName(List<DefaultResourceProxy> drps, String physicalName) {
             for (DefaultResourceProxy drp : drps) {

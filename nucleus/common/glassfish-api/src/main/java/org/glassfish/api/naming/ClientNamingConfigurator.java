@@ -19,18 +19,15 @@ package org.glassfish.api.naming;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * Used by application client container to configure default
- * naming behavior for a client JVM. Must be used before
- * any new InitialContext() is created within the JVM.
+ * Used by application client container to configure default naming behavior for a client JVM. Must be used before any
+ * new InitialContext() is created within the JVM.
  */
 
 @Contract
 public interface ClientNamingConfigurator {
 
-
     public void setDefaultHost(String host);
 
     public void setDefaultPort(String port);
-
 
 }

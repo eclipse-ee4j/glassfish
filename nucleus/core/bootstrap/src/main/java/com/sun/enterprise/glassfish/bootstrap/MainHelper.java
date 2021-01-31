@@ -49,8 +49,8 @@ public class MainHelper {
         //JDK9 the major verion would be the real major version e.g in case
         // of JDK9 major version is 9.So in that case checking the major version only
         if (major < 9) {
-          if (minor < 7) {
-            logger.log(Level.SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[]{7, minor});
+          if (minor < 8) {
+            logger.log(Level.SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[]{8, minor});
             System.exit(1);
           }
         }

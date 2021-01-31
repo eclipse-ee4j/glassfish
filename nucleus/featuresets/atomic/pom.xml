@@ -371,6 +371,16 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
             <exclusions>
@@ -415,7 +425,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-bootstrap</artifactId>
+            <artifactId>grizzly-npn-api</artifactId>
             <version>${grizzly.npn.version}</version>
             <exclusions>
                 <exclusion>

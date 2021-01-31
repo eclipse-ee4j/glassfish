@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,7 @@
 
 -->
 
-<project name="GlassFish-V3-QuickLook" default="all" basedir=".">
+<project name="GlassFish-QuickLook" default="all" basedir=".">
     <property environment="env"/>
 
     <property file="build.properties"/>
@@ -25,7 +25,7 @@
     <import file="${basedir}/gfproject/db-targets.xml"/>
 	<import file="${basedir}/gfproject/utils.xml"/>
     
-    <description>Builds, tests, and runs the project V3 Quicklook</description>
+    <description>Builds, tests, and runs the project Quicklook</description>
     
     <presetdef name="javac">
         <javac includeantruntime="false" />
@@ -591,7 +591,7 @@
     <property name="APPCLIENT" value="${glassfish.home}\bin\appclient.bat"/>
 </target>
 
-<target name="start-server-hk2" depends="setOSConditions" if="v3">
+<target name="start-server-hk2" depends="setOSConditions">
    
     <echo>+-----------------------------+</echo>
     <echo>|                             |</echo>
@@ -620,7 +620,7 @@
     </exec>
 </target>
 
-<target name="start-server-felix" depends="setOSConditions" if="v3">
+<target name="start-server-felix" depends="setOSConditions">
   
     <echo>+-----------------------------+</echo>
     <echo>|                             |</echo>

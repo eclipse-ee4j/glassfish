@@ -1,7 +1,9 @@
-GlassFish Server
-=================
+# Eclipse GlassFish
 
-GlassFish is the reference implementation of Java EE.
+## About
+
+Eclipse GlassFish is a [Jakarta EE compatible implementation](compatibility)
+sponsored by the Eclipse Foundation. Eclipse GlassFish 5.1 is also Java EE 8 Compatible.
 
 Building
 --------
@@ -32,7 +34,7 @@ Testing
 Testing QuickLook directly
 --------------------------
 
-Running GlassFish QuickLook tests:
+Running Eclipse GlassFish QuickLook tests:
 
 `mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=appserver/distributions/glassfish/target/stage/glassfish6/glassfish`
 
@@ -42,7 +44,7 @@ For more details, see [QuickLook_Test_Instructions](https://github.com/eclipse-e
 Testing Full
 ------------
 
-Build GlassFish using the `gfbuild.sh` script, OR build as stated above and copy the distributions to the `bundles` folder using:
+Build Eclipse GlassFish using the `gfbuild.sh` script, OR build as stated above and copy the distributions to the `bundles` folder using:
 
 `./gfbuild.sh archive_bundles`
 
@@ -95,12 +97,12 @@ E.g.
 
 
 
-Starting GlassFish
+Starting Eclipse GlassFish
 ------------------
 
 `glassfish6/bin/asadmin start-domain`
 
-Stopping GlassFish
+Stopping Eclipse GlassFish
 ------------------
 
 `glassfish6/bin/asadmin stop-domain`

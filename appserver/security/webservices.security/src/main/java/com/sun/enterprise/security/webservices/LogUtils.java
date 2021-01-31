@@ -32,7 +32,7 @@ private static final String LOGMSG_PREFIX = "AS-WSSECURITY";
     public static final String LOG_MESSAGES = "com.sun.enterprise.security.webservices.LogMessages";
 
     @LoggerInfo(subsystem = "WEBSERVICES", description = "Web Services Security Logger", publish = true)
-    public static final String LOG_DOMAIN = "javax.enterprise.webservices.security";
+    public static final String LOG_DOMAIN = "jakarta.enterprise.webservices.security";
 
     private static final Logger LOGGER = Logger.getLogger(LOG_DOMAIN, LOG_MESSAGES);
 

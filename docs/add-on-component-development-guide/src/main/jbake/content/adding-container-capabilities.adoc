@@ -14,7 +14,7 @@ Adding Container Capabilities
 7 Adding Container Capabilities
 -------------------------------
 
-Applications run on GlassFish Server in containers. GlassFish Server
+Applications run on Eclipse GlassFish Server in containers. GlassFish Server
 enables you to create containers that extend or replace the existing
 containers of GlassFish Server. Adding container capabilities enables
 you to run new types of applications and to deploy new archive types in
@@ -72,7 +72,7 @@ annotation's `name` element:
 package com.example.containers;
 ...
 
-@Service @javax.inject.Named("com.example.containers.MyContainer")
+@Service @jakarta.inject.Named("com.example.containers.MyContainer")
 public class MyContainer implements Container {
 ...
 }
@@ -257,7 +257,7 @@ Implementing the `ArchiveHandler` Interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 An archive handler is responsible for handling the particular layout of
-an archive. Java EE defines a set of archives (WAR, JAR, and RAR, for
+an archive. Jakarta EE defines a set of archives (WAR, JAR, and RAR, for
 example), and each of these archives has an `ArchiveHandler` instance
 associated with the archive type.
 
@@ -795,9 +795,9 @@ import components.SimpleGreeter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import jakarta.annotation.Resource;
 
 

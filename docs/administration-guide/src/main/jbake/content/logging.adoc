@@ -158,7 +158,7 @@ values: `EMERGENCY`, `ALERT`, `SEVERE`, `WARNING`, `INFO`, `CONFIG`,
 * Message ID consists of a module code that indicates the origin of the
 message and the message number. For example: `AS-WEB-GLUE-00172`
 * LoggerName represents a hierarchical logger namespace that identifies
-the source of the log module. For example: `javax.enterprise.web`
+the source of the log module. For example: `jakarta.enterprise.web`
 * Key Value Pairs represents pairs of key names and values. For example:
 `timeMillis: 1365779310154`
 * Message represents the text of the log message. For multiline
@@ -170,7 +170,7 @@ The following is an example of a log record formatted in the ODL format:
 
 [source,oac_no_warn]
 ----
-[2013-04-12T08:08:30.154-0700] [glassfish 4.0] [INFO] [AS-WEB-GLUE-00172] [javax.enterprise.web] [tid: _ThreadID=217 _ThreadName=admin-listener(21)]
+[2013-04-12T08:08:30.154-0700] [glassfish 4.0] [INFO] [AS-WEB-GLUE-00172] [jakarta.enterprise.web] [tid: _ThreadID=217 _ThreadName=admin-listener(21)]
 [timeMillis: 1365779310154] [levelValue: 800] [[
   Loading application [payroll] at [/payroll]]]
 ----
@@ -192,7 +192,7 @@ values: `EMERGENCY`, `ALERT`, `SEVERE`, `WARNING`, `INFO`, `CONFIG`,
 * ProductName-Version represents the current version of GlassFish Server
 Open Source Edition. For example: `glassfish`
 * LoggerName represents a hierarchical logger namespace that identifies
-the source of the log module. For example: `javax.enterprise.web.core`
+the source of the log module. For example: `jakarta.enterprise.web.core`
 * Key Value Pairs represents pairs of key names and values and can
 include a message ID. For example: `_MessageID=AS-WEB-CORE-00306`. +
 Message IDs are included for all GlassFish Server Open Source Edition
@@ -205,7 +205,7 @@ The following is an example of a log record formatted in the ULF format:
 
 [source,oac_no_warn]
 ----
-[#|2013-04-18T09:27:44.315-0700|INFO|glassfish 4.0|javax.enterprise.web.core|
+[#|2013-04-18T09:27:44.315-0700|INFO|glassfish 6.0|jakarta.enterprise.web.core|
 _ThreadID=15;_ThreadName=RunLevelControllerThread-1366302462682;_TimeMillis=1366302464315;_LevelValue=800;_MessageID=AS-WEB-CORE-00306;|
   Setting JAAS app name glassfish-web|#]
 ----
@@ -241,41 +241,41 @@ subcommand.
 [source,oac_no_warn]
 ----
 java.util.logging.ConsoleHandler     <FINEST>
-javax.enterprise.resource.corba     <INFO>
-javax.enterprise.resource.javamail  <INFO>
-javax.enterprise.resource.jdo       <INFO>
-javax.enterprise.resource.jms       <INFO>
-javax.enterprise.resource.jta       <INFO>
-javax.enterprise.resource.resourceadapter     <INFO>
-javax.enterprise.resource.sqltrace  <INFO>
-javax.enterprise.resource.webcontainer.jsf.application  <INFO>
-javax.enterprise.resource.webcontainer.jsf.config       <INFO>
-javax.enterprise.resource.webcontainer.jsf.context      <INFO>
-javax.enterprise.resource.webcontainer.jsf.facelets     <INFO>
-javax.enterprise.resource.webcontainer.jsf.lifecycle    <INFO>
-javax.enterprise.resource.webcontainer.jsf.managedbean  <INFO>
-javax.enterprise.resource.webcontainer.jsf.renderkit    <INFO>
-javax.enterprise.resource.webcontainer.jsf.resource     <INFO>
-javax.enterprise.resource.webcontainer.jsf.taglib       <INFO>
-javax.enterprise.resource.webcontainer.jsf.timing       <INFO>
-javax.enterprise.system.container.cmp         <INFO>
-javax.enterprise.system.container.ejb         <INFO>
-javax.enterprise.system.container.ejb.mdb     <INFO>
-javax.enterprise.system.container.web         <INFO>
-javax.enterprise.system.core.classloading     <INFO>
-javax.enterprise.system.core.config   <INFO>
-javax.enterprise.system.core.naming   <INFO>
-javax.enterprise.system.core.security <INFO>
-javax.enterprise.system.core.selfmanagement   <INFO>
-javax.enterprise.system.core.transaction      <INFO>
-javax.enterprise.system     <INFO>
-javax.enterprise.system.tools.admin   <INFO>
-javax.enterprise.system.tools.backup  <INFO>
-javax.enterprise.system.tools.deployment      <INFO>
-javax.enterprise.system.util          <INFO>
-javax.enterprise.system.webservices.registry  <INFO>
-javax.enterprise.system.webservices.rpc       <INFO>
-javax.enterprise.system.webservices.saaj      <INFO>
+jakarta.enterprise.resource.corba     <INFO>
+jakarta.enterprise.resource.javamail  <INFO>
+jakarta.enterprise.resource.jdo       <INFO>
+jakarta.enterprise.resource.jms       <INFO>
+jakarta.enterprise.resource.jta       <INFO>
+jakarta.enterprise.resource.resourceadapter     <INFO>
+jakarta.enterprise.resource.sqltrace  <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.application  <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.config       <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.context      <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.facelets     <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.lifecycle    <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.managedbean  <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.renderkit    <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.resource     <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.taglib       <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.timing       <INFO>
+jakarta.enterprise.system.container.cmp         <INFO>
+jakarta.enterprise.system.container.ejb         <INFO>
+jakarta.enterprise.system.container.ejb.mdb     <INFO>
+jakarta.enterprise.system.container.web         <INFO>
+jakarta.enterprise.system.core.classloading     <INFO>
+jakarta.enterprise.system.core.config   <INFO>
+jakarta.enterprise.system.core.naming   <INFO>
+jakarta.enterprise.system.core.security <INFO>
+jakarta.enterprise.system.core.selfmanagement   <INFO>
+jakarta.enterprise.system.core.transaction      <INFO>
+jakarta.enterprise.system     <INFO>
+jakarta.enterprise.system.tools.admin   <INFO>
+jakarta.enterprise.system.tools.backup  <INFO>
+jakarta.enterprise.system.tools.deployment      <INFO>
+jakarta.enterprise.system.util          <INFO>
+jakarta.enterprise.system.webservices.registry  <INFO>
+jakarta.enterprise.system.webservices.rpc       <INFO>
+jakarta.enterprise.system.webservices.saaj      <INFO>
 javax     <INFO>
 org.apache.catalina    <INFO>
 org.apache.coyote      <INFO>
@@ -601,14 +601,14 @@ levels in the DAS.
 [source,oac_no_warn]
 ----
 asadmin> list-log-levels 
-javax.enterprise.system.container.cmp <INFO>
-javax.enterprise.system.tools.admin <INFO>
+jakarta.enterprise.system.container.cmp <INFO>
+jakarta.enterprise.system.tools.admin <INFO>
 java.util.logging.ConsoleHandler <FINEST>
-javax.enterprise.system.container.web <INFO>
-javax.enterprise.system.util <INFO>
-javax.enterprise.resource.webcontainer.jsf.timing <INFO>
+jakarta.enterprise.system.container.web <INFO>
+jakarta.enterprise.system.util <INFO>
+jakarta.enterprise.resource.webcontainer.jsf.timing <INFO>
 javax <INFO>
-javax.enterprise.resource.corba <INFO>
+jakarta.enterprise.resource.corba <INFO>
 ...
 Command list-log-levels executed successfully.
 ----
@@ -625,13 +625,13 @@ instance `MyServer2`.
 ----
 asadmin> list-log-levels MyServer2
 java.util.logging.ConsoleHandler <FINEST>
-javax.enterprise.resource.corba  <INFO>
-javax.enterprise.resource.javamail   <INFO>
-javax.enterprise.resource.jdo <INFO>
-javax.enterprise.resource.jms <INFO>
-javax.enterprise.resource.jta <INFO>
-javax.enterprise.resource.resourceadapter <INFO>
-javax.enterprise.resource.sqltrace <FINE>
+jakarta.enterprise.resource.corba  <INFO>
+jakarta.enterprise.resource.javamail   <INFO>
+jakarta.enterprise.resource.jdo <INFO>
+jakarta.enterprise.resource.jms <INFO>
+jakarta.enterprise.resource.jta <INFO>
+jakarta.enterprise.resource.resourceadapter <INFO>
+jakarta.enterprise.resource.sqltrace <FINE>
 ...
 Command list-log-levels executed successfully.
 ----
@@ -717,12 +717,12 @@ are indicated in bold):
 
 [source,oac_no_warn]
 ----
-javax.enterprise.system.tools.level=FINE
-javax.enterprise.system.container.ejb.level=FINE
-javax.enterprise.system.core.security.level=FINE
-javax.enterprise.system.tools.admin.level=FINE
-javax.enterprise.level=FINE
-javax.enterprise.system.container.web.level=FINE
+jakarta.enterprise.system.tools.level=FINE
+jakarta.enterprise.system.container.ejb.level=FINE
+jakarta.enterprise.system.core.security.level=FINE
+jakarta.enterprise.system.tools.admin.level=FINE
+jakarta.enterprise.level=FINE
+jakarta.enterprise.system.container.web.level=FINE
 ----
 
 Because setting log levels is a dynamic operation, you do not need to
@@ -748,11 +748,11 @@ on the target instance `ManagedServer1`:
 [source,oac_no_warn]
 ----
 asadmin> set-log-levels --target ManagedServer1
-javax.enterprise.system.container.web=WARNING
-javax.enterprise.system.container.web package set with log level WARNING.
+jakarta.enterprise.system.container.web=WARNING
+jakarta.enterprise.system.container.web package set with log level WARNING.
 These logging levels are set for ManagedServer1.
 ManagedServer1 :
-javax.enterprise.system.container.web package set with log level WARNING.
+jakarta.enterprise.system.container.web package set with log level WARNING.
 These logging levels are set for ManagedServer1.
 
 Command set-log-levels executed successfully.
@@ -768,10 +768,10 @@ loggers in the DAS.
 
 [source,oac_no_warn]
 ----
-asadmin> set-log-levels javax.enterprise.system.core.security=FINE:
-javax.enterprise.system.container.web=WARNING
-javax.enterprise.system.container.web package set with log level WARNING.
-javax.enterprise.system.core.security package set with log level FINE.
+asadmin> set-log-levels jakarta.enterprise.system.core.security=FINE:
+jakarta.enterprise.system.container.web=WARNING
+jakarta.enterprise.system.container.web package set with log level WARNING.
+jakarta.enterprise.system.core.security package set with log level FINE.
 These logging levels are set for server.
 
 Command set-log-levels executed successfully.
@@ -1408,10 +1408,10 @@ readability.
 asadmin> list-loggers
 Logger Name                            Subsystem         Logger Description
 ...
-javax.enterprise.monitoring            Monitoring        Monitoring Logger
-javax.enterprise.system.core.ee        AS-CORE           Java EE Core Kernel
-javax.enterprise.system.jmx            JMX               JMX System Logger
-javax.enterprise.system.tools.admin    ADMIN             Administration Services
+jakarta.enterprise.monitoring            Monitoring        Monitoring Logger
+jakarta.enterprise.system.core.ee        AS-CORE           Java EE Core Kernel
+jakarta.enterprise.system.jmx            JMX               JMX System Logger
+jakarta.enterprise.system.tools.admin    ADMIN             Administration Services
 ...
 Command list-loggers executed successfully.
 ----

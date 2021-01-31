@@ -34,7 +34,7 @@ public class LogFacade {
              "org.apache.catalina.core.LogMessages";
 
     @LoggerInfo(subsystem = "WEB", description = "WEB Core Logger", publish = true)
-    private static final String WEB_CORE_LOGGER = "javax.enterprise.web.core";
+    private static final String WEB_CORE_LOGGER = "jakarta.enterprise.web.core";
 
     private static final Logger LOGGER =
              Logger.getLogger(WEB_CORE_LOGGER, SHARED_LOG_MESSAGE_RESOURCE);

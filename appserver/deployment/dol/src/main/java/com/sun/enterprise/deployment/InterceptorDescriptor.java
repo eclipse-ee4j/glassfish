@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,21 @@
 
 package com.sun.enterprise.deployment;
 
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import java.util.*;
-import java.util.logging.Logger;
-
 /**
  * Contains information about 1 Java EE interceptor.
- */ 
+ */
 
 public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
 {
@@ -38,15 +43,13 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
     private Set<LifecycleCallbackDescriptor> aroundTimeoutDescriptors;
     private String interceptorClassName;
 
-    // Should ONLY be used for system-level interceptors whose class
-    // is loaded by something other than the application class-loader
-    private Class interceptorClass;
+    private Class<?> interceptorClass;
 
 
-    // true if the AroundInvoke/AroundTimeout/Callback methods for this 
+    // true if the AroundInvoke/AroundTimeout/Callback methods for this
     // descriptor were defined on the bean class itself (or one of its
     // super-classes).  false if the methods are defined
-    // on a separate interceptor class (or one of its super-classes).  
+    // on a separate interceptor class (or one of its super-classes).
     private boolean fromBeanClass = false;
 
     public String getInterceptorClassName() {
@@ -73,7 +76,7 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
     public Set<LifecycleCallbackDescriptor> getAroundInvokeDescriptors() {
         if (aroundInvokeDescriptors == null) {
             aroundInvokeDescriptors =
-                new HashSet<LifecycleCallbackDescriptor>(); 
+                new HashSet<LifecycleCallbackDescriptor>();
         }
         return aroundInvokeDescriptors;
     }
@@ -92,7 +95,7 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
     public Set<LifecycleCallbackDescriptor> getAroundTimeoutDescriptors() {
         if (aroundTimeoutDescriptors == null) {
             aroundTimeoutDescriptors =
-                new HashSet<LifecycleCallbackDescriptor>(); 
+                new HashSet<LifecycleCallbackDescriptor>();
         }
         return aroundTimeoutDescriptors;
     }
@@ -196,11 +199,11 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
     /**
      * Order a set of lifecycle method descriptors for a particular
      * inheritance hierarchy with highest precedence assigned to the
-     * least derived class. 
+     * least derived class.
      */
     private List<LifecycleCallbackDescriptor> orderDescriptors
-        (Set<LifecycleCallbackDescriptor> lcds, ClassLoader loader) 
-        throws Exception 
+        (Set<LifecycleCallbackDescriptor> lcds, ClassLoader loader)
+        throws Exception
     {
 
         LinkedList<LifecycleCallbackDescriptor> orderedDescs =
@@ -213,7 +216,7 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
             map.put(next.getLifecycleCallbackClass(), next);
         }
 
-        Class nextClass = loader.loadClass(getInterceptorClassName());
+        Class<?> nextClass = interceptorClass != null? interceptorClass : loader.loadClass(getInterceptorClassName());
 
         while((nextClass != Object.class) && (nextClass != null)) {
             String nextClassName = nextClass.getName();
@@ -230,6 +233,7 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
 
     }
 
+    @Override
     public String toString() {
         return "InterceptorDescriptor class = " + getInterceptorClassName();
     }

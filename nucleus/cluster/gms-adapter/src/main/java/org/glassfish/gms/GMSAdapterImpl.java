@@ -156,7 +156,7 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
     private HealthHistory hHistory;
 
     @LoggerInfo(subsystem = "CLSTR", description="Group Management Service Adapter Logger", publish=true)
-    private static final String GMS_LOGGER_NAME = "javax.enterprise.cluster.gms";
+    private static final String GMS_LOGGER_NAME = "jakarta.enterprise.cluster.gms";
 
 
     @LogMessagesResourceBundle

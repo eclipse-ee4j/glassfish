@@ -1,4 +1,4 @@
-Thank you for downloading GlassFish Server Open Source Edition 5.1!
+Thank you for downloading Eclipse GlassFish 6.0.0!
 
 Here are a few short steps to get you started...
 
@@ -6,14 +6,13 @@ Here are a few short steps to get you started...
 0. Prerequisite
 ===============
 
-GlassFish 5.1 requires Oracle JDK 8 Update 191.
-Check http://www.oracle.com/technetwork/java/javase/downloads/index.html to download the JDK.
+Eclipse GlassFish 6.0.0 requires JDK 8.
 
 
-1. Installing GlassFish
-=======================
+1. Installing Eclipse GlassFish
+===============================
 
-Installing GlassFish is just a matter of unzipping the GlassFish archive in the desired directory. Since you are reading this, you have probably already unzipped GlassFish. If not, just type the following command in the directory where you want GlassFish to be installed : jar xvf glassfish-5.1.zip
+Installing Eclipse GlassFish is just a matter of unzipping the GlassFish archive in the desired directory. Since you are reading this, you have probably already unzipped GlassFish. If not, just type the following command in the directory where you want GlassFish to be installed : jar xvf glassfish.zip
 
 
 The default domain called 'domain1' is installed and preconfigured.
@@ -46,26 +45,27 @@ To stop GlassFish, just issue the following command :
 
 Open the following local file in your browser: glassfish6/glassfish/docs/quickstart.html. It contains useful information such as the details about the pre-configured 'domain1', links to the GlassFish Documentation, etc.
 
+Make sure to also check the GlassFish 6.0.0 Documentation contains important information : https://glassfish.org/docs/#current
 
-Make sure to also check the GlassFish 5.1 Release Notes as they contains important information : https://javaee.github.io/glassfish/documentation
+If you are new to Jakarta EE, the Jakarta EE Tutorial (https://eclipse-ee4j.github.io/jakartaee-tutorial/) is a good way to learn more. The examples are tailored to run with GlassFish and this will help you get oriented.
 
-If you are new to Java EE, the Java EE Tutorial (see below) is a good way to learn more. The examples are tailored to run with GlassFish and this will help you get oriented.
-
-
+The Jakarta EE Examples Project also has useful code samples https://projects.eclipse.org/projects/ee4j.jakartaee-examples
 
 
 5. Documentation 
 ================
 
-GlassFish Documentation : https://javaee.github.io/glassfish/documentation
+Eclipse GlassFish Documentation : https://glassfish.org/docs/#current
 
-Java EE Tutorial : https://javaee.github.io/tutorial
-
-GlassFish Forum : https://javaee.groups.io/g/glassfish/
+Jakarta EE Information : https://jakarta.ee/
 
 
 6. Follow us
 ============
 
-Make sure to follow @GlassFish and @Java_EE on Twitter and read The Aquarium Blog (https://blogs.oracle.com/TheAquarium) to get the latest news on GlassFish and Java EE.
+Eclipse GlassFish is deeloped at the Eclipse Foundation see https://projects.eclipse.org/projects/ee4j.glassfish for project details
+
+Eclipse GlassFish is developed on GitHub to view the source code or raise bugs see https://github.com/eclipse-ee4j/glassfish
+
+Join the mailing list https://projects.eclipse.org/projects/ee4j.glassfish/contact
 

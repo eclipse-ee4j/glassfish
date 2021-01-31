@@ -47,7 +47,7 @@
                             <archive>
                                 <manifestEntries>
                                     <Glassfish-require-services>org.glassfish.api.admingui.ConsoleProvider</Glassfish-require-services>
-                                    <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, com.sun.el.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
+                                    <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
                                 </manifestEntries>
                             </archive>
                         </configuration>
@@ -78,7 +78,7 @@
                                <jar jarfile="target/admingui.war" basedir="target/temp">
                                     <manifest>
                                       <attribute name="Glassfish-require-services" value="org.glassfish.api.admingui.ConsoleProvider" />
-                                      <attribute name="HK2-Import-Bundles" value="org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, com.sun.el.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider" />
+                                      <attribute name="HK2-Import-Bundles" value="org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider" />
                                     </manifest>
                                 </jar>
                                 <delete dir="target/temp" />

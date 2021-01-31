@@ -19,7 +19,7 @@
 
 <project name="db-targets" default="all" basedir=".">
 
-<target name="start-derby" depends="setOSConditions" if="v3">
+<target name="start-derby" depends="setOSConditions" >
     <antcall target="start-derby-unix"/>
     <antcall target="start-derby-windows"/>
 </target>
@@ -38,7 +38,7 @@
     </exec>
 </target>
 
-<target name="stop-derby" depends="setOSConditions" if="v3">
+<target name="stop-derby" depends="setOSConditions" >
     <antcall target="stop-derby-unix"/>
     <antcall target="stop-derby-windows"/>
 </target>

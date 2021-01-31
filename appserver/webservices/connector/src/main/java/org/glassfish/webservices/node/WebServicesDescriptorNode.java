@@ -46,10 +46,12 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     public final static XMLElement ROOT_ELEMENT =
         new XMLElement(WebServicesTagNames.WEB_SERVICES);
     
-    public final static String SCHEMA_ID = "javaee_web_services_1_4.xsd";
+    public final static String SCHEMA_ID = "jakartaee_web_services_2_0.xsd";
     public final static String SCHEMA_ID_12 = "javaee_web_services_1_2.xsd";
     public final static String SCHEMA_ID_13 = "javaee_web_services_1_3.xsd";
-    public final static String SPEC_VERSION = "1.3";
+    public final static String SCHEMA_ID_14 = "javaee_web_services_1_4.xsd";
+
+    public final static String SPEC_VERSION = "2.0";
     private final static List<String> systemIDs = initSystemIDs();
     private static final Logger logger = LogUtils.getLogger();
 
@@ -58,6 +60,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
         sysIDs.add(SCHEMA_ID);
         sysIDs.add(SCHEMA_ID_12);
         sysIDs.add(SCHEMA_ID_13);
+        sysIDs.add(SCHEMA_ID_14);
         return Collections.unmodifiableList(sysIDs);
 
     }

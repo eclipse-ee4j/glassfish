@@ -50,7 +50,7 @@ public final class HealthHistory implements ConfigListener {
         StringManager.getManager(HealthHistory.class);
 
     @LoggerInfo(subsystem = "CLSTR", description="Group Management Service Logger", publish=true)
-    private static final String GMSBS_LOGGER_NAME = "javax.enterprise.cluster.gms.bootstrap";
+    private static final String GMSBS_LOGGER_NAME = "jakarta.enterprise.cluster.gms.bootstrap";
 
 
     @LogMessagesResourceBundle

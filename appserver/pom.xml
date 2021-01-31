@@ -67,9 +67,6 @@
         <module>webservices</module>
         <module>orb</module>
         <module>appclient</module>
-        <module>verifier/verifier-impl</module>
-        <module>verifier/verifier-scripts</module>
-        <module>verifier/verifier-jdk-extension-bundle</module>
         <module>ant-tasks</module>
     </modules>
 
@@ -92,90 +89,89 @@
         <update_version>0</update_version>
         <install.dir.name>glassfish6</install.dir.name>
 
-        <javaee.major_version>8</javaee.major_version>
+        <javaee.major_version>9</javaee.major_version>
         <javaee.version_qualifier>-b${build.id}</javaee.version_qualifier>
         <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
 
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>3.0.0-RC1</jakarta.faces-api.version>
-        <mojarra.version>3.0.0-RC2</mojarra.version>
+        <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>
+        <mojarra.version>3.0.0</mojarra.version>
 
         <!-- Jakarta WebSocket -->
-        <websocket-api.version>2.0.0-M1</websocket-api.version>
-        <tyrus.version>2.0.0-M2</tyrus.version>
+        <websocket-api.version>2.0.0</websocket-api.version>
+        <tyrus.version>2.0.0</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <concurrent-api.version>2.0.0-RC2</concurrent-api.version>
-        <concurrent.version>2.0.0-RC2</concurrent.version>
+        <concurrent-api.version>2.0.0</concurrent-api.version>
+        <concurrent.version>2.0.0</concurrent.version>
 
         <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.0.0-RC2</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta EE Security + Authentication/Authorization -->
-        <jakarta.security.enterprise-api.version>2.0.0-RC2</jakarta.security.enterprise-api.version>
-        <jakarta.authorization-api.version>2.0.0-RC1</jakarta.authorization-api.version>
-        <jakarta.security.auth.message-api.version>2.0.0-RC1</jakarta.security.auth.message-api.version>
-        <jakarta.security.enterprise.version>1.0.1</jakarta.security.enterprise.version>
+        <jakarta.security.enterprise-api.version>2.0.0</jakarta.security.enterprise-api.version>
+        <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
+        <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
+        <soteria.version>2.0.1</soteria.version>
 
         <!-- Jakarta Messaging -->
-        <jms-api.version>3.0.0-RC1</jms-api.version>
-        <mq.version>6.0.0-M1</mq.version>
+        <jms-api.version>3.0.0</jms-api.version>
+        <mq.version>6.0.0</mq.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta-persistence-api.version>3.0.0-RC2</jakarta-persistence-api.version>
-        <eclipselink.version>3.0.0-M1</eclipselink.version>
+        <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
+        <eclipselink.version>3.0.0</eclipselink.version>
 
         <!-- Jakarta Transactions -->
-        <jakarta.transaction-api.version>2.0.0-RC2</jakarta.transaction-api.version>
+        <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
-        <jakarta.resource-api.version>2.0.0-RC1</jakarta.resource-api.version>
+        <jakarta.resource-api.version>2.0.0</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
-        <jakarta.batch-api.version>2.0.0-M2</jakarta.batch-api.version>
-        <com.ibm.jbatch.container.version>2.0.0-M3</com.ibm.jbatch.container.version>
-        <com.ibm.jbatch.spi.version>2.0.0-M3</com.ibm.jbatch.spi.version>
+        <jakarta.batch-api.version>2.0.0</jakarta.batch-api.version>
+        <com.ibm.jbatch.container.version>2.0.0</com.ibm.jbatch.container.version>
+        <com.ibm.jbatch.spi.version>2.0.0</com.ibm.jbatch.spi.version>
 
         <!-- Jakarta Enterprise beans -->
-        <jakarta.ejb-api.version>4.0.0-RC2</jakarta.ejb-api.version>
+        <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
-        <jsonp-api.version>2.0.0-RC2</jsonp-api.version>
-        <jsonp-ri.version>2.0.0-RC2</jsonp-ri.version>
-        <jsonp-jaxrs.version>2.0.0-RC2</jsonp-jaxrs.version>
-        <json.bind-api.version>2.0.0-RC2</json.bind-api.version>
-        <yasson.version>2.0.0-M2</yasson.version>
+        <jsonp-api.version>2.0.0</jsonp-api.version>
+        <jsonp-ri.version>2.0.0</jsonp-ri.version>
+        <jsonp-jaxrs.version>2.0.0</jsonp-jaxrs.version>
+        <json.bind-api.version>2.0.0</json.bind-api.version>
+        <yasson.version>2.0.1</yasson.version>
 
         <!-- Jakarta Server Pages -->
-        <jsp-api.version>3.0.0-M1</jsp-api.version>
-        <jsp-impl.version>3.0.0-RC1</jsp-impl.version>
-
+        <jsp-api.version>3.0.0</jsp-api.version>
+        <wasp.version>3.0.1</wasp.version>
+        
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>5.3.0</woodstox.version>
+        <woodstox.version>6.2.1</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
+  
         <jaxws-api.version>2.3.1</jaxws-api.version>
         <soap-api.version>1.4.0</soap-api.version>
         <jakarta.jws-api.version>2.1.0</jakarta.jws-api.version>
 
         <!-- Jakarta Standard Tag Library -->
-        <jstl-api.version>2.0.0-RC1</jstl-api.version>
-        <jstl-impl.version>2.0.0-M1</jstl-impl.version>
-
+        <jstl-api.version>2.0.0</jstl-api.version>
+        <jstl-impl.version>2.0.0</jstl-impl.version>
+        
         <!-- CDI -->
-        <cdi-api.version>3.0.0-M4</cdi-api.version>
-        <weld.version>4.0.0.Alpha2</weld.version>
-        <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
-
+        <cdi-api.version>3.0.0</cdi-api.version>
+        <weld.version>4.0.0.Final</weld.version>
+        <jboss.classfilewriter.version>1.2.4.Final</jboss.classfilewriter.version>
 
         <!-- Admin console components -->
-        <jsftemplating.version>3.0.0-M2</jsftemplating.version>
+        <jsftemplating.version>3.0.0</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>5.0.0-M1</woodstock.version>
+        <woodstock.version>5.0.0</woodstock.version>
 
 
         <!-- Other -->
-
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
         <derby.version>10.13.1.3</derby.version>
@@ -238,9 +234,9 @@
                 <version>${jakarta.security.enterprise-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.security.auth.message</groupId>
-                <artifactId>jakarta.security.auth.message-api</artifactId>
-                <version>${jakarta.security.auth.message-api.version}</version>
+                <groupId>jakarta.authentication</groupId>
+                <artifactId>jakarta.authentication-api</artifactId>
+                <version>${jakarta.authentication-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.authorization</groupId>
@@ -256,7 +252,12 @@
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
                 <artifactId>jakarta.security.enterprise</artifactId>
-                <version>${jakarta.security.enterprise.version}</version>
+                <version>${soteria.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.soteria</groupId>
+                <artifactId>soteria.spi.bean.decorator.weld</artifactId>
+                <version>${soteria.version}</version>
             </dependency>
             
             <!-- Jakarta Messaging -->
@@ -361,7 +362,7 @@
                 <version>${hibernate-validator.version}</version>
             </dependency>
             
-            <!-- Jakarta Expression Language -->
+            <!-- Jakarta Expression Language Impl -->
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.el</artifactId>
@@ -409,9 +410,9 @@
                 <version>${jsp-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>jakarta.servlet.jsp</artifactId>
-                <version>${jsp-impl.version}</version>
+                <groupId>org.glassfish.wasp</groupId>
+                <artifactId>wasp</artifactId>
+                <version>${wasp.version}</version>
             </dependency>
             
             <!-- Jakarta XML Web Services -->
@@ -674,7 +675,7 @@
                 <version>2.1</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
-                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,jakarta.servlet.jsp.jar,jakarta.enterprise.concurrent.jar,
+                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,wasp.jar,jakarta.enterprise.concurrent.jar,
                         jakarta.persistence.jar</excludes>
                     <specs>
                         <spec>
@@ -742,14 +743,14 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>jakarta.security.auth.message</groupId>
-                                <artifactId>jakarta.security.auth.message-api</artifactId>
-                                <version>${jakarta.security.auth.message-api.version}</version>
+                                <groupId>jakarta.authentication</groupId>
+                                <artifactId>jakarta.authentication-api</artifactId>
+                                <version>${jakarta.authentication-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${jakarta.security.auth.message-api.version}</specVersion>
-                            <specImplVersion>${jakarta.security.auth.message-api.version}</specImplVersion>
+                            <specVersion>${jakarta.authentication.version}</specVersion>
+                            <specImplVersion>${jakarta.authentication-api.version}</specImplVersion>
                             <apiPackage>jakarta.security.auth.message</apiPackage>
                         </spec>
                         <spec>

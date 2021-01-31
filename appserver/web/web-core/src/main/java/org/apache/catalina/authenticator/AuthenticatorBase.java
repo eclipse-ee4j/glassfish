@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,24 +18,39 @@
 package org.apache.catalina.authenticator;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.*;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.security.Principal;
+import java.security.SecureRandom;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.catalina.Auditor;
+import org.apache.catalina.Authenticator;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.HttpRequest;
+import org.apache.catalina.HttpResponse;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Pipeline;
+import org.apache.catalina.Realm;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.Session;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.valves.ValveBase;
 import org.glassfish.web.valve.GlassFishValve;
-import java.security.SecureRandom;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.security.Principal;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Basic implementation of the <b>Valve</b> interface that enforces the
@@ -65,8 +80,8 @@ public abstract class AuthenticatorBase
     */
     // START CR 6411114
     implements Authenticator {
-    // END CR 6411114    
-    
+    // END CR 6411114
+
     // ----------------------------------------------------- Static Variables
 
     protected static final Logger log = LogFacade.getLogger();
@@ -83,12 +98,12 @@ public abstract class AuthenticatorBase
      * session identifier.
      */
     protected static final int SESSION_ID_BYTES = 16;
-    
+
     /**
      * Authentication header
      */
     protected static final String AUTH_HEADER_NAME = "WWW-Authenticate";
-    
+
 
     /**
      * Default authentication realm name.
@@ -114,7 +129,7 @@ public abstract class AuthenticatorBase
      * an HTTP session?
      */
     protected boolean cache = true;
-    
+
     /**
      * Should the session ID, if any, be changed upon a successful
      * authentication to prevent a session fixation attack?
@@ -126,51 +141,51 @@ public abstract class AuthenticatorBase
      * The Context to which this Valve is attached.
      */
     protected Context context = null;
-    
-    
+
+
     /**
      * A String initialization parameter used to increase the entropy of
      * the initialization of our random number generator.
      */
     protected String entropy = null;
-        
+
     /**
      * Flag to determine if we disable proxy caching, or leave the issue
      * up to the webapp developer.
      */
     protected boolean disableProxyCaching = true;
-    
+
     /**
      * The lifecycle event support for this component.
      */
     /** CR 6411114 (Lifecycle implementation moved to ValveBase)
     protected LifecycleSupport lifecycle = new LifecycleSupport(this);
     */
-    
+
     /**
      * A random number generator to use when generating session identifiers.
      */
     protected SecureRandom random = null;
-    
+
     /**
      * The Java class name of the random number generator class to be used
      * when generating session identifiers.
      */
     protected String randomClass = SecureRandom.class.getName();
-        
+
     /**
      * The SingleSignOn implementation in our request processing chain,
      * if there is one.
      */
     protected SingleSignOn sso = null;
-    
+
     /**
      * Has this component been started?
      */
     /** CR 6411114 (Lifecycle implementation moved to ValveBase)
     protected boolean started = false;
     */
-    
+
     /**
      * "Expires" header always set to Date(1), so generate once only
      */
@@ -184,10 +199,10 @@ public abstract class AuthenticatorBase
 
     /**
      * Flag to determine if we disable proxy caching with headers incompatible
-     * with IE 
+     * with IE
      */
     protected boolean securePagesWithPragma = true;
-    
+
 
     // ------------------------------------------------------------- Properties
     public boolean getAlwaysUseSession() {
@@ -206,8 +221,8 @@ public abstract class AuthenticatorBase
     public boolean getCache() {
         return (this.cache);
     }
-    
-    
+
+
     /**
      * Set the cache authenticated Principals flag.
      *
@@ -216,65 +231,69 @@ public abstract class AuthenticatorBase
     public void setCache(boolean cache) {
         this.cache = cache;
     }
-    
-    
+
+
     /**
      * Return the Container to which this Valve is attached.
      */
+    @Override
     public Container getContainer() {
         return (this.context);
     }
-    
-    
+
+
     /**
      * Set the Container to which this Valve is attached.
      *
      * @param container The container to which we are attached
      */
+    @Override
     public void setContainer(Container container) {
-        
+
         if (!(container instanceof Context))
             throw new IllegalArgumentException
                     (rb.getString(LogFacade.CONFIG_ERROR_MUST_ATTACH_TO_CONTEXT));
-        
+
         super.setContainer(container);
         this.context = (Context) container;
-        this.securePagesWithPragma = context.isSecurePagesWithPragma(); 
+        this.securePagesWithPragma = context.isSecurePagesWithPragma();
     }
-    
-    
+
+
     /**
      * Return the debugging detail level for this component.
      */
+    @Override
     public int getDebug() {
         return (this.debug);
     }
-    
-    
+
+
     /**
      * Set the debugging detail level for this component.
      *
      * @param debug The new debugging detail level
      */
+    @Override
     public void setDebug(int debug) {
         this.debug = debug;
     }
-    
-    
+
+
     /**
      * Return the entropy increaser value, or compute a semi-useful value
      * if this String has not yet been set.
      */
     public String getEntropy() {
-        
+
         // Calculate a semi-useful value if this has not been set
         if (this.entropy == null)
             setEntropy(this.toString());
-        
-        return (this.entropy);        
+
+        return (this.entropy);
     }
-    
-    
+
+
     /**
      * Set the entropy increaser value.
      *
@@ -283,8 +302,8 @@ public abstract class AuthenticatorBase
     public void setEntropy(String entropy) {
         this.entropy = entropy;
     }
-    
-    
+
+
     /**
      * Return descriptive information about this Valve implementation.
      */
@@ -292,16 +311,16 @@ public abstract class AuthenticatorBase
     public String getInfo() {
         return (this.info);
     }
-    
-    
+
+
     /**
      * Return the random number generator class name.
      */
     public String getRandomClass() {
         return (this.randomClass);
     }
-    
-    
+
+
     /**
      * Set the random number generator class name.
      *
@@ -310,7 +329,7 @@ public abstract class AuthenticatorBase
     public void setRandomClass(String randomClass) {
         this.randomClass = randomClass;
     }
-    
+
     /**
      * Return the flag that states if we add headers to disable caching by
      * proxies.
@@ -318,7 +337,7 @@ public abstract class AuthenticatorBase
     public boolean getDisableProxyCaching() {
         return disableProxyCaching;
     }
-    
+
     /**
      * Set the value of the flag that states if we add headers to disable
      * caching by proxies.
@@ -328,7 +347,7 @@ public abstract class AuthenticatorBase
     public void setDisableProxyCaching(boolean nocache) {
         disableProxyCaching = nocache;
     }
-    
+
 
     /**
      * Return the flag that states, if proxy caching is disabled, what headers
@@ -342,18 +361,18 @@ public abstract class AuthenticatorBase
     /**
      * Set the value of the flag that states what headers we add to disable
      * proxy caching.
-     * @param securePagesWithPragma <code>true</code> if we add headers which 
+     * @param securePagesWithPragma <code>true</code> if we add headers which
      * are incompatible with downloading office documents in IE under SSL but
      * which fix a caching problem in Mozilla.
      */
     public void setSecurePagesWithPragma(boolean securePagesWithPragma) {
         this.securePagesWithPragma = securePagesWithPragma;
-    }    
+    }
 
     /**
      * Return the flag that states if we should change the session ID of an
      * existing session upon successful authentication.
-     * 
+     *
      * @return <code>true</code> to change session ID upon successful
      *         authentication, <code>false</code> to do not perform the change.
      */
@@ -364,7 +383,7 @@ public abstract class AuthenticatorBase
     /**
      * Set the value of the flag that states if we should change the session ID
      * of an existing session upon successful authentication.
-     * 
+     *
      * @param changeSessionIdOnAuthentication
      *            <code>true</code> to change session ID upon successful
      *            authentication, <code>false</code> to do not perform the
@@ -384,8 +403,8 @@ public abstract class AuthenticatorBase
     }
 
     // --------------------------------------------------------- Public Methods
-    
-    
+
+
     /**
      * Enforce the security restrictions in the web application deployment
      * descriptor of our associated Context.
@@ -399,10 +418,10 @@ public abstract class AuthenticatorBase
     @Override
     public int invoke(Request request, Response response)
     throws IOException, ServletException {
-                
+
         // START GlassFish 247
         if (!context.getAvailable()) {
-            try {    
+            try {
                 ((HttpServletResponse) response.getResponse())
                     .sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             } catch (IllegalStateException e) {
@@ -411,9 +430,9 @@ public abstract class AuthenticatorBase
                 ;
             }
             return END_PIPELINE;
-        }       
+        }
         // END GlassFish 247
-        
+
         /* GlassFish 6386229
         // If this is not an HTTP request, do nothing
         if (!(request instanceof HttpRequest) ||
@@ -425,7 +444,7 @@ public abstract class AuthenticatorBase
             return INVOKE_NEXT;
         }
         */
-        
+
         HttpRequest hrequest = (HttpRequest) request;
         HttpResponse hresponse = (HttpResponse) response;
         if (log.isLoggable(Level.FINE)) {
@@ -436,7 +455,7 @@ public abstract class AuthenticatorBase
             log.log(Level.FINE, neutralizeForLog(msg));
         }
         LoginConfig config = this.context.getLoginConfig();
-        
+
         // Have we got a cached authenticated Principal to record?
         if (cache) {
             Principal principal =
@@ -459,19 +478,19 @@ public abstract class AuthenticatorBase
                 }
             }
         }
-        
+
         Realm realm = this.context.getRealm();
         // Is this request URI subject to a security constraint?
         SecurityConstraint [] constraints = realm.
                 findSecurityConstraints(hrequest, this.context);
-        
+
         if ((constraints == null) /* &&
             (!Constants.FORM_METHOD.equals(config.getAuthMethod())) */ ) {
             if (log.isLoggable(Level.FINE))
                 log.log(Level.FINE, " Not subject to any constraint");
             return processSecurityCheck(hrequest,hresponse,config);
         }
-        
+
         // Make sure that constrained resources are not cached by web proxies
         // or browsers as caching can provide a security hole
         //START SJSAS 6202703
@@ -489,7 +508,7 @@ public abstract class AuthenticatorBase
         }
         */
         //END SJSAS 6202703
-        
+
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, " Calling hasUserDataPermission()");
 
@@ -500,7 +519,7 @@ public abstract class AuthenticatorBase
             // HTTP status code, so we do not have to do anything special
             return END_PIPELINE;
         }
-        
+
         //START SJSAS 6202703
         /*
         for(int i=0; i < constraints.length; i++) {
@@ -508,7 +527,7 @@ public abstract class AuthenticatorBase
             if (constraints[i].getAuthConstraint()) {
                 if (log.isDebugEnabled())
                     log.debug(" Calling authenticate()");
-         
+
                 if (!authenticate(hrequest, hresponse, config)) {
                     if (log.isDebugEnabled())
                         log.debug(" Failed authenticate() test");
@@ -526,7 +545,7 @@ public abstract class AuthenticatorBase
         int preAuthenticateCheckResult = realm.preAuthenticateCheck(
                 hrequest, hresponse, constraints, disableProxyCaching,
                 securePagesWithPragma, (sso != null));
-        
+
         if(preAuthenticateCheckResult == Realm.AUTHENTICATE_NOT_NEEDED) {
             return processSecurityCheck(hrequest,hresponse,config);
         } else if(preAuthenticateCheckResult == Realm.AUTHENTICATE_NEEDED) {
@@ -573,7 +592,7 @@ public abstract class AuthenticatorBase
              */
             return END_PIPELINE;
         }
-        
+
         // START IASRI 4823322
         Auditor[] auditors = this.context.getAuditors();
         if (auditors != null) {
@@ -590,7 +609,7 @@ public abstract class AuthenticatorBase
             }
         }
         // END IASRI 4823322
-        
+
         // Any and all specified constraints have been satisfied
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "Successfully passed all security constraints");
@@ -604,7 +623,7 @@ public abstract class AuthenticatorBase
      * is used for request processing.
      */
     @Override
-    public void postInvoke(Request request, Response response) 
+    public void postInvoke(Request request, Response response)
             throws IOException, ServletException {
         Realm realm = this.context.getRealm();
         HttpRequest hrequest = (HttpRequest) request;
@@ -618,12 +637,12 @@ public abstract class AuthenticatorBase
             realm.invokePostAuthenticateDelegate(hrequest, hresponse, context);
         }
     }
-    
+
     // ------------------------------------------------------ Protected Methods
-    
-    
-    
-    
+
+
+
+
     /**
      * Associate the specified single sign on identifier with the
      * specified Session.
@@ -634,14 +653,14 @@ public abstract class AuthenticatorBase
      */
     protected void associate(String ssoId, long ssoVersion,
             Session session) {
-        
+
         if (sso == null)
             return;
         sso.associate(ssoId, ssoVersion, session);
-        
+
     }
-    
-    
+
+
     /**
      * Authenticate the user making this request, based on the specified
      * login configuration.  Return <code>true</code> if any specified
@@ -667,18 +686,18 @@ public abstract class AuthenticatorBase
                                          LoginConfig config)
             throws IOException;
     //END SJSAS 6202703
-    
-    
+
+
     /**
      * Generate and return a new session identifier for the cookie that
      * identifies an SSO principal.
      */
     protected synchronized String generateSessionId() {
-        
+
         // Generate a byte array containing a session identifier
         byte bytes[] = new byte[SESSION_ID_BYTES];
         getRandom().nextBytes(bytes);
-        
+
         // Render the result as a String of hexadecimal digits
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
@@ -694,17 +713,17 @@ public abstract class AuthenticatorBase
                 result.append((char) ('A' + (b2 - 10)));
         }
         return (result.toString());
-        
+
     }
-    
-    
+
+
     /**
      * Return the random number generator instance we should use for
      * generating session identifiers.  If there is no such generator
      * currently defined, construct and seed a new one.
      */
     protected synchronized SecureRandom getRandom() {
-        
+
         if (this.random == null) {
             try {
                 Class clazz = Class.forName(randomClass);
@@ -720,12 +739,12 @@ public abstract class AuthenticatorBase
                 this.random = new SecureRandom();
             }
         }
-        
+
         return (this.random);
-        
+
     }
-    
-    
+
+
     /**
      * Return the internal Session that is associated with this HttpRequest,
      * or <code>null</code> if there is no such Session.
@@ -733,12 +752,12 @@ public abstract class AuthenticatorBase
      * @param request The HttpRequest we are processing
      */
     protected Session getSession(HttpRequest request) {
-        
+
         return (getSession(request, false));
-        
+
     }
-    
-    
+
+
     /**
      * Return the internal Session that is associated with this HttpRequest,
      * possibly creating a new one if necessary, or <code>null</code> if
@@ -748,12 +767,12 @@ public abstract class AuthenticatorBase
      * @param create Should we create a session if needed?
      */
     protected Session getSession(HttpRequest request, boolean create) {
-        
+
         return request.getSessionInternal(create);
-        
+
     }
-    
-    
+
+
     /**
      * Log a message on the Logger associated with our Container (if any).
      *
@@ -771,8 +790,8 @@ public abstract class AuthenticatorBase
             }
         }
     }
-    
-    
+
+
     /**
      * Log a message on the Logger associated with our Container (if any).
      *
@@ -791,8 +810,8 @@ public abstract class AuthenticatorBase
             log.log(Level.WARNING, msg, t);
         }
     }
-    
-    
+
+
     /**
      * Register an authenticated Principal and authentication type in our
      * request, in the current session (if there is one), and with our
@@ -809,7 +828,7 @@ public abstract class AuthenticatorBase
     protected void register(HttpRequest request, HttpResponse response,
             Principal principal, String authType,
             String username, char[] password) {
-        
+
         if (log.isLoggable(Level.FINE)) {
             String pname = ((principal != null) ? principal.getName() : "[null principal]");
             String msg = "Authenticated '" + pname + "' with type '"
@@ -826,7 +845,7 @@ public abstract class AuthenticatorBase
         } else if (alwaysUseSession) {
             session = getSession(request, true);
         }
-        
+
         // Cache the authentication information in our session, if any
         if (cache) {
             if (session != null) {
@@ -842,7 +861,7 @@ public abstract class AuthenticatorBase
                     session.removeNote(Constants.SESS_PASSWORD_NOTE);
             }
         }
-        
+
         // Construct a cookie to be returned to the client
         if (sso == null)
             return;
@@ -881,12 +900,12 @@ public abstract class AuthenticatorBase
         assert(realm != null);
         sso.register(value, principal, authType, username, password, realm);
         // END S1AS8 PE 4856080,4918627
-        
+
         request.setNote(Constants.REQ_SSOID_NOTE, value);
         if (sso.isVersioningSupported()) {
             request.setNote(Constants.REQ_SSO_VERSION_NOTE, Long.valueOf(0));
         }
-        
+
     }
 
     @Override
@@ -929,12 +948,12 @@ public abstract class AuthenticatorBase
         register(request, (HttpResponse)request.getResponse(), null,
                 null, null, null);
     }
-    
+
     // ------------------------------------------------------ Private Methods
 
     private int processSecurityCheck(HttpRequest hrequest,
 				     HttpResponse hresponse,
-				     LoginConfig config) 
+				     LoginConfig config)
 	throws IOException {
 
         // Special handling for form-based logins to deal with the case
@@ -942,7 +961,7 @@ public abstract class AuthenticatorBase
         // to which it submits) might be outside the secured area
         String contextPath = this.context.getPath();
         String requestURI = hrequest.getDecodedRequestURI();
-        if (requestURI.startsWith(contextPath) &&
+        if (requestURI.startsWith(contextPath) && this.getClass().equals(FormAuthenticator.class) &&
                 requestURI.endsWith(Constants.FORM_ACTION)) {
             if (!authenticate(hrequest, hresponse, config)) {
                 if (log.isLoggable(Level.FINE)) {
@@ -954,10 +973,10 @@ public abstract class AuthenticatorBase
         }
 	return INVOKE_NEXT;
     }
-        
+
     // ------------------------------------------------------ Lifecycle Methods
-    
-    
+
+
     /**
      * Add a lifecycle event listener to this component.
      *
@@ -965,26 +984,26 @@ public abstract class AuthenticatorBase
      */
     /** CR 6411114 (Lifecycle implementation moved to ValveBase)
     public void addLifecycleListener(LifecycleListener listener) {
-        
+
         lifecycle.addLifecycleListener(listener);
-        
+
     }
     */
 
-    
+
     /**
      * Get the lifecycle listeners associated with this lifecycle. If this
      * Lifecycle has no listeners registered, a zero-length array is returned.
      */
     /** CR 6411114 (Lifecycle implementation moved to ValveBase)
     public LifecycleListener[] findLifecycleListeners() {
-        
+
         return lifecycle.findLifecycleListeners();
-        
+
     }
     */
 
-    
+
     /**
      * Remove a lifecycle event listener from this component.
      *
@@ -992,13 +1011,13 @@ public abstract class AuthenticatorBase
      */
     /** CR 6411114 (Lifecycle implementation moved to ValveBase)
     public void removeLifecycleListener(LifecycleListener listener) {
-        
+
         lifecycle.removeLifecycleListener(listener);
-        
+
     }
     */
 
-    
+
     /**
      * Prepare for the beginning of active use of the public methods of this
      * component.  This method should be called after <code>configure()</code>,
@@ -1007,6 +1026,7 @@ public abstract class AuthenticatorBase
      * @exception LifecycleException if this component detects a fatal error
      *  that prevents this component from being used
      */
+    @Override
     public void start() throws LifecycleException {
         // START CR 6411114
         if (started)            // Ignore multiple starts
@@ -1055,10 +1075,10 @@ public abstract class AuthenticatorBase
             else
                 log.log(Level.FINE, "No SingleSignOn Valve is present");
         }
-        
+
     }
-    
-    
+
+
     /**
      * Gracefully terminate the active use of the public methods of this
      * component.  This method should be the last one called on a given
@@ -1078,7 +1098,7 @@ public abstract class AuthenticatorBase
         // START CR 6411114
         super.stop();
         // END CR 6411114
-        
+
     }
     // BEGIN S1AS8 PE 4856062,4918627
     /**
@@ -1088,10 +1108,10 @@ public abstract class AuthenticatorBase
      * @param name the name of the realm.
      */
     public void setRealmName(String name) {
-        
+
     }
-    
-    
+
+
     /**
      * Returns the name of the associated realm. Always returns null unless
      * subclass overrides behavior.
@@ -1102,5 +1122,5 @@ public abstract class AuthenticatorBase
         return null;
     }
     // END S1AS8 PE 4856062,4918627
-    
+
 }

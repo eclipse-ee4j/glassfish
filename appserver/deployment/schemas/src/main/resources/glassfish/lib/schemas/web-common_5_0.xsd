@@ -1,22 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
-
-    This program and the accompanying materials are made available under the
-    terms of the Eclipse Public License v. 2.0, which is available at
-    http://www.eclipse.org/legal/epl-2.0.
-
-    This Source Code may also be made available under the following Secondary
-    Licenses when the conditions for such availability set forth in the
-    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
-    version 2 with the GNU Classpath Exception, which is available at
-    https://www.gnu.org/software/classpath/license.html.
-
-    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-
--->
-
 <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
             targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
             xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee"
@@ -24,58 +6,78 @@
             elementFormDefault="qualified"
             attributeFormDefault="unqualified"
             version="5.0">
-
   <xsd:annotation>
     <xsd:documentation>
-      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="license.inc" parse="text"/>
+
+      Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+      
+      This program and the accompanying materials are made available under the
+      terms of the Eclipse Public License v. 2.0, which is available at
+      http://www.eclipse.org/legal/epl-2.0.
+      
+      This Source Code may also be made available under the following Secondary
+      Licenses when the conditions for such availability set forth in the
+      Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+      version 2 with the GNU Classpath Exception, which is available at
+      https://www.gnu.org/software/classpath/license.html.
+      
+      SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+      
     </xsd:documentation>
   </xsd:annotation>
 
   <xsd:annotation>
     <xsd:documentation>
       <![CDATA[
-
-        This is the common XML Schema for the Servlet 5.0 deployment descriptor.
-        This file is in turn used by web.xml and web-fragment.xml
-        web application's war file.  All Servlet deployment descriptors
-        must indicate the web common schema by using the Jakarta EE
-        namespace:
-
-        https://jakarta.ee/xml/ns/jakartaee
-
-        and by indicating the version of the schema by
-        using the version element as shown below:
-
-            <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="..."
-              version="5.0">
-              ...
-            </web-app>
-
-        The instance documents may indicate the published version of
-        the schema using the xsi:schemaLocation attribute for Jakarta EE
-        namespace with the following location:
-
-        https://jakarta.ee/xml/ns/jakartaee/web-common_5_0.xsd
-
-        ]]>
+      This is the common XML Schema for the Servlet 5.0 deployment descriptor.
+      This file is in turn used by web.xml and web-fragment.xml
+      web application's war file.  All Servlet deployment descriptors
+      must indicate the web common schema by using the Jakarta EE
+      namespace:
+      
+      https://jakarta.ee/xml/ns/jakartaee
+      
+      and by indicating the version of the schema by
+      using the version element as shown below:
+      
+      <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="..."
+      version="5.0">
+      ...
+      </web-app>
+      
+      The instance documents may indicate the published version of
+      the schema using the xsi:schemaLocation attribute for Jakarta EE
+      namespace with the following location:
+      
+      https://jakarta.ee/xml/ns/jakartaee/web-common_5_0.xsd
+      
+      ]]>
     </xsd:documentation>
   </xsd:annotation>
 
   <xsd:annotation>
     <xsd:documentation>
-      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="common.inc" parse="text"/>
+
+      The following conventions apply to all Jakarta EE
+      deployment descriptor elements unless indicated otherwise.
+      
+      - In elements that specify a pathname to a file within the
+      same JAR file, relative filenames (i.e., those not
+      starting with "/") are considered relative to the root of
+      the JAR file's namespace.  Absolute filenames (i.e., those
+      starting with "/") also specify names in the root of the
+      JAR file's namespace.  In general, relative names are
+      preferred.  The exception is .war files where absolute
+      names are preferred for consistency with the Servlet API.
+      
     </xsd:documentation>
   </xsd:annotation>
 
-
-<!-- **************************************************** -->
-
   <xsd:include schemaLocation="jakartaee_9.xsd"/>
-  <xsd:include schemaLocation="jsp_3_0.xsd"/>
 
-<!-- **************************************************** -->
+  <xsd:include schemaLocation="jsp_3_0.xsd"/>
 
   <xsd:group name="web-commonType">
     <xsd:choice>
@@ -90,11 +92,10 @@
             The context-param element contains the declaration
             of a web application's servlet context
             initialization parameters.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-
       <xsd:element name="filter"
                    type="jakartaee:filterType"/>
       <xsd:element name="filter-mapping"
@@ -129,15 +130,12 @@
     </xsd:choice>
   </xsd:group>
 
-<!-- **************************************************** -->
-
   <xsd:attributeGroup name="web-common-attributes">
     <xsd:attribute name="version"
                    type="jakartaee:web-app-versionType"
                    use="required"/>
     <xsd:attribute name="id"
                    type="xsd:ID"/>
-
     <xsd:attribute name="metadata-complete"
                    type="xsd:boolean">
       <xsd:annotation>
@@ -150,21 +148,22 @@
           files available to this module and packaged with
           this application should be examined for annotations
           that specify deployment information.
-
+          
           If metadata-complete is set to "true", the deployment
           tool must ignore any annotations that specify deployment
           information, which might be present in the class files
           of the application.
-
+          
           If metadata-complete is not specified or is set to
           "false", the deployment tool must examine the class
           files of the application for annotations, as
           specified by the specifications.
-
+          
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
   </xsd:attributeGroup>
+
 
 <!-- **************************************************** -->
 
@@ -184,10 +183,9 @@
         to the portion of the web application described by the
         containing security-constraint.  The container matches
         role names case sensitively when determining access.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="description"
                    type="jakartaee:descriptionType"
@@ -202,6 +200,7 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="auth-methodType">
@@ -215,16 +214,16 @@
         using the configured mechanism. Legal values are "BASIC",
         "DIGEST", "FORM", "CLIENT-CERT", or a vendor-specific
         authentication scheme.
-
+        
         Used in: login-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:restriction base="jakartaee:string"/>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -234,7 +233,7 @@
 
         The dispatcher has five legal values: FORWARD, REQUEST,
         INCLUDE, ASYNC, and ERROR.
-
+        
         A value of FORWARD means the Filter will be applied under
         RequestDispatcher.forward() calls.
         A value of REQUEST means the Filter will be applied under
@@ -245,14 +244,13 @@
         calls dispatched from an AsyncContext.
         A value of ERROR means the Filter will be applied under the
         error page mechanism.
-
+        
         The absence of any dispatcher elements in a filter-mapping
         indicates a default of applying filters only under ordinary
         client calls to the path or servlet.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:restriction base="jakartaee:string">
         <xsd:enumeration value="FORWARD"/>
@@ -264,6 +262,7 @@
     </xsd:simpleContent>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="error-codeType">
@@ -271,12 +270,11 @@
       <xsd:documentation>
 
         The error-code contains an HTTP error code, ex: 404
-
+        
         Used in: error-page
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:restriction base="jakartaee:xsdPositiveIntegerType">
         <xsd:pattern value="\d{3}"/>
@@ -285,6 +283,7 @@
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -295,22 +294,21 @@
         The error-pageType contains a mapping between an error code
         or exception type to the path of a resource in the web
         application.
-
+        
         Error-page declarations using the exception-type element in
         the deployment descriptor must be unique up to the class name of
         the exception-type. Similarly, error-page declarations using the
         error-code element must be unique in the deployment descriptor
         up to the status code.
-
+        
         If an error-page element in the deployment descriptor does not
         contain an exception-type or an error-code element, the error
         page is a default error page.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:choice minOccurs="0"
                   maxOccurs="1">
@@ -323,12 +321,11 @@
 
               The exception-type contains a fully qualified class
               name of a Java exception type.
-
+              
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
       </xsd:choice>
-
       <xsd:element name="location"
                    type="jakartaee:war-pathType">
         <xsd:annotation>
@@ -338,7 +335,7 @@
             resource in the web application relative to the root of
             the web application. The value of the location must have
             a leading `/'.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -346,6 +343,7 @@
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -359,12 +357,11 @@
         filter-name value to reference. Filters can access the
         initialization parameters declared in the deployment
         descriptor at runtime via the FilterConfig interface.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:group ref="jakartaee:descriptionGroup"/>
       <xsd:element name="filter-name"
@@ -377,14 +374,13 @@
           <xsd:documentation>
 
             The fully qualified classname of the filter.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
       <xsd:element name="async-supported"
                    type="jakartaee:true-falseType"
                    minOccurs="0"/>
-
       <xsd:element name="init-param"
                    type="jakartaee:param-valueType"
                    minOccurs="0"
@@ -394,7 +390,7 @@
 
             The init-param element contains a name/value pair as
             an initialization param of a servlet filter
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -402,6 +398,7 @@
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -424,10 +421,9 @@
         filter-name value must be the value of the filter-name
         sub-elements of one of the filter declarations in the
         deployment descriptor.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="filter-name"
                    type="jakartaee:filter-nameType"/>
@@ -447,13 +443,16 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="nonEmptyStringType">
     <xsd:annotation>
       <xsd:documentation>
+
         This type defines a string which contains at least one
         character.
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:simpleContent>
@@ -462,6 +461,7 @@
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -473,16 +473,16 @@
         by using filter-nameType. This name is used to map the
         filter.  Each filter name is unique within the web
         application.
-
+        
         Used in: filter, filter-mapping
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:extension base="jakartaee:nonEmptyStringType"/>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -493,14 +493,12 @@
         The form-login-configType specifies the login and error
         pages that should be used in form based login. If form based
         authentication is not used, these elements are ignored.
-
+        
         Used in: login-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
-
       <xsd:element name="form-login-page"
                    type="jakartaee:war-pathType">
         <xsd:annotation>
@@ -510,11 +508,10 @@
             app where the page that can be used for login can be
             found.  The path begins with a leading / and is interpreted
             relative to the root of the WAR.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-
       <xsd:element name="form-error-page"
                    type="jakartaee:war-pathType">
         <xsd:annotation>
@@ -525,47 +522,38 @@
             when login is not successful can be found.
             The path begins with a leading / and is interpreted
             relative to the root of the WAR.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-
     </xsd:sequence>
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
 
-<!-- **************************************************** -->
-
   <xsd:simpleType name="http-methodType">
     <xsd:annotation>
-
       <xsd:documentation>
 
         A HTTP method type as defined in HTTP 1.1 section 2.2.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:restriction base="xsd:token">
-      <xsd:pattern value="[&#33;-&#126;-[\(\)&#60;&#62;@,;:&#34;/\[\]?=\{\}\\\p{Z}]]+"/>
+      <xsd:pattern value="[!-~-[\(\)&#60;&#62;@,;:&#34;/\[\]?=\{\}\\\p{Z}]]+"/>
     </xsd:restriction>
-
   </xsd:simpleType>
-
-<!-- **************************************************** -->
 
   <xsd:simpleType name="load-on-startupType">
     <xsd:union memberTypes="jakartaee:null-charType xsd:integer"/>
   </xsd:simpleType>
-
-<!-- **************************************************** -->
 
   <xsd:simpleType name="null-charType">
     <xsd:restriction base="xsd:string">
       <xsd:enumeration value=""/>
     </xsd:restriction>
   </xsd:simpleType>
+
 
 <!-- **************************************************** -->
 
@@ -577,12 +565,11 @@
         method that should be used, the realm name that should be
         used for this application, and the attributes that are
         needed by the form login mechanism.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="auth-method"
                    type="jakartaee:auth-methodType"
@@ -595,7 +582,7 @@
 
             The realm name element specifies the realm name to
             use in HTTP Basic authorization.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -607,6 +594,7 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="mime-mappingType">
@@ -615,22 +603,20 @@
 
         The mime-mappingType defines a mapping between an extension
         and a mime type.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:annotation>
         <xsd:documentation>
 
           The extension element contains a string describing an
           extension. example: "txt"
-
+          
         </xsd:documentation>
       </xsd:annotation>
-
       <xsd:element name="extension"
                    type="jakartaee:string"/>
       <xsd:element name="mime-type"
@@ -640,6 +626,7 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="mime-typeType">
@@ -647,21 +634,21 @@
       <xsd:documentation>
 
         The mime-typeType is used to indicate a defined mime type.
-
+        
         Example:
         "text/plain"
-
+        
         Used in: mime-mapping
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:restriction base="jakartaee:string">
         <xsd:pattern value="[^\p{Cc}^\s]+/[^\p{Cc}^\s]+"/>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -672,12 +659,11 @@
         The security-constraintType is used to associate
         security constraints with one or more web resource
         collections
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="display-name"
                    type="jakartaee:display-nameType"
@@ -697,6 +683,7 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="servletType">
@@ -708,12 +695,11 @@
         servlet. If a jsp-file is specified and the load-on-startup
         element is present, then the JSP should be precompiled and
         loaded.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:group ref="jakartaee:descriptionGroup"/>
       <xsd:element name="servlet-name"
@@ -727,16 +713,13 @@
 
               The servlet-class element contains the fully
               qualified class name of the servlet.
-
+              
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-
         <xsd:element name="jsp-file"
                      type="jakartaee:jsp-fileType"/>
-
       </xsd:choice>
-
       <xsd:element name="init-param"
                    type="jakartaee:param-valueType"
                    minOccurs="0"
@@ -763,7 +746,7 @@
             before servlets marked with higher integers. The
             container may choose the order of loading of
             servlets with the same load-on-start-up value.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -789,6 +772,7 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="servlet-mappingType">
@@ -797,12 +781,11 @@
 
         The servlet-mappingType defines a mapping between a
         servlet and a url pattern.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="servlet-name"
                    type="jakartaee:servlet-nameType"/>
@@ -811,7 +794,8 @@
                    minOccurs="1"
                    maxOccurs="unbounded"/>
     </xsd:sequence>
-    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
   </xsd:complexType>
 
 
@@ -824,14 +808,14 @@
         The servlet-name element contains the canonical name of the
         servlet. Each servlet name is unique within the web
         application.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:extension base="jakartaee:nonEmptyStringType"/>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -841,12 +825,11 @@
 
         The session-configType defines the session parameters
         for this web application.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="session-timeout"
                    type="jakartaee:xsdIntegerType"
@@ -862,7 +845,7 @@
             the default behaviour of sessions is never to time
             out. If this element is not specified, the container
             must set its default timeout period.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -874,7 +857,7 @@
 
             The cookie-config element defines the configuration of the
             session tracking cookies created by this web application.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -887,7 +870,7 @@
 
             The tracking-mode element defines the tracking modes
             for sessions created by this web application
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -895,6 +878,7 @@
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -904,12 +888,11 @@
 
         The cookie-configType defines the configuration for the
         session tracking cookies of this web application.
-
+        
         Used in: session-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="name"
                    type="jakartaee:cookie-nameType"
@@ -920,7 +903,7 @@
             The name that will be assigned to any session tracking
             cookies created by this web application.
             The default is JSESSIONID
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -932,7 +915,7 @@
 
             The domain name that will be assigned to any session tracking
             cookies created by this web application.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -944,7 +927,7 @@
 
             The path that will be assigned to any session tracking
             cookies created by this web application.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -956,7 +939,7 @@
 
             The comment that will be assigned to any session tracking
             cookies created by this web application.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -968,7 +951,7 @@
 
             Specifies whether any session tracking cookies created
             by this web application will be marked as HttpOnly
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -985,7 +968,7 @@
             initiated the corresponding session.
             When false, the session cookie should only be marked secure
             if the request that initiated the session was secure.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -998,7 +981,7 @@
             The lifetime (in seconds) that will be assigned to any
             session tracking cookies created by this web application.
             Default is -1
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -1006,6 +989,7 @@
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1016,16 +1000,16 @@
         The name that will be assigned to any session tracking
         cookies created by this web application.
         The default is JSESSIONID
-
+        
         Used in: cookie-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:extension base="jakartaee:nonEmptyStringType"/>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1035,16 +1019,16 @@
 
         The domain name that will be assigned to any session tracking
         cookies created by this web application.
-
+        
         Used in: cookie-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:extension base="jakartaee:nonEmptyStringType"/>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1054,16 +1038,16 @@
 
         The path that will be assigned to any session tracking
         cookies created by this web application.
-
+        
         Used in: cookie-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:extension base="jakartaee:nonEmptyStringType"/>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1073,16 +1057,16 @@
 
         The comment that will be assigned to any session tracking
         cookies created by this web application.
-
+        
         Used in: cookie-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:extension base="jakartaee:nonEmptyStringType"/>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1092,12 +1076,11 @@
 
         The tracking modes for sessions created by this web
         application
-
+        
         Used in: session-config
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:restriction base="jakartaee:string">
         <xsd:enumeration value="COOKIE"/>
@@ -1106,6 +1089,7 @@
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1125,12 +1109,11 @@
         transmission. In most cases, the presence of the INTEGRAL or
         CONFIDENTIAL flag will indicate that the use of SSL is
         required.
-
+        
         Used in: user-data-constraint
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:simpleContent>
       <xsd:restriction base="jakartaee:string">
         <xsd:enumeration value="NONE"/>
@@ -1139,6 +1122,7 @@
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1149,12 +1133,11 @@
         The user-data-constraintType is used to indicate how
         data communicated between the client and container should be
         protected.
-
+        
         Used in: security-constraint
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="description"
                    type="jakartaee:descriptionType"
@@ -1167,7 +1150,8 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
-<!-- ************************************************** -->
+
+<!-- **************************************************** -->
 
   <xsd:complexType name="war-pathType">
     <xsd:annotation>
@@ -1176,7 +1160,7 @@
         The elements that use this type designate a path starting
         with a "/" and interpreted relative to the root of a WAR
         file.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:simpleContent>
@@ -1186,8 +1170,6 @@
     </xsd:simpleContent>
   </xsd:complexType>
 
-<!-- **************************************************** -->
-
   <xsd:simpleType name="web-app-versionType">
     <xsd:annotation>
       <xsd:documentation>
@@ -1195,13 +1177,14 @@
         This type contains the recognized versions of
         web-application supported. It is used to designate the
         version of the web application.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:restriction base="xsd:token">
       <xsd:enumeration value="5.0"/>
     </xsd:restriction>
   </xsd:simpleType>
+
 
 <!-- **************************************************** -->
 
@@ -1218,12 +1201,11 @@
         except those identified in the collection.
         http-method-omission and http-method elements are never
         mixed in the same collection.
-
+        
         Used in: security-constraint
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="web-resource-name"
                    type="jakartaee:string">
@@ -1232,7 +1214,7 @@
 
             The web-resource-name contains the name of this web
             resource collection.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -1251,8 +1233,10 @@
                      maxOccurs="unbounded">
           <xsd:annotation>
             <xsd:documentation>
+
               Each http-method names an HTTP method to which the
               constraint applies.
+              
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
@@ -1262,8 +1246,10 @@
                      maxOccurs="unbounded">
           <xsd:annotation>
             <xsd:documentation>
+
               Each http-method-omission names an HTTP method to
               which the constraint does not apply.
+              
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
@@ -1273,6 +1259,7 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
+
 <!-- **************************************************** -->
 
   <xsd:complexType name="welcome-file-listType">
@@ -1281,12 +1268,11 @@
 
         The welcome-file-list contains an ordered list of welcome
         files elements.
-
+        
         Used in: web-app
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="welcome-file"
                    type="xsd:string"
@@ -1296,7 +1282,7 @@
 
             The welcome-file element contains file name to use
             as a default welcome file, such as index.html
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -1305,38 +1291,33 @@
                    type="xsd:ID"/>
   </xsd:complexType>
 
-<!-- **************************************************** -->
-
   <xsd:simpleType name="localeType">
     <xsd:annotation>
       <xsd:documentation>
 
         The localeType defines valid locale defined by ISO-639-1
         and ISO-3166.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:restriction base="xsd:string">
       <xsd:pattern value="[a-z]{2}(_|-)?([\p{L}\-\p{Nd}]{2})?"/>
     </xsd:restriction>
   </xsd:simpleType>
-
-<!-- **************************************************** -->
 
   <xsd:simpleType name="encodingType">
     <xsd:annotation>
       <xsd:documentation>
 
         The encodingType defines IANA character sets.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:restriction base="xsd:string">
       <xsd:pattern value="[^\s]+"/>
     </xsd:restriction>
   </xsd:simpleType>
+
 
 <!-- **************************************************** -->
 
@@ -1346,10 +1327,9 @@
 
         The locale-encoding-mapping-list contains one or more
         locale-encoding-mapping(s).
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="locale-encoding-mapping"
                    type="jakartaee:locale-encoding-mappingType"
@@ -1358,6 +1338,7 @@
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1369,10 +1350,9 @@
         encoding name. The locale name must be either "Language-code",
         such as "ja", defined by ISO-639 or "Language-code_Country-code",
         such as "ja_JP".  "Country code" is defined by ISO-3166.
-
+        
       </xsd:documentation>
     </xsd:annotation>
-
     <xsd:sequence>
       <xsd:element name="locale"
                    type="jakartaee:localeType"/>
@@ -1382,6 +1362,7 @@
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1394,12 +1375,13 @@
         of this application resource relative to other application
         configuration resources.
         See section 8.2.2 of the specification for details.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:attribute name="id"
                    type="xsd:ID"/>
   </xsd:complexType>
+
 
 <!-- **************************************************** -->
 
@@ -1409,7 +1391,7 @@
 
         This element specifies configuration information related to the
         handling of multipart/form-data requests.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
@@ -1419,7 +1401,9 @@
                    maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
+
             The directory location where uploaded files will be stored
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -1429,7 +1413,9 @@
                    maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
+
             The maximum size limit of uploaded files
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -1439,7 +1425,9 @@
                    maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
+
             The maximum size limit of multipart/form-data requests
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -1449,8 +1437,10 @@
                    maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
+
             The size threshold after which an uploaded file will be
             written to disk
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>

@@ -58,7 +58,7 @@ import org.glassfish.logging.annotation.LoggerInfo;
 public class OSGiArchiveHandler extends GenericHandler implements CompositeHandler {
 
     @LoggerInfo(subsystem = "OSGI", description="OSGI container logger", publish=true)
-    private static final String LOGGER_NAME = "javax.enterprise.osgi.container";
+    private static final String LOGGER_NAME = "jakarta.enterprise.osgi.container";
 
     @LogMessagesResourceBundle()
     public static final String RB_NAME = "org.glassfish.extras.osgicontainer.LogMessages";

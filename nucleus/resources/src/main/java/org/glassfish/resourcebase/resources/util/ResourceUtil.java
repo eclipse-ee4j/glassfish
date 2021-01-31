@@ -42,7 +42,7 @@ public class ResourceUtil {
 
     @LoggerInfo(subsystem="RESOURCE", description="Nucleus Resource", publish=true)
 
-    public static final String LOGGER = "javax.enterprise.resources.util";
+    public static final String LOGGER = "jakarta.enterprise.resources.util";
     private static final Logger _logger = Logger.getLogger(LOGGER, LOGMESSAGE_RESOURCE);
 
     private static final String RESOURCES_XML_META_INF = "META-INF/glassfish-resources.xml";

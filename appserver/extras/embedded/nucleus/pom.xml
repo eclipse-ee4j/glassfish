@@ -185,8 +185,8 @@
           <optional>true</optional>
       </dependency>
       <dependency>
-          <groupId>org.glassfish.hk2.external</groupId>
-          <artifactId>jakarta.inject</artifactId>
+          <groupId>jakarta.inject</groupId>
+          <artifactId>jakarta.inject-api</artifactId>
           <optional>true</optional>
       </dependency>
       <dependency>
@@ -208,7 +208,7 @@
       </dependency>
       <dependency>
           <groupId>org.glassfish.grizzly</groupId>
-          <artifactId>grizzly-npn-bootstrap</artifactId>
+          <artifactId>grizzly-npn-api</artifactId>
           <version>${grizzly.npn.version}</version>
           <optional>true</optional>
       </dependency>

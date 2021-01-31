@@ -362,13 +362,8 @@
          <optional>true</optional>
      </dependency>
      <dependency>
-         <groupId>jakarta.management.j2ee</groupId>
-         <artifactId>jakarta.management.j2ee-api</artifactId>
-         <optional>true</optional>
-     </dependency>
-     <dependency>
-         <groupId>jakarta.security.auth.message</groupId>
-         <artifactId>jakarta.security.auth.message-api</artifactId>
+         <groupId>jakarta.authentication</groupId>
+         <artifactId>jakarta.authentication-api</artifactId>
          <optional>true</optional>
      </dependency>
      <dependency>
@@ -458,13 +453,6 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jaxr-ra</groupId>
-            <artifactId>jaxr-ra-rar</artifactId>
-            <version>${project.version}</version>
-            <type>rar</type>
-            <optional>true</optional>
-       </dependency>
         <dependency>
             <groupId>org.glassfish.main.batch</groupId>
             <artifactId>glassfish-batch-commands</artifactId>
@@ -727,8 +715,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>jakarta.inject</artifactId>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -750,7 +738,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-bootstrap</artifactId>
+            <artifactId>grizzly-npn-api</artifactId>
             <version>${grizzly.npn.version}</version>
             <optional>true</optional>
         </dependency>
@@ -833,8 +821,8 @@
         </dependency>
         <!-- glassfish-jcdi -->
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1318,8 +1306,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>jakarta.servlet.jsp</artifactId>
+            <groupId>org.glassfish.wasp</groupId>
+            <artifactId>wasp</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1330,6 +1318,11 @@
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1655,11 +1648,6 @@
             <artifactId>metro-fragments</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.registry</groupId>
-            <artifactId>jakarta.xml.registry-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

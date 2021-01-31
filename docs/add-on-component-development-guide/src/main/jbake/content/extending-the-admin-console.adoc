@@ -15,26 +15,19 @@ Extending the Administration Console
 --------------------------------------
 
 The Administration Console is a browser-based tool for administering
-GlassFish Server. It features an easy-to-navigate interface and online
+Eclipse GlassFish Server. It features an easy-to-navigate interface and online
 help. Extending the Administration Console enables you to provide a
 graphical user interface for administering your add-on component. You
 can use any of the user interface features of the Administration
 Console, such as tree nodes, links on the Common Tasks page, tabs and
-sub-tabs, property sheets, and JavaServer Faces pages. Your add-on
+sub-tabs, property sheets, and Jakarta Server Faces pages. Your add-on
 component implements a marker interface and provides a configuration
 file that describes how your customizations integrate with the
 Administration Console.
 
 This chapter refers to a simple example called `console-sample-ip` that
 illustrates how to provide Administration Console features for a
-hypothetical add-on component. Instructions for obtaining and using this
-example are available at the example's
-https://wikis.oracle.com/display/GlassFish/V3SampleIpProject[project
-page] (`https://wikis.oracle.com/display/GlassFish/V3SampleIpProject`).
-When you check out the code, it is placed in a directory named
-`glassfish-samples/v3/plugin/adminconsole/console-sample-ip/` in your
-current directory. In this chapter, path names for the example files are
-relative to this directory.
+hypothetical add-on component. 
 
 The following topics are addressed here:
 
@@ -136,8 +129,6 @@ in a nonstandard location or give it a name other than
 `console-config.xml`, your implementation of `getConfiguration` must
 return the URL where the file can be found.
 
-You can find this example code in the file
-`project/src/main/java/org/glassfish/admingui/plugin/SamplePlugin.java`.
 
 [[ghmom]][[GSACG00098]][[about-administration-console-templates]]
 
@@ -145,18 +136,18 @@ About Administration Console Templates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GlassFish Server includes a set of templates that make it easier to
-create JavaServer Faces pages for your add-on component. These templates
-use Templating for JavaServer Faces Technology, which is also known as
+create Jakarta Server Faces pages for your add-on component. These templates
+use Templating for Jakarta Server Faces Technology, which is also known as
 JSFTemplating.
 
 Examples of JSFTemplating technology can be found in the following
 sections of this chapter:
 
-* link:#ghoej[Creating a JavaServer Faces Page for Your Node]
-* link:#ghovg[Creating JavaServer Faces Pages for Your Tabs]
-* link:#ghoeu[Creating a JavaServer Faces Page for Your Task]
-* link:#ghoya[Creating a JavaServer Faces Page for Your Task Group]
-* link:#ghpao[Creating a JavaServer Faces Page for Your Page Content]
+* link:#ghoej[Creating a Jakarta Server Faces Page for Your Node]
+* link:#ghovg[Creating Jakarta Server Faces Pages for Your Tabs]
+* link:#ghoeu[Creating a Jakarta Server Faces Page for Your Task]
+* link:#ghoya[Creating a Jakarta Server Faces Page for Your Task Group]
+* link:#ghpao[Creating a Jakarta Server Faces Page for Your Page Content]
 * link:#ghmqe[Adding a Page to the Administration Console]
 
 [[ghmqr]][[GSACG00099]][[about-integration-points]]
@@ -171,7 +162,7 @@ integration points:
 
 * Nodes in the navigation tree
 * Elements on the Common Tasks page of the Administration Console
-* JavaServer Faces pages
+* Jakarta Server Faces pages
 * Tabs and sub-tabs
 
 Specify all the integration points in a file named `console-config.xml`.
@@ -179,7 +170,7 @@ In the example, this file is in the directory
 `project/src/main/resources/META-INF/admingui/`. The following sections
 describe how to create this file.
 
-In addition, create JavaServer Faces pages that contain JSF code
+In addition, create Jakarta Server Faces pages that contain JSF code
 fragments to implement the integration points. In the example, these
 files are in the directory `project/src/main/resources/`. The content of
 these files depends on the integration point you are implementing. The
@@ -357,17 +348,17 @@ nodes under the Resources and Configuration nodes.
 
 [[ghoej]][[GSACG00158]][[creating-a-javaserver-faces-page-for-your-node]]
 
-Creating a JavaServer Faces Page for Your Node
+Creating a Jakarta Server Faces Page for Your Node
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-A JavaServer Faces page for a tree node uses the tag `sun:treeNode`.
+A Jakarta Server Faces page for a tree node uses the tag `sun:treeNode`.
 This tag provides all the capabilities of the Project Woodstock tag
 `webuijsf:treeNode`.
 
 [[GSACG00021]][[ghpmn]]
 
 
-Example 3-3 Example JavaServer Faces Page for a Tree Node
+Example 3-3 Example Jakarta Server Faces Page for a Tree Node
 
 In the example, the `sampleNode.jsf` file has the following content:
 
@@ -398,14 +389,14 @@ pages, specify the attributes of this tag as follows:
 `url`::
   The location of the JavaServer Faces page that appears when you click
   the node. In the example, most of the integration points use a very
-  simple JavaServer Faces page called `testPage.jsf`, which is in the
+  simple Jakarta Server Faces page called `testPage.jsf`, which is in the
   `src/main/resources/page/` directory. Specify the integration point
   `id` value as the root of the URL; in this case, it is `sample` (see
   link:#ghmpg[Specifying the ID of an Add-On Component]). The rest of
   the URL is relative to the `src/main/resources/` directory, where
   `sampleNode.jsf` resides. +
   The `url` tag in this example passes a `name` parameter to the
-  JavaServer Faces page.
+  Jakarta Server Faces page.
 `imageURL`::
   The location of a graphic to display next to the node name. In the
   example, the graphic is always `sample.png`, which is in the
@@ -455,7 +446,7 @@ only one of the default Administration Console pages that has a tab set.
 the integration point type as a tab associated with the server instance.
 * The `priority` value, `500`, specifies the order of the tab within the
 tab set. This value is optional.
-* The `content` value, `sampleTab.jsf`, specifies the JavaServer Faces
+* The `content` value, `sampleTab.jsf`, specifies the Jakarta Server Faces
 page that displays the tab.
 
 [[GSACG00023]][[ghplu]]
@@ -512,22 +503,22 @@ of `sampleTab` in the Administration Console. The priority values for
 `sampleSubTab1` and `sampleSubTab2` are `300` and `400` respectively, so
 `sampleSubTab1` appears to the left of `sampleSubTab2`.
 * The `content` values, `sampleTabWithSubTab.jsf`, `sampleSubTab1.jsf`,
-and `sampleSubTab2.jsf`, specify the JavaServer Faces pages that display
+and `sampleSubTab2.jsf`, specify the Jakarta Server Faces pages that display
 the tabs.
 
 [[ghovg]][[GSACG00159]][[creating-javaserver-faces-pages-for-your-tabs]]
 
-Creating JavaServer Faces Pages for Your Tabs
+Creating Jakarta Server Faces Pages for Your Tabs
 +++++++++++++++++++++++++++++++++++++++++++++
 
-A JavaServer Faces page for a tab uses the tag `sun:tab`. This tag
+A Jakarta Server Faces page for a tab uses the tag `sun:tab`. This tag
 provides all the capabilities of the Project Woodstock tag
 `webuijsf:tab`.
 
 [[GSACG00024]][[ghpnt]]
 
 
-Example 3-6 Example JavaServer Faces Page for a Tab
+Example 3-6 Example Jakarta Server Faces Page for a Tab
 
 In the example, the `sampleTab.jsf` file has the following content:
 
@@ -552,7 +543,7 @@ In the actual file there are no line breaks in the `gf.redirect` value.
 |======================================================================
 
 
-In your own JavaServer Faces pages, specify the attributes of this tag
+In your own Jakarta Server Faces pages, specify the attributes of this tag
 as follows:
 
 `id`::
@@ -568,14 +559,14 @@ The JSF page displays tab content differently from the way the page for
 a node displays node content. It invokes two handlers for the `command`
 event: `setSessionAttribute` and `gf.redirect`. The `gf.redirect`
 handler has the same effect for a tab that the `url` attribute has for a
-node. It navigates to a simple JavaServer Faces page called
+node. It navigates to a simple Jakarta Server Faces page called
 `tabPage.jsf`, in the `src/main/resources/page/` directory, passing the
 text "Sample First Tab" to the page in a `name` parameter.
 
 The `sampleSubTab1.jsf` and `sampleSubTab2.jsf` files are almost
 identical to `sampleTab.jsf`. The most important difference is that each
 sets the session attribute `serverInstTabs` to the base name of the
-JavaServer Faces file that corresponds to that tab:
+Jakarta Server Faces file that corresponds to that tab:
 
 [source,oac_no_warn]
 ----
@@ -632,17 +623,17 @@ Faces page that displays the task.
 
 [[ghoeu]][[GSACG00160]][[creating-a-javaserver-faces-page-for-your-task]]
 
-Creating a JavaServer Faces Page for Your Task
+Creating a Jakarta Server Faces Page for Your Task
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-A JavaServer Faces page for a task uses the tag `sun:commonTask`. This
+A Jakarta Server Faces page for a task uses the tag `sun:commonTask`. This
 tag provides all the capabilities of the Project Woodstock tag
 `webuijsf:commonTask`.
 
 [[GSACG00026]][[gjkgd]]
 
 
-Example 3-8 Example JavaServer Faces Page for a Task
+Example 3-8 Example Jakarta Server Faces Page for a Task
 
 In the example, the `sampleCommonTask.jsf` file has the following
 content:
@@ -670,7 +661,7 @@ value.
 
 
 This file uses the `sun:commonTask` tag to specify the task. In your own
-JavaServer Faces pages, specify the attributes of this tag as follows:
+Jakarta Server Faces pages, specify the attributes of this tag as follows:
 
 `text`::
   The task name that appears on the Common Tasks page.
@@ -724,17 +715,17 @@ Faces page that displays the task.
 
 [[ghoya]][[GSACG00161]][[creating-a-javaserver-faces-page-for-your-task-group]]
 
-Creating a JavaServer Faces Page for Your Task Group
+Creating a Jakarta Server Faces Page for Your Task Group
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-A JavaServer Faces page for a task group uses the tag
+A Jakarta Server Faces page for a task group uses the tag
 `sun:commonTasksGroup`. This tag provides all the capabilities of the
 Project Woodstock tag `webuijsf:commonTasksGroup`.
 
 [[GSACG00028]][[ghpqe]]
 
 
-Example 3-10 Example JavaServer Faces Page for a Task Group
+Example 3-10 Example Jakarta Server Faces Page for a Task Group
 
 In the example, the `sampleTaskGroup.jsf` file has the following
 content:
@@ -826,10 +817,10 @@ places similar content on the Configuration page.
 
 [[ghpao]][[GSACG00162]][[creating-a-javaserver-faces-page-for-your-page-content]]
 
-Creating a JavaServer Faces Page for Your Page Content
+Creating a Jakarta Server Faces Page for Your Page Content
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-A JavaServer Faces page for page content often uses the tag
+A Jakarta Server Faces page for page content often uses the tag
 `sun:property` to specify a property on a property sheet. This tag
 provides all the capabilities of the Project Woodstock tag
 `webuijsf:property`.
@@ -837,7 +828,7 @@ provides all the capabilities of the Project Woodstock tag
 [[GSACG00030]][[ghpoz]]
 
 
-Example 3-12 Example JavaServer Faces Page for a Resource Page Item
+Example 3-12 Example Jakarta Server Faces Page for a Resource Page Item
 
 In the example, the `sampleResourceLink.jsf` file has the following
 content:
@@ -892,7 +883,7 @@ editing resources for it.
 [[GSACG00031]][[ghple]]
 
 
-Example 3-13 Example JavaServer Faces Page for a Property Sheet
+Example 3-13 Example Jakarta Server Faces Page for a Property Sheet
 
 Most of the user interface features used in the example reference the
 file `testPage.jsf` or (for tabs) the file `tabPage.jsf`. Both files are
@@ -1043,8 +1034,8 @@ content for each integration point is defined in an include file.
 
 To provide your own CSS and images to modify the global look and feel of
 the entire application (not just the Administration Console), use the
-theming feature of http://java.net/projects/woodstock/[Project
-Woodstock] (`http://java.net/projects/woodstock/`). Create a theme JAR
+theming feature of https://github.com/eclipse-ee4j/glassfish-woodstock[Project
+Woodstock] (`https://github.com/eclipse-ee4j/glassfish-woodstock`). Create a theme JAR
 file with all the CSS properties and image files that are required by
 your Woodstock component. Use a script provided by the Woodstock project
 to clone an existing theme, then modify the files and properties as
@@ -1083,7 +1074,7 @@ org.company.project:myMonitoringTabs
 ----
 2.  After you have an integration point ID, use handlers to insert the
 integration point implementation(s). +
-Include code like the following below the place in your JavaServer Faces
+Include code like the following below the place in your Jakarta Server Faces
 page where you would like to enable others to add their integration
 point implementations: +
 [source,oac_no_warn]
@@ -1104,13 +1095,6 @@ integration point ID in place of `org.company.project:myMonitoringTabs`.
 If you omit the `root` argument to `includeIntegrations`, all components
 on the entire page can be used for the `parentId` of the integration
 points.
-3.  To enable others to use this integration point, document it at the
-https://wikis.oracle.com/display/GlassFish/V3IntegrationPoint[GlassFish
-Integration Point wiki page]
-(`https://wikis.oracle.com/display/GlassFish/V3IntegrationPoint`). +
-Document the integration point only if your content is publicly
-available. +
-You or others can now provide an integration point that will be
-integrated into this page.
+
 
 ----

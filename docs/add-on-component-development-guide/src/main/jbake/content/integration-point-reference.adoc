@@ -16,9 +16,7 @@ A Integration Point Reference
 This appendix provides reference information about integration points,
 which are described in
 link:extending-the-admin-console.html#ghmrb[Extending the Administration
-Console]. For complete information about integration points, see
-`https://wikis.oracle.com/display/GlassFish/V3IntegrationPoint`.
-
+Console]. 
 Define an integration point for each user interface feature in the
 `console-config.xml` file for your add-on component.
 
@@ -61,10 +59,10 @@ Each attribute takes a string value.
   may need to experiment in order to place the integration point where
   you want it. This attribute is optional.
 `content`::
-  A relative path to the JavaServer Faces page that contains the content
-  to be integrated. Typically, the file contains a JavaServer Faces code
+  A relative path to the Jakarta Server Faces page that contains the content
+  to be integrated. Typically, the file contains a Jakarta Server Faces code
   fragment that is incorporated into a page. The code fragment often
-  specifies a link to another JavaServer Faces page that appears when a
+  specifies a link to another Jakarta Server Faces page that appears when a
   user clicks the link.
 
 [[ghmwa]][[GSACG00146]][[org.glassfish.adminguinavnode-integration-point]]
@@ -115,7 +113,7 @@ installed the web container module for the Administration Console (the
   A numeric value that specifies the relative ordering of the node on
   the tree, whether at the top level or under another node.
 `content`::
-  A relative path to the JavaServer Faces page that contains the content
+  A relative path to the Jakarta Server Faces page that contains the content
   to be integrated, or a URL to an external resource that returns the
   appropriate data structure for inclusion.
 
@@ -185,9 +183,9 @@ Console. Specify the attributes and their content as follows.
   A numeric value that specifies the relative ordering of the tab on the
   page, whether at the top level or under another tab.
 `content`::
-  A relative path to the JavaServer Faces page that contains the content
+  A relative path to the Jakarta Server Faces page that contains the content
   to be integrated. +
-  When you use this integration point, your JavaServer Faces page must
+  When you use this integration point, your Jakarta Server Faces page must
   call the `setSessionAttribute` handler for the `command` event to set
   the session variable of the `serverInstTabs` tab set to the `id` value
   of your tab. For example, the file may have the following content: +
@@ -228,7 +226,7 @@ Console. Specify the attributes and their content as follows.
   A numeric value that specifies the relative ordering of the tab on the
   page, whether at the top level or under another tab.
 `content`::
-  A relative path to the JavaServer Faces page that contains the content
+  A relative path to the Jakarta Server Faces page that contains the content
   to be integrated.
 
 For examples, see link:extending-the-admin-console.html#ghpox[Example
@@ -254,7 +252,7 @@ Specify the attributes and their content as follows.
   A numeric value that specifies the relative ordering of the item on
   the Configuration page.
 `content`::
-  A relative path to the JavaServer Faces page that contains the content
+  A relative path to the Jakarta Server Faces page that contains the content
   to be integrated.
 
 [[ghpfm]][[GSACG00152]][[org.glassfish.adminguiresources-integration-point]]
@@ -277,7 +275,7 @@ Specify the attributes and their content as follows.
   A numeric value that specifies the relative ordering of the item on
   the Resources page.
 `content`::
-  A relative path to the JavaServer Faces page that contains the content
+  A relative path to the Jakarta Server Faces page that contains the content
   to be integrated.
 
 For an example, see link:extending-the-admin-console.html#ghpnu[Example
@@ -339,7 +337,7 @@ this integration point.
   and 100. The theme with the smallest number is used first.
 `content`::
   A file that contains the content, typically a file that is included in
-  a JavaServer Faces page.
+  a Jakarta Server Faces page.
 
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].
@@ -366,7 +364,7 @@ point.
   and 100. The theme with the smallest number is used first.
 `content`::
   A file that contains the content, typically a file that is included in
-  a JavaServer Faces page.
+  a Jakarta Server Faces page.
 
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].
@@ -391,7 +389,7 @@ attribute for this integration point.
   and 100. The theme with the smallest number is used first.
 `content`::
   A file that contains the content, typically a file that is included in
-  a JavaServer Faces page.
+  a Jakarta Server Faces page.
 
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].
@@ -415,7 +413,7 @@ Specify the attributes and their content as follows. Do not specify a
   and 100. The theme with the smallest number is used first.
 `content`::
   A file that contains the content, typically a file that is included in
-  a JavaServer Faces page.
+  a Jakarta Server Faces page.
 
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].

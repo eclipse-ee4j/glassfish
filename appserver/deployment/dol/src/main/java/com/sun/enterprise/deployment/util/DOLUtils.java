@@ -101,7 +101,7 @@ public class DOLUtils {
     // Reserve this range [AS-DEPLOYMENT-00001, AS-DEPLOYMENT-02000]
     // for message ids used in this deployment dol module
     @LoggerInfo(subsystem = "DEPLOYMENT", description="Deployment logger for dol module", publish=true)
-    private static final String DEPLOYMENT_LOGGER = "javax.enterprise.system.tools.deployment.dol";
+    private static final String DEPLOYMENT_LOGGER = "jakarta.enterprise.system.tools.deployment.dol";
 
     public static final Logger deplLogger =
         Logger.getLogger(DEPLOYMENT_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
@@ -635,11 +635,13 @@ public class DOLUtils {
 		    schema = (String) st.nextElement();
 		} else {
 		    schema = namespace;
-		    namespace = TagNames.JAVAEE_NAMESPACE;
+		    namespace = TagNames.JAKARTAEE_NAMESPACE;
 		}
                 if (namespace.equals(TagNames.J2EE_NAMESPACE)) 
                     continue;
                 if (namespace.equals(TagNames.JAVAEE_NAMESPACE)) 
+                    continue;
+                if (namespace.equals(TagNames.JAKARTAEE_NAMESPACE))
                     continue;
                 if (namespace.equals(W3C_XML_SCHEMA)) 
                     continue;

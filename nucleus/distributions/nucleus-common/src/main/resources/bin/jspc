@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,8 @@
 
 AS_INSTALL=`dirname $0`/..
 AS_INSTALL_LIB=$AS_INSTALL/modules
-JSP_IMPL=$AS_INSTALL_LIB/jakarta.servlet.jsp.jar
-EL_IMPL=$AS_INSTALL_LIB/jakarta.el.jar
+JSP_IMPL=$AS_INSTALL_LIB/wasp.jar
+EL_IMPL=$AS_INSTALL_LIB/jakarta.el.jar:$AS_INSTALL_LIB/jakarta.el-api.jar
 JSTL_IMPL=$AS_INSTALL_LIB/jakarta.servlet.jsp.jstl.jar
 AS_LIB=$AS_INSTALL/lib
 JAVAEE_API=$AS_LIB/javaee.jar

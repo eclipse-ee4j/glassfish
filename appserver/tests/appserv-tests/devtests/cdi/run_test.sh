@@ -16,22 +16,32 @@
 #
 
 test_run(){
-	#Fix for false positive
+    printf "\n%s \n\n" "===== TEST RUN - MAIN ====="
+    
+	# Fix for false positive
 	echo "<property name=\"libraries\" value=\"' '\"/>" >> smoke-tests/simple-wab-with-cdi/build.properties
 	find . -name "RepRunConf.txt" | xargs rm -f
 	rm 	-rf *.output alltests.res ${APS_HOME}/test_results*
+	
 	# Run the tests
 	set +e
-	ant clean
+	ant clean -e -q > /dev/null
+	
+	printf "\n%s \n\n" "===== TEST RUN - STARTING GLASSFISH AND DB ====="
 	${S1AS_HOME}/bin/asadmin start-domain
 	${S1AS_HOME}/bin/asadmin start-database
+	
+	printf "\n%s \n\n" "===== TEST RUN - RUNNING TESTS ====="
 	ant ${TARGET} | tee ${TEST_RUN_LOG}
+	
+	printf "\n%s \n\n" "===== TEST RUN - STOPPING GLASSFISH AND DB ====="
 	${S1AS_HOME}/bin/asadmin stop-domain
 	${S1AS_HOME}/bin/asadmin stop-database
 	set -e
 }
 
 get_test_target(){
+    printf "\n%s \n\n" "===== GETTING TEST TARGET ====="
 	case ${1} in
 		cdi_all )
 			TARGET=all
@@ -47,8 +57,8 @@ run_test_id(){
 	get_test_target ${1}
 	test_run
 	check_successful_run
-  generate_junit_report ${1}
-  change_junit_report_class_names
+    generate_junit_report ${1}
+    change_junit_report_class_names
 }
 
 list_test_ids(){

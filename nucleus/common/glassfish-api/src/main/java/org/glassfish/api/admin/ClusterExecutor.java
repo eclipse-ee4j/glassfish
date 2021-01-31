@@ -43,5 +43,5 @@ public interface ClusterExecutor {
      * @param parameters the parameters passed to the original local command
      * @return the exit status of overall command replication
      */
-    public ActionReport.ExitCode execute(String commandName, AdminCommand command, AdminCommandContext context, ParameterMap parameters);
+    ActionReport.ExitCode execute(String commandName, AdminCommand command, AdminCommandContext context, ParameterMap parameters);
 }

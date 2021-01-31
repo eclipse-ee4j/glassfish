@@ -17,6 +17,7 @@
 package org.glassfish.api.admin;
 
 import java.util.Date;
+
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
 
 /**
@@ -26,39 +27,39 @@ import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
  */
 public interface CommandProgress extends ProgressStatus {
 
-    public static final String EVENT_PROGRESSSTATUS_CHANGE = "ProgressStatus/change";
-    public static final String EVENT_PROGRESSSTATUS_STATE = "ProgressStatus/state";
+    String EVENT_PROGRESSSTATUS_CHANGE = "ProgressStatus/change";
+    String EVENT_PROGRESSSTATUS_STATE = "ProgressStatus/state";
 
     /**
      * Timestamp of command complete event or {@code null} for running command
      */
-    public Date getEndTime();
+    Date getEndTime();
 
     /**
      * Timestamp of command creation
      */
-    public Date getStartTime();
+    Date getStartTime();
 
     /**
      * Creates child for mirroring (supplemental commands)
      */
-    public ProgressStatusMirroringImpl createMirroringChild(int allocatedSteps);
+    ProgressStatusMirroringImpl createMirroringChild(int allocatedSteps);
 
     /**
      * Unique id of this command
      */
-    public String getId();
+    @Override String getId();
 
-    public String getName();
+    String getName();
 
-    public float computeCompletePortion();
+    float computeCompletePortion();
 
-    public String getLastMessage();
+    String getLastMessage();
 
-    public void setEventBroker(AdminCommandEventBroker eventBroker);
+    void setEventBroker(AdminCommandEventBroker eventBroker);
 
-    public int computeSumSteps();
+    int computeSumSteps();
 
-    public boolean isSpinnerActive();
+    boolean isSpinnerActive();
 
 }

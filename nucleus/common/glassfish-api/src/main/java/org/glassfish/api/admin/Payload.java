@@ -77,43 +77,43 @@ import java.util.Properties;
  */
 public interface Payload {
 
-    public static final String PAYLOAD_HEADER_NAME = "org.glassfish.payload.admin.data";
+    String PAYLOAD_HEADER_NAME = "org.glassfish.payload.admin.data";
 
     /**
      * Public API for outbound Payloads.
      */
-    public static interface Outbound {
+    public interface Outbound {
 
         /**
          * Count of attached parts
          */
-        public int size();
+        int size();
 
         /**
          * Adds a part of the specified content type, name, and String content to the payload.
-         * 
+         *
          * @param contentType content type of the part
          * @param name name to be assigned to the part
          * @param props Properties to be included with the part
          * @param content String containing the content for the part
          * @throws java.io.IOException
          */
-        public void addPart(final String contentType, final String name, final Properties props, final String content) throws IOException;
+        void addPart(final String contentType, final String name, final Properties props, final String content) throws IOException;
 
         /**
          * Adds a part of the specified content type, name, and content to the payload.
-         * 
+         *
          * @param contentType content type of the part
          * @param name name to be assigned to the part
          * @param props Properties to be included with the part
          * @param content InputStream furnishing the content for this part
          * @throws java.io.IOException
          */
-        public void addPart(final String contentType, final String name, final Properties props, final InputStream content) throws IOException;
+        void addPart(final String contentType, final String name, final Properties props, final InputStream content) throws IOException;
 
         /**
          * Adds a part of the specified content type, name, and content at a specified position in the parts of the payload.
-         * 
+         *
          * @param index position (zero-based) where the part should be added
          * @param contentType content type of the part
          * @param name name to be assigned to thepart
@@ -121,7 +121,7 @@ public interface Payload {
          * @param content InputStream furnishing the content for this part
          * @throws java.io.IOException
          */
-        public void addPart(final int index, final String contentType, final String name, final Properties props, final InputStream content) throws IOException;
+        void addPart(final int index, final String contentType, final String name, final Properties props, final InputStream content) throws IOException;
 
         /**
          * Adds a part to the payload of the given content type from the specified file. The name assigned to the new part is
@@ -132,20 +132,20 @@ public interface Payload {
          * payload. To include the directory and its contents use
          * {@link #attachFile(java.lang.String, java.net.URI, java.lang.String, java.io.File, boolean) } and specify the
          * <code>recursive</code> argument as <code>true</code>.
-         * 
+         *
          * @param contentType content type of the part
          * @param fileURI URI relative to which the part's name should be computed
          * @param dataRequestName name identifying which part of a request this file answers
          * @param file File containing the content for the part
          * @throws java.io.IOException
          */
-        public void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final File file) throws IOException;
+        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final File file) throws IOException;
 
         /**
          * Adds a part to the payload of the given content type from the specified file. The name assigned to the new part is
          * the URI for the file relativized according to the specified file URI. The properties which indicate that this is file
          * transfer data request are set automatically.
-         * 
+         *
          * @param contentType content type of the part
          * @param fileURI URI relative to which the part's name should be computed
          * @param dataRequestName name identifying which part of a request this file answers
@@ -153,14 +153,14 @@ public interface Payload {
          * @param isRecursive if file is a directory, whether to add its contents as well
          * @throws java.io.IOException
          */
-        public void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final File file, final boolean isRecursive)
+        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final File file, final boolean isRecursive)
                 throws IOException;
 
         /**
          * Adds a part to the payload of the given content type from the specified file. The name assigned to the new part is
          * the URI for the file relativized according to the specified file URI. The properties which indicate that this is a
          * file transfer data request are set automatically and added to the properties passed by the caller.
-         * 
+         *
          * @param contentType content type of the part
          * @param fileURI URI relative to which the part's name should be computed
          * @param dataRequestName name identifying which part of a request this file answers
@@ -168,14 +168,14 @@ public interface Payload {
          * @param file File containing the content for the part
          * @throws java.io.IOException
          */
-        public void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file)
+        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file)
                 throws IOException;
 
         /**
          * Adds a part to the payload of the given content type from the specified file. The name assigned to the new part is
          * the URI for the file relativized according to the specified file URI. The properties which indicate that this is a
          * file transfer data request are set automatically and added to the properties passed by the caller.
-         * 
+         *
          * @param contentType content type of the part
          * @param fileURI URI relative to which the part's name should be computed
          * @param dataRequestName name identifying which part of a request this file answers
@@ -184,31 +184,31 @@ public interface Payload {
          * @param isRecursive if file is a directory, whether to add its contents as well
          * @throws java.io.IOException
          */
-        public void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file,
+        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file,
                 final boolean isRecursive) throws IOException;
 
         /**
          * Adds a part to the payload that represents a request to remove the specified file, presumably previously transferred
          * in a payload during an earlier request.
-         * 
+         *
          * @param fileURI relative URI of the file for deletion
          * @param dataRequestName name identifying which part of a request triggered the file removal
          * @param props Properties to be included with the part
          * @throws IOException
          */
-        public void requestFileRemoval(final URI fileURI, final String dataRequestName, final Properties props) throws IOException;
+        void requestFileRemoval(final URI fileURI, final String dataRequestName, final Properties props) throws IOException;
 
         /**
          * Adds a part to the payload that represents a request to remove the specified file, presumably previously transferred
          * in a payload during an earlier request.
-         * 
+         *
          * @param fileURI relative URI of the file for deletion
          * @param dataRequestName name identifying which part of a request triggered the file removal
          * @param props Properties to be included with the part
          * @param isRecursive if fileURI is a directory, whether to remove its contents as well
          * @throws IOException
          */
-        public void requestFileRemoval(final URI fileURI, final String dataRequestName, final Properties props, final boolean isRecursive) throws IOException;
+        void requestFileRemoval(final URI fileURI, final String dataRequestName, final Properties props, final boolean isRecursive) throws IOException;
 
         /**
          * Adds a part to the payload to request that the specified file be replaced.
@@ -220,140 +220,140 @@ public interface Payload {
          * the directory (which will have the result of removing the directory and its contents and then recreating the
          * directory) plus a Part for each file, including subdirectories, below the directory. The intent is to replace the
          * entire directory with new contents.
-         * 
+         *
          * @param fileURI
          * @param dataRequestName
          * @param props
          * @param isRecursive
          * @throws IOException
          */
-        public void requestFileReplacement(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file,
+        void requestFileReplacement(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file,
                 final boolean isRecursive) throws IOException;
 
         /**
          * Writes the parts already added to the payload to the specified OutputStream.
-         * 
+         *
          * @param os OutputStream to receive the formatted payload
          * @throws java.io.IOException
          */
-        public void writeTo(final OutputStream os) throws IOException;
+        void writeTo(final OutputStream os) throws IOException;
 
         /**
          * Returns the content type of the payload, determined by whether there are multiple parts and, if not, if the content
          * type of the single part is of type "text."
-         * 
+         *
          * @return the content type of the pauload
          */
-        public String getContentType();
+        String getContentType();
 
         /**
          * Returns the name of the header that should be set in the outgoing and incoming http request or response.
-         * 
+         *
          * @return the header name
          */
-        public String getHeaderName();
+        String getHeaderName();
 
         /**
          * Returns the parts from the outbound payload.
-         * 
+         *
          * @return Iterator over the outbound Parts
          */
-        public Iterator<Part> parts();
+        Iterator<Part> parts();
 
         /**
          * Resets Payload dirty flag, indicating whether Payload was modified.
          */
-        public void resetDirty();
+        void resetDirty();
 
         /**
          * Indicates whether Payload was modified since dirty flag was reset.
-         * 
+         *
          * @return <code>true</code> if Payload was modified.
          */
-        public boolean isDirty();
+        boolean isDirty();
 
     }
 
     /**
      * Public API for inbound payloads.
      */
-    public static interface Inbound {
+    public interface Inbound {
 
         /**
          * Returns the parts from the inbound payload.
-         * 
+         *
          * @return Iterator over the inbound Parts
          */
-        public Iterator<Part> parts();
+        Iterator<Part> parts();
 
         /**
          * Returns the name of the header that should be set in the outgoing and incoming http request or response.
-         * 
+         *
          * @return the header name
          */
-        public String getHeaderName();
+        String getHeaderName();
 
     }
 
     /**
      * Public API for the payload Part.
      */
-    public static interface Part {
+    public interface Part {
 
         /**
          * Returns the name assigned to the part when it was created.
-         * 
+         *
          * @return name
          */
-        public String getName();
+        String getName();
 
         /**
          * Returns the content type of the part.
-         * 
+         *
          * @return content type
          */
-        public String getContentType();
+        String getContentType();
 
         /**
          * Returns the Properties associated with the Part.
-         * 
+         *
          * @return Properties for the Part
          */
-        public Properties getProperties();
+        Properties getProperties();
 
         /**
          * Returns an InputStream suitable for reading the content of the Part.
-         * 
+         *
          * @return
          */
-        public InputStream getInputStream();
+        InputStream getInputStream();
 
         /**
          * Copies the contents of the Part to the specified OutputStream.
-         * 
+         *
          * @param os target OutputStream to receive the content of the Part
          * @throws java.io.IOException
          */
-        public void copy(final OutputStream os) throws IOException;
+        void copy(final OutputStream os) throws IOException;
 
         /**
          * Indicates if the Part represents a recursive action or not.
-         * 
+         *
          * @return
          */
-        public boolean isRecursive();
+        boolean isRecursive();
 
         /**
          * Extractor of content can note where the content was extracted. It can help next user of the same Part to read
          * content.
-         * 
+         *
          * @param extractedFile
          */
-        public void setExtracted(File extractedFile);
+        void setExtracted(File extractedFile);
 
         /**
          * File where content was extracted from the payload.
          */
-        public File getExtracted();
+        File getExtracted();
     }
 }

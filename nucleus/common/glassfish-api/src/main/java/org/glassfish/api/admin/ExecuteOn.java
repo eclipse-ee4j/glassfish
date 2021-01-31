@@ -16,11 +16,15 @@
 
 package org.glassfish.api.admin;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation to qualify when an action like a command is targeted to be run on a cluster or a set of instances.
- * 
+ *
  * Some actions may run only on DAS, or only on instances, by default they run on both the DAS and the instances.
  *
  * @author Jerome Dochez
@@ -40,7 +44,7 @@ public @interface ExecuteOn {
     /**
      * Identifies the {@link ClusterExecutor} that is responsible for remotely executing commands on the target clusters or
      * instances. The provider will be looked up in the habitat by its type.
-     * 
+     *
      * @return a {@link ClusterExecutor} type or null to use the default executor that takes the "target" command parameter
      * to
      */

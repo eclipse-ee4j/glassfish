@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Contract to register/unregister events listener. This implementation is not meant to be used for performance
  * sensitive message delivery.
- * 
+ *
  * @author Jerome Dochez
  */
 @Contract
@@ -29,10 +29,10 @@ public interface Events {
 
     /**
      * Registers a new listener for global events
-     * 
+     *
      * @param listener the new listener
      */
-    public void register(EventListener listener);
+    void register(EventListener listener);
 
     /**
      * Unregisteres a listener
@@ -40,14 +40,14 @@ public interface Events {
      * @param listener the register to remove
      * @return true if the removal was successful
      */
-    public boolean unregister(EventListener listener);
+    boolean unregister(EventListener listener);
 
     /**
      * Sends a event asynchronously
      *
      * @param event event to send
      */
-    public void send(EventListener.Event event);
+    void send(EventListener.Event event);
 
     /**
      * Sends a event to all listener synchronously or asynchronously.
@@ -55,5 +55,5 @@ public interface Events {
      * @param event event to send
      * @param asynchronously true if the event should be sent asynchronously
      */
-    public void send(EventListener.Event event, boolean asynchronously);
+    void send(EventListener.Event event, boolean asynchronously);
 }

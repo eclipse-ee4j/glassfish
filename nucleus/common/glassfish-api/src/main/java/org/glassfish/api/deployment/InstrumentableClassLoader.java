@@ -33,13 +33,13 @@ public interface InstrumentableClassLoader {
      *
      * @return A temporary classloader with the same classpath as this loader
      */
-    public ClassLoader copy();
+    ClassLoader copy();
 
     /**
      * Add a new ClassFileTransformer to this class loader. This transfomer should be called for each class loading event.
      *
      * @param transformer new class file transformer to do byte code enhancement.
      */
-    public void addTransformer(ClassFileTransformer transformer);
+    void addTransformer(ClassFileTransformer transformer);
 
 }

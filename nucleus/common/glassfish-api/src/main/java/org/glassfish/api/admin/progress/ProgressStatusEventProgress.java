@@ -92,7 +92,7 @@ public class ProgressStatusEventProgress extends ProgressStatusEvent implements 
         if (this.steps != other.steps) {
             return false;
         }
-        if ((this.message == null) ? (other.message != null) : !this.message.equals(other.message)) {
+        if (this.message == null ? other.message != null : !this.message.equals(other.message)) {
             return false;
         }
         if (this.spinner != other.spinner) {

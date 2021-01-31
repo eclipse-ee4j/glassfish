@@ -16,10 +16,10 @@
 
 package org.glassfish.api.deployment.archive;
 
+import java.net.URI;
+
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.net.URI;
 
 /**
  * @author Vivek Pandey

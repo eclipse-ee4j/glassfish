@@ -16,14 +16,14 @@
 
 package org.glassfish.api.admin;
 
-import org.glassfish.api.Param;
-
-import java.util.Collection;
-import java.util.ArrayList;
+import java.beans.Introspector;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.beans.Introspector;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.glassfish.api.Param;
 
 /**
  * Model for an administrative command
@@ -80,7 +80,7 @@ public abstract class CommandModel {
 
     /**
      * This command is managed job. It is preferred to listen using SSE in case of remote execution.
-     * 
+     *
      * @return {@code true} only if command is @ManagedJob
      */
     public abstract boolean isManagedJob();
@@ -94,7 +94,7 @@ public abstract class CommandModel {
 
     /**
      * Add a ParamModel for this command
-     * 
+     *
      * @param model the new param model to be added
      */
     public abstract void add(ParamModel model);
@@ -105,7 +105,7 @@ public abstract class CommandModel {
      * @return the command's parameters models.
      */
     public Collection<ParamModel> getParameters() {
-        ArrayList<ParamModel> copy = new ArrayList<ParamModel>();
+        ArrayList<ParamModel> copy = new ArrayList<>();
         for (String name : getParametersNames()) {
             copy.add(getModelFor(name));
         }
@@ -167,14 +167,14 @@ public abstract class CommandModel {
 
         /**
          * Returns a localized prompt for this parameter
-         * 
+         *
          * @return a localized String
          */
         public abstract String getLocalizedPrompt();
 
         /**
          * Returns a localized confirmation prompt for this parameter. This is only used for passwords.
-         * 
+         *
          * @return a localized String
          */
         public abstract String getLocalizedPromptAgain();
@@ -198,7 +198,7 @@ public abstract class CommandModel {
 
     /**
      * Should an unknown option be considered an operand by asadmin?
-     * 
+     *
      * @return true if unknown options are operands.
      */
     public boolean unknownOptionsAreOperands() {

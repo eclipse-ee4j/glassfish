@@ -24,6 +24,7 @@ import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
@@ -43,8 +44,8 @@ import org.jvnet.hk2.config.Dom;
  * </ul>
  * The command processor will find all {@code @AccessRequired} annotations and subannotations and make sure all of them
  * pass before allowing the command to proceed.
- * 
- * 
+ *
+ *
  * @author tjquinn
  */
 @Target(ElementType.TYPE)
@@ -88,7 +89,7 @@ public @interface AccessRequired {
     public @interface To {
         /**
          * Action(s) to be authorized on the ConfigBean
-         * 
+         *
          * @return
          */
         public String[] value();
@@ -150,7 +151,7 @@ public @interface AccessRequired {
      * As a convenience such classes can optionally pass the related object to one of the constructors which accepts it and
      * then retrieve it later. This helps avoid having to extend AccessCheck as a private inner class in a command so as to
      * link a given AccessCheck with a given object of interest in the command.
-     * 
+     *
      */
     public class AccessCheck<T> {
 
@@ -161,7 +162,7 @@ public @interface AccessRequired {
          * of the AccessChecks. Those classes can then use the AccessCheck.accessibleRelatedObjects() method, passing the typed
          * collection of access checks. Normally the related object collection will contain the related objects for only those
          * access checks which were successful but the caller can ask for all related objects if needed.
-         * 
+         *
          * @param <U> the type of related object stored in the access checks in the collection
          */
         private static class RelatedObjectCollection<U> extends AbstractCollection<U> {
@@ -176,7 +177,7 @@ public @interface AccessRequired {
 
             @Override
             public Iterator<U> iterator() {
-                return new Iterator<U>() {
+                return new Iterator<>() {
 
                     private final Iterator<AccessCheck<U>> baseIt = accessChecks.iterator();
 
@@ -230,7 +231,7 @@ public @interface AccessRequired {
         /**
          * Returns an immutable collection of the related objects associated with all of the specified access checks provided
          * that the associated access check was successful.
-         * 
+         *
          * @param <U>
          * @param accessChecks the collection of access checks (with related objects) to process
          * @return
@@ -242,14 +243,14 @@ public @interface AccessRequired {
         /**
          * Returns an immutable collection of the related objects associated with all of the specified access checks, regardless
          * of whether the access was granted for each.
-         * 
+         *
          * @param <U>
          * @param accessChecks the collection of access checks (with related objects) to process
          * @param successfulOnly whether to return the related objects for only the successful checks or for all checks
          * @return
          */
         public static <U> Collection<U> relatedObjects(final Collection<AccessCheck<U>> accessChecks, final boolean successfulOnly) {
-            return new RelatedObjectCollection<U>(accessChecks, successfulOnly);
+            return new RelatedObjectCollection<>(accessChecks, successfulOnly);
         }
 
         private final String resourceName;
@@ -266,7 +267,7 @@ public @interface AccessRequired {
         /**
          * Creates a new AccessCheck object linked with a given related object that is of interest to the caller (typically a
          * command).
-         * 
+         *
          * @param relatedObject the related object to which this AccessCheck is linked
          * @param resourceName the resource being acted upon
          * @param action the action performed on the resource
@@ -287,7 +288,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param resourceName the resource to be checked
          * @param action the action on the resource
          * @param note descriptive note about the access check; used during logging
@@ -299,7 +300,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param resourceName the name of the resource to be checked
          * @param action the action on the resource
          * @param note descriptive note about the access check; used during logging
@@ -310,7 +311,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param resourceName the name of the resource to be checked
          * @param action the action on the resource
          * @param isFailureFinal whether a failure of this access check should force a failure of the entire authorization
@@ -322,7 +323,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck} with the specified related object.
-         * 
+         *
          * @param relatedObject an object the commmand wants to associate with this AccessCheck
          * @param resourceName the resource to be checked
          * @param action the action on the resource
@@ -334,7 +335,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param resource the config bean that is the resource to check
          * @param action the action on the resource
          * @param isFailureFatal whether a failure of this access check should force a failure of the entire authorization
@@ -354,7 +355,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param resourceName the resource to be checked
          * @param action the action on the resource
          */
@@ -364,7 +365,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param parent the config bean of the parent resource to which a child is to be added
          * @param childType the type of the child to be added
          * @param action the action on the resource (typically "create")
@@ -392,7 +393,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param parent the config bean of the parent resource to which a child is to be added
          * @param childType the type of the child to be added
          * @param action the action on the resource (typically "create")
@@ -405,7 +406,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck}.
-         * 
+         *
          * @param parent the config bean of the parent resource to which a child is to be added
          * @param childType the type of the child to be added
          * @param action the action on the resource (typically "create")
@@ -416,7 +417,7 @@ public @interface AccessRequired {
 
         /**
          * Creates a new {@code AccessCheck} (typically for an existing target child)
-         * 
+         *
          * @param parent the parent of the config bean to be accessed
          * @param childType the type of the child config bean
          * @param childName the name of the child config bean
@@ -432,7 +433,7 @@ public @interface AccessRequired {
 
         /**
          * Returns the resource name, if any was set when the access check was created.
-         * 
+         *
          * @return
          */
         public String resourceName() {
@@ -451,7 +452,7 @@ public @interface AccessRequired {
 
         /**
          * Returns the action for the access check.
-         * 
+         *
          * @return
          */
         public String action() {
@@ -461,7 +462,7 @@ public @interface AccessRequired {
         /**
          * Returns the type of the child to be added as part of a create-style operation, as set when the access check was
          * created.
-         * 
+         *
          * @return
          */
         public Class<? extends ConfigBeanProxy> childType() {
@@ -470,7 +471,7 @@ public @interface AccessRequired {
 
         /**
          * Returns the parent config bean to which a child was to be added.
-         * 
+         *
          * @return
          */
         public ConfigBeanProxy parent() {
@@ -479,7 +480,7 @@ public @interface AccessRequired {
 
         /**
          * Returns the note associated with the access check.
-         * 
+         *
          * @return
          */
         public String note() {
@@ -488,7 +489,7 @@ public @interface AccessRequired {
 
         /**
          * Returns the config bean to be acted upon
-         * 
+         *
          * @return
          */
         public ConfigBeanProxy resource() {
@@ -498,7 +499,7 @@ public @interface AccessRequired {
         /**
          * Returns whether a failure of this access check would automatically trigger a failure of the entire authorization
          * operation of which it is a part.
-         * 
+         *
          * @return
          */
         public boolean isFailureFinal() {
@@ -508,7 +509,7 @@ public @interface AccessRequired {
         /**
          * Invoked by secure admin to record the result of performing the access check; <b>command developers should not
          * typically use this method themselves.</b>
-         * 
+         *
          * @param passed
          */
         public void setSuccessful(final boolean passed) {
@@ -517,7 +518,7 @@ public @interface AccessRequired {
 
         /**
          * Returns whether the access check succeeded.
-         * 
+         *
          * @return
          */
         public boolean isSuccessful() {
@@ -526,12 +527,12 @@ public @interface AccessRequired {
 
         /**
          * Formats the access check as a human-friendly string.
-         * 
+         *
          * @return
          */
         @Override
         public String toString() {
-            return (new StringBuilder("AccessCheck ")).append(resourceName()).append("=").append(action).append(", isSuccessful=").append(isSuccessful)
+            return new StringBuilder("AccessCheck ").append(resourceName()).append("=").append(action).append(", isSuccessful=").append(isSuccessful)
                     .append(", isFailureFatal=").append(isFailureFatal).append("//").append(note).toString();
         }
     }
@@ -554,21 +555,19 @@ public @interface AccessRequired {
                 path.insert(0, pathSegment);
                 d = d.parent();
             }
-            if (lastDom != null) {
-                if (lastDom.getKey() != null) {
-                    path.insert(0, pluralize(lastDom.model.getTagName()) + '/');
-                }
+            if ((lastDom != null) && (lastDom.getKey() != null)) {
+                path.insert(0, pluralize(lastDom.model.getTagName()) + '/');
             }
             return path.toString();
         }
 
         public static String resourceNameFromConfigBeanProxy(ConfigBeanProxy b) {
-            return (b == null ? null : resourceNameFromDom(Dom.unwrap(b)));
+            return b == null ? null : resourceNameFromDom(Dom.unwrap(b));
         }
 
         public static String resourceNameFromConfigBeanType(final ConfigBeanProxy parent, final String collectionName,
                 final Class<? extends ConfigBeanProxy> childType) {
-            return (parent == null ? null : resourceNameFromConfigBeanType(Dom.unwrap(parent), collectionName, childType));
+            return parent == null ? null : resourceNameFromConfigBeanType(Dom.unwrap(parent), collectionName, childType);
 
         }
 

@@ -16,12 +16,13 @@
 package org.glassfish.api.naming;
 
 import java.util.List;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Identifies a class that implements a default resource. Typically, this class is also annotated with NamespacePrefixes
  * which allows a caller to get the logical name for the resource.
- * 
+ *
  * @author Tom Mueller
  */
 @Contract

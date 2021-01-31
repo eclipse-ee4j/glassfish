@@ -17,7 +17,12 @@
 package org.glassfish.api.admin.progress;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.glassfish.api.admin.CommandProgress;
 import org.glassfish.api.admin.ProgressStatus;
 
@@ -33,6 +38,10 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
 
     public static class ChildProgressStatus implements Serializable {
 
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
         private final int allocatedSteps;
         private final ProgressStatusBase progressStatus;
 
@@ -89,11 +98,11 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     protected int currentStepCount = 0;
     protected ProgressStatusBase parent;
     protected boolean completed = false;
-    protected Set<ChildProgressStatus> children = new HashSet<ChildProgressStatus>();
+    protected Set<ChildProgressStatus> children = new HashSet<>();
 
     /**
      * Construct unnamed {@code ProgressStatus}
-     * 
+     *
      * @param parent Parent {@code ProgressStatus}
      * @param id Is useful for event transfer
      */
@@ -103,7 +112,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
 
     /**
      * Construct named {@code ProgressStatus}.
-     * 
+     *
      * @param name of the {@code ProgressStatus} implementation is used to identify source of progress messages.
      * @param parent Parent {@code ProgressStatus}
      * @param id Is useful for event transfer
@@ -114,7 +123,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
 
     /**
      * Construct named {@code ProgressStatus} with defined expected count of steps.
-     * 
+     *
      * @param name of the {@code ProgressStatus} implementation is used to identify source of progress messages.
      * @param totalStepCount How many steps are expected in this {@code ProgressStatus}
      * @param parent Parent {@code ProgressStatus}
@@ -265,7 +274,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             for (ChildProgressStatus child : children) {
                 allocatedSteps += child.getAllocatedSteps();
             }
-            if ((allocatedSteps + currentStepCount) > totalStepCount) {
+            if (allocatedSteps + currentStepCount > totalStepCount) {
                 currentStepCount = totalStepCount - allocatedSteps;
                 if (currentStepCount < 0) {
                     currentStepCount = 0;
@@ -310,7 +319,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
             if (childPortion < 0) {
                 return -1;
             }
-            realStepCount += ((float) child.getAllocatedSteps()) * childPortion;
+            realStepCount += child.getAllocatedSteps() * childPortion;
         }
         return realStepCount;
     }
@@ -332,7 +341,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
         if (totalStepCount < 0) {
             return -1;
         } else if (totalStepCount > 0) {
-            return realSteps / ((float) totalStepCount);
+            return realSteps / totalStepCount;
         } else {
             return 1;
         }
@@ -368,7 +377,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     }
 
     public synchronized Collection<ProgressStatusBase> getChildren() {
-        Collection<ProgressStatusBase> result = new ArrayList<ProgressStatusBase>(children.size());
+        Collection<ProgressStatusBase> result = new ArrayList<>(children.size());
         for (ChildProgressStatus chld : children) {
             result.add(chld.getProgressStatus());
         }
@@ -421,7 +430,7 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
         if (parent instanceof CommandProgress) {
             return ((CommandProgress) parent).isSpinnerActive();
         }
-        return ((ProgressStatusBase) parent).getSpinnerStatus();
+        return parent.getSpinnerStatus();
     }
 
 }

@@ -19,12 +19,12 @@ package org.glassfish.api.event;
 /**
  * Code that wish to listen to glassfish events should implement this interface and register it to the Events contract
  * implementation.
- * 
+ *
  * User: Jerome Dochez
  */
 public interface EventListener {
 
-    public void event(Event event);
+    void event(Event event);
 
     public class Event<T> {
         final long inception;

@@ -16,24 +16,25 @@
 
 package org.glassfish.api.admin.config;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
 import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * An configured element which has to have application type of name.
- * 
+ *
  * @author Nandini Ektare
  */
 @Configured
 public interface ApplicationName extends ConfigBeanProxy, Payload {
 
-    final static String NAME_APP_REGEX = "[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_\\./;:#]*";
+    String NAME_APP_REGEX = "[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_\\./;:#]*";
 
     /**
      * Name of the configured object
@@ -42,9 +43,8 @@ public interface ApplicationName extends ConfigBeanProxy, Payload {
      */
     @Attribute(key = true)
     @NotNull
-    @Pattern(regexp = NAME_APP_REGEX, message = "{app.invalid.name}", payload = ApplicationName.class)
-    public String getName();
+    @Pattern(regexp = NAME_APP_REGEX, message = "{app.invalid.name}", payload = ApplicationName.class) String getName();
 
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
 }

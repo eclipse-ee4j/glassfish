@@ -25,6 +25,6 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ResourceHandler {
 
-    public java.util.List getResourceList();
+    java.util.List getResourceList();
 
 }

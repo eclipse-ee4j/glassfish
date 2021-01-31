@@ -18,6 +18,7 @@ package org.glassfish.api.admin;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
@@ -47,21 +48,21 @@ public @interface RestEndpoint {
     /**
      * This is the value of the last segment in the generated URL. If blank, this will default to the value of the name
      * attribute on the commands @Service annotation
-     * 
+     *
      * @return
      */
     String path() default "";
 
     /**
      * The description of the endpoint. This is used primarily in the REST HTML interface.
-     * 
+     *
      * @return
      */
     String description() default "";
 
     /**
      * A list of one or more @RestParam annotations representing the parameters to be used in the AdminCommand call
-     * 
+     *
      * @return
      */
     RestParam[] params() default {};
@@ -70,7 +71,7 @@ public @interface RestEndpoint {
      * Whether this RestEndpoint should be used for command authorization decisions automatically. Setting this to true
      * causes the admin command framework automatically to use the configBean attribute to compute the resource name and the
      * OpType to compute the action.
-     * 
+     *
      * @return
      */
     boolean useForAuthorization() default false;

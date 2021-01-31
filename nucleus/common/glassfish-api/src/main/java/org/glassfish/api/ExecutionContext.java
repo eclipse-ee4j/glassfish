@@ -28,9 +28,9 @@ public interface ExecutionContext {
 
     /**
      * Returns the logger services implementation should use to log useful information about their execution.
-     * 
+     *
      * @retun the services logger
      */
-    public Logger getLogger();
+    Logger getLogger();
 
 }

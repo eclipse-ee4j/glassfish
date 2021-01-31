@@ -21,14 +21,14 @@ import java.util.Map;
 
 /**
  * Extensible list of event types. EventTypes are created through the create method and not directly.
- * 
+ *
  * Events can be compared using == or equals although == is recommended.
- * 
+ *
  * @author dochez
  */
 public final class EventTypes<T> {
 
-    private final static Map<String, EventTypes> EVENTS = new HashMap<String, EventTypes>();
+    private final static Map<String, EventTypes> EVENTS = new HashMap<>();
 
     // stock events.
     public static final String SERVER_STARTUP_NAME = "server_startup";
@@ -84,12 +84,15 @@ public final class EventTypes<T> {
      */
     @Override
     public boolean equals(final Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (null == o)
+        }
+        if (null == o) {
             return false;
-        if (getClass() != o.getClass())
+        }
+        if (getClass() != o.getClass()) {
             return false;
+        }
 
         return name.equals(((EventTypes) o).name);
     }

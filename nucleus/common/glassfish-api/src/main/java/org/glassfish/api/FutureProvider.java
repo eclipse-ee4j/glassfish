@@ -16,8 +16,8 @@
 
 package org.glassfish.api;
 
-import java.util.concurrent.Future;
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Some operations may be asynchronous and need to provide their results as a list of future objects
@@ -26,6 +26,6 @@ import java.util.List;
  */
 public interface FutureProvider<T> {
 
-    public List<Future<T>> getFutures();
+    List<Future<T>> getFutures();
 
 }

@@ -23,10 +23,14 @@ package com.sun.appserv.server;
 public final class ServerLifecycleException extends Exception {
 
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Construct a new LifecycleException with no other information.
      */
     public ServerLifecycleException() {
-        super();
     }
 
     /**

@@ -16,8 +16,8 @@
 
 package org.glassfish.api.admin.config;
 
-import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Contract for upgrading legacy configuration values to their new location or simply removing them if they are no

@@ -16,8 +16,8 @@
 
 package org.glassfish.api.container;
 
-import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.deployment.Deployer;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Contract identifying a container implementation.
@@ -35,13 +35,13 @@ public interface Container {
      *
      * @return the Deployer implementation
      */
-    public Class<? extends Deployer> getDeployer();
+    Class<? extends Deployer> getDeployer();
 
     /**
      * Returns a human redeable name for this container, this name is not used for identifying the container but can be used
      * to display messages belonging to the container.
-     * 
+     *
      * @return a human readable name for this container.
      */
-    public String getName();
+    String getName();
 }

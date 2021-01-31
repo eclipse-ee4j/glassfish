@@ -16,16 +16,16 @@
 
 package org.glassfish.api.naming;
 
-import org.glassfish.hk2.api.Metadata;
-import org.jvnet.hk2.annotations.Service;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import jakarta.inject.Qualifier;
+import org.glassfish.hk2.api.Metadata;
+import org.jvnet.hk2.annotations.Service;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import jakarta.inject.Qualifier;
 
 /**
  * Goes with {@link Service} annotation on a {@link NamedNamingObjectProxy}. Using this annotation a

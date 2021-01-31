@@ -18,10 +18,15 @@ package org.glassfish.api.container;
 
 /**
  * Exception, which will be thrown on endpoint registration problems.
- * 
+ *
  * @author Alexey Stashok
  */
 public class EndpointRegistrationException extends Exception {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     public EndpointRegistrationException() {
     }
 

@@ -32,7 +32,7 @@ public interface InvocationManager {
      *
      * @param inv the Invocation object
      */
-    public <T extends ComponentInvocation> void preInvoke(T inv) throws InvocationException;
+    <T extends ComponentInvocation> void preInvoke(T inv) throws InvocationException;
 
     /**
      * To be called by a Container to indicate that the Container has just completed the invocation of a method on a
@@ -40,28 +40,28 @@ public interface InvocationManager {
      *
      * @param inv the Invocation object
      */
-    public <T extends ComponentInvocation> void postInvoke(T inv) throws InvocationException;
+    <T extends ComponentInvocation> void postInvoke(T inv) throws InvocationException;
 
     /**
      * Returns the current Invocation object associated with the current thread
      */
-    public <T extends ComponentInvocation> T getCurrentInvocation();
+    <T extends ComponentInvocation> T getCurrentInvocation();
 
     /**
      * Returns the previous Invocation object associated with the current thread. Returns null if there is none. This is
      * typically used when a component A calls another component B within the same VM. In this case, it might be necessary
      * to obtain information related to both component A using getPreviousInvocation() and B using getCurrentInvocation()
      */
-    public <T extends ComponentInvocation> T getPreviousInvocation() throws InvocationException;
+    <T extends ComponentInvocation> T getPreviousInvocation() throws InvocationException;
 
     /**
      * return true iff no invocations on the stack for this thread
      */
-    public boolean isInvocationStackEmpty();
+    boolean isInvocationStackEmpty();
 
-    public java.util.List<? extends ComponentInvocation> getAllInvocations();
+    java.util.List<? extends ComponentInvocation> getAllInvocations();
 
-    public void registerComponentInvocationHandler(ComponentInvocationType type, RegisteredComponentInvocationHandler handler);
+    void registerComponentInvocationHandler(ComponentInvocationType type, RegisteredComponentInvocationHandler handler);
 
     /**
      * To be called by the infrastructure to indicate that some user code not associated with any Java EE specification may
@@ -72,14 +72,14 @@ public interface InvocationManager {
      *
      * @param env may not be null. Information about the application environment
      */
-    public void pushAppEnvironment(ApplicationEnvironment env);
+    void pushAppEnvironment(ApplicationEnvironment env);
 
     /**
      * Gets the current application environment on the current thread
      *
      * @return The current ApplicationEnvironment, or null if there is none
      */
-    public ApplicationEnvironment peekAppEnvironment();
+    ApplicationEnvironment peekAppEnvironment();
 
     /**
      * To be called by the infrastructure to indicate that some user code not associated with any Java EE specification is
@@ -90,6 +90,6 @@ public interface InvocationManager {
      *
      * @param env may not be null. Information about the application environment
      */
-    public void popAppEnvironment();
+    void popAppEnvironment();
 
 }

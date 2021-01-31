@@ -19,6 +19,11 @@ package org.glassfish.api.admin;
 public class CommandException extends Exception {
 
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates new <code>CommandException</code> without detail message.
      */
     public CommandException() {
@@ -26,7 +31,7 @@ public class CommandException extends Exception {
 
     /**
      * Constructs a <code>CommandException</code> with the specified detail message.
-     * 
+     *
      * @param msg the detail message.
      */
     public CommandException(String msg) {

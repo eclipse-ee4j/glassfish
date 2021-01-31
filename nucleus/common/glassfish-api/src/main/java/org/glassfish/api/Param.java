@@ -16,13 +16,12 @@
 
 package org.glassfish.api;
 
-import org.jvnet.hk2.config.Attribute;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Param is a parameter to a command. This annotation can be placed on a field or setter method to identify the
@@ -55,7 +54,7 @@ public @interface Param {
 
     /**
      * Returns true if the parameter is optional to the successful invocation of the command
-     * 
+     *
      * @return true if the parameter is optional
      */
     public boolean optional() default false;
@@ -85,14 +84,14 @@ public @interface Param {
 
     /**
      * Returns a class that calculates the default value associated with the parameter.
-     * 
+     *
      * @return a parameter default value calculator
      */
     public Class<? extends ParamDefaultCalculator> defaultCalculator() default ParamDefaultCalculator.class;
 
     /**
      * Returns true if the parameter is a password
-     * 
+     *
      * @return true if the parameter is password
      */
     public boolean password() default false;

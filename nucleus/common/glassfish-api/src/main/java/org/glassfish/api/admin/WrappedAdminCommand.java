@@ -23,7 +23,7 @@ package org.glassfish.api.admin;
  *     public void execute(...
  * }
  * </code>
- * 
+ *
  * @author Andriy Zhdanov
  *
  */
@@ -32,7 +32,7 @@ public abstract class WrappedAdminCommand implements AdminCommand {
 
     /**
      * Default constructor.
-     * 
+     *
      * @param command Original command is was wrapped.
      */
     public WrappedAdminCommand(AdminCommand command) {
@@ -41,7 +41,7 @@ public abstract class WrappedAdminCommand implements AdminCommand {
 
     /**
      * Original command that was wrapped.
-     * 
+     *
      * @return unwrapped command.
      */
     protected AdminCommand getWrappedCommand() {
@@ -50,7 +50,7 @@ public abstract class WrappedAdminCommand implements AdminCommand {
 
     /**
      * Get root of wrapped command.
-     * 
+     *
      * @return command.
      */
     protected AdminCommand getUnwrappedCommand() {

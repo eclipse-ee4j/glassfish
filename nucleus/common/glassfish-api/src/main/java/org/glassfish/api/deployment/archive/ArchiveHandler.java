@@ -16,13 +16,13 @@
 
 package org.glassfish.api.deployment.archive;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.jar.Manifest;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.io.IOException;
-import java.util.jar.Manifest;
-import java.util.List;
-import java.net.URI;
 
 /**
  * ArchiveHandlers are handling certain archive type. An archive has a unique type which is usually defines how classes
@@ -30,7 +30,7 @@ import java.net.URI;
  *
  * ArchiveHandler should be stateless objects although the implementations of this contract can control that using the
  * scope element of the @Service annotation.
- * 
+ *
  * @author Jerome Dochez, Sanjeeb Sahoo
  */
 @Contract
@@ -45,31 +45,31 @@ public interface ArchiveHandler {
      * @return the type of the archive or deployment unit handled by this handler
      * @see ArchiveDetector#getArchiveType()
      */
-    public String getArchiveType();
+    String getArchiveType();
 
     /**
      * Returns the default name by which the specified archive can be identified.
      * <p>
      * The default name is used, for example, during deployment if no name was specified explicitly as part of the
      * deployment request.
-     * 
+     *
      * @param archive the archive for which to provide the default name
      * @return the default name for identifying the specified archive
      */
-    public String getDefaultApplicationName(ReadableArchive archive);
+    String getDefaultApplicationName(ReadableArchive archive);
 
-    public String getDefaultApplicationName(ReadableArchive archive, DeploymentContext context);
+    String getDefaultApplicationName(ReadableArchive archive, DeploymentContext context);
 
     /**
      * Returns the version identifier by which the specified archive can be deployed.
      * <p>
      * The version identifier is used during deployment if no version identifier was specified <code>null</code> must be
      * returned
-     * 
+     *
      * @param archive the archive for which to provide the version identifier
      * @return the version identifier for versioning the deployment archive or <code>null</code>
      */
-    public String getVersionIdentifier(ReadableArchive archive);
+    String getVersionIdentifier(ReadableArchive archive);
 
     /**
      * Returns true if this handler understands the specified archive and can process it.
@@ -77,7 +77,7 @@ public interface ArchiveHandler {
      * @throws IOException The implementation of this method is expected to interact with the given archive, and if methods
      * on {@link ReadableArchive} throws an {@link IOException}, it can be simply tunneled to the caller.
      */
-    public boolean handles(ReadableArchive archive) throws IOException;
+    boolean handles(ReadableArchive archive) throws IOException;
 
     /**
      * Creates a classloader that can load code from inside the archive.
@@ -86,17 +86,17 @@ public interface ArchiveHandler {
      * classloader is capable of resolving APIs and other things that the container
      * @param context
      */
-    public ClassLoader getClassLoader(ClassLoader parent, DeploymentContext context);
+    ClassLoader getClassLoader(ClassLoader parent, DeploymentContext context);
 
     /**
      * Prepares the jar file to a format the ApplicationContainer is expecting. This could be just a pure unzipping of the
      * jar or nothing at all.
-     * 
+     *
      * @param source of the expanding
      * @param target of the expanding
      * @param context
      */
-    public void expand(ReadableArchive source, WritableArchive target, DeploymentContext context) throws IOException;
+    void expand(ReadableArchive source, WritableArchive target, DeploymentContext context) throws IOException;
 
     /**
      * Returns the manifest file for this archive, this file is usually located at the META-INF/MANIFEST location, however,
@@ -105,7 +105,7 @@ public interface ArchiveHandler {
      * @param archive file
      * @return manifest instance or null if this archive has no manifest
      */
-    public Manifest getManifest(ReadableArchive archive) throws IOException;
+    Manifest getManifest(ReadableArchive archive) throws IOException;
 
     /**
      * Returns the classpath URIs for this archive.
@@ -113,7 +113,7 @@ public interface ArchiveHandler {
      * @param archive file
      * @return classpath URIs for this archive
      */
-    public List<URI> getClassPathURIs(ReadableArchive archive);
+    List<URI> getClassPathURIs(ReadableArchive archive);
 
     /**
      * Returns whether this archive requires annotation scanning.
@@ -121,6 +121,6 @@ public interface ArchiveHandler {
      * @param archive file
      * @return whether this archive requires annotation scanning
      */
-    public boolean requiresAnnotationScanning(ReadableArchive archive);
+    boolean requiresAnnotationScanning(ReadableArchive archive);
 
 }

@@ -28,7 +28,7 @@ import org.jvnet.hk2.annotations.Contract;
  *
  * Command implementations are normal services and are therefore following the normal hk2 service lifecycle and
  * injection features.
- * 
+ *
  * <p>
  * Internationalization can be provided by using the {@link org.glassfish.api.I18n}} annotation. Each parameter
  * declaration can also be annotated with an {@link org.glassfish.api.I18n} annotation to point to the parameter .
@@ -50,9 +50,9 @@ public interface AdminCommand {
     /**
      * Executes the command with the command parameters passed as Properties where the keys are the parameter names and the
      * values are the parameter values
-     * 
+     *
      * @param context information
      */
-    public void execute(AdminCommandContext context);
+    void execute(AdminCommandContext context);
 
 }

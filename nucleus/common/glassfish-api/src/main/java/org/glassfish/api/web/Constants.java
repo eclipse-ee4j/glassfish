@@ -21,5 +21,5 @@ package org.glassfish.api.web;
  */
 public interface Constants {
 
-    public static final String ADMIN_VS = "__asadmin";
+    String ADMIN_VS = "__asadmin";
 }

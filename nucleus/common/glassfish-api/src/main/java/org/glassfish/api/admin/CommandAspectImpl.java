@@ -19,9 +19,6 @@ package org.glassfish.api.admin;
 import java.lang.annotation.Annotation;
 
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.Job;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -30,7 +27,7 @@ import org.jvnet.hk2.annotations.Contract;
  * this is used.
  *
  * See empty CommandAspectBase implementation to extend.
- * 
+ *
  * @author andriy.zhdanov
  *
  * @param <T> aspect annotation.

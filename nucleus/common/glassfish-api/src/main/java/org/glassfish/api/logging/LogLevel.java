@@ -47,7 +47,7 @@ public class LogLevel extends Level {
 
     /**
      * Constructor to initialize a custom Level instance
-     * 
+     *
      * @param name
      * @param value
      */

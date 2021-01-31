@@ -22,7 +22,7 @@ import java.sql.SQLException;
 /**
  * This interface can be implemented to provide a custom connection validation mechanism if custom-validation is chosen
  * as the connection-validation-method.
- * 
+ *
  * @author Shalini M
  */
 public interface ConnectionValidation {

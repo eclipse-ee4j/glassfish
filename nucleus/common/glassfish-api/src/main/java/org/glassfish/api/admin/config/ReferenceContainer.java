@@ -24,13 +24,13 @@ package org.glassfish.api.admin.config;
  */
 public interface ReferenceContainer {
 
-    public String getReference();
+    String getReference();
 
-    public boolean isCluster();
+    boolean isCluster();
 
-    public boolean isServer();
+    boolean isServer();
 
-    public boolean isInstance();
+    boolean isInstance();
 
-    public boolean isDas();
+    boolean isDas();
 }

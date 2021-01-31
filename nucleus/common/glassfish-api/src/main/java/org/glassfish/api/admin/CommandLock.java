@@ -16,7 +16,11 @@
 
 package org.glassfish.api.admin;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation used to indicate what type of lock to acquire before executing an admin command. By default (witout this
@@ -37,7 +41,7 @@ public @interface CommandLock {
      */
     public enum LockType {
         NONE, SHARED, EXCLUSIVE
-    };
+    }
 
     /**
      * Returns the type of lock to acquire.

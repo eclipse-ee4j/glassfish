@@ -67,7 +67,7 @@ public class ProgressStatusEventComplete extends ProgressStatusEvent implements 
             return false;
         }
         final ProgressStatusEventComplete other = (ProgressStatusEventComplete) obj;
-        if ((this.message == null) ? (other.message != null) : !this.message.equals(other.message)) {
+        if (this.message == null ? other.message != null : !this.message.equals(other.message)) {
             return false;
         }
         return true;

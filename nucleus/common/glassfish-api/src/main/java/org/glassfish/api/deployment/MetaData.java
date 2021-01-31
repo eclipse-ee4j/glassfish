@@ -16,8 +16,6 @@
 
 package org.glassfish.api.deployment;
 
-import com.sun.enterprise.module.ModuleDefinition;
-
 /**
  * MetaData associated with a Deployer. This is used by the deployment layers to identify the special requirements of
  * the Deployer.
@@ -50,7 +48,7 @@ public class MetaData {
 
     /**
      * Returns whether or not the class loader is invalidated by the Deployer's propare phase.
-     * 
+     *
      * @return true if the class loader is invalid after the Deployer's prepare phase call.
      */
     public boolean invalidatesClassLoader() {
@@ -68,7 +66,7 @@ public class MetaData {
             return empty;
         }
         return provides;
-    };
+    }
 
     /**
      * Returns the list of types of metadata this deployer will require to run successfully the prepare method.

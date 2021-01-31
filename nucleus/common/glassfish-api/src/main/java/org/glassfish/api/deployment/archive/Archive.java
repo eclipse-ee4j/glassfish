@@ -16,14 +16,14 @@
 
 package org.glassfish.api.deployment.archive;
 
-import org.glassfish.api.deployment.DeploymentContext;
-
-import java.io.IOException;
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Collection;
-import java.util.jar.Manifest;
+import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.jar.Manifest;
+
+import org.glassfish.api.deployment.DeploymentContext;
 
 /**
  * This interface is an abstraction for accessing a module archive.
@@ -35,46 +35,46 @@ public interface Archive {
     /**
      * closes this archive and releases all resources
      */
-    public void close() throws IOException;
+    void close() throws IOException;
 
     /**
      * Returns an enumeration of the module file entries. All elements in the enumeration are of type String. Each String
      * represents a file name relative to the root of the module.
-     * 
+     *
      * @return an enumeration of the archive file entries.
      */
-    public Enumeration<String> entries();
+    Enumeration<String> entries();
 
     /**
      * Returns an enumeration of the module file entries with the specified prefix. All elements in the enumeration are of
      * type String. Each String represents a file name relative to the root of the module.
-     * 
+     *
      * @param prefix the prefix of entries to be included
      * @return an enumeration of the archive file entries.
      */
-    public Enumeration<String> entries(String prefix);
+    Enumeration<String> entries(String prefix);
 
     /**
      * Returns the enumeration of first level directories in this archive
-     * 
+     *
      * @return enumeration of directories under the root of this archive
      */
-    public Collection<String> getDirectories() throws IOException;
+    Collection<String> getDirectories() throws IOException;
 
     /**
      * Returns true if the entry is a directory or a plain file
-     * 
+     *
      * @param name name is one of the entries returned by {@link #entries()}
      * @return true if the entry denoted by the passed name is a directory
      */
-    public boolean isDirectory(String name);
+    boolean isDirectory(String name);
 
     /**
      * Returns the manifest information for this archive
-     * 
+     *
      * @return the manifest info
      */
-    public Manifest getManifest() throws IOException;
+    Manifest getManifest() throws IOException;
 
     /**
      * Returns the path used to create or open the underlying archive
@@ -89,21 +89,21 @@ public interface Archive {
      *
      * @return the path for this archive.
      */
-    public URI getURI();
+    URI getURI();
 
     /**
      * Returns the size of the archive.
-     * 
+     *
      * @return long indicating the size of the archive
      */
-    public long getArchiveSize() throws SecurityException;
+    long getArchiveSize() throws SecurityException;
 
     /**
      * Returns the name of the archive.
      * <p>
      * Implementations should not return null.
-     * 
+     *
      * @return the name of the archive
      */
-    public String getName();
+    String getName();
 }

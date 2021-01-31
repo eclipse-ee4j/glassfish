@@ -16,37 +16,32 @@
 
 package org.glassfish.api.amx;
 
-import org.jvnet.hk2.annotations.Contract;
-
-import javax.management.JMException;
-import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.glassfish.external.probe.provider.annotations.Probe;
-
 import org.glassfish.external.amx.AMXGlassfish;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * A loader of AMX MBeans. Any module that wants automatic support for loading AMX MBeans should implement this
  * contract, choosing an appropriate name. The loader will be found and instantiated when AMX is loaded.
- * 
+ *
  * @see AMXValues
  */
 @Contract
 @org.glassfish.external.arc.Taxonomy(stability = org.glassfish.external.arc.Stability.UNCOMMITTED)
 public interface AMXLoader {
     /** property prefix used by AMXLoader MBeans, name to be suffixed to it */
-    public static String LOADER_PREFIX = AMXGlassfish.DEFAULT.amxSupportDomain() + ":type=amx-loader,name=";
+    String LOADER_PREFIX = AMXGlassfish.DEFAULT.amxSupportDomain() + ":type=amx-loader,name=";
 
     /**
      * Loader a hierarchy of AMX MBeans, returning the ObjectName of the root of the hierarchy.
      */
-    public ObjectName loadAMXMBeans();
+    ObjectName loadAMXMBeans();
 
     /**
      *
      * Unload (unregister) AMX MBeans.
      */
-    public void unloadAMXMBeans();
+    void unloadAMXMBeans();
 
 }

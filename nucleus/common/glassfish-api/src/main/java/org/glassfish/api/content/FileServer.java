@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Implementations of this interface are responsible for servicing a file residing on the local file system to a
  * Response object.
- * 
+ *
  * @author Jerome Dochez
  */
 @Contract

@@ -17,7 +17,9 @@
 package org.glassfish.api.admin;
 
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.Payload.Inbound;
 import org.glassfish.api.admin.Payload.Outbound;
@@ -30,6 +32,10 @@ import org.glassfish.api.admin.Payload.Outbound;
  */
 public class AdminCommandContextForInstance implements AdminCommandContext {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private AdminCommandContext wrapped;
     private ProgressStatus progressStatus;
 

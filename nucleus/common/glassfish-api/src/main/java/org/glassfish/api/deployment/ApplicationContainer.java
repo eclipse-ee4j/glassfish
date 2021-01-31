@@ -26,37 +26,37 @@ public interface ApplicationContainer<T> {
 
     /**
      * Returns the deployment descriptor associated with this application
-     * 
+     *
      * @return deployment descriptor if they exist or null if not
      */
-    public T getDescriptor();
+    T getDescriptor();
 
     /**
      * Starts an application container. ContractProvider starting should not throw an exception but rather should use their
      * prefered Logger instance to log any issue they encounter while starting. Returning false from a start mean that the
      * container failed to start
-     * 
+     *
      * @param startupContext the start up context
      * @return true if the container startup was successful.
      *
      * @throws Exception if this application container could not be started
      */
-    public boolean start(ApplicationContext startupContext) throws Exception;
+    boolean start(ApplicationContext startupContext) throws Exception;
 
     /**
      * Stop the application container
-     * 
+     *
      * @return true if stopping was successful.
      * @param stopContext
      */
-    public boolean stop(ApplicationContext stopContext);
+    boolean stop(ApplicationContext stopContext);
 
     /**
      * Suspends this application container.
      *
      * @return true if suspending was successful, false otherwise.
      */
-    public boolean suspend();
+    boolean suspend();
 
     /**
      * Resumes this application container.
@@ -65,13 +65,13 @@ public interface ApplicationContainer<T> {
      *
      * @throws Exception if this application container could not be resumed
      */
-    public boolean resume() throws Exception;
+    boolean resume() throws Exception;
 
     /**
      * Returns the class loader associated with this application
-     * 
+     *
      * @return ClassLoader for this app
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
 }

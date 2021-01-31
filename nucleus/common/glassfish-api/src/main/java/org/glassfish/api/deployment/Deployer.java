@@ -39,7 +39,7 @@ public interface Deployer<T extends Container, U extends ApplicationContainer> {
      *
      * @return the meta data for this Deployer
      */
-    public MetaData getMetaData();
+    MetaData getMetaData();
 
     /**
      * Loads the meta date associated with the application.
@@ -47,7 +47,7 @@ public interface Deployer<T extends Container, U extends ApplicationContainer> {
      * @param type type of meta-data that this deployer has declared providing.
      * @return the meta-data of type V
      */
-    public <V> V loadMetaData(Class<V> type, DeploymentContext context);
+    <V> V loadMetaData(Class<V> type, DeploymentContext context);
 
     /**
      * Prepares the application bits for running in the application server. For certain cases, this is generating non
@@ -57,31 +57,31 @@ public interface Deployer<T extends Container, U extends ApplicationContainer> {
      * @param context of the deployment
      * @return true if the prepare phase executed successfully
      */
-    public boolean prepare(DeploymentContext context);
+    boolean prepare(DeploymentContext context);
 
     /**
      * Loads a previously prepared application in its execution environment and return a ContractProvider instance that will
      * identify this environment in future communications with the application's container runtime.
-     * 
+     *
      * @param container in which the application will reside
      * @param context of the deployment
      * @return an ApplicationContainer instance identifying the running application
      */
-    public U load(T container, DeploymentContext context);
+    U load(T container, DeploymentContext context);
 
     /**
      * Unload or stop a previously running application identified with the ContractProvider instance. The container will be
      * stop upon return from this method.
-     * 
+     *
      * @param appContainer instance to be stopped
      * @param context of the undeployment
      */
-    public void unload(U appContainer, DeploymentContext context);
+    void unload(U appContainer, DeploymentContext context);
 
     /**
      * Clean any files and artifacts that were created during the execution of the prepare method.
-     * 
+     *
      * @param context deployment context
      */
-    public void clean(DeploymentContext context);
+    void clean(DeploymentContext context);
 }

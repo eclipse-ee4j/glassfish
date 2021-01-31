@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Contract called on startup right after the configuration has been read (and potentially upgraded) but before the
  * startup services.
- * 
+ *
  * This hook is particularly useful to clean up configuration from left over config elements that may have not been
  * synchronized correctly due to various sync optimizations.
  *

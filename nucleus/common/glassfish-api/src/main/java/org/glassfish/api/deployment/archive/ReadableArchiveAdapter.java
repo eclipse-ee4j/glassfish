@@ -18,89 +18,109 @@ package org.glassfish.api.deployment.archive;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
-import org.glassfish.api.deployment.archive.ReadableArchive;
+import java.util.Collection;
+import java.util.Enumeration;
 
 /**
  * A <strong>lot</strong> of methods need to be written in order to implement ReadableArchive. The no-op methods are
  * implemented here to make ScatteredWar easier to understand.
- * 
+ *
  * @author Byron Nevins
  */
 abstract public class ReadableArchiveAdapter implements ReadableArchive {
 
+    @Override
     public long getEntrySize(String arg0) {
         return 0L;
     }
 
+    @Override
     public void open(URI arg0) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ReadableArchive getSubArchive(String arg0) throws IOException {
         return null;
     }
 
+    @Override
     public boolean delete() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public boolean renameTo(String arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void close() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public long getArchiveSize() throws SecurityException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public boolean exists() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public Enumeration<String> entries() {
         return null;
     }
 
+    @Override
     public Enumeration<String> entries(String prefix) {
         return null;
     }
 
+    @Override
     public Collection<String> getDirectories() throws IOException {
         return null;
     }
 
+    @Override
     public boolean isDirectory(java.lang.String name) {
         return false;
     }
 
+    @Override
     public void setParentArchive(ReadableArchive parentArchive) {
     }
 
+    @Override
     public ReadableArchive getParentArchive() {
         return null;
     }
 
+    @Override
     public <U> U getExtraData(Class<U> dataType) {
         return null;
     }
 
+    @Override
     public <U> void setExtraData(Class<U> dataType, U instance) {
     }
 
+    @Override
     public <U> void removeExtraData(Class<U> dataType) {
     }
 
+    @Override
     public void addArchiveMetaData(String metaDataKey, Object metaData) {
     }
 
+    @Override
     public <T> T getArchiveMetaData(String metaDataKey, Class<T> metadataType) {
         return null;
     }
 
+    @Override
     public void removeArchiveMetaData(String metaDataKey) {
     }
 

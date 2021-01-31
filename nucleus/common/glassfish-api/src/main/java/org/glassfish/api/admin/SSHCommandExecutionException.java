@@ -22,15 +22,19 @@ package org.glassfish.api.admin;
 public class SSHCommandExecutionException extends CommandException {
 
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>SSHCommandExecutionException</code> without detail message.
      */
     public SSHCommandExecutionException() {
-        super();
     }
 
     /**
      * Constructs a <code>SSHCommandExecutionException</code> with the specified detail message.
-     * 
+     *
      * @param msg the detail message.
      */
     public SSHCommandExecutionException(String msg) {

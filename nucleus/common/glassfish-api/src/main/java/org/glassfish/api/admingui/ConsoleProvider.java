@@ -16,9 +16,9 @@
 
 package org.glassfish.api.admingui;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.net.URL;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * <p>
@@ -38,12 +38,12 @@ public interface ConsoleProvider {
      * returned, the default ({@link #DEFAULT_CONFIG_FILENAME}) will be used.
      * </p>
      */
-    public URL getConfiguration();
+    URL getConfiguration();
 
     /**
      * <p>
      * The default location of the <code>console-config.xml</code>.
      * </p>
      */
-    public String DEFAULT_CONFIG_FILENAME = "META-INF/admingui/console-config.xml";
+    String DEFAULT_CONFIG_FILENAME = "META-INF/admingui/console-config.xml";
 }

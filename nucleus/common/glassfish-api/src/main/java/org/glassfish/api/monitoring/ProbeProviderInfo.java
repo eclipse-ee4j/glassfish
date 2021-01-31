@@ -19,7 +19,7 @@ package org.glassfish.api.monitoring;
 /**
  * This information needs to be shared by more than one module. The bare minimum info contained in a FlashlightProbe
  * that a value-add module needs
- * 
+ *
  * @author bnevins
  */
 public interface ProbeProviderInfo {

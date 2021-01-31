@@ -17,24 +17,23 @@
 package org.glassfish.api.admin;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Singleton;
-
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * The implementation of the admin command lock.
- * 
+ *
  * @author Bill Shannon
  * @author Chris Kasso
  */
@@ -68,7 +67,7 @@ public class AdminCommandLock {
         TIMEOUT, // Failed - suspend timed out
         ILLEGALSTATE, // Failed - already suspended
         ERROR // Failed - other error
-    };
+    }
 
     /**
      * Return the appropriate Lock object for the specified LockType. The returned lock has not been locked. If the LockType
@@ -78,10 +77,12 @@ public class AdminCommandLock {
      * @return the Lock object to use, or null
      */
     public Lock getLock(CommandLock.LockType type) {
-        if (type == CommandLock.LockType.SHARED)
+        if (type == CommandLock.LockType.SHARED) {
             return rwlock.readLock();
-        if (type == CommandLock.LockType.EXCLUSIVE)
+        }
+        if (type == CommandLock.LockType.EXCLUSIVE) {
             return rwlock.writeLock();
+        }
         return null; // no lock
     }
 
@@ -101,10 +102,12 @@ public class AdminCommandLock {
      */
     public Lock getLock(AdminCommand command) {
         CommandLock alock = command.getClass().getAnnotation(CommandLock.class);
-        if (alock == null || alock.value() == CommandLock.LockType.SHARED)
+        if (alock == null || alock.value() == CommandLock.LockType.SHARED) {
             return rwlock.readLock();
-        if (alock.value() == CommandLock.LockType.EXCLUSIVE)
+        }
+        if (alock.value() == CommandLock.LockType.EXCLUSIVE) {
             return rwlock.writeLock();
+        }
         return null; // no lock
     }
 
@@ -124,15 +127,17 @@ public class AdminCommandLock {
 
         CommandLock alock = command.getClass().getAnnotation(CommandLock.class);
 
-        if (alock == null || alock.value() == CommandLock.LockType.SHARED)
+        if (alock == null || alock.value() == CommandLock.LockType.SHARED) {
             lock = rwlock.readLock();
-        else if (alock.value() == CommandLock.LockType.EXCLUSIVE) {
+        } else if (alock.value() == CommandLock.LockType.EXCLUSIVE) {
             lock = rwlock.writeLock();
             exclusive = true;
         }
 
         if (lock == null)
+         {
             return null; // no lock
+        }
 
         /*
          * If the suspendCommandsLockThread is alive then we were suspended manually (via suspendCommands()) otherwise we may
@@ -148,8 +153,9 @@ public class AdminCommandLock {
 
             try {
                 timeout = Integer.parseInt(timeout_s);
-                if (timeout < 0)
+                if (timeout < 0) {
                     badTimeOutValue = true;
+                }
             } catch (NumberFormatException e) {
                 badTimeOutValue = true;
             }
@@ -170,10 +176,11 @@ public class AdminCommandLock {
                      * A timeout < 0 indicates the domain was likely already locked manually but we tried to acquire the lock anyway - just
                      * in case.
                      */
-                    if (timeout >= 0)
+                    if (timeout >= 0) {
                         throw new AdminCommandLockTimeoutException("timeout acquiring lock", getLockTimeOfAcquisition(), getLockOwner());
-                    else
+                    } else {
                         throw new AdminCommandLockException(getLockMessage(), getLockTimeOfAcquisition(), getLockOwner());
+                    }
                 }
             } catch (java.lang.InterruptedException e) {
                 logger.log(Level.FINE, "Interrupted acquiring command lock. ", e);
@@ -261,7 +268,7 @@ public class AdminCommandLock {
      * Lock the DAS from accepting any commands annotated with a SHARED or EXCLUSIVE CommandLock. This method will result in
      * the acquisition of an EXCLUSIVE lock. This method will not return until the lock is acquired, it times out or an
      * error occurs.
-     * 
+     *
      * @param timeout lock timeout in seconds
      * @param lockOwner the user who acquired the lock
      * @return status regarding acquisition of the lock
@@ -274,7 +281,7 @@ public class AdminCommandLock {
      * Lock the DAS from accepting any commands annotated with a SHARED or EXCLUSIVE CommandLock. This method will result in
      * the acquisition of an EXCLUSIVE lock. This method will not return until the lock is acquired, it times out or an
      * error occurs.
-     * 
+     *
      * @param timeout lock timeout in seconds
      * @param lockOwner the user who acquired the lock
      * @param message message to return when a command is blocked
@@ -282,7 +289,7 @@ public class AdminCommandLock {
      */
     public synchronized SuspendStatus suspendCommands(long timeout, String lockOwner, String message) {
 
-        BlockingQueue<AdminCommandLock.SuspendStatus> suspendStatusQ = new ArrayBlockingQueue<AdminCommandLock.SuspendStatus>(1);
+        BlockingQueue<AdminCommandLock.SuspendStatus> suspendStatusQ = new ArrayBlockingQueue<>(1);
 
         /*
          * If the suspendCommandsLockThread is alive then we are already suspended or really close to it.
@@ -404,6 +411,7 @@ public class AdminCommandLock {
             suspendCommandsTimedOut = false;
         }
 
+        @Override
         public void run() {
 
             /*
@@ -414,10 +422,11 @@ public class AdminCommandLock {
             boolean lockAcquired = false;
             while (!lockAcquired && !suspendCommandsTimedOut) {
                 try {
-                    if (lock.tryLock(timeout, TimeUnit.SECONDS))
+                    if (lock.tryLock(timeout, TimeUnit.SECONDS)) {
                         lockAcquired = true;
-                    else
+                    } else {
                         suspendCommandsTimedOut = true;
+                    }
                 } catch (java.lang.InterruptedException e) {
                     logger.log(Level.FINE, "Interrupted acquiring command lock. ", e);
                 }
@@ -450,8 +459,9 @@ public class AdminCommandLock {
             /*
              * If we timed out trying to get the lock then this thread is finished.
              */
-            if (suspendCommandsTimedOut)
+            if (suspendCommandsTimedOut) {
                 return;
+            }
 
             /*
              * We block here waiting to be told to resume.
@@ -489,7 +499,7 @@ public class AdminCommandLock {
      * Use this method to temporarily suspend the command lock during which other operations may be performed. When the
      * method returns the lock will be reestablished. This method must be invoked from the same thread which acquired the
      * original lock.
-     * 
+     *
      * @param r A Runnable which will be invoked by the method after the lock is suspended
      */
     public static void runWithSuspendedLock(Runnable r) {
@@ -504,16 +514,18 @@ public class AdminCommandLock {
                 lock = rwlock.readLock();
             }
 
-            if (lock != null)
+            if (lock != null) {
                 lock.unlock();
+            }
 
             // Run the caller's commands without a lock in place.
             r.run();
         } finally {
             // Relock before returning. This may block if someone else
             // already grabbed the lock.
-            if (lock != null)
+            if (lock != null) {
                 lock.lock();
+            }
         }
     }
 }

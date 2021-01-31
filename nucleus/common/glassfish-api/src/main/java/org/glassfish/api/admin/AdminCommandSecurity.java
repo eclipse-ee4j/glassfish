@@ -18,6 +18,8 @@ package org.glassfish.api.admin;
 
 import java.util.Collection;
 
+import org.glassfish.api.admin.AccessRequired.AccessCheck;
+
 /**
  *
  * @author tjquinn
@@ -37,13 +39,13 @@ public interface AdminCommandSecurity {
          * Returns the {@code AccessCheck}s the command has computed at runtime which should be included in the authorization,
          * added to checks that secure admin infers from the command's CRUD or RestEndpoint characteristics or
          * {@code AccessRequired} annotations.
-         * 
+         *
          * @return the {@code AccessCheck}s
          */
         Collection<? extends AccessRequired.AccessCheck> getAccessChecks();
     }
 
     public interface Preauthorization {
-        public boolean preAuthorization(AdminCommandContext context);
+        boolean preAuthorization(AdminCommandContext context);
     }
 }

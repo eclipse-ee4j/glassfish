@@ -16,12 +16,12 @@
 
 package org.glassfish.api.admin;
 
-import org.glassfish.hk2.api.Metadata;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.glassfish.hk2.api.Metadata;
 
 import jakarta.inject.Qualifier;
 
@@ -43,7 +43,7 @@ import jakarta.inject.Qualifier;
  *
  * <p>
  * Example : take a command implementation
- * 
+ *
  * <pre>
  * <code>
  * &#64Service(name="randomCommand")
@@ -54,7 +54,7 @@ import jakarta.inject.Qualifier;
  * </pre>
  * <p>
  * a supplemental command may be defined as follows :
- * 
+ *
  * <pre>
  * <code>
  * &#64Service(name="mySupCommand")
@@ -67,7 +67,7 @@ import jakarta.inject.Qualifier;
  * <p>
  * Another implementation that does not use the same parameter names as the supplemented command will need to use
  * a @Bridge annotation
- * 
+ *
  * <pre>
  * <code>
  * &#64Service(name="otherSupCommand")
@@ -84,7 +84,7 @@ import jakarta.inject.Qualifier;
  * A supplemental command can be executed in "isolation" (not part of the supplemented command execution) and should not
  * make any assumption that it is called as part of its supplemented command execution. If a command should not be
  * invokable in isolation, it must not define a name() attribute on the @Service annotation :
- * 
+ *
  * <pre>
  * <code>
  * &#64Service
@@ -127,7 +127,7 @@ public @interface Supplemental {
     /**
      * Name of the supplemented command as it can be looked up in the habitat. * Therefore the supplemented command must
      * have the {@link AdminCommand} type and the provided registration name.
-     * 
+     *
      * @return habitat registration name for the command
      */
     @Metadata("target")

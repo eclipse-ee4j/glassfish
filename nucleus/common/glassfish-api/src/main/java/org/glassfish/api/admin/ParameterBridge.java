@@ -37,7 +37,7 @@ public interface ParameterBridge {
      * @param resourceName the name of the resource as defined by the action
      * @return the value used to inject the parameter identified by its resourceName
      */
-    public String getOne(ParameterMap map, String resourceName);
+    String getOne(ParameterMap map, String resourceName);
 
     /**
      * Returns the parameter values as expected by the injection code when a dependency injection annotated field or method
@@ -47,7 +47,7 @@ public interface ParameterBridge {
      * @param resourceName the name of the resource as defined by the action
      * @return a list of values used to inject the parameter identified by its resourceName
      */
-    public List<String> get(ParameterMap map, String resourceName);
+    List<String> get(ParameterMap map, String resourceName);
 
     /**
      * Provided mapper that does not change parameters names or values from the input set.

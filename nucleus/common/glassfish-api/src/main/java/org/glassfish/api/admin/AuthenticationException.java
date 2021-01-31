@@ -23,6 +23,11 @@ package org.glassfish.api.admin;
  */
 public class AuthenticationException extends CommandException {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     public AuthenticationException(String msg) {
         super(msg);
     }

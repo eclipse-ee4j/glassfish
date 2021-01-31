@@ -16,11 +16,11 @@
 
 package org.glassfish.api.admin;
 
-import org.glassfish.api.ActionReport;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+
+import org.glassfish.api.ActionReport;
 
 /**
  * Represents running (or finished) command instance.
@@ -34,41 +34,41 @@ public interface Job extends AdminCommandState, Serializable {
     /**
      * Command progress only if it is supported by command
      */
-    public CommandProgress getCommandProgress();
+    CommandProgress getCommandProgress();
 
-    public void setCommandProgress(CommandProgress commandProgress);
+    void setCommandProgress(CommandProgress commandProgress);
 
-    public void complete(ActionReport report, Payload.Outbound outbound);
+    void complete(ActionReport report, Payload.Outbound outbound);
 
     /**
      * Change state to reverting. Command Can use it to send info about reverting to Job management infrastructure.
      */
-    public void revert();
+    void revert();
 
-    public AdminCommandEventBroker getEventBroker();
+    AdminCommandEventBroker getEventBroker();
 
-    public List<String> getSubjectUsernames();
+    List<String> getSubjectUsernames();
 
-    public String getName();
+    String getName();
 
-    public long getCommandExecutionDate();
+    long getCommandExecutionDate();
 
-    public Payload.Outbound getPayload();
+    Payload.Outbound getPayload();
 
-    public File getJobsFile();
+    File getJobsFile();
 
-    public void setJobsFile(File jobsFile);
+    void setJobsFile(File jobsFile);
 
-    public String getScope();
+    String getScope();
 
-    public long getCommandCompletionDate();
+    long getCommandCompletionDate();
 
     /**
      * Job will be considered as retryable after fail. It means that checkpoint will not be deleted and revert or continue
      * can be decided by the user.
      */
-    public void setFailToRetryable(boolean value);
+    void setFailToRetryable(boolean value);
 
-    public ParameterMap getParameters();
+    ParameterMap getParameters();
 
 }

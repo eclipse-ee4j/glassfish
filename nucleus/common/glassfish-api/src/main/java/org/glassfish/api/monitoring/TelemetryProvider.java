@@ -28,9 +28,9 @@ public interface TelemetryProvider {
 
     /**
      * The requested monitoring level has changed.
-     * 
+     *
      * @param newLevel the new monitoring level
      */
-    public void onLevelChange(String newLevel);
+    void onLevelChange(String newLevel);
 
 }

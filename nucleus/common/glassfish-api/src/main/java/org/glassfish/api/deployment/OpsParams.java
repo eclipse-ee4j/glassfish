@@ -16,8 +16,8 @@
 
 package org.glassfish.api.deployment;
 
-import org.glassfish.api.admin.CommandParameters;
 import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandParameters;
 
 /**
  * Support class for all types of deployment operation parameters.
@@ -108,7 +108,7 @@ public abstract class OpsParams implements CommandParameters {
     /**
      * There can be cases where the container code wants to find out the command associated with the operation when the
      * Origin information is not sufficient
-     * 
+     *
      */
     public enum Command {
         deploy, undeploy, enable, disable, _deploy, create_application_ref, delete_application_ref, startup_server, shutdown_server

@@ -16,11 +16,14 @@
 
 package org.glassfish.api;
 
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 import java.io.File;
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 import java.lang.annotation.Target;
 
 /**

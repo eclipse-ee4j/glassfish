@@ -25,18 +25,18 @@ import java.sql.SQLException;
  * application server.
  * <p>
  * A sample code for getting driver's connection implementation would like the following.
- * 
+ *
  * <pre>
  * InitialContext ic = new InitialContext();
  * com.sun.appserv.DataSource ds = (com.sun.appserv.DataSOurce) ic.lookup("jdbc/PointBase");
  * Connection con = ds.getConnection();
  * Connection drivercon = ds.getConnection(con);
- * 
+ *
  * // Do db operations.
- * 
+ *
  * con.close();
  * </pre>
- * 
+ *
  * @author Binod P.G
  */
 public interface DataSource extends javax.sql.DataSource {
@@ -49,7 +49,7 @@ public interface DataSource extends javax.sql.DataSource {
      * @return <code>java.sql.Connection</code> implementation of the driver.
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained.
      */
-    public Connection getConnection(Connection con) throws SQLException;
+    Connection getConnection(Connection con) throws SQLException;
 
     /**
      * Gets a connection that is not in the scope of any transaction. This can be used to save performance overhead incurred
@@ -59,7 +59,7 @@ public interface DataSource extends javax.sql.DataSource {
      * @return <code>java.sql.Connection</code>
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
      */
-    public Connection getNonTxConnection() throws SQLException;
+    Connection getNonTxConnection() throws SQLException;
 
     /**
      * Gets a connection that is not in the scope of any transaction. This can be used to save performance overhead incurred
@@ -71,13 +71,13 @@ public interface DataSource extends javax.sql.DataSource {
      * @return <code>java.sql.Connection</code>
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
      */
-    public Connection getNonTxConnection(String userName, String password) throws SQLException;
+    Connection getNonTxConnection(String userName, String password) throws SQLException;
 
     /**
      * API to mark a connection as bad. If the application can determine that the connection is bad, using this api, it can
      * notify the resource-adapter which inturn will notify the connection-pool. Connection-pool will drop and create a new
      * connection. eg:
-     * 
+     *
      * <pre>
         com.sun.appserv.jdbc.DataSource ds=
            (com.sun.appserv.jdbc.DataSource)context.lookup("dataSource");
@@ -93,9 +93,9 @@ public interface DataSource extends javax.sql.DataSource {
      		con.close(); //Connection will be destroyed while close or Tx completion
         }
      * </pre>
-     * 
+     *
      * @param conn <code>java.sql.Connection</code>
      */
-    public void markConnectionAsBad(Connection conn);
+    void markConnectionAsBad(Connection conn);
 
 }

@@ -19,15 +19,19 @@ package org.glassfish.api.admin;
 public class CommandValidationException extends CommandException {
 
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>CommandValidationException</code> without detail message.
      */
     public CommandValidationException() {
-        super();
     }
 
     /**
      * Constructs a <code>CommandValidationException</code> with the specified detail message.
-     * 
+     *
      * @param msg the detail message.
      */
     public CommandValidationException(String msg) {

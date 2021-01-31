@@ -16,10 +16,10 @@
 
 package org.glassfish.api.content;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 /**
  * Annotation that denote a class capable of handling particular URL patterns. The definition of handling is loose in
@@ -35,7 +35,7 @@ import java.lang.annotation.ElementType;
 public @interface WebRequestHandler {
     /**
      * Returns the URL pattern for URL request this class is capable of handling.
-     * 
+     *
      * @return URL pattern
      */
     public String urlPattern() default "";

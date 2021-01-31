@@ -18,6 +18,7 @@ package org.glassfish.api.admin;
 
 import java.util.Iterator;
 import java.util.Map;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -28,7 +29,7 @@ import org.jvnet.hk2.annotations.Contract;
  * when the password alias store implementation is first instantiated, although an implementation could choose to load
  * lazily on first read. Saving is at the discretion of the implementer as well, although to maximize reliability the
  * implementation should persist changes as they occur. The {@link #putAll ) methods can help optimize that.
- * 
+ *
  * @author tjquinn
  */
 @Contract
@@ -36,7 +37,7 @@ public interface PasswordAliasStore {
 
     /**
      * Reports whether the store contains the specified alias.
-     * 
+     *
      * @param alias the alias to check for
      * @return true if the alias appears in the store; false otherwise
      */
@@ -44,7 +45,7 @@ public interface PasswordAliasStore {
 
     /**
      * Returns the password associated with the specified alias.
-     * 
+     *
      * @param alias the alias of interest
      * @return the password for that alias, if the store contains the alias; null otherwise
      */
@@ -52,21 +53,21 @@ public interface PasswordAliasStore {
 
     /**
      * Reports whether the alias store is empty.
-     * 
+     *
      * @return
      */
     boolean isEmpty();
 
     /**
      * Returns an Iterator over aliases present in the alias store.
-     * 
+     *
      * @return
      */
     Iterator<String> keys();
 
     /**
      * Reports the number of aliases present in the store.
-     * 
+     *
      * @return
      */
     int size();
@@ -78,7 +79,7 @@ public interface PasswordAliasStore {
 
     /**
      * Insert a new alias with the specified password, or assigns a new password to an existing alias.
-     * 
+     *
      * @param alias the alias to create or reassign
      * @param password the password to be associated with the alias
      */
@@ -86,7 +87,7 @@ public interface PasswordAliasStore {
 
     /**
      * Adds all alias/password pairs from the specified store to this store.
-     * 
+     *
      * @param otherStore the alias store from which to get entries
      */
     void putAll(PasswordAliasStore otherStore);
@@ -96,14 +97,14 @@ public interface PasswordAliasStore {
      * <p>
      * Callers might prefer to invoke this method once rather than invoking {@link #put ) repeatedly, for example if an
      * implementation persists each change as it is made.
-     * 
+     *
      * @param settings the alias/password pairs to add
      */
     void putAll(Map<String, char[]> settings);
 
     /**
      * Removes the specified alias (and the associated password) from the password alias store.
-     * 
+     *
      * @param alias the alias to be removed
      */
     void remove(String alias);

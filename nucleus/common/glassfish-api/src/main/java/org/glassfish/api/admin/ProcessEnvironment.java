@@ -60,7 +60,7 @@ public class ProcessEnvironment {
 
     /**
      * Determine and return the modes in which the code is behaving, like application server or application client modes.
-     * 
+     *
      * @return the process type
      */
     public ProcessType getProcessType() {
@@ -69,7 +69,7 @@ public class ProcessEnvironment {
 
     /**
      * Creates a process environemnt for the inten
-     * 
+     *
      * @param type of the execution environemnt
      */
     public ProcessEnvironment(ProcessType type) {

@@ -19,7 +19,7 @@ package org.glassfish.api.admin;
 /**
  * Resolves password alias expressions of the form ${ALIAS=aliasName} using an internal password alias store while also
  * accepting passwords themselves which are not translated.
- * 
+ *
  * @author tjquinn
  */
 public interface PasswordAliasResolver {

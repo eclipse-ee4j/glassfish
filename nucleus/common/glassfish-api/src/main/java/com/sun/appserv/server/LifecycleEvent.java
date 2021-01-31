@@ -22,6 +22,10 @@ package com.sun.appserv.server;
  */
 public class LifecycleEvent extends java.util.EventObject {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private int eventType;
     private Object eventData;
     private transient LifecycleEventContext ctx = null;
@@ -55,7 +59,7 @@ public class LifecycleEvent extends java.util.EventObject {
 
     /**
      * Construct new lifecycle event
-     * 
+     *
      * @param source The object on which the event initially occurred
      * @param eventType type of the event
      * @param ctx the underlying context for the lifecycle event

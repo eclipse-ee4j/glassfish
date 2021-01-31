@@ -37,7 +37,7 @@ public class ProgressStatusImpl extends ProgressStatusBase implements Serializab
 
     /**
      * Construct unnamed {@code ProgressStatusImpl}
-     * 
+     *
      * @param parent Parent {@code ProgressStatusBase}
      * @param id Is useful for event transfer
      */
@@ -47,7 +47,7 @@ public class ProgressStatusImpl extends ProgressStatusBase implements Serializab
 
     /**
      * Construct named {@code ProgressStatusImpl}.
-     * 
+     *
      * @param name of the {@code ProgressStatus} implementation is used to identify source of progress messages.
      * @param parent Parent {@code ProgressStatusBase}
      * @param id Is useful for event transfer
@@ -58,7 +58,7 @@ public class ProgressStatusImpl extends ProgressStatusBase implements Serializab
 
     /**
      * Construct named {@code ProgressStatusImpl} with defined expected count of steps.
-     * 
+     *
      * @param name of the {@code ProgressStatus} implementation is used to identify source of progress messages.
      * @param totalStepCount How many steps are expected in this {@code ProgressStatus}
      * @param parent Parent {@code ProgressStatusBase}

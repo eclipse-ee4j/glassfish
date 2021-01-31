@@ -16,7 +16,11 @@
 
 package org.glassfish.api.admin;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation used to indicate what type of failure action should be performed if the annotated method was to return a

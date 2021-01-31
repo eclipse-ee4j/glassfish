@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Marks a POJO class, a field, or a method as a named resource. Named resources can be annotated with
  * {@code @AccessRequired} annotations for declarative authorization.
- * 
+ *
  * @author tjquinn
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -19,10 +19,10 @@ package org.glassfish.api.admin;
 import java.io.Serializable;
 import java.util.UUID;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.Payload.Inbound;
-import org.glassfish.api.admin.Payload.Outbound;
 import org.glassfish.api.admin.progress.ProgressStatusImpl;
 
 /**
@@ -32,6 +32,10 @@ import org.glassfish.api.admin.progress.ProgressStatusImpl;
  */
 public class AdminCommandContextImpl implements AdminCommandContext, Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private ActionReport report;
     transient private final Logger logger;
     transient private Payload.Inbound inboundPayload;
@@ -120,6 +124,10 @@ public class AdminCommandContextImpl implements AdminCommandContext, Serializabl
 
     static class ErrorProgressStatus implements ProgressStatus, Serializable {
 
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
         private static final String EXC_MESSAGE = "@Progress annotation is not present.";
         private String id = null;
 

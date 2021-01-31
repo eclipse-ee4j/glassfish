@@ -16,18 +16,24 @@
 
 package org.glassfish.api;
 
-import org.jvnet.hk2.annotations.Contract;
-
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * An action report is an abstract class allowing any type of server side action like a service execution, a command
  * execution to report on its execution to the originator of the action.
- * 
+ *
  * Implementations of this interface should provide a good reporting experience based on the user's interface like a
  * browser or a command line shell.
  *
@@ -42,7 +48,7 @@ public abstract class ActionReport implements Serializable {
         SUCCESS, WARNING, FAILURE;
 
         public boolean isWorse(final ExitCode other) {
-            return (compareTo(other) > 0);
+            return compareTo(other) > 0;
         }
     }
 
@@ -125,7 +131,7 @@ public abstract class ActionReport implements Serializable {
         String message;
         String childrenType;
 
-        List<MessagePart> children = new ArrayList<MessagePart>();
+        List<MessagePart> children = new ArrayList<>();
 
         public MessagePart addChild() {
             MessagePart newPart = new MessagePart();
@@ -144,9 +150,9 @@ public abstract class ActionReport implements Serializable {
         public void appendMessage(String message) {
             // overkill Engineering seemingly but the strings might be HUGE
             // let the optimized JDK class handle it.
-            if (this.message == null)
+            if (this.message == null) {
                 this.message = message;
-            else {
+            } else {
                 StringBuilder sb = new StringBuilder(this.message);
                 sb.append(message);
                 this.message = sb.toString();
@@ -242,7 +248,7 @@ public abstract class ActionReport implements Serializable {
 
     /**
      * Gets a type that was set by the command implementation
-     * 
+     *
      * @param resultType the type requested
      * @return <T> the actual instance that was set
      */
@@ -256,7 +262,7 @@ public abstract class ActionReport implements Serializable {
      * information on pay load, generated directories etc. In this case, the DeployCommand will be expected to set this
      * information in, for example DeployResult, and set it in the ActionReport. The Supplemental Command will then retrieve
      * the DeployResult for its use.
-     * 
+     *
      * @param resultType the type
      * @param resultTypeInstance the actual instance
      */

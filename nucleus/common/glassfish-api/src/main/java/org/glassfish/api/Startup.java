@@ -16,13 +16,14 @@
 
 package org.glassfish.api;
 
+import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Do NOT use this interface anymore, it no longer does anything
  *
  * @deprecated Use the {@link RunLevel} annotation on the Service instead of implementing this interface.
- * 
+ *
  * @author Jerome Dochez
  */
 @Deprecated
@@ -40,8 +41,8 @@ public interface Startup {
 
     /**
      * Returns the life expectency of the service
-     * 
+     *
      * @return the life expectency.
      */
-    public Lifecycle getLifecycle();
+    Lifecycle getLifecycle();
 }

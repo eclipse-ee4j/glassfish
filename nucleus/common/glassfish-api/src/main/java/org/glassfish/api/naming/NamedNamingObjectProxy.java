@@ -17,6 +17,7 @@
 package org.glassfish.api.naming;
 
 import javax.naming.NamingException;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -27,9 +28,9 @@ public interface NamedNamingObjectProxy {
 
     /**
      * Returns the name that will be used to publish this object in the naming manager
-     * 
+     *
      * @return the name to bind
      */
-    public Object handle(String name) throws NamingException;
+    Object handle(String name) throws NamingException;
 
 }

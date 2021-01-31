@@ -16,11 +16,11 @@
 
 package org.glassfish.api.deployment.archive;
 
-import org.jvnet.hk2.annotations.Contract;
-
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Interface for implementing read access to an underlying archive on a unspecified medium
@@ -36,7 +36,7 @@ public interface ReadableArchive extends Archive {
      * @param name the file name relative to the root of the module.
      * @return the InputStream for the given entry name or null if not found.
      */
-    public InputStream getEntry(String name) throws IOException;
+    InputStream getEntry(String name) throws IOException;
 
     /**
      * Returns the existence of the given entry name The file name must be relative to the root of the module.
@@ -44,7 +44,7 @@ public interface ReadableArchive extends Archive {
      * @param name the file name relative to the root of the module.
      * @return the existence the given entry name.
      */
-    public boolean exists(String name) throws IOException;
+    boolean exists(String name) throws IOException;
 
     /**
      * Returns the entry size for a given entry name or 0 if not known
@@ -52,14 +52,14 @@ public interface ReadableArchive extends Archive {
      * @param name the entry name
      * @return the entry size
      */
-    public long getEntrySize(String name);
+    long getEntrySize(String name);
 
     /**
      * Open an abstract archive
      *
      * @param uri path to the archive
      */
-    public void open(URI uri) throws IOException;
+    void open(URI uri) throws IOException;
 
     /**
      * Returns an instance of this archive abstraction for an embedded archive within this archive.
@@ -67,38 +67,38 @@ public interface ReadableArchive extends Archive {
      * @param name is the entry name relative to the root for the archive
      * @return the Archive instance for this abstraction, or null if no such entry exists.
      */
-    public ReadableArchive getSubArchive(String name) throws IOException;
+    ReadableArchive getSubArchive(String name) throws IOException;
 
     /**
      * @return true if this archive exists
      */
-    public boolean exists();
+    boolean exists();
 
     /**
      * deletes the archive
      */
-    public boolean delete();
+    boolean delete();
 
     /**
      * rename the archive
      *
      * @param name the archive name
      */
-    public boolean renameTo(String name);
+    boolean renameTo(String name);
 
     /**
      * set the parent archive for this archive
      *
      * @param parentArchive the parent archive
      */
-    public void setParentArchive(ReadableArchive parentArchive);
+    void setParentArchive(ReadableArchive parentArchive);
 
     /**
      * get the parent archive of this archive
      *
      * @return the parent archive
      */
-    public ReadableArchive getParentArchive();
+    ReadableArchive getParentArchive();
 
     /**
      * Returns any data that could have been calculated as part of the descriptor loading.
@@ -106,15 +106,15 @@ public interface ReadableArchive extends Archive {
      * @param dataType the type of the extra data
      * @return the extra data or null if there are not an instance of type dataType registered.
      */
-    public <U> U getExtraData(Class<U> dataType);
+    <U> U getExtraData(Class<U> dataType);
 
-    public <U> void setExtraData(Class<U> dataType, U instance);
+    <U> void setExtraData(Class<U> dataType, U instance);
 
-    public <U> void removeExtraData(Class<U> dataType);
+    <U> void removeExtraData(Class<U> dataType);
 
-    public void addArchiveMetaData(String metaDataKey, Object metaData);
+    void addArchiveMetaData(String metaDataKey, Object metaData);
 
-    public <T> T getArchiveMetaData(String metaDataKey, Class<T> metadataType);
+    <T> T getArchiveMetaData(String metaDataKey, Class<T> metadataType);
 
-    public void removeArchiveMetaData(String metaDataKey);
+    void removeArchiveMetaData(String metaDataKey);
 }

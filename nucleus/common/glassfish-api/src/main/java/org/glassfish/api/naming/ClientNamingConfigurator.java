@@ -26,8 +26,8 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ClientNamingConfigurator {
 
-    public void setDefaultHost(String host);
+    void setDefaultHost(String host);
 
-    public void setDefaultPort(String port);
+    void setDefaultPort(String port);
 
 }

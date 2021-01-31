@@ -29,19 +29,19 @@ import org.omg.CORBA.ORB;
 
 @Contract
 public interface NamingClusterInfo {
-    public static final String LOAD_BALANCING_PROPERTY = "com.sun.appserv.iiop.loadbalancingpolicy";
+    String LOAD_BALANCING_PROPERTY = "com.sun.appserv.iiop.loadbalancingpolicy";
 
-    public static final String IIOP_ENDPOINTS_PROPERTY = "com.sun.appserv.iiop.endpoints";
+    String IIOP_ENDPOINTS_PROPERTY = "com.sun.appserv.iiop.endpoints";
 
-    public static final String IIOP_URL_PROPERTY = "com.sun.appserv.ee.iiop.endpointslist";
+    String IIOP_URL_PROPERTY = "com.sun.appserv.ee.iiop.endpointslist";
 
-    public static final String IC_BASED_WEIGHTED = "ic-based-weighted";
+    String IC_BASED_WEIGHTED = "ic-based-weighted";
 
-    public static final String IC_BASED = "ic-based";
+    String IC_BASED = "ic-based";
 
-    public static final String IIOP_URL = "iiop:1.2@";
+    String IIOP_URL = "iiop:1.2@";
 
-    public static final String CORBALOC = "corbaloc:";
+    String CORBALOC = "corbaloc:";
 
     void initGroupInfoService(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort, ORB orb, ServiceLocator services);
 

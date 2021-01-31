@@ -34,7 +34,7 @@ public interface ApplicationContext {
      *
      * @return a class loader capable of loading classes and resources from the source
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
     /**
      * Returns the application level properties that will be persisted as a key value pair at then end of deployment. That
@@ -43,14 +43,14 @@ public interface ApplicationContext {
      *
      * @return the application's properties.
      */
-    public Properties getAppProps();
+    Properties getAppProps();
 
     /**
      * Returns the module level properties that will be persisted as a key value pair at then end of deployment. That allows
      * individual Deployers implementation to store some information at the module level that should be available upon
      * server restart. Module level properties are only visible to the current module.
-     * 
+     *
      * @return the module's properties.
      */
-    public Properties getModuleProps();
+    Properties getModuleProps();
 }

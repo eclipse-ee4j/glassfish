@@ -16,11 +16,11 @@
 
 package org.glassfish.api.invocation;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 @PerLookup
 @Service
@@ -205,7 +205,7 @@ public class ComponentInvocation implements Cloneable {
      */
     public void setRegistryFor(Class key, Object payLoad) {
         if (registry == null) {
-            registry = new HashMap<Class, Object>();
+            registry = new HashMap<>();
         }
         registry.put(key, payLoad);
     }
@@ -253,6 +253,7 @@ public class ComponentInvocation implements Cloneable {
         return moduleName;
     }
 
+    @Override
     public ComponentInvocation clone() {
         ComponentInvocation newInv = null;
         try {

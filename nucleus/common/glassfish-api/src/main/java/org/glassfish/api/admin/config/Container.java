@@ -16,8 +16,8 @@
 
 package org.glassfish.api.admin.config;
 
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 /**
  * Tag interface for container related configuration. Inheriting from this interface allows glassfish to replicate the

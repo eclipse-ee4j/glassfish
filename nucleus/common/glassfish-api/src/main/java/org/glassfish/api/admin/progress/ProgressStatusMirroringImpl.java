@@ -16,14 +16,12 @@
 
 package org.glassfish.api.admin.progress;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.glassfish.api.admin.ProgressStatus;
 
 /**
  * This implementation is used for modeling of command execution with supplemental commands. It only mirrors all sizes
  * (total steps and current steps from its children.
- * 
+ *
  *
  * @author mmares
  */
@@ -31,6 +29,11 @@ import org.glassfish.api.admin.ProgressStatus;
 public class ProgressStatusMirroringImpl extends ProgressStatusBase {
 
     // private Collection<ProgressStatusBase> mirroreds = new ArrayList<ProgressStatusBase>();
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
     public ProgressStatusMirroringImpl(String name, ProgressStatusBase parent, String id) {
         super(name, -1, parent, id);
@@ -123,7 +126,7 @@ public class ProgressStatusMirroringImpl extends ProgressStatusBase {
                 return 1;
             }
         }
-        return ((float) currentStepCount) / ((float) totalStepCount);
+        return (float) currentStepCount / (float) totalStepCount;
     }
 
 }

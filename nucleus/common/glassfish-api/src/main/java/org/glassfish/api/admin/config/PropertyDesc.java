@@ -16,14 +16,14 @@
 
 package org.glassfish.api.admin.config;
 
-import org.jvnet.hk2.config.DataType;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-import java.lang.annotation.Documented;
-
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import org.jvnet.hk2.config.DataType;
 
 /**
  * Describes properties or system properties that might exist as sub-elements.

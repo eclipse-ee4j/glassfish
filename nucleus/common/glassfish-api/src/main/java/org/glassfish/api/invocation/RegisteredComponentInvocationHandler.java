@@ -27,7 +27,7 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface RegisteredComponentInvocationHandler {
 
-    public ComponentInvocationHandler getComponentInvocationHandler();
+    ComponentInvocationHandler getComponentInvocationHandler();
 
-    public void register();
+    void register();
 }

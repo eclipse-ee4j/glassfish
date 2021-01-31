@@ -17,6 +17,7 @@
 package org.glassfish.api.admin;
 
 import java.util.Map;
+
 import javax.security.auth.Subject;
 
 /**
@@ -25,7 +26,7 @@ import javax.security.auth.Subject;
  * <p>
  * Commands with complicated authorization requirements will implement this interface, in addition to the AdminCommand
  * interface.
- * 
+ *
  * @author tjquinn
  */
 public interface SelfAuthorizer {
@@ -35,10 +36,10 @@ public interface SelfAuthorizer {
      * <p>
      * Note that the command framework will have injected parameter values into fields annotated with @Param before invoking
      * this method, so the logic in isAuthorized can use those parameters in making its decision.
-     * 
+     *
      * @param ctx the AdminCommandContext for the current command execution
      * @return true if the Subject (recorded in the command context) can run the command; false otherwise.
      */
-    public void authorize(Subject s, Map<String, Object> env);
+    void authorize(Subject s, Map<String, Object> env);
 
 }

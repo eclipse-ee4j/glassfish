@@ -20,7 +20,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
  * Tag interface for any non default monitoring configuration
- * 
+ *
  * @author Jerome Dochez
  */
 public interface MonitoringItem extends ConfigBeanProxy {

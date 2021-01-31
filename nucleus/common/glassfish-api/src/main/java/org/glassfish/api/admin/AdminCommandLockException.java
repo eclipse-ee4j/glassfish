@@ -25,6 +25,10 @@ import java.util.Date;
  */
 public class AdminCommandLockException extends RuntimeException {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private Date timeOfAcquisition = null;
     private String lockOwner = null;
 

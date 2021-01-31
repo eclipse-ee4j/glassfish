@@ -19,7 +19,7 @@ package org.glassfish.api;
 /**
  * Interface for defining dynamic command parameter defaults. This is used with the defaultCalculator argument to
  * the @Param annotation to implement a calculator for a dynamic default value.
- * 
+ *
  * @author tmueller
  */
 public class ParamDefaultCalculator {
@@ -29,6 +29,6 @@ public class ParamDefaultCalculator {
      */
     public String defaultValue(ExecutionContext context) {
         return null;
-    };
+    }
 
 }

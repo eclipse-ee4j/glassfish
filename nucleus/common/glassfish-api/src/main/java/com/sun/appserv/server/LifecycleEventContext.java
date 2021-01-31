@@ -26,29 +26,29 @@ public interface LifecycleEventContext {
     /**
      * Get the server command-line arguments
      */
-    public String[] getCmdLineArgs();
+    String[] getCmdLineArgs();
 
     /**
      * Get server install root
      */
-    public String getInstallRoot();
+    String getInstallRoot();
 
     /**
      * Get the server instance name
      */
-    public String getInstanceName();
+    String getInstanceName();
 
     /**
      * Get the initial naming context.
      */
-    public InitialContext getInitialContext();
+    InitialContext getInitialContext();
 
     /**
      * Writes the specified message to a server log file.
      *
      * @param message a <code>String</code> specifying the message to be written to the log file
      */
-    public void log(String message);
+    void log(String message);
 
     /**
      * Writes an explanatory message and a stack trace for a given <code>Throwable</code> exception to the server log file.
@@ -58,5 +58,5 @@ public interface LifecycleEventContext {
      * @param throwable the <code>Throwable</code> error or exception
      */
 
-    public void log(String message, Throwable throwable);
+    void log(String message, Throwable throwable);
 }

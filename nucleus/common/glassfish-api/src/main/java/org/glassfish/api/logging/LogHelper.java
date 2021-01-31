@@ -30,7 +30,7 @@ public final class LogHelper {
 
     /**
      * Logs a message with the given level, message, parameters and <code>Throwable</code>.
-     * 
+     *
      * @param logger the <code>Logger</code> object to be used for logging the message.
      * @param level the <code>Level</code> of the message to be logged.
      * @param messageId the key in the resource bundle of the <code>Logger</code> containing the localized text.
@@ -50,7 +50,7 @@ public final class LogHelper {
     /**
      * Gets the formatted message given the message key and parameters. The ResourceBundle associated with the logger is
      * searched for the specified key.
-     * 
+     *
      * @param logger
      * @param msgKey
      * @param params

@@ -41,8 +41,9 @@ public enum FailurePolicy {
 
     public static ActionReport.ExitCode applyFailurePolicy(FailurePolicy f, ActionReport.ExitCode e) {
         ActionReport.ExitCode result = ActionReport.ExitCode.FAILURE;
-        if (f == null)
+        if (f == null) {
             f = Error;
+        }
         switch (f) {
         case Ignore:
             // If policy is to ignore, always return success
@@ -50,10 +51,11 @@ public enum FailurePolicy {
             break;
         case Warn:
             // Switch failures to Warning; Leave Warnings and Successes as is
-            if (e.equals(ActionReport.ExitCode.FAILURE))
+            if (e.equals(ActionReport.ExitCode.FAILURE)) {
                 result = ActionReport.ExitCode.WARNING;
-            else
+            } else {
                 result = e;
+            }
             break;
         case Error:
             result = e;

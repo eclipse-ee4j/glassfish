@@ -19,6 +19,7 @@ package org.glassfish.api.web;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -32,16 +33,16 @@ public interface TldProvider {
     /**
      * Gets the name of this TldProvider
      */
-    public String getName();
+    String getName();
 
     /**
      * Gets a mapping from JAR files to their TLD resources.
      */
-    public Map<URI, List<String>> getTldMap();
+    Map<URI, List<String>> getTldMap();
 
     /**
      * Gets a mapping from JAR files to their TLD resources that are known to contain listener declarations
      */
-    public Map<URI, List<String>> getTldListenerMap();
+    Map<URI, List<String>> getTldListenerMap();
 
 }

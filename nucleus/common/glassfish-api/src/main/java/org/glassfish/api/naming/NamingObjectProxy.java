@@ -16,10 +16,10 @@
 
 package org.glassfish.api.naming;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import javax.naming.Context;
 import javax.naming.NamingException;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * A proxy object that can be bound to GlassfishNamingManager. Concrete implementation of this contract will take
@@ -41,7 +41,7 @@ public interface NamingObjectProxy {
      *
      * @return an object
      */
-    public Object create(Context ic) throws NamingException;
+    Object create(Context ic) throws NamingException;
 
     /**
      * Special Naming Object proxy whose first create() call replaces itself in naming service.

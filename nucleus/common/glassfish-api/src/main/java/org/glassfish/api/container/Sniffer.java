@@ -16,17 +16,17 @@
 
 package org.glassfish.api.container;
 
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.Map;
+import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.jvnet.hk2.annotations.Contract;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.lang.annotation.Annotation;
-
 import com.sun.enterprise.module.HK2Module;
-import java.util.Map;
 
 /**
  * A sniffer implementation is responsible for identifying a particular application type and/or a particular file type.
@@ -41,27 +41,27 @@ public interface Sniffer {
 
     /**
      * Returns true if the passed file or directory is recognized by this sniffer.
-     * 
+     *
      * @param context deployment context
      * @return true if the location is recognized by this sniffer
      */
-    public boolean handles(DeploymentContext context);
+    boolean handles(DeploymentContext context);
 
     /**
      * Returns true if the passed file or directory is recognized by this sniffer.
-     * 
+     *
      * @param source the file or directory abstracted as an archive resources from the source archive.
      * @return true if the location is recognized by this sniffer
      */
-    public boolean handles(ReadableArchive source);
+    boolean handles(ReadableArchive source);
 
     /**
      * Returns the array of patterns to apply against the request URL If the pattern matches the URL, the service method of
      * the associated container will be invoked
-     * 
+     *
      * @return array of patterns
      */
-    public String[] getURLPatterns();
+    String[] getURLPatterns();
 
     /**
      * Returns the list of annotations types that this sniffer is interested in. If an application bundle contains at least
@@ -70,7 +70,7 @@ public interface Sniffer {
      *
      * @return list of annotations this sniffer is interested in or an empty array
      */
-    public Class<? extends Annotation>[] getAnnotationTypes();
+    Class<? extends Annotation>[] getAnnotationTypes();
 
     /**
      * Returns the list of annotation names that this sniffer is interested in. If an application bundle contains at least
@@ -80,14 +80,14 @@ public interface Sniffer {
      * @param context deployment context
      * @return list of annotation names this sniffer is interested in or an empty array
      */
-    public String[] getAnnotationNames(DeploymentContext context);
+    String[] getAnnotationNames(DeploymentContext context);
 
     /**
      * Returns the container type associated with this sniffer
-     * 
+     *
      * @return the container type
      */
-    public String getModuleType(); // This method should be renamed to getContainerType
+    String getModuleType(); // This method should be renamed to getContainerType
 
     /**
      * Sets up the container libraries so that any imported bundle from the connector jar file will now be known to the
@@ -102,13 +102,13 @@ public interface Sniffer {
      *
      * @throws java.io.IOException exception if something goes sour
      */
-    public HK2Module[] setup(String containerHome, Logger logger) throws IOException;
+    HK2Module[] setup(String containerHome, Logger logger) throws IOException;
 
     /**
      * Tears down a container, remove all imported libraries from the module subsystem.
      *
      */
-    public void tearDown();
+    void tearDown();
 
     /**
      * Returns the list of Containers that this Sniffer enables.
@@ -117,39 +117,39 @@ public interface Sniffer {
      *
      * @return list of container names known to the habitat for this sniffer
      */
-    public String[] getContainersNames();
+    String[] getContainersNames();
 
     /**
      * @return whether this sniffer should be visible to user
-     * 
+     *
      */
-    public boolean isUserVisible();
+    boolean isUserVisible();
 
     /**
      * @return whether this sniffer represents a Java EE container type
      *
      */
-    public boolean isJavaEE();
+    boolean isJavaEE();
 
     /**
      * Returns a map of deployment configurations for this Sniffer from the specific archive source.
      * <p>
      * Many sniffers (esp. Java EE sniffers) will choose to set the key of each map entry to the relative path within the
      * ReadableArchive of the deployment descriptor and the value of that map entry to the descriptor's contents.
-     * 
+     *
      * @param source the contents of the application's archive
      * @return map of configuration names to configurations for the application
      * @throws java.io.IOException in case of errors searching or reading the archive for the deployment configuration(s)
      */
-    public Map<String, String> getDeploymentConfigurations(final ReadableArchive source) throws IOException;
+    Map<String, String> getDeploymentConfigurations(final ReadableArchive source) throws IOException;
 
     /**
      * @return the set of the sniffers that should not co-exist for the same module. For example, ejb and appclient sniffers
      * should not be returned in the sniffer list for a certain module. This method will be used to validate and filter the
      * retrieved sniffer lists for a certain module
-     * 
+     *
      */
-    public String[] getIncompatibleSnifferTypes();
+    String[] getIncompatibleSnifferTypes();
 
     /**
      *
@@ -160,5 +160,5 @@ public interface Sniffer {
      * @return whether the sniffer supports the archive type
      *
      */
-    public boolean supportsArchiveType(ArchiveType archiveType);
+    boolean supportsArchiveType(ArchiveType archiveType);
 }

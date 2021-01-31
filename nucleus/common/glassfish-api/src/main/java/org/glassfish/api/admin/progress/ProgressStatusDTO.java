@@ -55,7 +55,7 @@ public class ProgressStatusDTO {
     protected int totalStepCount = -1;
     protected int currentStepCount = 0;
     protected boolean completed = false;
-    protected Set<ChildProgressStatusDTO> children = new HashSet<ChildProgressStatusDTO>();
+    protected Set<ChildProgressStatusDTO> children = new HashSet<>();
 
     public ProgressStatusDTO() {
     }

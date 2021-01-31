@@ -22,5 +22,5 @@ package org.glassfish.api.logging;
  */
 public interface Task<T> {
 
-    public T run();
+    T run();
 }

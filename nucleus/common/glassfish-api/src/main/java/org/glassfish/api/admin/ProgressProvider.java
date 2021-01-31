@@ -26,7 +26,7 @@ import java.lang.annotation.Annotation;
  */
 public interface ProgressProvider {
 
-    public Progress getProgress();
+    Progress getProgress();
 
     public static class Utils {
         public static Progress provide(final String name, final int totalStepCount) {

@@ -108,10 +108,10 @@ public class ProgressStatusEventCreateChild extends ProgressStatusEvent {
             return false;
         }
         final ProgressStatusEventCreateChild other = (ProgressStatusEventCreateChild) obj;
-        if ((this.childId == null) ? (other.childId != null) : !this.childId.equals(other.childId)) {
+        if (this.childId == null ? other.childId != null : !this.childId.equals(other.childId)) {
             return false;
         }
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+        if (this.name == null ? other.name != null : !this.name.equals(other.name)) {
             return false;
         }
         if (this.allocatedSteps != other.allocatedSteps) {

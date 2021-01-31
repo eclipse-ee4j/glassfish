@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * asynchronously generate ongoing progress messages and command completion information.
  *
  * A Command annotated with @Progress will also be a ManagedJob which will be managed by the Job Manager
- * 
+ *
  * @see org.glassfish.api.admin.ProgressStatus
  * @see org.glassfish.api.admin.JobManager
  * @author mmares
@@ -48,7 +48,7 @@ public @interface Progress {
      * Number of steps necessary to complete the operation. Value is used to determine percentage of work completed and can
      * be changed using {@code ProgressStatus.setTotalStepCount} If the step count is not established then a completion
      * percentage will not be included in the progress output.
-     * 
+     *
      * @see org.glassfish.api.admin.ProgressStatus
      */
     public int totalStepCount() default -1;

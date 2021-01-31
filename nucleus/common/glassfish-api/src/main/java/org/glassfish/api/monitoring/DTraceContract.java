@@ -16,7 +16,6 @@
 
 package org.glassfish.api.monitoring;
 
-import org.glassfish.api.monitoring.ProbeProviderInfo;
 import org.jvnet.hk2.annotations.Contract;
 
 /**

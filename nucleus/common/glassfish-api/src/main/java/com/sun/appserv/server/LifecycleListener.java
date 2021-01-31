@@ -16,8 +16,6 @@
 
 package com.sun.appserv.server;
 
-import java.util.Properties;
-
 /**
  * lifecycle modules implement <code>com.sun.appserv.server.LifecycleListener</code> interface. There is just one method
  * in this interface: <code>handleEvent()</code> which posts server lifecycle events to the lifecycle modules.
@@ -41,10 +39,10 @@ public interface LifecycleListener {
 
     /**
      * receive a server lifecycle event
-     * 
+     *
      * @param event associated event
      * @throws <code> ServerLifecycleException </code> for exception condition.
      *
      */
-    public void handleEvent(LifecycleEvent event) throws ServerLifecycleException;
+    void handleEvent(LifecycleEvent event) throws ServerLifecycleException;
 }

@@ -195,7 +195,6 @@
             <sysproperty key="jsr88client.host" value="${admin.host}"/>
             <sysproperty key="jsr88client.port" value="${admin.port}"/>
             <sysproperty key="com.sun.aas.installRoot" value="${inst}"/>
-            <sysproperty key="java.endorsed.dirs" value="${inst}/lib/endorsed"/>
 
             <classpath>
                 <pathelement location="${inst}/lib/j2ee.jar"/>

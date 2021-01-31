@@ -30,5 +30,5 @@ Import-Package: \
                         
 DynamicImport-Package: \
                         org.glassfish.flashlight.provider, \
-                        org.objectweb.asm;password=GlassFish, \
-                        org.objectweb.asm.commons;password=GlassFish
+                        org.objectweb.asm, \
+                        org.objectweb.asm.commons

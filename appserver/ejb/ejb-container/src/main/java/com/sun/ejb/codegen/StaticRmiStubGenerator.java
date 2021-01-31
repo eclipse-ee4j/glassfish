@@ -34,6 +34,7 @@ import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.util.TypeUtil;
+import com.sun.enterprise.util.JDK;
 import com.sun.enterprise.util.OS;
 import org.glassfish.api.admin.ServerEnvironment;
 
@@ -242,7 +243,7 @@ public class StaticRmiStubGenerator {
             return;
         }
 
-        if( toolsJarPath == null && !OS.isDarwin()) {
+        if( toolsJarPath == null && !OS.isDarwin() && JDK.getMajor() < 9) {
             _logger.log(Level.INFO,  "[RMIC] tools.jar location was not found");
             return;
         }
@@ -271,7 +272,7 @@ public class StaticRmiStubGenerator {
         _logger.info("[RMIC] options: " + cmds);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        sun.rmi.rmic.Main compiler = new sun.rmi.rmic.Main(baos, "rmic");
+        org.glassfish.rmic.Main compiler = new org.glassfish.rmic.Main(baos, "rmic");
         boolean success = compiler.compile(cmds.toArray(new String[cmds.size()]));
         //success = true;  // it ALWAYS returns an "error" if -Xnocompile is used!!
 

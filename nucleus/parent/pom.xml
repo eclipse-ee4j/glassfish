@@ -123,7 +123,8 @@
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <hk2.version>3.0.1</hk2.version>
         <hk2.plugin.version>3.0.1</hk2.plugin.version>
-        <pfl.version>4.1.0</pfl.version>
+        <pfl.version>4.1.1</pfl.version>
+
         <gmbal.version>4.0.2</gmbal.version>   
         <shoal.version>2.0.0</shoal.version>
         <ha-api.version>3.1.12</ha-api.version>
@@ -207,7 +208,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <compilerArgument>-Djava.endorsed.dirs=${project.build.directory}/endorsed</compilerArgument>
                         <source>1.8</source>
                         <target>1.8</target>
                         <excludes>
@@ -877,6 +877,11 @@
                 <version>${glassfish-corba.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.glassfish.corba</groupId>
+                <artifactId>rmic</artifactId>
+                <version>${glassfish-corba.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>jakarta.mail</groupId>
                 <artifactId>jakarta.mail-api</artifactId>
                 <version>${mail.version}</version>
@@ -904,11 +909,6 @@
             <dependency>
                 <groupId>org.glassfish.pfl</groupId>
                 <artifactId>pfl-basic-tools</artifactId>
-                <version>${pfl.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.pfl</groupId>
-                <artifactId>pfl-asm</artifactId>
                 <version>${pfl.version}</version>
             </dependency>
             <dependency>

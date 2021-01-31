@@ -234,7 +234,6 @@
      <antcall target="build-standalone"/>
      <java fork="true" classname="standalone.StandAloneClient"
           failonerror="true">
-      <jvmarg value="-Djava.endorsed.dirs=${env.S1AS_HOME}/lib/endorsed"/>
       <arg line="spellng http://${http.host}:${http.port}/google/GoogleSearch"/>
       <classpath>
         <pathelement location="${env.S1AS_HOME}/lib/j2ee.jar"/>

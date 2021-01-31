@@ -538,7 +538,9 @@ public class MainHelper {
             ClassLoaderBuilder clb = new ClassLoaderBuilder(ctx, delegate);
             clb.addFrameworkJars();
             clb.addBootstrapApiJar(); // simple-glassfish-api.jar
-            clb.addJDKToolsJar();
+            if (getMajorJdkVersion() < 9) {
+                clb.addJDKToolsJar();
+            }
             return clb.build();
         } catch (IOException e) {
             throw new Error(e);

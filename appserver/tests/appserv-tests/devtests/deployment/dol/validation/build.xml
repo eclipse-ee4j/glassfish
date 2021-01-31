@@ -164,7 +164,6 @@
 -->
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-            <jvmarg value="-Djava.endorsed.dirs=${inst}/lib/endorsed"/>
             <jvmarg value="-Dcom.sun.aas.installRoot=${inst}"/>
             <jvmarg value="-Dwriteout.xml=true"/>
             <jvmarg value="-Djakarta.enterprise.system.tools.deployment.org.glassfish.deployment.common=FINE"/>

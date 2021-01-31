@@ -115,7 +115,6 @@
                                                                                 
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${tgtPort}"/>
-            <jvmarg value="-Djava.endorsed.dirs=${inst}/lib/endorsed"/>
                                                                                 
             <classpath>
                 <path refid="gfv3.classpath"/>

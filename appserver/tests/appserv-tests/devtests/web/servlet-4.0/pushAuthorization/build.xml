@@ -79,7 +79,6 @@
 
     <target name="run" depends="init-common">
         <java classname="WebTest" fork="true">
-            <jvmarg value="-Djava.endorsed.dirs=${env.S1AS_HOME}/modules/endorsed"/>
             <sysproperty key="S1AS_HOME" value="${env.S1AS_HOME}"/>
             <sysproperty key="debug" value="true"/>
             <arg value="${http.host}"/>

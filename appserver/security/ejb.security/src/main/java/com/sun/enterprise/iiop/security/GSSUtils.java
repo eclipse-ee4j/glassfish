@@ -155,7 +155,7 @@ public class GSSUtils
         byte[] deroid = new byte[mechoidlen];
 	System.arraycopy(externalName, 4, deroid, 0, mechoidlen);
         ObjectIdentifier oid1 = getOID(deroid);
-        if  ( ! oid1.equals(oid) )
+        if  ( ! oid1.equals((Object)oid) )
             throw e;
 
         int pos = 4 + mechoidlen;
@@ -213,7 +213,7 @@ public class GSSUtils
         byte[] deroid = new byte[mechoidlen];
 	System.arraycopy(externalName, 4, deroid, 0, mechoidlen);
         ObjectIdentifier oid1 = getOID(deroid);
-        if  ( ! oid1.equals(oid) )
+        if  ( ! oid1.equals((Object)oid) )
             return false;
         else
             return true;
@@ -440,7 +440,7 @@ public class GSSUtils
             _logger.log(Level.FINE,"expected mech OID: " + dumpHex(getDER(oid)));
 	}
 
-        if ( ! mechoid.equals(oid)) {
+        if ( ! mechoid.equals((Object)oid)) {
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE,"mech OID in token does not match expected mech OID");
             }

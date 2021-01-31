@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,16 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
-    <packaging>pom</packaging>
+
     <groupId>org.glassfish.main.distributions</groupId>
     <artifactId>nucleus-distributions</artifactId>
+    <packaging>pom</packaging>
+
     <name>Nucleus distributions</name>
 
     <developers>
@@ -49,6 +52,12 @@
         </developer>
     </developers>
 
+    <modules>
+        <module>nucleus-common</module>
+        <module>atomic</module>
+        <module>nucleus</module>
+    </modules>
+
     <properties>
         <findbugs.skip>true</findbugs.skip>
         <stage.dir.name>stage</stage.dir.name>
@@ -59,42 +68,34 @@
         <create-domain.args>--user admin create-domain --nopassword --savelogin=true --checkports=false --adminport 4848 --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
     </properties>
 
-    <modules>
-        <module>nucleus-common</module>
-        <module>atomic</module>
-        <module>nucleus</module>
-    </modules>
-
     <build>
         <outputDirectory>${temp.dir}</outputDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>clean-domain</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                            <configuration>
+                                <directory>${project.build.directory}</directory>
+                                <includes>
+                                    <include>${stage.dir.name}/domains/**</include>
+                                </includes>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <configuration>
-                        <includeEmptyDirs>true</includeEmptyDirs>
-                    </configuration>
-                </plugin>
+                
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
                     <executions>
-                        <execution>
-                            <id>create-domain</id>
-                            <phase>process-resources</phase>
-                            <configuration>
-                                <executable>${stage.dir}/${nucleus.install.dir.name}/bin/nadmin</executable>
-                                <commandlineArgs>${create-domain.args}</commandlineArgs>
-                            </configuration>
-                        </execution>
                         <execution>
                             <id>default-featuresets-dependencies</id>
                             <phase>process-resources</phase>
@@ -110,6 +111,16 @@
                                 </mappings>
                             </configuration>
                         </execution>
+                        
+                        <execution>
+                            <id>create-domain</id>
+                            <phase>process-resources</phase>
+                            <configuration>
+                                <executable>${stage.dir}/${nucleus.install.dir.name}/bin/nadmin</executable>
+                                <commandlineArgs>${create-domain.args}</commandlineArgs>
+                            </configuration>
+                        </execution>
+                        
                         <execution>
                             <id>default-zip</id>
                             <phase>package</phase>
@@ -135,6 +146,7 @@
                         </execution>
                     </executions>
                 </plugin>
+                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -158,24 +170,21 @@
                         <useProjectArtifact>false</useProjectArtifact>
                     </configuration>
                 </plugin>
+                
+                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>clean-domain</id>
-                            <phase>initialize</phase>
-                            <goals>
-                                <goal>clean</goal>
-                            </goals>
-                            <configuration>
-                                <directory>${project.build.directory}</directory>
-                                <includes>
-                                    <include>${stage.dir.name}/domains/**</include>
-                                </includes>
-                            </configuration>
-                        </execution>
-                    </executions>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <includeEmptyDirs>true</includeEmptyDirs>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -82,6 +82,19 @@ public class UnprocessedEventsTest  extends ConfigApiTest
             // check the result.
             String port = listener.getPort();
             assertEquals(port, "8908");
+
+            // ensure events are delivered.
+            transactions.waitForDrain();
+            assertNotNull(unprocessed);
+            
+            ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
+                public Object run(NetworkListener param) {
+                    param.setPort("8080");
+                    return null;
+                }
+            }, listener);
+                        
+            assertEquals(listener.getPort(), "8080");
 
             // ensure events are delivered.
             transactions.waitForDrain();

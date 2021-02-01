@@ -60,8 +60,6 @@ public class PolicyLoader{
 
     private static final String POLICY_PROVIDER = 
         "jakarta.security.jacc.policy.provider";
-    private static final String POLICY_PROVIDER_13 = 
-        "javax.security.jacc.auth.policy.provider";
     private static final String POLICY_CONF_FACTORY = 
         "jakarta.security.jacc.PolicyConfigurationFactory.provider";
     private static final String POLICY_PROP_PREFIX =
@@ -76,9 +74,6 @@ public class PolicyLoader{
      * is set it will override the domain.xml configuration. This will
      * normally not be the case in S1AS.
      *
-     * <P>The J2EE 1.3 property javax.security.jacc.auth.policy.provider is
-     * checked as a last resort. It should not be set in J2EE 1.4.
-     *
      */
     public void loadPolicy() {
 
@@ -91,9 +86,6 @@ public class PolicyLoader{
         JaccProvider jacc = getConfiguredJaccProvider();
         // set config properties (see method comments)
         setPolicyConfigurationFactory(jacc);
-        
-        boolean j2ee13 = false;
-        
 
         // check if system property is set
         String javaPolicy = System.getProperty(POLICY_PROVIDER);
@@ -108,16 +100,6 @@ public class PolicyLoader{
                 javaPolicy = jacc.getPolicyProvider();
             }
         }
-        
-        if (javaPolicy == null) {
-            javaPolicy = System.getProperty(POLICY_PROVIDER_13);
-            if (javaPolicy != null) {
-                // warn user j2ee13 property is being used
-                j2ee13 = true;
-                _logger.log(Level.WARNING, SecurityLoggerInfo.policyProviderConfigOverrideWarning,
-                            new String[] { POLICY_PROVIDER_13, javaPolicy} );
-            }
-        }
 
         // now install the policy provider if one was identified
         if (javaPolicy != null) {
@@ -127,36 +109,22 @@ public class PolicyLoader{
                 
                 //Object obj = Class.forName(javaPolicy).newInstance();
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                Class javaPolicyClass = loader.loadClass(javaPolicy);
-                Object obj = javaPolicyClass.newInstance();
-                if (j2ee13) {
-                    // Use JDK 1.3 classes if j2ee1 3 property being used
-                    if (!(obj instanceof javax.security.auth.Policy)) {
-                        String msg = 
-                            sm.getString("enterprise.security.plcyload.not13");
-                        throw new RuntimeException(msg);
-                    }
-                    javax.security.auth.Policy policy =
-                        (javax.security.auth.Policy)obj;
-                    javax.security.auth.Policy.setPolicy(policy);
+                Class<?> javaPolicyClass = loader.loadClass(javaPolicy);
+                Object obj = javaPolicyClass.getDeclaredConstructor().newInstance();
+                
+                if (!(obj instanceof java.security.Policy)) {
+                    String msg = 
+                        sm.getString("enterprise.security.plcyload.not14");
+                    throw new RuntimeException(msg);
+                }
+                java.security.Policy policy = (java.security.Policy)obj;
+                java.security.Policy.setPolicy(policy);
+                //TODO: causing ClassCircularity error when SM ON and
+                //deployment use library feature and ApplibClassLoader
+                //it is likely a problem caused by the way classloading is done
+                //in this case.
+                if (System.getSecurityManager() == null) {
                     policy.refresh();
-                    
-                } else {
-                    // Otherwise use JDK 1.4 classes.
-                    if (!(obj instanceof java.security.Policy)) {
-                        String msg = 
-                            sm.getString("enterprise.security.plcyload.not14");
-                        throw new RuntimeException(msg);
-                    }
-                    java.security.Policy policy = (java.security.Policy)obj;
-                    java.security.Policy.setPolicy(policy);
-                    //TODO: causing ClassCircularity error when SM ON and
-                    //deployment use library feature and ApplibClassLoader
-                    //it is likely a problem caused by the way classloading is done
-                    //in this case.
-                    if (System.getSecurityManager() == null) {
-                        policy.refresh();
-                    }
                 }
 
             } catch (Exception e) {

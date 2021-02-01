@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import javax.security.auth.Subject;
 
 import org.glassfish.security.common.Group;
-//import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.auth.realm.BadRealmException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
@@ -33,10 +32,9 @@ import com.sun.enterprise.security.auth.realm.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.IASRealm;
 import java.security.Principal;
 import javax.security.auth.callback.Callback;
-
+import javax.security.auth.x500.X500Principal;
 
 import org.jvnet.hk2.annotations.Service;
-import sun.security.x509.X500Name;
 
 
 /**
@@ -180,23 +178,6 @@ public final class CertificateRealm extends IASRealm
         // property has been specified (see init()).
         return defaultGroups.elements();
     }
-    
-
-    /**
-     * Returns name of JAAS context used by this realm. Overrides default
-     * Realm behavior of this method. The certificate realm does not
-     * require (or support) a LoginModule. This method should never get
-     * called unless there is a configuration error, so this overloading
-     * is provided to log an error message.  See class documentation.
-     *
-     * @return null
-     *
-     */
-    /*public String getJAASContext()
-    {
-    _logger.warning("certrealm.nojaas");
-    return null;
-    }*/
 
     /**
      * Complete authentication of certificate user.
@@ -212,60 +193,13 @@ public final class CertificateRealm extends IASRealm
      * the security context for the current user.
      *
      * @param subject The Subject object for the authentication request.
-     * @param x500name The X500Name object from the user certificate.
-     *
-     
-    public void authenticate(Subject subject, X500Name x500name)
-    {
-        // It is important to use x500name.getName() in order to be
-        // consistent with web containers view of the name - see bug
-        // 4646134 for reasons why this matters.
-        
-        String name = x500name.getName();
-
-        if (_logger.isLoggable(Level.FINEST)) {
-            _logger.finest(
-                "Certificate realm setting up security context for: "+ name);
-        }
-
-        if (defaultGroups != null) {
-	    Set principalSet = subject.getPrincipals();
-	    Enumeration e = defaultGroups.elements();
-	    while (e.hasMoreElements()) {
-		principalSet.add(new Group((String) e.nextElement()));
-	    }
-	}
-        
-        SecurityContext securityContext =
-	    new SecurityContext(name, subject);
-        
-	SecurityContext.setCurrent(securityContext);
-    }*/
-
-    /**
-     * Complete authentication of certificate user.
-     *
-     * <P>As noted, the certificate realm does not do the actual
-     * authentication (signature and cert chain validation) for
-     * the user certificate, this is done earlier in NSS. This method
-     * simply sets up the security context for the user in order to
-     * properly complete the authentication processing.
-     *
-     * <P>If any groups have been assigned to cert-authenticated users
-     * through the assign-groups property these groups are added to
-     * the security context for the current user.
-     *
-     * @param subject The Subject object for the authentication request.
-     * @param x500name The X500Name object from the user certificate.
+     * @param principal The X500Principal object from the user certificate.
      *
      */
-    public void authenticate(Subject subject, X500Name x500name)
+    public void authenticate(Subject subject, X500Principal principal)
     {
-        // It is important to use x500name.getName() in order to be
-        // consistent with web containers view of the name - see bug
-        // 4646134 for reasons why this matters.
         
-        String name = x500name.getName();
+        String name = principal.getName();
 
         if (_logger.isLoggable(Level.FINEST)) {
             _logger.finest(
@@ -280,7 +214,7 @@ public final class CertificateRealm extends IASRealm
 	    }
 	}
         if (!subject.getPrincipals().isEmpty()) {
-            DistinguishedPrincipalCredential dpc = new DistinguishedPrincipalCredential(x500name);
+            DistinguishedPrincipalCredential dpc = new DistinguishedPrincipalCredential(principal);
             subject.getPublicCredentials().add(dpc);
         }
         

@@ -764,17 +764,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.ldapbp</groupId>
-            <artifactId>ldapbp</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.jvnet.mimepull</groupId>
             <artifactId>mimepull</artifactId>
             <exclusions>

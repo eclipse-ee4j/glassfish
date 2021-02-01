@@ -16,7 +16,7 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import com.sun.jndi.ldap.BasicControl;
+import javax.naming.ldap.BasicControl;
 
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.Control;

@@ -17,10 +17,10 @@
 package com.sun.enterprise.security.auth.realm.ldap;
 
 import java.util.*;
-import java.io.IOException;
 import java.util.logging.Level;
 import javax.naming.CompositeName;
 import javax.naming.Context;
+import javax.naming.InvalidNameException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -29,10 +29,6 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.security.auth.login.LoginException;
-import java.security.Principal;
-// imported from the ldap booster pack
-import com.sun.jndi.ldap.obj.GroupOfURLs;
-import javax.security.auth.x500.X500Principal;
 import com.sun.enterprise.security.auth.realm.BadRealmException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
@@ -41,12 +37,10 @@ import com.sun.enterprise.security.auth.realm.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.IASRealm;
 import java.lang.StringBuffer;
 import java.util.regex.Matcher;
-import javax.naming.directory.Attributes;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.annotations.Service;
-import sun.security.x509.X500Name;
 
 
 /**
@@ -361,12 +355,19 @@ public final class LDAPRealm extends IASRealm
 
             String _username = userDN;
             try {
-                X500Name name = new X500Name(userDN);
-                _username = name.getCommonName();
-            } catch (IOException e) {
+                _username = new LdapName(userDN)
+                    .getRdns()
+                    .stream()
+                    .filter(rdn -> rdn.getType().equalsIgnoreCase("cn"))
+                    .map(rdn -> rdn.getValue().toString())
+                    .findFirst()
+                    .orElseGet(null);
+                
+            } catch (InvalidNameException e) {
                 //Ignoring the exception to suppot simple group names as userDN
                 //Issue GLASSFISH-19595
             }
+            
             if (_username == null && userDN != null && userDN.startsWith("uid")) {
                 //handle uid=XXX here where cn is not present
                 //TODO :maybe there is a better way to handle this??

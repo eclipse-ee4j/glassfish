@@ -17,7 +17,7 @@
 package com.sun.jndi.ldap.ctl;
 
 import java.io.IOException;
-import com.sun.jndi.ldap.BasicControl;
+import javax.naming.ldap.BasicControl;
 
 /**
  * This class implements the LDAPv3 Request Control for Tree Delete as

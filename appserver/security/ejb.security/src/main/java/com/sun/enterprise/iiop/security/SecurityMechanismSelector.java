@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.security.PrivilegedAction;
 import java.security.AccessController;
 import javax.security.auth.Subject;
+import javax.security.auth.x500.X500Principal;
+
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
@@ -54,7 +56,6 @@ import com.sun.corba.ee.spi.transport.SocketInfo;
 import com.sun.corba.ee.org.omg.CSIIOP.*;
 import org.ietf.jgss.Oid;
 import java.util.Enumeration;
-import sun.security.x509.X500Name;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.login.common.LoginException;
@@ -923,8 +924,8 @@ localStrings.getLocalString("securitymechansimselector.runas_cannot_propagate_us
                 Object o = credIter.next();
                 if(o instanceof GSSUPName) {
                     ctx.identcls = GSSUPName.class;
-                } else if(o instanceof X500Name) {
-                    ctx.identcls = X500Name.class;
+                } else if(o instanceof X500Principal) {
+                    ctx.identcls = X500Principal.class;
                 } else {
                     ctx.identcls = X509CertificateCredential.class;
                 }
@@ -1504,12 +1505,12 @@ as_context_mech
                 return null;
             }  else {
                 // Set the transport principal in subject and
-                // return the X500Name class
+                // return the X500Principal class
                 ssc = new SecurityContext();
-                X500Name x500Name = (X500Name) certChain[0].getSubjectDN();
+                X500Principal x500principal = certChain[0].getSubjectX500Principal();
                 ssc.subject = new Subject();
-                ssc.subject.getPublicCredentials().add(x500Name);
-                ssc.identcls = X500Name.class;
+                ssc.subject.getPublicCredentials().add(x500principal);
+                ssc.identcls = X500Principal.class;
                 ssc.authcls = null;
                 return ssc;
             }

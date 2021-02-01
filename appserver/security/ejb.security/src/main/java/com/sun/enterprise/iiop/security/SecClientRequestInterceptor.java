@@ -32,6 +32,9 @@ import com.sun.logging.LogDomains;
 
 import java.util.*;
 import java.util.logging.Level;
+
+import javax.security.auth.x500.X500Principal;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.cert.X509Certificate;
@@ -42,7 +45,6 @@ import org.omg.PortableInterceptor.*;
 import org.omg.IOP.*;
 import sun.security.util.DerOutputStream;
 import sun.security.util.DerValue;
-import sun.security.x509.X500Name;
 
 /**
  * This class implements a client side security request interceptor for CSIV2.
@@ -166,9 +168,9 @@ public class SecClientRequestInterceptor extends    org.omg.CORBA.LocalObject
         Any  any = orb.create_any();
         idtok = new IdentityToken();
   
-        if (X500Name.class.isAssignableFrom(cls)) {
+        if (X500Principal.class.isAssignableFrom(cls)) {
                 _logger.log(Level.FINE,"Constructing an X500 DN Identity Token");
-            X500Name credname = (X500Name) cred;
+                X500Principal credname = (X500Principal) cred;
             credname.encode(dos);  // ASN.1 encoding
             X501DistinguishedNameHelper.insert(any, dos.toByteArray());
 

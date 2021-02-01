@@ -42,8 +42,8 @@ import sun.security.util.DerInputStream;
 import sun.security.util.DerValue;
 
 import sun.security.x509.X509CertImpl;
-import sun.security.x509.X500Name;
-import javax.security.auth.*;  
+import javax.security.auth.*;
+import javax.security.auth.x500.X500Principal;
 
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
@@ -225,7 +225,7 @@ public class SecServerRequestInterceptor
             break;
 
         case ITTDistinguishedName.value:
-            /* Construct a X500Name */
+            /* Construct a X500Principal */
 
             derenc = idtok.dn();
             /* Issue 5766: Decode CDR encoding if necessary */
@@ -236,15 +236,15 @@ public class SecServerRequestInterceptor
                 derenc = X501DistinguishedNameHelper.extract(any);
             }
             if(_logger.isLoggable(Level.FINE)){
-                _logger.log(Level.FINE,"Create an X500Name object from identity token");
+                _logger.log(Level.FINE,"Create an X500Principal object from identity token");
             }
-            X500Name xname = new X500Name(derenc);
+            X500Principal xname = new X500Principal(derenc);
 	    if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE,"Identity to be asserted is " + xname.toString());
-		_logger.log(Level.FINE,"Adding X500Name to subject's PublicCredentials");
+		_logger.log(Level.FINE,"Adding X500Principal to subject's PublicCredentials");
 	    }
             sc.subject.getPublicCredentials().add(xname);
-            sc.identcls = X500Name.class;
+            sc.identcls = X500Principal.class;
             break;
             
         case ITTX509CertChain.value:

@@ -48,9 +48,10 @@ public class GSSUtilsService implements GSSUtilsContract {
     }
     /**
      * TODO:V3 temporarily putting it inside this contract
-     * @return the ORB
-    public Object getORB() {
-        
-    }*/
+     * 
+     * @return the ORB public Object getORB() {
+     * 
+     * }
+     */
 
 }

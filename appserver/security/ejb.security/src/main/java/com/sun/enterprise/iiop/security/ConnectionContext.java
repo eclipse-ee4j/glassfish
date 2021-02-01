@@ -23,9 +23,6 @@ import java.net.Socket;
 import com.sun.corba.ee.spi.ior.IOR;
 import com.sun.corba.ee.spi.transport.SocketInfo;
 
-
-
-
 public final class ConnectionContext implements Serializable {
     private CompoundSecMech mechanism = null;
     private boolean sslClientAuth = false;
@@ -44,97 +41,95 @@ public final class ConnectionContext implements Serializable {
      * Create the security mechanism context. This is stored in TLS.
      */
     public ConnectionContext(CompoundSecMech mech, IOR ior) {
-	this.ior = ior;
-	mechanism = mech;
+        this.ior = ior;
+        mechanism = mech;
     }
 
     /**
      * Return the IOR.
      */
-     public IOR getIOR() {
-	return ior;
-     }
+    public IOR getIOR() {
+        return ior;
+    }
 
     /**
      * Set the IOR
      */
     public void setIOR(IOR ior) {
-	this.ior = ior;
+        this.ior = ior;
     }
 
     /**
      * Return the selected compound security mechanism.
      */
     public CompoundSecMech getMechanism() {
-	return mechanism;
+        return mechanism;
     }
 
     /**
      * Set the mechanism used for this invocation.
      */
     public void setMechanism(CompoundSecMech mech) {
-	mechanism = mech;
+        mechanism = mech;
     }
 
     /**
      * Return true if SSL client authentication has happened, false otherwise.
      */
     public boolean getSSLClientAuthenticationOccurred() {
-	return sslClientAuth;
+        return sslClientAuth;
     }
 
     /**
      * Set true if SSL client authentication has happened.
      */
     public void setSSLClientAuthenticationOccurred(boolean val) {
-	sslClientAuth = val;
+        sslClientAuth = val;
     }
 
     /**
      * Return true if SSL was used to invoke the EJB.
      */
     public boolean getSSLUsed() {
-	return ssl;
+        return ssl;
     }
 
     /**
      * Set true if SSL was used to invoke the EJB.
      */
     public void setSSLUsed(boolean val) {
-	ssl = val;
+        ssl = val;
     }
 
     public void setEndPointInfo(SocketInfo info) {
-	endpoint = info;
+        endpoint = info;
     }
 
     public SocketInfo getEndPointInfo() {
-	return endpoint;
+        return endpoint;
     }
 
     /**
      * Return the socket for this connection.
      */
     public Socket getSocket() {
-	return socket;
+        return socket;
     }
 
     /**
      * Set the socket for this connection.
      */
     public void setSocket(Socket s) {
-	socket = s;
+        socket = s;
     }
 
     public String toString() {
-	String s = "sslClientAuth=" + sslClientAuth;
-	s = s + " SSL=" + ssl;
-	s = s + " ENDPOINT=" + endpoint;
-	s = s + " mechanism=" + mechanism;
-	s = s + " IOR=" + ior;
-	s = s + " Socket=" + socket;
-	return s;
+        String s = "sslClientAuth=" + sslClientAuth;
+        s = s + " SSL=" + ssl;
+        s = s + " ENDPOINT=" + endpoint;
+        s = s + " mechanism=" + mechanism;
+        s = s + " IOR=" + ior;
+        s = s + " Socket=" + socket;
+        return s;
     }
 }
-
-

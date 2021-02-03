@@ -1,7 +1,7 @@
 @echo off
 
 REM
-REM  Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+REM  Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
 REM  terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,4 +33,4 @@ goto run
 set JAVA=java
 
 :run
-%JAVA% %WSIMPORT_OPTS% -cp "%~dp0..\modules\webservices-api-osgi.jar;%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jakarta.xml.bind-api.jar;%~dp0..\modules\jaxb-osgi.jar" com.sun.tools.ws.WsImport %*
+%JAVA% %WSIMPORT_OPTS% -cp "%~dp0..\modules\webservices-api-osgi.jar;%~dp0..\modules\webservices-osgi.jar;%~dp0..\modules\jakarta.xml.bind-api.jar;%~dp0..\modules\jaxb-osgi.jar;%~dp0..\modules\jakarta.activation.jar" com.sun.tools.ws.WsImport %*

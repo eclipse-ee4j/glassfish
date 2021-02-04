@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import java.io.IOException;
 
 import org.glassfish.security.common.Role;
+import org.ietf.jgss.GSSException;
 import org.omg.CORBA.ORB;
 
 import com.sun.enterprise.util.Utility;
@@ -288,7 +289,7 @@ public final class CSIV2TaggedComponentInfo {
      * decreasing order of preference). Note that creating more than one CompoundSecMech here will cause
      * getSecurityMechanisms to fail, as it supports only one CompoundSecMech.
      */
-    private CompoundSecMech[] createCompoundSecMechs(DescriptorMaker maker, EjbDescriptor desc) throws IOException {
+    private CompoundSecMech[] createCompoundSecMechs(DescriptorMaker maker, EjbDescriptor desc) throws GSSException {
 
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "IIOP: Creating CompoundSecMech");
@@ -338,7 +339,7 @@ public final class CSIV2TaggedComponentInfo {
         return mechList;
     }
 
-    private CompoundSecMech[] createCompoundSecMechs(final List<SocketInfo> socketInfos, final EjbDescriptor desc) throws IOException {
+    private CompoundSecMech[] createCompoundSecMechs(final List<SocketInfo> socketInfos, final EjbDescriptor desc) throws GSSException {
 
         DescriptorMaker maker = new DescriptorMaker() {
             public org.omg.IOP.TaggedComponent evaluate(EjbIORConfigurationDescriptor desc) {
@@ -349,7 +350,7 @@ public final class CSIV2TaggedComponentInfo {
         return createCompoundSecMechs(maker, desc);
     }
 
-    private CompoundSecMech[] createCompoundSecMechs(final int sslPort, final EjbDescriptor desc) throws IOException {
+    private CompoundSecMech[] createCompoundSecMechs(final int sslPort, final EjbDescriptor desc) throws GSSException {
 
         DescriptorMaker maker = new DescriptorMaker() {
             public org.omg.IOP.TaggedComponent evaluate(EjbIORConfigurationDescriptor desc) {
@@ -363,7 +364,7 @@ public final class CSIV2TaggedComponentInfo {
     /**
      * Create the AS layer context within a compound mechanism definition.
      */
-    public AS_ContextSec createASContextSec(EjbIORConfigurationDescriptor iorDesc, String realmName) throws IOException {
+    public AS_ContextSec createASContextSec(EjbIORConfigurationDescriptor iorDesc, String realmName) throws GSSException {
         AS_ContextSec asContext = null;
         int target_supports = 0;
         int target_requires = 0;
@@ -422,7 +423,7 @@ public final class CSIV2TaggedComponentInfo {
     /**
      * Create the SAS layer context within a compound mechanism definition.
      */
-    public SAS_ContextSec createSASContextSec(EjbIORConfigurationDescriptor iorDesc) throws IOException {
+    public SAS_ContextSec createSASContextSec(EjbIORConfigurationDescriptor iorDesc) throws GSSException {
         SAS_ContextSec sasContext = null;
         // target_supports = 0 means that target supports ITTAbsent
         int target_supports = 0;

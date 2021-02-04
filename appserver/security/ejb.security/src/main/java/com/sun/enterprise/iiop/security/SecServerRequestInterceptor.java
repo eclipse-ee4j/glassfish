@@ -30,6 +30,9 @@ import org.omg.CORBA.*;
 import org.omg.PortableInterceptor.*;
 import org.omg.IOP.*;
 
+import java.security.cert.CertPath;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 /* Import classes generated from CSIV2 idl files */
@@ -38,10 +41,7 @@ import com.sun.corba.ee.spi.legacy.connection.Connection;
 import com.sun.corba.ee.spi.legacy.interceptor.RequestInfoExt;
 import com.sun.enterprise.common.iiop.security.AnonCredential;
 import com.sun.enterprise.common.iiop.security.GSSUPName;
-import sun.security.util.DerInputStream;
-import sun.security.util.DerValue;
 
-import sun.security.x509.X509CertImpl;
 import javax.security.auth.*;
 import javax.security.auth.x500.X500Principal;
 
@@ -51,8 +51,12 @@ import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import com.sun.logging.LogDomains;
+
+import java.io.ByteArrayInputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.logging.*;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 
@@ -251,23 +255,18 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
                 /* Extract DER encoding */
                 derenc = X509CertificateChainHelper.extract(any);
             }
+            
+            List<? extends Certificate> certificates = CertificateFactory.getInstance("X.509")
+                    .generateCertPath(new ByteArrayInputStream(derenc))
+                    .getCertificates();
 
-            DerInputStream din = new DerInputStream(derenc);
-
-            /**
-             * Size specified for getSequence() is 1 and is just used as a guess by the method getSequence().
-             */
-            DerValue[] derval = din.getSequence(1);
-            X509Certificate[] certchain = new X509CertImpl[derval.length];
-            /**
-             * X509Certificate does not have a constructor which can be used to instantiate objects from DER encodings. So use
-             * X509CertImpl extends X509Cerificate and also implements DerEncoder interface.
-             */
+            X509Certificate[] certchain = new X509Certificate[certificates.size()];
+           
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Contents of X509 Certificate chain:");
             }
             for (int i = 0; i < certchain.length; i++) {
-                certchain[i] = new X509CertImpl(derval[i]);
+                certchain[i] = (X509Certificate) certificates.get(i);
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, "    " + certchain[i].getSubjectDN().getName());
                 }

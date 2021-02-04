@@ -26,6 +26,8 @@ import com.sun.corba.ee.org.omg.CSIIOP.CompoundSecMech;
 import com.sun.corba.ee.org.omg.GSSUP.InitialContextToken;
 import com.sun.corba.ee.org.omg.GSSUP.InitialContextTokenHelper;
 import java.io.IOException;
+
+import org.ietf.jgss.GSSException;
 import org.omg.CORBA.*;
 import org.omg.IOP.*;
 
@@ -306,7 +308,7 @@ public class GSSUPToken {
             if (target_name != null && target_name.length != 0) {
                 targetNameRealm = new String(GSSUtils.importName(GSSUtils.GSSUP_MECH_OID, target_name));
             }
-        } catch (IOException ex) {
+        } catch (GSSException ex) {
             _logger.log(Level.FINE, null, ex);
         }
         if (targetNameRealm != null && !DEFAULT_REALM_NAME.equals(targetNameRealm)) {
@@ -323,7 +325,7 @@ public class GSSUPToken {
      * 
      * @return byte[] the byte array representation of the GSSToken
      */
-    byte[] getGSSToken() throws IOException {
+    byte[] getGSSToken() throws GSSException {
         if (_logger.isLoggable(Level.FINER)) {
             _logger.log(Level.FINER, "IIOP:GSSUP mech token : " + GSSUtils.dumpHex(cdr_encoded_token));
         }

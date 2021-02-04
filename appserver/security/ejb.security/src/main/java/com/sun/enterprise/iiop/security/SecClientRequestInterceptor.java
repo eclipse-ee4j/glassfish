@@ -32,16 +32,18 @@ import java.util.logging.Level;
 
 import javax.security.auth.x500.X500Principal;
 
+import static java.util.Arrays.asList;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.cert.CertPath;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.omg.CORBA.*;
 import org.omg.PortableInterceptor.*;
 import org.omg.IOP.*;
-import sun.security.util.DerOutputStream;
-import sun.security.util.DerValue;
 
 /**
  * This class implements a client side security request interceptor for CSIV2. It is used to send and receive the
@@ -146,32 +148,31 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
     private IdentityToken createIdToken(java.lang.Object cred, Class cls, ORB orb) throws Exception {
 
         IdentityToken idtok = null;
-
-        DerOutputStream dos = new DerOutputStream();
-        DerValue[] derval = null; // DER encoding buffer
+        
         // byte[] cdrval ; // CDR encoding buffer
         Any any = orb.create_any();
         idtok = new IdentityToken();
 
         if (X500Principal.class.isAssignableFrom(cls)) {
             _logger.log(Level.FINE, "Constructing an X500 DN Identity Token");
-            X500Principal credname = (X500Principal) cred;
-            credname.encode(dos); // ASN.1 encoding
-            X501DistinguishedNameHelper.insert(any, dos.toByteArray());
+            X500Principal x500Principal = (X500Principal) cred;
+            X501DistinguishedNameHelper.insert(any, x500Principal.getEncoded());
 
-            /* IdentityToken with CDR encoded X501 name */
+            /* IdentityToken with CDR encoded X500 principal */
             idtok.dn(codec.encode_value(any));
         } else if (X509CertificateCredential.class.isAssignableFrom(cls)) {
             _logger.log(Level.FINE, "Constructing an X509 Certificate Chain Identity Token");
+            
             /* create a DER encoding */
             X509CertificateCredential certcred = (X509CertificateCredential) cred;
             X509Certificate[] certchain = certcred.getX509CertificateChain();
             _logger.log(Level.FINE, "Certchain length = " + certchain.length);
-            derval = new DerValue[certchain.length];
-            for (int i = 0; i < certchain.length; i++)
-                derval[i] = new DerValue(certchain[i].getEncoded());
-            dos.putSequence(derval);
-            X509CertificateChainHelper.insert(any, dos.toByteArray());
+            
+            byte[] certBytes = CertificateFactory.getInstance("X.509")
+                    .generateCertPath(asList(certchain))
+                    .getEncoded();
+            
+            X509CertificateChainHelper.insert(any, certBytes);
 
             /* IdentityToken with CDR encoded certificate chain */
             idtok.certificate_chain(codec.encode_value(any));
@@ -191,6 +192,7 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
             /* IdentityToken with CDR encoded GSSUPName */
             idtok.principal_name(codec.encode_value(any));
         }
+        
         return (idtok);
     }
 

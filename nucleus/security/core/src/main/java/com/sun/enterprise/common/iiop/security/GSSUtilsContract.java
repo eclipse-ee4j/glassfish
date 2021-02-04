@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.common.iiop.security;
 
-import java.io.IOException;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.Oid;
 import org.jvnet.hk2.annotations.Contract;
-import sun.security.util.ObjectIdentifier;
 
 /**
  *
@@ -26,13 +26,12 @@ import sun.security.util.ObjectIdentifier;
  */
 @Contract
 public interface GSSUtilsContract {
-    
-    public String dumpHex(byte[] octets);
 
-    public byte[] importName(ObjectIdentifier oid, byte[] externalName)
-	throws IOException;
-    public byte[] createExportedName(ObjectIdentifier oid, byte[] extName)
-	throws IOException;
-    public ObjectIdentifier GSSUP_MECH_OID();
-    
+    String dumpHex(byte[] octets);
+
+    byte[] importName(Oid oid, byte[] externalName) throws GSSException;
+
+    byte[] createExportedName(Oid oid, byte[] extName) throws GSSException;
+
+    Oid GSSUP_MECH_OID();
 }

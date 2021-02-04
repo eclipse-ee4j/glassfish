@@ -16,19 +16,14 @@
 
 package com.sun.enterprise.iiop.security;
 
-
-
-public class SecurityMechanismException extends java.lang.Exception
-{
+public class SecurityMechanismException extends java.lang.Exception {
     /**
      * Constructs the exception with the specified detail message.
+     * 
      * @param the detail message.
      */
     public SecurityMechanismException(String msg) {
-	super(msg);
+        super(msg);
     }
 
-    
 }
-
-

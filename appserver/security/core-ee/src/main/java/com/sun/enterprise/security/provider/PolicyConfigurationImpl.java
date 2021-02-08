@@ -29,12 +29,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.lang.reflect.Constructor;
-
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.*;
 import javax.security.auth.Subject;
 
 import java.util.logging.*;
 import com.sun.logging.LogDomains;
+import com.sun.xml.txw2.IllegalSignatureException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
@@ -767,12 +771,17 @@ public class PolicyConfigurationImpl implements PolicyConfiguration {
     }
 
     private java.security.Policy getNewPolicy() {
-	Object wrapper = java.security.Policy.getPolicy();
-	if (wrapper != null && wrapper instanceof BasePolicyWrapper) {
-	    return ((BasePolicyWrapper) wrapper).getNewPolicy();
-	} else {
-	    return new sun.security.provider.PolicyFile();
-	} 
+        Object wrapper = java.security.Policy.getPolicy();
+        if (wrapper != null && wrapper instanceof BasePolicyWrapper) {
+            return ((BasePolicyWrapper) wrapper).getNewPolicy();
+        } else {
+            try {
+                return Policy.getInstance("JavaPolicy", null);
+            } catch (NoSuchAlgorithmException e) {
+                // TODO Auto-generated catch block
+                throw new IllegalSignatureException(e);
+            }
+        }
     }
 
     private void captureFileTime(boolean granted) {
@@ -843,7 +852,7 @@ public class PolicyConfigurationImpl implements PolicyConfiguration {
 		}
 
 		policyUrlValue = 
-		    sun.net.www.ParseUtil.fileToEncodedURL(new File(name)).toString();
+		    fileToEncodedURL(new File(name));
 		if (fromFile && !remove) {
                     uncheckedPermissions = null;
                     rolePermissionsTable = null;
@@ -860,6 +869,26 @@ public class PolicyConfigurationImpl implements PolicyConfiguration {
 		throw new RuntimeException(defMsg);
 	    }
 	}
+    }
+    
+    public static String fileToEncodedURL(File file) throws MalformedURLException {
+        try {
+            String filePath = new URI("file", file.getAbsolutePath(), null)
+                .toASCIIString()
+                .substring("file:".length());
+
+            if (!filePath.startsWith("/")) {
+                filePath = "/" + filePath;
+            }
+
+            if (file.isDirectory() && !filePath.endsWith("/")) {
+                filePath = filePath + "/";
+            }
+
+            return new URL("file", "", filePath).toString();
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private String getPolicyFileName(boolean granted) {

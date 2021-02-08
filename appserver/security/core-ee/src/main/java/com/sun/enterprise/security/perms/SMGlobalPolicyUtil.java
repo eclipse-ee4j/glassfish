@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,31 +16,30 @@
 
 package com.sun.enterprise.security.perms;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.CodeSource;
-import java.security.Permission;
 import java.security.AllPermission;
+import java.security.CodeSource;
+import java.security.NoSuchAlgorithmException;
+import java.security.Permission;
 import java.security.PermissionCollection;
-import java.security.Permissions;
+import java.security.Policy;
+import java.security.URIParameter;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import com.sun.logging.LogDomains;
 
-import sun.security.provider.PolicyFile;
 
 /**
  * 
@@ -238,7 +237,7 @@ public class SMGlobalPolicyUtil {
             
         } catch (FileNotFoundException e) {
             //ignore: the permissions files not exist
-        } catch (IOException e) {
+        } catch (IOException | NoSuchAlgorithmException |  URISyntaxException e) {
             logger.warning(e.getMessage());
             throw new RuntimeException(e);
         }
@@ -257,8 +256,7 @@ public class SMGlobalPolicyUtil {
     }
     
 
-    private static void loadServerPolicy(PolicyType policyType) throws IOException {
-                
+    private static void loadServerPolicy(PolicyType policyType) throws IOException, NoSuchAlgorithmException, URISyntaxException {
         if (policyType == null)
             return;
 
@@ -291,16 +289,17 @@ public class SMGlobalPolicyUtil {
             logger.fine("policyFilename= " + policyFilename);
         }
 
-        File f = new File(policyFilename);
-        if (!f.exists())
+        if (!new File(policyFilename).exists()) {
             return;
+        }
         
         URL furl = new URL("file:" + policyFilename);
             
         if (logger.isLoggable(Level.FINE)){
             logger.fine("Loading policy from " + furl);
         }
-        PolicyFile pf = new PolicyFile(furl);
+        
+        Policy pf = Policy.getInstance("JavaPolicy", new URIParameter(furl.toURI()));
 
         CodeSource cs = new CodeSource(new URL(EJB_TYPE_CODESOURCE), (Certificate[])null ); 
         PermissionCollection pc = pf.getPermissions(cs);

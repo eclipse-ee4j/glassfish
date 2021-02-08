@@ -26,18 +26,34 @@
 
 package com.sun.enterprise.security.provider;
 
-//import sun.security.provider.PolicyFile;
-import sun.security.util.PropertyExpander;
-import java.security.*;
-import jakarta.security.jacc.*;
-import javax.management.MBeanPermission;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.NoSuchAlgorithmException;
+import java.security.Permission;
+import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.security.Policy;
+import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
+import java.security.Security;
 import java.util.Enumeration;
-import java.util.logging.*; 
-import com.sun.logging.LogDomains;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.management.MBeanPermission;
+
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.LogDomains;
+import com.sun.xml.txw2.IllegalSignatureException;
+
+import jakarta.security.jacc.EJBRoleRefPermission;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebRoleRefPermission;
 
 /**
  * This class is a wrapper around the default jdk policy file 
@@ -131,7 +147,12 @@ public class BasePolicyWrapper extends java.security.Policy {
      * can be overridden by Subclass
      */
     protected java.security.Policy getNewPolicy() {
-	return (java.security.Policy) new sun.security.provider.PolicyFile();
+        try {
+            return Policy.getInstance("JavaPolicy", null);
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            throw new IllegalSignatureException(e);
+        }
     }
 
     /**

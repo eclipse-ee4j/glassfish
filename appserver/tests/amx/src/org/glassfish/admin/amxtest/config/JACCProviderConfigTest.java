@@ -28,8 +28,8 @@ import java.util.Map;
  */
 public final class JACCProviderConfigTest
         extends ConfigMgrTestBase {
-    static final String PROVIDER = "com.sun.enterprise.security.provider.PolicyWrapper";
-    static final String PROVIDER_FACTORY = "com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl";
+    static final String PROVIDER = "com.sun.enterprise.security.jacc.provider.SimplePolicyProvider";
+    static final String PROVIDER_FACTORY = "com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory";
     static final Map<String, String> RESERVED = null;
 
     public JACCProviderConfigTest() {

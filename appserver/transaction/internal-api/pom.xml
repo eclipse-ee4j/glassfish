@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.transaction</groupId>
         <artifactId>transaction</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>

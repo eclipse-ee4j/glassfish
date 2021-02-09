@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>cmp-enhancer</artifactId>

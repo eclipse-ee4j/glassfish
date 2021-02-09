@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.ejb.portable;
 
 import java.io.*;
@@ -23,50 +22,40 @@ import jakarta.ejb.*;
 import jakarta.ejb.spi.HandleDelegate;
 import javax.naming.*;
 
-
 /**
- * A portable implementation of HomeHandle using the 
- * HandleDelegate SPI.
- * This class can potentially be instantiated in another vendor's container
- * so it must not refer to any non-portable RI-specific classes.
+ * A portable implementation of HomeHandle using the HandleDelegate SPI. This class can potentially be instantiated in
+ * another vendor's container so it must not refer to any non-portable RI-specific classes.
  *
  */
-
-public final class HomeHandleImpl implements HomeHandle, Serializable
-{
+public final class HomeHandleImpl implements HomeHandle, Serializable {
     private EJBHome ejbHome;
 
     // This constructor will only be used by the EJB container in the RI.
-    public HomeHandleImpl(EJBHome ejbHome)
-    {
-	this.ejbHome = ejbHome;
+    public HomeHandleImpl(EJBHome ejbHome) {
+        this.ejbHome = ejbHome;
     }
 
     // This is the public API from jakarta.ejb.HomeHandle
-    public EJBHome getEJBHome() throws RemoteException
-    {
-	return ejbHome;
+    @Override
+    public EJBHome getEJBHome() throws RemoteException {
+        return ejbHome;
     }
 
-    private void writeObject(ObjectOutputStream ostream)
-	throws IOException
-    {
-	HandleDelegate handleDelegate;
-	try {	    
-	    handleDelegate = HandleDelegateUtil.getHandleDelegate();
-	} catch ( NamingException ne ) {                                   
+    private void writeObject(ObjectOutputStream ostream) throws IOException {
+        HandleDelegate handleDelegate;
+        try {
+            handleDelegate = HandleDelegateUtil.getHandleDelegate();
+        } catch (NamingException ne) {
             throw new EJBException("Unable to lookup HandleDelegate", ne);
         }
         handleDelegate.writeEJBHome(ejbHome, ostream);
     }
 
-    private void readObject(ObjectInputStream istream)
-	throws IOException, ClassNotFoundException
-    {
-	HandleDelegate handleDelegate;
-	try {	   
-	    handleDelegate = HandleDelegateUtil.getHandleDelegate();
-	} catch ( NamingException ne ) {                        
+    private void readObject(ObjectInputStream istream) throws IOException, ClassNotFoundException {
+        HandleDelegate handleDelegate;
+        try {
+            handleDelegate = HandleDelegateUtil.getHandleDelegate();
+        } catch (NamingException ne) {
             throw new EJBException("Unable to lookup HandleDelegate", ne);
         }
         ejbHome = handleDelegate.readEJBHome(istream);

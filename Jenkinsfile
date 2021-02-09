@@ -219,7 +219,7 @@ spec:
               uname -a
               
               export JAVA_HOME=/usr/lib/jvm/jdk11
-			  export PATH=${JAVA_HOME}/bin:${PATH}
+              export PATH=${JAVA_HOME}/bin:${PATH}
               
               bash -xe ./gfbuild.sh build_re_dev
             '''

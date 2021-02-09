@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,147 +13,114 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.appclient.common;
+
+import static com.sun.enterprise.security.perms.SMGlobalPolicyUtil.CLIENT_TYPE_CODESOURCE;
+import static com.sun.enterprise.security.perms.SMGlobalPolicyUtil.CommponentType.car;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
+import java.security.NoSuchAlgorithmException;
 import java.security.PermissionCollection;
+import java.security.Policy;
+import java.security.URIParameter;
 import java.security.cert.Certificate;
 
 import javax.xml.stream.XMLStreamException;
 
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.security.perms.XMLPermissionsHandler;
-
-import sun.security.provider.PolicyFile;
 
 public class PermissionsUtil {
 
-    protected static final String PERMISSIONS_XML = "META-INF/permissions.xml";  
-    
+    protected static final String PERMISSIONS_XML = "META-INF/permissions.xml";
+
     protected static final String CLIENT_EE_PERMS_FILE = "javaee.client.policy";
-    protected static final String CLIENT_EE_PERMS_PKG = 
-        "META-INF/" + CLIENT_EE_PERMS_FILE;
-    
+    protected static final String CLIENT_EE_PERMS_PKG = "META-INF/" + CLIENT_EE_PERMS_FILE;
+
     protected static final String CLIENT_RESTRICT_PERMS_FILE = "restrict.client.policy";
-    protected static final String CLIENT_RESTRICT_PERMS_PKG = 
-        "META-INF/" + CLIENT_RESTRICT_PERMS_FILE;
-    
-    
-    //get client declared permissions which is packaged on the client's generated jar, 
-    //or in the client's module jar if standalone
-    //result could be null
-    public static PermissionCollection getClientDeclaredPermissions(ClassLoader cl) throws IOException {
-        
-        URL permUrl = cl.getResource(PERMISSIONS_XML);
-        
-        if (permUrl == null )
+    protected static final String CLIENT_RESTRICT_PERMS_PKG = "META-INF/" + CLIENT_RESTRICT_PERMS_FILE;
+
+    // get client declared permissions which is packaged on the client's generated jar,
+    // or in the client's module jar if standalone
+    // result could be null
+    public static PermissionCollection getClientDeclaredPermissions(ClassLoader classLoader) throws IOException {
+        URL permUrl = classLoader.getResource(PERMISSIONS_XML);
+        if (permUrl == null) {
             return null;
-        
-        InputStream declaredPermInput = permUrl.openStream(); 
-        
-        XMLPermissionsHandler pHdlr = null;
-        
-        try {
-            pHdlr = new XMLPermissionsHandler(
-                null, declaredPermInput, SMGlobalPolicyUtil.CommponentType.car);
-        } catch (XMLStreamException e) {
-            throw new IOException(e);
-        } catch (FileNotFoundException e) {
-            throw new IOException(e);
         }
 
-        return pHdlr.getAppDeclaredPermissions();
+        try {
+            return new 
+                XMLPermissionsHandler(null, permUrl.openStream(), car)
+                    .getAppDeclaredPermissions();
+        } catch (XMLStreamException | FileNotFoundException e) {
+            throw new IOException(e);
+        }
     }
-    
-    //get the permissions configured inside the javaee.client.policy, 
-    // which might be packaged inside the client jar, 
+
+    // get the permissions configured inside the javaee.client.policy,
+    // which might be packaged inside the client jar,
     // or from the installed folder lib/appclient
-    //result could be null if either of the above is found
-    public static PermissionCollection getClientEEPolicy(ClassLoader cl)
-            throws IOException {
-        
-        return getClientPolicy(cl, CLIENT_EE_PERMS_PKG, CLIENT_EE_PERMS_FILE);
+    // result could be null if either of the above is found
+    public static PermissionCollection getClientEEPolicy(ClassLoader classLoader) throws IOException {
+        return getClientPolicy(classLoader, CLIENT_EE_PERMS_PKG, CLIENT_EE_PERMS_FILE);
     }
 
-    //get the permissions configured inside the javaee.client.policy, 
-    // which might be packaged inside the client jar, 
+    // get the permissions configured inside the javaee.client.policy,
+    // which might be packaged inside the client jar,
     // or from the installed folder lib/appclient
-    //result could be null if either of the above is found
-    public static PermissionCollection getClientRestrictPolicy(ClassLoader cl)
-        throws IOException {
-
-        return getClientPolicy(cl, CLIENT_RESTRICT_PERMS_PKG, CLIENT_RESTRICT_PERMS_FILE);
+    // result could be null if either of the above is found
+    public static PermissionCollection getClientRestrictPolicy(ClassLoader classLoader) throws IOException {
+        return getClientPolicy(classLoader, CLIENT_RESTRICT_PERMS_PKG, CLIENT_RESTRICT_PERMS_FILE);
     }
 
-    
-    private static PermissionCollection getClientPolicy(ClassLoader cl, String pkgedFile, 
-            String policyFileName) throws IOException {
-        
-        
-        //1st try to find from the packaged client jar
-        URL eeClientUrl = cl.getResource(pkgedFile);
+    private static PermissionCollection getClientPolicy(ClassLoader classLoader, String pkgedFile, String policyFileName) throws IOException {
+
+        // 1st try to find from the packaged client jar
+        URL eeClientUrl = classLoader.getResource(pkgedFile);
         if (eeClientUrl != null)
             return getEEPolicyPermissions(eeClientUrl);
-        
-        
-        //2nd try to find from client's installation at lib/appclient folder
+
+        // 2nd try to find from client's installation at lib/appclient folder
         String clientPolicyClocation = getClientInstalledPath();
-        if (clientPolicyClocation != null) {            
-            String clietEEFile = clientPolicyClocation + policyFileName;
-            return getPolicyPermissions(clietEEFile);
+        if (clientPolicyClocation != null) {
+            return getPolicyPermissions(clientPolicyClocation + policyFileName);
         }
-        
+
         return null;
-        
+
     }
-    
+
+    private static PermissionCollection getPolicyPermissions(String policyFilename) throws IOException {
+        if (!new File(policyFilename).exists()) {
+            return null;
+        }
+
+        return getEEPolicyPermissions(new URL("file:" + policyFilename));
+    }
     
     private static PermissionCollection getEEPolicyPermissions(URL fileUrl) throws IOException {
-        
-        //System.out.println("Loading policy from " + fileUrl);
-        PolicyFile pf = new PolicyFile(fileUrl);
-        
-        CodeSource cs = 
-            new CodeSource(
-                    new URL(SMGlobalPolicyUtil.CLIENT_TYPE_CODESOURCE), (Certificate[])null );
-        PermissionCollection pc = pf.getPermissions(cs);
-
-        return pc;        
+        try {
+            return 
+                Policy.getInstance("JavaPolicy", new URIParameter(fileUrl.toURI()))
+                      .getPermissions(new CodeSource(new URL(CLIENT_TYPE_CODESOURCE), (Certificate[]) null));
+        } catch (NoSuchAlgorithmException | MalformedURLException | URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
     }
-
-    
-    
-    private static PermissionCollection  getPolicyPermissions(String policyFilename) throws IOException {
-
-        File f = new File(policyFilename);
-        if (!f.exists())
-            return null;
-        
-        URL furl = new URL("file:" + policyFilename);
-            
-        return getEEPolicyPermissions(furl);
-    }
-
 
     private static String getClientInstalledPath() {
         String policyPath = System.getProperty("java.security.policy");
-        
-        if (policyPath == null)
+        if (policyPath == null) {
             return null;
-        
-        File pf = new File(policyPath);
-        
-        String  clientPath = pf.getParent() + File.separator;
+        }
 
-        //System.out.println("clientPath  " + clientPath );
-        
-        return clientPath;
+        return new File(policyPath).getParent() + File.separator;
     }
 
 }

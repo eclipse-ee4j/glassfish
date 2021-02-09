@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.appclient.common;
 
 import java.io.IOException;
@@ -29,15 +28,14 @@ public class ClientClassLoaderDelegate {
     protected static final String PERMISSIONS_XML = "META-INF/permissions.xml";
 
     private URLClassLoader cl;
-    
+
     private PermsHolder permHolder;
 
     public ClientClassLoaderDelegate(URLClassLoader cl) {
         this.cl = cl;
         loadPemissions();
     }
-    
-    
+
     private void loadPemissions() {
         try {
             processDeclaredPermissions();
@@ -45,33 +43,28 @@ public class ClientClassLoaderDelegate {
             throw new RuntimeException(e);
         }
     }
-    
-    private void processDeclaredPermissions() throws IOException  {
 
-        if (System.getSecurityManager() == null)
+    private void processDeclaredPermissions() throws IOException {
+        if (System.getSecurityManager() == null) {
             return;
-        
-        PermissionCollection declaredPermissionCollection = 
-            PermissionsUtil.getClientDeclaredPermissions(cl);
-        
+        }
+
+        PermissionCollection declaredPermissionCollection = PermissionsUtil.getClientDeclaredPermissions(cl);
+
         PermissionCollection eePc = PermissionsUtil.getClientEEPolicy(cl);
-        PermissionCollection eeRestriction = PermissionsUtil.getClientRestrictPolicy(cl); 
+        PermissionCollection eeRestriction = PermissionsUtil.getClientRestrictPolicy(cl);
 
         SMGlobalPolicyUtil.checkRestriction(eePc, eeRestriction);
         SMGlobalPolicyUtil.checkRestriction(declaredPermissionCollection, eeRestriction);
-        
+
         permHolder = new PermsHolder(eePc, declaredPermissionCollection, eeRestriction);
-        
-    }    
+    }
 
     public PermissionCollection getCachedPerms(CodeSource codesource) {
-        
         return permHolder.getCachedPerms(codesource);
     }
-    
-    public PermissionCollection getPermissions(CodeSource codesource, 
-            PermissionCollection parentPC ) {
 
+    public PermissionCollection getPermissions(CodeSource codesource, PermissionCollection parentPC) {
         return permHolder.getPermissions(codesource, parentPC);
     }
 

@@ -30,7 +30,7 @@
 
     <target name="all">
         <antcall target="cache"/>
-        <antcall target="hello"/>
+<!--        <antcall target="hello"/>  -->
         <antcall target="three-modules"/>
         <antcall target="multi-module"/>
     </target>

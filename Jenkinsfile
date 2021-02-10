@@ -21,13 +21,15 @@ env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
 // list of test ids
 def jobs = [
-  "cdi_all",
-  "ql_gf_full_profile_all",
-  "ql_gf_web_profile_all"
+  
 ]
 
 
 def jobs_all = [
+  "cdi_all",
+  "ql_gf_full_profile_all",
+  "ql_gf_web_profile_all",
+  
   "web_jsp",
   "deployment_all",
   "ejb_group_1",
@@ -67,7 +69,12 @@ def generateStage(job) {
                       try {
                           retry(3) {
                               timeout(time: 2, unit: 'HOURS') {
-                                sh "./appserver/tests/gftest.sh run_test ${job}"
+                                sh """
+                                  export JAVA_HOME=/usr/lib/jvm/jdk11
+                                  export PATH=${JAVA_HOME}/bin:${PATH}
+                                  export CLASSPATH=$WORKSPACE/glassfish6/javadb
+                                  ./appserver/tests/gftest.sh run_test ${job}
+                                """
                               }
                           }
                       } finally {
@@ -147,7 +154,7 @@ spec:
         cpu: "1"
   - name: glassfish-ci
     # Docker image defined in this project in [glassfish]/etc/docker/Dockerfile
-    image: ee4jglassfish/ci:tini-jdk-8.181 
+    image: ee4jglassfish/ci:tini-jdk-8.252-11.0.7
     args:
     - cat
     tty: true
@@ -212,6 +219,9 @@ spec:
               
               echo Uname
               uname -a
+              
+              export JAVA_HOME=/usr/lib/jvm/jdk11
+              export PATH=${JAVA_HOME}/bin:${PATH}
               
               bash -xe ./gfbuild.sh build_re_dev
             '''

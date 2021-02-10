@@ -51,7 +51,7 @@
         <javac
             srcdir="${basedir}/src"
             destdir="${build.classes.home}"
-            includes="**/server/**,**/common/**">
+            includes="**/server/**,**/common/**" classpathref="class.path">
             <classpath refid="wsit.classpath"/>
         </javac>
     </target>

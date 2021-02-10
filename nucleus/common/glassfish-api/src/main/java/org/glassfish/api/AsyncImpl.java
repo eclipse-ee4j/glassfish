@@ -20,6 +20,7 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandAspectBase;
@@ -28,20 +29,18 @@ import org.glassfish.api.admin.WrappedAdminCommand;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * Implementation for the @Async command capability. 
+ * Implementation for the @Async command capability.
  *
  * @author tmueller
  */
 @Service
 public class AsyncImpl extends CommandAspectBase<Async> {
-    
+
     private static final Logger logger = Logger.getLogger(AsyncImpl.class.getName());
-    private static final ResourceBundle strings = 
-            ResourceBundle.getBundle("org/glassfish/api/LocalStrings");
-    
+    private static final ResourceBundle strings = ResourceBundle.getBundle("org/glassfish/api/LocalStrings");
+
     @Override
-    public WrappedAdminCommand createWrapper(final Async async, final CommandModel model, 
-            final AdminCommand command, final ActionReport report) {
+    public WrappedAdminCommand createWrapper(final Async async, final CommandModel model, final AdminCommand command, final ActionReport report) {
         return new WrappedAdminCommand(command) {
 
             @Override
@@ -60,8 +59,7 @@ public class AsyncImpl extends CommandAspectBase<Async> {
                 t.start();
 
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-                report.setMessage(MessageFormat.format(strings.getString("command.launch"),
-                        model.getCommandName()));
+                report.setMessage(MessageFormat.format(strings.getString("command.launch"), model.getCommandName()));
             }
         };
     }

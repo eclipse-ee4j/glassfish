@@ -115,7 +115,7 @@
 	</auth-realm>
 	<auth-realm name="certificate" classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm">
 	</auth-realm>
-	<jacc-provider name="default" policy-provider="com.sun.enterprise.security.provider.PolicyWrapper" policy-configuration-factory-provider="com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl">
+	<jacc-provider name="default" policy-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyProvider" policy-configuration-factory-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory">
 	  <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy"/>
 	</jacc-provider>
 	<audit-module name="default" classname="com.sun.enterprise.security.Audit">
@@ -130,7 +130,6 @@
 	<!-- various required jvm-options -->
 	<jvm-options>-client</jvm-options>
 	<jvm-options>-Dcom.sun.enterprise.web.connector.useCoyoteConnector=true</jvm-options> 
-	<jvm-options>-Djava.endorsed.dirs=${com.sun.aas.installRoot}/lib/endorsed</jvm-options>
 	<jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>
 	<jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
 	<jvm-options>-Dsun.rmi.dgc.server.gcInterval=3600000</jvm-options>
@@ -220,7 +219,7 @@
 	</auth-realm>
 	<auth-realm name="certificate" classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm">
 	</auth-realm>
-	<jacc-provider name="default" policy-provider="com.sun.enterprise.security.provider.PolicyWrapper" policy-configuration-factory-provider="com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl">
+	<jacc-provider name="default" policy-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyProvider" policy-configuration-factory-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory">
 	  <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy"/>
 	</jacc-provider>
 	<audit-module name="default" classname="com.sun.enterprise.security.Audit">
@@ -234,7 +233,6 @@
       <java-config java-home="${com.sun.aas.javaRoot}" debug-enabled="false" debug-options="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044" rmic-options="-iiop -poa -alwaysgenerate -keepgenerated -g" javac-options="-g" server-classpath="${com.sun.aas.javaRoot}/lib/tools.jar${path.separator}${com.sun.aas.installRoot}/lib/install/applications/jmsra/imqjmsra.jar${path.separator}${com.sun.aas.imqLib}/jaxm-api.jar${path.separator}${com.sun.aas.imqLib}/fscontext.jar${path.separator}${com.sun.aas.installRoot}/lib/ant/lib/ant.jar${path.separator}${com.sun.aas.hadbRoot}/lib/hadbjdbc4.jar${path.separator}/usr/lib/audit/Audit.jar${path.separator}${com.sun.aas.jdmkHome}/lib/jdmkrt.jar" classpath-suffix="${com.sun.aas.installRoot}/pointbase/lib/pbclient.jar${path.separator}${com.sun.aas.installRoot}/pointbase/lib/pbembedded.jar" env-classpath-ignored="true">
 	<!-- various required jvm-options -->
 	<jvm-options>-client</jvm-options>
-	<jvm-options>-Djava.endorsed.dirs=${com.sun.aas.installRoot}/lib/endorsed</jvm-options>
 	<jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>
 	<jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
 	<jvm-options>-Dsun.rmi.dgc.server.gcInterval=3600000</jvm-options>

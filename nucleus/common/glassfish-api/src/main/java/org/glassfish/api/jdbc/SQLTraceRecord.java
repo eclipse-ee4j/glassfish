@@ -19,20 +19,23 @@ package org.glassfish.api.jdbc;
 import java.io.Serializable;
 
 /**
- * Information related to SQL operations executed by the applications are 
- * stored in this object. 
- * 
- * This trace record is used to log all the sql statements in a particular 
- * format.
- * 
+ * Information related to SQL operations executed by the applications are stored in this object.
+ *
+ * This trace record is used to log all the sql statements in a particular format.
+ *
  * @author Shalini M
  */
 public class SQLTraceRecord implements Serializable {
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Thread ID from which SQL statement originated.
      */
     private long threadID;
-    
+
     /**
      * Thread Name from which SQL statement originated.
      */
@@ -42,32 +45,30 @@ public class SQLTraceRecord implements Serializable {
      * Pool Name in which the SQL statement is executed.
      */
     private String poolName;
-    
+
     /**
-     * Type of SQL query. Could be PreparedStatement, CallableStatement or
-     * other object types.
+     * Type of SQL query. Could be PreparedStatement, CallableStatement or other object types.
      */
     private String className;
-    
+
     /**
      * Method that executed the query.
      */
     private String methodName;
-    
+
     /**
      * Time of execution of query.
      */
     private long timeStamp;
-    
+
     /**
-     * Parameters of the method that executed the SQL query. Includes information
-     * like SQL query, arguments and so on.
-     */    
+     * Parameters of the method that executed the SQL query. Includes information like SQL query, arguments and so on.
+     */
     private Object[] params;
 
     /**
      * Gets the class name of the SQL query expressed as a String.
-     * 
+     *
      * @return The class name of the SQL query expressed as a String.
      */
     public String getClassName() {
@@ -76,7 +77,7 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Sets the class name of the SQL query expressed as a String.
-     * 
+     *
      * @param className class name of the SQL query.
      */
     public void setClassName(String className) {
@@ -85,7 +86,7 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Gets the method name that executed the SQL query.
-     * 
+     *
      * @return methodName that executed the SQL query.
      */
     public String getMethodName() {
@@ -94,7 +95,7 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Sets the method name that executes the SQL query.
-     * 
+     *
      * @param methodName that executes the SQL query.
      */
     public void setMethodName(String methodName) {
@@ -103,7 +104,7 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Gets the pool name in which the SQL statement is executed.
-     * 
+     *
      * @return poolName in which the SQL statement is executed.
      */
     public String getPoolName() {
@@ -112,7 +113,7 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Sets the poolName in which the SQL statement is executed.
-     * 
+     *
      * @param poolName in which the SQL statement is executed.
      */
     public void setPoolName(String poolName) {
@@ -121,7 +122,7 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Gets the thread ID from which the SQL statement originated.
-     * 
+     *
      * @return long threadID from which the SQL statement originated.
      */
     public long getThreadID() {
@@ -130,16 +131,16 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Sets the thread ID from which the SQL statement originated.
-     * 
+     *
      * @param threadID from which the SQL statement originated.
-     */    
+     */
     public void setThreadID(long threadID) {
         this.threadID = threadID;
     }
 
     /**
      * Gets the thread Name from which the SQL statement originated.
-     * 
+     *
      * @return String threadName from which the SQL statement originated.
      */
     public String getThreadName() {
@@ -148,51 +149,51 @@ public class SQLTraceRecord implements Serializable {
 
     /**
      * Sets the thread Name from which the SQL statement originated.
-     * 
+     *
      * @param threadName from which the SQL statement originated.
-     */    
+     */
     public void setThreadName(String threadName) {
         this.threadName = threadName;
     }
 
     /**
      * Gets the time of execution of query.
-     * 
+     *
      * @return long timeStamp of execution of query.
-     */    
+     */
     public long getTimeStamp() {
         return timeStamp;
     }
 
     /**
      * Sets the time of execution of query.
-     * 
+     *
      * @param timeStamp of execution of query.
-     */        
+     */
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
 
     /**
-     * Gets the parameters of the method that executed the SQL query. 
-     * Includes information like SQL query, arguments and so on.
-     * 
+     * Gets the parameters of the method that executed the SQL query. Includes information like SQL query, arguments and so
+     * on.
+     *
      * @return Object[] params method parameters that execute SQL query.
-     */    
+     */
     public Object[] getParams() {
         return params;
     }
-    
+
     /**
-     * Sets the parameters of the method that executed the SQL query. 
-     * Includes information like SQL query, arguments and so on.
-     * 
+     * Sets the parameters of the method that executed the SQL query. Includes information like SQL query, arguments and so
+     * on.
+     *
      * @param params method parameters that execute SQL query.
-     */    
+     */
     public void setParams(Object[] params) {
         this.params = params;
     }
-    
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -201,15 +202,13 @@ public class SQLTraceRecord implements Serializable {
         sb.append("TimeStamp=" + getTimeStamp() + " | ");
         sb.append("ClassName=" + getClassName() + " | ");
         sb.append("MethodName=" + getMethodName() + " | ");
-        if(params != null && params.length > 0) {
+        if (params != null && params.length > 0) {
             int index = 0;
-            for(Object param : params) {
-                sb.append("arg[" + index++ + "]=" +
-                    (param != null ? param.toString() : "null" ) +
-                    " | ");
+            for (Object param : params) {
+                sb.append("arg[" + index++ + "]=" + (param != null ? param.toString() : "null") + " | ");
             }
         }
-        //TODO add poolNames and other fields of this record.
+        // TODO add poolNames and other fields of this record.
         return sb.toString();
     }
 }

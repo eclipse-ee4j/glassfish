@@ -62,7 +62,6 @@
         classpath="${s1astest.classpath}"
         debug="on"
         failonerror="true">
-            <compilerarg value="-Djava.endorsed.dirs=${env.S1AS_HOME}/modules/endorsed"/>
         </javac>
     </target>
 

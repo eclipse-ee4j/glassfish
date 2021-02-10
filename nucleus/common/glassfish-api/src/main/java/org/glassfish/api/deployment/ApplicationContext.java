@@ -23,40 +23,34 @@ import java.util.Properties;
  *
  */
 public interface ApplicationContext {
-    
+
     /**
-     * Returns the class loader associated with the application.
-     * ClassLoader instances are usually obtained by the getClassLoader API on
-     * the associated ArchiveHandler for the archive type being deployed.
+     * Returns the class loader associated with the application. ClassLoader instances are usually obtained by the
+     * getClassLoader API on the associated ArchiveHandler for the archive type being deployed.
      *
-     * This can return null and the container should allocate a ClassLoader
-     * while loading the application.
+     * This can return null and the container should allocate a ClassLoader while loading the application.
      *
      * @link {org.jvnet.glassfish.api.deployment.archive.ArchiveHandler.getClassLoader()}
      *
-     * @return a class loader capable of loading classes and resources from the
-     * source
+     * @return a class loader capable of loading classes and resources from the source
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
     /**
-     * Returns the application level properties that will be persisted as a
-     * key value pair at then end of deployment. That allows individual
-     * Deployers implementation to store some information at the
-     * application level that should be available upon server restart.
-     * Application level propertries are shared by all the modules.
+     * Returns the application level properties that will be persisted as a key value pair at then end of deployment. That
+     * allows individual Deployers implementation to store some information at the application level that should be
+     * available upon server restart. Application level propertries are shared by all the modules.
      *
      * @return the application's properties.
      */
-    public Properties getAppProps();
+    Properties getAppProps();
 
     /**
-     * Returns the module level properties that will be persisted as a
-     * key value pair at then end of deployment. That allows individual
-     * Deployers implementation to store some information at the module
-     * level that should be available upon server restart.
-     * Module level properties are only visible to the current module.
+     * Returns the module level properties that will be persisted as a key value pair at then end of deployment. That allows
+     * individual Deployers implementation to store some information at the module level that should be available upon
+     * server restart. Module level properties are only visible to the current module.
+     *
      * @return the module's properties.
      */
-    public Properties getModuleProps();
+    Properties getModuleProps();
 }

@@ -19,38 +19,36 @@ package org.glassfish.api.admin;
 public class CommandValidationException extends CommandException {
 
     /**
-     * Creates a new <code>CommandValidationException</code> without
-     * detail message.
+     *
      */
-    public CommandValidationException() {
-        super();
-    }
-
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Constructs a <code>CommandValidationException</code> with the specified
-     * detail message.
+     * Creates a new <code>CommandValidationException</code> without detail message.
+     */
+    public CommandValidationException() {
+    }
+
+    /**
+     * Constructs a <code>CommandValidationException</code> with the specified detail message.
+     *
      * @param msg the detail message.
      */
     public CommandValidationException(String msg) {
         super(msg);
     }
 
-
     /**
-     * Constructs a new <code>CommandValidationException</code> exception with
-     * the specified cause.
+     * Constructs a new <code>CommandValidationException</code> exception with the specified cause.
      */
     public CommandValidationException(Throwable cause) {
-	super(cause);
+        super(cause);
     }
 
-
     /**
-     * Constructs a new <code>CommandValidationException</code> exception with
-     * the specified detailed message and cause.
+     * Constructs a new <code>CommandValidationException</code> exception with the specified detailed message and cause.
      */
     public CommandValidationException(String msg, Throwable cause) {
-	super(msg, cause);
+        super(msg, cause);
     }
 }

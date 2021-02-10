@@ -76,7 +76,6 @@ Variables used:
     debug="on"
     includeantruntime="false"
     failonerror="true">
-    <compilerarg line="-endorseddirs ${env.S1AS_HOME}/modules/endorsed"/>
    </javac>
 </target>
 

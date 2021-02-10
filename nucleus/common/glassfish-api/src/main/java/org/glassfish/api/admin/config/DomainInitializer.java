@@ -17,22 +17,20 @@
 package org.glassfish.api.admin.config;
 
 import org.jvnet.hk2.annotations.Contract;
-import org.glassfish.api.admin.config.Container;
 
 /**
- * Marker interface to mark inhabitants that require some minimal initial 
- * configuration to be inserted into a newly create domain's domain.xml
+ * Marker interface to mark inhabitants that require some minimal initial configuration to be inserted into a newly
+ * create domain's domain.xml
  *
  * @author Nandini Ektare
  */
 @Contract
 public interface DomainInitializer {
     /**
-     * The actual initial config that needs to be inserted into
-     * the fresh domain.xml
+     * The actual initial config that needs to be inserted into the fresh domain.xml
      *
-     * See {@link Attribute#value()} for how the default value is inferred.
+     * See <code>Attribute#value()</code> for how the default value is inferred.
      *
      */
-    public <T extends Container> T getInitialConfig(DomainContext initialCtx);
+    <T extends Container> T getInitialConfig(DomainContext initialCtx);
 }

@@ -19,14 +19,14 @@ package org.glassfish.api.admin.progress;
 import java.util.HashSet;
 import java.util.Set;
 
-/** 
+/**
  *
  * @author mmares
  */
 public class ProgressStatusDTO {
-    
+
     public static class ChildProgressStatusDTO {
-        
+
         private final int allocatedSteps;
         private final ProgressStatusDTO progressStatus;
 
@@ -47,15 +47,15 @@ public class ProgressStatusDTO {
         public String toString() {
             return "ChildProgressStatusDTO{" + "allocatedSteps=" + allocatedSteps + ", progressStatus=" + progressStatus + '}';
         }
-        
+
     }
-    
+
     protected String name;
     protected String id;
     protected int totalStepCount = -1;
     protected int currentStepCount = 0;
     protected boolean completed = false;
-    protected Set<ChildProgressStatusDTO> children = new HashSet<ChildProgressStatusDTO>();
+    protected Set<ChildProgressStatusDTO> children = new HashSet<>();
 
     public ProgressStatusDTO() {
     }
@@ -91,7 +91,7 @@ public class ProgressStatusDTO {
     public void setName(String name) {
         this.name = name;
         if ("null".equals(name)) {
-            this.name = null; //TODO: Debug to find out where is time to time "null" from
+            this.name = null; // TODO: Debug to find out where is time to time "null" from
         }
     }
 
@@ -109,9 +109,8 @@ public class ProgressStatusDTO {
 
     @Override
     public String toString() {
-        return "ProgressStatusDTO{" + "name=" + name + ", id=" + id + ", totalStepCount=" + totalStepCount + ", currentStepCount=" + currentStepCount + ", completed=" + completed + ", children=" + children + '}';
+        return "ProgressStatusDTO{" + "name=" + name + ", id=" + id + ", totalStepCount=" + totalStepCount + ", currentStepCount=" + currentStepCount
+                + ", completed=" + completed + ", children=" + children + '}';
     }
-    
-    
-    
+
 }

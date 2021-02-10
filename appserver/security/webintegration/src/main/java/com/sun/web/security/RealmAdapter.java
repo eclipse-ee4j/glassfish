@@ -38,6 +38,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
 import javax.security.auth.Subject;
+import javax.security.auth.x500.X500Principal;
+
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
@@ -48,7 +50,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import sun.security.x509.X500Name;
 
 import org.apache.catalina.Authenticator;
 import org.apache.catalina.Container;
@@ -668,8 +669,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             if (certs != null) {
                 Subject subject = new Subject();
                 X509Certificate certificate = certs[0];
-                X500Name x500Name = (X500Name) certificate.getSubjectDN();
-                subject.getPublicCredentials().add(x500Name);
+                X500Principal x500Principal = certificate.getSubjectX500Principal();
+                subject.getPublicCredentials().add(x500Principal);
                 // Put the certificate chain as an List in the subject, to be accessed by user's LoginModule.
                 final List<X509Certificate> certificateCred = Arrays.asList(certs);
                 subject.getPublicCredentials().add(certificateCred);

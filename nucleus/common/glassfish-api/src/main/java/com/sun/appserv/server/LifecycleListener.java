@@ -16,35 +16,33 @@
 
 package com.sun.appserv.server;
 
-import java.util.Properties;
-
 /**
- * lifecycle modules implement <code>com.sun.appserv.server.LifecycleListener</code> interface. 
- * There is just one method in this interface: <code>handleEvent()</code> which posts server
- * lifecycle events to the lifecycle modules.
+ * lifecycle modules implement <code>com.sun.appserv.server.LifecycleListener</code> interface. There is just one method
+ * in this interface: <code>handleEvent()</code> which posts server lifecycle events to the lifecycle modules.
  * <p>
- * Upon start up, before initializing its subsystems application server posts lifcycle modules the 
- * <code>INIT_EVENT</code>. This is followed by server posting the <code>STARTUP_EVENT</code> to the 
- * lifecycle modules upon which server starts loading and initializaing the applications. Once this 
- * phase is completed, the <code>READY_EVENT</code> is posted to the lifecycle modules.
+ * Upon start up, before initializing its subsystems application server posts lifcycle modules the
+ * <code>INIT_EVENT</code>. This is followed by server posting the <code>STARTUP_EVENT</code> to the lifecycle modules
+ * upon which server starts loading and initializaing the applications. Once this phase is completed, the
+ * <code>READY_EVENT</code> is posted to the lifecycle modules.
  * <p>
- * When the server is shutdown, server posts the <code>SHUTDOWN_EVENT</code> to the lifecycle modules and
- * then shuts down the applications and subsystems. Once this phase is completed the 
- * <code>TERMINATION_EVENT</code> is posted.
+ * When the server is shutdown, server posts the <code>SHUTDOWN_EVENT</code> to the lifecycle modules and then shuts
+ * down the applications and subsystems. Once this phase is completed the <code>TERMINATION_EVENT</code> is posted.
  * <p>
- * Note that lifecycle modules may obtain the event specific data by calling <code>getData()</code> 
- * on the event parameter in the <code>handleEvent()</code>. For the INIT_EVENT event,
- * <code>getData()</code> returns the lifecycle module's properties configured in server.xml.
+ * Note that lifecycle modules may obtain the event specific data by calling <code>getData()</code> on the event
+ * parameter in the <code>handleEvent()</code>. For the INIT_EVENT event, <code>getData()</code> returns the lifecycle
+ * module's properties configured in server.xml.
  * <p>
- *  When <code>is-failure-fatal</code> in server.xml is set to <code>true</code>, all exceptions from the
- *  lifecycle modules are treated as fatal conditions.
+ * When <code>is-failure-fatal</code> in server.xml is set to <code>true</code>, all exceptions from the lifecycle
+ * modules are treated as fatal conditions.
  */
 public interface LifecycleListener {
 
-    /** receive a server lifecycle event 
-     *  @param event associated event
-     *  @throws <code> ServerLifecycleException </code> for exception condition.
+    /**
+     * receive a server lifecycle event
+     *
+     * @param event associated event
+     * @throws <code> ServerLifecycleException </code> for exception condition.
      *
      */
-    public void handleEvent(LifecycleEvent event) throws ServerLifecycleException; 
+    void handleEvent(LifecycleEvent event) throws ServerLifecycleException;
 }

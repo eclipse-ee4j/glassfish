@@ -18,9 +18,11 @@ package org.glassfish.api.admin;
 
 import java.io.BufferedReader;
 import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.jvnet.hk2.annotations.Contract;
-import javax.security.auth.Subject;
 
 /**
  * CommandRunner is a service that allows you to run administrative commands.
@@ -31,23 +33,21 @@ import javax.security.auth.Subject;
 public interface CommandRunner {
 
     /**
-     * Returns an initialized ActionReport instance for the passed type or
-     * null if it cannot be found.
+     * Returns an initialized ActionReport instance for the passed type or null if it cannot be found.
      *
      * @param name actiopn report type name
      * @return uninitialized action report or null
      */
-    public ActionReport getActionReport(String name);
+    ActionReport getActionReport(String name);
 
     /**
      * Returns the command model for a command name for the null scope
      *
      * @param name command name
      * @param logger logger to log any error messages
-     * @return model for this command (list of parameters,etc...), null if command
-     * is not found
+     * @return model for this command (list of parameters,etc...), null if command is not found
      */
-    public CommandModel getModel(String name, Logger logger);
+    CommandModel getModel(String name, Logger logger);
 
     /**
      * Returns the command model for a command name
@@ -55,43 +55,43 @@ public interface CommandRunner {
      * @param scope the scope (or namespace) for the command
      * @param name command name
      * @param logger logger to log any error messages
-     * @return model for this command (list of parameters,etc...), null if command
-     * is not found
+     * @return model for this command (list of parameters,etc...), null if command is not found
      */
-    public CommandModel getModel(String scope, String name, Logger logger);
-    
-    /** 
+    CommandModel getModel(String scope, String name, Logger logger);
+
+    /**
      * Returns manpage for the command.
-     * 
+     *
      * @param model of command
      * @return Formated manpage
      */
-    public BufferedReader getHelp(CommandModel model);
-    
-    /** Checks if given command model eTag is equal to current command model eTag
-     * 
+    BufferedReader getHelp(CommandModel model);
+
+    /**
+     * Checks if given command model eTag is equal to current command model eTag
+     *
      * @param command Command to be checked
      * @param eTag ETag to validate
      */
-    public boolean validateCommandModelETag(AdminCommand command, String eTag);
-    
-    /** Checks if given command model eTag is equal to current command model eTag
-     * 
+    boolean validateCommandModelETag(AdminCommand command, String eTag);
+
+    /**
+     * Checks if given command model eTag is equal to current command model eTag
+     *
      * @param model of command to be checked
      * @param eTag ETag to validate
      */
-    public boolean validateCommandModelETag(CommandModel model, String eTag);
+    boolean validateCommandModelETag(CommandModel model, String eTag);
 
     /**
-     * Obtain and return the command implementation defined by the passed commandName 
-     * for the null scope
+     * Obtain and return the command implementation defined by the passed commandName for the null scope
      *
      * @param commandName command name as typed by users
      * @param report report used to communicate command status back to the user
      * @param logger logger to log
      * @return command registered under commandName or null if not found.
      */
-    public AdminCommand getCommand(String commandName, ActionReport report, Logger logger);
+    AdminCommand getCommand(String commandName, ActionReport report, Logger logger);
 
     /**
      * Obtain and return the command implementation defined by the passed commandName
@@ -102,11 +102,11 @@ public interface CommandRunner {
      * @param logger logger to log
      * @return command registered under commandName or null if not found.
      */
-    public AdminCommand getCommand(String scope, String commandName, ActionReport report, Logger logger);
+    AdminCommand getCommand(String scope, String commandName, ActionReport report, Logger logger);
 
     /**
-     * Obtain a new command invocation object for the null scope. Command invocations can
-     * be configured and used to trigger a command execution.
+     * Obtain a new command invocation object for the null scope. Command invocations can be configured and used to trigger
+     * a command execution.
      *
      * @param name name of the requested command to invoke
      * @param report where to place the status of the command execution
@@ -116,8 +116,8 @@ public interface CommandRunner {
     CommandInvocation getCommandInvocation(String name, ActionReport report, Subject subject);
 
     /**
-     * Obtain a new command invocation object. Command invocations can be configured and used
-     * to trigger a command execution.
+     * Obtain a new command invocation object. Command invocations can be configured and used to trigger a command
+     * execution.
      *
      * @param scope the scope (or namespace) for the command
      * @param name name of the requested command to invoke
@@ -128,8 +128,8 @@ public interface CommandRunner {
     CommandInvocation getCommandInvocation(String scope, String name, ActionReport report, Subject subject);
 
     /**
-     * Obtain a new command invocation object for the null scope. Command invocations can
-     * be configured and used to trigger a command execution.
+     * Obtain a new command invocation object for the null scope. Command invocations can be configured and used to trigger
+     * a command execution.
      *
      * @param name name of the requested command to invoke
      * @param report where to place the status of the command execution
@@ -140,8 +140,8 @@ public interface CommandRunner {
     CommandInvocation getCommandInvocation(String name, ActionReport report, Subject subject, boolean isNotify);
 
     /**
-     * Obtain a new command invocation object. Command invocations can be configured and used
-     * to trigger a command execution.
+     * Obtain a new command invocation object. Command invocations can be configured and used to trigger a command
+     * execution.
      *
      * @param scope the scope (or namespace) for the command
      * @param name name of the requested command to invoke
@@ -153,14 +153,15 @@ public interface CommandRunner {
     CommandInvocation getCommandInvocation(String scope, String name, ActionReport report, Subject subject, boolean isNotify);
 
     /**
-     * CommandInvocation defines a command excecution context like the requested
-     * name of the command to execute, the parameters of the command, etc...
-     * 
+     * CommandInvocation defines a command excecution context like the requested name of the command to execute, the
+     * parameters of the command, etc...
+     *
      */
     public interface CommandInvocation {
 
         /**
          * Sets the command parameters as a typed inteface
+         *
          * @param params the parameters
          * @return itself
          */
@@ -168,13 +169,15 @@ public interface CommandRunner {
 
         /**
          * Sets the command parameters as a ParameterMap.
+         *
          * @param params the parameters
          * @return itself
          */
         CommandInvocation parameters(ParameterMap params);
 
         /**
-         * Sets the data carried with the request (could be an attachment) 
+         * Sets the data carried with the request (could be an attachment)
+         *
          * @param inbound inbound data
          * @return itself
          */
@@ -182,49 +185,48 @@ public interface CommandRunner {
 
         /**
          * Sets the data carried with the response
+         *
          * @param outbound outbound data
          * @return itself
          */
         CommandInvocation outbound(Payload.Outbound outbound);
 
-        /** 
+        /**
          * Register new event listener.
-         * 
+         *
          * @param nameRegexp
          * @param listener
          * @return itself
          */
-        public CommandInvocation listener(String nameRegexp, AdminCommandEventBroker.AdminCommandListener listener);
-        
+        CommandInvocation listener(String nameRegexp, AdminCommandEventBroker.AdminCommandListener listener);
+
         /**
-         * Register child of ProgressStatus. Usable for command from command 
-         * execution. 
-         * 
+         * Register child of ProgressStatus. Usable for command from command execution.
+         *
          * @param ps
-         * @return 
+         * @return
          */
-        public CommandInvocation progressStatusChild(ProgressStatus ps);
-        
+        CommandInvocation progressStatusChild(ProgressStatus ps);
+
         /**
          * Set the AdminCommand to be a managed job
          */
-        public CommandInvocation managedJob(); 
-        
-        /** Current report. After command execution report can be changed by command
-         */
-        public ActionReport report();
-        
+        CommandInvocation managedJob();
+
         /**
-         * Executes the command and populate the report with the command
-         * execution result. Parameters must have been set before invoking
-         * this method.
+         * Current report. After command execution report can be changed by command
+         */
+        ActionReport report();
+
+        /**
+         * Executes the command and populate the report with the command execution result. Parameters must have been set before
+         * invoking this method.
          */
         void execute();
 
         /**
-         * Executes the passed command with this context and populates the
-         * report with the execution result. Parameters must be set before
-         * invoking this command.
+         * Executes the passed command with this context and populates the report with the execution result. Parameters must be
+         * set before invoking this command.
          *
          * @param command command implementation to execute
          */

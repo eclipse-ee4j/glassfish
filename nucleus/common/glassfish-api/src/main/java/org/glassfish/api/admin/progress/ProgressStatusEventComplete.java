@@ -18,7 +18,8 @@ package org.glassfish.api.admin.progress;
 
 import org.glassfish.api.admin.ProgressStatus;
 
-/** Progress method was called.
+/**
+ * Progress method was called.
  *
  * @author martinmares
  */
@@ -66,11 +67,10 @@ public class ProgressStatusEventComplete extends ProgressStatusEvent implements 
             return false;
         }
         final ProgressStatusEventComplete other = (ProgressStatusEventComplete) obj;
-        if ((this.message == null) ? (other.message != null) : !this.message.equals(other.message)) {
+        if (this.message == null ? other.message != null : !this.message.equals(other.message)) {
             return false;
         }
         return true;
     }
-    
-    
+
 }

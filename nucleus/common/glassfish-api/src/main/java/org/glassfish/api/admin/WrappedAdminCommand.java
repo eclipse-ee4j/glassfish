@@ -17,14 +17,13 @@
 package org.glassfish.api.admin;
 
 /**
- * Represents command wrapped with {@link CommandWrapperImpl}. It should be enough to wrap
- * command without an overhead. E.g.:
- * <code>
+ * Represents command wrapped with {@link CommandWrapperImpl}. It should be enough to wrap command without an overhead.
+ * E.g.: <code>
  * new WrappedAdminCommand(command) {
  *     public void execute(...
  * }
  * </code>
- * 
+ *
  * @author Andriy Zhdanov
  *
  */
@@ -33,7 +32,7 @@ public abstract class WrappedAdminCommand implements AdminCommand {
 
     /**
      * Default constructor.
-     * 
+     *
      * @param command Original command is was wrapped.
      */
     public WrappedAdminCommand(AdminCommand command) {
@@ -42,7 +41,7 @@ public abstract class WrappedAdminCommand implements AdminCommand {
 
     /**
      * Original command that was wrapped.
-     * 
+     *
      * @return unwrapped command.
      */
     protected AdminCommand getWrappedCommand() {
@@ -51,13 +50,13 @@ public abstract class WrappedAdminCommand implements AdminCommand {
 
     /**
      * Get root of wrapped command.
-     * 
+     *
      * @return command.
      */
     protected AdminCommand getUnwrappedCommand() {
         AdminCommand unwrappedCommand = wrappedCommand;
         while (unwrappedCommand instanceof WrappedAdminCommand) {
-            unwrappedCommand = ((WrappedAdminCommand)unwrappedCommand).getWrappedCommand();
+            unwrappedCommand = ((WrappedAdminCommand) unwrappedCommand).getWrappedCommand();
         }
         return unwrappedCommand;
     }

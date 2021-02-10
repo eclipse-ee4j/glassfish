@@ -504,11 +504,6 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.pfl</groupId>
-            <artifactId>pfl-asm</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.pfl</groupId>
             <artifactId>pfl-basic</artifactId>
             <optional>true</optional>
         </dependency>
@@ -1195,12 +1190,6 @@
         <dependency>
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>ssl-impl</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.ldapbp</groupId>
-            <artifactId>ldapbp</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

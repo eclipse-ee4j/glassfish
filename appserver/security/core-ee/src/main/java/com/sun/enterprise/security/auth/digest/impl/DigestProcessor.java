@@ -16,12 +16,8 @@
 
 package com.sun.enterprise.security.auth.digest.impl;
 
-import com.sun.enterprise.security.auth.digest.*;
-import com.sun.enterprise.security.auth.digest.api.Key;
-import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.security.auth.digest.impl.KeyDigestAlgoParamImpl;
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -29,9 +25,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static com.sun.enterprise.security.auth.digest.api.Constants.*;
-import com.sun.logging.LogDomains;
+
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
+import com.sun.enterprise.security.auth.digest.api.Password;
 import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 /**
  * supports creation and validation of digest.

@@ -1,7 +1,17 @@
 FROM krallin/centos-tini
 
 ADD ./entrypoint.sh /etc/
-ADD ./jdk1.8.0_181 /usr/lib/jvm/jdk8
+
+#
+# The JDK was got from the following releases:
+#  -JDK8: https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries/
+#         releases/download/jdk8u252-b09/OpenJDK8U-jdk_x64_linux_8u252b09.tar.gz
+#  -JDK11: https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/
+#          releases/download/jdk-11.0.7%2B10/OpenJDK11U-jdk_x64_linux_11.0.7_10.tar.gz
+# Since the JDK is a very large file, download and add the file manually.
+#
+ADD ./openjdk-8u252-b09 /usr/lib/jvm/jdk8
+ADD ./openjdk-11.0.7+10 /usr/lib/jvm/jdk11
 
 RUN chmod +x /etc/entrypoint.sh && \
     #
@@ -14,6 +24,7 @@ RUN chmod +x /etc/entrypoint.sh && \
     #
     cp -Lf /etc/pki/java/cacerts /usr/lib/jvm/jdk8/jre/lib/security/cacerts && \
     ln -s /usr/lib/jvm/jdk8/bin/* /bin/ && \
+    cp -Lf /etc/pki/java/cacerts /usr/lib/jvm/jdk11/lib/security/cacerts && \
     #
     # install maven
     #

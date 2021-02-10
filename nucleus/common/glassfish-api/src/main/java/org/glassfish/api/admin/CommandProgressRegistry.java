@@ -17,7 +17,7 @@
 package org.glassfish.api.admin;
 
 import java.util.Collection;
-import org.glassfish.api.admin.CommandProgress;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -26,11 +26,11 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface CommandProgressRegistry {
-    
-    public String registr(CommandProgress cp);
-    
-    public Collection<CommandProgress> list();
-    
-    public CommandProgress get(String id);
-    
+
+    String registr(CommandProgress cp);
+
+    Collection<CommandProgress> list();
+
+    CommandProgress get(String id);
+
 }

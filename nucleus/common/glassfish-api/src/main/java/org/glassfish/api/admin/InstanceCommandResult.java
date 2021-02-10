@@ -17,11 +17,16 @@
 package org.glassfish.api.admin;
 
 public class InstanceCommandResult {
-    public InstanceCommandResult() {}
+    public InstanceCommandResult() {
+    }
 
-    public InstanceCommand getInstanceCommand() { return this.ic;}
+    public InstanceCommand getInstanceCommand() {
+        return this.ic;
+    }
 
-    public void setInstanceCommand(InstanceCommand i) { this.ic = i;}
+    public void setInstanceCommand(InstanceCommand i) {
+        this.ic = i;
+    }
 
     private InstanceCommand ic;
 }

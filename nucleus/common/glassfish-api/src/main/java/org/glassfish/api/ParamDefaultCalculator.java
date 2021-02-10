@@ -17,21 +17,18 @@
 package org.glassfish.api;
 
 /**
- * Interface for defining dynamic command parameter defaults. This is used with the 
- * defaultCalculator argument to the @Param annotation to implement a calculator 
- * for a dynamic default value.
- * 
+ * Interface for defining dynamic command parameter defaults. This is used with the defaultCalculator argument to
+ * the @Param annotation to implement a calculator for a dynamic default value.
+ *
  * @author tmueller
  */
 public class ParamDefaultCalculator {
     /*
-     * This method is called if the user has not
-     * provided a value for it via the client. This object is given a chance to 
-     * determine the default value for parameter. This method may return null 
-     * if no default value can be computed. 
+     * This method is called if the user has not provided a value for it via the client. This object is given a chance to
+     * determine the default value for parameter. This method may return null if no default value can be computed.
      */
     public String defaultValue(ExecutionContext context) {
         return null;
-    };
-    
+    }
+
 }

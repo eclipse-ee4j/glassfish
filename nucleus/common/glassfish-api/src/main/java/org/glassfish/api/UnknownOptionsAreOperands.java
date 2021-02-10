@@ -16,20 +16,20 @@
 
 package org.glassfish.api;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 /**
- * If this annotation is applied to a command class, the asadmin client will
- * treat any unknown option on the command line as the start of the operands.
- * This is used by the create-jvm-options and delete-jvm-options commands so
- * that operands of the form "-Dfoo=bar" are not considered options.
+ * If this annotation is applied to a command class, the asadmin client will treat any unknown option on the command
+ * line as the start of the operands. This is used by the create-jvm-options and delete-jvm-options commands so that
+ * operands of the form "-Dfoo=bar" are not considered options.
  *
  * @author Bill Shannon
  */
 @Retention(RUNTIME)
-@Target({TYPE})
+@Target({ TYPE })
 public @interface UnknownOptionsAreOperands {
 }

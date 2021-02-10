@@ -189,11 +189,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.ldapbp</groupId>
-            <artifactId>ldapbp</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
 	    <groupId>org.glassfish.external</groupId>
 	    <artifactId>management-api</artifactId>
         </dependency>

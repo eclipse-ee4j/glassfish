@@ -23,9 +23,10 @@
         <artifactId>orb</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
+    
     <artifactId>orb-iiop</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>GlassFish ORB interface layer implementation</name>
     <developers>
         <developer>
@@ -74,7 +75,6 @@
         <dependency>
             <groupId>org.glassfish.corba</groupId>
             <artifactId>glassfish-corba-orb</artifactId>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.glassfish.pfl</groupId>

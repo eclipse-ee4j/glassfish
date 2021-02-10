@@ -16,28 +16,27 @@
 
 package org.glassfish.api;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 /**
- * Identify an I18n resource associated with the annotated element. The value() holds the name
- * of the resource as it stored in the LocalStrings.properties and can be used by the runtime
- * to generate appropriate localized meta-data.
+ * Identify an I18n resource associated with the annotated element. The value() holds the name of the resource as it
+ * stored in the LocalStrings.properties and can be used by the runtime to generate appropriate localized meta-data.
  *
  * @author Jerome Dochez
  */
 @Retention(RUNTIME)
-@Target({TYPE,METHOD,FIELD})
+@Target({ TYPE, METHOD, FIELD })
 public @interface I18n {
 
     /**
-     * Returns the string identify the i18n resource from the resource bundle associated with
-     * the class containing the annotation.
+     * Returns the string identify the i18n resource from the resource bundle associated with the class containing the
+     * annotation.
      *
      * @return a string identifying the resource in the bundle
      */

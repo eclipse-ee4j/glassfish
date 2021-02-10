@@ -16,32 +16,34 @@
 
 package org.glassfish.api.admingui;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.net.URL;
 
+import org.jvnet.hk2.annotations.Contract;
 
 /**
- *  <p>	This interface exists to provide a marker for locating modules which
- *	provide GUI features to be displayed in the GlassFish admin console.
- *	The {@link #getConfiguration()} method should either return (null), or
- *	a <code>URL</code> to the console-config.xml file.</p>
+ * <p>
+ * This interface exists to provide a marker for locating modules which provide GUI features to be displayed in the
+ * GlassFish admin console. The {@link #getConfiguration()} method should either return (null), or a <code>URL</code> to
+ * the console-config.xml file.
+ * </p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ * @author Ken Paulsen (ken.paulsen@sun.com)
  */
 @Contract
 public interface ConsoleProvider {
 
     /**
-     *	<p> Returns a <code>URL</code> to the <code>console-config.xml</code>
-     *	    file, or <code>null</code>.  If <code>null</code> is returned, the
-     *	    default ({@link #DEFAULT_CONFIG_FILENAME}) will be used.</p>
+     * <p>
+     * Returns a <code>URL</code> to the <code>console-config.xml</code> file, or <code>null</code>. If <code>null</code> is
+     * returned, the default ({@link #DEFAULT_CONFIG_FILENAME}) will be used.
+     * </p>
      */
-    public URL getConfiguration();
+    URL getConfiguration();
 
     /**
-     *	<p> The default location of the <code>console-config.xml</code>.</p>
+     * <p>
+     * The default location of the <code>console-config.xml</code>.
+     * </p>
      */
-    public String DEFAULT_CONFIG_FILENAME   =
-	"META-INF/admingui/console-config.xml";
+    String DEFAULT_CONFIG_FILENAME = "META-INF/admingui/console-config.xml";
 }

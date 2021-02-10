@@ -19,15 +19,18 @@ package org.glassfish.api.admin;
 import org.jvnet.hk2.component.MultiMap;
 
 /**
- * A map from parameter name to a list of parameter values.
- * (Really just a more convenient name for MultiMap.)
+ * A map from parameter name to a list of parameter values. (Really just a more convenient name for MultiMap.)
  */
 public class ParameterMap extends MultiMap<String, String> {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Creates an empty ParameterMap.
      */
     public ParameterMap() {
-        super();
     }
 
     /**
@@ -39,6 +42,7 @@ public class ParameterMap extends MultiMap<String, String> {
 
     /**
      * Fluent API for adding parameters to the map.
+     *
      * @param k
      * @param v
      * @return ParameterMap

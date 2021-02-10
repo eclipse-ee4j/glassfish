@@ -17,69 +17,77 @@
 package org.glassfish.api.admin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.*;
 
 /**
- * This holds the late status of the instance, the commands that are Queued up while the instance was starting
- * etc.
+ * This holds the late status of the instance, the commands that are Queued up while the instance was starting etc.
  *
  * @author Vijay Ramachandran
  */
 public class InstanceState {
     public enum StateType {
         NO_RESPONSE {
+            @Override
             public String getDescription() {
                 return "NO_RESPONSE";
             }
 
+            @Override
             public String getDisplayString() {
                 return " no response";
             }
         },
         NOT_RUNNING {
+            @Override
             public String getDescription() {
                 return "NOT_RUNNING";
             }
 
+            @Override
             public String getDisplayString() {
                 return " not running";
             }
         },
         STARTING {
+            @Override
             public String getDescription() {
                 return "STARTING";
             }
 
+            @Override
             public String getDisplayString() {
                 return " starting";
             }
         },
         RUNNING {
+            @Override
             public String getDescription() {
                 return "RUNNING";
             }
 
+            @Override
             public String getDisplayString() {
                 return " running";
             }
         },
         RESTART_REQUIRED {
+            @Override
             public String getDescription() {
                 return "REQUIRES_RESTART";
             }
 
+            @Override
             public String getDisplayString() {
                 return " requires restart";
             }
         },
         NEVER_STARTED {
+            @Override
             public String getDescription() {
                 return "NEVER_STARTED";
             }
 
+            @Override
             public String getDisplayString() {
                 return " never started";
             }
@@ -95,27 +103,29 @@ public class InstanceState {
 
         public static StateType makeStateType(String s) {
             for (StateType st : StateType.values()) {
-                if (s.equals(st.getDescription())) return st;
+                if (s.equals(st.getDescription())) {
+                    return st;
+                }
             }
             return null;
         }
-    };
+    }
 
     private StateType currentState;
     private List<String> failedCommands;
 
     public InstanceState(StateType st) {
         currentState = st;
-        failedCommands = new ArrayList<String>();
+        failedCommands = new ArrayList<>();
     }
 
     public StateType getState() {
         return currentState;
-    };
+    }
 
     public void setState(StateType state) {
         currentState = state;
-    };
+    }
 
     public List<String> getFailedCommands() {
         return failedCommands;

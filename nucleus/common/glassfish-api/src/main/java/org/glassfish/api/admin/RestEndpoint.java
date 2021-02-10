@@ -18,6 +18,7 @@ package org.glassfish.api.admin;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
@@ -26,7 +27,9 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RestEndpoint {
-    enum OpType { GET, PUT, POST, DELETE}
+    enum OpType {
+        GET, PUT, POST, DELETE
+    }
 
     /**
      * ConfigBean to which to attach the AdminCommand
@@ -36,39 +39,40 @@ public @interface RestEndpoint {
     Class<? extends ConfigBeanProxy> configBean();
 
     /**
-     * Rest operation type that should trigger a redirect to an actual asadmin
-     * command invocation. The default is GET.
+     * Rest operation type that should trigger a redirect to an actual asadmin command invocation. The default is GET.
      *
      * @return the rest operation type for this redirect
      */
     OpType opType() default OpType.GET;
 
     /**
-     * This is the value of the last segment in the generated URL.  If blank, this
-     * will default to the value of the name attribute on the commands @Service annotation
-     * @return 
+     * This is the value of the last segment in the generated URL. If blank, this will default to the value of the name
+     * attribute on the commands @Service annotation
+     *
+     * @return
      */
     String path() default "";
-    
+
     /**
      * The description of the endpoint. This is used primarily in the REST HTML interface.
-     * @return 
+     *
+     * @return
      */
     String description() default "";
-    
+
     /**
-     * A list of one or more @RestParam annotations representing the parameters to be
-     * used in the AdminCommand call
-     * @return 
+     * A list of one or more @RestParam annotations representing the parameters to be used in the AdminCommand call
+     *
+     * @return
      */
     RestParam[] params() default {};
-    
+
     /**
-     * Whether this RestEndpoint should be used for command authorization
-     * decisions automatically.  Setting this to true causes the admin command
-     * framework automatically to use the configBean attribute to compute the resource name
-     * and the OpType to compute the action.
-     * @return 
+     * Whether this RestEndpoint should be used for command authorization decisions automatically. Setting this to true
+     * causes the admin command framework automatically to use the configBean attribute to compute the resource name and the
+     * OpType to compute the action.
+     *
+     * @return
      */
     boolean useForAuthorization() default false;
 }

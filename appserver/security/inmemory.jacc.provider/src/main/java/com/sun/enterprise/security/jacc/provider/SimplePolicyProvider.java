@@ -17,6 +17,7 @@
 package com.sun.enterprise.security.jacc.provider;
 
 import java.security.CodeSource;
+import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Policy;
@@ -59,7 +60,11 @@ public class SimplePolicyProvider extends Policy {
     public SimplePolicyProvider() {
         basePolicy = Policy.getPolicy();
         if (basePolicy == null) {
-            basePolicy = new sun.security.provider.PolicyFile();
+            try {
+                basePolicy = Policy.getInstance("JavaPolicy", null);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace(); // Too bad, no policy then
+            }
         }
     }
 

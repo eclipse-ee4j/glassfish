@@ -109,7 +109,6 @@
                 resultproperty="autodeployResult"
                 output="${build}/${log.id}.output.log"
             >
-            <jvmarg value="-Djava.endorsed.dirs=${inst}/lib/endorsed"/>
             <jvmarg value="-Dmonitor.debug=true"/>
 
             <classpath>

@@ -16,17 +16,14 @@
 
 package com.sun.enterprise.iiop.security;
 
-
-public class InvalidMechanismException extends java.lang.Exception{
+public class InvalidMechanismException extends java.lang.Exception {
     /**
      * Constructs the exception with the specified detail message.
+     * 
      * @param the detail message.
      */
     public InvalidMechanismException(String msg) {
-	super(msg);
+        super(msg);
     }
 
-    
 }
-
-

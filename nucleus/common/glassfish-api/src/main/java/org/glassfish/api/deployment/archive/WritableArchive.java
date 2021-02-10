@@ -16,11 +16,11 @@
 
 package org.glassfish.api.deployment.archive;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Interface for implementing write access to an underlying archive on a unspecified medium
@@ -35,7 +35,7 @@ public interface WritableArchive extends Archive {
      *
      * @param uri the path to create the archive
      */
-    public void create(URI uri) throws IOException;
+    void create(URI uri) throws IOException;
 
     /**
      * Close a previously returned sub archive
@@ -43,28 +43,26 @@ public interface WritableArchive extends Archive {
      * @param subArchive output stream to close
      * @link Archive.getSubArchive}
      */
-    public void closeEntry(WritableArchive subArchive) throws IOException;
+    void closeEntry(WritableArchive subArchive) throws IOException;
 
     /**
      * Create a new entry in the archive
      *
      * @param name the entry name
-     * @returns an @see java.io.OutputStream for a new entry in this
-     * current abstract archive.
+     * @returns an @see java.io.OutputStream for a new entry in this current abstract archive.
      */
-    public OutputStream putNextEntry(String name) throws java.io.IOException;
+    OutputStream putNextEntry(String name) throws java.io.IOException;
 
     /**
      * closes the current entry
      */
-    public void closeEntry() throws IOException;
+    void closeEntry() throws IOException;
 
     /**
-     * Returns an instance of this archive abstraction for an embedded
-     * archive within this archive.
+     * Returns an instance of this archive abstraction for an embedded archive within this archive.
      *
      * @param name is the entry name relative to the root for the archive
      * @return the Archive instance for this abstraction
      */
-    public WritableArchive createSubArchive(String name) throws IOException;
+    WritableArchive createSubArchive(String name) throws IOException;
 }

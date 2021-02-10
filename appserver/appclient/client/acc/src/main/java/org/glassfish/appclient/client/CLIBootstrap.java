@@ -26,6 +26,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.glassfish.appclient.client.acc.UserError;
@@ -790,6 +793,11 @@ public class CLIBootstrap {
                         if (path.endsWith(".ear")) {
                             introducer = "-jar";
                             values.set(values.size() - 1, gfInfo.agentJarPath());
+                        } else if(path.endsWith(".jar")){
+                            introducer = null;
+                            values.set(values.size() - 1, "-classpath");
+                            values.add(gfInfo.agentJarPath() + File.pathSeparator + path);
+                            values.add(getMainClassOf(clientSpec));
                         }
                     }
                     return result;
@@ -804,6 +812,25 @@ public class CLIBootstrap {
                 agentArgs.add("client=class=" + values.get(values.size() - 1));
                 return result;
                 
+            }
+        }
+
+        private String getMainClassOf(File clientSpec) {
+            JarFile jarFile = null;
+            try {
+                try {
+                    jarFile = new JarFile(clientSpec);
+                    Manifest manifest = jarFile.getManifest();
+                    Attributes mainAttributes = manifest.getMainAttributes();
+                    String mainClass = mainAttributes.getValue("Main-Class");
+                    return mainClass == null ? "" : mainClass;
+                } finally {
+                    if (jarFile != null) {
+                        jarFile.close();
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
         

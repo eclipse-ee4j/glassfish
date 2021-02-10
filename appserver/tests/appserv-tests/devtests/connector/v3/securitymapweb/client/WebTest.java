@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Base64;
 
 import com.sun.ejte.ccl.reporter.*;
 
@@ -165,8 +166,7 @@ public class WebTest {
     }
 
     public static String encode(String userpass) {
-        sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-        return new String(enc.encodeBuffer(userpass.getBytes()));
+        return new String(Base64.getEncoder().encodeToString(userpass.getBytes()));
     }
 
 }

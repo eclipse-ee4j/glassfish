@@ -30,14 +30,13 @@ public interface JNDIBinding {
      *
      * @return the logical name in the component namespace
      */
-    public String getName();
-
+    String getName();
 
     /**
      * Returns the value to be bound against the logical name
      *
      * @return the value to be bound against the logical name
      */
-    public Object getValue();
+    Object getValue();
 
 }

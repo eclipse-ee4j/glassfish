@@ -20,9 +20,8 @@ import org.glassfish.api.ActionReport;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * A ClusterExecutor is responsible for remotely executing commands.
- * The list of target servers (either clusters or remote instances) is obtained
- * from the parameter list.
+ * A ClusterExecutor is responsible for remotely executing commands. The list of target servers (either clusters or
+ * remote instances) is obtained from the parameter list.
  *
  * @author Jerome Dochez
  */
@@ -30,19 +29,19 @@ import org.jvnet.hk2.annotations.Contract;
 public interface ClusterExecutor {
 
     /**
-     * <p>Execute the passed command on targeted remote instances. The list of remote
-     * instances is usually retrieved from the passed parameters (with a "target"
-     * parameter for instance) or from the configuration.
+     * <p>
+     * Execute the passed command on targeted remote instances. The list of remote instances is usually retrieved from the
+     * passed parameters (with a "target" parameter for instance) or from the configuration.
      *
-     * <p>Each remote execution must return a different ActionReport so the user
-     * or framework can get feedback on the success or failure or such executions.
+     * <p>
+     * Each remote execution must return a different ActionReport so the user or framework can get feedback on the success
+     * or failure or such executions.
      *
      * @param commandName the name of the command to execute
      * @param command the command to execute
      * @param context the original command context
      * @param parameters the parameters passed to the original local command
-     * @return the exit status of overall command replication 
+     * @return the exit status of overall command replication
      */
-    public ActionReport.ExitCode execute(String commandName, AdminCommand command, AdminCommandContext context,
-                                                        ParameterMap parameters);
+    ActionReport.ExitCode execute(String commandName, AdminCommand command, AdminCommandContext context, ParameterMap parameters);
 }

@@ -26,8 +26,6 @@ import java.security.PrivilegedAction;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.x500.X500Principal;
-import sun.security.x509.X500Name;
-import com.sun.logging.*;
 import com.sun.enterprise.common.iiop.security.GSSUPName;
 import com.sun.enterprise.common.iiop.security.AnonCredential;
 import com.sun.enterprise.security.SecurityContext;
@@ -35,20 +33,17 @@ import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.common.AppservAccessController;
-//import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.enterprise.security.auth.login.common.ServerLoginCallbackHandler;
 import com.sun.enterprise.security.auth.login.common.LoginException;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
-
 // FIXME: ACC methods need to be moved to ACC-specific class.
 import com.sun.enterprise.security.auth.realm.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 import com.sun.enterprise.security.common.ClientSecurityContext;
-//import com.sun.enterprise.appclient.AppContainer;
 import com.sun.enterprise.security.common.SecurityConstants;
 import org.glassfish.internal.api.Globals;
 
@@ -197,7 +192,7 @@ public class LoginContextDriver  {
      *  <LI>AnonCredential - Unauthenticated session, set anonymous security
      *      context.
      *  <LI>GSSUPName - Retrieve user and realm and set security context.
-     *  <LI>X500Name - Retrieve user and realm and set security context.
+     *  <LI>X500Principal - Retrieve user and realm and set security context.
      * </ul>
      *
      * @param Subject the subject of the client
@@ -225,7 +220,7 @@ public class LoginContextDriver  {
         } else if (cls.equals(GSSUPName.class)) {
             doGSSUPLogin(subject);
             
-        } else if (cls.equals(X500Name.class)) {
+        } else if (cls.equals(X500Principal.class)) {
             doX500Login(subject, null);
             
         } else {
@@ -477,13 +472,12 @@ public class LoginContextDriver  {
 
         String userName = "";
         try {
-            final X500Name x500Name = new X500Name(
-                x500Principal.getName(X500Principal.RFC1779));
-            userName = x500Name.toString();
+            
+            userName = x500Principal.getName();
 
             AppservAccessController.doPrivileged(new PrivilegedAction(){
                 public java.lang.Object run(){
-                    fs.getPublicCredentials().add(x500Name);
+                    fs.getPublicCredentials().add(x500Principal);
                     return fs;
                 }
             });
@@ -496,7 +490,7 @@ public class LoginContextDriver  {
                 LoginContext lg = new LoginContext(jaasCtx, fs, dummyCallback);
                 lg.login();
             }
-            certRealm.authenticate(fs, x500Name);
+            certRealm.authenticate(fs, x500Principal);
         } catch(Exception ex) {
             if (_logger.isLoggable(Level.INFO)) {
                 _logger.log(Level.INFO, SecurityLoggerInfo.auditAtnRefusedError,
@@ -644,7 +638,7 @@ public class LoginContextDriver  {
 
 
     /**
-     * A special case login for X500Name credentials.
+     * A special case login for X500Principal credentials.
      * This is invoked for certificate login because the containers
      * extract the X.500 name from the X.509 certificate before calling
      * into this class.
@@ -659,8 +653,8 @@ public class LoginContextDriver  {
        String user = null;
        String realm_name = null;
        try{
-            X500Name x500name = (X500Name)getPublicCredentials(s, X500Name.class);
-            user = x500name.getName();
+            X500Principal x500Principal = (X500Principal) getPublicCredentials(s, X500Principal.class);
+            user = x500Principal.getName();
         
             // In the RI-inherited implementation this directly creates
             // some credentials and sets the security context. This means
@@ -682,7 +676,7 @@ public class LoginContextDriver  {
                     LoginContext lg = new LoginContext(jaasCtx, s, new ServerLoginCallbackHandler(user, null, appModuleID));
                     lg.login();
                 }
-                certRealm.authenticate(s, x500name);
+                certRealm.authenticate(s, x500Principal);
                 realm_name = CertificateRealm.AUTH_TYPE;
                 if(getAuditManager().isAuditOn()){
                     getAuditManager().authentication(user, realm_name, true);

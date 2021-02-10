@@ -16,21 +16,21 @@
 
 package org.glassfish.api.naming;
 
-import org.glassfish.hk2.api.Metadata;
-import org.jvnet.hk2.annotations.Service;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.glassfish.hk2.api.Metadata;
+import org.jvnet.hk2.annotations.Service;
+
 import jakarta.inject.Qualifier;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * Goes with {@link Service} annotation on a {@link NamedNamingObjectProxy}. Using this annotation
- * a {@link NamedNamingObjectProxy} indicates what namespace prefixes are handled by a proxy. This extra metadata
- * enables lazy instantiation of {@link NamedNamingObjectProxy} objects.
+ * Goes with {@link Service} annotation on a {@link NamedNamingObjectProxy}. Using this annotation a
+ * {@link NamedNamingObjectProxy} indicates what namespace prefixes are handled by a proxy. This extra metadata enables
+ * lazy instantiation of {@link NamedNamingObjectProxy} objects.
  *
  * @author sanjeeb.sahoo@oracle.com
  */

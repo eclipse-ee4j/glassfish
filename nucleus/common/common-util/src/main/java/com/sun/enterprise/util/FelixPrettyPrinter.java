@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,6 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 package com.sun.enterprise.util;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FelixPrettyPrinter {
     
@@ -111,6 +119,25 @@ public class FelixPrettyPrinter {
         return messageBuilder.toString();
     }
     
+    private static Pattern BUNDLE_PATTERN = Pattern.compile("\\[(\\d+)\\]", Pattern.MULTILINE);
+    
+    public static List<Integer> findBundleIds(String message) {
+        if (message == null ||  message.isEmpty()) {
+            return Collections.emptyList();
+        }
+        
+        Set<Integer> bundleIds = new LinkedHashSet<>();
+        
+        Matcher bundlePattern = BUNDLE_PATTERN.matcher(message);
+        while (bundlePattern.find()) {
+            String number = bundlePattern.group(1);
+            
+            bundleIds.add(Integer.valueOf(number));
+        }
+        
+        return new ArrayList<Integer>(bundleIds);
+    }
+    
     private static void printLn(StringBuilder messageBuilder, int indent, String message) {
         for (int i=0; i<(indent * 4); i++) {
             messageBuilder.append(" ");
@@ -125,9 +152,12 @@ public class FelixPrettyPrinter {
 
         String test1 = prettyPrintExceptionMessage(test);
         
+        List<Integer> ids = findBundleIds(test1);
+        
         String test2 = prettyPrintExceptionMessage(" (java.lang.String) Unable to resolve org.glassfish.jersey.containers.jersey-container-grizzly2-http [142](R 142.0): missing requirement [org.glassfish.jersey.containers.jersey-container-grizzly2-http [142](R 142.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.grizzly)(version>=2.4.0)(!(version>=3.0.0))) Unresolved requirements: [[org.glassfish.jersey.containers.jersey-container-grizzly2-http [142](R 142.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.grizzly)(version>=2.4.0)(!(version>=3.0.0)))]");
         
         System.out.println(test1);
+        System.out.println(ids.toString());
         System.out.println("\n\n");
         System.out.println(test2);
     }

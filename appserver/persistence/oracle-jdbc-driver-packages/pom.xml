@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,17 +19,18 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <parent>
         <groupId>org.glassfish.main.persistence</groupId>
         <artifactId>persistence</artifactId>
         <version>6.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
+    
     <artifactId>glassfish-oracle-jdbc-driver-packages</artifactId>
-    <packaging>jar</packaging>
+    
     <name>GlassFish Oracle JDBC Packages</name>
     <description>This bundle extends System Bundle to provide access to additional classes available in oracle jdbc driver.</description>
-    
+
     <developers>
         <developer>
             <id>mm110999</id>
@@ -40,38 +41,46 @@
             </roles>
         </developer>
     </developers>
-    
+
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                            <Fragment-Host>system.bundle; extension:=framework</Fragment-Host>
-                            <Export-Package>
- oracle.jdbc,
- oracle.jdbc.internal,
- oracle.jdbc.pool,
- oracle.xdb,
- oracle.xdb.dom,
- oracle.sql,
- oracle.spatial.geometry,
- oracle.dms.instrument,
- oracle.dms.spy,
- oracle.xml.jaxp,
- oracle.xml.parser.schema,
- oracle.xml.parser.v2,
- oracle.ucp.jdbc,
- oracle.jdbc.dcn,
- oracle.AQ,
- oracle.kv
-                            </Export-Package>
-                            <Bundle-Description>${project.description}</Bundle-Description> 
-                        </manifestEntries>
-                    </archive>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Description>${project.description}</Bundle-Description>
+                        <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                        <Fragment-Host>system.bundle; extension:=framework</Fragment-Host>
+                        <Export-Package>
+                            oracle.jdbc,
+                            oracle.jdbc.internal,
+                            oracle.jdbc.pool,
+                            oracle.xdb,
+                            oracle.xdb.dom,
+                            oracle.sql,
+                            oracle.spatial.geometry,
+                            oracle.dms.instrument,
+                            oracle.dms.spy,
+                            oracle.xml.jaxp,
+                            oracle.xml.parser.schema,
+                            oracle.xml.parser.v2,
+                            oracle.ucp.jdbc,
+                            oracle.jdbc.dcn,
+                            oracle.AQ,
+                            oracle.kv
+                        </Export-Package>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,25 +16,41 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
+import static com.sun.enterprise.util.FelixPrettyPrinter.findBundleIds;
+import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
+
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.hk2.api.MultiException;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.util.tracker.ServiceTracker;
+
 import com.sun.enterprise.glassfish.bootstrap.GlassFishImpl;
+import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.embeddable.GlassFishRuntime;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import com.sun.enterprise.util.FelixPrettyPrinter;
 
 /**
  * Implementation of GlassFishRuntime in an OSGi environment.
@@ -63,20 +79,84 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
             setEnv(gfProps.getProperties());
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
             final ServiceTracker hk2Tracker = new ServiceTracker(getBundleContext(), Main.class.getName(), null);
+            
             hk2Tracker.open();
             final Main main = (Main) hk2Tracker.waitForService(0);
             hk2Tracker.close();
+            
             final ModulesRegistry mr = ModulesRegistry.class.cast(getBundleContext().getService(getBundleContext().getServiceReference(ModulesRegistry.class.getName())));
             ServiceLocator serviceLocator = main.createServiceLocator(mr, startupContext, null, null);
             final ModuleStartup gfKernel = main.findStartupService(mr, serviceLocator, null, startupContext);
             GlassFish glassFish = createGlassFish(gfKernel, serviceLocator, gfProps.getProperties());
             gfs.add(glassFish);
+            
             return glassFish;
-        } catch (BootException ex) {
+        } catch (BootException | InterruptedException ex) {
             throw new GlassFishException(ex);
-        } catch (InterruptedException ex) {
-            throw new GlassFishException(ex);
+        } catch (MultiException ex) {
+            GlassFishException e = null;
+            
+            String bundleMessage = "";
+            try {
+                bundleMessage = findBundleMessage(ex);
+                if (bundleMessage != null) {
+
+                    bundleMessage = prettyPrintExceptionMessage(bundleMessage);
+
+                    List<Integer> bundleIDs = findBundleIds(bundleMessage);
+                    if (!bundleIDs.isEmpty()) {
+                        StringBuilder bundleBuilder = new StringBuilder(bundleMessage);
+                        for (Integer bundleId : bundleIDs) {
+                            Bundle bundle = context.getBundle(bundleId);
+                            if (bundle != null) {
+                                bundleBuilder.append("[" + bundleId + "] \n").append("jar = " + bundle.getLocation());
+                                tryAddPomProperties(bundle, bundleBuilder);
+                                bundleBuilder.append("\n");
+                            }
+                        }
+                        bundleMessage = bundleBuilder.toString();
+                    }
+
+                    e = new GlassFishException("\n\n" + bundleMessage, ex);
+                }
+            } catch (Exception ee) {
+                e = new GlassFishException("\n\n" + bundleMessage, ex);
+                e.addSuppressed(ee);
+            }
+
+            if (e == null) {
+                throw ex;
+            }
+            
+            throw e;
         }
+    }
+
+    private void tryAddPomProperties(Bundle bundle, StringBuilder bundleBuilder) throws IOException {
+        Enumeration<URL> entries = bundle.findEntries("META-INF/maven/", "pom.properties", true);
+        while (entries.hasMoreElements()) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(entries.nextElement().openStream(), UTF_8))) {
+                reader.lines()
+                      .filter(e -> !e.startsWith("#"))
+                      .forEach(e -> bundleBuilder.append("\n" + e.replace("=", " = ")));
+            }
+            bundleBuilder.append("\n");
+        }
+    }
+    
+    private String findBundleMessage(MultiException ex) {
+        for (Throwable error : ex.getErrors()) {
+            
+            Throwable currentThrowable = error;
+            while (currentThrowable != null) {
+                if (currentThrowable instanceof BundleException) {
+                    return currentThrowable.getMessage();
+                }
+                currentThrowable = currentThrowable.getCause();
+            }
+        }
+        
+        return null;
     }
 
     public synchronized void shutdown() throws GlassFishException {

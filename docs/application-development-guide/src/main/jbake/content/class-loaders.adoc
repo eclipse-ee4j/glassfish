@@ -28,7 +28,6 @@ The following topics are addressed here:
 * link:#beadf[The Class Loader Hierarchy]
 * link:#gfqpi[Delegation]
 * link:#beadk[Using the Java Optional Package Mechanism]
-* link:#gchif[Using the Endorsed Standards Override Mechanism]
 * link:#beadg[Class Loader Universes]
 * link:#gatej[Application-Specific Class Loading]
 * link:#beadh[Circumventing Class Loader Isolation]
@@ -124,16 +123,14 @@ In previous GlassFish Server versions, the JVM options provided
 `classpath-prefix` and `classpath-suffix` attributes that made it
 possible to add JAR files or directories either in front of, or after
 the application server's system `classpath`. These options are not
-present in GlassFish Server 5.0.
+present in GlassFish Server 6.0.
 
 The `classpath-prefix` was typically used to substitute another package
 for one of the GlassFish Server packages, for example if a newer one was
-available. This same result can be achieved by using the Java Endorsed
-Standards Override Mechanism or on a per-application basis with the
+available. This same result can be achieved on a per-application basis with the
 `--libraries` option for the `deploy` subcommand. For more information,
-see link:#gchif[Using the Endorsed Standards Override Mechanism] and the
-link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] help page, respectively. The Java Optional
-Package Mechanism does what `classpath-suffix` used to do. For more
+see the link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] help page. 
+The Java Optional Package Mechanism does what `classpath-suffix` used to do. For more
 information, see link:#beadk[Using the Java Optional Package Mechanism].
 
 [[gfqpi]][[GSDVG00095]][[delegation]]

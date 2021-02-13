@@ -1,16 +1,16 @@
 type=page
 status=published
-title=Eclipse GlassFish Server 5.1 Release Notes
+title=Eclipse GlassFish Server 6.1 Release Notes
 prev=preface.html
 ~~~~~~
-Eclipse GlassFish Server 5.1 Release Notes
+Eclipse GlassFish Server 6.1 Release Notes
 ==========================================
 
 [[GSRLN00001]][[abppa]]
 
 
-[[glassfish-server-open-source-edition-5.1-release-notes]]
-1 Eclipse GlassFish Server 5.1 Release Notes
+[[glassfish-server-open-source-edition-6.1-release-notes]]
+1 Eclipse GlassFish Server 6.1 Release Notes
 --------------------------------------------
 
 GlassFish Server provides a lightweight, modular server for the
@@ -430,16 +430,14 @@ JAXB and JAX-WS no longer part of Java EE platform
 Description
 +++++++++++
 
-JAXB and JAX-WS are no longer part of Java EE platform, instead these
-technologies are shipped with Java SE since version 6. However, the jars
-are packaged in GlassFish. The APIs have been updated with newer
-versions (i.e 2.3.0) using the endorsed standard mechanism of JDK.
+Jakarta XML Binding (previous JAXB) and Jakarta XML Web Services (previouly JAX-WS) are part of Java EE platform,
+but as optional technologies. However, the jars are packaged in GlassFish.
 
 
 [NOTE]
 =======================================================================
 
-These updated jars are present only in the full profile of GlassFish and
+These jars are present only in the full profile of GlassFish and
 not part of web profile.
 
 =======================================================================

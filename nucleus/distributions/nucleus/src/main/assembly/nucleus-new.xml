@@ -95,13 +95,13 @@
             <outputDirectory>${install.dir.name}/lib/monitor</outputDirectory>
         </fileSet>
 
-        <!-- modules/endorsed -->
+        <!-- modules/lib -->
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
                 <include>grizzly-npn-api.jar</include>
             </includes>
-            <outputDirectory>${install.dir.name}/modules/endorsed</outputDirectory>
+            <outputDirectory>${install.dir.name}/lib</outputDirectory>
         </fileSet>
 
         <!-- felix -->

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,16 +74,14 @@ public class GlassFishMainActivator implements BundleActivator {
     private GlassFish gf;
 
     private static final String[] DEFAULT_INSTALLATION_LOCATIONS_RELATIVE = new String[]{
-            // Order is important. endorsed must be ahead of others
-            "modules/endorsed/",
+            // Order is important.
             "modules/",
             "modules/autostart/"
     };
 
     private static final String[] DEFAULT_START_LOCATIONS_RELATIVE = new String[]{
-            // Order is important. endorsed must be ahead of others
+            // Order is important.
             // osgi-resource-locator must come ahead of osgi-adapter
-            "modules/endorsed/",
             "modules/osgi-resource-locator.jar",
             "modules/osgi-adapter.jar",
             "modules/autostart/"

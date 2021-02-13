@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -207,7 +207,7 @@
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.annotation-api.jar</jvm-options>
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.xml.bind-api.jar</jvm-options>
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/webservices-api-osgi.jar</jvm-options>
-        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/grizzly-npn-api.jar</jvm-options>
+        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
         <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
       </java-config>
@@ -392,7 +392,7 @@
              <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.annotation-api.jar</jvm-options>
              <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.xml.bind-api.jar</jvm-options>
              <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/webservices-api-osgi.jar</jvm-options>
-             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/endorsed/grizzly-npn-api.jar</jvm-options>
+             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
              <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
          </java-config>

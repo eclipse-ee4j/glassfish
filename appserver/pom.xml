@@ -84,7 +84,7 @@
         <version_prefix />
         <version_suffix />
         <major_version>6</major_version>
-        <minor_version>0</minor_version>
+        <minor_version>1</minor_version>
         <update_version>0</update_version>
         <install.dir.name>glassfish6</install.dir.name>
 

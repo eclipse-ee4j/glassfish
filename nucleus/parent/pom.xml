@@ -117,12 +117,12 @@
         <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
 
         <!-- GlassFish Components -->                                   
-        <glassfish-corba.version>4.2.3</glassfish-corba.version>
+        <glassfish-corba.version>4.2.4</glassfish-corba.version>
         <grizzly.version>3.0.0</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
-        <hk2.version>3.0.1</hk2.version>
-        <hk2.plugin.version>3.0.1</hk2.plugin.version>
+        <hk2.version>3.0.2</hk2.version>
+        <hk2.plugin.version>3.0.2</hk2.plugin.version>
         <pfl.version>4.1.2</pfl.version>
 
         <gmbal.version>4.0.2</gmbal.version>   
@@ -144,7 +144,7 @@
         <jackson.version>2.11.0</jackson.version>
         <jettison.version>1.4.1</jettison.version>
         <mimepull.version>1.9.13</mimepull.version>
-        <asm.version>7.3.1</asm.version>
+        <asm.version>9.1</asm.version>
 
         <testng.version>7.1.0</testng.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,33 +23,31 @@ import org.omg.PortableInterceptor.ServerRequestInfo;
 import java.util.Properties;
 
 /**
- * @author Mahesh Kannan
- *         Date: Jan 17, 2009
+ * @author Mahesh Kannan Date: Jan 17, 2009
  */
 @Contract
 public interface GlassFishORBFactory {
+    
     // This is ORBConstants.ENV_IS_SERVER_PROPERTY. We cannot
     // reference ORBConstants from this class.
-    public static final String ENV_IS_SERVER_PROPERTY = 
-        "com.sun.corba.ee.ORBEnvironmentIsGlassFishServer" ;
+    String ENV_IS_SERVER_PROPERTY = "com.sun.corba.ee.ORBEnvironmentIsGlassFishServer";
 
-    public ORB createORB(Properties props);
+    ORB createORB(Properties props);
+    int getOTSPolicyType();
 
-    public int getOTSPolicyType();
+    int getCSIv2PolicyType();
 
-    public int getCSIv2PolicyType();
+    Properties getCSIv2Props();
 
-    public Properties getCSIv2Props();
+    void setCSIv2Prop(String name, String value);
 
-    public void setCSIv2Prop(String name, String value);
+    int getORBInitialPort();
 
-    public int getORBInitialPort();
+    String getORBHost(ORB orb);
 
-    public String getORBHost(ORB orb);
+    int getORBPort(ORB orb);
 
-    public int getORBPort(ORB orb); 
+    boolean isEjbCall(ServerRequestInfo sri);
 
-    public boolean isEjbCall (ServerRequestInfo sri);
-
-    public String getIIOPEndpoints() ;
+    String getIIOPEndpoints();
 }

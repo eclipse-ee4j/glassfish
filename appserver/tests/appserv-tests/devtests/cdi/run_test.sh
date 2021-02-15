@@ -31,7 +31,7 @@ test_run(){
 	${S1AS_HOME}/bin/asadmin start-domain
 	${S1AS_HOME}/bin/asadmin start-database
 	
-	printf "\n%s \n\n" "===== TEST RUN - RUNNING TESTS ====="
+	printf "\n%s \n\n" "===== TEST RUN - RUNNING TESTS for ${TARGET} ====="
 	ant ${TARGET} | tee ${TEST_RUN_LOG}
 	
 	printf "\n%s \n\n" "===== TEST RUN - STOPPING GLASSFISH AND DB ====="

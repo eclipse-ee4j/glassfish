@@ -35,7 +35,7 @@ public class IIOPObjectFactory implements ObjectFactory {
                                     Name name,
                                     Context nameCtx,
                                     Hashtable env) throws Exception {
-        env.put("java.naming.factory.initial", "com.sun.jndi.cosnaming.CNCtxFactory");
+        env.put("java.naming.factory.initial", "org.glassfish.jndi.cosnaming.CNCtxFactory");
 
         InitialContext ic = new InitialContext(env);
 

@@ -63,13 +63,13 @@ public class EnrollerClient {
 		queueString = "java:comp/env/jms/SampleQueue";
 	    }
 	    Properties env = new Properties();
-	    env.put("java.naming.factory.initial", "com.sun.jndi.cosnaming.CNCtxFactory");
+	    env.put("java.naming.factory.initial", "org.glassfish.jndi.cosnaming.CNCtxFactory");
 	    ORBLocator orbLocator = Globals.getDefaultHabitat().getService(ORBLocator.class);
 	    
 	    env.put("java.naming.corba.orb", orbLocator.getORB());
 	    // Initialize the Context with JNDI specific properties
 	    InitialContext ctx = new InitialContext(env);
-	    System.out.println("looking up ejb/MyStudent using com.sun.jndi.cosnaming.CNCtxFactory...");
+	    System.out.println("looking up ejb/MyStudent using org.glassfish.jndi.cosnaming.CNCtxFactory...");
 	    Object obj = ctx.lookup("ejb/MyStudent");
 	    System.out.println("Looked up ejb/MyStudent with CnCtxFactory...");
 	    StudentHome sH = 

@@ -52,7 +52,7 @@ try{
         out.println("new InitialContext()...\n");
         Properties p2 = new Properties();
         p2.put( Context.INITIAL_CONTEXT_FACTORY, 
-	        "com.sun.jndi.cosnaming.CNCtxFactory" );
+	        "org.glassfish.jndi.cosnaming.CNCtxFactory" );
 Properties p1 = new Properties();
         p1.put( "org.omg.CORBA.ORBInitialHost", "localhost" );
         p1.put( "org.omg.CORBA.ORBInitialPort", "1345" );

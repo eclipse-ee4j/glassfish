@@ -112,10 +112,10 @@
     </target>
 
     <target name="run-standalone" depends="init-common">
-        <property name="ctxfactory" value="com.sun.jndi.cosnaming.CNCtxFactory"/>
+        <property name="ctxfactory" value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
         <property name="provider.url" value="iiop://${admin.host}:${orb.port}"/>
         <echo message="provider url used is ${provider.url}"/>
-        <echo message="ctxfactory used is com.sun.jndi.cosnaming.CNCtxFactory" />
+        <echo message="ctxfactory used is org.glassfish.jndi.cosnaming.CNCtxFactory" />
         <java classname="examples.sfsb.Client"
             classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
             failonerror="true" fork="true">

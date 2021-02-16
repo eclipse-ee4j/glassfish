@@ -111,7 +111,7 @@
     <target name="run_cosnaming_override" depends="init-common">
         <antcall target="runclient_withoverride">
             <param name="jndi.clash"
-                   value="-Djava.naming.factory.initial=com.sun.jndi.cosnaming.CNCtxFactory"/>
+                   value="-Djava.naming.factory.initial=org.glassfish.jndi.cosnaming.CNCtxFactory"/>
         </antcall>
     </target>
 

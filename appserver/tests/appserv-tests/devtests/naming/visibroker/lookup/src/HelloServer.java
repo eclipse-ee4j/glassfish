@@ -61,7 +61,7 @@ public class HelloServer {
       // create and initialize the ORB		
       ORB orb = ORB.init( args, p );
       Hashtable env = new Hashtable();
-      env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.cosnaming.CNCtxFactory");
+      env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY,"org.glassfish.jndi.cosnaming.CNCtxFactory");
       env.put("java.naming.corba.orb", orb);
       
       

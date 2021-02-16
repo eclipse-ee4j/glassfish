@@ -29,7 +29,7 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
-import com.sun.jndi.cosnaming.IiopUrl;
+import org.glassfish.jndi.cosnaming.IiopUrl;
 
 public class EnrollerClient {
 

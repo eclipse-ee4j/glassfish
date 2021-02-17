@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,20 +13,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+package test;
 
-import jakarta.ejb.Stateless;
-import jakarta.inject.Inject;
+import jakarta.ejb.Remote;
 
-
-@Stateless
-public class SlessEJB implements Sless {
-
-    @Inject ImplicitTestBean tb; //Field Injection
-
-    public String hello() {
-        System.out.println("In SlessEJB:hello()");
-        if (tb != null) return "hello";
-        else return null;
-    }
-
+@Remote
+public interface Foo {
+    String hello();
 }

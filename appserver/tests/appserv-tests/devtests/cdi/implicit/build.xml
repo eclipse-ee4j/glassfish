@@ -96,8 +96,7 @@
 	<target name="implicit">
 		<record name="implicit.output" action="start" />
 		<ant dir="simple-ejb-cdi" target="${implicit-target}" />
-		<!--
-		<ant dir="deployment-option" target="${implicit-target}" /> -->
+		<ant dir="deployment-option" target="${implicit-target}" />
 		<record name="implicit.output" action="stop" />
 	</target>
 

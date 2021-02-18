@@ -31,216 +31,216 @@
     &commonRun;
     &reporting;
     
-    <property name="cdi-target" value="all"/>
+    <property name="cdi-target" value="all" />
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
-            <pathelement location="${env.APS_HOME}/devtests/cdi/lib/ant-contrib-1.0b3.jar"/>
+            <pathelement location="${env.APS_HOME}/devtests/cdi/lib/ant-contrib-1.0b3.jar" />
         </classpath>
     </taskdef>
 
     <target name="pe-all">
-        <antcall target="backup-config-pe"/>
-	<echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/pe-config.properties. The file will be reverted to its original state after the completion of these tests."/>
-	<copy file="${basedir}/config/pe-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
-	<antcall target="create-pe-passwordfile"/>
-	<antcall target="all"/>
-        <antcall target="restore-config-pe"/>
+        <antcall target="backup-config-pe" />
+        <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/pe-config.properties. The file will be reverted to its original state after the completion of these tests." />
+        <copy file="${basedir}/config/pe-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true" />
+        <antcall target="create-pe-passwordfile" />
+        <antcall target="all" />
+        <antcall target="restore-config-pe" />
     </target>
-	
+
     <target name="das-all">
-        <antcall target="backup-config-pe"/>
-        <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/das-config.properties. The file will be reverted to its original state after the completion of these tests."/>
-	<copy file="${basedir}/config/das-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
-	<antcall target="create-ee-passwordfile"/>
-	<antcall target="all"/>
-        <antcall target="restore-config-pe"/>
+        <antcall target="backup-config-pe" />
+        <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/das-config.properties. The file will be reverted to its original state after the completion of these tests." />
+        <copy file="${basedir}/config/das-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true" />
+        <antcall target="create-ee-passwordfile" />
+        <antcall target="all" />
+        <antcall target="restore-config-pe" />
     </target>
 
     <target name="ee-all">
-        <antcall target="backup-config-pe"/>
-        <antcall target="backup-config-ee"/>
-        <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/das-config.properties. The file will be reverted to its original state after the completion of these tests."/>
-	<copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
-	<copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true"/>
-	<antcall target="create-ee-passwordfile"/>
-	<antcall target="ee"/>
-	<antcall target="all"/>
-        <antcall target="restore-config-pe"/>
-        <antcall target="restore-config-ee"/>
+        <antcall target="backup-config-pe" />
+        <antcall target="backup-config-ee" />
+        <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/das-config.properties. The file will be reverted to its original state after the completion of these tests." />
+        <copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true" />
+        <copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true" />
+        <antcall target="create-ee-passwordfile" />
+        <antcall target="ee" />
+        <antcall target="all" />
+        <antcall target="restore-config-pe" />
+        <antcall target="restore-config-ee" />
     </target>
 
     <target name="backup-config-pe" depends="replace-password-with-passwordfile">
-	<copy file="${env.APS_HOME}/config.properties" tofile="${env.APS_HOME}/config.properties.bak" overwrite="true"/>
+        <copy file="${env.APS_HOME}/config.properties" tofile="${env.APS_HOME}/config.properties.bak" overwrite="true" />
     </target>
 
     <target name="restore-config-pe" depends="undo-replace-password-with-passwordfile">
-	<copy file="${env.APS_HOME}/config.properties.bak" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
+        <copy file="${env.APS_HOME}/config.properties.bak" tofile="${env.APS_HOME}/config.properties" overwrite="true" />
     </target>
-		
+
     <target name="backup-config-ee">
-	<copy file="${env.APS_HOME}/eeconfig/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties.bak" overwrite="true"/>
+        <copy file="${env.APS_HOME}/eeconfig/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties.bak" overwrite="true" />
     </target>
 
     <target name="restore-config-ee">
-	<copy file="${env.APS_HOME}/eeconfig/ee-config.properties.bak" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true"/>
+        <copy file="${env.APS_HOME}/eeconfig/ee-config.properties.bak" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true" />
     </target>
-    
+
     <target name="create-pe-passwordfile">
-	<property file="${env.APS_HOME}/config.properties"/>
-	<echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/cdi/config/password.txt"/>
+        <property file="${env.APS_HOME}/config.properties" />
+        <echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/cdi/config/password.txt" />
     </target>
 
     <target name="create-ee-passwordfile">
-	<property file="${env.APS_HOME}/config.properties"/>
-	<echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/cdi/config/password.txt"/>
-	<echo message="AS_ADMIN_MASTERPASSWORD=${master.password}${line.separator}" file="${env.APS_HOME}/devtests/cdi/config/password.txt" append="true"/>
+        <property file="${env.APS_HOME}/config.properties" />
+        <echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/cdi/config/password.txt" />
+        <echo message="AS_ADMIN_MASTERPASSWORD=${master.password}${line.separator}" file="${env.APS_HOME}/devtests/cdi/config/password.txt" append="true" />
     </target>
-    
+
     <target name="replace-password-with-passwordfile">
-	<replace dir="${env.APS_HOME}/config/">
-           <include name="**/*.xml"/>
-	   <replacetoken>--password ${admin.password}</replacetoken>
-	   <replacevalue>--passwordfile ${env.APS_HOME}/devtests/cdi/config/password.txt</replacevalue>
-	</replace>
+        <replace dir="${env.APS_HOME}/config/">
+            <include name="**/*.xml" />
+            <replacetoken>--password ${admin.password}</replacetoken>
+            <replacevalue>--passwordfile ${env.APS_HOME}/devtests/cdi/config/password.txt</replacevalue>
+        </replace>
     </target>
 
     <target name="undo-replace-password-with-passwordfile">
-	<replace dir="${env.APS_HOME}/config/">
-           <include name="**/*.xml"/>
-	   <replacetoken>--passwordfile ${env.APS_HOME}/devtests/cdi/config/password.txt</replacetoken>
-	   <replacevalue>--password ${admin.password}</replacevalue>
-	</replace>
+        <replace dir="${env.APS_HOME}/config/">
+            <include name="**/*.xml" />
+            <replacetoken>--passwordfile ${env.APS_HOME}/devtests/cdi/config/password.txt</replacetoken>
+            <replacevalue>--password ${admin.password}</replacevalue>
+        </replace>
     </target>
-	
+
     <target name="run-test">
         <antcall target="cdi">
-        <param name="cdi-target" value="run-test"/>
+            <param name="cdi-target" value="run-test" />
         </antcall>
     </target>
 
     <target name="all">
         <antcall target="cdi">
-        <param name="cdi-target" value="all"/>
+            <param name="cdi-target" value="all" />
         </antcall>
     </target>
 
     <target name="clean">
         <antcall target="cdi">
-        <param name="cdi-target" value="clean"/>
+            <param name="cdi-target" value="clean" />
         </antcall>
     </target>
 
     <target name="build">
         <antcall target="cdi">
-        <param name="cdi-target" value="build"/>
+            <param name="cdi-target" value="build" />
         </antcall>
     </target>
 
     <target name="setup">
         <antcall target="cdi">
-        <param name="cdi-target" value="setup"/>
+            <param name="cdi-target" value="setup" />
         </antcall>
     </target>
 
     <target name="deploy">
         <antcall target="cdi">
-        <param name="cdi-target" value="deploy"/>
+            <param name="cdi-target" value="deploy" />
         </antcall>
     </target>
 
     <target name="undeploy">
         <antcall target="cdi">
-        <param name="cdi-target" value="undeploy"/>
+            <param name="cdi-target" value="undeploy" />
         </antcall>
     </target>
 
     <target name="unsetup">
         <antcall target="cdi">
-        <param name="cdi-target" value="unsetup"/>
+            <param name="cdi-target" value="unsetup" />
         </antcall>
     </target>
 
     <target name="run">
         <antcall target="cdi">
-        <param name="cdi-target" value="run"/>
+            <param name="cdi-target" value="run" />
         </antcall>
     </target>
 
     <target name="cdi">
         <record name="cdi.output" action="start" />
-		<echo message="@@## Running all CDI developer tests##@@"/>
-        
-        <echo message="Running smoke-tests"/>
-        <ant dir="smoke-tests" target="${cdi-target}"/>
-        
-        <echo message="Running qualifiers"/>
-        <ant dir="qualifiers" target="${cdi-target}"/>
+        <echo message="@@## Running all CDI developer tests##@@" />
+
+        <echo message="Running smoke-tests" />
+        <ant dir="smoke-tests" target="${cdi-target}" />
+
+        <echo message="Running qualifiers" />
+        <ant dir="qualifiers" target="${cdi-target}" />
 
         <!--
-        Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
-        In 1.1.10.Final the test passes.
-        In 2.0 Beta it fails.
-        See email from Jozef 3/4/13
-        <ant dir="alternatives" target="${cdi-target}"/>
-        <ant dir="ambiguous-deps" target="${cdi-target}"/>
+	        Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
+	        In 1.1.10.Final the test passes.
+	        In 2.0 Beta it fails.
+	        See email from Jozef 3/4/13
+	        <ant dir="alternatives" target="${cdi-target}"/>
+	        <ant dir="ambiguous-deps" target="${cdi-target}"/>
         -->
-        
-        <echo message="Running events"/>
-        <ant dir="events" target="${cdi-target}"/>
-        
-        <echo message="Running injection-point"/>
-        <ant dir="injection-point" target="${cdi-target}"/>
-        
-        <echo message="Running interceptors"/>
-        <ant dir="interceptors" target="${cdi-target}"/>
-        
-        <echo message="Running javaee-component-resources"/>
-        <ant dir="javaee-component-resources" target="${cdi-target}"/>
-        
-        <echo message="Running javaee-integration"/>
-        <ant dir="javaee-integration" target="${cdi-target}"/>
-        
-        <echo message="Running managed-beans"/>
-        <ant dir="managed-beans" target="${cdi-target}"/>
-        
-        <echo message="Running portable-extensions"/>
-        <ant dir="portable-extensions" target="${cdi-target}"/>
-        
-        <echo message="Running producer-methods"/>
-        <ant dir="producer-methods" target="${cdi-target}"/>
+
+        <echo message="Running events" />
+        <ant dir="events" target="${cdi-target}" />
+
+        <echo message="Running injection-point" />
+        <ant dir="injection-point" target="${cdi-target}" />
+
+        <echo message="Running interceptors" />
+        <ant dir="interceptors" target="${cdi-target}" />
+
+        <echo message="Running javaee-component-resources" />
+        <ant dir="javaee-component-resources" target="${cdi-target}" />
+
+        <echo message="Running javaee-integration" />
+        <ant dir="javaee-integration" target="${cdi-target}" />
+
+        <echo message="Running managed-beans" />
+        <ant dir="managed-beans" target="${cdi-target}" />
+
+        <echo message="Running portable-extensions" />
+        <ant dir="portable-extensions" target="${cdi-target}" />
+
+        <echo message="Running producer-methods" />
+        <ant dir="producer-methods" target="${cdi-target}" />
 
         <!--
-        Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
-        In 1.1.10.Final the test passes.
-        In 2.0 Beta it fails.
-        See email from Jozef 3/4/13
-        <ant dir="programmatic-lookup" target="${cdi-target}"/>
+	        Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
+	        In 1.1.10.Final the test passes.
+	        In 2.0 Beta it fails.
+	        See email from Jozef 3/4/13
+	        <ant dir="programmatic-lookup" target="${cdi-target}"/>
         -->
 
-        <echo message="Running scopes"/>
-        <ant dir="scopes" target="${cdi-target}"/>
-        
-        <echo message="Running specialization"/>
-        <ant dir="specialization" target="${cdi-target}"/>
-        
-        <echo message="Running stereotypes"/>
-        <ant dir="stereotypes" target="${cdi-target}"/>
-        
-        <echo message="Running transactions"/>
-        <ant dir="transactions" target="${cdi-target}"/>
-        
-        <echo message="Running unproxyable-deps"/>
-        <ant dir="unproxyable-deps" target="${cdi-target}"/>
-        
-        <echo message="Running unsatisfied-deps"/>
-        <ant dir="unsatisfied-deps" target="${cdi-target}"/>
+        <echo message="Running scopes" />
+        <ant dir="scopes" target="${cdi-target}" />
 
-        <echo message="Running implicit"/>
-        <ant dir="implicit" target="${cdi-target}"/>
+        <echo message="Running specialization" />
+        <ant dir="specialization" target="${cdi-target}" />
+
+        <echo message="Running stereotypes" />
+        <ant dir="stereotypes" target="${cdi-target}" />
+
+        <echo message="Running transactions" />
+        <ant dir="transactions" target="${cdi-target}" />
+
+        <echo message="Running unproxyable-deps" />
+        <ant dir="unproxyable-deps" target="${cdi-target}" />
+
+        <echo message="Running unsatisfied-deps" />
+        <ant dir="unsatisfied-deps" target="${cdi-target}" />
+
+        <echo message="Running implicit" />
+        <ant dir="implicit" target="${cdi-target}" />
 
         <if>
-            <equals arg1="${test.embedded.mode}" arg2="true"/>
+            <equals arg1="${test.embedded.mode}" arg2="true" />
             <then>
                 <echo> Excluding testcase directory osgi-cdi for embedded mode</echo>
             </then>
@@ -253,17 +253,17 @@
                 -->
             </else>
         </if>
-        
-        <echo message="***** DONE TESTING - GENERATING REPORT ******"/>
-        
+
+        <echo message="***** DONE TESTING - GENERATING REPORT ******" />
+
         <!-- now generate report -->
-        <antcall target="report"/>
+        <antcall target="report" />
 
         <record name="cdi.output" action="stop" />
     </target>
 
     <target name="usage">
-	<echo> Usage:
+        <echo> Usage:
 		ant cdi (Executes the cdi tests)
 		ant all (Executes all the cdi tests)
 		ant clean (cleans all the cdi tests)
@@ -277,8 +277,8 @@
     </target>
 
     <target name="report-local">
-      <exec executable="sh">
-        <arg value="./resultCount.sh"/>
-      </exec>
+        <exec executable="sh">
+            <arg value="./resultCount.sh" />
+        </exec>
     </target>
 </project>

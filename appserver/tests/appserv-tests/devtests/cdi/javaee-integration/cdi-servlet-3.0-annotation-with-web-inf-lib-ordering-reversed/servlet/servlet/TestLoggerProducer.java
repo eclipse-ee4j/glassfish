@@ -13,13 +13,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+package servlet;
 
 import jakarta.enterprise.inject.Produces;
 
-
 public class TestLoggerProducer {
     @Produces
-    public org.jboss.logging.Logger getLogger(){
+    public org.jboss.logging.Logger getLogger() {
         org.jboss.logging.Logger l = org.jboss.logging.Logger.getLogger(TestLoggerProducer.class);
         System.out.println("getLogger:: " + l);
         return l;

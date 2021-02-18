@@ -19,86 +19,84 @@
 
 <project name="javaee-int-test" default="usage" basedir=".">
 
-    <property name="javaee-int-target" value="all"/>
+    <property name="javaee-int-target" value="all" />
 
     <target name="run-test">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="run-test"/>
+            <param name="javaee-int-target" value="run-test" />
         </antcall>
     </target>
 
     <target name="all">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="all"/>
+            <param name="javaee-int-target" value="all" />
         </antcall>
     </target>
 
     <target name="clean">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="clean"/>
+            <param name="javaee-int-target" value="clean" />
         </antcall>
     </target>
 
     <target name="build">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="build"/>
+            <param name="javaee-int-target" value="build" />
         </antcall>
     </target>
 
     <target name="setup">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="setup"/>
+            <param name="javaee-int-target" value="setup" />
         </antcall>
     </target>
 
     <target name="deploy">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="deploy"/>
+            <param name="javaee-int-target" value="deploy" />
         </antcall>
     </target>
 
     <target name="undeploy">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="undeploy"/>
+            <param name="javaee-int-target" value="undeploy" />
         </antcall>
     </target>
 
     <target name="unsetup">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="unsetup"/>
+            <param name="javaee-int-target" value="unsetup" />
         </antcall>
     </target>
 
     <target name="run">
         <antcall target="javaee-int">
-        <param name="javaee-int-target" value="run"/>
+            <param name="javaee-int-target" value="run" />
         </antcall>
     </target>
 
     <target name="javaee-int">
         <record name="javaee-int.output" action="start" />
-            <ant dir="builtin-beans" target="${javaee-int-target}"/>
-            <ant dir="servlet-context-injection-cdi" target="${javaee-int-target}"/>
-<!-- Test issue: ManagedBean need not have a no-arg constructor in CDI runtimes
-            <ant dir="simple-managed-bean-interceptor-noargconstructor-missing" target="${javaee-int-target}"/>
--->
-            <ant dir="simple-managed-bean-interceptor-nonnull-package" target="${javaee-int-target}"/>
-            <ant dir="no-interface-local-view-proxy-serializable" target="${javaee-int-target}"/>
-            <ant dir="normal-bean-injection-ear" target="${javaee-int-target}"/>
-            <ant dir="programmatic-lookup-ear" target="${javaee-int-target}"/>
-            <ant dir="bean-in-lib-dir-used-by-ejb-in-ear" target="${javaee-int-target}"/>
-            <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-javaee-injection" target="${javaee-int-target}"/>
-            <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering" target="${javaee-int-target}"/>
-            <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering-reversed" target="${javaee-int-target}"/>
-            <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-extension-alternative" target="${javaee-int-target}"/>
-            <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib" target="${javaee-int-target}"/>
-            <ant dir="embedded-resource-adapter-as-bean-archive" target="${javaee-int-target}"/>
+        
+        <ant dir="builtin-beans" target="${javaee-int-target}" />
+        <ant dir="servlet-context-injection-cdi" target="${javaee-int-target}" />
+        <ant dir="simple-managed-bean-interceptor-nonnull-package" target="${javaee-int-target}" />
+        <ant dir="no-interface-local-view-proxy-serializable" target="${javaee-int-target}" />
+        <ant dir="normal-bean-injection-ear" target="${javaee-int-target}" />
+        <ant dir="programmatic-lookup-ear" target="${javaee-int-target}" />
+        <ant dir="bean-in-lib-dir-used-by-ejb-in-ear" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-javaee-injection" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering-reversed" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-extension-alternative" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib" target="${javaee-int-target}" />
+        <ant dir="embedded-resource-adapter-as-bean-archive" target="${javaee-int-target}" />
 
         <record name="javaee-int.output" action="stop" />
     </target>
 
     <target name="usage">
-	<echo> Usage:
+        <echo> Usage:
 		ant all (Executes all the javaee-int tests)
 		ant clean (cleans all the javaee-int tests)
 		ant build (builds all the javaee-int tests)

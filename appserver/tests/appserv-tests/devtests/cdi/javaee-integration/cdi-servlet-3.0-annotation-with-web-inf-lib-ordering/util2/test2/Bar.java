@@ -13,9 +13,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+package test2;
+
+import test1.Foo;
 
 @jakarta.enterprise.context.RequestScoped
-public class Bar{
-@jakarta.inject.Inject
-Foo f;
+public class Bar {
+    @jakarta.inject.Inject
+    Foo f;
 }

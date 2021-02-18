@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,9 @@
 -->
 
 <!DOCTYPE project [
-<!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
-<!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
-<!ENTITY testproperties SYSTEM "./build.properties">
+    <!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
+    <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+    <!ENTITY testproperties SYSTEM "./build.properties">
 ]>
 
 <project name="simple-ejb-cdi" default="usage" basedir=".">
@@ -31,45 +31,43 @@
 
     <target name="all" depends="build,deploy,run,undeploy"/>
 
-    <target name="clean" depends="init-common">
-      <antcall  target="clean-common"/>
-      <delete file="client/Client.java"/>
-    </target>
+	<target name="clean" depends="init-common">
+		<antcall  target="clean-common"/>
+		<delete file="client/Client.java"/>
+	</target>
 
-    <target name="compile" depends="clean">
-        <copy file="client/Client.java.token" tofile="client/Client.java"/>
-        <replace file="client/Client.java" token="@ORB_PORT@" value="${orb.port}"/>
+	<target name="compile" depends="clean">
+		<copy file="client/Client.java.token" tofile="client/Client.java"/>
+		<replace file="client/Client.java" token="@ORB_PORT@" value="${orb.port}"/>
 
-        <antcall target="compile-common">
-            <param name="src" value="ejb"/>
-        </antcall>
-        <antcall target="compile-common">
-            <param name="src" value="client"/>
-        </antcall>
-    </target>
+		<antcall target="compile-common">
+			<param name="src" value="ejb"/>
+		</antcall>
+		<antcall target="compile-common">
+			<param name="src" value="client"/>
+		</antcall>
+	</target>
 
-    <target name="build" depends="compile">
-        <antcall target="build-ear-common">
-            <param name="ejbjar.classes"
-                   value="**/Sless*.class, **/ImplicitTestBean.class"/>
-            <param name="appclientjar.classes"
-                   value="**/Client.class,**/Sless.class"/>
-        </antcall>
-    </target>
+	<target name="build" depends="compile">
+		<antcall target="build-ear-common">
+			<param name="ejbjar.classes" value="**/Sless*.class, **/Foo*.class, **/ImplicitTestBean.class"/>
+			<param name="appclientjar.classes" value="**/Client.class, **/Foo*.class, **/Sless.class"/>
+		</antcall>
+	</target>
 
-    <target name="deploy" depends="init-common">
-        <antcall target="deploy-common"/>
-    </target>
+	<target name="deploy" depends="init-common">
+		<antcall target="deploy-common"/>
+	</target>
 
-    <target name="run" depends="init-common">
-        <antcall target="runclient-common"/>
-    </target>
+	<target name="run" depends="init-common">
+		<antcall target="runclient-common"/>
+	</target>
 
-    <target name="undeploy" depends="init-common">
-        <antcall target="undeploy-common"/>
-    </target>
+	<target name="undeploy" depends="init-common">
+		<antcall target="undeploy-common"/>
+	</target>
 
-    <target name="usage">
-        <antcall target="usage-common"/>
-    </target>
+	<target name="usage">
+		<antcall target="usage-common"/>
+	</target>
 </project>

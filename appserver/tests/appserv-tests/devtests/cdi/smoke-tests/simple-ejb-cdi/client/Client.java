@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,11 +13,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-import test.*;
+
+package com.sun.s1asdev.cdi.ejb.hello.session.client;
+
 import java.io.*;
 import java.util.*;
 import jakarta.ejb.EJB;
 import javax.naming.InitialContext;
+import com.sun.s1asdev.cdi.ejb.hello.session.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
@@ -25,37 +28,45 @@ public class Client {
     private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-        stat.addDescription("simple-ejb-implicit-cdi");
+        stat.addDescription("simple-ejb-cdi");
         Client client = new Client(args);
         client.doTest();
-        stat.printSummary("simple-ejb-implicit-cdi");
+        stat.printSummary("simple-ejb-cdi");
     }
 
     public Client(String[] args) {
     }
 
-    @EJB(mappedName = "test.Foo#test.Foo")
-    private static Foo sless;
+    private static @EJB Sful sful;
+
+    private static @EJB(mappedName = "com.sun.s1asdev.cdi.ejb.hello.session.Sless") Sless sless;
 
     //
-    // NOTE: Token @ORB_PORT@ will be replaced in @EJB annotations below
+    // NOTE: Token 3700 will be replaced in @EJB annotations below
     // with the value of the port from config.properties during the build
     //
-    @EJB(mappedName = "corbaname:iiop:localhost:@ORB_PORT@#test.Foo") 
-    private static Foo sless2;
+    private static @EJB(mappedName = "corbaname:iiop:localhost:3700#com.sun.s1asdev.cdi.ejb.hello.session.Sless") Sless sless2;
 
-    @EJB(mappedName = "corbaname:iiop:localhost:@ORB_PORT@#java:global/simple-ejb-implicit-cdiApp/simple-ejb-implicit-cdi-ejb/SlessEJB!test.Foo") 
-    private static Foo sless3;
+    private static @EJB(mappedName = "corbaname:iiop:localhost:3700#java:global/simple-ejb-cdiApp/simple-ejb-cdi-ejb/SlessEJB!com.sun.s1asdev.cdi.ejb.hello.session.Sless") Sless sless3;
+
+    private static @EJB(mappedName = "corbaname:iiop:localhost:3700#java:global/simple-ejb-cdiApp/simple-ejb-cdi-ejb/SlessEJB") Sless sless4;
 
     public void doTest() {
 
         try {
-            System.out.println("Creating InitialContext()");
-            InitialContext initialContext = new InitialContext();
-            org.omg.CORBA.ORB orb = (org.omg.CORBA.ORB) initialContext.lookup("java:comp/ORB");
-            Foo sless = (Foo) initialContext.lookup("test.Foo#test.Foo");
 
-            String response = sless.hello();
+            System.out.println("Creating InitialContext()");
+            InitialContext ic = new InitialContext();
+            org.omg.CORBA.ORB orb = (org.omg.CORBA.ORB) ic.lookup("java:comp/ORB");
+            Sful sful = (Sful) ic.lookup("com.sun.s1asdev.cdi.ejb.hello.session.Sful");
+            Sless sless = (Sless) ic.lookup("com.sun.s1asdev.cdi.ejb.hello.session.Sless");
+
+            String response = null;
+
+            response = sful.hello();
+            testResponse("invoking stateful", response);
+
+            response = sless.hello();
             testResponse("invoking stateless", response);
 
             response = sless2.hello();
@@ -69,6 +80,8 @@ public class Client {
 
             response = sless3.hello();
             testResponse("invoking stateless3", response);
+            response = sless4.hello();
+            testResponse("invoking stateless4", response);
 
             System.out.println("test complete");
 
@@ -83,11 +96,10 @@ public class Client {
     }
 
     private void testResponse(String testDescription, String response) {
-        if (response.equals("hello")) {
+        if (response.equals("hello"))
             stat.addStatus(testDescription, stat.PASS);
-        } else {
+        else
             stat.addStatus(testDescription, stat.FAIL);
-        }
     }
 
 }

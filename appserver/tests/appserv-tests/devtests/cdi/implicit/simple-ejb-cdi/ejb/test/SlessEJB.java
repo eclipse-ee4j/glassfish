@@ -14,10 +14,27 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import jakarta.enterprise.context.RequestScoped;
+package test;
 
-//Simple TestBean to test CDI.
-@RequestScoped
-public class ImplicitTestBean {
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+
+import test.ImplicitTestBean;
+
+
+@Stateless
+public class SlessEJB implements Foo {
+
+    @Inject
+    ImplicitTestBean testBean; // Field Injection
+
+    public String hello() {
+        System.out.println("In SlessEJB:hello()");
+        if (testBean != null) {
+            return "hello";
+        }
+        
+        return null;
+    }
 
 }

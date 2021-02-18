@@ -71,8 +71,15 @@ def generateStage(job) {
                               timeout(time: 2, unit: 'HOURS') {
                                 sh """
                                   export JAVA_HOME=/usr/lib/jvm/jdk11
-                                  export PATH=${JAVA_HOME}/bin:${PATH}
+                                  JAVA_HOME=/usr/lib/jvm/jdk11
+                                  export PATH=/usr/lib/jvm/jdk11/bin:${PATH}
+                                  PATH=/usr/lib/jvm/jdk11/bin:${PATH}
                                   export CLASSPATH=$WORKSPACE/glassfish6/javadb
+                                  
+                                  echo ${JAVA_HOME}
+                                  
+                                  java -version
+                                  
                                   ./appserver/tests/gftest.sh run_test ${job}
                                 """
                               }

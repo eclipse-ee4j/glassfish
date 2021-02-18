@@ -14,9 +14,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import jakarta.ejb.Remote;
+package test;
 
-@Remote
-public interface Sless {
-    public String hello();
+import jakarta.enterprise.context.RequestScoped;
+
+//Simple TestBean to test CDI.
+@RequestScoped
+public class ImplicitTestBean {
+
 }

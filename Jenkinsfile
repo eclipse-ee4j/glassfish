@@ -230,9 +230,6 @@ spec:
               export JAVA_HOME=/usr/lib/jvm/jdk11
               export PATH=${JAVA_HOME}/bin:${PATH}
               
-              #Flush cached pfl
-              rm -rf /home/jenkins/.m2/repository/org/glassfish/pfl
-              
               bash -xe ./gfbuild.sh build_re_dev
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'

@@ -176,6 +176,9 @@
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
         <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
       </java-config>
       <network-config>
         <protocols>
@@ -324,6 +327,9 @@
              <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
              <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
          </java-config>
          <availability-service/>
          <network-config>

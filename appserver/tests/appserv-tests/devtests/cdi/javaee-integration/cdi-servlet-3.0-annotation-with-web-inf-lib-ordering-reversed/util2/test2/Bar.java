@@ -13,16 +13,15 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+package test2;
 
-import jakarta.enterprise.inject.Produces;
+import test1.Foo;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
-public class TestLoggerProducer {
-    @Produces
-    public org.jboss.logging.Logger getLogger(){
-        org.jboss.logging.Logger l = org.jboss.logging.Logger.getLogger(TestLoggerProducer.class);
-        System.out.println("getLogger:: " + l);
-        return l;
-    }
-
+@RequestScoped
+public class Bar {
+    @Inject
+    Foo f;
 }

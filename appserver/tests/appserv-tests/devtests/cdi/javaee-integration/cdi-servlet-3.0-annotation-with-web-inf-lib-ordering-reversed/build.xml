@@ -18,10 +18,10 @@
 -->
 
 <!DOCTYPE project [
-<!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
-<!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
-<!ENTITY run SYSTEM "./../../../../config/run.xml">
-<!ENTITY testproperties SYSTEM "./build.properties">
+    <!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
+    <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+    <!ENTITY run SYSTEM "./../../../../config/run.xml">
+    <!ENTITY testproperties SYSTEM "./build.properties">
 ]>
 
 <project name="webcontainer_unittest" default="all" basedir=".">
@@ -31,82 +31,80 @@
     &testproperties;
     &run;
 
-    <target name="all" depends="build,deploy,run,undeploy"/>
+    <target name="all" depends="build,deploy,run,undeploy" />
 
     <target name="clean" depends="init-common">
-        <antcall target="clean-common"/>
+        <antcall target="clean-common" />
         <delete>
-            <fileset dir="." includes="*.class"/>
+            <fileset dir="." includes="*.class" />
         </delete>
-        <delete file="lib/alpha.jar"/>
-        <delete file="lib/bravo.jar"/>
+        <delete file="lib/alpha.jar" />
+        <delete file="lib/bravo.jar" />
     </target>
-       
+
     <target name="compile" depends="clean">
         <!-- create WEB-INF/lib/bravo.jar -->
-        <mkdir dir="${build.classes.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/>
-        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="1.6"/>
-        <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml"/>
+        <mkdir dir="${build.classes.dir}" />
+        <mkdir dir="${build.classes.dir}/META-INF" />
+        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11" />
+        <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml" />
         <jar destfile="lib/bravo.jar">
-            <fileset dir="${build.classes.dir}"/>
+            <fileset dir="${build.classes.dir}" />
         </jar>
-        <delete dir="${build.classes.dir}"/>
+        <delete dir="${build.classes.dir}" />
 
-         <!-- create WEB-INF/lib/alpha.jar -->
-        <mkdir dir="${build.classes.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/>
-        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="1.6"/>
-        <javac srcdir="util2" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="1.6"/>
-        <delete file="${build.classes.dir}/Foo.class"/>
-        <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml"/>
+        <!-- create WEB-INF/lib/alpha.jar -->
+        <mkdir dir="${build.classes.dir}" />
+        <mkdir dir="${build.classes.dir}/META-INF" />
+        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11" />
+        <javac srcdir="util2" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11" />
+        <delete file="${build.classes.dir}/test1/Foo.class" />
+        <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml" />
         <jar destfile="lib/alpha.jar">
-            <fileset dir="${build.classes.dir}"/>
+            <fileset dir="${build.classes.dir}" />
         </jar>
-        <delete dir="${build.classes.dir}"/>
+        <delete dir="${build.classes.dir}" />
 
-        <!-- compile test servlet -->     
-        <mkdir dir="${build.classes.dir}"/>
-        <echo message="common.xml: Compiling test source files" level="verbose"/>
-        <mkdir dir="servlet"/>
-        <javac srcdir="servlet" destdir="${build.classes.dir}" classpath="${s1astest.classpath}:lib/alpha.jar:lib/bravo.jar" debug="on" failonerror="true"/>
+        <!-- compile test servlet -->
+        <mkdir dir="${build.classes.dir}" />
+        <echo message="common.xml: Compiling test source files" level="verbose" />
+        <mkdir dir="servlet" />
+        <javac srcdir="servlet" destdir="${build.classes.dir}" classpath="${s1astest.classpath}:lib/alpha.jar:lib/bravo.jar" debug="on" failonerror="true" />
     </target>
 
     <target name="build" depends="compile">
-       <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes" />
         <antcall target="webclient-war-common">
-            <param name="hasWebclient" value="yes"/>
-            <param name="webclient.war.classes" value="**/*.class"/> 
+            <param name="hasWebclient" value="yes" />
+            <param name="webclient.war.classes" value="**/*.class" />
         </antcall>
 
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
-               includes="WebTest.java"/>
-
-    </target> 
+        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar" includes="WebTest.java" />
+    </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="deploy" depends="init-common">
-        <antcall target="deploy-war-common"/>
+        <antcall target="deploy-war-common" />
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
-          <arg value="${http.host}"/>
-          <arg value="${http.port}"/>
-          <arg value="${contextroot}"/>
-          <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-           <pathelement location="."/>
-         </classpath>
+            <arg value="${http.host}" />
+            <arg value="${http.port}" />
+            <arg value="${contextroot}" />
+            <classpath>
+                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar" />
+                <pathelement location="." />
+            </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
-        <antcall target="undeploy-war-common"/>
-    </target>   
+        <antcall target="undeploy-war-common" />
+    </target>
 
     <target name="usage">
-        <antcall target="usage-common"/>
+        <antcall target="usage-common" />
     </target>
 </project>

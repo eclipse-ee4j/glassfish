@@ -14,6 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+package servlet;
+
+import test1.Foo;
+import test2.Bar;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
@@ -32,63 +37,80 @@ import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.util.AnnotationLiteral;
 import javax.naming.InitialContext;
 
-@WebServlet(name="mytest",
-        urlPatterns={"/myurl"},
-        initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
+@WebServlet(
+    name = "mytest", 
+    urlPatterns = { "/myurl" }, 
+    initParams = { 
+        @WebInitParam(name = "n1", value = "v1"),
+        @WebInitParam(name = "n2", value = "v2") })
 public class TestServlet extends HttpServlet {
-    @Inject TestBean tb;
-    @Inject BeanManager bm;
+    @Inject
+    TestBean tb;
+    
+    @Inject
+    BeanManager bm;
 
-    @Inject Foo f; //from WEB-INF/lib/alpha.jar
-    @Inject Bar b; //from WEB-INF/lib/bravo.jar
-
+    @Inject
+    Foo f; // from WEB-INF/lib/alpha.jar
+    
+    @Inject
+    Bar b; // from WEB-INF/lib/bravo.jar
 
     BeanManager bm1;
-    
-    @Inject 
+
+    @Inject
     private transient org.jboss.logging.Logger log;
 
-    public void service(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0. ");
-        String msg = "n1=" + getInitParameter("n1") +
-            ", n2=" + getInitParameter("n2");
-        
-        //Bean Injection
-        if (tb == null) msg += "Bean injection into Servlet failed";
+        String msg = "n1=" + getInitParameter("n1") + ", n2=" + getInitParameter("n2");
 
-        if (f == null) msg += "Bean injection of a TestBean(foo) in WEB-INF/lib/alpha.jar into Servlet failed";
+        // Bean Injection
+        if (tb == null)
+            msg += "Bean injection into Servlet failed";
+
+        if (f == null)
+            msg += "Bean injection of a TestBean(foo) in WEB-INF/lib/alpha.jar into Servlet failed";
         System.out.println("Test Bean foo from WEB-INF/lib/alpha.jar=" + f);
 
-        if (b == null) msg += "Bean injection of a TestBean(bar) in WEB-INF/lib/bravo.jar into Servlet failed";
+        if (b == null)
+            msg += "Bean injection of a TestBean(bar) in WEB-INF/lib/bravo.jar into Servlet failed";
         System.out.println("Test Bean foo from WEB-INF/lib/bravo.jar=" + b);
 
-        //BeanManager Injection
+        // BeanManager Injection
         System.out.println("BeanManager is " + bm);
-        if (bm == null) msg += "BeanManager Injection via @Inject failed";
+        if (bm == null)
+            msg += "BeanManager Injection via @Inject failed";
 
         try {
-            bm1 = (BeanManager)((new InitialContext()).lookup("java:comp/BeanManager"));
+            bm1 = (BeanManager) ((new InitialContext()).lookup("java:comp/BeanManager"));
             System.out.println("BeanManager via lookup is " + bm1);
         } catch (Exception ex) {
             ex.printStackTrace();
             msg += "BeanManager Injection via component environment lookup failed";
         }
-        if (bm1 == null) msg += "BeanManager Injection via component environment lookup failed";
+        if (bm1 == null)
+            msg += "BeanManager Injection via component environment lookup failed";
 
-        //Check if Beans in WAR(WEB-INF/classes) and WEB-INF/lib/*.jar are visible
-        //via BeanManager of WAR
-        Set warBeans = bm.getBeans(TestBean.class,new AnnotationLiteral<Any>() {});
-        if (warBeans.size() != 1) msg += "TestBean in WAR is not available via the WAR BeanManager";
-        
-        Set webinfLibBeans = bm.getBeans(Foo.class,new AnnotationLiteral<Any>() {});
-        if (webinfLibBeans.size() != 1) msg += "TestBean Foo in WEB-INF/lib/alpha.jar is not available via the WAR BeanManager";
+        // Check if Beans in WAR(WEB-INF/classes) and WEB-INF/lib/*.jar are visible
+        // via BeanManager of WAR
+        Set warBeans = bm.getBeans(TestBean.class, new AnnotationLiteral<Any>() {
+        });
+        if (warBeans.size() != 1)
+            msg += "TestBean in WAR is not available via the WAR BeanManager";
+
+        Set webinfLibBeans = bm.getBeans(Foo.class, new AnnotationLiteral<Any>() {
+        });
+        if (webinfLibBeans.size() != 1)
+            msg += "TestBean Foo in WEB-INF/lib/alpha.jar is not available via the WAR BeanManager";
         System.out.println("Test Bean Foo from WEB-INF/lib/alpha.jar via BeanManager:" + webinfLibBeans);
-        
-        webinfLibBeans = bm.getBeans(Bar.class,new AnnotationLiteral<Any>() {});
-        if (webinfLibBeans.size() != 1) msg += "TestBean Bar in WEB-INF/lib/bravo.jar is not available via the WAR BeanManager";
+
+        webinfLibBeans = bm.getBeans(Bar.class, new AnnotationLiteral<Any>() {
+        });
+        if (webinfLibBeans.size() != 1)
+            msg += "TestBean Bar in WEB-INF/lib/bravo.jar is not available via the WAR BeanManager";
         System.out.println("Test Bean Bar from WEB-INF/lib/bravo.jar via BeanManager:" + webinfLibBeans);
 
         writer.write("initParams: " + msg + "\n");

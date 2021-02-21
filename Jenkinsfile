@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,7 @@ env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
 // list of test ids
 def jobs = [
-  
+  "cdi_all"
 ]
 
 
@@ -71,8 +71,15 @@ def generateStage(job) {
                               timeout(time: 2, unit: 'HOURS') {
                                 sh """
                                   export JAVA_HOME=/usr/lib/jvm/jdk11
-                                  export PATH=${JAVA_HOME}/bin:${PATH}
+                                  JAVA_HOME=/usr/lib/jvm/jdk11
+                                  export PATH=/usr/lib/jvm/jdk11/bin:${PATH}
+                                  PATH=/usr/lib/jvm/jdk11/bin:${PATH}
                                   export CLASSPATH=$WORKSPACE/glassfish6/javadb
+                                  
+                                  echo ${JAVA_HOME}
+                                  
+                                  java -version
+                                  
                                   ./appserver/tests/gftest.sh run_test ${job}
                                 """
                               }

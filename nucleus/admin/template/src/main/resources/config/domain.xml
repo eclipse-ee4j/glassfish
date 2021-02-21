@@ -171,8 +171,6 @@
         <jvm-options>-Dfelix.fileinstall.disableConfigSave=false</jvm-options>
         <!-- End of OSGi bundle configurations -->
         <jvm-options>-XX:NewRatio=2</jvm-options>
-        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.annotation-api.jar</jvm-options>
-        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.xml.bind-api.jar</jvm-options>
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
         <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
@@ -322,8 +320,6 @@
              -->
              <jvm-options>-Dfelix.fileinstall.disableConfigSave=false</jvm-options>
              <!-- End of OSGi bundle configurations -->
-             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.annotation-api.jar</jvm-options>
-             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.xml.bind-api.jar</jvm-options>
              <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
              <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>

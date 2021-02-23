@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-IMAGE_TAG = jdk-8.181
+IMAGE_TAG = tini-jdk-11.0.10
 
 .PHONY: clean docker-clean docker-build docker-push
 

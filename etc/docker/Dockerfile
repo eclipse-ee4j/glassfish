@@ -4,14 +4,11 @@ ADD ./entrypoint.sh /etc/
 
 #
 # The JDK was got from the following releases:
-#  -JDK8: https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries/
-#         releases/download/jdk8u252-b09/OpenJDK8U-jdk_x64_linux_8u252b09.tar.gz
 #  -JDK11: https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/
-#          releases/download/jdk-11.0.7%2B10/OpenJDK11U-jdk_x64_linux_11.0.7_10.tar.gz
+#          releases/download/jdk-11.0.10%2B9/OpenJDK11U-jdk_x64_linux_11.0.10_9.tar.gz
 # Since the JDK is a very large file, download and add the file manually.
 #
-ADD ./openjdk-8u252-b09 /usr/lib/jvm/jdk8
-ADD ./openjdk-11.0.7+10 /usr/lib/jvm/jdk11
+ADD ./openjdk-11.0.10_9 /usr/lib/jvm/jdk11
 
 RUN chmod +x /etc/entrypoint.sh && \
     #
@@ -22,9 +19,8 @@ RUN chmod +x /etc/entrypoint.sh && \
     #
     # setup jdk
     #
-    cp -Lf /etc/pki/java/cacerts /usr/lib/jvm/jdk8/jre/lib/security/cacerts && \
-    ln -s /usr/lib/jvm/jdk8/bin/* /bin/ && \
     cp -Lf /etc/pki/java/cacerts /usr/lib/jvm/jdk11/lib/security/cacerts && \
+    ln -s /usr/lib/jvm/jdk11/bin/* /bin/ && \
     #
     # install maven
     #
@@ -56,7 +52,7 @@ RUN chmod +x /etc/entrypoint.sh && \
     chmod 777 -R /home/jenkins/.m2/repository/org/glassfish/main && \
     chown -R jenkins:root /home/jenkins
 
-ENV JAVA_HOME /usr/lib/jvm/jdk8
+ENV JAVA_HOME /usr/lib/jvm/jdk11
 ENV MAVEN_HOME /usr/share/maven
 ENV M2_HOME /usr/share/maven
 ENV ANT_HOME /usr/share/ant

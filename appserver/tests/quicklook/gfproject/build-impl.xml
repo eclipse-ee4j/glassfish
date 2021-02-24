@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,18 +49,10 @@
             <include name="**/glassfish-api.jar"/>
             <include name="**/amx-core.jar"/>
             <include name="**/amx-javaee.jar"/>
-            <include name="**/gf-client.jar"/>
-            <include name="**/jaxws-api.jar"/>
-            <include name="**/webservices-osgi.jar"/>
-            <include name="**/webservices-rt.jar"/>
-            <include name="**/jaxb-osgi.jar"/>
-            <include name="**/jakarta.activation-api.jar"/>
-        </fileset>
-        <fileset dir="${glassfish.home}/modules/endorsed">
-            <include name="**/webservices-api-osgi.jar"/>
-            <include name="**/jakarta.xml.bind-api.jar"/>
-            <include name="**/jakarta.annotation-api.jar"/>
             <include name="**/gf-client-module.jar"/>
+        </fileset>
+        <fileset dir="${glassfish.home}/lib">
+            <include name="**/resolver.jar"/>
         </fileset>
 	<fileset dir="${maven.repo.local}/com/beust/jcommander">
 	    <include name="**/1.72/jcommander-1.72.jar"/>

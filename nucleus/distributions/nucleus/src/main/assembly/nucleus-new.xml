@@ -145,7 +145,6 @@
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>cluster-cli.jar</exclude>
-                <exclude>jakarta.xml.bind-api.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/modules</outputDirectory>
         </fileSet>

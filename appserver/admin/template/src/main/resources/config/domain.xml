@@ -207,7 +207,9 @@
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/resolver.jar</jvm-options>
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.xml.bind-api.jar</jvm-options>
-        <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
+        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jaxb-osgi.jar</jvm-options>
+        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/modules/jakarta.activation.jar</jvm-options>
+                <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -63,7 +63,9 @@ class SummaryReporter {
     private String getVMInfo(final RuntimeMXBean rt) {
         final StringBuilderNewLineAppender sb = new StringBuilderNewLineAppender(new StringBuilder());
         sb.append(sm.getString("rt.info", rt.getName()));
-        sb.append(sm.getString("rt.bcp", rt.getBootClassPath()));
+        if (rt.isBootClassPathSupported()) {
+            sb.append(sm.getString("rt.bcp", rt.getBootClassPath()));
+        }
         sb.append(sm.getString("rt.cp", rt.getClassPath()));
         sb.append(sm.getString("rt.libpath", rt.getLibraryPath()));
         sb.append(sm.getString("rt.nvv", rt.getVmName(), rt.getVmVendor(), rt.getVmVersion()));

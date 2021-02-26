@@ -22,7 +22,8 @@ env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 // list of test ids
 def jobs = [
   "cdi_all",
-  "ql_gf_full_profile_all"
+  "ql_gf_full_profile_all",
+  "ql_gf_web_profile_all"
 ]
 
 

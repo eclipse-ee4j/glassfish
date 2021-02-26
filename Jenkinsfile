@@ -178,7 +178,7 @@ spec:
       - name: "MAVEN_OPTS"
         value: "-Duser.home=/home/jenkins"
       - name: "MVN_EXTRA"
-        value: "--batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -DskipTests"
+        value: "--batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
     resources:
       limits:
         memory: "7Gi"

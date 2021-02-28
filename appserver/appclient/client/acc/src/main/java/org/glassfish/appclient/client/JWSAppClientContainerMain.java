@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,9 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.SwingUtilities;
+
 import org.glassfish.appclient.client.acc.UserError;
 import org.glassfish.appclient.client.jws.boot.ErrorDisplayDialog;
 import org.glassfish.appclient.client.jws.boot.LaunchSecurityHelper;
@@ -44,25 +46,22 @@ public class JWSAppClientContainerMain {
     public static final String SECURITY_CONFIG_PATH_PLACEHOLDER = "security.config.path";
 
     private static final Logger logger = Logger.getLogger(JWSAppClientContainerMain.class.getName());
-    
+
     private static final String ENDORSED_PACKAGE_PROPERTY_NAME = "endorsed-standard-packages";
 
     /** localizable strings */
-    private static final ResourceBundle rb =
-        ResourceBundle.getBundle(
-            JWSAppClientContainerMain.class.getPackage().getName().replaceAll("\\.", "/") + ".LocalStrings");
+    private static final ResourceBundle rb = ResourceBundle
+            .getBundle(JWSAppClientContainerMain.class.getPackage().getName().replaceAll("\\.", "/") + ".LocalStrings");
 
     /** unpublished command-line argument conveying jwsacc information */
-    private static final Map<JWSACCSetting,String> jwsaccSettings =
-            new EnumMap<JWSACCSetting,String>(JWSACCSetting.class);
+    private static final Map<JWSACCSetting, String> jwsaccSettings = new EnumMap<JWSACCSetting, String>(JWSACCSetting.class);
 
     private static final String JWSACC_PROPERTY_NAME_PREFIX = "javaws.acc.";
 
     /**
-     * request to exit the JVM upon return from the client - should be set (via
-     * the -jwsacc command-line argument value) only for
-     * command-line clients; otherwise it can prematurely end the JVM when
-     * the GUI and other user work is continuing
+     * request to exit the JVM upon return from the client - should be set (via the -jwsacc command-line argument value)
+     * only for command-line clients; otherwise it can prematurely end the JVM when the GUI and other user work is
+     * continuing
      */
     private static final String JWSACC_EXIT_AFTER_RETURN = "exitAfterReturn";
 
@@ -82,8 +81,6 @@ public class JWSAppClientContainerMain {
         return exitManager != null;
     }
 
-
-
     /**
      * @param args the command line arguments
      */
@@ -92,18 +89,16 @@ public class JWSAppClientContainerMain {
         try {
             now = System.currentTimeMillis();
             /*
-             * Process any arguments (conveyed as properties in the JNLP)
-             * intended for the JWS-aware ACC.
+             * Process any arguments (conveyed as properties in the JNLP) intended for the JWS-aware ACC.
              */
             processJWSArgs();
 
             final String agentArgsText = System.getProperty("agent.args");
             LaunchSecurityHelper.setPermissions();
-            
+
             /*
-             * Prevent the Java Web Start class loader from delegating to its
-             * parent when resolving classes and resources that should come from
-             * the GlassFish-provided endorsed JARs.
+             * Prevent the Java Web Start class loader from delegating to its parent when resolving classes and resources that
+             * should come from the GlassFish-provided endorsed JARs.
              */
             insertMaskingLoader();
 
@@ -114,7 +109,7 @@ public class JWSAppClientContainerMain {
                 runner.run();
             }
         } catch (Throwable thr) {
-            if (isTestMode()){
+            if (isTestMode()) {
                 exitManager.recordFailure(thr);
             }
             throw new RuntimeException(rb.getString("jwsacc.errorLaunch"), thr);
@@ -123,17 +118,14 @@ public class JWSAppClientContainerMain {
     }
 
     /*
-     * Launches the client.  This is in its own class so we can either
-     * run it directly or run it on the Swing EDT, if requested by
-     * a jwsacc command line argument.
+     * Launches the client. This is in its own class so we can either run it directly or run it on the Swing EDT, if
+     * requested by a jwsacc command line argument.
      */
     private static class ClientRunner implements Runnable {
         private final String agentArgsText;
         private final String[] args;
 
-        private ClientRunner(
-                final String agentArgsText,
-                final String[] args) {
+        private ClientRunner(final String agentArgsText, final String[] args) {
             this.agentArgsText = agentArgsText;
             this.args = args;
         }
@@ -143,10 +135,9 @@ public class JWSAppClientContainerMain {
             try {
                 AppClientFacade.prepareACC(agentArgsText, null);
                 AppClientFacade.launch(args);
-                logger.log(Level.FINE, "JWSAppClientContainer finished after {0} ms",
-                    (System.currentTimeMillis() - now));
+                logger.log(Level.FINE, "JWSAppClientContainer finished after {0} ms", (System.currentTimeMillis() - now));
             } catch (UserError ue) {
-                if ( ! isTestMode()) {
+                if (!isTestMode()) {
                     ErrorDisplayDialog.showUserError(ue, rb);
                 } else {
                     throw new RuntimeException(ue);
@@ -165,20 +156,16 @@ public class JWSAppClientContainerMain {
 
         final ClassLoader jwsLoader = Thread.currentThread().getContextClassLoader();
 
-        final ClassLoader mcl = getMaskingClassLoader(
-                jwsLoader.getParent(), props);
+        final ClassLoader mcl = getMaskingClassLoader(jwsLoader.getParent(), props);
 
         final Field jwsLoaderParentField = ClassLoader.class.getDeclaredField("parent");
         jwsLoaderParentField.setAccessible(true);
         jwsLoaderParentField.set(jwsLoader, mcl);
     }
 
+    private static ClassLoader getMaskingClassLoader(final ClassLoader parent, final Properties props) {
 
-    private static ClassLoader getMaskingClassLoader(final ClassLoader parent,
-            final Properties props) {
-
-        final Collection<String> endorsedPackagesToMask = prepareEndorsedPackages(
-                props.getProperty(ENDORSED_PACKAGE_PROPERTY_NAME));
+        final Collection<String> endorsedPackagesToMask = prepareEndorsedPackages(props.getProperty(ENDORSED_PACKAGE_PROPERTY_NAME));
         return new JWSACCMaskingClassLoader(parent, endorsedPackagesToMask);
     }
 
@@ -192,22 +179,20 @@ public class JWSAppClientContainerMain {
         }
         return result;
     }
-    
+
     /**
-     *Interpret the JWSACC arguments (if any) supplied on the command line.
-     *@param args the JWSACC arguments
+     * Interpret the JWSACC arguments (if any) supplied on the command line.
+     * 
+     * @param args the JWSACC arguments
      */
     private static void processJWSArgs() {
-        
+
         String propValue;
         for (int i = 0; (propValue = System.getProperty(JWSACC_PROPERTY_NAME_PREFIX + i)) != null; i++) {
             final int equals = propValue.indexOf('=');
-            final JWSACCSetting setting = JWSACCSetting.find(
-                    (equals == -1 ?
-                        propValue :
-                        propValue.substring(0, equals)));
+            final JWSACCSetting setting = JWSACCSetting.find((equals == -1 ? propValue : propValue.substring(0, equals)));
             if (setting != null) {
-                final String settingValue = (equals == -1 ? "" : propValue.substring(equals+1));
+                final String settingValue = (equals == -1 ? "" : propValue.substring(equals + 1));
                 jwsaccSettings.put(setting, settingValue);
                 setting.run(settingValue);
             }
@@ -227,17 +212,14 @@ public class JWSAppClientContainerMain {
 //    }
 
     private enum JWSACCSetting {
-        EXIT_AFTER_RETURN(JWSACC_EXIT_AFTER_RETURN),
-        FORCE_ERROR(JWSACC_FORCE_ERROR),
-        RUN_ON_SWING_THREAD(JWSACC_RUN_ON_SWING_THREAD),
-        TEST_OUTPUT(JWSACC_TEST_OUTPUT,
-            new Runner() {
-                
+        EXIT_AFTER_RETURN(JWSACC_EXIT_AFTER_RETURN), FORCE_ERROR(JWSACC_FORCE_ERROR), RUN_ON_SWING_THREAD(JWSACC_RUN_ON_SWING_THREAD),
+        TEST_OUTPUT(JWSACC_TEST_OUTPUT, new Runner() {
+
             @Override
             public void run(final String testOutputFile) {
                 prepareTestMode(testOutputFile);
             }
-                
+
         });
 
         private static class Runner {
@@ -252,8 +234,7 @@ public class JWSAppClientContainerMain {
             this(propertyNameSuffix, new Runner());
         }
 
-        private JWSACCSetting(final String propertyNameSuffix,
-                final Runner action) {
+        private JWSACCSetting(final String propertyNameSuffix, final Runner action) {
             this.propertyNameSuffix = propertyNameSuffix;
             this.action = action;
         }
@@ -277,8 +258,7 @@ public class JWSAppClientContainerMain {
     private static void prepareTestMode(final String testReportLocation) {
         exitManager = new ExitManager(testReportLocation);
         try {
-            final SplitPrintStream splitPS =
-                    new SplitPrintStream(System.out, new File(testReportLocation));
+            final SplitPrintStream splitPS = new SplitPrintStream(System.out, new File(testReportLocation));
             System.setOut(splitPS);
             logger.log(Level.FINE, "Also sending output to {0}", testReportLocation);
         } catch (FileNotFoundException ex) {
@@ -293,8 +273,7 @@ public class JWSAppClientContainerMain {
 
         private final PrintStream originalPS;
 
-        public SplitPrintStream(final PrintStream originalPS,
-                final File newOutputFile) throws FileNotFoundException {
+        public SplitPrintStream(final PrintStream originalPS, final File newOutputFile) throws FileNotFoundException {
             super(newOutputFile);
             this.originalPS = originalPS;
         }

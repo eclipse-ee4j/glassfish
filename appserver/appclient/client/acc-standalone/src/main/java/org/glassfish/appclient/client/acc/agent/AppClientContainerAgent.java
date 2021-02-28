@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package org.glassfish.appclient.client.acc.agent;
 
+import static org.glassfish.appclient.client.CLIBootstrap.FILE_OPTIONS_INTRODUCER;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,24 +26,23 @@ import java.io.LineNumberReader;
 import java.lang.instrument.Instrumentation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.appclient.client.AppClientFacade;
-import org.glassfish.appclient.client.CLIBootstrap;
 import org.glassfish.appclient.client.acc.UserError;
 
 /**
  * Agent which prepares the ACC before the VM launches the selected main program.
+ * 
  * <p>
- * This agent gathers processes agent arguments, supplied either by the
- * appclient script or the end-user (when entering a java command directly),
- * and processes those arguments.  The primary purpose is to:
+ * This agent gathers processes agent arguments, supplied either by the appclient script or the end-user (when entering
+ * a java command directly), and processes those arguments. The primary purpose is to:
  * <ol>
- * <li>identify the main class that the Java launcher has decided to start,
- * <li>create and initialize a new app client container instance, asking the
- * ACC to load and inject the indicated main class in the process <b>if and only if</b>
- * the main class is not the AppClientCommand class.
+ *   <li>identify the main class that the Java launcher has decided to start,
+ *   <li>create and initialize a new app client container instance, asking the ACC to load and inject the indicated main
+ *       class in the process <b>if and only if</b> the main class is not the AppClientCommand class.
  * </ol>
- * Then the agent is done.  The java launcher and the VM see to it that the main class's
- * main method is invoked.
+ * 
+ * Then the agent is done. The java launcher and the VM see to it that the main class's main method is invoked.
  *
  * @author tjquinn
  */
@@ -49,15 +50,15 @@ public class AppClientContainerAgent {
 
     private static Logger logger = Logger.getLogger(AppClientContainerAgent.class.getName());
 
-    public static void premain(String agentArgsText, Instrumentation inst) {
+    public static void premain(String agentArgsText, Instrumentation instrumentation) {
         try {
-            final long now = System.currentTimeMillis();
-            
+            long now = System.currentTimeMillis();
+
             /*
              * The agent prepares the ACC but does not launch the client.
              */
-            AppClientFacade.prepareACC(optionsValue(agentArgsText),inst);
-    
+            AppClientFacade.prepareACC(optionsValue(agentArgsText), instrumentation);
+
             logger.fine("AppClientContainerAgent finished after " + (System.currentTimeMillis() - now) + " ms");
 
         } catch (UserError ue) {
@@ -68,29 +69,31 @@ public class AppClientContainerAgent {
         }
 
     }
-    
+
     private static String optionsValue(final String agentArgsText) throws FileNotFoundException, IOException {
         if (agentArgsText == null) {
             throw new IllegalArgumentException();
         }
-        if (! agentArgsText.startsWith(CLIBootstrap.FILE_OPTIONS_INTRODUCER)) {
+        
+        if (!agentArgsText.startsWith(FILE_OPTIONS_INTRODUCER)) {
             return agentArgsText;
         }
-        final File argsFile = new File(agentArgsText.substring(CLIBootstrap.FILE_OPTIONS_INTRODUCER.length()));
-        final LineNumberReader reader = new LineNumberReader(new FileReader(argsFile));
-        final String result;
-        try {
+        
+        File argsFile = new File(agentArgsText.substring(FILE_OPTIONS_INTRODUCER.length()));
+        String result;
+        
+        try (LineNumberReader reader = new LineNumberReader(new FileReader(argsFile))) {
             result = reader.readLine();
-        } finally {
-            reader.close();
         }
+        
         if (Boolean.getBoolean("keep.argsfile")) {
             System.err.println("Agent arguments file retained: " + argsFile.getAbsolutePath());
         } else {
-            if ( ! argsFile.delete()) {
+            if (!argsFile.delete()) {
                 logger.log(Level.FINE, "Unable to delete temporary args file {0}; continuing", argsFile.getAbsolutePath());
             }
         }
+        
         return result;
     }
 }

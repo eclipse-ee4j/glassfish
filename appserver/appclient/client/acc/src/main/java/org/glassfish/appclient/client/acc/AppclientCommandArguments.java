@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,6 @@
 
 package org.glassfish.appclient.client.acc;
 
-import com.sun.enterprise.util.LocalStringManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.LogDomains;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,12 +31,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.sun.enterprise.util.LocalStringManager;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.LogDomains;
+
 /**
  * Encapsulates handling of appclient script command arguments and options.
  * <p>
- * This class processes a list of strings which are the ACC and client arguments
- * passed on the appclient script.  It makes each ACC argument available
- * explicitly by its own method ({@link #getTargetServer} for example).  The arguments
+ * This class processes a list of strings which are the ACC and client arguments passed on the appclient script. It
+ * makes each ACC argument available explicitly by its own method ({@link #getTargetServer} for example). The arguments
  * to be passed to the app client itself are available using {@link #getAppArgs }.
  *
  *
@@ -49,15 +49,13 @@ public class AppclientCommandArguments {
 
     private final static Logger logger = Logger.getLogger(AppclientCommandArguments.class.getName());
     private final static String LINE_SEP = System.getProperty("line.separator");
-    private final static Logger accLogger = LogDomains.getLogger(
-            AppclientCommandArguments.class,
-            LogDomains.ACC_LOGGER);
+    private final static Logger accLogger = LogDomains.getLogger(AppclientCommandArguments.class, LogDomains.ACC_LOGGER);
 
     /*
      * names of appclient options.
      *
-     * Note that the scripts themselves handle the appclient "-client" option so
-     * -client is not one of the arguments managed by this class.
+     * Note that the scripts themselves handle the appclient "-client" option so -client is not one of the arguments managed
+     * by this class.
      */
     private final static String TEXTAUTH = "textauth";
     private final static String NOAPPINVOKE = "noappinvoke";
@@ -71,65 +69,64 @@ public class AppclientCommandArguments {
     private final static String TARGETSERVER = "targetserver";
     private final static String USAGE = "usage";
     private final static String HELP = "help";
-    
+
     final static String PASSWORD_FILE_PASSWORD_KEYWORD = "PASSWORD";
 
     /* names of options that take a value */
-    private final static String[] valuedArgNames =
-            new String[] {MAINCLASS, NAME, XML, CONFIGXML, USER, PASSWORD, PASSWORDFILE, TARGETSERVER};
+    private final static String[] valuedArgNames = new String[] { MAINCLASS, NAME, XML, CONFIGXML, USER, PASSWORD, PASSWORDFILE,
+            TARGETSERVER };
 
     /* names of options that take no value */
-    private final static String[] unvaluedArgNames =
-            new String[] {TEXTAUTH, NOAPPINVOKE, USAGE, HELP};
+    private final static String[] unvaluedArgNames = new String[] { TEXTAUTH, NOAPPINVOKE, USAGE, HELP };
 
     private static LocalStringManager localStrings = new LocalStringManagerImpl(AppclientCommandArguments.class);;
 
-    private Map<String,AtomicReference<String>> valuedArgs = initValuedArgs();
-    private Map<String,AtomicBoolean> unvaluedArgs = initUnvaluedArgs();
+    private Map<String, AtomicReference<String>> valuedArgs = initValuedArgs();
+    private Map<String, AtomicBoolean> unvaluedArgs = initUnvaluedArgs();
 
-    private List<String> unrecognizedArgs = new ArrayList<String>();
+    private List<String> unrecognizedArgs = new ArrayList<>();
 
-    private char[] password = null;
+    private char[] password;
     private boolean isPasswordOptionUsed = false;
 
-    private String configPathToUse = null;
+    private String configPathToUse;
 
     /**
      * Initializes the list of valued arguments with nulls for all values.
+     * 
      * @return
      */
-    private Map<String,AtomicReference<String>> initValuedArgs() {
-        HashMap<String,AtomicReference<String>> result =
-                new HashMap<String,AtomicReference<String>>();
+    private Map<String, AtomicReference<String>> initValuedArgs() {
+        Map<String, AtomicReference<String>> valuedArgs = new HashMap<>();
 
-        for (String s : valuedArgNames) {
-            result.put(s, new AtomicReference<String>(null));
+        for (String valuedArgName : valuedArgNames) {
+            valuedArgs.put(valuedArgName, new AtomicReference<String>(null));
         }
-        return result;
+        
+        return valuedArgs;
     }
 
     /**
-     * Initializes the list of unvalued arguments with false for all values,
-     * indicating that none of the options has been seen (yet).
+     * Initializes the list of unvalued arguments with false for all values, indicating that none of the options has been
+     * seen (yet).
+     * 
      * @return
      */
-    private Map<String,AtomicBoolean> initUnvaluedArgs() {
-        HashMap<String,AtomicBoolean> result =
-                new HashMap<String,AtomicBoolean>();
+    private Map<String, AtomicBoolean> initUnvaluedArgs() {
+        Map<String, AtomicBoolean> unvaluedArgs = new HashMap<>();
 
-        for (String s : unvaluedArgNames) {
-            result.put(s, new AtomicBoolean(false));
+        for (String unvaluedArgName : unvaluedArgNames) {
+            unvaluedArgs.put(unvaluedArgName, new AtomicBoolean(false));
         }
-        return result;
+        
+        return unvaluedArgs;
     }
 
     /**
-     * Creates and returns a new AppclientCommandArguments object from which
-     * the ACC argument settings and the arguments to be passed to the app
-     * client can be retrieved.
+     * Creates and returns a new AppclientCommandArguments object from which the ACC argument settings and the arguments to
+     * be passed to the app client can be retrieved.
      *
-     * @param appclientCommandArgs appclient command arguments to use in
-     * populating the launch info object
+     * @param appclientCommandArgs appclient command arguments to use in populating the launch info object
      * @return
      */
     public static AppclientCommandArguments newInstance(List<String> appclientCommandArgs) throws UserError {
@@ -142,7 +139,6 @@ public class AppclientCommandArguments {
 
     private AppclientCommandArguments() {
     }
-
 
     public boolean isTextauth() {
         return unvaluedArgs.get(TEXTAUTH).get();
@@ -168,10 +164,6 @@ public class AppclientCommandArguments {
         return password;
     }
 
-//    public String getPasswordFile() {
-//        return valuedArgs.get(PASSWORDFILE).get();
-//    }
-
     public String getName() {
         return valuedArgs.get(NAME).get();
     }
@@ -184,7 +176,7 @@ public class AppclientCommandArguments {
         return valuedArgs.get(XML).get();
     }
 
-    private  String getConfigXML() {
+    private String getConfigXML() {
         return valuedArgs.get(CONFIGXML).get();
     }
 
@@ -192,6 +184,7 @@ public class AppclientCommandArguments {
         if (configPathToUse == null) {
             configPathToUse = chooseConfigFilePath();
         }
+        
         return configPathToUse;
     }
 
@@ -202,30 +195,13 @@ public class AppclientCommandArguments {
             if (isConfig) {
                 logger.log(Level.CONFIG, "Choosing app client container config from -xml option: {0}", pathToUse);
             }
-        } else if ((pathToUse = getConfigXML()) != null ) {
+        } else if ((pathToUse = getConfigXML()) != null) {
             if (isConfig) {
                 logger.log(Level.CONFIG, "Choosing app client container config from -configxml option: {0}", pathToUse);
             }
-//        } else if (isJWS) {
-//            /*
-//             *Neither -xml nor -configxml were present and this is a Java
-//             *Web Start invocation.  Use
-//             *the alternate mechanism to create the default config.
-//             */
-//            try {
-//                String jwsACCConfigXml = prepareJWSConfig();
-//                if (jwsACCConfigXml != null) {
-//                    pathToUse = jwsACCConfigXml;
-//                    if (isFine) {
-//                        logger.fine(localStrings.getString("appclient.configFromJWSTemplate"));
-//                    }
-//                }
-//            } catch (Throwable thr) {
-//                throw new RuntimeException(localStrings.getString("appclient.errorPrepConfig"), thr);
-//            }
         }
+        
         return pathToUse;
-
     }
 
     public String getMainclass() {
@@ -237,81 +213,77 @@ public class AppclientCommandArguments {
     }
 
     private void processAppclientArgs(final List<String> commandArgs) throws UserError {
-        final boolean isConfig = logger.isLoggable(Level.CONFIG);
-        final StringBuilder sb = (isConfig ?
-            new StringBuilder("Arguments from appclient command:" ) : null);
+        boolean isConfig = logger.isLoggable(Level.CONFIG);
+        StringBuilder sb = (isConfig ? new StringBuilder("Arguments from appclient command:") : null);
+        
         for (int slot = 0; slot < commandArgs.size(); slot++) {
             String arg = commandArgs.get(slot);
             if (arg.charAt(0) == '-') {
                 arg = arg.substring(1);
-                 if (valuedArgs.containsKey(arg)) {
-                     if (slot < commandArgs.size()) {
-                         String value = commandArgs.get(++slot);
-                         /*
-                          * The scripts might use " " to enclose argument values,
-                          * so if that's the case strip the quotes off.
-                          */
-                         if ((value.length() > 1) && 
-                                 (value.charAt(0) == '\"') &&
-                                 (value.charAt(value.length() - 1) == '\"')
-                             ) {
-                             value = value.substring(1, value.length() - 1);
-                         }
-                         if (arg.equals(PASSWORD)) {
-                             password = value.toCharArray();
-                             isPasswordOptionUsed = true;
-                             if (isConfig) {
-                                 sb.append(LINE_SEP).append("  ").append(arg).append("=???");
-                             }
-                         } else {
-                             if (isConfig) {
-                                 sb.append(LINE_SEP).append("  ").append(arg).append("=").append(value);
-                             }
-                         }
-                         valuedArgs.get(arg).set(value);
-                         if (arg.equals(PASSWORDFILE)) {
-                             processPasswordFile(value);
-                         }
-                     } else {
-                         throw new IllegalArgumentException(arg+"=?");
-                     }
-                 } else if (unvaluedArgs.containsKey(arg)) {
-                     unvaluedArgs.get(arg).set(Boolean.TRUE);
-                     if (isConfig) {
-                         sb.append(LINE_SEP).append("  ").append(arg);
-                     }
-                 } else {
-                     unrecognizedArgs.add(arg);
-                 }
+                if (valuedArgs.containsKey(arg)) {
+                    if (slot < commandArgs.size()) {
+                        String value = commandArgs.get(++slot);
+                        /*
+                         * The scripts might use " " to enclose argument values, so if that's the case strip the quotes off.
+                         */
+                        if ((value.length() > 1) && (value.charAt(0) == '\"') && (value.charAt(value.length() - 1) == '\"')) {
+                            value = value.substring(1, value.length() - 1);
+                        }
+                        
+                        if (arg.equals(PASSWORD)) {
+                            password = value.toCharArray();
+                            isPasswordOptionUsed = true;
+                            if (isConfig) {
+                                sb.append(LINE_SEP).append("  ").append(arg).append("=???");
+                            }
+                        } else {
+                            if (isConfig) {
+                                sb.append(LINE_SEP).append("  ").append(arg).append("=").append(value);
+                            }
+                        }
+                        valuedArgs.get(arg).set(value);
+                        if (arg.equals(PASSWORDFILE)) {
+                            processPasswordFile(value);
+                        }
+                    } else {
+                        throw new IllegalArgumentException(arg + "=?");
+                    }
+                } else if (unvaluedArgs.containsKey(arg)) {
+                    unvaluedArgs.get(arg).set(Boolean.TRUE);
+                    if (isConfig) {
+                        sb.append(LINE_SEP).append("  ").append(arg);
+                    }
+                } else {
+                    unrecognizedArgs.add(arg);
+                }
             } else {
                 unrecognizedArgs.add(arg);
             }
         }
+        
         if (isConfig) {
             logger.config(sb.toString());
         }
+        
         validateOptions();
     }
 
     private void processPasswordFile(final String passwordFilePath) throws UserError {
         try {
-            final File pwFile = Util.verifyFilePath(passwordFilePath);
+            File pwFile = Util.verifyFilePath(passwordFilePath);
 
             /*
              * The file path looks good - read the password from it.
              */
             password = loadPasswordFromFile(pwFile);
         } catch (IOException e) {
-            String msg = localStrings.getLocalString(getClass(),
-                    "appclient.errorReadingFromPasswordFile",
-                    "Error reading the password from the password file {0}",
-                    new Object[] {passwordFilePath});
+            String msg = localStrings.getLocalString(getClass(), "appclient.errorReadingFromPasswordFile",
+                    "Error reading the password from the password file {0}", new Object[] { passwordFilePath });
             throw new UserError(msg, e);
         }
     }
 
-    private char[] loadPasswordFromFile(final File pwFile)
-            throws IOException, UserError {
+    private char[] loadPasswordFromFile(final File pwFile) throws IOException, UserError {
         InputStream inputStream = null;
         try {
             inputStream = new BufferedInputStream(new FileInputStream(pwFile));
@@ -321,10 +293,9 @@ public class AppclientCommandArguments {
             if (props.containsKey(PASSWORD_FILE_PASSWORD_KEYWORD)) {
                 return props.getProperty(PASSWORD_FILE_PASSWORD_KEYWORD).toCharArray();
             } else {
-                final String msg = localStrings.getLocalString(getClass(),
-                        "appclient.noPasswordInFile",
+                final String msg = localStrings.getLocalString(getClass(), "appclient.noPasswordInFile",
                         "The file {0} specified by the -passwordfile option should contain a setting PASSWORD=client-password-to-use but does not",
-                        new Object[] {pwFile.getAbsolutePath()});
+                        new Object[] { pwFile.getAbsolutePath() });
                 throw new UserError(msg);
             }
         } finally {
@@ -338,28 +309,25 @@ public class AppclientCommandArguments {
         ensureAtMostOneOfNameAndMainClass();
         warnAboutPasswordUsage();
     }
+
     /**
-     * Makes sure that at most one of the -name and -mainclass arguments
-     * appeared on the command line.
+     * Makes sure that at most one of the -name and -mainclass arguments appeared on the command line.
+     * 
      * @throws IllegalArgumentException if both appeared
      */
     private void ensureAtMostOneOfNameAndMainClass() throws UserError {
         if ((getMainclass() != null) && (getName() != null)) {
-            throw new UserError(localStrings.getLocalString(
-                    getClass(), 
-                    "appclient.mainclassOrNameNotBoth",
+            throw new UserError(localStrings.getLocalString(getClass(), "appclient.mainclassOrNameNotBoth",
                     "Specify either -mainclass or -name but not both to identify the app client to be run"));
         }
     }
 
     /**
-     * Logs a warning if the user specified the -password command line
-     * option, which is discouraged and deprecated.
+     * Logs a warning if the user specified the -password command line option, which is discouraged and deprecated.
      */
     private void warnAboutPasswordUsage() {
         if (isPasswordOptionUsed) {
-            final String msg = accLogger.getResourceBundle().getString("appclient.password.deprecated");
-            logger.warning(msg);
+            logger.warning(accLogger.getResourceBundle().getString("appclient.password.deprecated"));
         }
     }
 

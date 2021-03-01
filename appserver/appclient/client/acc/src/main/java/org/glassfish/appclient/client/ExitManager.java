@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,18 +24,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Encapsulates the logic related to intercepting exceptions
- * and VM exits in a test environment and creating a disk file which records
- * the results.  Typically a test script would wait for the file to appear
- * and then read it to find out the results of the Java Web Start launch.
+ * Encapsulates the logic related to intercepting exceptions and VM exits in a test environment and creating a disk file
+ * which records the results. Typically a test script would wait for the file to appear and then read it to find out the
+ * results of the Java Web Start launch.
  * <p>
- * The report file format contains one line with the exit status value, then
- * possibly additional lines containing stack trace information.
+ * The report file format contains one line with the exit status value, then possibly additional lines containing stack
+ * trace information.
  * <p>
- * The status is written to a temp file, then that file is renamed to the
- * selected status file.  This prevents a script waiting for the status file to
- * appear from seeing the file appear before it has been written and closed and
- * thereby not being able to read the status file's contents correctly.
+ * The status is written to a temp file, then that file is renamed to the selected status file. This prevents a script
+ * waiting for the status file to appear from seeing the file appear before it has been written and closed and thereby
+ * not being able to read the status file's contents correctly.
  *
  * @author Tim Quinn
  */
@@ -61,12 +59,10 @@ class ExitManager implements Runnable {
     }
 
     /**
-     * Executes when shutdown is in progress.  Writes any recorded exit status
-     * to the status file and, if a failure has been reported, writes the
-     * stack trace to the file as well.
+     * Executes when shutdown is in progress. Writes any recorded exit status to the status file and, if a failure has been
+     * reported, writes the stack trace to the file as well.
      * <p>
-     * The file is readable as a properties file.  (The stack trace is written
-     * as comments.)
+     * The file is readable as a properties file. (The stack trace is written as comments.)
      */
     @Override
     public void run() {
@@ -76,20 +72,17 @@ class ExitManager implements Runnable {
             reportedFailure.printStackTrace(commentWriter);
         }
         reportWriter.close();
-        if ( ! tempStatusFile.renameTo(statusFile)) {
-            throw new RuntimeException("Could not rename temp status file from " + 
-                    tempStatusFile.getAbsolutePath() + " to " + 
-                    statusFile.getAbsolutePath());
+        if (!tempStatusFile.renameTo(statusFile)) {
+            throw new RuntimeException(
+                    "Could not rename temp status file from " + tempStatusFile.getAbsolutePath() + " to " + statusFile.getAbsolutePath());
         }
     }
-
 
     private void prepareReportWriter(final File tempTestReportFile) {
         try {
             reportWriter = new PrintWriter(tempTestReportFile);
             commentWriter = new CommentWriter(reportWriter);
-            logger.log(Level.FINE, "PrintWriter for temp exit file {0} ready",
-                    tempTestReportFile.getAbsolutePath());
+            logger.log(Level.FINE, "PrintWriter for temp exit file {0} ready", tempTestReportFile.getAbsolutePath());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -108,11 +101,11 @@ class ExitManager implements Runnable {
         reportedFailure = t;
         recordExit(1);
     }
-    
+
     void recordExit(final int status) {
         logger.log(Level.FINE, "Recording exit {0}", status);
         reportedStatus.set(status);
-        
+
     }
 
     private static class CommentWriter extends PrintWriter {

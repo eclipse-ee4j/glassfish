@@ -16,18 +16,18 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Ssl;
-import org.glassfish.grizzly.config.GrizzlyConfig;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
- * User: Jerome Dochez
- * Date: Mar 4, 2008
- * Time: 2:44:59 PM
+ * User: Jerome Dochez Date: Mar 4, 2008 Time: 2:44:59 PM
  */
 public class Ssl2EnabledTest extends ConfigApiTest {
     public String getFileName() {
@@ -39,22 +39,24 @@ public class Ssl2EnabledTest extends ConfigApiTest {
     @Before
     public void setup() {
         config = getHabitat().getService(NetworkConfig.class);
-        assertTrue(config !=null);
+        assertTrue(config != null);
 
     }
 
     @Test
     public void sslEnabledTest() {
-        for (final NetworkListener listener : config.getNetworkListeners()
-            .getNetworkListener()) {
-            Ssl ssl = listener.findHttpProtocol().getSsl();
-            if (ssl!=null) {
-                try {
-                    logger.fine("SSL2 ENABLED = " + ssl.getSsl2Enabled());
-                    assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
-                    assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
-                } catch(Exception e) {
-                     e.printStackTrace();
+        for (NetworkListener listener : config.getNetworkListeners().getNetworkListener()) {
+            Protocol httpProtocol = listener.findHttpProtocol();
+            if (httpProtocol != null) {
+                Ssl ssl = httpProtocol.getSsl();
+                if (ssl != null) {
+                    try {
+                        logger.fine("SSL2 ENABLED = " + ssl.getSsl2Enabled());
+                        assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
+                        assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

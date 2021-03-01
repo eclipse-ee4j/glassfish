@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,8 @@
 
 package org.glassfish.appclient.client.packageappclient;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import static java.util.jar.Attributes.Name.CLASS_PATH;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -29,90 +30,71 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.jar.Attributes;
-import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
 import java.util.zip.ZipException;
 
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 /**
- * Creates a JAR file containing the runtime bits required to run app clients
- * remotely, on a system without a full GlassFish installation.
+ * Creates a JAR file containing the runtime bits required to run app clients remotely, on a system without a full
+ * GlassFish installation.
+ * 
  * <p>
  * The resulting file will contain:
  * <ul>
- * <li>the stand-alone ACC JAR file (the one containing this class)
- * <li>all JARs listed in the Class-Path of this JAR's manifest
- * <li>the contents of the ${installDir}/lib/dtds and schemas directories (for
- * local resolution of schemas and DTDs on the remote client system)
- * <li>the specified sun-acc.xml file (the one from domains/domain1/config if unspecified)
- * <li>the handful of other config files to which sun-acc.xml refers
+ *   <li>the stand-alone ACC JAR file (the one containing this class)
+ *   <li>all JARs listed in the Class-Path of this JAR's manifest
+ *   <li>the contents of the ${installDir}/lib/dtds and schemas directories (for local resolution of schemas and DTDs on
+ *       the remote client system)
+ *   <li>the specified sun-acc.xml file (the one from domains/domain1/config if unspecified)
+ *   <li>the handful of other config files to which sun-acc.xml refers
  * </ul>
+ * 
  * <p>
  * Optional command-line options:
  * <ul>
- * <li><code>-output path-to-output-file</code> (default: ${installDir}/lib/appclient/appclient.jar)
- * <li><code>-xml path-to-sun-acc.xml-config-file</code> (default: ${installDir}/domains/domain1/config/sun-acc.xml)
- * <li><code>-verbose</code> reports progress and errors that are non-fatal
- *
+ *   <li><code>-output path-to-output-file</code> (default: ${installDir}/lib/appclient/appclient.jar)
+ *   <li><code>-xml path-to-sun-acc.xml-config-file</code> (default: ${installDir}/domains/domain1/config/sun-acc.xml)
+ *   <li><code>-verbose</code> reports progress and errors that are non-fatal
+ * </ul>
  *
  * @author tjquinn
  */
 public class PackageAppClient {
 
     private final static String OUTPUT_PREFIX = "appclient/";
-
     private final static String GLASSFISH_LIB = "glassfish/lib";
-
     private final static String GLASSFISH_BIN = "glassfish/bin";
-
     private final static String GLASSFISH_CONFIG = "glassfish/config";
-
     private final static String MODULES_ENDORSED_DIR = "glassfish/modules/endorsed";
-
     private final static String MQ_LIB = "mq/lib";
-
     private final static String DOMAIN_1_CONFIG = "glassfish/domains/domain1/config";
-
     private final static String INDENT = "  ";
-
     private final static String ACC_CONFIG_FILE_DEFAULT = "/glassfish-acc.xml";
     private final static String ACC_CONFIG_FILE_DEFAULT_OLD = "/sun-acc.xml";
 
-
     /* DIRS_TO_COPY entries are all relative to the installation directory */
-    private final static String[] DIRS_TO_COPY = new String[] {
-        GLASSFISH_LIB + "/dtds",
-        GLASSFISH_LIB + "/schemas",
-        GLASSFISH_LIB + "/appclient"
-        };
+    private final static String[] DIRS_TO_COPY = new String[] { 
+        GLASSFISH_LIB + "/dtds", GLASSFISH_LIB + "/schemas",
+        GLASSFISH_LIB + "/appclient" };
 
     /*
-     * relative path to the endorsed directory of the app server.  Handled
-     * separately from other directorys because we do not include all files from
-     * the endorsed directory.
+     * relative path to the endorsed directory of the app server. Handled separately from other directorys because we do not
+     * include all files from the endorsed directory.
      */
     private final static String LIB_ENDORSED_DIR = GLASSFISH_LIB + "/endorsed";
 
-    private final static String[] ENDORSED_DIRS_TO_COPY = new String[] {
-        LIB_ENDORSED_DIR,
-        MODULES_ENDORSED_DIR
-    };
+    private final static String[] ENDORSED_DIRS_TO_COPY = new String[] { LIB_ENDORSED_DIR, MODULES_ENDORSED_DIR };
 
     /* default sun-acc.xml is relative to the installation directory */
-    private final static String DEFAULT_ACC_XML =
-            DOMAIN_1_CONFIG + ACC_CONFIG_FILE_DEFAULT;
-    private final static String OLD_ACC_XML =
-            DOMAIN_1_CONFIG + ACC_CONFIG_FILE_DEFAULT_OLD;
+    private final static String DEFAULT_ACC_XML = DOMAIN_1_CONFIG + ACC_CONFIG_FILE_DEFAULT;
+    private final static String OLD_ACC_XML = DOMAIN_1_CONFIG + ACC_CONFIG_FILE_DEFAULT_OLD;
 
-    private final static String[] DEFAULT_ACC_CONFIG_FILES = {
-        DEFAULT_ACC_XML, OLD_ACC_XML
-        };
+    private final static String[] DEFAULT_ACC_CONFIG_FILES = { DEFAULT_ACC_XML, OLD_ACC_XML };
 
-    private final static String IMQJMSRA_APP =
-            GLASSFISH_LIB + "/install/applications/jmsra/imqjmsra.jar";
+    private final static String IMQJMSRA_APP = GLASSFISH_LIB + "/install/applications/jmsra/imqjmsra.jar";
 
     private final static String IMQ_JAR = MQ_LIB + "/imq.jar";
     private final static String IMQADMIN_JAR = MQ_LIB + "/imqadmin.jar";
@@ -126,20 +108,12 @@ public class PackageAppClient {
     private final static String ASENV_CONF = GLASSFISH_CONFIG + "/asenv.conf";
     private final static String ASENV_BAT = GLASSFISH_CONFIG + "/asenv.bat";
 
-    private final static String[] SINGLE_FILES_TO_COPY = {
-        IMQJMSRA_APP,
-        IMQ_JAR,
-        IMQADMIN_JAR,
-        IMQUTIL_JAR,
-        FSCONTEXT_JAR,
-        WIN_SCRIPT,
-        WIN_JS,
-        NONWIN_SCRIPT,
-        ASENV_CONF,
-        ASENV_BAT};
+    private final static String[] SINGLE_FILES_TO_COPY = { 
+        IMQJMSRA_APP, IMQ_JAR, IMQADMIN_JAR, IMQUTIL_JAR, FSCONTEXT_JAR, WIN_SCRIPT,
+        WIN_JS, NONWIN_SCRIPT, ASENV_CONF, ASENV_BAT };
 
     /* default output file */
-    private final static String DEFAULT_OUTPUT_PATH = GLASSFISH_LIB +  "/appclient.jar";
+    private final static String DEFAULT_OUTPUT_PATH = GLASSFISH_LIB + "/appclient.jar";
 
     private final static LocalStringsImpl strings = new LocalStringsImpl(PackageAppClient.class);
 
@@ -157,24 +131,22 @@ public class PackageAppClient {
         }
     }
 
-    private void run(final String[] args) throws URISyntaxException, IOException {
+    private void run(String[] args) throws URISyntaxException, IOException {
         isVerbose = isVerboseOutputLevel(args);
-        final File thisJarFile = findCurrentJarFile();
+        File thisJarFile = findCurrentJarFile();
         File installDir = findInstallDir(thisJarFile);
         File modulesDir = new File(installDir.toURI().resolve("glassfish/modules/"));
         /*
-         * Write the new JAR to a temp file in the install directory.  Then
-         * we can simply rename the file to the correct name.  (Rename does not
-         * work on Windows systems across volumes.)
+         * Write the new JAR to a temp file in the install directory. Then we can simply rename the file to the correct name.
+         * (Rename does not work on Windows systems across volumes.)
          */
-        final File tempFile = File.createTempFile("appc", ".tmp", installDir);
-        final File outputFile = chooseOutputFile(installDir, args);
-        
-        final File[] configFiles = chooseConfigFiles(installDir, args);
+        File tempFile = File.createTempFile("appc", ".tmp", installDir);
+        File outputFile = chooseOutputFile(installDir, args);
+
+        File[] configFiles = chooseConfigFiles(installDir, args);
         String[] classPathElements = getJarClassPath(thisJarFile).split(" ");
 
-        JarOutputStream os = new JarOutputStream(new BufferedOutputStream(
-                new FileOutputStream(tempFile)));
+        JarOutputStream os = new JarOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
 
         /*
          * Add this JAR file to the output.
@@ -182,36 +154,27 @@ public class PackageAppClient {
         addFile(os, installDir.toURI(), thisJarFile.toURI(), tempFile, "");
 
         /*
-         * JARs listed in the Class-Path are all relative to the modules
-         * directory so resolve each Class-Path entry against the modules
-         * directory.
+         * JARs listed in the Class-Path are all relative to the modules directory so resolve each Class-Path entry against the
+         * modules directory.
          */
         for (String classPathElement : classPathElements) {
-            final File classPathJAR = new File(modulesDir, classPathElement);
-            addFile(os, installDir.toURI(),
-                    modulesDir.toURI().resolve(classPathJAR.toURI()), tempFile,
-                    "");
+            File classPathJAR = new File(modulesDir, classPathElement);
+            addFile(os, installDir.toURI(), modulesDir.toURI().resolve(classPathJAR.toURI()), tempFile, "");
         }
 
         /*
-         * The directories to copy are all relative to the installation directory,
-         * so resolve them against the installDir file.
+         * The directories to copy are all relative to the installation directory, so resolve them against the installDir file.
          */
         for (String dirToCopy : DIRS_TO_COPY) {
-            addDir(os, installDir.toURI(),
-                    installDir.toURI().resolve(dirToCopy), tempFile,
-                    "");
+            addDir(os, installDir.toURI(), installDir.toURI().resolve(dirToCopy), tempFile, "");
         }
 
         for (String endorsedDirToCopy : ENDORSED_DIRS_TO_COPY) {
-            addEndorsedFiles(os, installDir.toURI(),
-                    installDir.toURI().resolve(endorsedDirToCopy), tempFile);
+            addEndorsedFiles(os, installDir.toURI(), installDir.toURI().resolve(endorsedDirToCopy), tempFile);
         }
 
         for (String singleFileToCopy : SINGLE_FILES_TO_COPY) {
-            addFile(os, installDir.toURI(),
-                    installDir.toURI().resolve(singleFileToCopy), tempFile,
-                    "");
+            addFile(os, installDir.toURI(), installDir.toURI().resolve(singleFileToCopy), tempFile, "");
         }
 
         /*
@@ -224,73 +187,56 @@ public class PackageAppClient {
         os.close();
         placeFile(tempFile, outputFile);
     }
-    
+
     private void placeFile(final File tempFile, final File outputFile) {
         if (outputFile.exists()) {
-            if ( ! outputFile.delete()) {
+            if (!outputFile.delete()) {
                 throw new RuntimeException(strings.get("errDel", outputFile.getAbsolutePath()));
             }
             System.out.println(strings.get("replacingFile", outputFile.getAbsolutePath()));
         } else {
             System.out.println(strings.get("creatingFile", outputFile.getAbsolutePath()));
         }
+        
         if (isVerbose) {
             System.out.println(strings.get("moving", tempFile.getAbsolutePath(), outputFile.getAbsolutePath()));
         }
-        if ( ! tempFile.renameTo(outputFile)) {
+        
+        if (!tempFile.renameTo(outputFile)) {
             throw new RuntimeException(strings.get("errRenaming", tempFile.getAbsolutePath(), outputFile.getAbsolutePath()));
         }
     }
 
     /**
-     * Adds all endorsed JAR files in the app server's endorsed directory to
-     * the output JAR file.
+     * Adds all endorsed JAR files in the app server's endorsed directory to the output JAR file.
+     * 
      * @param os
      * @param installDirURI
      * @param endorsedDirURI
      * @param outputFile
      * @throws java.io.IOException
      */
-    private void addEndorsedFiles(
-            final JarOutputStream os,
-            final URI installDirURI,
-            final URI endorsedDirURI,
-            final File outputFile) throws IOException {
-        addDir(os, installDirURI, endorsedDirURI,
-                new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.getName().endsWith(".jar") ||
-                    pathname.isDirectory();
-            }
-
-                },
-                outputFile, "");
+    private void addEndorsedFiles(JarOutputStream os, URI installDirURI, URI endorsedDirURI, File outputFile) throws IOException {
+        addDir(os, installDirURI, endorsedDirURI, pathname -> pathname.getName().endsWith(".jar") || pathname.isDirectory(), outputFile, "");
     }
 
     /**
-     * Adds a single file to the output JAR, avoiding the output file itself (if
-     * by some chance the user is creating the output JAR in one of the
-     * places from which we gather input).
+     * Adds a single file to the output JAR, avoiding the output file itself (if by some chance the user is creating the
+     * output JAR in one of the places from which we gather input).
+     * 
      * @param os
      * @param installDirURI
      * @param absoluteURIToAdd
      * @param outputFile
      * @throws java.io.IOException
      */
-    private void addFile(
-            final JarOutputStream os,
-            final URI installDirURI,
-            final URI absoluteURIToAdd,
-            final File outputFile,
-            final String indent
-            ) throws IOException {
+    private void addFile(JarOutputStream os, URI installDirURI, URI absoluteURIToAdd, File outputFile, String indent) throws IOException {
         try {
             if (isVerbose) {
                 System.err.println(indent + strings.get("addingFile", absoluteURIToAdd));
             }
-            final File fileToCopy = new File(absoluteURIToAdd);
+            
+            File fileToCopy = new File(absoluteURIToAdd);
             if (fileToCopy.equals(outputFile)) {
                 return;
             }
@@ -298,15 +244,12 @@ public class PackageAppClient {
             JarEntry entry = new JarEntry(OUTPUT_PREFIX + installDirURI.relativize(absoluteURIToAdd).toString());
             try {
                 /*
-                 * Some modules in the GlassFish build are marked as optional
-                 * dependencies, and the resulting JARs are not included in the
-                 * GlassFish distribution.  But the JAR file names do appear in
-                 * the maven-generated Class-Path for the stand-alone client JAR
-                 * library which this tool uses to find out what JARs to include
-                 * in the generated appclient.jar file.  So, if the Class-Path
-                 * specifies a file we cannot find we keep going -- silently.
+                 * Some modules in the GlassFish build are marked as optional dependencies, and the resulting JARs are not included in
+                 * the GlassFish distribution. But the JAR file names do appear in the maven-generated Class-Path for the stand-alone
+                 * client JAR library which this tool uses to find out what JARs to include in the generated appclient.jar file. So, if
+                 * the Class-Path specifies a file we cannot find we keep going -- silently.
                  */
-                if ( ! new File(absoluteURIToAdd).exists()) {
+                if (!new File(absoluteURIToAdd).exists()) {
                     if (isVerbose) {
                         System.err.println(indent + strings.get("noFile", new File(absoluteURIToAdd).getAbsolutePath()));
                     }
@@ -320,7 +263,7 @@ public class PackageAppClient {
 
             } catch (ZipException e) {
                 /*
-                 * Probably duplicate entry.  Keep going after logging the error.
+                 * Probably duplicate entry. Keep going after logging the error.
                  */
                 if (isVerbose) {
                     System.err.println(indent + strings.get("zipExc", e.getLocalizedMessage()));
@@ -333,29 +276,23 @@ public class PackageAppClient {
     }
 
     /**
-     * Add all the files from the specified directory, recursing to lower-level
-     * subdirectories.
+     * Add all the files from the specified directory, recursing to lower-level subdirectories.
+     * 
      * @param os
      * @param installDirURI
      * @param absoluteDirURIToAdd
      * @param outputFile
      * @throws java.io.IOException
      */
-    private void addDir(
-            final JarOutputStream os,
-            final URI installDirURI,
-            final URI absoluteDirURIToAdd,
-            final File outputFile,
-            final String indent) throws IOException {
-        addDir(os, installDirURI, absoluteDirURIToAdd,
-                null /* with null filter File.listFiles accepts all files and directories */,
-                outputFile,
-                indent);
+    private void addDir(JarOutputStream os, URI installDirURI, URI absoluteDirURIToAdd, File outputFile, String indent) throws IOException {
+        addDir(
+            os, installDirURI, absoluteDirURIToAdd, 
+            null /* with null filter File.listFiles accepts all files and directories */,
+            outputFile, indent);
     }
 
     /**
-     * Add all files from a directory that meet the criteria of the specified
-     * file filter.
+     * Add all files from a directory that meet the criteria of the specified file filter.
      *
      * @param os
      * @param installDirURI
@@ -364,26 +301,21 @@ public class PackageAppClient {
      * @param outputFile
      * @throws java.io.IOException
      */
-    private void addDir(
-            final JarOutputStream os,
-            final URI installDirURI,
-            final URI absoluteDirURIToAdd,
-            final FileFilter fileFilter,
-            final File outputFile,
-            final String indent) throws IOException {
-
-        final File dirFile = new File(absoluteDirURIToAdd);
-        final File[] matchingFiles = dirFile.listFiles(fileFilter);
+    private void addDir(JarOutputStream os, URI installDirURI, URI absoluteDirURIToAdd, FileFilter fileFilter, File outputFile, String indent) throws IOException {
+        File dirFile = new File(absoluteDirURIToAdd);
+        File[] matchingFiles = dirFile.listFiles(fileFilter);
         if (matchingFiles == null) {
             /*
-             * The file does not exist or is not a directory.  This could happen
-             * for example if the user has not created the endorsed directory.
+             * The file does not exist or is not a directory. This could happen for example if the user has not created the endorsed
+             * directory.
              */
             return;
         }
+        
         if (isVerbose) {
             System.err.println(indent + strings.get("addingDir", dirFile.getAbsolutePath()));
         }
+        
         for (File fileToAdd : matchingFiles) {
             if (fileToAdd.isFile()) {
                 addFile(os, installDirURI, fileToAdd.toURI(), outputFile, indent + INDENT);
@@ -395,18 +327,17 @@ public class PackageAppClient {
 
     /**
      * Copies the contents of a given file to the output stream.
+     * 
      * @param os
      * @param uriToCopy
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
-    private void copyFileToStream(
-            final OutputStream os,
-            final URI uriToCopy) throws FileNotFoundException, IOException {
+    private void copyFileToStream(OutputStream os, URI uriToCopy) throws FileNotFoundException, IOException {
         File fileToCopy = new File(uriToCopy);
         try (InputStream is = new BufferedInputStream(new FileInputStream(fileToCopy))) {
             int bytesRead;
-            byte [] buffer = new byte[4096];
+            byte[] buffer = new byte[4096];
             while ((bytesRead = is.read(buffer)) != -1) {
                 os.write(buffer, 0, bytesRead);
             }
@@ -414,9 +345,8 @@ public class PackageAppClient {
     }
 
     /**
-     * Returns the File to create.  The user can optionally specify the output file as
-     * <code>-output outFile</code> on the command line.  The default is
-     * <code>${installDir}/lib/appclient.jar</code>
+     * Returns the File to create. The user can optionally specify the output file as <code>-output outFile</code> on the
+     * command line. The default is <code>${installDir}/lib/appclient.jar</code>
      *
      * @param args command-line arguments
      * @return File for the file to create
@@ -426,35 +356,29 @@ public class PackageAppClient {
     }
 
     /**
-     * Returns a file, either a default value or one explicitly set via a
-     * user-provided option on the command line.
+     * Returns a file, either a default value or one explicitly set via a user-provided option on the command line.
+     * 
      * @param option
      * @param defaultRelativeURI
      * @param installDir
      * @param args
      * @return
      */
-    private File chooseFile(
-            final String option,
-            final String defaultRelativeURI,
-            final File installDir,
-            final String[] args) {
-        File result;
+    private File chooseFile(final String option, final String defaultRelativeURI, final File installDir, final String[] args) {
         /*
          * Look for the option in the arguments.
          */
-        final String optionValue = argValue(option, args);
+        String optionValue = argValue(option, args);
         if (optionValue != null) {
-            result = new File(optionValue);
-        } else {
-            URI outputFileURI = installDir.toURI().resolve(defaultRelativeURI);
-            result = new File(outputFileURI);
+            return new File(optionValue);
         }
-        return result;
+        
+        return new File(installDir.toURI().resolve(defaultRelativeURI));
     }
 
     /**
      * Returns the user-specified or default *-acc.xml config files.
+     * 
      * @param installDir
      * @param args
      * @return
@@ -470,11 +394,10 @@ public class PackageAppClient {
             }
         } else {
             final File userSpecifiedFile = new File(xmlArg);
-            files = new File[] {userSpecifiedFile};
-            if ( ! userSpecifiedFile.exists()) {
-            System.err.println(strings.get("xmlNotFound", userSpecifiedFile.getAbsolutePath()));
-        }
-
+            files = new File[] { userSpecifiedFile };
+            if (!userSpecifiedFile.exists()) {
+                System.err.println(strings.get("xmlNotFound", userSpecifiedFile.getAbsolutePath()));
+            }
 
         }
         return files;
@@ -496,24 +419,26 @@ public class PackageAppClient {
 
     /**
      * Returns the value for the specified option.
+     * 
      * @param option option name to search the args for
-     * @param args args to search
+     * @param args   args to search
      * @return token after the specified optionon the command line, if any;
      * @throws IllegalArgumentException if there is no value on the command line for the specified option
      */
-    private String argValue(final String option, final String[] args) {
-
+    private String argValue(String option, String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals(option)) {
                 if (i + 1 < args.length) {
-                    return args[i+1];
+                    return args[i + 1];
                 } else {
                     throw new IllegalArgumentException(option);
                 }
             }
         }
+        
         return null;
     }
+
     /**
      * Returns a File object for the JAR file that contains this class.
      *
@@ -522,36 +447,27 @@ public class PackageAppClient {
      */
     private File findCurrentJarFile() throws URISyntaxException {
         URI thisJarURI = getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-        URI thisJarFileBasedURI = (thisJarURI.getScheme().startsWith("jar")) ?
-            URI.create("file:" + thisJarURI.getRawSchemeSpecificPart()) :
-            thisJarURI;
+        URI thisJarFileBasedURI = (thisJarURI.getScheme().startsWith("jar")) ? URI.create("file:" + thisJarURI.getRawSchemeSpecificPart())
+                : thisJarURI;
+        
         /*
-         * One getParent gives the modules directory; the second gives the
-         * installation directory.
+         * One getParent gives the modules directory; the second gives the installation directory.
          */
-        File result = new File(thisJarFileBasedURI);
-        return result;
+        return new File(thisJarFileBasedURI);
     }
 
     /**
-     * Returns the Class-Path setting for the specified File, presumed to be
-     * a JAR.
+     * Returns the Class-Path setting for the specified File, presumed to be a JAR.
+     * 
      * @param currentJarFile
      * @return
      * @throws java.io.IOException
      */
-    private String getJarClassPath(final File currentJarFile) throws IOException {
-        JarFile jf = null;
-        try {
-            jf = new JarFile(currentJarFile);
-            final Manifest mf = jf.getManifest();
-            final Attributes mainAttrs = mf.getMainAttributes();
-            final String classPath = mainAttrs.getValue(Name.CLASS_PATH);
-            return classPath;
-        }
-        finally {
-            if (jf != null)
-                jf.close();
+    private String getJarClassPath(File currentJarFile) throws IOException {
+        try (JarFile jarFile = new JarFile(currentJarFile)) {
+            return jarFile.getManifest()
+                          .getMainAttributes()
+                          .getValue(CLASS_PATH);
         }
     }
 }

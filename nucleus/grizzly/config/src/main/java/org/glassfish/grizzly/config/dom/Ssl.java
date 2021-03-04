@@ -35,6 +35,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
     boolean TLS_ENABLED = true;
     boolean TLS11_ENABLED = true;
     boolean TLS12_ENABLED = true;
+    boolean TLS13_ENABLED = true;
     boolean TLS_ROLLBACK_ENABLED = true;
     boolean RENEGOTIATE_ON_CLIENT_AUTH_WANT = true;
     int MAX_CERT_LENGTH = 5;
@@ -183,6 +184,14 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
     String getTls12Enabled();
 
     void setTls12Enabled(String value);
+
+    /**
+     * Determines whether TLS 1.3 is enabled.
+     */
+    @Attribute(defaultValue = "" + TLS13_ENABLED, dataType = Boolean.class)
+    String getTls13Enabled();
+
+    void setTls13Enabled(String value);
 
     /**
      * Determines whether TLS rollback is enabled. TLS rollback should be enabled for Microsoft Internet Explorer 5.0

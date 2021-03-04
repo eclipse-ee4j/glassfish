@@ -128,6 +128,9 @@ public class SSLConfigurator extends SSLEngineConfigurator {
                 if (Boolean.parseBoolean(ssl.getTls12Enabled())) {
                     tmpSSLArtifactsList.add("TLSv1.2");
                 }
+                if (Boolean.parseBoolean(ssl.getTls13Enabled())) {
+                    tmpSSLArtifactsList.add("TLSv1.3");
+                }
                 if (Boolean.parseBoolean(ssl.getSsl3Enabled())
                         || Boolean.parseBoolean(ssl.getTlsEnabled())) {
                     tmpSSLArtifactsList.add("SSLv2Hello");

@@ -1263,8 +1263,16 @@ public class PECoyoteConnector extends Connector {
         if (Boolean.valueOf(sslConfig.getTls12Enabled())) {
             if (needComma) {
                 sslProtocolsBuf.append(", ");
+            } else {
+                needComma = true;
             }
             sslProtocolsBuf.append("TLSv1.2");
+        }
+        if (Boolean.valueOf(sslConfig.getTls13Enabled())) {
+            if (needComma) {
+                sslProtocolsBuf.append(", ");
+            }
+            sslProtocolsBuf.append("TLSv1.3");
         }
         if (Boolean.valueOf(sslConfig.getSsl3Enabled()) ||
                 Boolean.valueOf(sslConfig.getTlsEnabled())) {

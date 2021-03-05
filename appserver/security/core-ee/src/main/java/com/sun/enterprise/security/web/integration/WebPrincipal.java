@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,7 +60,7 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
     }
 
     public WebPrincipal(X509Certificate[] certs, SecurityContext context) {
-        super(certs[0].getSubjectDN().getName());
+        super(getPrincipalName(context, certs));
         this.certificates = certs;
         this.useCertificate = true;
         this.securityContext = context;
@@ -118,5 +118,18 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
         }
 
         return customPrincipal.toString();
+    }
+    
+    private static String getPrincipalName(SecurityContext securityContext, X509Certificate[] certificates) {
+        Principal callerPrincipal = securityContext.getCallerPrincipal();
+        if (callerPrincipal != null) {
+            return callerPrincipal.getName();
+        }
+        
+        if (certificates != null && certificates.length > 0) {
+            return certificates[0].getSubjectX500Principal().getName();
+        }
+        
+        return null;
     }
 }

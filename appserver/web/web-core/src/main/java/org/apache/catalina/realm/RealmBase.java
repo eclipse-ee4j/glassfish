@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -429,7 +429,7 @@ public abstract class RealmBase
             for (int i = 0; i < certs.length; i++) {
                 if (log.isLoggable(Level.FINE))
                     log.log(Level.FINE, "Checking validity for '" +
-                            certs[i].getSubjectDN().getName() + "'");
+                            certs[i].getSubjectX500Principal().getName() + "'");
                 try {
                     certs[i].checkValidity();
                 } catch (Exception e) {
@@ -441,7 +441,7 @@ public abstract class RealmBase
         }
 
         // Check the existence of the client Principal in our database
-        return (getPrincipal(certs[0].getSubjectDN().getName()));
+        return (getPrincipal(certs[0].getSubjectX500Principal().getName()));
 
     }
 

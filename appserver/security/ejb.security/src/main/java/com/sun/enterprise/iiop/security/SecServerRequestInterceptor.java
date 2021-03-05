@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -268,7 +268,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
             for (int i = 0; i < certchain.length; i++) {
                 certchain[i] = (X509Certificate) certificates.get(i);
                 if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "    " + certchain[i].getSubjectDN().getName());
+                    _logger.log(Level.FINE, "    " + certchain[i].getSubjectX500Principal().getName());
                 }
             }
             if (_logger.isLoggable(Level.FINE)) {
@@ -278,7 +278,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
              * The alias field in the X509CertificateCredential is currently ignored by the RI. So it is set to "dummy".
              * 
              */
-            X509CertificateCredential cred = new X509CertificateCredential(certchain, certchain[0].getSubjectDN().getName(), "default");
+            X509CertificateCredential cred = new X509CertificateCredential(certchain, certchain[0].getSubjectX500Principal().getName(), "default");
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Adding X509CertificateCredential to subject's PublicCredentials");
             }

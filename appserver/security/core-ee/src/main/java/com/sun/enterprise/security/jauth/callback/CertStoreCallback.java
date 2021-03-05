@@ -34,7 +34,7 @@ public class CertStoreCallback extends jakarta.security.auth.message.callback.Ce
      * Set the CertStore.
      *
      * @param certStore the certificate store, which may be null If null, the requester is assumed to already have access to
-     *                  the relevant certificate and/or chain.
+     * the relevant certificate and/or chain.
      */
     public void setStore(CertStore certStore) {
         setCertStore(certStore);

@@ -46,13 +46,13 @@ public interface ClientAuthModule {
      * <p>
      * Either the the request policy or the response policy (or both) must be non-null.
      *
-     * @param requestPolicy  the request policy this module is to enforce, which may be null.
+     * @param requestPolicy the request policy this module is to enforce, which may be null.
      *
      * @param responsePolicy the response policy this module is to enforce, which may be null.
      *
-     * @param handler        CallbackHandler used to request information from the caller.
+     * @param handler CallbackHandler used to request information from the caller.
      *
-     * @param options        administrative options.
+     * @param options administrative options.
      */
     void initialize(AuthPolicy requestPolicy, AuthPolicy responsePolicy, CallbackHandler handler, Map options);
 
@@ -63,14 +63,14 @@ public interface ClientAuthModule {
      * Attach authentication credentials to an initial request, sign/encrypt a request, or respond to a server challenge,
      * for example.
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects.
+     * @param param an authentication parameter that encapsulates the client request and server response objects.
      *
-     * @param subject     the subject may be used by configured modules to obtain Principals and credentials necessary to
-     *                    secure the request, or null. If null, the module may use a CallbackHandler to obtain any
-     *                    information necessary to secure the request.
+     * @param subject the subject may be used by configured modules to obtain Principals and credentials necessary to secure
+     * the request, or null. If null, the module may use a CallbackHandler to obtain any information necessary to secure the
+     * request.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>secureRequest</code> to
-     *                    <code>validateResponse</code> to <code>disposeSubject</code>.
+     * <code>validateResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */
@@ -82,13 +82,13 @@ public interface ClientAuthModule {
      * <p>
      * Validation may include verifying signature in response, or decrypting response contents, for example.
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects.
+     * @param param an authentication parameter that encapsulates the client request and server response objects.
      *
-     * @param subject     the subject may be used by configured modules to store the Principals and credentials related to
-     *                    the identity validated in the response.
+     * @param subject the subject may be used by configured modules to store the Principals and credentials related to the
+     * identity validated in the response.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>secureRequest</code> to
-     *                    <code>validateResponse</code> to <code>disposeSubject</code>.
+     * <code>validateResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */
@@ -100,10 +100,10 @@ public interface ClientAuthModule {
      * <p>
      * Remove Principals or credentials from the Subject object that were stored during <code>validateResponse</code>.
      *
-     * @param subject     Subject instance to be disposed.
+     * @param subject Subject instance to be disposed.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>secureRequest</code> to
-     *                    <code>validateResponse</code> to <code>disposeSubject</code>.
+     * <code>validateResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */

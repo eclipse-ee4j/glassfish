@@ -68,7 +68,7 @@ public class SecretKeyCallback extends jakarta.security.auth.message.callback.Se
      * Get the Request object which identifies the secret key to be returned.
      *
      * @return the Request object which identifies the private key to be returned, or null. If null, the handler of the
-     *         callback relies on its own deafult.
+     * callback relies on its own deafult.
      */
     @Override
     public Request getRequest() {

@@ -144,10 +144,10 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
     }
 
     // V3: to break dependency of SSLUtils on this class
-//    public static void setManagers(KeyManager[] kmgrs, TrustManager[] tmgrs) {
-//        keyManagers = kmgrs;
-//        trustManagers = tmgrs;
-//    }
+    //    public static void setManagers(KeyManager[] kmgrs, TrustManager[] tmgrs) {
+    //        keyManagers = kmgrs;
+    //        trustManagers = tmgrs;
+    //    }
     // V3: Copied from SSLUtils to break dependency of SSLUtils on this class
     public static synchronized void initStoresAtStartup() throws Exception {
         if (initialized) {

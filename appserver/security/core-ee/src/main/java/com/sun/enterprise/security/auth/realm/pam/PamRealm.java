@@ -54,7 +54,7 @@ public final class PamRealm extends AppservRealm {
      * method may only be called a single time.
      *
      * @param props Initialization parameters used by this realm.
-     * @exception BadRealmException    If the configuration parameters identify a corrupt realm.
+     * @exception BadRealmException If the configuration parameters identify a corrupt realm.
      * @exception NoSuchRealmException If the configuration parameters specify a realm which doesn't exist.
      *
      */

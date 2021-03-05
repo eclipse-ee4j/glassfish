@@ -38,7 +38,7 @@ import jakarta.security.auth.message.MessageInfo;
 public interface WebServicesDelegate {
     /**
      *
-     * @param svcRef     The ServiceReferenceDescriptor
+     * @param svcRef The ServiceReferenceDescriptor
      * @param properties The Properties Map passed to WebServices Code Via PipeCreator
      * @return The MessageSecurityBindingDescriptor
      */

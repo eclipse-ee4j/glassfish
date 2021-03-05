@@ -251,44 +251,42 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     /**
      * Create the realm adapter. Extracts the role to user/group mapping from the runtime deployment descriptor.
      *
-     * @param the         web bundle deployment descriptor.
+     * @param the web bundle deployment descriptor.
      * @param isSystemApp if the app is a system app.
      *
-     *                    public RealmAdapter(WebBundleDescriptor descriptor, boolean isSystemApp) { this(descriptor,
-     *                    isSystemApp, null); }
+     * public RealmAdapter(WebBundleDescriptor descriptor, boolean isSystemApp) { this(descriptor, isSystemApp, null); }
      */
 
     /**
      * Create the realm adapter. Extracts the role to user/group mapping from the runtime deployment descriptor.
      *
-     * @param the         web bundle deployment descriptor.
+     * @param the web bundle deployment descriptor.
      * @param isSystemApp if the app is a system app.
-     * @param realmName   The realm name to use if the app does not specify its own
+     * @param realmName The realm name to use if the app does not specify its own
      *
-     *                    public RealmAdapter(WebBundleDescriptor descriptor, boolean isSystemApp, String realmName) {
+     * public RealmAdapter(WebBundleDescriptor descriptor, boolean isSystemApp, String realmName) {
      *
-     *                    this.isSystemApp = isSystemApp; webDesc = descriptor; Application app =
-     *                    descriptor.getApplication(); mapper = app.getRoleMapper(); LoginConfiguration loginConfig =
-     *                    descriptor.getLoginConfiguration(); _realmName = app.getRealm(); if (_realmName == null &&
-     *                    loginConfig != null) { _realmName = loginConfig.getRealmName(); } if (realmName != null &&
-     *                    (_realmName == null || _realmName.equals(""))) { _realmName = realmName; }
+     * this.isSystemApp = isSystemApp; webDesc = descriptor; Application app = descriptor.getApplication(); mapper =
+     * app.getRoleMapper(); LoginConfiguration loginConfig = descriptor.getLoginConfiguration(); _realmName =
+     * app.getRealm(); if (_realmName == null && loginConfig != null) { _realmName = loginConfig.getRealmName(); } if
+     * (realmName != null && (_realmName == null || _realmName.equals(""))) { _realmName = realmName; }
      *
-     *                    // BEGIN IASRI 4747594 CONTEXT_ID = WebSecurityManager.getContextID(descriptor); runAsPrincipals =
-     *                    new HashMap(); Iterator bundle = webDesc.getWebComponentDescriptors().iterator();
+     * // BEGIN IASRI 4747594 CONTEXT_ID = WebSecurityManager.getContextID(descriptor); runAsPrincipals = new HashMap();
+     * Iterator bundle = webDesc.getWebComponentDescriptors().iterator();
      *
-     *                    while (bundle.hasNext()) {
+     * while (bundle.hasNext()) {
      *
-     *                    WebComponentDescriptor wcd = (WebComponentDescriptor) bundle.next(); RunAsIdentityDescriptor
-     *                    runAsDescriptor = wcd.getRunAsIdentity();
+     * WebComponentDescriptor wcd = (WebComponentDescriptor) bundle.next(); RunAsIdentityDescriptor runAsDescriptor =
+     * wcd.getRunAsIdentity();
      *
-     *                    if (runAsDescriptor != null) { String principal = runAsDescriptor.getPrincipal(); String servlet =
-     *                    wcd.getCanonicalName();
+     * if (runAsDescriptor != null) { String principal = runAsDescriptor.getPrincipal(); String servlet =
+     * wcd.getCanonicalName();
      *
-     *                    if (principal == null || servlet == null) { _logger.warning("web.realmadapter.norunas"); } else {
-     *                    runAsPrincipals.put(servlet, principal); _logger.fine("Servlet " + servlet + " will run-as: " +
-     *                    principal); } } } // END IASRI 4747594
+     * if (principal == null || servlet == null) { _logger.warning("web.realmadapter.norunas"); } else {
+     * runAsPrincipals.put(servlet, principal); _logger.fine("Servlet " + servlet + " will run-as: " + principal); } } } //
+     * END IASRI 4747594
      *
-     *                    this.appID = app.getRegistrationName(); // helper are set until setVirtualServer is invoked }
+     * this.appID = app.getRegistrationName(); // helper are set until setVirtualServer is invoked }
      */
 
     @Override
@@ -356,10 +354,10 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * otherwise.
      *
      * @return true if the principal has the specified role.
-     * @param request  Request we are processing
+     * @param request Request we are processing
      * @param response Response we are creating
-     * @param the      principal
-     * @param the      role
+     * @param the principal
+     * @param the role
      */
     // START OF SJSAS 6232464
     // public boolean hasRole(Principal principal, String role) {
@@ -867,10 +865,10 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * Perform access control based on the specified authorization constraint. Return <code>true</code> if this constraint
      * is satisfied and processing should continue, or <code>false</code> otherwise.
      *
-     * @param request    Request we are processing
-     * @param response   Response we are creating
+     * @param request Request we are processing
+     * @param response Response we are creating
      * @param constraint Security constraint we are enforcing
-     * @param The        Context to which client of this class is attached.
+     * @param The Context to which client of this class is attached.
      *
      * @exception IOException if an input/output error occurs
      */
@@ -903,8 +901,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * Invokes WebSecurityManager to perform access control check. Return <code>true</code> if permission is granted, or
      * <code>false</code> otherwise.
      *
-     * @param request     Request we are processing
-     * @param response    Response we are creating
+     * @param request Request we are processing
+     * @param response Response we are creating
      * @param constraints Security constraint we are enforcing
      *
      * @exception IOException if an input/output error occurs
@@ -985,14 +983,14 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     /**
      * Enforce any user data constraint required by the security constraint guarding this request URI.
      *
-     * @param request     Request we are processing
-     * @param response    Response we are creating
+     * @param request Request we are processing
+     * @param response Response we are creating
      * @param constraints Security constraint being checked
      *
      * @exception IOException if an input/output error occurs
      *
      * @return <code>true</code> if this constraint was not violated and processing should continue, or <code>false</code>
-     *         if we have created a response already
+     * if we have created a response already
      */
     @Override
     public boolean hasUserDataPermission(HttpRequest request, HttpResponse response, SecurityConstraint[] constraints) throws IOException {
@@ -1007,15 +1005,15 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      *
      * If a user-data-constraint exists that is not satisfied, then the given <tt>request</tt> will be redirected to HTTPS.
      *
-     * @param request     the request that may be redirected
-     * @param response    the response that may be redirected
+     * @param request the request that may be redirected
+     * @param response the response that may be redirected
      * @param constraints the security constraints to check against
-     * @param uri         the request URI (minus the context path) to check
-     * @param method      the request method to check
+     * @param uri the request URI (minus the context path) to check
+     * @param method the request method to check
      *
      * @return true if the request URI and method are not the target of any unsatisfied user-data-constraint with a
-     *         transport-guarantee of CONFIDENTIAL, and false if they are (in which case the given request will have been
-     *         redirected to HTTPS)
+     * transport-guarantee of CONFIDENTIAL, and false if they are (in which case the given request will have been redirected
+     * to HTTPS)
      */
     @Override
     public boolean hasUserDataPermission(HttpRequest request, HttpResponse response, SecurityConstraint[] constraints, String uri,
@@ -1236,15 +1234,15 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         return "";
     }
 
-//    Function not required anymore.
-//    private String getExtension(String uri) {
-//        int index=uri.lastIndexOf(".");
-//        if(index >= 0) {
-//            return uri.substring(index);
-//        } else {
-//            return "";
-//        }
-//    }
+    //    Function not required anymore.
+    //    private String getExtension(String uri) {
+    //        int index=uri.lastIndexOf(".");
+    //        if(index >= 0) {
+    //            return uri.substring(index);
+    //        } else {
+    //            return "";
+    //        }
+    //    }
 
     /**
      * Return a short name for this Realm Adapter implementation.
@@ -1318,13 +1316,13 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * Checks whether or not authentication is needed. Returns an int, one of AUTHENTICATE_NOT_NEEDED, AUTHENTICATE_NEEDED,
      * or AUTHENTICATED_NOT_AUTHORIZED
      *
-     * @param request               Request we are processing
-     * @param response              Response we are creating
-     * @param constraints           Security constraint we are enforcing
-     * @param disableProxyCaching   whether or not to disable proxy caching for protected resources.
+     * @param request Request we are processing
+     * @param response Response we are creating
+     * @param constraints Security constraint we are enforcing
+     * @param disableProxyCaching whether or not to disable proxy caching for protected resources.
      * @param securePagesWithPragma true if we add headers which are incompatible with downloading office documents in IE
-     *                              under SSL but which fix a caching problem in Mozilla.
-     * @param ssoEnabled            true if sso is enabled
+     * under SSL but which fix a caching problem in Mozilla.
+     * @param ssoEnabled true if sso is enabled
      *
      * @exception IOException if an input/output error occurs
      */
@@ -1390,9 +1388,9 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * any specified requirements have been satisfied, or <code>false</code> if we have created a response challenge
      * already.
      *
-     * @param request         Request we are processing
-     * @param response        Response we are creating
-     * @param context         The Context to which client of this class is attached.
+     * @param request Request we are processing
+     * @param response Response we are creating
+     * @param context The Context to which client of this class is attached.
      * @param authenticantion the current authenticator.
      * @exception IOException if an input/output error occurs
      */
@@ -1431,9 +1429,9 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     /**
      * Post authentication for given request and response.
      *
-     * @param request  Request we are processing
+     * @param request Request we are processing
      * @param response Response we are creating
-     * @param context  The Context to which client of this class is attached.
+     * @param context The Context to which client of this class is attached.
      * @exception IOException if an input/output error occurs
      */
     @Override
@@ -1763,7 +1761,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         webDesc = (WebBundleDescriptor) descriptor;
         Application app = webDesc.getApplication();
 
-//        mapper = app.getRoleMapper();
+        //        mapper = app.getRoleMapper();
         LoginConfiguration loginConfig = webDesc.getLoginConfiguration();
         _realmName = app.getRealm();
         if (_realmName == null && loginConfig != null) {

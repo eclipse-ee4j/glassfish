@@ -118,7 +118,7 @@ public final class JDBCRealm extends DigestRealmBase {
      * method may only be called a single time.
      *
      * @param props Initialization parameters used by this realm.
-     * @exception BadRealmException    If the configuration parameters identify a corrupt realm.
+     * @exception BadRealmException If the configuration parameters identify a corrupt realm.
      * @exception NoSuchRealmException If the configuration parameters specify a realm which doesn't exist.
      */
     @Override
@@ -229,7 +229,7 @@ public final class JDBCRealm extends DigestRealmBase {
      * @param username Name of the user in this realm whose group listing is needed.
      * @return Enumeration of group names (strings).
      * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm
-     *                                      does not support this operation.
+     * does not support this operation.
      */
     @Override
     public Enumeration getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
@@ -343,7 +343,7 @@ public final class JDBCRealm extends DigestRealmBase {
     /**
      * Test if a user is valid
      *
-     * @param user     user's identifier
+     * @param user user's identifier
      * @param password user's password
      * @return true if valid
      */

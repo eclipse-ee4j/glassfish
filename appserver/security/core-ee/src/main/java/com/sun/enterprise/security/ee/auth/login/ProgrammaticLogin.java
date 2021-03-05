@@ -110,11 +110,11 @@ public class ProgrammaticLogin {
      * established identity will be propagated to EJB calls but will not be used for web container manager authorization. In
      * general servlets should use the servlet-specific version of login instead.
      *
-     * @param user     User name.
+     * @param user User name.
      * @param password Password for user.
-     * @param realm    the realm name in which the user should be logged in.
-     * @param errors   errors=true, propagate any exception encountered to the user errors=false, no exceptions are
-     *                 propagated.
+     * @param realm the realm name in which the user should be logged in.
+     * @param errors errors=true, propagate any exception encountered to the user errors=false, no exceptions are
+     * propagated.
      * @return Boolean containing true or false to indicate success or failure of login.
      * @throws Exception any exception encountered during Login.
      */
@@ -187,7 +187,7 @@ public class ProgrammaticLogin {
      * established identity will be propagated to EJB calls but will not be used for web container manager authorization. In
      * general servlets should use the servlet-specific version of login instead.
      *
-     * @param user     User name.
+     * @param user User name.
      * @param password Password for user.
      * @return Boolean containing true or false to indicate success or failure of login.
      */
@@ -223,9 +223,9 @@ public class ProgrammaticLogin {
      * @returns Boolean containing true or false to indicate success or failure of login.
      * @param realm
      * @param errors
-     * @param user     User name.
+     * @param user User name.
      * @param password Password for user.
-     * @param request  HTTP request object provided by caller application. It should be an instance of HttpRequestFacade.
+     * @param request HTTP request object provided by caller application. It should be an instance of HttpRequestFacade.
      * @param response HTTP response object provided by called application. It should be an instance of HttpServletResponse.
      * @throws Exception any exceptions encountered during login
      * @return Boolean indicating true for successful login and false otherwise
@@ -270,9 +270,9 @@ public class ProgrammaticLogin {
      * In addition, the principal stored in the request is set to the user name. If a session is available, its principal is
      * also set to the user provided.
      *
-     * @param user     User name.
+     * @param user User name.
      * @param password Password for user.
-     * @param request  HTTP request object provided by caller application. It should be an instance of HttpRequestFacade.
+     * @param request HTTP request object provided by caller application. It should be an instance of HttpRequestFacade.
      * @param response HTTP response object provided by called application. It should be an instance of HttpServletResponse.
      * @return Boolean containing true or false to indicate success or failure of login.
      *
@@ -310,7 +310,7 @@ public class ProgrammaticLogin {
      * Attempt to logout.
      *
      * @param errors, errors = true, the method will propagate the exceptions encountered while logging out, errors=false
-     *                will return a Boolean value of false indicating failure of logout
+     * will return a Boolean value of false indicating failure of logout
      * @return Boolean containing true or false to indicate success or failure of logout.
      * @throws Exception encountered while logging out, if errors==false
      *
@@ -370,7 +370,7 @@ public class ProgrammaticLogin {
      * Attempt to logout. Also removes principal from request (and session if available).
      *
      * @param errors, errors = true, the method will propagate the exceptions encountered while logging out, errors=false
-     *                will return a Boolean value of false indicating failure of logout
+     * will return a Boolean value of false indicating failure of logout
      *
      * @return Boolean containing true or false to indicate success or failure of logout.
      * @throws Exception, exception encountered while logging out and if errors == true

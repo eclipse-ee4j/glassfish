@@ -67,7 +67,7 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
      *
      * @param the application name for this RoleMapper
      *
-     *            public void removeRoleMapper(String appName) { RoleMapper.removeRoleMapper(appName); }
+     * public void removeRoleMapper(String appName) { RoleMapper.removeRoleMapper(appName); }
      */
 
     /**
@@ -76,8 +76,7 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
      * @param the application name
      * @param the new role mapper
      *
-     *            public void setRoleMapper(String appName, SecurityRoleMapper rmap) { RoleMapper.setRoleMapper(appName,
-     *            rmap); }
+     * public void setRoleMapper(String appName, SecurityRoleMapper rmap) { RoleMapper.setRoleMapper(appName, rmap); }
      */
 
     @Override
@@ -114,7 +113,7 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
      * Set a RoleMapper for the application
      *
      * @param appName Application or module name
-     * @param rmap    <I>SecurityRoleMapper</I> for the application or the module
+     * @param rmap <I>SecurityRoleMapper</I> for the application or the module
      */
     @Override
     public void setRoleMapper(String appName, SecurityRoleMapper rmap) {

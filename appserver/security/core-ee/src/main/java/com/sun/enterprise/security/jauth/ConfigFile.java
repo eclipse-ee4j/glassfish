@@ -233,12 +233,12 @@ class ConfigFile extends AuthConfig {
 
         // return the configured modules with the correct policies
 
-//	ConfigFile.Entry[] entries = new Entry[idEntry.modules.size()];
+        //	ConfigFile.Entry[] entries = new Entry[idEntry.modules.size()];
         ConfigFile.Entry[] entries = new Entry[1];
         for (int i = 0; i < entries.length; i++) {
-// Login Bridge profile?
-//	    AppConfigurationEntry aEntry =
-//				(AppConfigurationEntry)idEntry.modules.get(i);
+            // Login Bridge profile?
+            //	    AppConfigurationEntry aEntry =
+            //				(AppConfigurationEntry)idEntry.modules.get(i);
             entries[i] = new ConfigFile.Entry(reqP, respP, idEntry.getModuleClassName(),
                     AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, idEntry.getOptions());
         }
@@ -371,16 +371,15 @@ class ConfigFile extends AuthConfig {
          * <p>
          * An entry encapsulates a single module and its related information.
          *
-         * @param requestPolicy  the request policy assigned to the module listed in this entry, which may be null.
+         * @param requestPolicy the request policy assigned to the module listed in this entry, which may be null.
          *
          * @param responsePolicy the response policy assigned to the module listed in this entry, which may be null.
          *
-         * @param moduleClass    the fully qualified class name of the module.
+         * @param moduleClass the fully qualified class name of the module.
          *
-         * @param flag           the module control flag. This value must either be REQUIRED, REQUISITE, SUFFICIENT, or
-         *                       OPTIONAL.
+         * @param flag the module control flag. This value must either be REQUIRED, REQUISITE, SUFFICIENT, or OPTIONAL.
          *
-         * @param options        the options configured for this module.
+         * @param options the options configured for this module.
          */
         Entry(AuthPolicy requestPolicy, AuthPolicy responsePolicy, String moduleClass, AppConfigurationEntry.LoginModuleControlFlag flag,
                 Map options) {

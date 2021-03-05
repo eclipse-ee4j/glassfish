@@ -63,21 +63,21 @@ public interface ServerAuthContext {
      * <p>
      * This method invokes configured modules to authenticate the request.
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects.
+     * @param param an authentication parameter that encapsulates the client request and server response objects.
      *
-     * @param subject     the subject may be used by configured modules to store and Principals and credentials validated in
-     *                    the request.
+     * @param subject the subject may be used by configured modules to store and Principals and credentials validated in the
+     * request.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>validateRequest</code> to
-     *                    <code>secureResponse</code> to <code>disposeSubject</code>.
+     * <code>secureResponse</code> to <code>disposeSubject</code>.
      *
      * @exception PendingException if the operation is pending (for example, when a module issues a challenge). The module
-     *                             must have updated the response object in the AuthParam input parameter.
+     * must have updated the response object in the AuthParam input parameter.
      *
      * @exception FailureException if the authentication failed. The module must have updated the response object in the
-     *                             AuthParam input parameter.
+     * AuthParam input parameter.
      *
-     * @exception AuthException    if the operation failed.
+     * @exception AuthException if the operation failed.
      */
     void validateRequest(AuthParam param, javax.security.auth.Subject subject, java.util.Map sharedState) throws AuthException;
 
@@ -87,13 +87,13 @@ public interface ServerAuthContext {
      * <p>
      * This method invokes configured modules to secure the response.
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects
+     * @param param an authentication parameter that encapsulates the client request and server response objects
      *
-     * @param subject     the subject may be used by configured modules to obtain credentials needed to secure the response,
-     *                    or null. If null, the module may use a CallbackHandler to obtain the necessary information.
+     * @param subject the subject may be used by configured modules to obtain credentials needed to secure the response, or
+     * null. If null, the module may use a CallbackHandler to obtain the necessary information.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>validateRequest</code> to
-     *                    <code>secureResponse</code> to <code>disposeSubject</code>.
+     * <code>secureResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */
@@ -106,10 +106,10 @@ public interface ServerAuthContext {
      * <p>
      * This method invokes configured modules to dispose the Subject.
      *
-     * @param subject     the subject to be disposed.
+     * @param subject the subject to be disposed.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>validateRequest</code> to
-     *                    <code>secureResponse</code> to <code>disposeSubject</code>.
+     * <code>secureResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */
@@ -128,7 +128,7 @@ public interface ServerAuthContext {
      * session.
      *
      * @return true if the context should be allowed to manage sessions, and false if session management (if it is to occur)
-     *         must be performed by the container.
+     * must be performed by the container.
      *
      * @exception AuthException if the operation failed.
      */

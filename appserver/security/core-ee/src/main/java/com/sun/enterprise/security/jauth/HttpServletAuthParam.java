@@ -56,7 +56,7 @@ public class HttpServletAuthParam implements AuthParam {
     /**
      * Create an HttpServletAuthParam with HTTP request and response objects.
      *
-     * @param request  the HTTP Servlet request object, or null.
+     * @param request the HTTP Servlet request object, or null.
      * @param response the HTTP Servlet response object, or null.
      */
     public HttpServletAuthParam(HttpServletRequest request, HttpServletResponse response) {

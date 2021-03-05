@@ -212,7 +212,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
      * @param wp WebPrincipal
      *
      * @return true when Security Context has been obtained from webPrincipal, and CB is finished. returns false when more
-     *         CB processing is required.
+     * CB processing is required.
      */
     private boolean reuseWebPrincipal(final Subject fs, final WebPrincipal wp) {
 

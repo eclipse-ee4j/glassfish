@@ -198,7 +198,8 @@ public class WebPermissionUtil {
                             case PT_PREFIX:
                                 if ((otherUrlType == PT_PREFIX || otherUrlType == PT_EXACT) && implies(url, otherUrl)) {
                                     mValue.addQualifier(otherUrl);
-                                } else if ((otherUrlType == PT_PREFIX && implies(otherUrl, url)) || (otherUrlType == PT_EXTENSION || otherUrlType == PT_DEFAULT)) {
+                                } else if ((otherUrlType == PT_PREFIX && implies(otherUrl, url))
+                                        || (otherUrlType == PT_EXTENSION || otherUrlType == PT_DEFAULT)) {
                                     qpVal.getValue().addQualifier(url);
                                 }
                                 break;
@@ -234,7 +235,8 @@ public class WebPermissionUtil {
                             // every path-prefix or extension pattern (in
                             // the map) that implies the new pattern.
                             case PT_EXACT:
-                                if (((otherUrlType == PT_PREFIX || otherUrlType == PT_EXTENSION) && implies(otherUrl, url)) || (otherUrlType == PT_DEFAULT)) {
+                                if (((otherUrlType == PT_PREFIX || otherUrlType == PT_EXTENSION) && implies(otherUrl, url))
+                                        || (otherUrlType == PT_DEFAULT)) {
                                     qpVal.getValue().addQualifier(url);
                                 }
                                 break;

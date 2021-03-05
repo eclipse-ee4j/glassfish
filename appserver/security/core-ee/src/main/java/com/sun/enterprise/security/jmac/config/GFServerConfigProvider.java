@@ -388,11 +388,11 @@ public class GFServerConfigProvider implements AuthConfigProvider {
          * An entry encapsulates a single module and its related information.
          *
          * @param moduleClassName the module class name
-         * @param requestPolicy   the request policy assigned to the module listed in this entry, which may be null.
+         * @param requestPolicy the request policy assigned to the module listed in this entry, which may be null.
          *
-         * @param responsePolicy  the response policy assigned to the module listed in this entry, which may be null.
+         * @param responsePolicy the response policy assigned to the module listed in this entry, which may be null.
          *
-         * @param options         the options configured for this module.
+         * @param options the options configured for this module.
          */
         Entry(String moduleClassName, MessagePolicy requestPolicy, MessagePolicy responsePolicy, Map options) {
             this.moduleClassName = moduleClassName;
@@ -551,29 +551,28 @@ public class GFServerConfigProvider implements AuthConfigProvider {
      * The implementation of this method returns a ClientAuthConfig instance that describes the configuration of
      * ClientAuthModules at a given message layer, and for use in an identified application context.
      *
-     * @param layer      a String identifying the message layer for the returned ClientAuthConfig object. This argument must
-     *                   not be null.
+     * @param layer a String identifying the message layer for the returned ClientAuthConfig object. This argument must not
+     * be null.
      *
      * @param appContext a String that identifies the messaging context for the returned ClientAuthConfig object. This
-     *                   argument must not be null.
+     * argument must not be null.
      *
-     * @param handler    a CallbackHandler to be passed to the ClientAuthModules encapsulated by ClientAuthContext objects
-     *                   derived from the returned ClientAuthConfig. This argument may be null, in which case the
-     *                   implementation may assign a default handler to the configuration.
+     * @param handler a CallbackHandler to be passed to the ClientAuthModules encapsulated by ClientAuthContext objects
+     * derived from the returned ClientAuthConfig. This argument may be null, in which case the implementation may assign a
+     * default handler to the configuration.
      *
      * @return a ClientAuthConfig Object that describes the configuration of ClientAuthModules at the message layer and
-     *         messaging context identified by the layer and appContext arguments. This method does not return null.
+     * messaging context identified by the layer and appContext arguments. This method does not return null.
      *
-     * @exception AuthException     if this provider does not support the assignment of a default CallbackHandler to the
-     *                              returned ClientAuthConfig.
+     * @exception AuthException if this provider does not support the assignment of a default CallbackHandler to the
+     * returned ClientAuthConfig.
      *
      * @exception SecurityException if the caller does not have permission to retrieve the configuration.
      *
-     *                              The CallbackHandler assigned to the configuration must support the Callback objects
-     *                              required to be supported by the profile of this specification being followed by the
-     *                              messaging runtime. The CallbackHandler instance must be initialized with any application
-     *                              context needed to process the required callbacks on behalf of the corresponding
-     *                              application.
+     * The CallbackHandler assigned to the configuration must support the Callback objects required to be supported by the
+     * profile of this specification being followed by the messaging runtime. The CallbackHandler instance must be
+     * initialized with any application context needed to process the required callbacks on behalf of the corresponding
+     * application.
      */
     @Override
     public ClientAuthConfig getClientAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException {
@@ -587,29 +586,28 @@ public class GFServerConfigProvider implements AuthConfigProvider {
      * The implementation of this method returns a ServerAuthConfig instance that describes the configuration of
      * ServerAuthModules at a given message layer, and for a particular application context.
      *
-     * @param layer      a String identifying the message layer for the returned ServerAuthConfig object. This argument must
-     *                   not be null.
+     * @param layer a String identifying the message layer for the returned ServerAuthConfig object. This argument must not
+     * be null.
      *
      * @param appContext a String that identifies the messaging context for the returned ServerAuthConfig object. This
-     *                   argument must not be null.
+     * argument must not be null.
      *
-     * @param handler    a CallbackHandler to be passed to the ServerAuthModules encapsulated by ServerAuthContext objects
-     *                   derived from thr returned ServerAuthConfig. This argument may be null, in which case the
-     *                   implementation may assign a default handler to the configuration.
+     * @param handler a CallbackHandler to be passed to the ServerAuthModules encapsulated by ServerAuthContext objects
+     * derived from thr returned ServerAuthConfig. This argument may be null, in which case the implementation may assign a
+     * default handler to the configuration.
      *
      * @return a ServerAuthConfig Object that describes the configuration of ServerAuthModules at a given message layer, and
-     *         for a particular application context. This method does not return null.
+     * for a particular application context. This method does not return null.
      *
-     * @exception AuthException     if this provider does not support the assignment of a default CallbackHandler to the
-     *                              returned ServerAuthConfig.
+     * @exception AuthException if this provider does not support the assignment of a default CallbackHandler to the
+     * returned ServerAuthConfig.
      *
      * @exception SecurityException if the caller does not have permission to retrieve the configuration.
-     *                              <p>
-     *                              The CallbackHandler assigned to the configuration must support the Callback objects
-     *                              required to be supported by the profile of this specification being followed by the
-     *                              messaging runtime. The CallbackHandler instance must be initialized with any application
-     *                              context needed to process the required callbacks on behalf of the corresponding
-     *                              application.
+     * <p>
+     * The CallbackHandler assigned to the configuration must support the Callback objects required to be supported by the
+     * profile of this specification being followed by the messaging runtime. The CallbackHandler instance must be
+     * initialized with any application context needed to process the required callbacks on behalf of the corresponding
+     * application.
      */
     @Override
     public ServerAuthConfig getServerAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException {
@@ -621,7 +619,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
      * reflected in the corresponding authentication context configuration objects previously created by the provider within
      * the current process context.
      *
-     * @exception AuthException     if an error occured during the refresh.
+     * @exception AuthException if an error occured during the refresh.
      *
      * @exception SecurityException if the caller does not have permission to refresh the provider.
      */
@@ -636,7 +634,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
      * changed. It relies on the slaves, since it is a static method.
      *
      * @param config a config object of type understood by the parser. NOTE: there appears to be a thread saftey problem,
-     *               and this method will fail if a slaveProvider has not been established prior to its call.
+     * and this method will fail if a slaveProvider has not been established prior to its call.
      */
     public static void loadConfigContext(Object config) {
 
@@ -732,7 +730,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
         protected String providerID = null;
         protected boolean init = false;
         protected boolean onePolicy = false;
-//        protected boolean newHandler = false;
+        //        protected boolean newHandler = false;
         protected MessageSecurityBindingDescriptor binding = null;
         protected SunWebApp sunWebApp = null;
 
@@ -743,7 +741,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
             this.type = type;
             if (handler == null) {
                 handler = AuthMessagePolicy.getDefaultCallbackHandler();
-//		this.newHandler = true;
+                //		this.newHandler = true;
             }
             this.handler = handler;
         }
@@ -752,7 +750,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
          * Get the message layer name of this authentication context configuration object.
          *
          * @return the message layer name of this configuration object, or null if the configuration object pertains to an
-         *         unspecified message layer.
+         * unspecified message layer.
          */
         @Override
         public String getMessageLayer() {
@@ -763,7 +761,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
          * Get the application context identifier of this authentication context configuration object.
          *
          * @return the String identifying the application context of this configuration object or null if the configuration
-         *         object pertains to an unspecified application context.
+         * object pertains to an unspecified application context.
          */
         @Override
         public String getAppContext() {
@@ -780,12 +778,11 @@ public class GFServerConfigProvider implements AuthConfigProvider {
          * @param messageInfo a contextual Object that encapsulates the client request and server response objects.
          *
          * @return the authentication context identifier corresponding to the encapsulated request and response objects, or
-         *         null.
+         * null.
          *
          *
          * @throws IllegalArgumentException if the type of the message objects incorporated in messageInfo are not compatible
-         *                                  with the message types supported by this authentication context configuration
-         *                                  object.
+         * with the message types supported by this authentication context configuration object.
          */
         @Override
         public String getAuthContextID(MessageInfo messageInfo) {
@@ -807,7 +804,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
          * Causes a dynamic anthentication context configuration object to update the internal state that it uses to process
          * calls to its <code>getAuthContext</code> method.
          *
-         * @exception AuthException     if an error occured during the update.
+         * @exception AuthException if an error occured during the update.
          *
          * @exception SecurityException if the caller does not have permission to refresh the configuration object.
          */
@@ -821,7 +818,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
          * will return null for all possible values of authentication context identifier.
          *
          * @return false when <code>getAuthContext</code> will return null for all possible values of authentication context
-         *         identifier. Otherwise, this method returns true.
+         * identifier. Otherwise, this method returns true.
          */
         @Override
         public boolean isProtected() {

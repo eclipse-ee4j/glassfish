@@ -205,7 +205,8 @@ public class PermissionXMLParser {
                 }
                 pc.add(pm);
             }
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
+                | InvocationTargetException e) {
             throw new SecurityException(e);
         }
     }

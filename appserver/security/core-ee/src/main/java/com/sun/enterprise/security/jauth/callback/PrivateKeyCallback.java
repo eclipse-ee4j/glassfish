@@ -93,7 +93,7 @@ public class PrivateKeyCallback extends jakarta.security.auth.message.callback.P
          *
          * If the issuer/serialNumber parameters are null, the handler of the callback relies on its own defaults.
          *
-         * @param issuer       the X500Principal name of the certificate issuer, or null.
+         * @param issuer the X500Principal name of the certificate issuer, or null.
          *
          * @param serialNumber the serial number of the certificate, or null.
          */
@@ -122,7 +122,7 @@ public class PrivateKeyCallback extends jakarta.security.auth.message.callback.P
      * Get the Request object which identifies the private key to be returned.
      *
      * @return the Request object which identifies the private key to be returned, or null. If null, the handler of the
-     *         callback relies on its own default.
+     * callback relies on its own default.
      */
     @Override
     public Request getRequest() {

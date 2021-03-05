@@ -95,8 +95,8 @@ public class Audit extends AuditModule {
     /**
      * Invoked post authentication request for a user in a given realm
      *
-     * @param user    username for whom the authentication request was made
-     * @param realm   the realm name under which the user is authenticated.
+     * @param user username for whom the authentication request was made
+     * @param realm the realm name under which the user is authenticated.
      * @param success the status of the authentication
      */
     @Override
@@ -113,9 +113,9 @@ public class Audit extends AuditModule {
     /**
      * Invoked post web authorization request.
      *
-     * @param user    the username for whom the authorization was performed
-     * @param req     the HttpRequest object for the web request
-     * @param type    either hasResourcePermission, hasUserDataPermission or hasRoleRefPermission
+     * @param user the username for whom the authorization was performed
+     * @param req the HttpRequest object for the web request
+     * @param type either hasResourcePermission, hasUserDataPermission or hasRoleRefPermission
      * @param success the status of the web authorization request
      */
     @Override
@@ -131,9 +131,9 @@ public class Audit extends AuditModule {
     /**
      * Invoked post ejb authorization request.
      *
-     * @param user    the username for whom the authorization was performed
-     * @param ejb     the ejb name for which this authorization was performed
-     * @param method  the method name for which this authorization was performed
+     * @param user the username for whom the authorization was performed
+     * @param ejb the ejb name for which this authorization was performed
+     * @param method the method name for which this authorization was performed
      * @param success the status of the ejb authorization request
      */
     @Override
@@ -150,18 +150,18 @@ public class Audit extends AuditModule {
     /**
      * Invoked post ejb authorization request.
      *
-     * @param user    the username for whom the authorization was performed
-     * @param ejb     the ejb name for which this authorization was performed
-     * @param method  the method name for which this authorization was performed
+     * @param user the username for whom the authorization was performed
+     * @param ejb the ejb name for which this authorization was performed
+     * @param method the method name for which this authorization was performed
      * @param success the status of the ejb authorization request
      */
 
     /**
      * Invoked during validation of the web service request
      *
-     * @param uri      The URL representation of the web service endpoint
+     * @param uri The URL representation of the web service endpoint
      * @param endpoint The name of the endpoint representation
-     * @param success  the status of the web service request validation
+     * @param success the status of the web service request validation
      */
     @Override
     public void webServiceInvocation(String uri, String endpoint, boolean success) {
@@ -179,7 +179,7 @@ public class Audit extends AuditModule {
      * Invoked during validation of the web service request
      *
      * @param endpoint The URL representation of the web service endpoint
-     * @param success  the status of the web service request validation
+     * @param success the status of the web service request validation
      */
     @Override
     public void ejbAsWebServiceInvocation(String endpoint, boolean success) {
@@ -239,9 +239,9 @@ public class Audit extends AuditModule {
     /**
      * Log an EJB method invocation.
      *
-     * @param user    Effective user for the invocation.
-     * @param ejb     EJB name.
-     * @param method  Method name.
+     * @param user Effective user for the invocation.
+     * @param ejb EJB name.
+     * @param method Method name.
      * @param success True if the invocation was allowed, false if denied.
      *
      */
@@ -269,7 +269,7 @@ public class Audit extends AuditModule {
     /**
      * Log a servlet invocation.
      *
-     * @param req     The HttpRequest.
+     * @param req The HttpRequest.
      * @param success True if the invocation was allowed, false if denied.
      *
      */

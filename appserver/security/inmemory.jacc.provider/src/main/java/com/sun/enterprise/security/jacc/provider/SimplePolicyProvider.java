@@ -34,23 +34,20 @@ import jakarta.security.jacc.PolicyContextException;
 public class SimplePolicyProvider extends Policy {
 
     private static final String REUSE = "java.security.Policy.supportsReuse";
-    Policy basePolicy;
+    private Policy basePolicy;
+    
     /**
      * ThreadLocal object to keep track of the reentrancy status of each thread. It contains a byte[] object whose single
      * element is either 0 (initial value or no reentrancy), or 1 (current thread is reentrant). When a thread exists the
      * implies method, byte[0] is alwasy reset to 0.
      */
-    private static ThreadLocal reentrancyStatus;
+    private static ThreadLocal<Object> reentrancyStatus = new ThreadLocal<>() {
+        @Override
+        protected synchronized Object initialValue() {
+            return new byte[] { 0 };
+        }
+    };
 
-    static {
-        reentrancyStatus = new ThreadLocal() {
-
-            @Override
-            protected synchronized Object initialValue() {
-                return new byte[] { 0 };
-            }
-        };
-    }
 
     /**
      * Create a new instance of SimplePolicyProvider delegates to existing policy provider unless one is not defined, in
@@ -72,21 +69,21 @@ public class SimplePolicyProvider extends Policy {
      * code from the specified code source.
      *
      * @param codesource the CodeSource associated with the caller. This encapsulates the original location of the code
-     *                   (where the code came from) and the public key(s) of its signer.
+     * (where the code came from) and the public key(s) of its signer.
      *
      * @return the set of permissions allowed for code from <i>codesource</i> according to the policy.The returned set of
-     *         permissions must be a new mutable instance and it must support heterogeneous Permission types.
+     * permissions must be a new mutable instance and it must support heterogeneous Permission types.
      *
      */
     @Override
     public PermissionCollection getPermissions(CodeSource codesource) {
-        PermissionCollection pC = basePolicy.getPermissions(codesource);
+        PermissionCollection permissionCollection = basePolicy.getPermissions(codesource);
         try {
-            pC = SimplePolicyConfiguration.getPermissions(pC, codesource);
+            permissionCollection = SimplePolicyConfiguration.getPermissions(permissionCollection, codesource);
         } catch (PolicyContextException pce) {
             SimplePolicyConfiguration.logGetPermissionsFailure(codesource, pce);
         }
-        return pC;
+        return permissionCollection;
     }
 
     /**
@@ -96,7 +93,7 @@ public class SimplePolicyProvider extends Policy {
      * @param domain the ProtectionDomain associated with the caller.
      *
      * @return the set of permissions allowed for the <i>domain</i> according to the policy.The returned set of permissions
-     *         must be a new mutable instance and it must support heterogeneous Permission types.
+     * must be a new mutable instance and it must support heterogeneous Permission types.
      *
      * @see java.security.ProtectionDomain
      * @see java.security.SecureClassLoader
@@ -104,20 +101,20 @@ public class SimplePolicyProvider extends Policy {
      */
     @Override
     public PermissionCollection getPermissions(ProtectionDomain domain) {
-        PermissionCollection pC = basePolicy.getPermissions(domain);
+        PermissionCollection permissionCollection = basePolicy.getPermissions(domain);
         try {
-            pC = SimplePolicyConfiguration.getPermissions(pC, domain);
+            permissionCollection = SimplePolicyConfiguration.getPermissions(permissionCollection, domain);
         } catch (PolicyContextException pce) {
             SimplePolicyConfiguration.logGetPermissionsFailure(domain, pce);
         }
-        return pC;
+        return permissionCollection;
     }
 
     /**
      * Evaluates the global policy for the permissions granted to the ProtectionDomain and tests whether the permission is
      * granted.
      *
-     * @param domain     the ProtectionDomain to test
+     * @param domain the ProtectionDomain to test
      * @param permission the Permission object to be tested for implication.
      *
      * @return true if "permission" is a proper subset of a permission granted to this ProtectionDomain.
@@ -139,7 +136,7 @@ public class SimplePolicyProvider extends Policy {
         }
     }
 
-    private boolean doImplies(final ProtectionDomain domain, final Permission permission) {
+    private boolean doImplies(ProtectionDomain domain, Permission permission) {
         int result = -1;
         try {
             result = SimplePolicyConfiguration.implies(domain, permission);
@@ -186,6 +183,7 @@ public class SimplePolicyProvider extends Policy {
             throw new IllegalStateException(pce);
         }
     }
+    
     /*
      * NB: Excluded perms should be removed from the collections returned by getPermissions. Permissions that imply excluded
      * permissions should also be excluded. There is a potential semantic integrity issue if the exluded perms have been

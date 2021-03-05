@@ -59,7 +59,7 @@ public class SignatureKeyCallback implements Callback {
     /**
      * Set the requested signing key.
      *
-     * @param key   the signing key
+     * @param key the signing key
      * @param chain the corresponding certificate chain
      */
     public void setKey(PrivateKey key, Certificate[] chain) {

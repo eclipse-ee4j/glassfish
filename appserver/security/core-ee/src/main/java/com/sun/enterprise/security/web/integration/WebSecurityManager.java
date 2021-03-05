@@ -76,7 +76,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author Jean-Francois Arcand
  * @author Harpreet Singh.
  * @todo introduce a new class called AbstractSecurityManager. Move functionality from this class and EJBSecurityManager
- *       class and extend this class from AbstractSecurityManager
+ * class and extend this class from AbstractSecurityManager
  */
 public class WebSecurityManager {
     private static final Logger logger = LogUtils.getLogger();
@@ -158,7 +158,7 @@ public class WebSecurityManager {
         this.serverContext = svc;
         this.wsmf = fact;
         String appname = getAppId();
-//        factory = SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory();
+        //        factory = SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory();
         postConstruct();
         initialise(appname);
     }
@@ -486,14 +486,14 @@ public class WebSecurityManager {
      * the context path, and any colons occurring in the uri must be escaped.
      *
      * @return 1 if access is permitted (as is or without SSL). -1 if the the access will be permitted after a redirect to
-     *         SSL. return 0 if access will be denied independent of whether a redirect to SSL is done.
+     * SSL. return 0 if access will be denied independent of whether a redirect to SSL is done.
      *
-     *         Note: this method is not intended to be called if the request is secure. it checks whether the resource can
-     *         be accessed over the current connection type (which is presumed to be insecure), and if an insecure
-     *         connection type is not permitted it checks if the resource can be accessed via a confidential transport.
+     * Note: this method is not intended to be called if the request is secure. it checks whether the resource can be
+     * accessed over the current connection type (which is presumed to be insecure), and if an insecure connection type is
+     * not permitted it checks if the resource can be accessed via a confidential transport.
      *
-     *         If the request is secure, the second check is skipped, and the proper result is returned (but that is not the
-     *         intended use model).
+     * If the request is secure, the second check is skipped, and the proper result is returned (but that is not the
+     * intended use model).
      */
 
     public int hasUserDataPermission(HttpServletRequest httpsr, String uri, String httpMethod) {

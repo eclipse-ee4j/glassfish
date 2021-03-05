@@ -31,20 +31,19 @@ public interface JACCRoleMapper {
     String HANDLER_KEY = "simple.jacc.provider.RoleMapper";
     String CLASS_NAME = "simple.jacc.provider.JACCRoleMapper.class";
 
-    Set<String> getDeclaredRoles(String pcid);
+    Set<String> getDeclaredRoles(String contextId);
 
-    boolean isSubjectInRole(String pcid, Subject s, String roleName) throws SecurityException;
+    boolean isSubjectInRole(String contextId, Subject subject, String roleName) throws SecurityException;
 
-    boolean arePrincipalsInRole(String pcid, Principal[] principals, String roleName) throws SecurityException;
+    boolean arePrincipalsInRole(String contextId, Principal[] principals, String roleName) throws SecurityException;
 
-    Set<String> getRolesOfSubject(String pcid, Subject s) throws SecurityException, UnsupportedOperationException;
+    Set<String> getRolesOfSubject(String contextId, Subject subject) throws SecurityException, UnsupportedOperationException;
 
-    Set<String> getRolesOfPrincipals(String pcid, Principal[] principals) throws SecurityException, UnsupportedOperationException;
+    Set<String> getRolesOfPrincipals(String contextId, Principal[] principals) throws SecurityException, UnsupportedOperationException;
 
-    BitSet getRolesOfSubject(String pcid, String roles[], Subject s) throws SecurityException, UnsupportedOperationException;
+    BitSet getRolesOfSubject(String contextId, String roles[], Subject subject) throws SecurityException, UnsupportedOperationException;
 
-    BitSet getRolesOfPrincipals(String pcid, String roles[], Principal[] principals)
-            throws SecurityException, UnsupportedOperationException;
+    BitSet getRolesOfPrincipals(String contextId, String roles[], Principal[] principals) throws SecurityException, UnsupportedOperationException;
 
-    Set<Principal> getPrincipalsInRole(String pcid, String roleName) throws SecurityException, UnsupportedOperationException;
+    Set<Principal> getPrincipalsInRole(String contextId, String roleName) throws SecurityException, UnsupportedOperationException;
 }

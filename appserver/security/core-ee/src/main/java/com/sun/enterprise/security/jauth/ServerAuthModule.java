@@ -46,13 +46,13 @@ public interface ServerAuthModule {
      * <p>
      * Either the the request policy or the response policy (or both) must be non-null.
      *
-     * @param requestPolicy  the request policy this module is to enforce, which may be null.
+     * @param requestPolicy the request policy this module is to enforce, which may be null.
      *
      * @param responsePolicy the response policy this module is to enforce, which may be null.
      *
-     * @param handler        CallbackHandler used to request information from the caller.
+     * @param handler CallbackHandler used to request information from the caller.
      *
-     * @param options        administrative options.
+     * @param options administrative options.
      */
     void initialize(AuthPolicy requestPolicy, AuthPolicy responsePolicy, CallbackHandler handler, Map options);
 
@@ -63,34 +63,34 @@ public interface ServerAuthModule {
      * The AuthParam input parameter encapsulates the client request and server response objects. This ServerAuthModule
      * validates the client request object (decrypts content and verifies a signature, for example).
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects.
+     * @param param an authentication parameter that encapsulates the client request and server response objects.
      *
-     * @param subject     the subject may be used by configured modules to store and Principals and credentials validated in
-     *                    the request.
+     * @param subject the subject may be used by configured modules to store and Principals and credentials validated in the
+     * request.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>validateRequest</code> to
-     *                    <code>secureResponse</code> to <code>disposeSubject</code>.
+     * <code>secureResponse</code> to <code>disposeSubject</code>.
      *
      * @exception PendingException if the operation is pending (for example, when a module issues a challenge). The module
-     *                             must have updated the response object in the AuthParam.
+     * must have updated the response object in the AuthParam.
      *
      * @exception FailureException if the authentication failed. The module must have updated the response object in the
-     *                             AuthParam.
+     * AuthParam.
      *
-     * @exception AuthException    if the operation failed.
+     * @exception AuthException if the operation failed.
      */
     void validateRequest(AuthParam param, Subject subject, Map sharedState) throws AuthException;
 
     /**
      * Secure the response to the client (sign and encrypt the response, for example).
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects.
+     * @param param an authentication parameter that encapsulates the client request and server response objects.
      *
-     * @param subject     the subject may be used by configured modules to obtain credentials needed to secure the response,
-     *                    or null. If null, the module may use a CallbackHandler to obtain the necessary information.
+     * @param subject the subject may be used by configured modules to obtain credentials needed to secure the response, or
+     * null. If null, the module may use a CallbackHandler to obtain the necessary information.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>validateRequest</code> to
-     *                    <code>secureResponse</code> to <code>disposeSubject</code>.
+     * <code>secureResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */
@@ -102,10 +102,10 @@ public interface ServerAuthModule {
      * <p>
      * Remove Principals or credentials from the Subject object that were stored during <code>validateRequest</code>.
      *
-     * @param subject     the Subject instance to be disposed.
+     * @param subject the Subject instance to be disposed.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>validateRequest</code> to
-     *                    <code>secureResponse</code> to <code>disposeSubject</code>.
+     * <code>secureResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */

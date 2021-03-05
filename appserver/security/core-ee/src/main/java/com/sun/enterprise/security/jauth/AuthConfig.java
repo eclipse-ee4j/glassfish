@@ -185,26 +185,25 @@ public abstract class AuthConfig {
      * (for example the order modules are to be invoked, and whether certain modules must succeed). Individual
      * ClientAuthContext implementations may enforce custom module invocation semantics.
      *
-     * @param intercept      the interception point used to determine the modules configured for the returned
-     *                       ClientAuthContext. Standard values include:
-     *                       <ul>
-     *                       <li>HTTP
-     *                       <li>EJB
-     *                       <li>SOAP
-     *                       </ul>
+     * @param intercept the interception point used to determine the modules configured for the returned ClientAuthContext.
+     * Standard values include:
+     * <ul>
+     * <li>HTTP
+     * <li>EJB
+     * <li>SOAP
+     * </ul>
      *
-     * @param id             the provider id used to determine the modules configured for the returned ClientAuthContext, or
-     *                       null. If null, a default ID may be used.
+     * @param id the provider id used to determine the modules configured for the returned ClientAuthContext, or null. If
+     * null, a default ID may be used.
      *
-     * @param requestPolicy  the application request policy to be enfored by the modules, or null. If null, a default
-     *                       request policy may be used.
+     * @param requestPolicy the application request policy to be enfored by the modules, or null. If null, a default request
+     * policy may be used.
      *
      * @param responsePolicy the application response policy to be enfored by the modules, or null. If null, a default
-     *                       response policy may be used.
+     * response policy may be used.
      *
-     * @param handler        the CallbackHandler to associate with the returned ClientAuthContext for use by configured
-     *                       modules to request information from the caller, or null. If null, a default handler may be
-     *                       used.
+     * @param handler the CallbackHandler to associate with the returned ClientAuthContext for use by configured modules to
+     * request information from the caller, or null. If null, a default handler may be used.
      *
      * @return a ClientAuthContext, or null.
      */
@@ -224,26 +223,25 @@ public abstract class AuthConfig {
      * (for example the order modules are to be invoked, and whether certain modules must succeed). Individual
      * ServerAuthContext implementations may enforce custom module invocation semantics.
      *
-     * @param intercept      the interception point used to determine the modules configured for the returned
-     *                       ServerAuthContext. Standard values include:
-     *                       <ul>
-     *                       <li>HTTP
-     *                       <li>EJB
-     *                       <li>SOAP
-     *                       </ul>
+     * @param intercept the interception point used to determine the modules configured for the returned ServerAuthContext.
+     * Standard values include:
+     * <ul>
+     * <li>HTTP
+     * <li>EJB
+     * <li>SOAP
+     * </ul>
      *
-     * @param id             the provider id used to determine the modules configured for the returned ClientAuthContext, or
-     *                       null. If null, a default id may be used.
+     * @param id the provider id used to determine the modules configured for the returned ClientAuthContext, or null. If
+     * null, a default id may be used.
      *
-     * @param requestPolicy  the application request policy to be enfored by the modules, or null. If null, a default
-     *                       request policy may be used.
+     * @param requestPolicy the application request policy to be enfored by the modules, or null. If null, a default request
+     * policy may be used.
      *
      * @param responsePolicy the application response policy to be enfored by the modules, or null. If null, a default
-     *                       response policy may be used.
+     * response policy may be used.
      *
-     * @param handler        the CallbackHandler to associate with the returned ClientAuthContext, which can be used by
-     *                       configured modules to request information from the caller, or null. If null, a default handler
-     *                       may be used.
+     * @param handler the CallbackHandler to associate with the returned ClientAuthContext, which can be used by configured
+     * modules to request information from the caller, or null. If null, a default handler may be used.
      *
      * @return a ServerAuthContext, or null.
      */

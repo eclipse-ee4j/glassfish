@@ -63,14 +63,14 @@ public interface ClientAuthContext {
      * <p>
      * This method invokes configured modules to secure the request.
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects.
+     * @param param an authentication parameter that encapsulates the client request and server response objects.
      *
-     * @param subject     the subject may be used by configured modules to obtain Principals and credentials necessary to
-     *                    secure the request, or null. If null, the module may use a CallbackHandler to obtain any
-     *                    information necessary to secure the request.
+     * @param subject the subject may be used by configured modules to obtain Principals and credentials necessary to secure
+     * the request, or null. If null, the module may use a CallbackHandler to obtain any information necessary to secure the
+     * request.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>secureRequest</code> to
-     *                    <code>validateResponse</code> to <code>disposeSubject</code>.
+     * <code>validateResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */
@@ -85,13 +85,13 @@ public interface ClientAuthContext {
      * <p>
      * This method invokes configured modules to validate the response.
      *
-     * @param param       an authentication parameter that encapsulates the client request and server response objects.
+     * @param param an authentication parameter that encapsulates the client request and server response objects.
      *
-     * @param subject     the subject may be used by configured modules to store the Principals and credentials related to
-     *                    the identity validated in the response.
+     * @param subject the subject may be used by configured modules to store the Principals and credentials related to the
+     * identity validated in the response.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>secureRequest</code> to
-     *                    <code>validateResponse</code> to <code>disposeSubject</code>.
+     * <code>validateResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */
@@ -104,10 +104,10 @@ public interface ClientAuthContext {
      * <p>
      * This method invokes configured modules to dispose the Subject.
      *
-     * @param subject     the subject to be disposed.
+     * @param subject the subject to be disposed.
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>secureRequest</code> to
-     *                    <code>validateResponse</code> to <code>disposeSubject</code>.
+     * <code>validateResponse</code> to <code>disposeSubject</code>.
      *
      * @exception AuthException if the operation failed.
      */

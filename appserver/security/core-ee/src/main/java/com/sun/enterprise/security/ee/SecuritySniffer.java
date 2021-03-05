@@ -96,7 +96,7 @@ public class SecuritySniffer extends GenericSniffer {
      * loaded in the associated container.
      *
      * @param containerHome is where the container implementation resides
-     * @param logger        the logger to use
+     * @param logger the logger to use
      * @return the module definition of the core container implementation.
      * @throws java.io.IOException exception if something goes sour
      */

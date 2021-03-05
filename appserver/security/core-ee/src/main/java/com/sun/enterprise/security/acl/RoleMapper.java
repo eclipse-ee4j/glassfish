@@ -99,10 +99,10 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     }
 
     private synchronized void initDefaultRole() {
-//        if (!SecurityServicesUtil.getInstance().isServer()) {
-//            //do nothing if this is not an EJB or Web Container
-//            return;
-//        }
+        //        if (!SecurityServicesUtil.getInstance().isServer()) {
+        //            //do nothing if this is not an EJB or Web Container
+        //            return;
+        //        }
         if (defaultRole == null) {
             defaultRoleName = DEFAULT_ROLE_NAME;
             try {
@@ -137,7 +137,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
 
     /**
      * @param principal A principal that corresponds to the role
-     * @param role      A role corresponding to this principal
+     * @param role A role corresponding to this principal
      */
     private void addRoleToPrincipal(final Principal principal, String role) {
         assert roleToSubject != null;
@@ -157,7 +157,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     /**
      * Remove the given role-principal mapping
      *
-     * @param role,      Role object
+     * @param role, Role object
      * @param principal, the principal
      */
     @Override
@@ -245,8 +245,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
      * The first time this is called, a new Mapping object is created to store the role mapping information. When called
      * again from a different module, the old mapping information is checked and stored and a new Mapping object is created.
      *
-     * @param p   The principal that needs to be assigned to the role.
-     * @param r   The Role the principal is being assigned to.
+     * @param p The principal that needs to be assigned to the role.
+     * @param r The Role the principal is being assigned to.
      * @param rdd The descriptor of the module containing the role mapping
      */
     @Override
@@ -374,7 +374,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
 
     /**
      * @returns the class name used for default Principal to role mapping return null if default P2R mapping is not
-     *          supported.
+     * supported.
      */
     private String getDefaultP2RMappingClassName() {
         String className = null;
@@ -497,12 +497,12 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             return true;
         }
 
-// if role not previously mapped, no conflict
+        // if role not previously mapped, no conflict
         if (!roleToSubject.keySet().contains(r.getName())) {
             return false;
         }
 
-// check number of mappings first
+        // check number of mappings first
         int targetNumPrin = ps.size();
         int actualNum = 0;
         Set<Principal> pSet = roleToPrincipal.get(r.getName());
@@ -523,7 +523,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             return true;
         }
 
-// check the principals and groups
+        // check the principals and groups
         boolean fail = false;
         for (Principal p : ps) {
             if (p instanceof Group) {
@@ -640,7 +640,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     }
 
     private void postConstruct() {
-//       initDefaultRole();
+        //       initDefaultRole();
     }
 
 }

@@ -82,16 +82,14 @@ public class PermissionCacheFactory {
     /**
      * Create a PermissionCache object. If the corresponding object exists, then it will overwrite the previous one.
      *
-     * @param pcID       - a string identifying the policy context and which must be set when getPermissions is called
-     *                   (internally). This value may be null, in which case the permisions of the default policy context
-     *                   will be cached.
+     * @param pcID - a string identifying the policy context and which must be set when getPermissions is called
+     * (internally). This value may be null, in which case the permisions of the default policy context will be cached.
      * @param codesource - the codesource argument to be used in the call to getPermissions. This value may be null.
-     * @param perms      - an array of Permission objects identifying the permission types that will be managed by the
-     *                   cache. This value may be null, in which case all permissions obtained by the getPermissions call
-     *                   will be cached.
-     * @param name       - a string corresponding to a value returned by Permission.getName() only permissions whose
-     *                   getName() value matches the name parameter will be included in the cache. This value may be null,
-     *                   in which case permission name dos not factor into the permission caching.
+     * @param perms - an array of Permission objects identifying the permission types that will be managed by the cache.
+     * This value may be null, in which case all permissions obtained by the getPermissions call will be cached.
+     * @param name - a string corresponding to a value returned by Permission.getName() only permissions whose getName()
+     * value matches the name parameter will be included in the cache. This value may be null, in which case permission name
+     * dos not factor into the permission caching.
      */
     public static synchronized PermissionCache createPermissionCache(String pcID, CodeSource codesource, Permission[] perms, String name) {
 
@@ -109,15 +107,14 @@ public class PermissionCacheFactory {
     /**
      * Create a PermissionCache object. If the corresponding object exists, then it will overwrite the previous one.
      *
-     * @param pcID       - a string identifying the policy context and which must be set when getPermissions is called
-     *                   (internally). This value may be null, in which case the permisions of the default policy context
-     *                   will be cached.
+     * @param pcID - a string identifying the policy context and which must be set when getPermissions is called
+     * (internally). This value may be null, in which case the permisions of the default policy context will be cached.
      * @param codesource - the codesource argument to be used in the call to getPermissions. This value may be null.
-     * @param clazz      - a class object identifying the permission type that will be managed by the cache. This value may
-     *                   be null, in which case all permissions obtained by the getPermissions call will be cached.
-     * @param name       - a string corresponding to a value returned by Permission.getName() only permissions whose
-     *                   getName() value matches the name parameter will be included in the cache. This value may be null,
-     *                   in which case permission name dos not factor into the permission caching.
+     * @param clazz - a class object identifying the permission type that will be managed by the cache. This value may be
+     * null, in which case all permissions obtained by the getPermissions call will be cached.
+     * @param name - a string corresponding to a value returned by Permission.getName() only permissions whose getName()
+     * value matches the name parameter will be included in the cache. This value may be null, in which case permission name
+     * dos not factor into the permission caching.
      */
     public static synchronized PermissionCache createPermissionCache(String pcID, CodeSource codesource, Class clazz, String name) {
 

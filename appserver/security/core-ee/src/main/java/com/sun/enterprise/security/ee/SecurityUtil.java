@@ -63,11 +63,11 @@ public class SecurityUtil {
      * generated code needs to do, to invoke a particular ejb method. The method is invoked under a security Subject. This
      * method is called from the generated code.
      *
-     * @param Method     beanClassMethod, the bean class method to be invoked
+     * @param Method beanClassMethod, the bean class method to be invoked
      * @param Invocation inv, the current invocation object
-     * @param Object     o, the object on which this method needs to be invoked,
-     * @param Object[]   oa, the parameters to the methods,
-     * @param Container  c, the container from which the appropriate subject is queried from.
+     * @param Object o, the object on which this method needs to be invoked,
+     * @param Object[] oa, the parameters to the methods,
+     * @param Container c, the container from which the appropriate subject is queried from.
      */
     /*
      * This method is now in EJBSecurityUtil in ejb/ejb-container module of V3 public static Object runMethod(Method
@@ -92,13 +92,13 @@ public class SecurityUtil {
      * the exception is caused due to reflection, it returns the InvocationTargetException. This method is called from the
      * containers for ejbTimeout, WebService and MDBs.
      *
-     * @param Method          beanClassMethod, the bean class method to be invoked
-     * @param Invocation      inv, the current invocation
-     * @param Object          o, the object on which this method is to be invoked in this case the ejb,
-     * @param Object[]        oa, the parameters for the method,
-     * @param Container       c, the container instance,
+     * @param Method beanClassMethod, the bean class method to be invoked
+     * @param Invocation inv, the current invocation
+     * @param Object o, the object on which this method is to be invoked in this case the ejb,
+     * @param Object[] oa, the parameters for the method,
+     * @param Container c, the container instance,
      * @param SecurityManager sm, security manager for this container, can be a null value, where in the container will be
-     *                        queried to find its security manager.
+     * queried to find its security manager.
      * @return Object, the result of the execution of the method.
      */
     /*
@@ -129,9 +129,8 @@ public class SecurityUtil {
      * contexts. Note that policy statements have already been added to the pc, this method works to put them in Service.
      *
      * @param String name - the module id which serves to identify the corresponding policy context. The name shall not be
-     *               null. If the underlying PolicyModule is the RI PolicyModule, A SecurityRoleMapper must have been bound
-     *               to the policy context before this method is called or the embedded call to pc.commit will throw an
-     *               exception.
+     * null. If the underlying PolicyModule is the RI PolicyModule, A SecurityRoleMapper must have been bound to the policy
+     * context before this method is called or the embedded call to pc.commit will throw an exception.
      */
     public static void generatePolicyFile(String name) throws IASSecurityException {
         assert name != null;
@@ -171,7 +170,7 @@ public class SecurityUtil {
      * file in the repository is how we persistently remember which policy contexts are in service.
      *
      * @param String name - the module id which serves to identify the corresponding policy context. The name shall not be
-     *               null.
+     * null.
      */
     public static void removePolicy(String name) throws IASSecurityException {
         assert name != null;
@@ -201,14 +200,14 @@ public class SecurityUtil {
      * This method obtains the policy configuration object corresponding to the name, and links it, for roleMapping purposes
      * to another. If the pc is already InService when this method is called, this method does nothing.
      *
-     * @param String  name - the module id which serves to identify the corresponding policy context. The name shall not be
-     *                null.
-     * @param String  linkName - the module id of the module being linked to this context. This value may be null, in which
-     *                case, no link is done, but the inService state of the named PC is returned.
+     * @param String name - the module id which serves to identify the corresponding policy context. The name shall not be
+     * null.
+     * @param String linkName - the module id of the module being linked to this context. This value may be null, in which
+     * case, no link is done, but the inService state of the named PC is returned.
      * @param boolean lastInService - the inService state returned by the previous call to this method. The value of this
-     *                argument is only significant when linkName is not null.
+     * argument is only significant when linkName is not null.
      * @return boolean if linkName is null, returns the inService state of the PC identified in the name argument. Otherwise
-     *         returns the value passed to lastInService.
+     * returns the value passed to lastInService.
      */
     public static boolean linkPolicyFile(String name, String linkName, boolean lastInService) throws IASSecurityException {
 

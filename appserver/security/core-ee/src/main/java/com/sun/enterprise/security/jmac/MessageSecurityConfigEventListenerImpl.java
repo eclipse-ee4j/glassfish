@@ -114,9 +114,9 @@ public class MessageSecurityConfigEventListenerImpl implements ConfigListener {
             /**
              * Notification of a change on a configuration object
              *
-             * @param type            type of change : ADD mean the changedInstance was added to the parent REMOVE means the
-             *                        changedInstance was removed from the parent, CHANGE means the changedInstance has mutated.
-             * @param changedType     type of the configuration object
+             * @param type type of change : ADD mean the changedInstance was added to the parent REMOVE means the changedInstance
+             * was removed from the parent, CHANGE means the changedInstance has mutated.
+             * @param changedType type of the configuration object
              * @param changedInstance changed instance.
              */
             @Override

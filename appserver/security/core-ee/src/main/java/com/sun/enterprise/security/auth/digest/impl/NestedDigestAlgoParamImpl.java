@@ -16,8 +16,9 @@
 
 package com.sun.enterprise.security.auth.digest.impl;
 
-import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
 import java.security.spec.AlgorithmParameterSpec;
+
+import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
 
 /**
  *
@@ -30,46 +31,51 @@ public class NestedDigestAlgoParamImpl implements NestedDigestAlgoParam {
     private AlgorithmParameterSpec[] params = null;
     private String name = "";
 
-    public NestedDigestAlgoParamImpl(String algorithm, String name,AlgorithmParameterSpec[] values) {
+    public NestedDigestAlgoParamImpl(String algorithm, String name, AlgorithmParameterSpec[] values) {
         this.algorithm = algorithm;
         this.params = values;
         this.name = name;
     }
 
-    public NestedDigestAlgoParamImpl(String name,AlgorithmParameterSpec[] values) {
+    public NestedDigestAlgoParamImpl(String name, AlgorithmParameterSpec[] values) {
         this.params = values;
         this.name = name;
     }
 
-    public NestedDigestAlgoParamImpl(String algorithm,String name, AlgorithmParameterSpec[] values, byte[] delimiter) {
+    public NestedDigestAlgoParamImpl(String algorithm, String name, AlgorithmParameterSpec[] values, byte[] delimiter) {
         this.algorithm = algorithm;
         this.params = values;
         this.delimeter = delimiter;
         this.name = name;
     }
 
-    public NestedDigestAlgoParamImpl(AlgorithmParameterSpec[] values,String name,  byte[] delimiter) {
+    public NestedDigestAlgoParamImpl(AlgorithmParameterSpec[] values, String name, byte[] delimiter) {
         this.params = values;
         this.delimeter = delimiter;
         this.name = name;
     }
 
+    @Override
     public AlgorithmParameterSpec[] getNestedParams() {
         return params;
     }
 
+    @Override
     public byte[] getDelimiter() {
         return delimeter;
-    } 
+    }
 
+    @Override
     public String getAlgorithm() {
         return algorithm;
     }
 
+    @Override
     public byte[] getValue() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public String getName() {
         return name;
     }

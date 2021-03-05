@@ -29,18 +29,105 @@ import java.util.Set;
  */
 public class Role {
 
-    String roleName;
-    Permissions permissions;
-    Set<Principal> principals;
-    private boolean isAnyAuthenticatedUserRole = false;
+    private String roleName;
+    private Permissions permissions;
+    private Set<Principal> principals;
+    private boolean isAnyAuthenticatedUserRole;
 
     public Role(String name) {
         roleName = name;
     }
 
+    public String getName() {
+        return roleName;
+    }
+
+    void addPermission(Permission permission) {
+        if (permissions == null) {
+            permissions = new Permissions();
+        }
+        
+        permissions.add(permission);
+    }
+
+    void addPermissions(PermissionCollection permissionCollection) {
+        if (permissions == null) {
+            permissions = new Permissions();
+        }
+        
+        for (Enumeration<Permission> e = permissionCollection.elements(); e.hasMoreElements();) {
+            permissions.add(e.nextElement());
+        }
+    }
+
+    Permissions getPermissions() {
+        return permissions;
+    }
+
+    void setPrincipals(Set<Principal> principals) {
+        if (principals != null) {
+            this.principals = principals;
+        }
+    }
+
+    boolean implies(Permission permission) {
+        if (permissions == null) {
+            return false;
+        }
+        
+        return permissions.implies(permission);
+    }
+
+    void determineAnyAuthenticatedUserRole() {
+        isAnyAuthenticatedUserRole = false;
+        // If no princiapls are present then any authenticated user is possible
+        if ((principals == null) || principals.isEmpty()) {
+            isAnyAuthenticatedUserRole = true;
+        }
+    }
+
+    boolean isAnyAuthenticatedUserRole() {
+        return isAnyAuthenticatedUserRole;
+    }
+
+    boolean isPrincipalInRole(Principal principal) {
+        if (isAnyAuthenticatedUserRole && (principal != null)) {
+            return true;
+        }
+
+        if (principals == null) {
+            return false;
+        }
+        
+        return principals.contains(principal);
+    }
+
+    boolean arePrincipalsInRole(Principal subject[]) {
+        if (subject == null || subject.length == 0) {
+            return false;
+        }
+        
+        if (isAnyAuthenticatedUserRole) {
+            return true;
+        }
+        
+        if (principals == null || principals.isEmpty()) {
+            return false;
+        }
+
+        boolean rvalue = false;
+        for (Principal principal : subject) {
+            if (principals.contains(principal)) {
+                rvalue = true;
+                break;
+            }
+        }
+        return rvalue;
+    }
+    
     /**
-     * NB: Class Overrides equals and hashCode Methods such that 2 Roles are
-     * equal simply based on having a common name.
+     * NB: Class Overrides equals and hashCode Methods such that 2 Roles are equal simply based on having a common name.
+     *
      * @param o
      * @return
      */
@@ -55,89 +142,5 @@ public class Role {
         int hash = 7;
         hash = 29 * hash + (this.roleName != null ? this.roleName.hashCode() : 0);
         return hash;
-    }
-
-    public String getName() {
-        return roleName;
-    }
-
-    void addPermission(Permission p) {
-        if (permissions == null) {
-            permissions = new Permissions();
-        }
-        permissions.add(p);
-    }
-
-    void addPermissions(PermissionCollection pc) {
-        if (permissions == null) {
-            permissions = new Permissions();
-        }
-        for (Enumeration<Permission> e = pc.elements();
-                e.hasMoreElements();) {
-            permissions.add(e.nextElement());
-        }
-    }
-
-    Permissions getPermissions() {
-        return permissions;
-    }
-
-    void setPrincipals(Set<Principal> pSet) {
-        if (pSet != null) {
-            principals = pSet;
-        }
-    }
-
-    boolean implies(Permission p) {
-        boolean rvalue = false;
-        if (permissions != null) {
-            rvalue = permissions.implies(p);
-        }
-        return rvalue;
-    }
-
-    void determineAnyAuthenticatedUserRole() {
-        isAnyAuthenticatedUserRole = false;
-        // If no princiapls are present then any authenticated user is possible
-        if ((principals == null) || principals.isEmpty()) {
-        	isAnyAuthenticatedUserRole = true;
-        }
-    }
-
-    boolean isAnyAuthenticatedUserRole() {
-        return isAnyAuthenticatedUserRole;
-    }
-
-    boolean isPrincipalInRole(Principal p) {
-        if (isAnyAuthenticatedUserRole && (p != null)) {
-            return true;
-        }
-
-        boolean rvalue = false;
-        if (principals != null) {
-            rvalue = principals.contains(p);
-        }
-        return rvalue;
-    }
-
-    boolean arePrincipalsInRole(Principal subject[]) {
-        if (subject == null || subject.length == 0) {
-            return false;
-        }
-        if (isAnyAuthenticatedUserRole) {
-            return true;
-        }
-        if (principals == null || principals.isEmpty()) {
-            return false;
-        }
-
-        boolean rvalue = false;
-        for (Principal p : subject) {
-            if (principals.contains(p)) {
-                rvalue = true;
-                break;
-            }
-        }
-        return rvalue;
     }
 }

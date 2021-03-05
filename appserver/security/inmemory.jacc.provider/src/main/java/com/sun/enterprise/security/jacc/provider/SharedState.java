@@ -16,196 +16,168 @@
 
 package com.sun.enterprise.security.jacc.provider;
 
+import static java.util.logging.Level.WARNING;
+
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import jakarta.security.jacc.PolicyContext;
 import jakarta.security.jacc.PolicyContextException;
 
 /**
- * 
+ *
  * @author monzillo
  */
 public class SharedState {
+    
+    private static final Logger logger = Logger.getLogger(SharedState.class.getPackage().getName());
 
-    //lock on the shared configTable and linkTable
+    // lock on the shared configTable and linkTable
     private static ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock(true);
     private static Lock rLock = rwLock.readLock();
     private static Lock wLock = rwLock.writeLock();
-    private static HashMap<String, SimplePolicyConfiguration> configTable =
-            new HashMap<String, SimplePolicyConfiguration>();
-    private static HashMap<String, HashSet<String>> linkTable =
-            new HashMap<String, HashSet<String>>();
-    private static final Logger logger =
-            Logger.getLogger(SharedState.class.getPackage().getName());
-
-    private SharedState() {
-    }
+    private static Map<String, SimplePolicyConfiguration> configTable = new HashMap<>();
+    private static Map<String, Set<String>> linkTable = new HashMap<>();
+    
 
     static Logger getLogger() {
         return logger;
     }
 
     static SimplePolicyConfiguration lookupConfig(String pcid) {
-
-        SimplePolicyConfiguration pc = null;
         wLock.lock();
         try {
-            pc = configTable.get(pcid);
+            return configTable.get(pcid);
         } finally {
             wLock.unlock();
         }
-        return pc;
     }
 
     static SimplePolicyConfiguration getConfig(String pcid, boolean remove) {
-
-        SimplePolicyConfiguration pc = null;
+        SimplePolicyConfiguration simplePolicyConfiguration = null;
         wLock.lock();
         try {
-            pc = configTable.get(pcid);
-            if (pc == null) {
-                pc = new SimplePolicyConfiguration(pcid);
+            simplePolicyConfiguration = configTable.get(pcid);
+            if (simplePolicyConfiguration == null) {
+                simplePolicyConfiguration = new SimplePolicyConfiguration(pcid);
                 SharedState.initLinks(pcid);
-                configTable.put(pcid, pc);
+                configTable.put(pcid, simplePolicyConfiguration);
             } else if (remove) {
                 SharedState.removeLinks(pcid);
             }
         } finally {
             wLock.unlock();
         }
-        return pc;
+        
+        return simplePolicyConfiguration;
     }
 
-    static SimplePolicyConfiguration getActiveConfig()
-            throws PolicyContextException {
-        String pcid = PolicyContext.getContextID();
-        SimplePolicyConfiguration pc = null;
-        if (pcid != null) {
+    static SimplePolicyConfiguration getActiveConfig() throws PolicyContextException {
+        String contectId = PolicyContext.getContextID();
+        SimplePolicyConfiguration simplePolicyConfiguration = null;
+        if (contectId != null) {
             rLock.lock();
             try {
-                pc = configTable.get(pcid);
-                if (pc == null) {
-                    /* unknown policy context set on thread
-                     * return null to allow checking to be performed with
-                     * default context. Should repair improper setting
-                     * of context by encompassing runtime.
+                simplePolicyConfiguration = configTable.get(contectId);
+                if (simplePolicyConfiguration == null) {
+                    /*
+                     * unknown policy context set on thread return null to allow checking to be performed with default context. Should
+                     * repair improper setting of context by encompassing runtime.
                      */
-                    SimplePolicyConfiguration.logException(Level.WARNING,
-                            "invalid policy context id",
-                            new PolicyContextException());
+                    SimplePolicyConfiguration.logException(WARNING, "invalid policy context id", new PolicyContextException());
                 }
 
             } finally {
                 rLock.unlock();
             }
-            if (pc != null) {
-                if (!pc.inService()) {
-                    /* policy context set on thread is not in service 
-                     * return null to allow checking to be performed with
-                     * default context. Should repair improper setting
-                     * of context by encompassing runtime.
+            if (simplePolicyConfiguration != null) {
+                if (!simplePolicyConfiguration.inService()) {
+                    /*
+                     * policy context set on thread is not in service return null to allow checking to be performed with default context.
+                     * Should repair improper setting of context by encompassing runtime.
                      */
-                    SimplePolicyConfiguration.logException(Level.FINEST,
-                            "invalid policy context state",
-                            new PolicyContextException());
-                    pc = null;
+                    SimplePolicyConfiguration.logException(Level.FINEST, "invalid policy context state", new PolicyContextException());
+                    simplePolicyConfiguration = null;
                 }
             }
         }
 
-        return pc;
+        return simplePolicyConfiguration;
     }
 
     /**
-     * Creates a relationship between this configuration and another
-     * such that they share the same principal-to-role mappings.
-     * PolicyConfigurations are linked to apply a common principal-to-role
-     * mapping to multiple seperately manageable PolicyConfigurations,
-     * as is required when an application is composed of multiple
-     * modules.
+     * Creates a relationship between this configuration and another such that they share the same principal-to-role
+     * mappings. PolicyConfigurations are linked to apply a common principal-to-role mapping to multiple seperately
+     * manageable PolicyConfigurations, as is required when an application is composed of multiple modules.
      * <P>
-     * Note that the policy statements which comprise a role, or comprise
-     * the excluded or unchecked policy collections in a PolicyConfiguration
-     * are unaffected by the configuration being linked to another.
+     * Note that the policy statements which comprise a role, or comprise the excluded or unchecked policy collections in a
+     * PolicyConfiguration are unaffected by the configuration being linked to another.
      * <P>
-     * The relationship formed by this method is symetric, transitive
-     * and idempotent. 
+     * The relationship formed by this method is symetric, transitive and idempotent.
+     *
      * @param id
      * @param otherId
-     * @throws jakarta.security.jacc.PolicyContextException If otherID 
-     * equals receiverID. no relationship is formed.
+     * @throws jakarta.security.jacc.PolicyContextException If otherID equals receiverID. no relationship is formed.
      */
-    static void link(String id, String otherId)
-            throws jakarta.security.jacc.PolicyContextException {
-
+    static void link(String id, String otherId) throws jakarta.security.jacc.PolicyContextException {
         wLock.lock();
         try {
-
             if (otherId.equals(id)) {
-                String msg = "Operation attempted to link PolicyConfiguration to itself.";
-                throw new IllegalArgumentException(msg);
+                throw new IllegalArgumentException("Operation attempted to link PolicyConfiguration to itself.");
             }
 
-// get the linkSet corresponding to this context
-            HashSet<String> linkSet = linkTable.get(id);
+            // Get the linkSet corresponding to this context
+            Set<String> linkSet = linkTable.get(id);
 
-            // get the linkSet corresponding to the context being linked to this
-            HashSet otherLinkSet = linkTable.get(otherId);
+            // Get the linkSet corresponding to the context being linked to this
+            Set<String> otherLinkSet = linkTable.get(otherId);
 
             if (otherLinkSet == null) {
-                String msg = "Linked policy configuration (" + otherId + ") does not exist";
-                throw new RuntimeException(msg);
+                throw new RuntimeException("Linked policy configuration (" + otherId + ") does not exist");
             }
-
-            Iterator it = otherLinkSet.iterator();
-
-            // for each context (id) linked to the context being linked to this
-            while (it.hasNext()) {
-                String nextid = (String) it.next();
-
-                //add the id to this linkSet
+            
+            for (String nextid : otherLinkSet) {
+                // Add the id to this linkSet
                 linkSet.add(nextid);
-
-                //replace the linkset mapped to all the contexts being linked
-                //to this context, with this linkset.
+                
+                // Replace the linkset mapped to all the contexts being linked
+                // to this context, with this linkset.
                 linkTable.put(nextid, linkSet);
             }
-
         } finally {
             wLock.unlock();
         }
     }
 
-    static void initLinks(String id) {
-        // create a new linkSet with only this context id, and put in the table.
-        HashSet linkSet = new HashSet();
-        linkSet.add(id);
-        linkTable.put(id, linkSet);
+    static void initLinks(String contextId) {
+        // Create a new linkSet with only this context id, and put in the table.
+        Set<String> linkSet = new HashSet<>();
+        linkSet.add(contextId);
+        linkTable.put(contextId, linkSet);
     }
 
-    static void removeLinks(String id) {
+    static void removeLinks(String contextId) {
         wLock.lock();
-        try {        // get the linkSet corresponding to this context.
-            HashSet linkSet = linkTable.get(id);
-            // remove this context id from the linkSet (which may be shared
+        try { // get the linkSet corresponding to this context.
+            Set<String> linkSet = linkTable.get(contextId);
+            
+            // Remove this context id from the linkSet (which may be shared
             // with other contexts), and unmap the linkSet from this context.
             if (linkSet != null) {
-                linkSet.remove(id);
-                linkTable.remove(id);
+                linkSet.remove(contextId);
+                linkTable.remove(contextId);
             }
 
-            initLinks(id);
+            initLinks(contextId);
         } finally {
             wLock.unlock();
         }
-
     }
 
 }
-
-

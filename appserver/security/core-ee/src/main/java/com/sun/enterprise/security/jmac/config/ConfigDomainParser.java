@@ -53,16 +53,17 @@ public class ConfigDomainParser implements ConfigParser {
     static {
         _logger = LogDomains.getLogger(ConfigDomainParser.class, LogDomains.SECURITY_LOGGER);
     }
-    
+
     private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
     private Map configMap = new HashMap();
-    private Set<String> layersWithDefault = new HashSet<String>();
+    private Set<String> layersWithDefault = new HashSet<>();
 
     public ConfigDomainParser() throws IOException {
     }
 
+    @Override
     public void initialize(Object service) throws IOException {
         if (service == null && Globals.getDefaultHabitat() != null) {
             service = Globals.getDefaultHabitat().getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
@@ -108,10 +109,12 @@ public class ConfigDomainParser implements ConfigParser {
         }
     }
 
+    @Override
     public Map getConfigMap() {
         return configMap;
     }
 
+    @Override
     public Set<String> getLayersWithDefault() {
         return layersWithDefault;
     }
@@ -152,8 +155,8 @@ public class ConfigDomainParser implements ConfigParser {
         String id = pConfig.getProviderId();
         String type = pConfig.getProviderType();
         String moduleClass = pConfig.getClassName();
-        MessagePolicy requestPolicy = parsePolicy((RequestPolicy) pConfig.getRequestPolicy());
-        MessagePolicy responsePolicy = parsePolicy((ResponsePolicy) pConfig.getResponsePolicy());
+        MessagePolicy requestPolicy = parsePolicy(pConfig.getRequestPolicy());
+        MessagePolicy responsePolicy = parsePolicy(pConfig.getResponsePolicy());
 
         // get the module options
 
@@ -205,7 +208,7 @@ public class ConfigDomainParser implements ConfigParser {
         // map id to Intercept
         intEntry.idMap.put(id, idEntry);
     }
-   
+
     private String expand(String rawProperty) {
         Matcher propertyMatcher = PROPERTY_PATTERN.matcher(rawProperty);
         StringBuilder propertyBuilder = new StringBuilder();
@@ -214,19 +217,19 @@ public class ConfigDomainParser implements ConfigParser {
             if (propertyMatcher.group(1) != null) {
                 // Ignore ${{...}} matched, so just append everything
                 propertyMatcher.appendReplacement(propertyBuilder, quoteReplacement(propertyMatcher.group()));
-            } else { 
-                
+            } else {
+
                 String replacement = System.getProperty(propertyMatcher.group(2));
                 if (replacement == null) {
                     throw new IllegalStateException("No system property for " + propertyMatcher.group(2));
                 }
-                
+
                 // The replacement pattern matched
                 propertyMatcher.appendReplacement(propertyBuilder, quoteReplacement(replacement));
             }
         }
         propertyMatcher.appendTail(propertyBuilder);
-        
+
         return propertyBuilder.toString();
     }
 
@@ -251,5 +254,5 @@ public class ConfigDomainParser implements ConfigParser {
         String authRecipient = policy.getAuthRecipient();
         return AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
-    
+
 }

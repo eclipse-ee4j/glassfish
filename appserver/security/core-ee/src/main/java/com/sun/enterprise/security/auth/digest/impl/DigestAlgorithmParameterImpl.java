@@ -16,58 +16,59 @@
 
 package com.sun.enterprise.security.auth.digest.impl;
 
-
-
-
 /**
- * Implementation class for Digest algorithm parameters. 
+ * Implementation class for Digest algorithm parameters.
+ *
  * @author K.Venugopal@sun.com
  */
 
-public class DigestAlgorithmParameterImpl implements  com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter {
-    
+public class DigestAlgorithmParameterImpl implements com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter {
+
     private static byte[] delimeter = ":".getBytes();
     private String algorithm = "";
-    private byte[] data = null;          
+    private byte[] data = null;
     private String name = "";
 
-    public DigestAlgorithmParameterImpl(String name,byte[] data) {        
+    public DigestAlgorithmParameterImpl(String name, byte[] data) {
         this.data = data;
         this.name = name;
     }
-    
-    public DigestAlgorithmParameterImpl(String name,byte[] data,byte delimiter) {        
+
+    public DigestAlgorithmParameterImpl(String name, byte[] data, byte delimiter) {
         this.data = data;
-        this.delimeter = delimeter;
+        DigestAlgorithmParameterImpl.delimeter = delimeter;
         this.name = name;
     }
-    
-    
-    public DigestAlgorithmParameterImpl(String name,String algorithm, byte[] data) {
+
+    public DigestAlgorithmParameterImpl(String name, String algorithm, byte[] data) {
         this.algorithm = algorithm;
         this.data = data;
         this.name = name;
     }
-    
-    public DigestAlgorithmParameterImpl(String name,String algorithm, byte[] data,byte [] delimiter) {
+
+    public DigestAlgorithmParameterImpl(String name, String algorithm, byte[] data, byte[] delimiter) {
         this.algorithm = algorithm;
         this.data = data;
-        this.delimeter = delimeter;
+        DigestAlgorithmParameterImpl.delimeter = delimeter;
         this.name = name;
     }
-    
+
+    @Override
     public String getAlgorithm() {
         return this.algorithm;
     }
-    
-    public  byte[] getValue() {
+
+    @Override
+    public byte[] getValue() {
         return data;
-    }    
-   
+    }
+
+    @Override
     public byte[] getDelimiter() {
         return delimeter;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }

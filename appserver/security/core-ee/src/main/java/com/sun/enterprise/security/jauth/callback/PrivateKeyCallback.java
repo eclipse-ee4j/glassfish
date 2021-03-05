@@ -17,6 +17,7 @@
 package com.sun.enterprise.security.jauth.callback;
 
 import java.math.BigInteger;
+
 import javax.security.auth.x500.X500Principal;
 
 /**
@@ -24,31 +25,28 @@ import javax.security.auth.x500.X500Principal;
  *
  * @version %I%, %G%
  */
-public class PrivateKeyCallback 
-        extends jakarta.security.auth.message.callback.PrivateKeyCallback {
+public class PrivateKeyCallback extends jakarta.security.auth.message.callback.PrivateKeyCallback {
 
     /**
      * Marker interface for private key request types.
      */
-    public static interface Request extends
-            jakarta.security.auth.message.callback.PrivateKeyCallback.Request { };
+    public interface Request extends jakarta.security.auth.message.callback.PrivateKeyCallback.Request {
+    }
 
     /**
      * Request type for private keys that are identified via an alias.
      */
-    public static class AliasRequest extends
-            jakarta.security.auth.message.callback.PrivateKeyCallback.AliasRequest
-            implements Request {
+    public static class AliasRequest extends jakarta.security.auth.message.callback.PrivateKeyCallback.AliasRequest implements Request {
 
         /**
          * Construct an AliasRequest with an alias.
          *
-         * <p> The alias is used to directly identify the private key
-         * to be returned.  The corresponding certificate chain for the
+         * <p>
+         * The alias is used to directly identify the private key to be returned. The corresponding certificate chain for the
          * private key is also returned.
          *
-         * <p> If the alias is null,
-         * the handler of the callback relies on its own default.
+         * <p>
+         * If the alias is null, the handler of the callback relies on its own default.
          *
          * @param alias name identifier for the private key, or null.
          */
@@ -60,19 +58,18 @@ public class PrivateKeyCallback
     /**
      * Request type for private keys that are identified via a SubjectKeyID
      */
-    public static class SubjectKeyIDRequest extends
-            jakarta.security.auth.message.callback.PrivateKeyCallback.SubjectKeyIDRequest
+    public static class SubjectKeyIDRequest extends jakarta.security.auth.message.callback.PrivateKeyCallback.SubjectKeyIDRequest
             implements Request {
 
         /**
          * Construct a SubjectKeyIDRequest with an subjectKeyID.
          *
-         * <p> The subjectKeyID is used to directly identify the private key
-         * to be returned.  The corresponding certificate chain for the
-         * private key is also returned.
+         * <p>
+         * The subjectKeyID is used to directly identify the private key to be returned. The corresponding certificate chain for
+         * the private key is also returned.
          *
-         * <p> If the subjectKeyID is null,
-         * the handler of the callback relies on its own default.
+         * <p>
+         * If the subjectKeyID is null, the handler of the callback relies on its own default.
          *
          * @param subjectKeyID identifier for the private key, or null.
          */
@@ -82,32 +79,25 @@ public class PrivateKeyCallback
     }
 
     /**
-     * Request type for private keys that are identified via an
-     * issuer/serial number.
+     * Request type for private keys that are identified via an issuer/serial number.
      */
-    public static class IssuerSerialNumRequest extends
-           jakarta.security.auth.message.callback.PrivateKeyCallback.IssuerSerialNumRequest
-           implements Request {
+    public static class IssuerSerialNumRequest extends jakarta.security.auth.message.callback.PrivateKeyCallback.IssuerSerialNumRequest
+            implements Request {
 
         /**
          * Constructs a IssuerSerialNumRequest with an issuer/serial number.
          *
-         * <p> The issuer/serial number are used to identify a
-         * public key certificate.  The corresponding private key
-         * is returned in the callback.  The corresponding certificate chain
-         * for the private key is also returned.
+         * <p>
+         * The issuer/serial number are used to identify a public key certificate. The corresponding private key is returned in
+         * the callback. The corresponding certificate chain for the private key is also returned.
          *
-         * If the issuer/serialNumber parameters are null,
-         * the handler of the callback relies on its own defaults.
+         * If the issuer/serialNumber parameters are null, the handler of the callback relies on its own defaults.
          *
-         * @param issuer the X500Principal name of the certificate issuer,
-         *                or null.
+         * @param issuer the X500Principal name of the certificate issuer, or null.
          *
-         * @param serialNumber the serial number of the certificate,
-         *                or null.
+         * @param serialNumber the serial number of the certificate, or null.
          */
-        public IssuerSerialNumRequest(X500Principal issuer,
-                                        BigInteger serialNumber) {
+        public IssuerSerialNumRequest(X500Principal issuer, BigInteger serialNumber) {
             super(issuer, serialNumber);
         }
     }
@@ -115,12 +105,12 @@ public class PrivateKeyCallback
     /**
      * Constructs this PrivateKeyCallback with a private key Request object.
      *
-     * <p> The <i>request</i> object identifies the private key
-     * to be returned.  The corresponding certificate chain for the
+     * <p>
+     * The <i>request</i> object identifies the private key to be returned. The corresponding certificate chain for the
      * private key is also returned.
      *
-     * <p> If the <i>request</i> object is null,
-     * the handler of the callback relies on its own default.
+     * <p>
+     * If the <i>request</i> object is null, the handler of the callback relies on its own default.
      *
      * @param request identifier for the private key, or null.
      */
@@ -131,11 +121,11 @@ public class PrivateKeyCallback
     /**
      * Get the Request object which identifies the private key to be returned.
      *
-     * @return the Request object which identifies the private key
-     *		to be returned, or null.  If null, the handler of the callback
-     *		relies on its own default.
+     * @return the Request object which identifies the private key to be returned, or null. If null, the handler of the
+     * callback relies on its own default.
      */
+    @Override
     public Request getRequest() {
-	return (Request)super.getRequest();
+        return (Request) super.getRequest();
     }
 }

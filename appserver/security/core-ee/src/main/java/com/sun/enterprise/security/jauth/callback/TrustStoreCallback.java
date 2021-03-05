@@ -21,21 +21,19 @@ import java.security.KeyStore;
 /**
  * Callback for trusted certificate KeyStore.
  *
- * <p> A trusted certificate KeyStore may be used to determine
- * whether a given certificate chain can be trusted.
+ * <p>
+ * A trusted certificate KeyStore may be used to determine whether a given certificate chain can be trusted.
  *
  * @version %I%, %G%
  */
-public class TrustStoreCallback
-        extends jakarta.security.auth.message.callback.TrustStoreCallback {
+public class TrustStoreCallback extends jakarta.security.auth.message.callback.TrustStoreCallback {
 
     /**
      * Set the trusted certificate KeyStore.
      *
-     * @param trustStore the trusted certificate KeyStore,
-     *		which must already be loaded.
+     * @param trustStore the trusted certificate KeyStore, which must already be loaded.
      */
     public void setStore(KeyStore trustStore) {
-	setTrustStore(trustStore);
+        setTrustStore(trustStore);
     }
 }

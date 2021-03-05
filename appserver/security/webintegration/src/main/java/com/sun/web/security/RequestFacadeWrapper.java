@@ -24,22 +24,34 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.RequestFacade;
 
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
 
     private final HttpServletRequest servletRequest;
 
-    RequestFacadeWrapper(Request request,
-            HttpServletRequest servletRequest,boolean mask) {
-        super(request,mask);
+    RequestFacadeWrapper(Request request, HttpServletRequest servletRequest, boolean mask) {
+        super(request, mask);
         this.servletRequest = servletRequest;
     }
-    
+
     /**
      * methods defined by HttpServletRequest
      */
@@ -60,7 +72,7 @@ class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
 
     @Override
     public String getHeader(String name) {
-         return servletRequest.getHeader(name);
+        return servletRequest.getHeader(name);
     }
 
     @Override
@@ -95,7 +107,7 @@ class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
 
     @Override
     public HttpServletMapping getHttpServletMapping() {
-        return servletRequest.getHttpServletMapping(); 
+        return servletRequest.getHttpServletMapping();
     }
 
     @Override
@@ -211,7 +223,7 @@ class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
     /**
      * Methods inherited from ServletRequest
      */
-    
+
     @Override
     public Object getAttribute(String name) {
         return servletRequest.getAttribute(name);
@@ -368,8 +380,7 @@ class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
     }
 
     @Override
-    public AsyncContext startAsync(ServletRequest sRequest, 
-        ServletResponse sResponse) throws IllegalStateException {
+    public AsyncContext startAsync(ServletRequest sRequest, ServletResponse sResponse) throws IllegalStateException {
         return servletRequest.startAsync(sRequest, sResponse);
     }
 

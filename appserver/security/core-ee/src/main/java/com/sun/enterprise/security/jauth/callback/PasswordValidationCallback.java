@@ -21,8 +21,7 @@ package com.sun.enterprise.security.jauth.callback;
  *
  * @version %I%, %G%
  */
-public class PasswordValidationCallback extends
-        jakarta.security.auth.message.callback.PasswordValidationCallback {
+public class PasswordValidationCallback extends jakarta.security.auth.message.callback.PasswordValidationCallback {
 
     /**
      * Create a PasswordValidationCallback.

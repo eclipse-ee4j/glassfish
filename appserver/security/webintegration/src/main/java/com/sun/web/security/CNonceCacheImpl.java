@@ -16,17 +16,15 @@
 
 package com.sun.web.security;
 
-import org.glassfish.security.common.NonceInfo;
-import org.glassfish.security.common.CNonceCache;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import org.apache.catalina.util.StringManager;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
-
-
+import org.glassfish.security.common.CNonceCache;
+import org.glassfish.security.common.NonceInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *
@@ -36,57 +34,53 @@ import org.glassfish.hk2.api.PerLookup;
 @PerLookup
 public final class CNonceCacheImpl extends LinkedHashMap<String, NonceInfo> implements CNonceCache {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4657887758539980470L;
+
     private static final long LOG_SUPPRESS_TIME = 5 * 60 * 1000;
 
     private long lastLog = 0;
 
-    private static final Logger log = Logger.getLogger(
-        CNonceCacheImpl.class.getName());
+    private static final Logger log = Logger.getLogger(CNonceCacheImpl.class.getName());
 
-    private String  eldestCNonce = null;
-    private String  storeName = null;
+    private String eldestCNonce = null;
+    private String storeName = null;
     /**
      * The string manager for this package.
      */
-    static final StringManager sm =
-            StringManager.getManager("org.apache.catalina.util");
+    static final StringManager sm = StringManager.getManager("org.apache.catalina.util");
 
     public CNonceCacheImpl() {
 
     }
 
     /**
-     * Maximum number of client nonces to keep in the cache. If not specified,
-     * the default value of 1000 is used.
+     * Maximum number of client nonces to keep in the cache. If not specified, the default value of 1000 is used.
      */
     long cnonceCacheSize = 1000;
 
     /**
-     * How long server nonces are valid for in milliseconds. Defaults to 5
-     * minutes.
+     * How long server nonces are valid for in milliseconds. Defaults to 5 minutes.
      */
     long nonceValidity = 5 * 60 * 1000;
 
     @Override
-    protected boolean removeEldestEntry(
-            Map.Entry<String, NonceInfo> eldest) {
+    protected boolean removeEldestEntry(Map.Entry<String, NonceInfo> eldest) {
         // This is called from a sync so keep it simple
         long currentTime = System.currentTimeMillis();
         eldestCNonce = eldest.getKey();
         if (size() > getCnonceCacheSize()) {
-            if (lastLog < currentTime
-                    && currentTime - eldest.getValue().getTimestamp()
-                    < getNonceValidity()) {
+            if (lastLog < currentTime && currentTime - eldest.getValue().getTimestamp() < getNonceValidity()) {
                 // Replay attack is possible
-                log.warning(sm.getString(
-                        "digestAuthenticator.cacheRemove"));
+                log.warning(sm.getString("digestAuthenticator.cacheRemove"));
                 lastLog = currentTime + LOG_SUPPRESS_TIME;
             }
             return true;
         }
         return false;
     }
-
 
     /**
      * @return the cnonceCacheSize

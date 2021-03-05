@@ -22,30 +22,29 @@
 
 package com.sun.enterprise.security.jmac.callback;
 
-import com.sun.enterprise.security.SecurityServicesUtil;
 import java.io.IOException;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-//V3:Commented import com.sun.enterprise.Switch;
-import com.sun.enterprise.security.jmac.config.CallbackHandlerConfig;
-import com.sun.enterprise.security.jmac.config.HandlerContext;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.security.SecurityServicesUtil;
+//V3:Commented import com.sun.enterprise.Switch;
+import com.sun.enterprise.security.jmac.config.CallbackHandlerConfig;
+import com.sun.enterprise.security.jmac.config.HandlerContext;
+
 /**
- * @author  Shing Wai Chan
+ * @author Shing Wai Chan
  */
 @Service
-@ContractsProvided({ContainerCallbackHandler.class, CallbackHandler.class})
-public final class ContainerCallbackHandler 
-        implements CallbackHandler, CallbackHandlerConfig {
+@ContractsProvided({ ContainerCallbackHandler.class, CallbackHandler.class })
+public final class ContainerCallbackHandler implements CallbackHandler, CallbackHandlerConfig {
     private CallbackHandler handler = null;
-    
-    
+
     public ContainerCallbackHandler() {
         if (Globals.getDefaultHabitat() == null || SecurityServicesUtil.getInstance().isACC()) {
             handler = new ClientContainerCallbackHandler();
@@ -54,27 +53,29 @@ public final class ContainerCallbackHandler
         }
     }
 
-    public void handle(Callback[] callbacks)
-            throws IOException, UnsupportedCallbackException {
+    @Override
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         handler.handle(callbacks);
     }
 
+    @Override
     public void setHandlerContext(HandlerContext handlerContext) {
-        ((CallbackHandlerConfig)handler).setHandlerContext(handlerContext);
+        ((CallbackHandlerConfig) handler).setHandlerContext(handlerContext);
     }
-    
+
     public void setHandlerContext(String realm) {
         final String fRealmName = realm;
         HandlerContext handlerContext = new HandlerContext() {
 
+            @Override
             public String getRealmName() {
                 return fRealmName;
             }
         };
         ((BaseContainerCallbackHandler) handler).setHandlerContext(handlerContext);
     }
-    
-/*    private  boolean isAppclientContainer() {
-        return SecurityServicesUtil.getInstance().isACC();
-    }*/
+
+    /*
+     * private boolean isAppclientContainer() { return SecurityServicesUtil.getInstance().isACC(); }
+     */
 }

@@ -16,14 +16,18 @@
 
 package com.sun.enterprise.security.jmac.callback;
 
-import com.sun.enterprise.security.common.AppservAccessController;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.Set;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
-import jakarta.security.auth.message.callback.GroupPrincipalCallback;
+
 import org.glassfish.security.common.Group;
+
+import com.sun.enterprise.security.common.AppservAccessController;
+
+import jakarta.security.auth.message.callback.GroupPrincipalCallback;
 
 /**
  *
@@ -35,7 +39,8 @@ public class ServerLoginCBHUtil {
         final Subject fs = gpCallback.getSubject();
         final String[] groups = gpCallback.getGroups();
         if (groups != null && groups.length > 0) {
-            AppservAccessController.doPrivileged(new PrivilegedAction(){
+            AppservAccessController.doPrivileged(new PrivilegedAction() {
+                @Override
                 public java.lang.Object run() {
                     for (String group : groups) {
                         fs.getPrincipals().add(new Group(group));
@@ -44,7 +49,8 @@ public class ServerLoginCBHUtil {
                 }
             });
         } else if (groups == null) {
-            AppservAccessController.doPrivileged(new PrivilegedAction(){
+            AppservAccessController.doPrivileged(new PrivilegedAction() {
+                @Override
                 public java.lang.Object run() {
                     Set<Principal> principalSet = fs.getPrincipals();
                     principalSet.removeAll(fs.getPrincipals(Group.class));
@@ -54,7 +60,7 @@ public class ServerLoginCBHUtil {
         }
     }
 
-    //NOTE: this method is called by reflection from ServerLoginCallbackHandler
+    // NOTE: this method is called by reflection from ServerLoginCallbackHandler
     public static void processGroupPrincipal(Callback gpCallback) {
         if (gpCallback instanceof GroupPrincipalCallback) {
             processGP((GroupPrincipalCallback) gpCallback);

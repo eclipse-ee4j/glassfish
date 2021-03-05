@@ -16,21 +16,21 @@
 
 package com.sun.web.security;
 
-import com.sun.enterprise.security.CNonceCacheFactory;
-import org.glassfish.security.common.CNonceCache;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-
 import java.util.HashMap;
 import java.util.Map;
-import org.glassfish.api.admin.ServerEnvironment;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
+import org.glassfish.security.common.CNonceCache;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.CNonceCacheFactory;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 /**
  *
@@ -48,30 +48,26 @@ public class CNonceCacheFactoryImpl implements CNonceCacheFactory, PostConstruct
     @Named("CNonceCache")
     private Provider<CNonceCache> cNonceCacheProvider;
 
-
     @Inject()
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private SecurityService secService;
 
     /**
-     * Maximum number of client nonces to keep in the cache. If not specified,
-     * the default value of 1000 is used.
+     * Maximum number of client nonces to keep in the cache. If not specified, the default value of 1000 is used.
      */
     protected long cnonceCacheSize = 1000;
 
     /**
-     * How long server nonces are valid for in milliseconds. Defaults to 5
-     * minutes.
+     * How long server nonces are valid for in milliseconds. Defaults to 5 minutes.
      */
     protected long nonceValidity = 5 * 60 * 1000;
-
 
     @Override
     public void postConstruct() {
         String sz = this.secService.getPropertyValue("NONCE_CACHE_SIZE");
         String age = this.secService.getPropertyValue("MAX_NONCE_AGE");
         if (sz != null) {
-            this.cnonceCacheSize =  Long.parseLong(sz);
+            this.cnonceCacheSize = Long.parseLong(sz);
         }
         if (age != null) {
             this.nonceValidity = Long.parseLong(age);
@@ -81,8 +77,8 @@ public class CNonceCacheFactoryImpl implements CNonceCacheFactory, PostConstruct
     @Override
     public CNonceCache createCNonceCache(String appName, String clusterName, String instanceName, String storeName) {
         boolean haEnabled = (clusterName != null) && (instanceName != null) && (storeName != null);
-        CNonceCache  cache = null;
-        Map<String, String> map = new HashMap<String, String>();
+        CNonceCache cache = null;
+        Map<String, String> map = new HashMap<>();
         if (haEnabled) {
             cache = cHANonceCacheProvider.get();
             map.put(CLUSTER_NAME_PROP, clusterName);

@@ -21,30 +21,27 @@ package com.sun.enterprise.security.jauth.callback;
  *
  * @version %I%, %G%
  */
-public class SecretKeyCallback 
-        extends jakarta.security.auth.message.callback.SecretKeyCallback {
+public class SecretKeyCallback extends jakarta.security.auth.message.callback.SecretKeyCallback {
 
     /**
      * Marker interface for private key request types.
      */
-    public static interface Request extends
-            jakarta.security.auth.message.callback.SecretKeyCallback.Request { };
+    public interface Request extends jakarta.security.auth.message.callback.SecretKeyCallback.Request {
+    }
 
     /**
      * Request type for secret keys that are identified via an alias.
      */
-    public static class AliasRequest extends
-            jakarta.security.auth.message.callback.SecretKeyCallback.AliasRequest
-            implements Request {
+    public static class AliasRequest extends jakarta.security.auth.message.callback.SecretKeyCallback.AliasRequest implements Request {
 
         /**
          * Construct an AliasRequest with an alias.
          *
-         * <p> The alias is used to directly identify the secret key
-         * to be returned.
+         * <p>
+         * The alias is used to directly identify the secret key to be returned.
          *
-         * <p> If the alias is null,
-         * the handler of the callback relies on its own default.
+         * <p>
+         * If the alias is null, the handler of the callback relies on its own default.
          *
          * @param alias name identifier for the secret key, or null.
          */
@@ -56,26 +53,25 @@ public class SecretKeyCallback
     /**
      * Constructs this SecretKeyCallback with a secret key Request object.
      *
-     * <p> The <i>request</i> object identifies the secret key
-     * to be returned.
+     * <p>
+     * The <i>request</i> object identifies the secret key to be returned.
      *
-     * If the alias is null, the handler of the callback
-     * relies on its own default.
+     * If the alias is null, the handler of the callback relies on its own default.
      *
      * @param request request object identifying the secret key, or null.
      */
     public SecretKeyCallback(Request request) {
-	super(request);
+        super(request);
     }
 
     /**
      * Get the Request object which identifies the secret key to be returned.
      *
-     * @return the Request object which identifies the private key
-     *		to be returned, or null.  If null, the handler of the callback
-     *		relies on its own deafult.
+     * @return the Request object which identifies the private key to be returned, or null. If null, the handler of the
+     * callback relies on its own deafult.
      */
+    @Override
     public Request getRequest() {
-	return (Request)super.getRequest();
+        return (Request) super.getRequest();
     }
 }

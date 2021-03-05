@@ -16,55 +16,63 @@
 
 package com.sun.enterprise.security.jmac;
 
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import com.sun.enterprise.security.jmac.config.ConfigHelper;
 import java.util.Map;
-import jakarta.security.auth.message.MessageInfo;
-import com.sun.enterprise.security.jauth.AuthParam;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.jvnet.hk2.annotations.Contract;
 
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
+import com.sun.enterprise.security.jauth.AuthParam;
+import com.sun.enterprise.security.jmac.config.ConfigHelper;
+
+import jakarta.security.auth.message.MessageInfo;
+
 /**
- * A Delegate Interface for handling WebServices Specific Security and  JSR 196 Providers
- * This insulates the GF Web-Bundle from any WebServices Dependencies.
+ * A Delegate Interface for handling WebServices Specific Security and JSR 196 Providers This insulates the GF
+ * Web-Bundle from any WebServices Dependencies.
+ *
  * @author kumar.jayanti
  */
 @Contract
-public interface  WebServicesDelegate {
+public interface WebServicesDelegate {
     /**
-     * 
+     *
      * @param svcRef The ServiceReferenceDescriptor
      * @param properties The Properties Map passed to WebServices Code Via PipeCreator
      * @return The MessageSecurityBindingDescriptor
      */
-    public MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor svcRef, Map properties);
+    MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor svcRef, Map properties);
+
     /**
      * remove the registration of the argument listener from the Pipe
+     *
      * @param listener
      */
-    public void removeListener(ConfigHelper.AuthConfigRegistrationWrapper listener);
-    /** 
+    void removeListener(ConfigHelper.AuthConfigRegistrationWrapper listener);
+
+    /**
      * @return the classname of the Default JSR 196 WebServices Security Provider (A.k.a Metro Security Provider)
      */
-    public String  getDefaultWebServicesProvider();
-    
+    String getDefaultWebServicesProvider();
+
     /**
-     * @param messageInfo  The MessageInfo
+     * @param messageInfo The MessageInfo
      * @return the AuthContextID computed from the argument MessageInfo
      */
-    public String getAuthContextID(MessageInfo messageInfo);
-    
+    String getAuthContextID(MessageInfo messageInfo);
+
     /**
      * @param messageInfo TheMessageInfo
      * @return a new instance of SOAPAuthParam
      */
-    public AuthParam newSOAPAuthParam(MessageInfo messageInfo);
-    
+    AuthParam newSOAPAuthParam(MessageInfo messageInfo);
+
     /**
      * return the SOAP Message from the invocation, to be used by JACC PolicyContextHandler
+     *
      * @param inv the invocation
      * @return the SOAP Message
      */
-    public Object getSOAPMessage(ComponentInvocation inv);
+    Object getSOAPMessage(ComponentInvocation inv);
 }

@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.security.jauth;
 
-import java.util.*;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,217 +29,193 @@ import javax.security.auth.login.AppConfigurationEntry;
  */
 final class AuthContext {
 
-    static final String INIT			= "initialize";
-    static final String DISPOSE_SUBJECT		= "disposeSubject";
+    static final String INIT = "initialize";
+    static final String DISPOSE_SUBJECT = "disposeSubject";
 
-    static final String SECURE_REQUEST		= "secureRequest";
-    static final String VALIDATE_RESPONSE	= "validateResponse";
+    static final String SECURE_REQUEST = "secureRequest";
+    static final String VALIDATE_RESPONSE = "validateResponse";
 
-    static final String VALIDATE_REQUEST	= "validateRequest";
-    static final String SECURE_RESPONSE		= "secureResponse";
+    static final String VALIDATE_REQUEST = "validateRequest";
+    static final String SECURE_RESPONSE = "secureResponse";
 
-    // managesSessions method is implemented by looking for 
+    // managesSessions method is implemented by looking for
     // corresponding option value in module configuration
-    static final String MANAGES_SESSIONS	= "managesSessions";
-    static final String MANAGES_SESSIONS_OPTION	= "managessessions";
+    static final String MANAGES_SESSIONS = "managesSessions";
+    static final String MANAGES_SESSIONS_OPTION = "managessessions";
 
     private ConfigFile.Entry[] entries;
     private Logger logger;
 
-    AuthContext(ConfigFile.Entry[] entries,
-		Logger logger) throws AuthException {
+    AuthContext(ConfigFile.Entry[] entries, Logger logger) throws AuthException {
 
-	this.entries = entries;
-	this.logger = logger;
+        this.entries = entries;
+        this.logger = logger;
     }
 
     /**
      * Invoke modules according to configuration
      */
-    Object[] invoke(final String methodName, final Object[] args)
-		throws AuthException {
+    Object[] invoke(final String methodName, final Object[] args) throws AuthException {
 
-    // invoke modules in a doPrivileged
-	final Object rValues[] = new Object[entries.length];
+        // invoke modules in a doPrivileged
+        final Object rValues[] = new Object[entries.length];
 
-	try {
-	    java.security.AccessController.doPrivileged
-		(new java.security.PrivilegedExceptionAction() {
-		public Object run() throws AuthException {
-		    invokePriv(methodName, args, rValues);
-		    return null;
-		}
-	    });
-	} catch (java.security.PrivilegedActionException pae) {
-	    if (pae.getException() instanceof AuthException) {
-		throw (AuthException)pae.getException();
-	    } else {
-		AuthException ae = new AuthException();
-		ae.initCause(pae.getException());
-		throw ae;
-	    }
-	}
-	return rValues;
+        try {
+            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                @Override
+                public Object run() throws AuthException {
+                    invokePriv(methodName, args, rValues);
+                    return null;
+                }
+            });
+        } catch (java.security.PrivilegedActionException pae) {
+            if (pae.getException() instanceof AuthException) {
+                throw (AuthException) pae.getException();
+            }
+            AuthException ae = new AuthException();
+            ae.initCause(pae.getException());
+            throw ae;
+        }
+        return rValues;
     }
 
-    void invokePriv(String methodName, Object[] args, Object[] rValues)
-	throws AuthException {
+    void invokePriv(String methodName, Object[] args, Object[] rValues) throws AuthException {
 
-	// special treatment for managesSessions until the module
-	// interface can be extended.
-	if (methodName.equals(AuthContext.MANAGES_SESSIONS)) {
-	    for (int i = 0; i < entries.length; i++) {
-		Map options = entries[i].getOptions();
-		String mS = (String) options.get(AuthContext.MANAGES_SESSIONS_OPTION); 
-		rValues[i] = Boolean.valueOf(mS);
-	    }
-	    return;
-	}
+        // special treatment for managesSessions until the module
+        // interface can be extended.
+        if (methodName.equals(AuthContext.MANAGES_SESSIONS)) {
+            for (int i = 0; i < entries.length; i++) {
+                Map options = entries[i].getOptions();
+                String mS = (String) options.get(AuthContext.MANAGES_SESSIONS_OPTION);
+                rValues[i] = Boolean.valueOf(mS);
+            }
+            return;
+        }
 
-	boolean success = false;
-	AuthException firstRequiredError = null;
-	AuthException firstError = null;
+        boolean success = false;
+        AuthException firstRequiredError = null;
+        AuthException firstError = null;
 
-	// XXX no way to reverse module invocation
+        // XXX no way to reverse module invocation
 
-	for (int i = 0; i < entries.length; i++) {
+        for (int i = 0; i < entries.length; i++) {
 
-	    // get initialized module instance
-	
-	    Object module = entries[i].module;
+            // get initialized module instance
 
-	    // invoke the module
+            Object module = entries[i].module;
 
-	    try {
-		Method[] mArray = module.getClass().getMethods();
-		for (int j = 0; j < mArray.length; j++) {
-		    if (mArray[j].getName().equals(methodName)) {
+            // invoke the module
 
-			// invoke module
-			rValues[i] = mArray[j].invoke(module, args);
+            try {
+                Method[] mArray = module.getClass().getMethods();
+                for (Method element : mArray) {
+                    if (element.getName().equals(methodName)) {
 
-			// success -
-			// return if SUFFICIENT and no previous REQUIRED errors
-			
-			if (firstRequiredError == null &&
-			    entries[i].getControlFlag() ==
-		      AppConfigurationEntry.LoginModuleControlFlag.SUFFICIENT) {
+                        // invoke module
+                        rValues[i] = element.invoke(module, args);
 
-			    if (logger != null && logger.isLoggable(Level.FINE)) {
-                                logger.fine(entries[i].getLoginModuleName() +
-					"." +
-					methodName +
-					" SUFFICIENT success");
-			    }
+                        // success -
+                        // return if SUFFICIENT and no previous REQUIRED errors
 
-			    return;
-			}
+                        if (firstRequiredError == null
+                                && entries[i].getControlFlag() == AppConfigurationEntry.LoginModuleControlFlag.SUFFICIENT) {
 
-			if (logger != null && logger.isLoggable(Level.FINE)) {
-                                logger.fine(entries[i].getLoginModuleName() +
-					"." +
-					methodName +
-					" success");
-			}
+                            if (logger != null && logger.isLoggable(Level.FINE)) {
+                                logger.fine(entries[i].getLoginModuleName() + "." + methodName + " SUFFICIENT success");
+                            }
 
-			success = true;
-			break;
-		    }
-		}
+                            return;
+                        }
 
-		if (!success) {
-		    // PLEASE NOTE:
-		    // this exception will be thrown if any module 
-		    // in the context does not support the method.
-		    NoSuchMethodException nsme = 
-			new NoSuchMethodException("module " +
-				module.getClass().getName() +
-				" does not implement " +
-				methodName);
-		    AuthException ae = new AuthException();
-		    ae.initCause(nsme);
-		    throw ae;
-		}
-	    } catch (IllegalAccessException iae) {
-		AuthException ae = new AuthException();
-		ae.initCause(iae);
-		throw ae;
-	    } catch (InvocationTargetException ite) {
+                        if (logger != null && logger.isLoggable(Level.FINE)) {
+                            logger.fine(entries[i].getLoginModuleName() + "." + methodName + " success");
+                        }
 
-		// failure cases
+                        success = true;
+                        break;
+                    }
+                }
 
-		AuthException ae;
+                if (!success) {
+                    // PLEASE NOTE:
+                    // this exception will be thrown if any module
+                    // in the context does not support the method.
+                    NoSuchMethodException nsme = new NoSuchMethodException(
+                            "module " + module.getClass().getName() + " does not implement " + methodName);
+                    AuthException ae = new AuthException();
+                    ae.initCause(nsme);
+                    throw ae;
+                }
+            } catch (IllegalAccessException iae) {
+                AuthException ae = new AuthException();
+                ae.initCause(iae);
+                throw ae;
+            } catch (InvocationTargetException ite) {
 
-		if (ite.getCause() instanceof AuthException) {
-		    ae = (AuthException)ite.getCause();
-		} else {
-		    ae = new AuthException();
-		    ae.initCause(ite.getCause());
-		}
+                // failure cases
 
-		if (entries[i].getControlFlag() ==
-		    AppConfigurationEntry.LoginModuleControlFlag.REQUISITE) {
+                AuthException ae;
 
-		    if (logger != null && logger.isLoggable(Level.FINE)) {
-                                logger.fine(entries[i].getLoginModuleName() +
-					"." +
-					methodName +
-					" REQUISITE failure");
-		    }
+                if (ite.getCause() instanceof AuthException) {
+                    ae = (AuthException) ite.getCause();
+                } else {
+                    ae = new AuthException();
+                    ae.initCause(ite.getCause());
+                }
 
-		    // immediately throw exception
+                if (entries[i].getControlFlag() == AppConfigurationEntry.LoginModuleControlFlag.REQUISITE) {
 
-		    if (firstRequiredError != null) {
-			throw firstRequiredError;
-		    } else {
-			throw ae;
-		    }
+                    if (logger != null && logger.isLoggable(Level.FINE)) {
+                        logger.fine(entries[i].getLoginModuleName() + "." + methodName + " REQUISITE failure");
+                    }
 
-		} else if (entries[i].getControlFlag() ==
-			AppConfigurationEntry.LoginModuleControlFlag.REQUIRED) {
+                    // immediately throw exception
 
-		    if (logger != null && logger.isLoggable(Level.FINE)) {
-                            logger.fine(entries[i].getLoginModuleName() +
-                                    "." +
-                                    methodName +
-                                    " REQUIRED failure");
-		    }
+                    if (firstRequiredError != null) {
+                        throw firstRequiredError;
+                    }
+                    throw ae;
 
-		    // save exception and continue
+                }
+                if (entries[i].getControlFlag() == AppConfigurationEntry.LoginModuleControlFlag.REQUIRED) {
 
-		    if (firstRequiredError == null) {
-			firstRequiredError = ae;
-		    }
+                    if (logger != null && logger.isLoggable(Level.FINE)) {
+                        logger.fine(entries[i].getLoginModuleName() + "." + methodName + " REQUIRED failure");
+                    }
 
-		} else {
+                    // save exception and continue
 
-		    if (logger != null && logger.isLoggable(Level.FINE)) {
-                        logger.fine(entries[i].getLoginModuleName() +
-                                "." +
-                                methodName +
-                                " OPTIONAL failure");
-		    }
+                    if (firstRequiredError == null) {
+                        firstRequiredError = ae;
+                    }
 
-		    // save exception and continue
+                } else {
 
-		    if (firstError == null) {
-			firstError = ae;
-		    }
-		}
-	    }
-	}
+                    if (logger != null && logger.isLoggable(Level.FINE)) {
+                        logger.fine(entries[i].getLoginModuleName() + "." + methodName + " OPTIONAL failure");
+                    }
 
-	// done invoking entire stack of modules
+                    // save exception and continue
 
-	if (firstRequiredError != null) {
-	    throw firstRequiredError;
-	} else if (firstError != null && !success) {
-	    throw firstError;
-	}
+                    if (firstError == null) {
+                        firstError = ae;
+                    }
+                }
+            }
+        }
 
-	// if no errors, return gracefully
-	if (logger != null && logger.isLoggable(Level.FINE)) {
+        // done invoking entire stack of modules
+
+        if (firstRequiredError != null) {
+            throw firstRequiredError;
+        }
+        if (firstError != null && !success) {
+            throw firstError;
+        }
+
+        // if no errors, return gracefully
+        if (logger != null && logger.isLoggable(Level.FINE)) {
             logger.fine("overall " + methodName + " success");
-	}
+        }
     }
 }

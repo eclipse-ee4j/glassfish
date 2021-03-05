@@ -25,17 +25,17 @@ package com.sun.enterprise.security.jmac.callback;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.KeyStoreException;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.security.PrivateKey;
-import java.security.cert.Certificate;
+import java.security.PrivilegedAction;
 import java.security.cert.CertStore;
+import java.security.cert.Certificate;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,6 +52,30 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.x500.X500Principal;
+
+import org.glassfish.internal.api.Globals;
+//V3:Commented import com.sun.enterprise.Switch;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.MasterPassword;
+import org.glassfish.security.common.PrincipalImpl;
+
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.auth.login.common.LoginException;
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.jmac.config.CallbackHandlerConfig;
+import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
+import com.sun.enterprise.security.jmac.config.HandlerContext;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.security.store.PasswordAdapter;
+import com.sun.enterprise.security.web.integration.WebPrincipal;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
+import com.sun.logging.LogDomains;
+
 import jakarta.security.auth.message.callback.CallerPrincipalCallback;
 import jakarta.security.auth.message.callback.CertStoreCallback;
 import jakarta.security.auth.message.callback.GroupPrincipalCallback;
@@ -58,34 +83,10 @@ import jakarta.security.auth.message.callback.PasswordValidationCallback;
 import jakarta.security.auth.message.callback.PrivateKeyCallback;
 import jakarta.security.auth.message.callback.SecretKeyCallback;
 import jakarta.security.auth.message.callback.TrustStoreCallback;
-import javax.security.auth.x500.X500Principal;
-
-//V3:Commented import com.sun.enterprise.Switch;
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
-import com.sun.enterprise.security.auth.login.common.LoginException;
-import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
-import com.sun.enterprise.security.jmac.config.CallbackHandlerConfig;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
-import com.sun.enterprise.security.jmac.config.HandlerContext;
-import org.glassfish.security.common.MasterPassword;
-import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-import com.sun.enterprise.server.pluggable.SecuritySupport;
-import com.sun.logging.LogDomains;
-import java.util.Set;
-
-import org.glassfish.internal.api.Globals;
 
 /**
  * Base Callback Handler for Jakarta Authentication
- * 
+ *
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
@@ -116,6 +117,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         }
     }
 
+    @Override
     public void setHandlerContext(HandlerContext handlerContext) {
         this.handlerContext = handlerContext;
     }
@@ -130,6 +132,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
     protected abstract void handleSupportedCallbacks(Callback[] callbacks) throws IOException, UnsupportedCallbackException;
 
+    @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         if (callbacks == null) {
             return;
@@ -218,11 +221,12 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         final Principal callerPrincipal = sc != null ? sc.getCallerPrincipal() : null;
         final Principal defaultPrincipal = SecurityContext.getDefaultCallerPrincipal();
 
-        return ((Boolean) AppservAccessController.doPrivileged(new PrivilegedAction() {
+        return (Boolean) AppservAccessController.doPrivileged(new PrivilegedAction() {
 
             /**
              * this method uses 4 (numbered) criteria to determine if the argument WebPrincipal can be reused
              */
+            @Override
             public Boolean run() {
 
                 /*
@@ -281,27 +285,21 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                  * Copy principals from Subject within SecurityContext to receiving Subject
                  */
 
-                for (Principal p : wps.getPrincipals()) {
-                    fs.getPrincipals().add(p);
-                }
+                fs.getPrincipals().addAll(wps.getPrincipals());
 
                 /**
                  * Copy public credentials from Subject within SecurityContext to receiving Subject
                  */
-                for (Object publicCred : wps.getPublicCredentials()) {
-                    fs.getPublicCredentials().add(publicCred);
-                }
+                fs.getPublicCredentials().addAll(wps.getPublicCredentials());
 
                 /**
                  * Copy private credentials from Subject within SecurityContext to receiving Subject
                  */
-                for (Object privateCred : wps.getPrivateCredentials()) {
-                    fs.getPrivateCredentials().add(privateCred);
-                }
+                fs.getPrivateCredentials().addAll(wps.getPrivateCredentials());
 
                 return Boolean.TRUE;
             }
-        })).booleanValue();
+        });
     }
 
     private void processCallerPrincipal(CallerPrincipalCallback cpCallback) {
@@ -355,15 +353,14 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             if (principal instanceof X500Principal) {
                 LoginContextDriver.jmacLogin(fs, (X500Principal) principal);
             }
-        } else {
-            if (!principal.equals(SecurityContext.getDefaultCallerPrincipal())) {
-                LoginContextDriver.jmacLogin(fs, principal.getName(), realmName);
-            }
+        } else if (!principal.equals(SecurityContext.getDefaultCallerPrincipal())) {
+            LoginContextDriver.jmacLogin(fs, principal.getName(), realmName);
         }
 
         final Principal fprin = principal;
         final DistinguishedPrincipalCredential fdpc = new DistinguishedPrincipalCredential(principal);
         AppservAccessController.doPrivileged(new PrivilegedAction() {
+            @Override
             public java.lang.Object run() {
                 fs.getPrincipals().add(fprin);
                 Iterator iter = fs.getPublicCredentials().iterator();
@@ -384,6 +381,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         final String[] groups = gpCallback.getGroups();
         if (groups != null && groups.length > 0) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
+                @Override
                 public java.lang.Object run() {
                     for (String group : groups) {
                         fs.getPrincipals().add(new Group(group));
@@ -393,6 +391,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             });
         } else if (groups == null) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
+                @Override
                 public java.lang.Object run() {
                     Set<Principal> principalSet = fs.getPrincipals();
                     principalSet.removeAll(fs.getPrincipals(Group.class));
@@ -431,8 +430,9 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             }
             // explicitly ditch the password
             if (passwd != null) {
-                for (int i = 0; i < passwd.length; i++)
+                for (int i = 0; i < passwd.length; i++) {
                     passwd[i] = ' ';
+                }
             }
             pwdCallback.setResult(true);
         } catch (LoginException le) {
@@ -477,7 +477,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
                 String alias = aliasRequest.getAlias();
                 PrivateKeyEntry privKeyEntry;
-                
+
                 if (alias == null) {
                     // use default key
                     privKeyEntry = getDefaultPrivateKeyEntry(keyStores);
@@ -491,16 +491,16 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                 }
             } else if (request instanceof PrivateKeyCallback.IssuerSerialNumRequest) {
                 PrivateKeyCallback.IssuerSerialNumRequest issuerSerialNumRequest = (PrivateKeyCallback.IssuerSerialNumRequest) request;
-                
+
                 X500Principal issuer = issuerSerialNumRequest.getIssuer();
                 BigInteger serialNum = issuerSerialNumRequest.getSerialNum();
-                
+
                 if (issuer != null && serialNum != null) {
                     boolean found = false;
                     for (int i = 0; i < keyStores.length && !found; i++) {
                         Enumeration<String> aliases = keyStores[i].aliases();
                         while (aliases.hasMoreElements() && !found) {
-                            String nextAlias = (String) aliases.nextElement();
+                            String nextAlias = aliases.nextElement();
                             PrivateKey key = securitySupport.getPrivateKeyForAlias(nextAlias, i);
                             if (key != null) {
                                 Certificate[] certificates = keyStores[i].getCertificateChain(nextAlias);
@@ -518,10 +518,10 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             } else if (request instanceof PrivateKeyCallback.SubjectKeyIDRequest) {
                 PrivateKeyCallback.SubjectKeyIDRequest subjectKeyIDRequest = (PrivateKeyCallback.SubjectKeyIDRequest) request;
                 byte[] subjectKeyID = subjectKeyIDRequest.getSubjectKeyID();
-                
+
                 if (subjectKeyID != null) {
                     boolean found = false;
-                    
+
                     X509CertSelector selector = new X509CertSelector();
                     selector.setSubjectKeyIdentifier(toDerOctetString(subjectKeyID));
 
@@ -530,11 +530,11 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                         while (aliases.hasMoreElements() && !found) {
                             String nextAlias = aliases.nextElement();
                             PrivateKey key = securitySupport.getPrivateKeyForAlias(nextAlias, i);
-                            
+
                             if (key != null) {
                                 Certificate[] certificates = keyStores[i].getCertificateChain(nextAlias);
-                                
-                                if (selector.match((X509Certificate) certificates[0])) {
+
+                                if (selector.match(certificates[0])) {
                                     privateKey = key;
                                     certificateChain = certificates;
                                     found = true;
@@ -564,10 +564,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                     privateKey = privateKeyEntry.getPrivateKey();
                     certificateChain = privateKeyEntry.getCertificateChain();
                 }
-            } else {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "invalid request type: " + request.getClass().getName());
-                }
+            } else if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, "invalid request type: " + request.getClass().getName());
             }
         } catch (Exception e) {
             // UnrecoverableKeyException
@@ -580,23 +578,23 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             privKeyCallback.setKey(privateKey, certificateChain);
         }
     }
-    
+
     private byte[] toDerOctetString(byte[] value) throws IOException {
         ByteArrayOutputStream subjectOutputStream = new ByteArrayOutputStream();
-        
+
         subjectOutputStream.write(0x04); // DER Octet String tag
         subjectOutputStream.write(length2Bytes(value.length));
         subjectOutputStream.write(value);
-        
+
         return subjectOutputStream.toByteArray();
     }
-    
+
     /**
-     * Splits out an integer into a variable number of bytes with the first byte containing either
-     * the number of bytes, or the integer itself if small enough.
-     * 
+     * Splits out an integer into a variable number of bytes with the first byte containing either the number of bytes, or
+     * the integer itself if small enough.
+     *
      * @param length the integer to convert
-     * @return the integer in DER byte array form 
+     * @return the integer in DER byte array form
      */
     private byte[] length2Bytes(int length) {
         // The first byte with the MSB bit a 0 encodes the direct length
@@ -604,7 +602,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         if (length <= 127) {
             return new byte[] { (byte) length };
         }
-        
+
         // Count how many bytes are in the "length" integer
         int byteCount = 1;
         int lengthValue = length;
@@ -612,24 +610,24 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         while ((lengthValue >>>= 8) != 0) {
             byteCount++;
         }
-        
+
         byte[] lengthBytes = new byte[byteCount + 1];
 
         // The first byte with the MSB bit a 1 encodes the number of bytes used for the length
         // E.g. 0b10000001 for 1 additional byte (for values up to 255)
         lengthBytes[0] = (byte) (byteCount | 0b10000000);
-        
+
         // Shift the integer in increments of 8 bits, and truncate the lowest 8 ones in every iteration.
-        // For numbers up to 255 shift 0 times, e.g. for length 255 take the binary version 0b11111111 directly. 
-        // For numbers up to 65535 shift 1 time, e.g. for length 256 
-        //   first byte  = 0b100000000 >> 8 = 0b000000001 -> 0b00000001
-        //   second byte = 0b100000000 >> 0 = 0b000000000 -> 0b00000000
+        // For numbers up to 255 shift 0 times, e.g. for length 255 take the binary version 0b11111111 directly.
+        // For numbers up to 65535 shift 1 time, e.g. for length 256
+        // first byte = 0b100000000 >> 8 = 0b000000001 -> 0b00000001
+        // second byte = 0b100000000 >> 0 = 0b000000000 -> 0b00000000
         int pos = 1;
         for (int i = (byteCount - 1) * 8; i >= 0; i -= 8) {
             lengthBytes[pos] = (byte) (length >> i);
             pos++;
         }
-            
+
         return lengthBytes;
     }
 
@@ -644,7 +642,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                 Enumeration<String> aliases = keyStores[i].aliases();
                 // loop thru aliases and try to get the key/chain
                 while (aliases.hasMoreElements() && privateKey == null) {
-                    String nextAlias = (String) aliases.nextElement();
+                    String nextAlias = aliases.nextElement();
                     privateKey = null;
                     certificates = null;
                     PrivateKey key = securitySupport.getPrivateKeyForAlias(nextAlias, i);
@@ -674,7 +672,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                 Enumeration<String> aliases = kstores[i].aliases();
                 // loop thru aliases and try to get the key/chain
                 while (aliases.hasMoreElements() && privKey == null) {
-                    String nextAlias = (String) aliases.nextElement();
+                    String nextAlias = aliases.nextElement();
                     privKey = null;
                     certs = null;
                     PrivateKey key = securitySupport.getPrivateKeyForAlias(nextAlias, i);
@@ -709,7 +707,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         if (certStore == null) {// should never happen
             certStoreCallback.setCertStore(null);
         }
-        List<Certificate> list = new ArrayList<Certificate>();
+        List<Certificate> list = new ArrayList<>();
         CollectionCertStoreParameters ccsp;
         try {
             if (certStore != null) {
@@ -736,11 +734,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "JMAC:  Cannot determine truststore aliases", kse);
             }
-        } catch (InvalidAlgorithmParameterException iape) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC:  Cannot instantiate CertStore", iape);
-            }
-        } catch (NoSuchAlgorithmException nsape) {
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException nsape) {
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "JMAC:  Cannot instantiate CertStore", nsape);
             }

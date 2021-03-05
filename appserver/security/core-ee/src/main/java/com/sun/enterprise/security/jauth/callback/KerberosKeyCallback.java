@@ -16,8 +16,9 @@
 
 package com.sun.enterprise.security.jauth.callback;
 
-import javax.security.auth.kerberos.*;
 import javax.security.auth.callback.Callback;
+import javax.security.auth.kerberos.KerberosKey;
+import javax.security.auth.kerberos.KerberosPrincipal;
 
 /**
  * Callback for Kerberos Key.
@@ -32,13 +33,13 @@ public class KerberosKeyCallback implements Callback {
     /**
      * Constructs this KerberosSubjectCallback with a KerberosPrincipal.
      *
-     * <p> The <i>owner</i> input parameter
-     * specifies the owner of the KerberosKey to be returned.
+     * <p>
+     * The <i>owner</i> input parameter specifies the owner of the KerberosKey to be returned.
      *
      * @param owner the owner of the KerberosKey to be returned
      */
     public KerberosKeyCallback(KerberosPrincipal owner) {
-	this.owner = owner;
+        this.owner = owner;
     }
 
     /**
@@ -47,7 +48,7 @@ public class KerberosKeyCallback implements Callback {
      * @return the owner
      */
     public KerberosPrincipal getOwner() {
-	return owner;
+        return owner;
     }
 
     /**
@@ -56,7 +57,7 @@ public class KerberosKeyCallback implements Callback {
      * @param key the Kerberos key
      */
     public void setKey(KerberosKey key) {
-	this.key = key;
+        this.key = key;
     }
 
     /**
@@ -65,6 +66,6 @@ public class KerberosKeyCallback implements Callback {
      * @return the Kerberos key
      */
     public KerberosKey getKey() {
-	return key;
+        return key;
     }
 }

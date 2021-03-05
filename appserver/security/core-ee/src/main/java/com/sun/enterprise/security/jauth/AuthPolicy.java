@@ -17,7 +17,8 @@
 package com.sun.enterprise.security.jauth;
 
 import jakarta.security.auth.message.MessagePolicy;
-import static jakarta.security.auth.message.MessagePolicy.*;
+import jakarta.security.auth.message.MessagePolicy.ProtectionPolicy;
+import jakarta.security.auth.message.MessagePolicy.TargetPolicy;
 
 /*
  * This class is used to define the message authentication policy that informs
@@ -31,7 +32,7 @@ import static jakarta.security.auth.message.MessagePolicy.*;
  *
  * <p> This class is used used by the AuthConfig class to define the request and
  * response authentication policies associated with Client and Server
- * AuthModules. 
+ * AuthModules.
  *
  * @version %I%, %G%
  * @see AuthConfig
@@ -181,6 +182,7 @@ public class AuthPolicy {
         return (orderForValidation ? !this.recipientBeforeContent : this.recipientBeforeContent);
     }
 
+    @Override
     public String toString() {
 
         // wait for 1.5
@@ -208,6 +210,7 @@ public class AuthPolicy {
         return sb.toString();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -226,6 +229,7 @@ public class AuthPolicy {
         return false;
     }
 
+    @Override
     public int hashCode() {
         return authenticateSource + (authenticateRecipient ? 5 : 0) + (recipientBeforeContent ? 10 : 0);
     }

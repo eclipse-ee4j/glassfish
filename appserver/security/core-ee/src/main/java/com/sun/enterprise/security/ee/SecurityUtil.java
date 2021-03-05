@@ -16,27 +16,31 @@
 
 package com.sun.enterprise.security.ee;
 
-import java.security.*;
+import java.security.Policy;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import jakarta.security.jacc.*;
-//import com.sun.ejb.Invocation; 
-import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
-import com.sun.enterprise.security.util.IASSecurityException;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.*;
-import java.util.logging.*;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.deployment.common.SecurityRoleMapperFactory;
+import org.glassfish.deployment.versioning.VersioningUtils;
+
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import org.glassfish.deployment.common.SecurityRoleMapperFactory;
-import java.util.Collection;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.OpsParams;
-import org.glassfish.deployment.versioning.VersioningUtils;
+//import com.sun.ejb.Invocation;
+import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
+import com.sun.enterprise.security.util.IASSecurityException;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyConfigurationFactory;
 
 /**
  * This utility class encloses all the calls to a ejb method in a specified subject
- * 
+ *
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
@@ -58,7 +62,7 @@ public class SecurityUtil {
      * This method is called from the generated code to execute the method. This is a translation of method.invoke that the
      * generated code needs to do, to invoke a particular ejb method. The method is invoked under a security Subject. This
      * method is called from the generated code.
-     * 
+     *
      * @param Method     beanClassMethod, the bean class method to be invoked
      * @param Invocation inv, the current invocation object
      * @param Object     o, the object on which this method needs to be invoked,
@@ -68,17 +72,17 @@ public class SecurityUtil {
     /*
      * This method is now in EJBSecurityUtil in ejb/ejb-container module of V3 public static Object runMethod(Method
      * beanClassMethod, Invocation inv, Object o, Object[] oa, Container c) throws Throwable {
-     * 
+     *
      * final Method meth = beanClassMethod; final Object obj = o; final Object[] objArr = oa; Object ret; EJBSecurityManager
      * mgr = (EJBSecurityManager) c.getSecurityManager(); if (mgr == null) { throw new
      * SecurityException("SecurityManager not set"); }
-     * 
+     *
      * // Optimization. Skip doAsPrivileged call if this is a local // invocation and the target ejb uses caller identity or
      * the // System Security Manager is disabled. // Still need to execute it within the target bean's policy context. //
      * see CR 6331550 if((inv.isLocal && mgr.getUsesCallerIdentity()) || System.getSecurityManager() == null) { ret =
      * mgr.runMethod(meth, obj, objArr); } else { try { PrivilegedExceptionAction pea = new PrivilegedExceptionAction(){
      * public java.lang.Object run() throws Exception { return meth.invoke(obj, objArr); } };
-     * 
+     *
      * ret = mgr.doAsPrivileged(pea); } catch(PrivilegedActionException pae) { Throwable cause = pae.getCause(); if( cause
      * instanceof InvocationTargetException ) { cause = ((InvocationTargetException) cause).getCause(); } throw cause; } }
      * return ret; }
@@ -87,7 +91,7 @@ public class SecurityUtil {
      * This method is similiar to the runMethod, except it keeps the semantics same as the one in reflection. On failure, if
      * the exception is caused due to reflection, it returns the InvocationTargetException. This method is called from the
      * containers for ejbTimeout, WebService and MDBs.
-     * 
+     *
      * @param Method          beanClassMethod, the bean class method to be invoked
      * @param Invocation      inv, the current invocation
      * @param Object          o, the object on which this method is to be invoked in this case the ejb,
@@ -100,21 +104,21 @@ public class SecurityUtil {
     /*
      * This method is now in EJBSecurityUtil in ejb/ejb-container module of V3 public static Object invoke(Method
      * beanClassMethod, Invocation inv, Object o, Object[] oa, Container c, SecurityManager mgr) throws Throwable {
-     * 
+     *
      * final Method meth = beanClassMethod; final Object obj = o; final Object[] objArr = oa; Object ret = null;
      * EJBSecurityManager ejbSecMgr = null;
-     * 
+     *
      * if(mgr == null) { if (c != null) { ejbSecMgr = (EJBSecurityManager) c.getSecurityManager(); } if (ejbSecMgr == null)
      * { throw new SecurityException("SecurityManager not set"); } } else { ejbSecMgr = (EJBSecurityManager) mgr; }
-     * 
+     *
      * // Optimization. Skip doAsPrivileged call if this is a local // invocation and the target ejb uses caller identity or
      * the // System Security Manager is disabled. // Still need to execute it within the target bean's policy context. //
      * see CR 6331550 if((inv.isLocal && ejbSecMgr.getUsesCallerIdentity()) || System.getSecurityManager() == null) { ret =
      * ejbSecMgr.runMethod(meth, obj, objArr); } else {
-     * 
+     *
      * PrivilegedExceptionAction pea = new PrivilegedExceptionAction(){ public java.lang.Object run() throws Exception {
      * return meth.invoke(obj, objArr); } };
-     * 
+     *
      * try { ret = ejbSecMgr.doAsPrivileged(pea); } catch(PrivilegedActionException pae) { Throwable cause = pae.getCause();
      * throw cause; } } return ret; }
      */
@@ -123,7 +127,7 @@ public class SecurityUtil {
      * This method obtains the policy configuration object corresponding to the name, and causes the corresponding policy
      * statements to be put in service. This method also informs the policy module to refresh its in service policy
      * contexts. Note that policy statements have already been added to the pc, this method works to put them in Service.
-     * 
+     *
      * @param String name - the module id which serves to identify the corresponding policy context. The name shall not be
      *               null. If the underlying PolicyModule is the RI PolicyModule, A SecurityRoleMapper must have been bound
      *               to the policy context before this method is called or the embedded call to pc.commit will throw an
@@ -156,11 +160,7 @@ public class SecurityUtil {
             }
 
             Policy.getPolicy().refresh();
-        } catch (java.lang.ClassNotFoundException cnfe) {
-            // String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound","Could not find
-            // PolicyConfigurationFactory class. Check jakarta.security.jacc.PolicyConfigurationFactory.provider property");
-            throw new IASSecurityException(cnfe);
-        } catch (jakarta.security.jacc.PolicyContextException pce) {
+        } catch (java.lang.ClassNotFoundException | jakarta.security.jacc.PolicyContextException pce) {
             throw new IASSecurityException(pce);
         }
     }
@@ -169,7 +169,7 @@ public class SecurityUtil {
      * Inform the policy module to take the named policy context out of service. The policy context is transitioned to the
      * deleted state. In our provider implementation, the corresponding policy file is deleted, as the presence of a policy
      * file in the repository is how we persistently remember which policy contexts are in service.
-     * 
+     *
      * @param String name - the module id which serves to identify the corresponding policy context. The name shall not be
      *               null.
      */
@@ -200,7 +200,7 @@ public class SecurityUtil {
     /**
      * This method obtains the policy configuration object corresponding to the name, and links it, for roleMapping purposes
      * to another. If the pc is already InService when this method is called, this method does nothing.
-     * 
+     *
      * @param String  name - the module id which serves to identify the corresponding policy context. The name shall not be
      *                null.
      * @param String  linkName - the module id of the module being linked to this context. This value may be null, in which
@@ -254,7 +254,7 @@ public class SecurityUtil {
     /**
      * create pseudo module context id, and make sure it is unique, by chacking it against the names of all the other
      * modules in the app.
-     * 
+     *
      * @param ejbDesc
      * @return
      */

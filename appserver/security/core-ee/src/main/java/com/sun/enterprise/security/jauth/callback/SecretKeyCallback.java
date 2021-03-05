@@ -26,8 +26,8 @@ public class SecretKeyCallback extends jakarta.security.auth.message.callback.Se
     /**
      * Marker interface for private key request types.
      */
-    public static interface Request extends jakarta.security.auth.message.callback.SecretKeyCallback.Request {
-    };
+    public interface Request extends jakarta.security.auth.message.callback.SecretKeyCallback.Request {
+    }
 
     /**
      * Request type for secret keys that are identified via an alias.
@@ -70,6 +70,7 @@ public class SecretKeyCallback extends jakarta.security.auth.message.callback.Se
      * @return the Request object which identifies the private key to be returned, or null. If null, the handler of the
      *         callback relies on its own deafult.
      */
+    @Override
     public Request getRequest() {
         return (Request) super.getRequest();
     }

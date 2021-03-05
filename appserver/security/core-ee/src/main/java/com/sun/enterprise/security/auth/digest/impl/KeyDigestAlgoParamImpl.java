@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.security.auth.digest.impl;
 
-import com.sun.enterprise.security.auth.digest.api.Key;
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.Key;
 
 /**
  *
@@ -42,26 +42,32 @@ public class KeyDigestAlgoParamImpl implements DigestAlgorithmParameter, Key {
         this.algorithm = algorithm;
     }
 
+    @Override
     public String getUsername() {
         return userName;
     }
 
+    @Override
     public String getRealmName() {
         return realmName;
     }
 
+    @Override
     public byte[] getValue() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public String getAlgorithm() {
         return algorithm;
     }
 
+    @Override
     public byte[] getDelimiter() {
         return delimeter;
     }
 
+    @Override
     public String getName() {
         return name;
     }

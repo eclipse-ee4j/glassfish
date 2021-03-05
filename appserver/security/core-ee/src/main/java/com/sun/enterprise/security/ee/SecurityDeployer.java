@@ -16,40 +16,45 @@
 
 package com.sun.enterprise.security.ee;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.MetaData;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.EventTypes;
+import org.glassfish.api.event.Events;
+import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
+import org.glassfish.deployment.common.DeploymentException;
+import org.glassfish.deployment.common.DummyApplication;
+import org.glassfish.deployment.common.SimpleDeployer;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ModuleInfo;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.security.common.CNonceCache;
+import org.glassfish.security.common.HAUtil;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.security.AppCNonceCacheMap;
 import com.sun.enterprise.security.CNonceCacheFactory;
 import com.sun.enterprise.security.EjbSecurityPolicyProbeProvider;
 import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
-import org.glassfish.security.common.CNonceCache;
-import org.glassfish.security.common.HAUtil;
-import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
-import com.sun.enterprise.security.web.integration.WebSecurityManager;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.MetaData;
-import org.glassfish.api.deployment.OpsParams;
-import org.glassfish.deployment.common.DeploymentException;
-import org.glassfish.deployment.common.SimpleDeployer;
-import org.glassfish.deployment.common.DummyApplication;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.security.util.IASSecurityException;
-import org.glassfish.internal.api.ServerContext;
+import com.sun.enterprise.security.web.integration.WebSecurityManager;
+import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
 import com.sun.logging.LogDomains;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.EventTypes;
-import org.glassfish.api.event.Events;
-import org.glassfish.internal.deployment.Deployment;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
-import org.glassfish.internal.data.ModuleInfo;
-import com.sun.enterprise.deployment.web.LoginConfiguration;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -97,6 +102,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
     private class AppDeployEventListener implements EventListener {
 
+        @Override
         public void event(Event event) {
             Application app = null;
             if (Deployment.MODULE_LOADED.equals(event.type())) {
@@ -129,7 +135,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
                 commitPolicy((WebBundleDescriptor) event.hook());
             }
         }
-    };
+    }
 
     // creates security policy if needed
     @Override
@@ -187,7 +193,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
     /**
      * Translate Web Bundle Policy
-     * 
+     *
      * @param webBD
      * @param remove boolean indicated whether any existing policy statements are removed form context before translation
      * @throws DeploymentException
@@ -213,7 +219,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
     /**
      * puts Web Bundle Policy In Service, repeats translation is Descriptor indicate policy was changed by ContextListener.
-     * 
+     *
      * @param webBD
      * @throws DeploymentException
      */
@@ -240,7 +246,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
     /**
      * commits ejb policy contexts. This should occur in EjbApplication, being done here until issue with
      * ejb-ejb31-singleton-multimoduleApp.ear is resolved
-     * 
+     *
      * @param ejbs
      */
     private void commitEjbs(Application app) throws DeploymentException {
@@ -303,12 +309,12 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
         try {
             String[] webcontexts = wsmf.getContextsForApp(appName, false);
             if (webcontexts != null) {
-                for (int i = 0; i < webcontexts.length; i++) {
-                    if (webcontexts[i] != null) {
-                        websecurityProbeProvider.policyDestructionStartedEvent(webcontexts[i]);
-                        SecurityUtil.removePolicy(webcontexts[i]);
-                        websecurityProbeProvider.policyDestructionEndedEvent(webcontexts[i]);
-                        websecurityProbeProvider.policyDestructionEvent(webcontexts[i]);
+                for (String webcontext : webcontexts) {
+                    if (webcontext != null) {
+                        websecurityProbeProvider.policyDestructionStartedEvent(webcontext);
+                        SecurityUtil.removePolicy(webcontext);
+                        websecurityProbeProvider.policyDestructionEndedEvent(webcontext);
+                        websecurityProbeProvider.policyDestructionEvent(webcontext);
                     }
                 }
             }
@@ -334,6 +340,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
          */
     }
 
+    @Override
     public MetaData getMetaData() {
         return new MetaData(false, null, new Class[] { Application.class });
     }
@@ -342,7 +349,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
      * Clean security policy generated at deployment time. NOTE: This routine calls destroy on the WebSecurityManagers, but
      * that does not cause deletion of the underlying policy (files). The underlying policy is deleted when removePolicy (in
      * AppDeployerBase and WebModuleDeployer) is called.
-     * 
+     *
      * @param appName the app name
      */
     private boolean cleanSecurityContext(String appName) {
@@ -365,11 +372,12 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
     }
 
     public static List<EventTypes> getDeploymentEvents() {
-        ArrayList<EventTypes> events = new ArrayList<EventTypes>();
+        ArrayList<EventTypes> events = new ArrayList<>();
         events.add(Deployment.APPLICATION_PREPARED);
         return events;
     }
 
+    @Override
     public void postConstruct() {
         listener = new AppDeployEventListener();
         Events events = eventsProvider.get();

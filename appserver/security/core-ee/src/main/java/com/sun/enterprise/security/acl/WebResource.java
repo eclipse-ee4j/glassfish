@@ -29,8 +29,9 @@ public class WebResource extends Resource {
     }
 
     private void init(String name) {
-        if (name == null)
+        if (name == null) {
             throw new IllegalArgumentException("name can't be null");
+        }
 
         if (name.endsWith("/*") || name.equals("*")) {
             wildcard = true;
@@ -44,42 +45,48 @@ public class WebResource extends Resource {
         }
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (obj == this)
+        if (obj == this) {
             return true;
+        }
 
-        if ((obj == null) || (obj.getClass() != getClass()))
+        if ((obj == null) || (obj.getClass() != getClass())) {
             return false;
+        }
 
         Resource r = (Resource) obj;
 
         return getApplication().equals(r.getApplication()) && getMethod().equals(r.getMethod()) && getName().equals(r.getName());
     }
 
+    @Override
     public boolean implies(Resource resource) {
-        if ((resource == null) || (resource.getClass() != getClass()))
+        if ((resource == null) || (resource.getClass() != getClass())) {
             return false;
+        }
 
         WebResource that = (WebResource) resource;
 
         // Application name is not an issue in implies .....
-        if (!getMethod().equals(that.getMethod()))
+        if (!getMethod().equals(that.getMethod())) {
             return false;
+        }
 
         if (this.wildcard) {
-            if (that.wildcard)
+            if (that.wildcard) {
                 // one wildcard can imply another
                 return that.path.startsWith(path);
-            else
+            } else {
                 // make sure ap.path is longer so a/b/* doesn't imply a/b
                 return (that.path.length() > this.path.length()) && that.path.startsWith(this.path);
-        } else {
-            if (that.wildcard) {
-                // a non-wildcard can't imply a wildcard
-                return false;
-            } else {
-                return this.path.equals(that.path);
             }
+        }
+        if (that.wildcard) {
+            // a non-wildcard can't imply a wildcard
+            return false;
+        } else {
+            return this.path.equals(that.path);
         }
     }
 }

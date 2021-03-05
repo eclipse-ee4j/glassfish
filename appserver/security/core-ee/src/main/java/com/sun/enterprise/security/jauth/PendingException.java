@@ -33,7 +33,6 @@ public class PendingException extends AuthException {
      * exception.
      */
     public PendingException() {
-        super();
     }
 
     /**

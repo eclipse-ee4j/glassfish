@@ -17,6 +17,7 @@
 package com.sun.enterprise.security.jauth.callback;
 
 import java.math.BigInteger;
+
 import javax.security.auth.x500.X500Principal;
 
 /**
@@ -29,8 +30,8 @@ public class PrivateKeyCallback extends jakarta.security.auth.message.callback.P
     /**
      * Marker interface for private key request types.
      */
-    public static interface Request extends jakarta.security.auth.message.callback.PrivateKeyCallback.Request {
-    };
+    public interface Request extends jakarta.security.auth.message.callback.PrivateKeyCallback.Request {
+    }
 
     /**
      * Request type for private keys that are identified via an alias.
@@ -123,6 +124,7 @@ public class PrivateKeyCallback extends jakarta.security.auth.message.callback.P
      * @return the Request object which identifies the private key to be returned, or null. If null, the handler of the
      *         callback relies on its own default.
      */
+    @Override
     public Request getRequest() {
         return (Request) super.getRequest();
     }

@@ -51,8 +51,9 @@ public class PermissionsProcessor {
     protected static PermissionCollection processPermisssonsForPath(PermissionCollection originalPC, DeploymentContext dc)
             throws MalformedURLException {
 
-        if (originalPC == null)
+        if (originalPC == null) {
             return originalPC;
+        }
 
         Permissions revisedPC = new Permissions();
 
@@ -61,8 +62,9 @@ public class PermissionsProcessor {
             Permission perm = pcEnum.nextElement();
             if (perm instanceof FilePermission) {
                 processFilePermission(revisedPC, dc, (FilePermission) perm);
-            } else
+            } else {
                 revisedPC.add(perm);
+            }
         }
 
         if (logger.isLoggable(Level.FINE)) {
@@ -88,12 +90,14 @@ public class PermissionsProcessor {
     // check if a FilePermssion with target path as the "current"
     protected static boolean isFilePermforCurrentDir(FilePermission fp) {
 
-        if (fp == null)
+        if (fp == null) {
             return false;
+        }
 
         String name = fp.getName();
-        if (!CURRENT_FOLDER.equals(name))
+        if (!CURRENT_FOLDER.equals(name)) {
             return false;
+        }
 
         return true;
     }
@@ -101,12 +105,14 @@ public class PermissionsProcessor {
     // check if a FilePermssion with target path as the "servlet temp dir"
     protected static boolean isFilePermforTempDir(FilePermission fp) {
 
-        if (fp == null)
+        if (fp == null) {
             return false;
+        }
 
         String name = fp.getName();
-        if (!TEMP_FOLDER.equals(name))
+        if (!TEMP_FOLDER.equals(name)) {
             return false;
+        }
 
         return true;
     }

@@ -33,7 +33,7 @@ public interface ConfigParser {
     /**
      * Initialize the parser. Passing null as argument means the parser is to find configuration object as necessary.
      */
-    public void initialize(Object config) throws IOException;
+    void initialize(Object config) throws IOException;
 
     /**
      * Get the module configuration information. The information is returned as a HashMap.
@@ -64,10 +64,10 @@ public interface ConfigParser {
      * <li>
      * </ul>
      */
-    public Map getConfigMap();
+    Map getConfigMap();
 
     /**
      * Get the name of layers with default set in domain.xml.
      */
-    public Set<String> getLayersWithDefault();
+    Set<String> getLayersWithDefault();
 }

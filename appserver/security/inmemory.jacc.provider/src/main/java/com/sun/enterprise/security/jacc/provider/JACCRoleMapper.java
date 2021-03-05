@@ -19,16 +19,17 @@ package com.sun.enterprise.security.jacc.provider;
 import java.security.Principal;
 import java.util.BitSet;
 import java.util.Set;
+
 import javax.security.auth.Subject;
 
 /**
- * 
+ *
  * @author monzillo
  */
 public interface JACCRoleMapper {
 
-    static final String HANDLER_KEY = "simple.jacc.provider.RoleMapper";
-    static final String CLASS_NAME = "simple.jacc.provider.JACCRoleMapper.class";
+    String HANDLER_KEY = "simple.jacc.provider.RoleMapper";
+    String CLASS_NAME = "simple.jacc.provider.JACCRoleMapper.class";
 
     Set<String> getDeclaredRoles(String pcid);
 

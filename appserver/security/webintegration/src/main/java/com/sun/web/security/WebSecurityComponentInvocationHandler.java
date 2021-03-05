@@ -16,21 +16,22 @@
 
 package com.sun.web.security;
 
-import com.sun.logging.LogDomains;
 import java.util.logging.Logger;
+
 import org.apache.catalina.Realm;
 import org.apache.catalina.core.ContainerBase;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
 import org.glassfish.api.invocation.ComponentInvocationHandler;
-import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.glassfish.api.invocation.InvocationException;
 import org.glassfish.api.invocation.InvocationManager;
-
+import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
+
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Service(name = "webSecurityCIH")
 @Singleton
@@ -47,6 +48,7 @@ public class WebSecurityComponentInvocationHandler implements RegisteredComponen
 
     private ComponentInvocationHandler webSecurityCompInvHandler = new ComponentInvocationHandler() {
 
+        @Override
         public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv)
                 throws InvocationException {
             if (invType == ComponentInvocationType.SERVLET_INVOCATION) {
@@ -60,14 +62,17 @@ public class WebSecurityComponentInvocationHandler implements RegisteredComponen
             }
         }
 
+        @Override
         public void afterPreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
                 throws InvocationException {
         }
 
+        @Override
         public void beforePostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
                 throws InvocationException {
         }
 
+        @Override
         public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
                 throws InvocationException {
             if (invType == ComponentInvocationType.SERVLET_INVOCATION) {
@@ -82,10 +87,12 @@ public class WebSecurityComponentInvocationHandler implements RegisteredComponen
         }
     };
 
+    @Override
     public ComponentInvocationHandler getComponentInvocationHandler() {
         return webSecurityCompInvHandler;
     }
 
+    @Override
     public void register() {
         invManager.registerComponentInvocationHandler(ComponentInvocationType.SERVLET_INVOCATION, this);
     }

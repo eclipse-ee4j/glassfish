@@ -18,7 +18,7 @@ package com.sun.enterprise.security.acl;
 
 /**
  * Abstract resource ..
- * 
+ *
  * @author Harish Prabandham
  */
 abstract public class Resource {
@@ -44,14 +44,17 @@ abstract public class Resource {
         return this.method;
     }
 
+    @Override
     public int hashCode() {
         return getClass().hashCode();
     }
 
     public abstract boolean implies(Resource res);
 
+    @Override
     public abstract boolean equals(Object obj);
 
+    @Override
     public String toString() {
         return getApplication() + ":" + getName() + "." + getMethod();
     }

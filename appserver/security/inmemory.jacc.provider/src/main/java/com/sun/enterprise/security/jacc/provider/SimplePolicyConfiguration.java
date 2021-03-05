@@ -31,7 +31,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.MBeanPermission;
+
 import jakarta.security.jacc.EJBRoleRefPermission;
 import jakarta.security.jacc.PolicyConfiguration;
 import jakarta.security.jacc.PolicyContext;
@@ -86,6 +88,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
 
                 PolicyContext.registerHandler(JACCRoleMapper.HANDLER_KEY, new PolicyContextHandler() {
 
+                    @Override
                     public Object getContext(String key, Object data) throws PolicyContextException {
                         if (key.equals(JACCRoleMapper.HANDLER_KEY)) {
                             try {
@@ -97,10 +100,12 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
                         return null;
                     }
 
+                    @Override
                     public String[] getKeys() throws PolicyContextException {
                         return new String[] { JACCRoleMapper.HANDLER_KEY };
                     }
 
+                    @Override
                     public boolean supports(String key) throws PolicyContextException {
                         return key.equals(JACCRoleMapper.HANDLER_KEY);
                     }
@@ -122,7 +127,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
 // Public Policy Configuration Interfaces Start here
     /**
      * This method returns this object's policy context identifier.
-     * 
+     *
      * @return this object's policy context identifier.
      *
      * @throws java.lang.SecurityException                  if called by an AccessControlContext that has not been granted
@@ -134,6 +139,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public String getContextID() throws jakarta.security.jacc.PolicyContextException {
         return id;
     }
@@ -145,7 +151,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * It is the job of the Policy provider to ensure that all the permissions added to a role are granted to principals
      * "mapped to the role".
      * <P>
-     * 
+     *
      * @param roleName    the name of the Role to which the permissions are to be added.
      *                    <P>
      * @param permissions the collection of permissions to be added to the role. The collection may be either a homogenous
@@ -164,6 +170,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void addToRole(String roleName, PermissionCollection permissions) throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -186,7 +193,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * It is the job of the Policy provider to ensure that all the permissions added to a role are granted to principals
      * "mapped to the role".
      * <P>
-     * 
+     *
      * @param roleName   the name of the Role to which the permission is to be added.
      *                   <P>
      * @param permission the permission to be added to the role.
@@ -204,6 +211,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void addToRole(String roleName, Permission permission) throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -222,7 +230,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
     /**
      * Used to add unchecked policy statements to this PolicyConfiguration.
      * <P>
-     * 
+     *
      * @param permissions the collection of permissions to be added as unchecked policy statements. The collection may be
      *                    either a homogenous or heterogenous collection.
      *
@@ -239,6 +247,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void addToUncheckedPolicy(PermissionCollection permissions) throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -259,7 +268,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
     /**
      * Used to add a single unchecked policy statement to this PolicyConfiguration.
      * <P>
-     * 
+     *
      * @param permission the permission to be added to the unchecked policy statements.
      *
      * @throws java.lang.SecurityException                  if called by an AccessControlContext that has not been granted
@@ -275,6 +284,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void addToUncheckedPolicy(Permission permission) throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -293,7 +303,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
     /**
      * Used to add excluded policy statements to this PolicyConfiguration.
      * <P>
-     * 
+     *
      * @param permissions the collection of permissions to be added to the excluded policy statements. The collection may be
      *                    either a homogenous or heterogenous collection.
      *
@@ -310,6 +320,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void addToExcludedPolicy(PermissionCollection permissions) throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -330,7 +341,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
     /**
      * Used to add a single excluded policy statement to this PolicyConfiguration.
      * <P>
-     * 
+     *
      * @param permission the permission to be added to the excluded policy statements.
      *
      * @throws java.lang.SecurityException                  if called by an AccessControlContext that has not been granted
@@ -346,6 +357,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void addToExcludedPolicy(Permission permission) throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -364,7 +376,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
     /**
      * Used to remove a role and all its permissions from this PolicyConfiguration.
      * <P>
-     * 
+     *
      * @param roleName the name of the Role to remove from this PolicyConfiguration.
      *
      * @throws java.lang.SecurityException                  if called by an AccessControlContext that has not been granted
@@ -380,6 +392,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void removeRole(String roleName) throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -418,6 +431,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      be encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void removeUncheckedPolicy() throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -446,6 +460,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void removeExcludedPolicy() throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         pcwLock.lock();
@@ -466,7 +481,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      * Note that the policy statements which comprise a role, or comprise the excluded or unchecked policy collections in a
      * PolicyConfiguration are unaffected by the configuration being linked to another.
      * <P>
-     * 
+     *
      * @param link a reference to a different PolicyConfiguration than this PolicyConfiguration.
      *             <P>
      *             The relationship formed by this method is symetric, transitive and idempotent. If the argument
@@ -489,6 +504,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public void linkConfiguration(PolicyConfiguration link) throws jakarta.security.jacc.PolicyContextException {
 
         checkSetPolicyPermission();
@@ -522,6 +538,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      thrown by the implementation class will be encapsulated (during
      *                                                      construction) in the thrown PolicyContextException.
      */
+    @Override
     public void delete() throws jakarta.security.jacc.PolicyContextException {
 
         checkSetPolicyPermission();
@@ -566,6 +583,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      thrown by the implementation class will be encapsulated (during
      *                                                      construction) in the thrown PolicyContextException.
      */
+    @Override
     public void commit() throws jakarta.security.jacc.PolicyContextException {
         checkSetPolicyPermission();
         boolean initRoles = false;
@@ -607,6 +625,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public boolean inService() throws jakarta.security.jacc.PolicyContextException {
         pcrLock.lock();
         try {
@@ -691,7 +710,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
         Role rvalue = new Role(roleName);
 
         if (roleTable == null) {
-            roleTable = new ArrayList<Role>();
+            roleTable = new ArrayList<>();
         } else {
             index = roleTable.indexOf(rvalue);
         }
@@ -713,7 +732,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
 
     /**
      * Adds the principal-2-role mapping to the roles in the roleTable
-     * 
+     *
      * @throws jakarta.security.jacc.PolicyContextException
      */
     private void commitRoleMapping() throws PolicyContextException {
@@ -732,9 +751,8 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
             SharedState.getLogger().log(Level.SEVERE, "RoleMapper.lookup.failed", t);
             if (t instanceof PolicyContextException) {
                 throw (PolicyContextException) t;
-            } else {
-                throw new PolicyContextException(t);
             }
+            throw new PolicyContextException(t);
         }
 
         pcwLock.lock();
@@ -982,6 +1000,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
             } else {
                 AccessController.doPrivileged(new PrivilegedAction() {
 
+                    @Override
                     public Object run() {
                         logger.log(level, msg, params);
                         return null;
@@ -999,6 +1018,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
             } else {
                 AccessController.doPrivileged(new PrivilegedAction() {
 
+                    @Override
                     public Object run() {
                         logger.log(level, msg, t);
                         return null;

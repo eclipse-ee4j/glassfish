@@ -16,23 +16,27 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
-import com.sun.appserv.security.AppservPasswordLoginModule;
-import com.sun.enterprise.security.auth.realm.pam.PamRealm;
 import java.util.Set;
 import java.util.logging.Level;
+
 import javax.security.auth.login.LoginException;
+
 import org.jvnet.libpam.PAM;
 import org.jvnet.libpam.PAMException;
 import org.jvnet.libpam.UnixUser;
 
+import com.sun.appserv.security.AppservPasswordLoginModule;
+import com.sun.enterprise.security.auth.realm.pam.PamRealm;
+
 /**
  * This is the main LoginModule for PAM realm that invokes the calls to libpam4j classes to authenticate the given
  * username and password
- * 
+ *
  * @author Nithya Subramanian
  */
 public class PamLoginModule extends AppservPasswordLoginModule {
 
+    @Override
     protected void authenticateUser() throws LoginException {
 
         // A Unix user must have a name not null so check here.
@@ -67,7 +71,7 @@ public class PamLoginModule extends AppservPasswordLoginModule {
 
     /**
      * Invokes the authentication call.This class uses the default PAM service - sshd
-     * 
+     *
      * @param username OS User to authenticate.
      * @param password Given password.
      * @returns null if authentication failed, returns the UnixUser object if authentication succeeded.
@@ -77,11 +81,10 @@ public class PamLoginModule extends AppservPasswordLoginModule {
         UnixUser user = null;
         String pamService = null;
 
-        if (_currentRealm instanceof PamRealm) {
-            pamService = ((PamRealm) _currentRealm).getPamService();
-        } else {
+        if (!(_currentRealm instanceof PamRealm)) {
             throw new LoginException("pamrealm.invalid_realm");
         }
+        pamService = ((PamRealm) _currentRealm).getPamService();
 
         try {
             user = new PAM(pamService).authenticate(username, password);

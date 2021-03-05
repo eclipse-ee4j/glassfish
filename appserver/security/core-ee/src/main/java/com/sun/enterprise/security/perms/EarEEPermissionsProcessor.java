@@ -16,15 +16,14 @@
 
 package com.sun.enterprise.security.perms;
 
+import java.net.MalformedURLException;
+import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-import java.security.Permission;
-
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Enumeration;
 import java.util.logging.Level;
-import java.net.MalformedURLException;
 
 import org.glassfish.api.deployment.DeploymentContext;
 
@@ -33,7 +32,7 @@ import com.sun.enterprise.security.perms.SMGlobalPolicyUtil.CommponentType;
 public class EarEEPermissionsProcessor extends PermissionsProcessor {
 
     // map recording the 'Java EE component type' to its EE adjusted granted permissions
-    private static final Map<CommponentType, PermissionCollection> compTypeToEEGarntsMap = new HashMap<CommponentType, PermissionCollection>();
+    private static final Map<CommponentType, PermissionCollection> compTypeToEEGarntsMap = new HashMap<>();
 
     public EarEEPermissionsProcessor(DeploymentContext dc) throws SecurityException {
 
@@ -56,7 +55,7 @@ public class EarEEPermissionsProcessor extends PermissionsProcessor {
 
     /**
      * get the EE permissions which have the file path adjusted for the right module
-     * 
+     *
      * @return adjusted EE permissions
      */
     public PermissionCollection getAdjustedEEPermission(CommponentType type) {
@@ -84,8 +83,9 @@ public class EarEEPermissionsProcessor extends PermissionsProcessor {
 
     private PermissionCollection combineAllEEPermisssonsForEar() {
 
-        if (compTypeToEEGarntsMap == null)
+        if (compTypeToEEGarntsMap == null) {
             return null;
+        }
 
         Permissions allEEPerms = new Permissions();
 
@@ -101,8 +101,9 @@ public class EarEEPermissionsProcessor extends PermissionsProcessor {
 
     private void addPermissions(Permissions combined, PermissionCollection toAdd) {
 
-        if (toAdd == null)
+        if (toAdd == null) {
             return;
+        }
 
         Enumeration<Permission> enumAdd = toAdd.elements();
         while (enumAdd.hasMoreElements()) {

@@ -16,8 +16,9 @@
 
 package com.sun.enterprise.security.jauth.callback;
 
-import javax.security.auth.kerberos.*;
 import javax.security.auth.callback.Callback;
+import javax.security.auth.kerberos.KerberosKey;
+import javax.security.auth.kerberos.KerberosPrincipal;
 
 /**
  * Callback for Kerberos Key.

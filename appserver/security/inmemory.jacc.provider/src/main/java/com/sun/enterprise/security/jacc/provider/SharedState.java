@@ -23,11 +23,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import jakarta.security.jacc.PolicyContext;
 import jakarta.security.jacc.PolicyContextException;
 
 /**
- * 
+ *
  * @author monzillo
  */
 public class SharedState {
@@ -36,8 +37,8 @@ public class SharedState {
     private static ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock(true);
     private static Lock rLock = rwLock.readLock();
     private static Lock wLock = rwLock.writeLock();
-    private static HashMap<String, SimplePolicyConfiguration> configTable = new HashMap<String, SimplePolicyConfiguration>();
-    private static HashMap<String, HashSet<String>> linkTable = new HashMap<String, HashSet<String>>();
+    private static HashMap<String, SimplePolicyConfiguration> configTable = new HashMap<>();
+    private static HashMap<String, HashSet<String>> linkTable = new HashMap<>();
     private static final Logger logger = Logger.getLogger(SharedState.class.getPackage().getName());
 
     private SharedState() {
@@ -120,7 +121,7 @@ public class SharedState {
      * PolicyConfiguration are unaffected by the configuration being linked to another.
      * <P>
      * The relationship formed by this method is symetric, transitive and idempotent.
-     * 
+     *
      * @param id
      * @param otherId
      * @throws jakarta.security.jacc.PolicyContextException If otherID equals receiverID. no relationship is formed.

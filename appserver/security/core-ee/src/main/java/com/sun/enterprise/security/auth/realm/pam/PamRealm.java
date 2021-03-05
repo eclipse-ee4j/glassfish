@@ -16,24 +16,26 @@
 
 package com.sun.enterprise.security.auth.realm.pam;
 
-import com.sun.appserv.security.AppservRealm;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.libpam.PAM;
 import org.jvnet.libpam.PAMException;
 
+import com.sun.appserv.security.AppservRealm;
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+
 /**
  * Realm wrapper for supporting PAM based authentication for all Unix machines. The PAM realm uses the Operating
  * System's PAM login mechanism to authenticate the applications with their OS usernames and passwords.
- * 
+ *
  * @author Nithya Subramanian
  */
 
@@ -56,6 +58,7 @@ public final class PamRealm extends AppservRealm {
      * @exception NoSuchRealmException If the configuration parameters specify a realm which doesn't exist.
      *
      */
+    @Override
     public synchronized void init(Properties props) throws BadRealmException, NoSuchRealmException {
         super.init(props);
         String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
@@ -68,6 +71,7 @@ public final class PamRealm extends AppservRealm {
     /**
      * @return Description of the kind of authentication that is directly supported by this realm.
      */
+    @Override
     public String getAuthType() {
         return AUTH_TYPE;
     }
@@ -85,7 +89,7 @@ public final class PamRealm extends AppservRealm {
 
     /**
      * This method retreives the PAM service stack to be used by the Realm class and Login Module uniformly
-     * 
+     *
      * @return String = Pam Service
      */
     public String getPamService() {

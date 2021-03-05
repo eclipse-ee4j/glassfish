@@ -24,11 +24,12 @@ package com.sun.enterprise.security.web.integration;
 
 import java.lang.ref.WeakReference;
 
-import com.sun.enterprise.security.PrincipalGroupFactory;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.PrincipalImpl;
 import org.glassfish.security.common.Group;
+import org.glassfish.security.common.PrincipalImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.security.PrincipalGroupFactory;
 
 /**
  *
@@ -39,11 +40,11 @@ public class PrincipalGroupFactoryImpl implements PrincipalGroupFactory {
 
     /** Creates a new instance of PrincipalGroupFactory */
 
-    private static WeakReference<WebSecurityManagerFactory> webSecurityManagerFactory = new WeakReference<WebSecurityManagerFactory>(null);
+    private static WeakReference<WebSecurityManagerFactory> webSecurityManagerFactory = new WeakReference<>(null);
 
     private static synchronized WebSecurityManagerFactory _getWebSecurityManagerFactory() {
         if (webSecurityManagerFactory.get() == null) {
-            webSecurityManagerFactory = new WeakReference<WebSecurityManagerFactory>(Globals.get(WebSecurityManagerFactory.class));
+            webSecurityManagerFactory = new WeakReference<>(Globals.get(WebSecurityManagerFactory.class));
         }
         return webSecurityManagerFactory.get();
     }
@@ -55,6 +56,7 @@ public class PrincipalGroupFactoryImpl implements PrincipalGroupFactory {
         return _getWebSecurityManagerFactory();
     }
 
+    @Override
     public PrincipalImpl getPrincipalInstance(String name, String realm) {
         WebSecurityManagerFactory fact = getWebSecurityManagerFactory();
         PrincipalImpl p = (PrincipalImpl) fact.getAdminPrincipal(name, realm);
@@ -64,6 +66,7 @@ public class PrincipalGroupFactoryImpl implements PrincipalGroupFactory {
         return p;
     }
 
+    @Override
     public Group getGroupInstance(String name, String realm) {
         WebSecurityManagerFactory fact = getWebSecurityManagerFactory();
         Group g = (Group) fact.getAdminGroup(name, realm);

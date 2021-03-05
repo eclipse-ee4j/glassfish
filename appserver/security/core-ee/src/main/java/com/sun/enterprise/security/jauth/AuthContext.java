@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.security.jauth;
 
-import java.util.*;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +62,7 @@ final class AuthContext {
 
         try {
             java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                @Override
                 public Object run() throws AuthException {
                     invokePriv(methodName, args, rValues);
                     return null;
@@ -70,11 +71,10 @@ final class AuthContext {
         } catch (java.security.PrivilegedActionException pae) {
             if (pae.getException() instanceof AuthException) {
                 throw (AuthException) pae.getException();
-            } else {
-                AuthException ae = new AuthException();
-                ae.initCause(pae.getException());
-                throw ae;
             }
+            AuthException ae = new AuthException();
+            ae.initCause(pae.getException());
+            throw ae;
         }
         return rValues;
     }
@@ -108,11 +108,11 @@ final class AuthContext {
 
             try {
                 Method[] mArray = module.getClass().getMethods();
-                for (int j = 0; j < mArray.length; j++) {
-                    if (mArray[j].getName().equals(methodName)) {
+                for (Method element : mArray) {
+                    if (element.getName().equals(methodName)) {
 
                         // invoke module
-                        rValues[i] = mArray[j].invoke(module, args);
+                        rValues[i] = element.invoke(module, args);
 
                         // success -
                         // return if SUFFICIENT and no previous REQUIRED errors
@@ -177,7 +177,8 @@ final class AuthContext {
                         throw ae;
                     }
 
-                } else if (entries[i].getControlFlag() == AppConfigurationEntry.LoginModuleControlFlag.REQUIRED) {
+                }
+                if (entries[i].getControlFlag() == AppConfigurationEntry.LoginModuleControlFlag.REQUIRED) {
 
                     if (logger != null && logger.isLoggable(Level.FINE)) {
                         logger.fine(entries[i].getLoginModuleName() + "." + methodName + " REQUIRED failure");
@@ -208,7 +209,8 @@ final class AuthContext {
 
         if (firstRequiredError != null) {
             throw firstRequiredError;
-        } else if (firstError != null && !success) {
+        }
+        if (firstError != null && !success) {
             throw firstError;
         }
 

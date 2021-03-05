@@ -16,45 +16,56 @@
 
 package com.sun.enterprise.security.web.integration;
 
-import org.glassfish.internal.api.ServerContext;
-import java.security.*;
-import java.util.Set;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.Collections;
 import java.net.URL;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.Policy;
+import java.security.Principal;
+import java.security.PrivilegedExceptionAction;
+import java.security.ProtectionDomain;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.security.jacc.*;
+import org.glassfish.api.web.Constants;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.PrincipalImpl;
 
-import java.util.logging.*;
-
-import com.sun.logging.LogDomains;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.security.web.integration.LogUtils;
+import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
+//V3:Commented import com.sun.enterprise.server.ApplicationServer;
+import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
+import com.sun.enterprise.deployment.runtime.web.SunWebApp;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.security.SecurityContext;
+//import org.apache.catalina.Globals;
+import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
+import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.ee.CachedPermission;
 import com.sun.enterprise.security.ee.CachedPermissionImpl;
 import com.sun.enterprise.security.ee.PermissionCache;
 import com.sun.enterprise.security.ee.PermissionCacheFactory;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
-import org.glassfish.security.common.PrincipalImpl;
-import org.glassfish.security.common.Group;
-import com.sun.enterprise.config.serverbeans.*;
-//V3:Commented import com.sun.enterprise.server.ApplicationServer;
-import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
-import com.sun.enterprise.deployment.web.LoginConfiguration;
-import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-//import org.apache.catalina.Globals;
-import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
-import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.ee.SecurityUtil;
-import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
-import com.sun.enterprise.security.audit.AuditManager;
-import java.util.List;
-import org.glassfish.api.web.Constants;
+import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
+
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyConfigurationFactory;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebRoleRefPermission;
+import jakarta.security.jacc.WebUserDataPermission;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The class implements the JSR 115 - JavaTM Authorization Contract for Containers. This class is a companion class of
@@ -212,8 +223,9 @@ public class WebSecurityManager {
         try {
             java.net.URI uri = null;
             try {
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, "[Web-Security] Creating a Codebase URI with = {0}", CODEBASE);
+                }
                 uri = new java.net.URI("file:///" + CODEBASE);
                 if (uri != null) {
                     codesource = new CodeSource(new URL(uri.toString()), (java.security.cert.Certificate[]) null);
@@ -296,11 +308,11 @@ public class WebSecurityManager {
 
     /*
      * Invoke the <code>Policy</code> to determine if the <code>Permission</code> object has security permission.
-     * 
+     *
      * @param perm an instance of <code>Permission</code>.
-     * 
+     *
      * @param principalSet a set containing the principals to check for authorization
-     * 
+     *
      * @return true if granted, false if denied.
      */
     protected boolean checkPermission(Permission perm, Set principalSet) {
@@ -352,8 +364,8 @@ public class WebSecurityManager {
                 logger.log(Level.FINE, "[Web-Security] Generating a protection domain for Permission check.");
 
                 if (principals != null) {
-                    for (int i = 0; i < principals.length; i++) {
-                        logger.log(Level.FINE, "[Web-Security] Checking with Principal : {0}", principals[i].toString());
+                    for (Principal principal : principals) {
+                        logger.log(Level.FINE, "[Web-Security] Checking with Principal : {0}", principal.toString());
                     }
                 } else {
                     logger.log(Level.FINE, "[Web-Security] Checking with Principals: null");
@@ -428,7 +440,7 @@ public class WebSecurityManager {
     /**
      * Perform access control based on the <code>HttpServletRequest</code>. Return <code>true</code> if this constraint is
      * satisfied and processing should continue, or <code>false</code> otherwise.
-     * 
+     *
      * @return true is the resource is granted, false if denied
      */
     public boolean hasResourcePermission(HttpServletRequest httpsr) {
@@ -450,11 +462,11 @@ public class WebSecurityManager {
      * WebRoleRefPermission; otherwise return <code>false</code>.
      *
      * @param principal servletName the resource's name.
-     * 
+     *
      * @param principal Principal for whom the role is to be checked
-     * 
+     *
      * @param role Security role to be checked
-     * 
+     *
      * @return true is the resource is granted, false if denied
      */
     public boolean hasRoleRefPermission(String servletName, String role, Principal p) {
@@ -518,8 +530,9 @@ public class WebSecurityManager {
 
             isGranted = checkPermission(perm, defaultPrincipalSet);
 
-            if (isGranted)
+            if (isGranted) {
                 result = -1;
+            }
         }
 
         return result;
@@ -576,6 +589,7 @@ public class WebSecurityManager {
 
             try {
                 AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+                    @Override
                     public java.lang.Object run() throws Exception {
                         PolicyContext.setContextID(ctxID);
                         return null;
@@ -598,7 +612,7 @@ public class WebSecurityManager {
 
     /**
      * This is an private method for transforming principal into a SecurityContext
-     * 
+     *
      * @param principal expected to be a WebPrincipal
      * @return SecurityContext
      */
@@ -620,7 +634,7 @@ public class WebSecurityManager {
 
     /**
      * This is an private method for policy context handler data info
-     * 
+     *
      * @param httpRequest
      */
     private void setSecurityInfo(HttpServletRequest httpRequest) {

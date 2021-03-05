@@ -16,19 +16,29 @@
 
 package com.sun.enterprise.security.auth.digest.impl;
 
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import static com.sun.enterprise.security.auth.digest.api.Constants.A2;
+import static com.sun.enterprise.security.auth.digest.api.Constants.CNONCE;
+import static com.sun.enterprise.security.auth.digest.api.Constants.DATA;
+import static com.sun.enterprise.security.auth.digest.api.Constants.METHOD;
+import static com.sun.enterprise.security.auth.digest.api.Constants.NONCE;
+import static com.sun.enterprise.security.auth.digest.api.Constants.NONCE_COUNT;
+import static com.sun.enterprise.security.auth.digest.api.Constants.QOP;
+import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
+import static com.sun.enterprise.security.auth.digest.api.Constants.URI;
+
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static com.sun.enterprise.security.auth.digest.api.Constants.*;
+
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 
 /**
  * HttpDigestParamGenerator consumes Authorization header from HttpServlet request and generates Digest parameter
  * objects to be used by Digest validators.
- * 
+ *
  * @author K.Venugopal@sun.com
  */
 public final class HttpDigestParamGenerator extends DigestParameterGenerator {
@@ -51,16 +61,16 @@ public final class HttpDigestParamGenerator extends DigestParameterGenerator {
     public HttpDigestParamGenerator() {
     }
 
+    @Override
     public com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter[] generateParameters(AlgorithmParameterSpec param)
             throws InvalidAlgorithmParameterException {
         jakarta.servlet.ServletInputStream sis = null;
 
         jakarta.servlet.http.HttpServletRequest request = null;
-        if (param instanceof com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl) {
-            request = ((com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl) param).getValue();
-        } else {
+        if (!(param instanceof com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl)) {
             throw new java.security.InvalidAlgorithmParameterException(param.getClass().toString());
         }
+        request = ((com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl) param).getValue();
         java.lang.String authorization = request.getHeader("Authorization");
         if (authorization == null) {
             return null;
@@ -147,17 +157,17 @@ public final class HttpDigestParamGenerator extends DigestParameterGenerator {
             list[1] = p2;
             list[2] = p3;
             list[3] = p4;
-            list[4] = (com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter) a2;
+            list[4] = a2;
         } else {
             list = new com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter[2];
             list[0] = p1;
-            list[1] = (com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter) a2;
+            list[1] = a2;
         }
         secret = new com.sun.enterprise.security.auth.digest.impl.DigestAlgorithmParameterImpl(RESPONSE, response.getBytes());
         com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter[] data = new com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter[3];
         data[0] = new com.sun.enterprise.security.auth.digest.impl.NestedDigestAlgoParamImpl(DATA, list);
         data[1] = secret;
-        data[2] = (com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter) key;
+        data[2] = key;
         return data;
     }
 
@@ -174,7 +184,8 @@ public final class HttpDigestParamGenerator extends DigestParameterGenerator {
             list[1] = p2;
             NestedDigestAlgoParamImpl a2 = new NestedDigestAlgoParamImpl(algorithm, A2, list);
             return a2;
-        } else if ("auth-int".equals(qop)) {
+        }
+        if ("auth-int".equals(qop)) {
             AlgorithmParameterSpec[] list = new AlgorithmParameterSpec[3];
             DigestAlgorithmParameterImpl p3 = new DigestAlgorithmParameterImpl("enity-body", algorithm, entityBody);
             list[0] = p1;
@@ -194,7 +205,8 @@ public final class HttpDigestParamGenerator extends DigestParameterGenerator {
         // support both quoted and non-quoted
         if (quotedString.length() > 0 && quotedString.charAt(0) != '"' && !quotesRequired) {
             return quotedString;
-        } else if (quotedString.length() > 2) {
+        }
+        if (quotedString.length() > 2) {
             return quotedString.substring(1, quotedString.length() - 1);
         } else {
             return "";

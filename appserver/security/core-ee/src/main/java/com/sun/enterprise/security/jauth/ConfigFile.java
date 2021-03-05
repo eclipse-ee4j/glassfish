@@ -16,12 +16,9 @@
 
 package com.sun.enterprise.security.jauth;
 
-import com.sun.enterprise.security.jmac.config.ConfigParser;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
-import java.io.*;
-import java.util.*;
-
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +28,8 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.AppConfigurationEntry;
 
+import com.sun.enterprise.security.jmac.config.ConfigParser;
+import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
 import com.sun.logging.LogDomains;
 
 /**
@@ -77,6 +76,7 @@ class ConfigFile extends AuthConfig {
      *
      * @return an instance of ConfigClient.
      */
+    @Override
     public ClientAuthContext getClientAuthContext(String intercept, String id, AuthPolicy requestPolicy, AuthPolicy responsePolicy,
             CallbackHandler handler) throws AuthException {
 
@@ -105,6 +105,7 @@ class ConfigFile extends AuthConfig {
      *
      * @return an instance of ConfigServer.
      */
+    @Override
     public ServerAuthContext getServerAuthContext(String intercept, String id, AuthPolicy requestPolicy, AuthPolicy responsePolicy,
             CallbackHandler handler) throws AuthException {
 
@@ -128,6 +129,7 @@ class ConfigFile extends AuthConfig {
         return new ConfigServer(entries);
     }
 
+    @Override
     public void refresh() throws AuthException {
         synchronized (this) {
             ConfigParser nextParser;
@@ -267,6 +269,7 @@ class ConfigFile extends AuthConfig {
             final ClassLoader finalLoader = AuthConfig.getClassLoader();
 
             return (ConfigParser) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                @Override
                 public Object run() throws Exception {
                     Class c = Class.forName(finalClassName, true, finalLoader);
                     return c.newInstance();
@@ -290,6 +293,7 @@ class ConfigFile extends AuthConfig {
             final ClassLoader finalLoader = AuthConfig.getClassLoader();
 
             return (CallbackHandler) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                @Override
                 public Object run() throws Exception {
 
                     String className = DEFAULT_HANDLER_CLASS;
@@ -434,9 +438,9 @@ class ConfigFile extends AuthConfig {
      */
     /*
      * static class InterceptEntry {
-     * 
+     *
      * String defaultClientID; String defaultServerID; HashMap idMap;
-     * 
+     *
      * InterceptEntry(String defaultClientID, String defaultServerID, HashMap idMap) { this.defaultClientID =
      * defaultClientID; this.defaultServerID = defaultServerID; this.idMap = idMap; } }
      */
@@ -446,22 +450,22 @@ class ConfigFile extends AuthConfig {
      */
     /*
      * static class IDEntry {
-     * 
+     *
      * private String type; // provider type (client, server, client-server) private AuthPolicy requestPolicy; private
      * AuthPolicy responsePolicy; private ArrayList modules;
-     * 
+     *
      * IDEntry(String type, AuthPolicy requestPolicy, AuthPolicy responsePolicy, ArrayList modules) {
-     * 
+     *
      * this.type = type; this.modules = modules; this.requestPolicy = requestPolicy; this.responsePolicy = responsePolicy; }
-     * 
+     *
      * // XXX delete this later IDEntry(String type, String requestPolicy, String responsePolicy, ArrayList modules) {
-     * 
+     *
      * this.type = type;
-     * 
+     *
      * if (requestPolicy != null) { this.requestPolicy = new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, true, //
      * recipient-auth true); // beforeContent } if (responsePolicy != null) { this.responsePolicy = new
      * AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, true, // recipient-auth false); // beforeContent }
-     * 
+     *
      * this.modules = modules; } }
      */
 
@@ -477,6 +481,7 @@ class ConfigFile extends AuthConfig {
             context = new AuthContext(entries, logger);
         }
 
+        @Override
         public void secureRequest(AuthParam param, Subject subject, Map sharedState) throws AuthException {
 
             // invoke modules
@@ -484,12 +489,14 @@ class ConfigFile extends AuthConfig {
             context.invoke(AuthContext.SECURE_REQUEST, args);
         }
 
+        @Override
         public void validateResponse(AuthParam param, Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { param, subject, sharedState };
             context.invoke(AuthContext.VALIDATE_RESPONSE, args);
         }
 
+        @Override
         public void disposeSubject(Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { subject, sharedState };
@@ -510,24 +517,28 @@ class ConfigFile extends AuthConfig {
             context = new AuthContext(entries, logger);
         }
 
+        @Override
         public void validateRequest(AuthParam param, Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { param, subject, sharedState };
             context.invoke(AuthContext.VALIDATE_REQUEST, args);
         }
 
+        @Override
         public void secureResponse(AuthParam param, Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { param, subject, sharedState };
             context.invoke(AuthContext.SECURE_RESPONSE, args);
         }
 
+        @Override
         public void disposeSubject(Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { subject, sharedState };
             context.invoke(AuthContext.DISPOSE_SUBJECT, args);
         }
 
+        @Override
         public boolean managesSessions(Map sharedState) throws AuthException {
 
             // invoke modules
@@ -548,7 +559,7 @@ class ConfigFile extends AuthConfig {
 
             for (int i = 0; rValues != null && i < rValues.length; i++) {
                 if (rValues[i] != null) {
-                    boolean thisValue = ((Boolean) rValues[i]).booleanValue();
+                    boolean thisValue = ((Boolean) rValues[i]);
                     rvalue = rvalue | thisValue;
                 }
             }
@@ -572,16 +583,17 @@ class ConfigFile extends AuthConfig {
             }
         }
 
+        @Override
         public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
             if (defaultHandler == null) {
                 handler.handle(callbacks);
             } else {
                 Callback[] oneCallback = new Callback[1];
-                for (int i = 0; i < callbacks.length; i++) {
+                for (Callback callback : callbacks) {
 
                     boolean tryDefault = false;
 
-                    oneCallback[0] = callbacks[i];
+                    oneCallback[0] = callback;
                     try {
                         handler.handle(oneCallback);
                     } catch (UnsupportedCallbackException uce) {

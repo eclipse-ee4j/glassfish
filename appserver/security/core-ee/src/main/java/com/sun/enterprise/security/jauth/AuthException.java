@@ -30,7 +30,6 @@ public class AuthException extends jakarta.security.auth.message.AuthException {
      * exception.
      */
     public AuthException() {
-        super();
     }
 
     /**

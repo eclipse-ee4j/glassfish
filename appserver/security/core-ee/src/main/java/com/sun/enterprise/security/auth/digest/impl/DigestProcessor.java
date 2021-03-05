@@ -34,7 +34,7 @@ import com.sun.logging.LogDomains;
 
 /**
  * supports creation and validation of digest.
- * 
+ *
  * @author K.Venugopal@sun.com
  */
 public abstract class DigestProcessor {
@@ -64,8 +64,7 @@ public abstract class DigestProcessor {
             com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter clientResponse = null;
             com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter key = null;
             this.passwd = passwd;
-            for (int i = 0; i < params.length; i++) {
-                com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter dap = params[i];
+            for (DigestAlgorithmParameter dap : params) {
                 if (A1.equals(dap.getName()) && (dap instanceof com.sun.enterprise.security.auth.digest.api.Key)) {
                     key = dap;
                 } else {
@@ -112,19 +111,19 @@ public abstract class DigestProcessor {
     protected final byte[] valueOf(DigestAlgorithmParameter param) throws NoSuchAlgorithmException {
         if (param instanceof KeyDigestAlgoParamImpl) {
             return valueOf((KeyDigestAlgoParamImpl) param);
-        } else if (param instanceof NestedDigestAlgoParam) {
+        }
+        if (param instanceof NestedDigestAlgoParam) {
             return valueOf((NestedDigestAlgoParam) param);
         }
         if (param.getAlgorithm() == null || param.getAlgorithm().length() == 0) {
             return param.getValue();
-        } else {
-            MessageDigest md = MessageDigest.getInstance(param.getAlgorithm());
-            md.update(param.getValue());
-            byte[] dk = md.digest();
-            String tmp = getMd5Encoder().encode(dk);
-            // new MD5Encoder().encode(dk);
-            return tmp.getBytes();
         }
+        MessageDigest md = MessageDigest.getInstance(param.getAlgorithm());
+        md.update(param.getValue());
+        byte[] dk = md.digest();
+        String tmp = getMd5Encoder().encode(dk);
+        // new MD5Encoder().encode(dk);
+        return tmp.getBytes();
     }
 
     /**
@@ -139,23 +138,22 @@ public abstract class DigestProcessor {
 
         java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
 
-        if (passwd.getType() == Password.PLAIN_TEXT) {
-            try {
-                bos.write(param.getUsername().getBytes());
-                bos.write(param.getDelimiter());
-                bos.write(param.getRealmName().getBytes());
-                bos.write(param.getDelimiter());
-                bos.write(passwd.getValue());
-                MessageDigest md = MessageDigest.getInstance(param.getAlgorithm());
-                byte[] dk = md.digest(bos.toByteArray());
-                String tmp = getMd5Encoder().encode(dk);
-                // new MD5Encoder().encode(dk);
-                return tmp.getBytes();
-            } catch (IOException ex) {
-                _logger.log(java.util.logging.Level.SEVERE, "digest.param.error", ex);
-            }
-        } else {
+        if (passwd.getType() != Password.PLAIN_TEXT) {
             return passwd.getValue();
+        }
+        try {
+            bos.write(param.getUsername().getBytes());
+            bos.write(param.getDelimiter());
+            bos.write(param.getRealmName().getBytes());
+            bos.write(param.getDelimiter());
+            bos.write(passwd.getValue());
+            MessageDigest md = MessageDigest.getInstance(param.getAlgorithm());
+            byte[] dk = md.digest(bos.toByteArray());
+            String tmp = getMd5Encoder().encode(dk);
+            // new MD5Encoder().encode(dk);
+            return tmp.getBytes();
+        } catch (IOException ex) {
+            _logger.log(java.util.logging.Level.SEVERE, "digest.param.error", ex);
         }
 
         return null;
@@ -180,9 +178,8 @@ public abstract class DigestProcessor {
             String tmp = getMd5Encoder().encode(dk);
             // new MD5Encoder().encode(dk);
             return tmp.getBytes();
-        } else {
-            return bos.toByteArray();
         }
+        return bos.toByteArray();
     }
 
     public MD5Encoder getMd5Encoder() {
@@ -210,14 +207,15 @@ public abstract class DigestProcessor {
          */
         public String encode(byte[] binaryData) {
 
-            if (binaryData.length != 16)
+            if (binaryData.length != 16) {
                 return null;
+            }
 
             char[] buffer = new char[32];
 
             for (int i = 0; i < 16; i++) {
-                int low = (int) (binaryData[i] & 0x0f);
-                int high = (int) ((binaryData[i] & 0xf0) >> 4);
+                int low = binaryData[i] & 0x0f;
+                int high = (binaryData[i] & 0xf0) >> 4;
                 buffer[i * 2] = hexadecimal[high];
                 buffer[i * 2 + 1] = hexadecimal[low];
             }

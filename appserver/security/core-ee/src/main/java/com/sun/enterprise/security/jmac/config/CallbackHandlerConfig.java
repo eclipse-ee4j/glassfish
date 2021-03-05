@@ -22,5 +22,5 @@ package com.sun.enterprise.security.jmac.config;
  * @author Shing Wai Chan
  */
 public interface CallbackHandlerConfig {
-    public void setHandlerContext(HandlerContext handlerContext);
+    void setHandlerContext(HandlerContext handlerContext);
 }

@@ -20,11 +20,17 @@ import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
-import com.sun.enterprise.security.SecurityContextProxy;
 import org.glassfish.security.common.PrincipalImpl;
+
 import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.SecurityContextProxy;
 
 public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7855179427171479644L;
 
     private char[] password;
 
@@ -83,18 +89,20 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
         return useCertificate;
     }
 
+    @Override
     public SecurityContext getSecurityContext() {
         return secCtx;
     }
 
+    @Override
     public String getName() {
         if (customPrincipal == null) {
             return super.getName();
-        } else {
-            return customPrincipal.getName();
         }
+        return customPrincipal.getName();
     }
 
+    @Override
     public boolean equals(Object another) {
 
         if (customPrincipal == null) {
@@ -103,6 +111,7 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
         return customPrincipal.equals(another);
     }
 
+    @Override
     public int hashCode() {
         if (customPrincipal == null) {
             return super.hashCode();
@@ -110,6 +119,7 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
         return customPrincipal.hashCode();
     }
 
+    @Override
     public String toString() {
         if (customPrincipal == null) {
             return super.toString();

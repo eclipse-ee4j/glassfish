@@ -20,7 +20,7 @@ import javax.security.auth.callback.CallbackHandler;
 
 /**
  * This class manages the configuration AuthModules.
- * 
+ *
  * <p>
  * An AuthModule represents a pluggable component for performing security-related request and response processing, and
  * can be configured for a particular interception point and provider ID. The provider ID is an administrator-defined
@@ -96,13 +96,14 @@ public abstract class AuthConfig {
         final ClassLoader rvalue;
 
         rvalue = (ClassLoader) java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+            @Override
             public Object run() {
                 return Thread.currentThread().getContextClassLoader();
             }
         });
 
         return rvalue;
-    };
+    }
 
     /**
      * Sole constructor. (For invocation by subclass constructors, typically implicit.)
@@ -131,6 +132,7 @@ public abstract class AuthConfig {
         if (config == null) {
             String config_class = null;
             config_class = (String) java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                @Override
                 public Object run() {
                     return java.security.Security.getProperty(AUTHCONFIG_PROPERTY);
                 }
@@ -142,6 +144,7 @@ public abstract class AuthConfig {
             try {
                 final String finalClass = config_class;
                 config = (AuthConfig) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                    @Override
                     public Object run() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
                         return Class.forName(finalClass, true, getClassLoader()).newInstance();
                     }

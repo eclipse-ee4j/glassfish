@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.security.perms;
 
-import java.security.PermissionCollection;
 import java.net.MalformedURLException;
+import java.security.PermissionCollection;
 
 import org.glassfish.api.deployment.DeploymentContext;
 
@@ -35,7 +35,7 @@ public class DeclaredPermissionsProcessor extends PermissionsProcessor {
 
     /**
      * get the declared permissions which have the file path adjusted for the right module
-     * 
+     *
      * @return adjusted declared permissions
      */
     public PermissionCollection getAdjustedDeclaredPermissions() {

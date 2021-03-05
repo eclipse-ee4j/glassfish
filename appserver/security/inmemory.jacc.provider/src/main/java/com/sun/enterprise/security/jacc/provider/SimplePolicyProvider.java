@@ -23,6 +23,7 @@ import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
+
 import jakarta.security.jacc.PolicyContext;
 import jakarta.security.jacc.PolicyContextException;
 
@@ -129,13 +130,12 @@ public class SimplePolicyProvider extends Policy {
         byte[] alreadyCalled = (byte[]) reentrancyStatus.get();
         if (alreadyCalled[0] == 1) {
             return true;
-        } else {
-            alreadyCalled[0] = 1;
-            try {
-                return doImplies(domain, permission);
-            } finally {
-                alreadyCalled[0] = 0;
-            }
+        }
+        alreadyCalled[0] = 1;
+        try {
+            return doImplies(domain, permission);
+        } finally {
+            alreadyCalled[0] = 0;
         }
     }
 

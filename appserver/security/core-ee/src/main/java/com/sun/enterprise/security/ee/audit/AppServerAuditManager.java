@@ -22,28 +22,29 @@
 
 package com.sun.enterprise.security.ee.audit;
 
-import java.util.logging.Logger;
-
-import com.sun.appserv.security.AuditModule;
-import com.sun.enterprise.security.audit.BaseAuditManager;
-import com.sun.enterprise.security.BaseAuditModule;
-import com.sun.logging.LogDomains;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.glassfish.hk2.api.Rank;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.appserv.security.AuditModule;
+import com.sun.enterprise.security.BaseAuditModule;
+import com.sun.enterprise.security.audit.BaseAuditManager;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.LogDomains;
+
 import jakarta.inject.Singleton;
 import jakarta.servlet.http.HttpServletRequest;
-import org.glassfish.hk2.api.Rank;
 
 /**
  * An EE-specific implementation of the audit manager.
  * <p>
  * This class delegates the nucleus-based work of handling server start-up and shutdown and user authentication to its
  * superclass, adding only the work specific to EE auditing here.
- * 
+ *
  * @author Harpreet Singh
  * @author Shing Wai Chan
  * @author tjquinn
@@ -82,14 +83,14 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
     public BaseAuditModule removeAuditModule(String name) {
         final BaseAuditModule am = super.removeAuditModule(name);
         if (AuditModule.class.isAssignableFrom(am.getClass())) {
-            myAuditModules().remove((AuditModule) am);
+            myAuditModules().remove(am);
         }
         return am;
     }
 
     /**
      * logs the web authorization call for all loaded modules
-     * 
+     *
      * @see com.sun.appserv.security.AuditModule.webInvocation
      */
     public void webInvocation(final String user, final HttpServletRequest req, final String type, final boolean success) {
@@ -109,7 +110,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
 
     /**
      * logs the ejb authorization call for all ejb modules
-     * 
+     *
      * @see com.sun.appserv.security.AuditModule.ejbInvocation
      */
     public void ejbInvocation(final String user, final String ejb, final String method, final boolean success) {
@@ -129,7 +130,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
 
     /**
      * This method is called for the web service calls with MLS set and the endpoints deployed as servlets
-     * 
+     *
      * @see com.sun.appserv.security.AuditModule.webServiceInvocation
      */
     public void webServiceInvocation(final String uri, final String endpoint, final boolean validRequest) {
@@ -149,7 +150,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
 
     /**
      * This method is called for the web service calls with MLS set and the endpoints deployed as servlets
-     * 
+     *
      * @see com.sun.appserv.security.AuditModule.webServiceInvocation
      */
     public void ejbAsWebServiceInvocation(final String endpoint, final boolean validRequest) {

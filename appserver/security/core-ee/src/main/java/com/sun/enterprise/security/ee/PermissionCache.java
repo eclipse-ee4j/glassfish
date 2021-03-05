@@ -16,30 +16,30 @@
 
 package com.sun.enterprise.security.ee;
 
-import com.sun.enterprise.security.common.AppservAccessController;
-import java.security.CodeSource;
 import java.security.AllPermission;
+import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Policy;
-import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.ee.CachedPermissionImpl.Epoch;
+import com.sun.logging.LogDomains;
 
 import jakarta.security.jacc.PolicyContext;
-import com.sun.enterprise.security.ee.CachedPermissionImpl.Epoch;
-
-import com.sun.logging.LogDomains;
 
 /**
  * This class is
- * 
+ *
  * @author Ron Monzillo
  */
 
@@ -64,19 +64,19 @@ public class PermissionCache extends Object {
 
     /*
      * USE OF THIS CONSTRUCTOR WITH IS DISCOURAGED PLEASE USE THE Permission (object) based CONSTRUCTOR.
-     * 
+     *
      * @param key - Integer that uniquely identifies the cache at the factory
-     * 
+     *
      * @param pcID - a string identifying the policy context and which must be set when getPermissions is called
      * (internally). this value may be null, in which case the permisions of the default policy context will be cached.
-     * 
+     *
      * @param codesource - the codesource argument to be used in the call to getPermissions. this value may be null.
-     * 
+     *
      * @param class - a single Class object that identifies the permission type that will be managed by the cache. This
      * value may be null. When this argument is not null, only permissions of the identified type or that resolve to the
      * identified type, will be managed within the cache. When null is passed to this argument, permission type will not be
      * a factor in determining the cached permissions.
-     * 
+     *
      * @param name - a string corresponding to a value returned by Permission.getName(). Only permissions whose getName()
      * value matches the name parameter will be included in the cache. This value may be null, in which case permission name
      * does not factor into the permission caching.
@@ -106,17 +106,17 @@ public class PermissionCache extends Object {
 
     /*
      * @param key - Integer that uniquely identifies the cache at the factory
-     * 
+     *
      * @param pcID - a string identifying the policy context and which must be set when getPermissions is called
      * (internally). this value may be null, in which case the permisions of the default policy context will be cached.
-     * 
+     *
      * @param codesource - the codesource argument to be used in the call to getPermissions. this value may be null.
-     * 
+     *
      * @param perms - an array of permission objects identifying the permission types that will be managed by the cache.
      * This value may be null. When this argument is not null, only permissions of the types passed in the array or that
      * resolve to the types identified in the will be managed within the cache. When null is passed to this argument,
      * permission type will not be a factor in determining the cached permissions.
-     * 
+     *
      * @param name - a string corresponding to a value returned by Permission.getName(). Only permissions whose getName()
      * value matches the name parameter will be included in the cache. This value may be null, in which case permission name
      * does not factor into the permission caching.
@@ -154,13 +154,12 @@ public class PermissionCache extends Object {
     private boolean checkLoadedCache(Permission p, Epoch e) {
         if (e == null) {
             return cache.implies(p);
-        } else {
-            if (e.epoch != epoch) {
-                e.granted = cache.implies(p);
-                e.epoch = epoch;
-            }
-            return e.granted;
         }
+        if (e.epoch != epoch) {
+            e.granted = cache.implies(p);
+            e.epoch = epoch;
+        }
+        return e.granted;
     }
 
     private boolean checkCache(Permission p, Epoch e) {
@@ -170,7 +169,8 @@ public class PermissionCache extends Object {
         try {
             if (loading) {
                 return false;
-            } else if (cache != null) {
+            }
+            if (cache != null) {
                 // cache is loaded and readlock is held
                 // check permission and return
                 return checkLoadedCache(p, e);
@@ -185,7 +185,8 @@ public class PermissionCache extends Object {
             // release the writelock and return
             wLock.unlock();
             return false;
-        } else if (cache != null) {
+        }
+        if (cache != null) {
             // another thread loaded the cache
             // get readlock inside writelock.
             // check permission and return
@@ -261,8 +262,8 @@ public class PermissionCache extends Object {
                 if (this.classes != null) {
                     classMatch = false;
                     Class iClazz = i.getClass();
-                    for (int j = 0; j < this.classes.length; j++) {
-                        if (this.classes[j].equals(iClazz)) {
+                    for (Class element : this.classes) {
+                        if (element.equals(iClazz)) {
                             classMatch = true;
                             break;
                         }
@@ -321,6 +322,7 @@ public class PermissionCache extends Object {
 
     private void setPolicyContextID(final String newID) throws PrivilegedActionException {
         AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+            @Override
             public java.lang.Object run() throws Exception {
                 PolicyContext.setContextID(newID);
                 return null;
@@ -333,8 +335,8 @@ public class PermissionCache extends Object {
         // each call to implies will resolve permissions of the
         // argument permission type
         if (this.protoPerms != null && this.protoPerms.length > 0) {
-            for (int i = 0; i < this.protoPerms.length; i++) {
-                pc.implies(this.protoPerms[i]);
+            for (Permission protoPerm : this.protoPerms) {
+                pc.implies(protoPerm);
             }
         } else {
             pc.implies(p);

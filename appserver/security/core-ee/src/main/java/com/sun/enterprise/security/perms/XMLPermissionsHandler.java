@@ -22,26 +22,22 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.PermissionCollection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
 import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
-import com.sun.enterprise.config.serverbeans.DasConfig;
-import com.sun.enterprise.deployment.io.PermissionsDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.PermissionItemDescriptor;
-import com.sun.enterprise.deployment.PermissionsDescriptor;
-import com.sun.logging.LogDomains;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
+import org.xml.sax.SAXException;
+
+import com.sun.enterprise.config.serverbeans.DasConfig;
+import com.sun.enterprise.deployment.PermissionsDescriptor;
+import com.sun.enterprise.deployment.io.PermissionsDeploymentDescriptorFile;
+import com.sun.logging.LogDomains;
 
 /**
- * 
+ *
  * Utility class to get declared permissions
  *
  */
@@ -96,10 +92,11 @@ public class XMLPermissionsHandler {
                     dasConfig = serviceLocator.getService(DasConfig.class);
                     if (dasConfig != null) {
                         String xmlValidationLevel = dasConfig.getDeployXmlValidation();
-                        if (xmlValidationLevel.equals("none"))
+                        if (xmlValidationLevel.equals("none")) {
                             pddf.setXMLValidation(false);
-                        else
+                        } else {
                             pddf.setXMLValidation(true);
+                        }
                         pddf.setXMLValidationLevel(xmlValidationLevel);
                     }
                 }
@@ -109,9 +106,7 @@ public class XMLPermissionsHandler {
 
                 declaredPermXml = pd.getDeclaredPermissions();
 
-            } catch (SAXException e) {
-                throw new SecurityException(e);
-            } catch (IOException e) {
+            } catch (SAXException | IOException e) {
                 throw new SecurityException(e);
             } finally {
                 if (fi != null) {
@@ -144,11 +139,13 @@ public class XMLPermissionsHandler {
     // check the app declared permissions against server restricted policy
     private void checkServerRestrictedPermissions() {
 
-        if (this.declaredPermXml == null)
+        if (this.declaredPermXml == null) {
             return;
+        }
 
-        if (compType == null) // don't know the type, no check
+        if (compType == null) {
             return;
+        }
 
         SMGlobalPolicyUtil.checkRestrictionOfComponentType(declaredPermXml, this.compType);
     }

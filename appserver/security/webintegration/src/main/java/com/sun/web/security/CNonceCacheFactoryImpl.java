@@ -16,21 +16,21 @@
 
 package com.sun.web.security;
 
-import com.sun.enterprise.security.CNonceCacheFactory;
-import org.glassfish.security.common.CNonceCache;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-
 import java.util.HashMap;
 import java.util.Map;
-import org.glassfish.api.admin.ServerEnvironment;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
+import org.glassfish.security.common.CNonceCache;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.CNonceCacheFactory;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 /**
  *
@@ -78,7 +78,7 @@ public class CNonceCacheFactoryImpl implements CNonceCacheFactory, PostConstruct
     public CNonceCache createCNonceCache(String appName, String clusterName, String instanceName, String storeName) {
         boolean haEnabled = (clusterName != null) && (instanceName != null) && (storeName != null);
         CNonceCache cache = null;
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         if (haEnabled) {
             cache = cHANonceCacheProvider.get();
             map.put(CLUSTER_NAME_PROP, clusterName);

@@ -16,9 +16,10 @@
 
 package com.sun.enterprise.security.auth.digest.impl;
 
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.spec.AlgorithmParameterSpec;
+
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 
 /**
  * This Factory provides DigestParameterGenerator instances to generate DigestAlgorithmParameter objects from Http and
@@ -37,7 +38,6 @@ public abstract class DigestParameterGenerator {
     // TODO: Ability to return implementations through services mechanism.
     public static DigestParameterGenerator getInstance(String algorithm) {
         if (HTTP_DIGEST.equals(algorithm)) {
-            return new HttpDigestParamGenerator();
         }
         return new HttpDigestParamGenerator();
     }

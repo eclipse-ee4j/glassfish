@@ -16,28 +16,30 @@
 
 package com.sun.web.security;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.TrustManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.security.ssl.SSLUtils;
-//V3:Commented import com.sun.enterprise.ServerConfiguration;
-//V3:Commented import com.sun.web.server.*;
-//V3:Commented import com.sun.enterprise.server.J2EEServer;
-import com.sun.enterprise.security.ssl.J2EEKeyManager;
-
-import java.util.logging.*;
-import com.sun.logging.*;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.X509KeyManager;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.SharedSecureRandom;
+import org.glassfish.security.common.SharedSecureRandomImpl;
+
+//V3:Commented import com.sun.enterprise.ServerConfiguration;
+//V3:Commented import com.sun.web.server.*;
+//V3:Commented import com.sun.enterprise.server.J2EEServer;
+import com.sun.enterprise.security.ssl.J2EEKeyManager;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.LogDomains;
 
 /**
  * SSL server socket factory.
@@ -75,14 +77,14 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
                 initStoresAtStartup();
             }
             context = SSLContext.getInstance("TLS");
-            context.init(keyManagers, trustManagers, SharedSecureRandom.get());
+            context.init(keyManagers, trustManagers, SharedSecureRandomImpl.get());
 
             factory = context.getServerSocketFactory();
             cipherSuites = factory.getSupportedCipherSuites();
 
-            for (int i = 0; i < cipherSuites.length; ++i) {
+            for (String cipherSuite : cipherSuites) {
                 if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, "Suite: " + cipherSuites[i]);
+                    _logger.log(Level.FINEST, "Suite: " + cipherSuite);
                 }
             }
 
@@ -93,10 +95,11 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
 
     /**
      * Create the socket at the specified port.
-     * 
+     *
      * @param port the port number.
      * @return the SSL server socket.
      */
+    @Override
     public ServerSocket createSocket(int port) throws IOException {
         SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port);
         init(socket);
@@ -105,7 +108,7 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
 
     /**
      * Specify whether the server will require client authentication.
-     * 
+     *
      * @param socket the SSL server socket.
      */
     private void init(SSLServerSocket socket) {
@@ -116,10 +119,11 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
 
     /**
      * Create the socket at the specified port.
-     * 
+     *
      * @param port the port number.
      * @return the SSL server socket.
      */
+    @Override
     public ServerSocket createSocket(int port, int backlog) throws IOException {
         SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port, backlog);
         init(socket);
@@ -128,10 +132,11 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
 
     /**
      * Create the socket at the specified port.
-     * 
+     *
      * @param port the port number.
      * @return the SSL server socket.
      */
+    @Override
     public ServerSocket createSocket(int port, int backlog, InetAddress ifAddress) throws IOException {
         SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port, backlog, ifAddress);
         init(socket);

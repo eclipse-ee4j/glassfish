@@ -16,22 +16,22 @@
 
 package com.sun.enterprise.security.ee;
 
-import com.sun.enterprise.security.SecurityLifecycle;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.DeploymentUtils;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
-import java.util.logging.Logger;
-import java.io.IOException;
-
+import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.module.HK2Module;
-import java.lang.annotation.Annotation;
+import com.sun.enterprise.security.SecurityLifecycle;
 
 import jakarta.inject.Inject;
 
@@ -69,8 +69,9 @@ public class SecuritySniffer extends GenericSniffer {
             return false;
         }
         if (archiveType != null && (archiveType.equals(DOLUtils.warType()) || archiveType.equals(DOLUtils.earType())
-                || archiveType.equals(DOLUtils.ejbType())))
+                || archiveType.equals(DOLUtils.ejbType()))) {
             return true;
+        }
         return handles(context.getSource());
     }
 
@@ -123,6 +124,7 @@ public class SecuritySniffer extends GenericSniffer {
      *
      * @return list of container names known to the habitat for this sniffer
      */
+    @Override
     public String[] getContainersNames() {
         return containers;
     }
@@ -141,6 +143,7 @@ public class SecuritySniffer extends GenericSniffer {
      * @return whether the sniffer supports the archive type
      *
      */
+    @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.toString().equals("war") || archiveType.toString().equals("ejb")) {
             return true;

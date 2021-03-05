@@ -18,20 +18,22 @@ package com.sun.enterprise.security.ee.authorize;
 
 import java.lang.reflect.Method;
 
-import com.sun.enterprise.security.authorize.PolicyContextDelegate;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.api.EJBInvocation;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.security.authorize.PolicyContextDelegate;
+
 /**
  * This class is primarily a delegate for PolicyContextHandler related queries But also handles Authorization of
  * WebServiceInvocations
- * 
+ *
  * @author Kumar
  */
 @Service(name = "EJB")
 public class EJBPolicyContextDelegate implements PolicyContextDelegate {
 
+    @Override
     public Object getEnterpriseBean(ComponentInvocation inv) {
         if (inv instanceof EJBInvocation) {
             return ((EJBInvocation) inv).getJaccEjb();
@@ -39,18 +41,19 @@ public class EJBPolicyContextDelegate implements PolicyContextDelegate {
         return null;
     }
 
+    @Override
     public Object getEJbArguments(ComponentInvocation inv) {
         if (inv instanceof EJBInvocation) {
             EJBInvocation eInv = (EJBInvocation) inv;
             if (eInv.isAWebService()) {
                 return null;
-            } else {
-                return (eInv.getMethodParams() != null) ? eInv.getMethodParams() : new Object[0];
             }
+            return (eInv.getMethodParams() != null) ? eInv.getMethodParams() : new Object[0];
         }
         return null;
     }
 
+    @Override
     public Object getSOAPMessage(ComponentInvocation inv) {
         if (inv instanceof EJBInvocation) {
             EJBInvocation eInv = (EJBInvocation) inv;
@@ -63,6 +66,7 @@ public class EJBPolicyContextDelegate implements PolicyContextDelegate {
         return null;
     }
 
+    @Override
     public void setSOAPMessage(Object message, ComponentInvocation inv) {
         if (inv instanceof EJBInvocation) {
             EJBInvocation eInv = (EJBInvocation) inv;
@@ -72,6 +76,7 @@ public class EJBPolicyContextDelegate implements PolicyContextDelegate {
         }
     }
 
+    @Override
     public boolean authorize(ComponentInvocation inv, Method m) throws Exception {
         Exception ie = null;
         if (inv instanceof EJBInvocation) {

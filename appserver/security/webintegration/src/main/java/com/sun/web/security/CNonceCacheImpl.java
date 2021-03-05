@@ -16,15 +16,15 @@
 
 package com.sun.web.security;
 
-import org.glassfish.security.common.NonceInfo;
-import org.glassfish.security.common.CNonceCache;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.apache.catalina.util.StringManager;
 
-import org.jvnet.hk2.annotations.Service;
+import org.apache.catalina.util.StringManager;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.security.common.CNonceCache;
+import org.glassfish.security.common.NonceInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *
@@ -33,6 +33,11 @@ import org.glassfish.hk2.api.PerLookup;
 @Service(name = "CNonceCache")
 @PerLookup
 public final class CNonceCacheImpl extends LinkedHashMap<String, NonceInfo> implements CNonceCache {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4657887758539980470L;
 
     private static final long LOG_SUPPRESS_TIME = 5 * 60 * 1000;
 

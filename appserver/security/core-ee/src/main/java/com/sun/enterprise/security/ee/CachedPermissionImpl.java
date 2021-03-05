@@ -20,7 +20,7 @@ import java.security.Permission;
 
 /**
  * This class is
- * 
+ *
  * @author Ron Monzillo
  */
 
@@ -36,15 +36,18 @@ public class CachedPermissionImpl extends Object implements CachedPermission {
         epoch = new Epoch();
     }
 
+    @Override
     public Permission getPermission() {
         return this.permission;
     }
 
+    @Override
     public PermissionCache getPermissionCache() {
         return this.permissionCache;
     }
 
     // synchronization done in PermissionCache
+    @Override
     public boolean checkPermission() {
         boolean granted = false;
         if (permissionCache != null) {

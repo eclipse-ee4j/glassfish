@@ -58,11 +58,12 @@ public class ConfigDomainParser implements ConfigParser {
 
     // configuration info
     private Map configMap = new HashMap();
-    private Set<String> layersWithDefault = new HashSet<String>();
+    private Set<String> layersWithDefault = new HashSet<>();
 
     public ConfigDomainParser() throws IOException {
     }
 
+    @Override
     public void initialize(Object service) throws IOException {
         if (service == null && Globals.getDefaultHabitat() != null) {
             service = Globals.getDefaultHabitat().getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
@@ -108,10 +109,12 @@ public class ConfigDomainParser implements ConfigParser {
         }
     }
 
+    @Override
     public Map getConfigMap() {
         return configMap;
     }
 
+    @Override
     public Set<String> getLayersWithDefault() {
         return layersWithDefault;
     }
@@ -152,8 +155,8 @@ public class ConfigDomainParser implements ConfigParser {
         String id = pConfig.getProviderId();
         String type = pConfig.getProviderType();
         String moduleClass = pConfig.getClassName();
-        MessagePolicy requestPolicy = parsePolicy((RequestPolicy) pConfig.getRequestPolicy());
-        MessagePolicy responsePolicy = parsePolicy((ResponsePolicy) pConfig.getResponsePolicy());
+        MessagePolicy requestPolicy = parsePolicy(pConfig.getRequestPolicy());
+        MessagePolicy responsePolicy = parsePolicy(pConfig.getResponsePolicy());
 
         // get the module options
 

@@ -16,17 +16,19 @@
 
 package com.sun.enterprise.security.ee;
 
-import com.sun.enterprise.security.ContainerSecurityLifecycle;
-import com.sun.enterprise.security.jmac.config.GFAuthConfigFactory;
-import com.sun.logging.LogDomains;
 import java.security.Security;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.security.auth.message.config.AuthConfigFactory;
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.security.ContainerSecurityLifecycle;
+import com.sun.enterprise.security.jmac.config.GFAuthConfigFactory;
+import com.sun.logging.LogDomains;
+
 import jakarta.inject.Singleton;
+import jakarta.security.auth.message.config.AuthConfigFactory;
 
 /**
  *

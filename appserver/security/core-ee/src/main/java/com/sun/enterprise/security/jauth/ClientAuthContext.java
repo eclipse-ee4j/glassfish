@@ -30,7 +30,7 @@ package com.sun.enterprise.security.jauth;
  * ClientAuthContext implementation invokes configured plug-in modules. Modules verify or decrypt response as necessary.
  * <li>The <i>disposeSubject</i> method may be invoked if necessary to clean up any authentication state in the Subject.
  * </ol>
- * 
+ *
  * <p>
  * An instance may reuse module instances it previously created. As a result a single module instance may be used to
  * issue different requests as different clients. It is the module implementation's responsibility to properly store and
@@ -81,7 +81,7 @@ public interface ClientAuthContext {
      *
      * <p>
      * Validation may include verifying signature in response, or decrypting response contents, for example.
-     * 
+     *
      * <p>
      * This method invokes configured modules to validate the response.
      *

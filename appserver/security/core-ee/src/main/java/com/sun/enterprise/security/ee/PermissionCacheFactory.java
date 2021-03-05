@@ -24,7 +24,7 @@ import java.util.Iterator;
 
 /**
  * This class is the factory for creating and managing PermissionCache.
- * 
+ *
  * @author Shing Wai Chan
  */
 
@@ -54,15 +54,15 @@ public class PermissionCacheFactory {
 
     /**
      * Reserve the next Cache Key for subsequent registration.
-     * 
+     *
      * @return the key as an Integer object.
      */
     private static Integer getNextKey() {
 
-        Integer key = Integer.valueOf(factoryKey++);
+        Integer key = factoryKey++;
 
         while (cacheMap.get(key) != null) {
-            key = Integer.valueOf(factoryKey++);
+            key = factoryKey++;
         }
 
         return key;
@@ -81,7 +81,7 @@ public class PermissionCacheFactory {
 
     /**
      * Create a PermissionCache object. If the corresponding object exists, then it will overwrite the previous one.
-     * 
+     *
      * @param pcID       - a string identifying the policy context and which must be set when getPermissions is called
      *                   (internally). This value may be null, in which case the permisions of the default policy context
      *                   will be cached.
@@ -108,7 +108,7 @@ public class PermissionCacheFactory {
 
     /**
      * Create a PermissionCache object. If the corresponding object exists, then it will overwrite the previous one.
-     * 
+     *
      * @param pcID       - a string identifying the policy context and which must be set when getPermissions is called
      *                   (internally). This value may be null, in which case the permisions of the default policy context
      *                   will be cached.
@@ -135,7 +135,7 @@ public class PermissionCacheFactory {
     /**
      * Register a PermissionCache object with the factory. If an object is already registered at the key, it will be
      * overidden.
-     * 
+     *
      * @param cache a cache with an internal key value.
      * @return the cache object
      */

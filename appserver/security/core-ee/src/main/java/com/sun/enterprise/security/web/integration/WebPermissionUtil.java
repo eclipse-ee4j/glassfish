@@ -16,25 +16,39 @@
 
 package com.sun.enterprise.security.web.integration;
 
-import java.util.*;
+import java.security.Permission;
+import java.security.Permissions;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.security.common.Role;
+
+import com.sun.enterprise.deployment.SecurityRoleDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.web.AuthorizationConstraint;
+import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.deployment.web.SecurityRoleReference;
+import com.sun.enterprise.deployment.web.UserDataConstraint;
+import com.sun.enterprise.deployment.web.WebResourceCollection;
+
 import jakarta.security.jacc.PolicyConfiguration;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebRoleRefPermission;
 import jakarta.security.jacc.WebUserDataPermission;
 
-import java.util.logging.*;
-import com.sun.logging.LogDomains;
-import java.security.Permission;
-import java.security.Permissions;
-
-import com.sun.enterprise.security.web.integration.LogUtils;
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.web.*;
-import org.glassfish.security.common.Role;
-
 /**
  * This class is used for generating Web permissions based on the deployment descriptor.
- * 
+ *
  * @author Harpreet Singh
  * @author Jean-Francois Arcand
  * @author Ron Monzillo
@@ -54,21 +68,24 @@ public class WebPermissionUtil {
 
     static int patternType(Object urlPattern) {
         String pattern = urlPattern.toString();
-        if (pattern.startsWith("*."))
+        if (pattern.startsWith("*.")) {
             return PT_EXTENSION;
-        else if (pattern.startsWith("/") && pattern.endsWith("/*"))
+        }
+        if (pattern.startsWith("/") && pattern.endsWith("/*")) {
             return PT_PREFIX;
-        else if (pattern.equals("/"))
+        } else if (pattern.equals("/")) {
             return PT_DEFAULT;
-        else
+        } else {
             return PT_EXACT;
+        }
     }
 
     static boolean implies(String pattern, String path) {
 
         // Check for exact match
-        if (pattern.equals(path))
+        if (pattern.equals(path)) {
             return (true);
+        }
 
         // Check for path prefix matching
         if (pattern.startsWith("/") && pattern.endsWith("/*")) {
@@ -76,8 +93,9 @@ public class WebPermissionUtil {
 
             int length = pattern.length();
 
-            if (length == 0)
+            if (length == 0) {
                 return (true); // "/*" is the same as "/"
+            }
 
             return (path.startsWith(pattern) && (path.length() == length || path.substring(length).startsWith("/")));
         }
@@ -93,8 +111,9 @@ public class WebPermissionUtil {
         }
 
         // Check for universal mapping
-        if (pattern.equals("/"))
+        if (pattern.equals("/")) {
             return (true);
+        }
 
         return (false);
     }
@@ -177,14 +196,11 @@ public class WebPermissionUtil {
                             // path prefix pattern.
 
                             case PT_PREFIX:
-                                if ((otherUrlType == PT_PREFIX || otherUrlType == PT_EXACT) && implies(url, otherUrl))
+                                if ((otherUrlType == PT_PREFIX || otherUrlType == PT_EXACT) && implies(url, otherUrl)) {
                                     mValue.addQualifier(otherUrl);
-
-                                else if (otherUrlType == PT_PREFIX && implies(otherUrl, url))
+                                } else if ((otherUrlType == PT_PREFIX && implies(otherUrl, url)) || (otherUrlType == PT_EXTENSION || otherUrlType == PT_DEFAULT)) {
                                     qpVal.getValue().addQualifier(url);
-
-                                else if (otherUrlType == PT_EXTENSION || otherUrlType == PT_DEFAULT)
-                                    qpVal.getValue().addQualifier(url);
+                                }
                                 break;
 
                             // if the new pattern is an extension pattern,
@@ -196,19 +212,20 @@ public class WebPermissionUtil {
                             // the defualt pattern, if it exists in the
                             // map.
                             case PT_EXTENSION:
-                                if (otherUrlType == PT_PREFIX || (otherUrlType == PT_EXACT && implies(url, otherUrl)))
+                                if (otherUrlType == PT_PREFIX || (otherUrlType == PT_EXACT && implies(url, otherUrl))) {
                                     mValue.addQualifier(otherUrl);
-
-                                else if (otherUrlType == PT_DEFAULT)
+                                } else if (otherUrlType == PT_DEFAULT) {
                                     qpVal.getValue().addQualifier(url);
+                                }
                                 break;
 
                             // if the new pattern is the default pattern
                             // it must be qualified by every other pattern
                             // in the map.
                             case PT_DEFAULT:
-                                if (otherUrlType != PT_DEFAULT)
+                                if (otherUrlType != PT_DEFAULT) {
                                     mValue.addQualifier(otherUrl);
+                                }
                                 break;
 
                             // if the new pattern is an exact pattern, it
@@ -217,10 +234,9 @@ public class WebPermissionUtil {
                             // every path-prefix or extension pattern (in
                             // the map) that implies the new pattern.
                             case PT_EXACT:
-                                if ((otherUrlType == PT_PREFIX || otherUrlType == PT_EXTENSION) && implies(otherUrl, url))
+                                if (((otherUrlType == PT_PREFIX || otherUrlType == PT_EXTENSION) && implies(otherUrl, url)) || (otherUrlType == PT_DEFAULT)) {
                                     qpVal.getValue().addQualifier(url);
-                                else if (otherUrlType == PT_DEFAULT)
-                                    qpVal.getValue().addQualifier(url);
+                                }
                                 break;
                             default:
                                 break;
@@ -424,7 +440,7 @@ public class WebPermissionUtil {
 
     /**
      * Remove All Policy Statements from Configuration config must be in open state when this method is called
-     * 
+     *
      * @param pc
      * @param wbd
      * @throws jakarta.security.jacc.PolicyContextException
@@ -452,7 +468,7 @@ public class WebPermissionUtil {
         }
 
         HashMap qpMap = parseConstraints(wbd);
-        HashMap<String, Permissions> roleMap = new HashMap<String, Permissions>();
+        HashMap<String, Permissions> roleMap = new HashMap<>();
 
         Permissions excluded = new Permissions();
         Permissions unchecked = new Permissions();
@@ -577,8 +593,8 @@ public class WebPermissionUtil {
                 logger.log(Level.FINE,
                         "JACC: role-reference translation: Going through the list of roles not present in RoleRef elements and creating WebRoleRefPermissions ");
             }
-            for (Iterator it = roleset.iterator(); it.hasNext();) {
-                Role r = (Role) it.next();
+            for (Object element : roleset) {
+                Role r = (Role) element;
                 if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, "JACC: role-reference translation: Looking at Role =  " + r.getName());
                 }
@@ -612,8 +628,8 @@ public class WebPermissionUtil {
          * When checking a WebRoleRefPermission from a JSP not mapped to a servlet, use a permission with the empty string as
          * its name and with the argument to isUserInRole as its actions
          */
-        for (Iterator it = roleset.iterator(); it.hasNext();) {
-            Role r = (Role) it.next();
+        for (Object element : roleset) {
+            Role r = (Role) element;
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "JACC: role-reference translation: Looking at Role =  " + r.getName());
             }
@@ -656,15 +672,16 @@ class ConstraintValue {
     static String connectKeys[] = { "NONE", "INTEGRAL", "CONFIDENTIAL" };
 
     static int connectTypeNone = 1;
-    static HashMap<String, Integer> connectHash = new HashMap<String, Integer>();
+    static HashMap<String, Integer> connectHash = new HashMap<>();
     static {
-        for (int i = 0; i < connectKeys.length; i++)
-            connectHash.put(connectKeys[i], Integer.valueOf(1 << i));
-    };
+        for (int i = 0; i < connectKeys.length; i++) {
+            connectHash.put(connectKeys[i], 1 << i);
+        }
+    }
 
     boolean excluded;
     boolean ignoreRoleList;
-    final List<String> roleList = new ArrayList<String>();
+    final List<String> roleList = new ArrayList<>();
     int connectSet;
 
     ConstraintValue() {
@@ -706,9 +723,10 @@ class ConstraintValue {
         int b = connectTypeNone;
         if (guarantee != null) {
             Integer bit = connectHash.get(guarantee);
-            if (bit == null)
+            if (bit == null) {
                 throw new IllegalArgumentException("constraint translation error-illegal trx guarantee");
-            b = bit.intValue();
+            }
+            b = bit;
         }
 
         connectSet |= b;
@@ -725,7 +743,8 @@ class ConstraintValue {
     boolean isAuthConstrained() {
         if (excluded) {
             return true;
-        } else if (ignoreRoleList || roleList.isEmpty()) {
+        }
+        if (ignoreRoleList || roleList.isEmpty()) {
             return false;
         }
         return true;
@@ -753,7 +772,7 @@ class ConstraintValue {
             Enumeration eroles = ac.getSecurityRoles();
             if (!eroles.hasMoreElements()) {
                 setPredefinedOutcome(false);
-            } else
+            } else {
                 while (eroles.hasMoreElements()) {
                     SecurityRoleDescriptor srd = (SecurityRoleDescriptor) eroles.nextElement();
                     String roleName = srd.getName();
@@ -763,6 +782,7 @@ class ConstraintValue {
                         setRole(roleName);
                     }
                 }
+            }
             /**
              * JACC MR8 When role '*' named, do not include any authenticated user role '**' unless an application defined a role
              * named '**'
@@ -795,6 +815,7 @@ class ConstraintValue {
         connectSet = constraint.connectSet;
     }
 
+    @Override
     public String toString() {
         StringBuilder roles = new StringBuilder(" roles: ");
         Iterator rit = roleList.iterator();
@@ -884,7 +905,7 @@ class MethodValue extends ConstraintValue {
             size += 1;
         }
 
-        return (String[]) methods.toArray(new String[size]);
+        return methods.toArray(new String[size]);
     }
 
     static BitSet methodArrayToSet(String[] methods) {
@@ -901,6 +922,7 @@ class MethodValue extends ConstraintValue {
         return methodSet;
     }
 
+    @Override
     public String toString() {
         return "MethodValue( " + getMethodName(index) + super.toString() + " )";
     }
@@ -918,7 +940,7 @@ class MapValue {
 
     StringBuffer urlPatternSpec;
 
-    final HashMap<String, MethodValue> methodValues = new HashMap<String, MethodValue>();
+    final HashMap<String, MethodValue> methodValues = new HashMap<>();
 
     ConstraintValue otherConstraint;
 
@@ -932,8 +954,9 @@ class MapValue {
     }
 
     void addQualifier(String urlPattern) {
-        if (WebPermissionUtil.implies(urlPattern, this.urlPatternSpec.substring(0, this.patternLength)))
+        if (WebPermissionUtil.implies(urlPattern, this.urlPatternSpec.substring(0, this.patternLength))) {
             this.irrelevantByQualifier = true;
+        }
         this.urlPatternSpec.append(":" + urlPattern);
     }
 
@@ -1020,7 +1043,7 @@ class MapValue {
      * Map of methods allowed per role
      */
     HashMap<String, BitSet> getRoleMap() {
-        HashMap<String, BitSet> roleMap = new HashMap<String, BitSet>();
+        HashMap<String, BitSet> roleMap = new HashMap<>();
 
         synchronized (methodValues) {
 
@@ -1057,7 +1080,7 @@ class MapValue {
                  * connectSet when its value was 0 (indicating any connection, until some specific bit is set)
                  *
                  * if (v.connectSet == 0) { v.connectSet = MethodValue.connectTypeNone; }
-                 * 
+                 *
                  */
 
                 if (v.isConnectAllowed(cType)) {
@@ -1178,12 +1201,10 @@ class MapValue {
                     } else {
                         WebPermissionUtil.logger.log(Level.INFO, LogUtils.EXCLUDED_METHODS, args);
                     }
+                } else if (otherIsUncovered) {
+                    WebPermissionUtil.logger.log(Level.WARNING, LogUtils.NOT_UNCOVERED_METHODS, args);
                 } else {
-                    if (otherIsUncovered) {
-                        WebPermissionUtil.logger.log(Level.WARNING, LogUtils.NOT_UNCOVERED_METHODS, args);
-                    } else {
-                        WebPermissionUtil.logger.log(Level.WARNING, LogUtils.UNCOVERED_METHODS, args);
-                    }
+                    WebPermissionUtil.logger.log(Level.WARNING, LogUtils.UNCOVERED_METHODS, args);
                 }
             }
         }

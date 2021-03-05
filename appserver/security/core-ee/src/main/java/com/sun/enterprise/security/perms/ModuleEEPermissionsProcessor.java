@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.security.perms;
 
+import java.net.MalformedURLException;
 import java.security.PermissionCollection;
 import java.util.logging.Level;
-import java.net.MalformedURLException;
 
 import org.glassfish.api.deployment.DeploymentContext;
 
@@ -38,7 +38,7 @@ public class ModuleEEPermissionsProcessor extends PermissionsProcessor {
 
     /**
      * get the EE permissions which have the file path adjusted for the right module
-     * 
+     *
      * @return adjusted EE permissions
      */
     public PermissionCollection getAdjustedEEPermission() {

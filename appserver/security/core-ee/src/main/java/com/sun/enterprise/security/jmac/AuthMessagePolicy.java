@@ -16,19 +16,23 @@
 
 package com.sun.enterprise.security.jmac;
 
-import java.security.PrivilegedExceptionAction;
+import static com.sun.enterprise.security.jmac.config.GFServerConfigProvider.SOAP;
+//V3:Commented webservices support
+//import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.security.auth.callback.CallbackHandler;
-import jakarta.security.auth.message.MessagePolicy;
-import static jakarta.security.auth.message.MessagePolicy.*;
 
+import org.glassfish.internal.api.Globals;
+
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
@@ -36,10 +40,10 @@ import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.jmac.config.HttpServletConstants;
-import org.glassfish.internal.api.Globals;
-import static com.sun.enterprise.security.jmac.config.GFServerConfigProvider.SOAP;
-//V3:Commented webservices support
-//import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.MessagePolicy.ProtectionPolicy;
+import jakarta.security.auth.message.MessagePolicy.TargetPolicy;
 
 /**
  * Utility class for JMAC appserver implementation.
@@ -59,7 +63,7 @@ public class AuthMessagePolicy {
     private static String handlerClassName = null;
 
     private AuthMessagePolicy() {
-    };
+    }
 
     public static MessageSecurityBindingDescriptor getMessageSecurityBinding(String layer, Map properties) {
 
@@ -108,21 +112,24 @@ public class AuthMessagePolicy {
         boolean recipientAuth = (authRecipient != null);
         boolean beforeContent = BEFORE_CONTENT.equals(authRecipient);
 
-        List<TargetPolicy> targetPolicies = new ArrayList<TargetPolicy>();
+        List<TargetPolicy> targetPolicies = new ArrayList<>();
         if (recipientAuth && beforeContent) {
             targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
+                @Override
                 public String getID() {
                     return ProtectionPolicy.AUTHENTICATE_RECIPIENT;
                 }
             }));
             if (sourceSender) {
                 targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
+                    @Override
                     public String getID() {
                         return ProtectionPolicy.AUTHENTICATE_SENDER;
                     }
                 }));
             } else if (sourceContent) {
                 targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
+                    @Override
                     public String getID() {
                         return ProtectionPolicy.AUTHENTICATE_CONTENT;
                     }
@@ -131,12 +138,14 @@ public class AuthMessagePolicy {
         } else {
             if (sourceSender) {
                 targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
+                    @Override
                     public String getID() {
                         return ProtectionPolicy.AUTHENTICATE_SENDER;
                     }
                 }));
             } else if (sourceContent) {
                 targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
+                    @Override
                     public String getID() {
                         return ProtectionPolicy.AUTHENTICATE_CONTENT;
                     }
@@ -145,6 +154,7 @@ public class AuthMessagePolicy {
 
             if (recipientAuth) {
                 targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
+                    @Override
                     public String getID() {
                         return ProtectionPolicy.AUTHENTICATE_RECIPIENT;
                     }
@@ -277,15 +287,15 @@ public class AuthMessagePolicy {
     public static MessagePolicy[] getHttpServletPolicies(String authContextID) {
         if (Boolean.valueOf(authContextID)) {
             return new MessagePolicy[] { MANDATORY_POLICY, null };
-        } else {
-            return new MessagePolicy[] { OPTIONAL_POLICY, null };
         }
+        return new MessagePolicy[] { OPTIONAL_POLICY, null };
     }
 
     public static CallbackHandler getDefaultCallbackHandler() {
         // get the default handler class
         try {
             CallbackHandler rvalue = (CallbackHandler) AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+                @Override
                 public Object run() throws Exception {
                     ClassLoader loader = Thread.currentThread().getContextClassLoader();
                     if (handlerClassName == null) {

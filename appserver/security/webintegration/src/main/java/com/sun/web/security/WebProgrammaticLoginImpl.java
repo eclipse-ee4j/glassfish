@@ -16,30 +16,29 @@
 
 package com.sun.web.security;
 
-import java.security.*;
-import java.io.*;
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.security.AccessControlException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.catalina.Context;
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.connector.RequestFacade;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.web.integration.WebPrincipal;
+import com.sun.enterprise.security.web.integration.WebProgrammaticLogin;
+import com.sun.logging.LogDomains;
+
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-import org.apache.catalina.Session;
-import org.apache.catalina.Context;
-import org.apache.catalina.Manager;
-
-import com.sun.logging.LogDomains;
-
-import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.SecurityContext;
-
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.connector.RequestFacade;
-import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.security.web.integration.WebProgrammaticLogin;
 
 /**
  * Internal implementation for servlet programmatic login.
@@ -66,7 +65,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
      *
      * <P>
      * See bugs 4646134, 4688449 and other referenced bugs for more background.
-     * 
+     *
      * <P>
      * Note also that this login does not hook up into SSO.
      *
@@ -82,12 +81,13 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
      * @throws Exception on login failure.
      *
      */
+    @Override
     public Boolean login(String user, char[] password, String realm, HttpServletRequest request, HttpServletResponse response) {
         // Need real request object not facade
 
         Request req = getUnwrappedCoyoteRequest(request);
         if (req == null) {
-            return Boolean.valueOf(false);
+            return false;
         }
 
         // Try to login - this will set up security context on success
@@ -114,18 +114,16 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
 
         Session realSession = getSession(req);
         if (realSession != null) {
-            realSession.setPrincipal((Principal) principal);
+            realSession.setPrincipal(principal);
             realSession.setAuthType(WEBAUTH_PROGRAMMATIC);
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "Programmatic login set principal in session.");
             }
-        } else {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "Programmatic login: No session available.");
-            }
+        } else if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Programmatic login: No session available.");
         }
 
-        return Boolean.valueOf(true);
+        return true;
     }
 
     /**
@@ -162,12 +160,13 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
      * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
      * @throws Exception any exception encountered during logout operation
      */
+    @Override
     public Boolean logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Need real request object not facade
 
         Request req = getUnwrappedCoyoteRequest(request);
         if (req == null) {
-            return Boolean.valueOf(false);
+            return false;
         }
 
         // Logout - clears out security context
@@ -192,7 +191,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
             }
         }
 
-        return Boolean.valueOf(true);
+        return true;
     }
 
     /**
@@ -213,8 +212,6 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
                         Session realSession = manager.findSession(sessionId);
                         return realSession;
                     } catch (IOException e) {
-                        // ignored
-                        return null;
                     }
                 }
             }

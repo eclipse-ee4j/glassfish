@@ -16,36 +16,40 @@
 
 package com.sun.enterprise.security.ee;
 
-import java.util.*;
-
-import java.util.logging.Logger;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.deployment.common.SecurityRoleMapper;
+import org.glassfish.security.common.Role;
+
+import com.sun.appserv.security.AuditModule;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.MethodPermission;
+import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.web.AuthorizationConstraint;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.deployment.web.SecurityRole;
+import com.sun.enterprise.deployment.web.UserDataConstraint;
+import com.sun.enterprise.deployment.web.WebResourceCollection;
 
 //V3:Commented import com.sun.enterprise.config.serverbeans.ServerBeansFactory;
 
 import com.sun.logging.LogDomains;
 
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.MethodPermission;
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
-import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.web.SecurityConstraint;
-import com.sun.enterprise.deployment.web.AuthorizationConstraint;
-import com.sun.enterprise.deployment.web.LoginConfiguration;
-import com.sun.enterprise.deployment.web.UserDataConstraint;
-import com.sun.enterprise.deployment.web.SecurityRole;
-import com.sun.enterprise.deployment.web.WebResourceCollection;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-
-import org.glassfish.security.common.Role;
-import org.glassfish.deployment.common.SecurityRoleMapper;
 import jakarta.servlet.http.HttpServletRequest;
-
-import com.sun.appserv.security.AuditModule;
 
 /**
  * Audit support class.
@@ -81,19 +85,21 @@ public class Audit extends AuditModule {
         return auditFlag;
     }
 
+    @Override
     public void init(Properties props) {
         super.init(props);
         String audit = props.getProperty(AUDIT_ON);
-        auditFlag = (audit == null) ? false : Boolean.valueOf(audit).booleanValue();
+        auditFlag = (audit == null) ? false : Boolean.valueOf(audit);
     }
 
     /**
      * Invoked post authentication request for a user in a given realm
-     * 
+     *
      * @param user    username for whom the authentication request was made
      * @param realm   the realm name under which the user is authenticated.
      * @param success the status of the authentication
      */
+    @Override
     public void authentication(String user, String realm, boolean success) {
         if (auditFlag) {
             StringBuffer sbuf = new StringBuffer("Audit: Authentication for user = (");
@@ -106,12 +112,13 @@ public class Audit extends AuditModule {
 
     /**
      * Invoked post web authorization request.
-     * 
+     *
      * @param user    the username for whom the authorization was performed
      * @param req     the HttpRequest object for the web request
      * @param type    either hasResourcePermission, hasUserDataPermission or hasRoleRefPermission
      * @param success the status of the web authorization request
      */
+    @Override
     public void webInvocation(String user, HttpServletRequest req, String type, boolean success) {
         if (auditFlag) {
             StringBuilder sbuf = new StringBuilder("Audit: [Web] Authorization for user = (");
@@ -123,12 +130,13 @@ public class Audit extends AuditModule {
 
     /**
      * Invoked post ejb authorization request.
-     * 
+     *
      * @param user    the username for whom the authorization was performed
      * @param ejb     the ejb name for which this authorization was performed
      * @param method  the method name for which this authorization was performed
      * @param success the status of the ejb authorization request
      */
+    @Override
     public void ejbInvocation(String user, String ejb, String method, boolean success) {
         if (auditFlag) {
             // Modified from StringBuffer to StringBuilder
@@ -141,7 +149,7 @@ public class Audit extends AuditModule {
 
     /**
      * Invoked post ejb authorization request.
-     * 
+     *
      * @param user    the username for whom the authorization was performed
      * @param ejb     the ejb name for which this authorization was performed
      * @param method  the method name for which this authorization was performed
@@ -150,11 +158,12 @@ public class Audit extends AuditModule {
 
     /**
      * Invoked during validation of the web service request
-     * 
+     *
      * @param uri      The URL representation of the web service endpoint
      * @param endpoint The name of the endpoint representation
      * @param success  the status of the web service request validation
      */
+    @Override
     public void webServiceInvocation(String uri, String endpoint, boolean success) {
 
         if (auditFlag) {
@@ -168,10 +177,11 @@ public class Audit extends AuditModule {
 
     /**
      * Invoked during validation of the web service request
-     * 
+     *
      * @param endpoint The URL representation of the web service endpoint
      * @param success  the status of the web service request validation
      */
+    @Override
     public void ejbAsWebServiceInvocation(String endpoint, boolean success) {
 
         if (auditFlag) {
@@ -184,6 +194,7 @@ public class Audit extends AuditModule {
     /**
      * Invoked upon completion of the server startup
      */
+    @Override
     public void serverStarted() {
         if (auditFlag) {
             logger.log(Level.INFO, "Audit: Application server startup complete");
@@ -193,6 +204,7 @@ public class Audit extends AuditModule {
     /**
      * Invoked upon completion of the server shutdown
      */
+    @Override
     public void serverShutdown() {
         if (auditFlag) {
             logger.log(Level.INFO, "Audit: Application server shutdown complete");
@@ -206,23 +218,23 @@ public class Audit extends AuditModule {
     /*
      * public static void init() { try { ConfigContext configContext =
      * ApplicationServer.getServerContext().getConfigContext(); assert(configContext != null);
-     * 
+     *
      * Server configBean = ServerBeansFactory.getServerBean(configContext); assert(configBean != null);
-     * 
+     *
      * SecurityService securityBean = ServerBeansFactory.getSecurityServiceBean(configContext); assert(securityBean !=
      * null);
-     * 
+     *
      * auditFlag = securityBean.isAuditEnabled();
-     * 
+     *
      * } catch (Exception e) { logger.log(Level.WARNING, "audit.badinit", e); }
-     * 
+     *
      * if (auditFlag) { logger.info("audit.enabled"); }
-     * 
+     *
      * // load i18n message bits for audit entries ResourceBundle resBundle = logger.getResourceBundle(); strPrivateAudit =
      * resBundle.getString("audit.string_private_audit"); strDenied = " " + resBundle.getString("audit.denied"); strOK = " "
      * + resBundle.getString("audit.ok"); strMethodName = " " + resBundle.getString("audit.methodname"); strSession = " " +
      * resBundle.getString("audit.session"); }
-     * 
+     *
      */
     /**
      * Log an EJB method invocation.
@@ -236,23 +248,23 @@ public class Audit extends AuditModule {
     /*
      * public static void ejbMethodInvocation(SecurityContext secCtx, EJBLocalRemoteObject ejbObj, Method method, boolean
      * success) { if (!logger.isLoggable(Level.INFO)) { return; }
-     * 
+     *
      * String user = "(null)"; if (secCtx != null) { Principal p = secCtx.getCallerPrincipal(); if (p!=null) { user =
      * p.getName(); } }
-     * 
+     *
      * String ejb = "(N/A)"; if (ejbObj != null) { ejb = ejbObj.toString(); }
-     * 
+     *
      * String meth = "(N/A)"; if (method != null) { meth = method.toString(); }
-     * 
+     *
      * StringBuffer sb = new StringBuffer(); sb.append(strPrivateAudit); // "Audit: principal="
-     * 
+     *
      * if(user != null) { sb.append(user); } else { sb.append("(null)"); }
-     * 
+     *
      * sb.append(" ejb="); sb.append(ejb); sb.append(strMethodName); // " method=" sb.append(method); if (success) {
      * sb.append(strOK); // " OK" } else { sb.append(strDenied); // " DENIED" }
-     * 
+     *
      * logger.info(sb.toString()); }
-     * 
+     *
      */
     /**
      * Log a servlet invocation.
@@ -265,25 +277,25 @@ public class Audit extends AuditModule {
     /*
      * public static void webInvocation(HttpRequest req, boolean success) { /// DO NOTHING FOR NOW. //if
      * (!logger.isLoggable(Level.INFO) || !auditFlag) { // return; //}
-     * 
+     *
      * //if (req == null) { // logger.fine("Audit: No HttpRequest available."); // return; //}
-     * 
+     *
      * //if (!(req instanceof HttpRequestBase)) { // logger.fine("Audit internal error, class: " + req.getClass()); //
      * return; //}
-     * 
+     *
      * //HttpRequestBase reqs = (HttpRequestBase)req;
-     * 
+     *
      * //StringBuffer sb = new StringBuffer(); //sb.append(strPrivateAudit); // "Audit: principal="
-     * 
+     *
      * //String user = reqs.getRemoteUser(); //if (user != null) { // sb.append(user); //} else { // sb.append("(null)");
      * //}
-     * 
+     *
      * //sb.append(" "); //sb.append(reqs.getMethod()); //sb.append(" "); //sb.append(reqs.getRequestURI());
      * //sb.append(strSession); // " session=" //sb.append(reqs.getRequestedSessionId()); //if (success) { //
      * sb.append(strOK); // " OK" //} else { // sb.append(strDenied); // " DENIED" //}
-     * 
+     *
      * //logger.info(sb.toString()); }
-     * 
+     *
      */
     /**
      * Diagnostic method. Read roles and ACLs from the given Application and dump a somewhat organized summary of what has
@@ -531,7 +543,7 @@ public class Audit extends AuditModule {
                 name.append("]");
                 logger.finest(name.toString());
 
-                RunAsIdentityDescriptor runas = (RunAsIdentityDescriptor) wcd.getRunAsIdentity();
+                RunAsIdentityDescriptor runas = wcd.getRunAsIdentity();
                 if (runas != null) {
                     String role = runas.getRoleName();
                     String user = runas.getPrincipal();

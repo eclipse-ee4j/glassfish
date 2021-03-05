@@ -34,7 +34,6 @@ public class FailureException extends AuthException {
      * exception.
      */
     public FailureException() {
-        super();
     }
 
     /**

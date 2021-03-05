@@ -40,7 +40,7 @@ public class Role {
 
     /**
      * NB: Class Overrides equals and hashCode Methods such that 2 Roles are equal simply based on having a common name.
-     * 
+     *
      * @param o
      * @return
      */

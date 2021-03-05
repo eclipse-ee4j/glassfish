@@ -66,7 +66,7 @@ public class HttpServletAuthParam implements AuthParam {
 
     /**
      * Create an HttpServletAuthParam with MessageInfo object.
-     * 
+     *
      * @param messageInfo
      *
      */

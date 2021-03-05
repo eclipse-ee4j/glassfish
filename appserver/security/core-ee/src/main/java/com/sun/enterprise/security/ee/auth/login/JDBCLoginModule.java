@@ -16,18 +16,17 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import com.sun.enterprise.security.auth.login.PasswordLoginModule;
 import com.sun.enterprise.security.auth.login.common.LoginException;
 import com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm;
 
-import java.util.Arrays;
-
 /**
  * This class implement a JDBC Login module for Glassfish. The work is derivated from Sun's sample JDBC login module.
  * Enhancement has been done to use latest features. sample setting in server.xml for JDBCLoginModule
- * 
+ *
  * @author Jean-Baptiste Bugeaud
  */
 public class JDBCLoginModule extends PasswordLoginModule {
@@ -36,6 +35,7 @@ public class JDBCLoginModule extends PasswordLoginModule {
      *
      * @throws LoginException If login fails (JAAS login() behavior).
      */
+    @Override
     protected void authenticate() throws LoginException {
         if (!(_currentRealm instanceof JDBCRealm)) {
             String msg = sm.getString("jdbclm.badrealm");

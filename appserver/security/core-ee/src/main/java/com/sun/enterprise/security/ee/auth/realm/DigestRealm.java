@@ -23,5 +23,5 @@ import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
  * @author K.Venugopal@sun.com
  */
 public interface DigestRealm {
-    public boolean validate(String username, DigestAlgorithmParameter params[]);
+    boolean validate(String username, DigestAlgorithmParameter params[]);
 }

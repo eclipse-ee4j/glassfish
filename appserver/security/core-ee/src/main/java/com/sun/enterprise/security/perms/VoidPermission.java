@@ -21,7 +21,7 @@ import java.security.Permission;
 
 /**
  * a class used on permission restriction list to imply "No 'AllPermission' allowed" in permissions.xml.
- * 
+ *
  * This permission can not imply any other permission
  */
 public class VoidPermission extends BasicPermission {

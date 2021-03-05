@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 import com.sun.logging.LogDomains;
 
 /**
- * 
+ *
  * Utility class to load the EE permissions, EE restrictions, and check restrictions for a given permission set
  *
  */
@@ -50,7 +50,7 @@ public class SMGlobalPolicyUtil {
     static Logger logger = Logger.getLogger(LogDomains.SECURITY_LOGGER);
 
     /**
-     * 
+     *
      * Java EE Component type supporting the use of declared permissions
      *
      */
@@ -119,7 +119,7 @@ public class SMGlobalPolicyUtil {
     public static final String EAR_CLASS_LOADER = "org.glassfish.javaee.full.deployment.EarClassLoader";
 
     // map recording the 'Java EE component type' to its code source URL
-    private static final Map<CommponentType, String> CompTypeToCodeBaseMap = new HashMap<CommponentType, String>();
+    private static final Map<CommponentType, String> CompTypeToCodeBaseMap = new HashMap<>();
 
     static {
         CompTypeToCodeBaseMap.put(CommponentType.ejb, EJB_TYPE_CODESOURCE);
@@ -130,13 +130,13 @@ public class SMGlobalPolicyUtil {
     }
 
     // map recording the 'Java EE component type' to its EE granted permissions
-    private static final Map<CommponentType, PermissionCollection> compTypeToEEGarntsMap = new HashMap<CommponentType, PermissionCollection>();
+    private static final Map<CommponentType, PermissionCollection> compTypeToEEGarntsMap = new HashMap<>();
 
     // map recording the 'Java EE component type' to its EE restricted permissions
-    private static final Map<CommponentType, PermissionCollection> compTypeToEERestrictedMap = new HashMap<CommponentType, PermissionCollection>();
+    private static final Map<CommponentType, PermissionCollection> compTypeToEERestrictedMap = new HashMap<>();
 
     // map recording the 'Java EE component type' to its allowed permissions
-    private static final Map<CommponentType, PermissionCollection> compTypeToServAllowedMap = new HashMap<CommponentType, PermissionCollection>();
+    private static final Map<CommponentType, PermissionCollection> compTypeToServAllowedMap = new HashMap<>();
 
     private static boolean eeGrantedPolicyInitDone = false;
 
@@ -157,7 +157,7 @@ public class SMGlobalPolicyUtil {
 
     /**
      * Get the default granted permissions of a specified component type
-     * 
+     *
      * @param type Java EE component type
      * @return the permission set granted to the specified component
      */
@@ -168,7 +168,7 @@ public class SMGlobalPolicyUtil {
 
     /**
      * Get the default granted permissions of a specified component type
-     * 
+     *
      * @param type Java EE component type such as ejb, war, rar, car, ear
      * @return
      */
@@ -179,7 +179,7 @@ public class SMGlobalPolicyUtil {
 
     /**
      * Get the restricted permission set of a specified component type on the server
-     * 
+     *
      * @param type Java EE component type
      * @return the restricted permission set of the specified component type on the server
      */
@@ -201,8 +201,9 @@ public class SMGlobalPolicyUtil {
                 logger.fine("defGrantedPolicyInitDone= " + eeGrantedPolicyInitDone);
             }
 
-            if (eeGrantedPolicyInitDone)
+            if (eeGrantedPolicyInitDone) {
                 return;
+            }
 
             eeGrantedPolicyInitDone = true;
 
@@ -226,8 +227,9 @@ public class SMGlobalPolicyUtil {
 
         String policyPath = System.getProperty(SYS_PROP_JAVA_SEC_POLICY);
 
-        if (policyPath == null)
+        if (policyPath == null) {
             return null;
+        }
 
         File pf = new File(policyPath);
 
@@ -235,8 +237,9 @@ public class SMGlobalPolicyUtil {
     }
 
     private static void loadServerPolicy(PolicyType policyType) throws IOException, NoSuchAlgorithmException, URISyntaxException {
-        if (policyType == null)
+        if (policyType == null) {
             return;
+        }
 
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("PolicyType= " + policyType);
@@ -260,8 +263,9 @@ public class SMGlobalPolicyUtil {
             break;
         }
 
-        if (policyFilename == null || policyMap == null)
+        if (policyFilename == null || policyMap == null) {
             throw new IllegalArgumentException("Unrecognized policy type: " + policyType);
+        }
 
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("policyFilename= " + policyFilename);
@@ -338,7 +342,7 @@ public class SMGlobalPolicyUtil {
 
     /**
      * Checks a permissions set against a restriction set
-     * 
+     *
      * @param declaredPC
      * @param restrictedPC
      * @return true for passed
@@ -346,8 +350,9 @@ public class SMGlobalPolicyUtil {
      */
     public static void checkRestriction(PermissionCollection declaredPC, PermissionCollection restrictedPC) throws SecurityException {
 
-        if (restrictedPC == null || declaredPC == null)
+        if (restrictedPC == null || declaredPC == null) {
             return;
+        }
 
         // check declared does not contain restricted
         checkContains(declaredPC, restrictedPC);
@@ -360,8 +365,9 @@ public class SMGlobalPolicyUtil {
     // check if permissionCollection toBeCheckedPC is contained/implied by containPC
     private static void checkContains(PermissionCollection containPC, PermissionCollection toBeCheckedPC) throws SecurityException {
 
-        if (containPC == null || toBeCheckedPC == null)
+        if (containPC == null || toBeCheckedPC == null) {
             return;
+        }
 
         Enumeration<Permission> checkEnum = toBeCheckedPC.elements();
         while (checkEnum.hasMoreElements()) {
@@ -370,13 +376,11 @@ public class SMGlobalPolicyUtil {
                 throw new SecurityException("Restricted permission " + p + " is declared or implied in the " + containPC);
             }
         }
-
-        return;
     }
 
     /**
      * Check a permission set against a restriction of a component type
-     * 
+     *
      * @param declaredPC
      * @param type
      * @return
@@ -384,8 +388,9 @@ public class SMGlobalPolicyUtil {
      */
     public static void checkRestrictionOfComponentType(PermissionCollection declaredPC, CommponentType type) throws SecurityException {
 
-        if (CommponentType.ear == type)
+        if (CommponentType.ear == type) {
             checkRestrictionOfEar(declaredPC);
+        }
 
         PermissionCollection restrictedPC = compTypeToEERestrictedMap.get(type);
 
@@ -396,20 +401,24 @@ public class SMGlobalPolicyUtil {
     public static void checkRestrictionOfEar(PermissionCollection declaredPC) throws SecurityException {
 
         PermissionCollection pc = compTypeToEERestrictedMap.get(CommponentType.ejb);
-        if (pc != null)
+        if (pc != null) {
             SMGlobalPolicyUtil.checkRestriction(declaredPC, pc);
+        }
 
         pc = compTypeToEERestrictedMap.get(CommponentType.war);
-        if (pc != null)
+        if (pc != null) {
             SMGlobalPolicyUtil.checkRestriction(declaredPC, pc);
+        }
 
         pc = compTypeToEERestrictedMap.get(CommponentType.rar);
-        if (pc != null)
+        if (pc != null) {
             SMGlobalPolicyUtil.checkRestriction(declaredPC, pc);
+        }
 
         pc = compTypeToEERestrictedMap.get(CommponentType.car);
-        if (pc != null)
+        if (pc != null) {
             SMGlobalPolicyUtil.checkRestriction(declaredPC, pc);
+        }
 
     }
 

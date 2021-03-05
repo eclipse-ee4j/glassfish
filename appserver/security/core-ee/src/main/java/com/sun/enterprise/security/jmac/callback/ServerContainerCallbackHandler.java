@@ -26,6 +26,7 @@ import java.io.IOException;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+
 import jakarta.security.auth.message.callback.CallerPrincipalCallback;
 import jakarta.security.auth.message.callback.CertStoreCallback;
 import jakarta.security.auth.message.callback.GroupPrincipalCallback;
@@ -36,7 +37,7 @@ import jakarta.security.auth.message.callback.TrustStoreCallback;
 
 /**
  * Callback Handler for ServerContainer
- * 
+ *
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
@@ -45,12 +46,14 @@ final class ServerContainerCallbackHandler extends BaseContainerCallbackHandler 
     ServerContainerCallbackHandler() {
     }
 
+    @Override
     protected void handleSupportedCallbacks(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-        for (int i = 0; i < callbacks.length; i++) {
-            processCallback(callbacks[i]);
+        for (Callback callback : callbacks) {
+            processCallback(callback);
         }
     }
 
+    @Override
     protected boolean isSupportedCallback(Callback callback) {
         boolean isSupported = false;
         if (callback instanceof CertStoreCallback || callback instanceof PasswordValidationCallback

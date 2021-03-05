@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.security.auth.realm.jdbc;
 
+import java.io.Reader;
 import java.nio.charset.CharacterCodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,6 +25,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -31,30 +34,27 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
-import javax.sql.DataSource;
-//import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-
-import com.sun.enterprise.universal.GFBase64Encoder;
 
 import javax.security.auth.login.LoginException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.security.ee.auth.realm.DigestRealmBase;
-import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.util.Utility;
-
-import java.io.Reader;
-import java.util.Arrays;
+import javax.sql.DataSource;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
+
+//import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.enterprise.security.BaseRealm;
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.Password;
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.ee.auth.realm.DigestRealmBase;
+import com.sun.enterprise.universal.GFBase64Encoder;
+import com.sun.enterprise.util.Utility;
 
 /**
  * Realm for supporting JDBC authentication.
@@ -121,10 +121,11 @@ public final class JDBCRealm extends DigestRealmBase {
      * @exception BadRealmException    If the configuration parameters identify a corrupt realm.
      * @exception NoSuchRealmException If the configuration parameters specify a realm which doesn't exist.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public synchronized void init(Properties props) throws BadRealmException, NoSuchRealmException {
         super.init(props);
-        String jaasCtx = props.getProperty(IASRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
         String dbUser = props.getProperty(PARAM_DB_USER);
         String dbPassword = props.getProperty(PARAM_DB_PASSWORD);
         String dsJndi = props.getProperty(PARAM_DATASOURCE_JNDI);
@@ -141,7 +142,7 @@ public final class JDBCRealm extends DigestRealmBase {
                 .getBestDescriptor(BuilderHelper.createContractFilter(ConnectorRuntime.class.getName()));
 
         if (jaasCtx == null) {
-            String msg = sm.getString("realm.missingprop", IASRealm.JAAS_CONTEXT_PARAM, "JDBCRealm");
+            String msg = sm.getString("realm.missingprop", BaseRealm.JAAS_CONTEXT_PARAM, "JDBCRealm");
             throw new BadRealmException(msg);
         }
 
@@ -186,7 +187,7 @@ public final class JDBCRealm extends DigestRealmBase {
             encoding = DEFAULT_ENCODING;
         }
 
-        this.setProperty(IASRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+        this.setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
         if (dbUser != null && dbPassword != null) {
             this.setProperty(PARAM_DB_USER, dbUser);
             this.setProperty(PARAM_DB_PASSWORD, dbPassword);
@@ -201,13 +202,13 @@ public final class JDBCRealm extends DigestRealmBase {
         }
 
         if (_logger.isLoggable(Level.FINEST)) {
-            _logger.finest("JDBCRealm : " + IASRealm.JAAS_CONTEXT_PARAM + "= " + jaasCtx + ", " + PARAM_DATASOURCE_JNDI + " = " + dsJndi
+            _logger.finest("JDBCRealm : " + BaseRealm.JAAS_CONTEXT_PARAM + "= " + jaasCtx + ", " + PARAM_DATASOURCE_JNDI + " = " + dsJndi
                     + ", " + PARAM_DB_USER + " = " + dbUser + ", " + PARAM_DIGEST_ALGORITHM + " = " + digestAlgorithm + ", "
                     + PARAM_ENCODING + " = " + encoding + ", " + PARAM_CHARSET + " = " + charset);
         }
 
-        groupCache = new HashMap<String, Vector>();
-        emptyVector = new Vector<String>();
+        groupCache = new HashMap<>();
+        emptyVector = new Vector<>();
     }
 
     /**
@@ -216,6 +217,7 @@ public final class JDBCRealm extends DigestRealmBase {
      *
      * @return Description of the kind of authentication that is directly supported by this realm.
      */
+    @Override
     public String getAuthType() {
         return AUTH_TYPE;
     }
@@ -229,6 +231,7 @@ public final class JDBCRealm extends DigestRealmBase {
      * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm
      *                                      does not support this operation.
      */
+    @Override
     public Enumeration getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
         Vector vector = groupCache.get(username);
         if (vector == null) {
@@ -246,10 +249,8 @@ public final class JDBCRealm extends DigestRealmBase {
             v = emptyVector;
 
         } else {
-            v = new Vector<String>(groups.length + 1);
-            for (int i = 0; i < groups.length; i++) {
-                v.add(groups[i]);
-            }
+            v = new Vector<>(groups.length + 1);
+            Collections.addAll(v, groups);
         }
 
         synchronized (this) {
@@ -302,26 +303,29 @@ public final class JDBCRealm extends DigestRealmBase {
                 if (!PRE_HASHED.equalsIgnoreCase(getProperty(PARAM_ENCODING))) {
                     return new Password() {
 
+                        @Override
                         public byte[] getValue() {
                             return pwd.getBytes();
                         }
 
+                        @Override
                         public int getType() {
                             return Password.PLAIN_TEXT;
                         }
                     };
-                } else {
-                    return new Password() {
-
-                        public byte[] getValue() {
-                            return pwd.getBytes();
-                        }
-
-                        public int getType() {
-                            return Password.HASHED;
-                        }
-                    };
                 }
+                return new Password() {
+
+                    @Override
+                    public byte[] getValue() {
+                        return pwd.getBytes();
+                    }
+
+                    @Override
+                    public int getType() {
+                        return Password.HASHED;
+                    }
+                };
             }
         } catch (Exception ex) {
             _logger.log(Level.SEVERE, "jdbcrealm.invaliduser", username);
@@ -338,7 +342,7 @@ public final class JDBCRealm extends DigestRealmBase {
 
     /**
      * Test if a user is valid
-     * 
+     *
      * @param user     user's identifier
      * @param password user's password
      * @return true if valid
@@ -426,9 +430,9 @@ public final class JDBCRealm extends DigestRealmBase {
 
     private char[] hexEncode(byte[] bytes) {
         StringBuilder sb = new StringBuilder(2 * bytes.length);
-        for (int i = 0; i < bytes.length; i++) {
-            int low = (int) (bytes[i] & 0x0f);
-            int high = (int) ((bytes[i] & 0xf0) >> 4);
+        for (byte element : bytes) {
+            int low = element & 0x0f;
+            int high = (element & 0xf0) >> 4;
             sb.append(HEXADECIMAL[high]);
             sb.append(HEXADECIMAL[low]);
         }
@@ -445,7 +449,7 @@ public final class JDBCRealm extends DigestRealmBase {
 
     /**
      * Delegate method for retreiving users groups
-     * 
+     *
      * @param user user's identifier
      * @return array of group key
      */
@@ -458,7 +462,7 @@ public final class JDBCRealm extends DigestRealmBase {
             statement = connection.prepareStatement(groupQuery);
             statement.setString(1, user);
             rs = statement.executeQuery();
-            final List<String> groups = new ArrayList<String>();
+            final List<String> groups = new ArrayList<>();
             while (rs.next()) {
                 groups.add(rs.getString(1));
             }
@@ -500,7 +504,7 @@ public final class JDBCRealm extends DigestRealmBase {
 
     /**
      * Return a connection from the properties configured
-     * 
+     *
      * @return a connection
      */
     private Connection getConnection() throws LoginException {

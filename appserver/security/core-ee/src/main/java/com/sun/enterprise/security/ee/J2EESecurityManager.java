@@ -16,16 +16,16 @@
 
 package com.sun.enterprise.security.ee;
 
-import com.sun.enterprise.security.ssl.SSLUtils;
 import java.net.SocketPermission;
-
-import java.util.*;
 // IASRI 4660742 START
 // IASRI 4660742 END
+import java.util.PropertyPermission;
+
+import com.sun.enterprise.security.ssl.SSLUtils;
 
 /**
  * Java 2 security manager that enforces code security.
- * 
+ *
  * @author Harish Prabandham
  */
 public class J2EESecurityManager extends java.rmi.RMISecurityManager {
@@ -43,12 +43,12 @@ public class J2EESecurityManager extends java.rmi.RMISecurityManager {
      * public void checkAccess(ThreadGroup t) { Class[] clss = getClassContext(); for(int i=1; i < clss.length; ++i) { //
      * IASRI 4660742 System.out.println(clss[i] + " : " + clss[i].getProtectionDomain()); // START OF IASRI 4660742
      * _logger.log(Level.FINE,clss[i] + " : " + clss[i].getProtectionDomain()); // END OF IASRI 4660742 }
-     * 
+     *
      * System.out.flush();
-     * 
+     *
      * // JDK 1.1. implementation... Class[] clss = getClassContext(); for(int i=1; i < clss.length; ++i) {
      * checkIfInContainer(clss[i]); } }
-     * 
+     *
      * // JDK 1.1. implementation... private void checkIfInContainer(Class clazz) { Class[] parents =
      * clazz.getDeclaredClasses(); for(int i=0; i < parents.length; ++i) { if(parents[i] == com.sun.ejb.Container.class)
      * throw new SecurityException("Got it...."); } }
@@ -63,8 +63,9 @@ public class J2EESecurityManager extends java.rmi.RMISecurityManager {
     @Override
     public void checkPackageAccess(final String pkgname) {
         // Remove this once 1.2.2 SecurityManager/ClassLoader bug is fixed.
-        if (!pkgname.startsWith("sun."))
+        if (!pkgname.startsWith("sun.")) {
             super.checkPackageAccess(pkgname);
+        }
     }
 
     @Override

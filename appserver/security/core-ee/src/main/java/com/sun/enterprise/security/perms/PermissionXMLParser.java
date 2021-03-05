@@ -16,13 +16,16 @@
 
 package com.sun.enterprise.security.perms;
 
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.PermissionCollection;
@@ -33,10 +36,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 //import com.sun.enterprise.deploy.shared.LogMessageInfo;
 import com.sun.enterprise.security.integration.PermissionCreator;
@@ -85,11 +84,12 @@ public class PermissionXMLParser {
             fi = new FileInputStream(permissionsXmlFile);
             init(fi);
         } finally {
-            if (fi != null)
+            if (fi != null) {
                 try {
                     fi.close();
                 } catch (IOException e) {
                 }
+            }
         }
 
     }
@@ -188,7 +188,8 @@ public class PermissionXMLParser {
                 throw new XMLStreamException(
                         // rb.getString(UNEXPECTED_END_IN_XMLDOCUMENT));
                         "Unexpected element with name " + name);
-            } else if (event == END_ELEMENT && name.equals(parser.getLocalName())) {
+            }
+            if (event == END_ELEMENT && name.equals(parser.getLocalName())) {
                 return;
             }
         }
@@ -201,19 +202,10 @@ public class PermissionXMLParser {
             if (pm != null) {
                 if (permissionCollectionToBeRestricted != null && permissionCollectionToBeRestricted.implies(pm)) {
                     throw new SecurityException("Restricted Permission Declared - fail deployment!");
-                } else {
-                    pc.add(pm);
                 }
+                pc.add(pm);
             }
-        } catch (ClassNotFoundException e) {
-            throw new SecurityException(e);
-        } catch (NoSuchMethodException e) {
-            throw new SecurityException(e);
-        } catch (InstantiationException e) {
-            throw new SecurityException(e);
-        } catch (IllegalAccessException e) {
-            throw new SecurityException(e);
-        } catch (InvocationTargetException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new SecurityException(e);
         }
     }

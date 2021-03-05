@@ -57,7 +57,7 @@ public class SimplePolicyConfigurationFactory extends PolicyConfigurationFactory
      * To preserve the invariant that there be at most one PolicyConfiguration object for a given policy context, it may be
      * necessary for this method to be thread safe.
      * <P>
-     * 
+     *
      * @param contextID A String identifying the policy context whose PolicyConfiguration interface is to be returned. The
      *                  value passed to this parameter must not be null.
      *                  <P>
@@ -78,6 +78,7 @@ public class SimplePolicyConfigurationFactory extends PolicyConfigurationFactory
      *                                                      be encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public PolicyConfiguration getPolicyConfiguration(String contextID, boolean remove)
             throws jakarta.security.jacc.PolicyContextException {
         return SimplePolicyConfiguration.getPolicyConfig(contextID, remove);
@@ -87,7 +88,7 @@ public class SimplePolicyConfigurationFactory extends PolicyConfigurationFactory
      * This method determines if the identified policy context exists with state "inService" in the Policy provider
      * associated with the factory.
      * <P>
-     * 
+     *
      * @param contextID A string identifying a policy context
      *
      * @return true if the identified policy context exists within the provider and its state is "inService", false
@@ -102,6 +103,7 @@ public class SimplePolicyConfigurationFactory extends PolicyConfigurationFactory
      *                                                      encapsulated (during construction) in the thrown
      *                                                      PolicyContextException.
      */
+    @Override
     public boolean inService(String contextID) throws jakarta.security.jacc.PolicyContextException {
         return SimplePolicyConfiguration.inService(contextID);
     }

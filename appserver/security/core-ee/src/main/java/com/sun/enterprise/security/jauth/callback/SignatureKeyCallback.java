@@ -18,6 +18,7 @@ package com.sun.enterprise.security.jauth.callback;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.x500.X500Principal;
 

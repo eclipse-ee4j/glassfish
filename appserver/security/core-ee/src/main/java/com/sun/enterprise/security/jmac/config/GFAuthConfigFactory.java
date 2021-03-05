@@ -16,19 +16,18 @@
 
 package com.sun.enterprise.security.jmac.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.jmac.WebServicesDelegate;
 import com.sun.jaspic.config.factory.BaseAuthConfigFactory;
-import com.sun.jaspic.config.factory.RegStoreFileParser;
 import com.sun.jaspic.config.factory.EntryInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+import com.sun.jaspic.config.factory.RegStoreFileParser;
 
 /**
  * This class implements methods in the abstract class AuthConfigFactory.
- * 
+ *
  * @author Shing Wai Chan
  */
 public class GFAuthConfigFactory extends BaseAuthConfigFactory {
@@ -96,12 +95,12 @@ public class GFAuthConfigFactory extends BaseAuthConfigFactory {
             delegate = svcUtil.getHabitat().getService(WebServicesDelegate.class);
         }
         if (delegate != null) {
-            List<EntryInfo> entries = new ArrayList<EntryInfo>(2);
+            List<EntryInfo> entries = new ArrayList<>(2);
             entries.add(new EntryInfo(delegate.getDefaultWebServicesProvider(), null));
             entries.add(new EntryInfo(GFServerConfigProvider.class.getName(), null));
             return entries;
         }
-        List<EntryInfo> entries = new ArrayList<EntryInfo>(1);
+        List<EntryInfo> entries = new ArrayList<>(1);
         entries.add(new EntryInfo(GFServerConfigProvider.class.getName(), null));
         return entries;
     }

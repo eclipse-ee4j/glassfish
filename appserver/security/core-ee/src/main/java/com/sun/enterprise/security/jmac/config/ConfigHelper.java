@@ -23,21 +23,23 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.internal.api.Globals;
+
+import com.sun.enterprise.security.jmac.AuthMessagePolicy;
+import com.sun.enterprise.security.jmac.WebServicesDelegate;
+
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.config.AuthConfig;
 import jakarta.security.auth.message.config.AuthConfigFactory;
+import jakarta.security.auth.message.config.AuthConfigFactory.RegistrationContext;
 import jakarta.security.auth.message.config.AuthConfigProvider;
 import jakarta.security.auth.message.config.ClientAuthConfig;
 import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.security.auth.message.config.RegistrationListener;
 import jakarta.security.auth.message.config.ServerAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthContext;
-import jakarta.security.auth.message.config.AuthConfigFactory.RegistrationContext;
-
-import com.sun.enterprise.security.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.jmac.WebServicesDelegate;
-import org.glassfish.internal.api.Globals;
 
 /**
  * This is based Helper class for 196 Configuration. This class implements RegistrationListener.
@@ -290,9 +292,7 @@ public abstract class ConfigHelper /* implements RegistrationListener */ {
                     ClassLoader loader = Thread.currentThread().getContextClassLoader();
                     Class delegateClass = loader.loadClass("com.sun.enterprise.security.webservices.WebServicesDelegateImpl");
                     delegate = (WebServicesDelegate) delegateClass.newInstance();
-                } catch (InstantiationException ex) {
-                } catch (IllegalAccessException ex) {
-                } catch (ClassNotFoundException ex) {
+                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
                 }
             }
         }
@@ -387,6 +387,7 @@ public abstract class ConfigHelper /* implements RegistrationListener */ {
                 this.appCtxt = appCtxt;
             }
 
+            @Override
             public void notify(String layer, String appContext) {
                 if (this.layer.equals(layer)
                         && ((this.appCtxt == null && appContext == null) || (appContext != null && appContext.equals(this.appCtxt)))) {

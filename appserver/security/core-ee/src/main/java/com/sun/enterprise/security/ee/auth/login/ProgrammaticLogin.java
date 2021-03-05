@@ -16,29 +16,27 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
-import com.sun.appserv.security.ProgrammaticLoginPermission;
-import com.sun.enterprise.security.SecurityServicesUtil;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.appserv.security.ProgrammaticLoginPermission;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.UsernamePasswordStore;
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.common.SecurityConstants;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.web.integration.WebProgrammaticLogin;
+import com.sun.logging.LogDomains;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import com.sun.logging.LogDomains;
-import com.sun.enterprise.security.auth.login.LoginContextDriver;
-
-import com.sun.enterprise.security.UsernamePasswordStore;
-import com.sun.enterprise.security.web.integration.WebProgrammaticLogin;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.security.common.SecurityConstants;
-import com.sun.enterprise.security.common.Util;
 
 /**
  * Implement programmatic login.
@@ -59,7 +57,7 @@ import com.sun.enterprise.security.common.Util;
  * There are two forms of the login method, one which includes the HTTP request and response objects for use by servlets
  * and one which can be used by EJBs.
  *
- * 
+ *
  */
 @Service
 @PerLookup
@@ -131,6 +129,7 @@ public class ProgrammaticLogin {
             // try to login. doPrivileged is used since application code does
             // not have permissions to process the jaas login.
             authenticated = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+                @Override
                 public java.lang.Boolean run() {
                     // if realm is null, LCD will log into the default realm
                     if (((SecurityServicesUtil.getInstance() != null) && SecurityServicesUtil.getInstance().isServer())
@@ -152,16 +151,15 @@ public class ProgrammaticLogin {
                             UsernamePasswordStore.resetThreadLocalOnly();
                         }
                     }
-                    return Boolean.valueOf(true);
+                    return true;
                 }
             });
         } catch (Exception e) {
             logger.log(Level.SEVERE, "prog.login.failed", e);
             if (errors == true) { // propagate the exception ahead
                 throw e;
-            } else {
-                authenticated = Boolean.valueOf(false);
             }
+            authenticated = false;
         }
         return authenticated;
     }
@@ -200,7 +198,7 @@ public class ProgrammaticLogin {
             authenticated = login(user, password, null, false);
         } catch (Exception e) {
             // sanity checking, will never come here
-            authenticated = Boolean.valueOf(false);
+            authenticated = false;
         }
         return authenticated;
     }
@@ -241,16 +239,16 @@ public class ProgrammaticLogin {
             // try to login. doPrivileged is used since application code does
             // not have permissions to process the jaas login.
             authenticated = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+                @Override
                 public Boolean run() {
                     return webProgrammaticLogin.login(user, password, realm, request, response);
                 }
             });
         } catch (Exception e) {
-            if (errors != true) {
-                authenticated = Boolean.valueOf(false);
-            } else {
+            if (errors == true) {
                 throw e;
             }
+            authenticated = false;
         }
         return authenticated;
     }
@@ -286,14 +284,14 @@ public class ProgrammaticLogin {
             authenticated = login(user, password, null, request, response, false);
         } catch (Exception e) {
             // sanity check will never come here
-            authenticated = Boolean.valueOf(false);
+            authenticated = false;
         }
         return authenticated;
     }
 
     /**
      * Attempt to logout.
-     * 
+     *
      * @returns Boolean containing true or false to indicate success or failure of logout.
      *
      */
@@ -303,14 +301,14 @@ public class ProgrammaticLogin {
             loggedout = logout(false);
         } catch (Exception e) {
             // sanity check will never come here
-            loggedout = Boolean.valueOf(false);
+            loggedout = false;
         }
         return loggedout;
     }
 
     /**
      * Attempt to logout.
-     * 
+     *
      * @param errors, errors = true, the method will propagate the exceptions encountered while logging out, errors=false
      *                will return a Boolean value of false indicating failure of logout
      * @return Boolean containing true or false to indicate success or failure of logout.
@@ -322,7 +320,8 @@ public class ProgrammaticLogin {
         // check logout permission
         try {
             checkLogoutPermission();
-            AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            AccessController.doPrivileged(new PrivilegedAction<>() {
+                @Override
                 public java.lang.Object run() {
                     // V3:Commentedif (isServer) {
                     if (SecurityServicesUtil.getInstance() != null && SecurityServicesUtil.getInstance().isServer()) {
@@ -339,14 +338,13 @@ public class ProgrammaticLogin {
                     return null;
                 }
             });
-            loggedout = Boolean.valueOf(true);
+            loggedout = true;
         } catch (Exception e) {
             logger.log(Level.WARNING, "prog.logout.failed", e);
             if (errors) {
                 throw e;
-            } else {
-                loggedout = Boolean.valueOf(false);
             }
+            loggedout = false;
         }
         return loggedout;
     }
@@ -363,14 +361,14 @@ public class ProgrammaticLogin {
             loggedout = logout(request, response, false);
         } catch (Exception e) {
             // sanity check, will never come here
-            loggedout = Boolean.valueOf(false);
+            loggedout = false;
         }
         return loggedout;
     }
 
     /**
      * Attempt to logout. Also removes principal from request (and session if available).
-     * 
+     *
      * @param errors, errors = true, the method will propagate the exceptions encountered while logging out, errors=false
      *                will return a Boolean value of false indicating failure of logout
      *
@@ -383,6 +381,7 @@ public class ProgrammaticLogin {
         try {
             checkLogoutPermission();
             loggedout = AccessController.doPrivileged(new PrivilegedExceptionAction<Boolean>() {
+                @Override
                 public Boolean run() throws Exception {
                     return webProgrammaticLogin.logout(request, response);
                 }
@@ -390,9 +389,8 @@ public class ProgrammaticLogin {
         } catch (Exception e) {
             if (errors) {
                 throw e;
-            } else {
-                loggedout = Boolean.valueOf(false);
             }
+            loggedout = false;
         }
         return loggedout;
     }

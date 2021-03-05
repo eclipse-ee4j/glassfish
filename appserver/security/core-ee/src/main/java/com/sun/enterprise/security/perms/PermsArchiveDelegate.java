@@ -32,7 +32,7 @@ public class PermsArchiveDelegate {
 
     /**
      * Get the application or module packaged permissions
-     * 
+     *
      * @param type    the type of the module, this is used to check the configured restriction for the type
      * @param context the deployment context
      * @return the module or app declared permissions
@@ -54,11 +54,7 @@ public class PermsArchiveDelegate {
             PermissionCollection revisedWarDeclaredPerms = dpp.getAdjustedDeclaredPermissions();
 
             return revisedWarDeclaredPerms;
-        } catch (XMLStreamException e) {
-            throw new SecurityException(e);
-        } catch (SecurityException e) {
-            throw new SecurityException(e);
-        } catch (FileNotFoundException e) {
+        } catch (XMLStreamException | SecurityException | FileNotFoundException e) {
             throw new SecurityException(e);
         }
 
@@ -66,7 +62,7 @@ public class PermsArchiveDelegate {
 
     /**
      * Get the EE permissions for the spcified module type
-     * 
+     *
      * @param type module type
      * @param dc   the deployment context
      * @return the ee permissions
@@ -82,7 +78,7 @@ public class PermsArchiveDelegate {
 
     /**
      * Get the declared permissions and EE permissions, then add them to the classloader
-     * 
+     *
      * @param type        module type
      * @param context     deployment context
      * @param classloader throws AccessControlException if caller has no privilege
@@ -92,11 +88,13 @@ public class PermsArchiveDelegate {
 
         if (System.getSecurityManager() != null) {
 
-            if (!(classloader instanceof DDPermissionsLoader))
+            if (!(classloader instanceof DDPermissionsLoader)) {
                 return;
+            }
 
-            if (!(context instanceof ExtendedDeploymentContext))
+            if (!(context instanceof ExtendedDeploymentContext)) {
                 return;
+            }
 
             DDPermissionsLoader ddcl = (DDPermissionsLoader) classloader;
 
@@ -124,6 +122,7 @@ public class PermsArchiveDelegate {
             this.cloader = cl;
         }
 
+        @Override
         public Object run() throws SecurityException {
 
             processModuleDeclaredAndEEPemirssions(type, context, cloader);

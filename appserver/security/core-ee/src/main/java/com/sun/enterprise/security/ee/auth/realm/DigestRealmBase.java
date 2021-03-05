@@ -16,20 +16,23 @@
 
 package com.sun.enterprise.security.ee.auth.realm;
 
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.digest.impl.DigestProcessor;
-import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.digest.api.Key;
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
-import static com.sun.enterprise.security.auth.digest.api.Constants.*;
+
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.Key;
+import com.sun.enterprise.security.auth.digest.api.Password;
+import com.sun.enterprise.security.auth.digest.impl.DigestProcessor;
+import com.sun.enterprise.security.auth.realm.IASRealm;
 
 /**
  * Base class for all realms wanting to support Digest based authentication.
- * 
+ *
  * @author K.Venugopal@sun.com
  */
 public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
@@ -59,10 +62,10 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
 
         }
 
+        @Override
         protected final boolean validate(Password passwd, DigestAlgorithmParameter[] params) throws NoSuchAlgorithmException {
 
-            for (int i = 0; i < params.length; i++) {
-                DigestAlgorithmParameter dap = params[i];
+            for (DigestAlgorithmParameter dap : params) {
                 if (A1.equals(dap.getName()) && (dap instanceof Key)) {
                     key = dap;
                 } else if (RESPONSE.equals(dap.getName())) {

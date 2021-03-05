@@ -21,9 +21,10 @@
 
 package com.sun.enterprise.security.web.integration;
 
+import org.jvnet.hk2.annotations.Contract;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Web specific Programmatic Login An implementation of this will be injected into
@@ -43,7 +44,7 @@ public interface WebProgrammaticLogin {
      *
      * <P>
      * See bugs 4646134, 4688449 and other referenced bugs for more background.
-     * 
+     *
      * <P>
      * Note also that this login does not hook up into SSO.
      *
@@ -59,7 +60,7 @@ public interface WebProgrammaticLogin {
      * @throws Exception on login failure.
      *
      */
-    public Boolean login(String user, char[] password, String realm, HttpServletRequest request, HttpServletResponse response);
+    Boolean login(String user, char[] password, String realm, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Logout and remove principal in request and session.
@@ -71,6 +72,6 @@ public interface WebProgrammaticLogin {
      * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
      * @throws Exception any exception encountered during logout operation
      */
-    public Boolean logout(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    Boolean logout(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 }

@@ -83,8 +83,8 @@ public class SecuritySniffer extends GenericSniffer {
      */
     @Override
     public boolean handles(ReadableArchive location) {
-        return (DeploymentUtils.isArchiveOfType(location, DOLUtils.warType(), habitat)
-                || DeploymentUtils.isArchiveOfType(location, DOLUtils.earType(), habitat) || isJar(location));
+        return DeploymentUtils.isArchiveOfType(location, DOLUtils.warType(), habitat)
+                || DeploymentUtils.isArchiveOfType(location, DOLUtils.earType(), habitat) || isJar(location);
     }
 
     /**

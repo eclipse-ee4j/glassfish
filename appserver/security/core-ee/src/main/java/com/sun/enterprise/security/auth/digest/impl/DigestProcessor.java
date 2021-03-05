@@ -65,7 +65,7 @@ public abstract class DigestProcessor {
             com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter key = null;
             this.passwd = passwd;
             for (DigestAlgorithmParameter dap : params) {
-                if (A1.equals(dap.getName()) && (dap instanceof com.sun.enterprise.security.auth.digest.api.Key)) {
+                if (A1.equals(dap.getName()) && dap instanceof com.sun.enterprise.security.auth.digest.api.Key) {
                     key = dap;
                 } else {
                     data = dap;
@@ -168,7 +168,7 @@ public abstract class DigestProcessor {
             DigestAlgorithmParameter dataP = (DigestAlgorithmParameter) datastore[i];
             byte[] tmpData = valueOf(dataP);
             bos.write(tmpData, 0, tmpData.length);
-            if (param.getDelimiter() != null && (i + 1 < datastore.length)) {
+            if (param.getDelimiter() != null && i + 1 < datastore.length) {
                 bos.write(param.getDelimiter(), 0, param.getDelimiter().length);
             }
         }

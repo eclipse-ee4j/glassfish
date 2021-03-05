@@ -173,9 +173,8 @@ final class AuthContext {
 
                     if (firstRequiredError != null) {
                         throw firstRequiredError;
-                    } else {
-                        throw ae;
                     }
+                    throw ae;
 
                 }
                 if (entries[i].getControlFlag() == AppConfigurationEntry.LoginModuleControlFlag.REQUIRED) {

@@ -151,18 +151,18 @@ public abstract class ConfigHelper /* implements RegistrationListener */ {
 
         try {
             rLock.lock();
-            disabled = (!listenerWrapper.isEnabled());
+            disabled = !listenerWrapper.isEnabled();
             if (!disabled) {
                 d = listenerWrapper.getConfigData();
                 if (d != null) {
-                    c = (isServer ? d.sConfig : d.cConfig);
+                    c = isServer ? d.sConfig : d.cConfig;
                     lastP = d.provider;
                 }
             }
 
         } finally {
             rLock.unlock();
-            if (disabled || c != null || (d != null && lastP == null)) {
+            if (disabled || c != null || d != null && lastP == null) {
                 return c;
             }
         }
@@ -185,7 +185,7 @@ public abstract class ConfigHelper /* implements RegistrationListener */ {
             }
         }
 
-        return ((isServer) ? d.sConfig : d.cConfig);
+        return isServer ? d.sConfig : d.cConfig;
     }
 
     /**
@@ -281,7 +281,7 @@ public abstract class ConfigHelper /* implements RegistrationListener */ {
             this.appCtxt = appCtxt;
             this.rwLock = new ReentrantReadWriteLock(true);
             this.wLock = rwLock.writeLock();
-            enabled = (factory != null);
+            enabled = factory != null;
             listener = new AuthConfigRegistrationListener(layer, appCtxt);
             if (Globals.getDefaultHabitat() != null) {
                 delegate = Globals.get(WebServicesDelegate.class);
@@ -390,7 +390,7 @@ public abstract class ConfigHelper /* implements RegistrationListener */ {
             @Override
             public void notify(String layer, String appContext) {
                 if (this.layer.equals(layer)
-                        && ((this.appCtxt == null && appContext == null) || (appContext != null && appContext.equals(this.appCtxt)))) {
+                        && (this.appCtxt == null && appContext == null || appContext != null && appContext.equals(this.appCtxt))) {
                     try {
                         wLock.lock();
                         data = null;

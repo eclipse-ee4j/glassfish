@@ -69,8 +69,8 @@ final class ClientContainerCallbackHandler extends BaseContainerCallbackHandler 
         int i = 0;
         while (i < callbacks.length) {
             if (!processedSomeAppclientCallbacks) {
-                if ((callbacks[i] instanceof NameCallback) || (callbacks[i] instanceof PasswordCallback)
-                        || (callbacks[i] instanceof ChoiceCallback)) {
+                if (callbacks[i] instanceof NameCallback || callbacks[i] instanceof PasswordCallback
+                        || callbacks[i] instanceof ChoiceCallback) {
 
                     String loginName = UsernamePasswordStore.getUsername();
                     char[] password = UsernamePasswordStore.getPassword();

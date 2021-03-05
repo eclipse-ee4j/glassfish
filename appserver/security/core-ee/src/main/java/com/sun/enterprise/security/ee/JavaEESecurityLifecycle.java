@@ -46,7 +46,7 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
         // TODO: need someway to not override the SecMgr if the EmbeddedServer was
         // run with a different non-default SM.
         // right now there seems no way to find out if the SM is the VM's default SM.
-        if (secMgr != null && !(J2EESecurityManager.class.equals(secMgr.getClass()))) {
+        if (secMgr != null && !J2EESecurityManager.class.equals(secMgr.getClass())) {
             J2EESecurityManager mgr = new J2EESecurityManager();
             try {
                 System.setSecurityManager(mgr);

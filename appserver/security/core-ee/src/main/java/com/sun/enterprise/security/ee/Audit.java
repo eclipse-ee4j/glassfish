@@ -89,7 +89,7 @@ public class Audit extends AuditModule {
     public void init(Properties props) {
         super.init(props);
         String audit = props.getProperty(AUDIT_ON);
-        auditFlag = (audit == null) ? false : Boolean.valueOf(audit);
+        auditFlag = audit == null ? false : Boolean.valueOf(audit);
     }
 
     /**

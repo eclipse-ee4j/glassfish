@@ -300,7 +300,7 @@ public class SecurityUtil {
              * detect special case of EJBs embedded in a war, and make sure psuedo policy context id is unique within app
              */
             Object root = ejbBundleDesc.getModuleDescriptor().getDescriptor();
-            if ((root != ejbBundleDesc) && (root instanceof WebBundleDescriptor)) {
+            if (root != ejbBundleDesc && root instanceof WebBundleDescriptor) {
                 cid = createUniquePseudoModuleID(ejbBundleDesc);
             } else {
                 cid = VersioningUtils.getRepositoryName(ejbBundleDesc.getApplication().getRegistrationName()) + '/'

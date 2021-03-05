@@ -221,7 +221,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         final Principal callerPrincipal = sc != null ? sc.getCallerPrincipal() : null;
         final Principal defaultPrincipal = SecurityContext.getDefaultCallerPrincipal();
 
-        return ((Boolean) AppservAccessController.doPrivileged(new PrivilegedAction() {
+        return (Boolean) AppservAccessController.doPrivileged(new PrivilegedAction() {
 
             /**
              * this method uses 4 (numbered) criteria to determine if the argument WebPrincipal can be reused
@@ -299,7 +299,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
                 return Boolean.TRUE;
             }
-        }));
+        });
     }
 
     private void processCallerPrincipal(CallerPrincipalCallback cpCallback) {

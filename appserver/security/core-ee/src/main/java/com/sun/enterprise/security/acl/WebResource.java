@@ -51,7 +51,7 @@ public class WebResource extends Resource {
             return true;
         }
 
-        if ((obj == null) || (obj.getClass() != getClass())) {
+        if (obj == null || obj.getClass() != getClass()) {
             return false;
         }
 
@@ -62,7 +62,7 @@ public class WebResource extends Resource {
 
     @Override
     public boolean implies(Resource resource) {
-        if ((resource == null) || (resource.getClass() != getClass())) {
+        if (resource == null || resource.getClass() != getClass()) {
             return false;
         }
 
@@ -77,16 +77,14 @@ public class WebResource extends Resource {
             if (that.wildcard) {
                 // one wildcard can imply another
                 return that.path.startsWith(path);
-            } else {
-                // make sure ap.path is longer so a/b/* doesn't imply a/b
-                return (that.path.length() > this.path.length()) && that.path.startsWith(this.path);
             }
+            // make sure ap.path is longer so a/b/* doesn't imply a/b
+            return that.path.length() > this.path.length() && that.path.startsWith(this.path);
         }
         if (that.wildcard) {
             // a non-wildcard can't imply a wildcard
             return false;
-        } else {
-            return this.path.equals(that.path);
         }
+        return this.path.equals(that.path);
     }
 }

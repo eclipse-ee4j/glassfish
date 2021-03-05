@@ -98,7 +98,7 @@ public class AuthPolicy {
                 }
 
                 if (authenticateRecipient && contentInd >= 0) {
-                    this.recipientBeforeContent = (recipientInd < contentInd);
+                    this.recipientBeforeContent = recipientInd < contentInd;
                 }
             }
         }
@@ -155,11 +155,11 @@ public class AuthPolicy {
     }
 
     public boolean isSenderAuthRequired() {
-        return (this.isSourceAuthRequired() ? (this.getSourceAuth() == SOURCE_AUTH_SENDER ? true : false) : false);
+        return this.isSourceAuthRequired() ? this.getSourceAuth() == SOURCE_AUTH_SENDER ? true : false : false;
     }
 
     public boolean isContentAuthRequired() {
-        return (this.isSourceAuthRequired() ? (this.getSourceAuth() == SOURCE_AUTH_CONTENT ? true : false) : false);
+        return this.isSourceAuthRequired() ? this.getSourceAuth() == SOURCE_AUTH_CONTENT ? true : false : false;
     }
 
     public boolean isRecipientAuthRequired() {
@@ -179,7 +179,7 @@ public class AuthPolicy {
     // Behaves same as noArg variant when orderForValidation is false. In either
     // case, the returned value is only relevant when recipientAuth is required.
     public boolean isRecipientAuthBeforeContent(boolean orderForValidation) {
-        return (orderForValidation ? !this.recipientBeforeContent : this.recipientBeforeContent);
+        return orderForValidation ? !this.recipientBeforeContent : this.recipientBeforeContent;
     }
 
     @Override

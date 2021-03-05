@@ -199,14 +199,13 @@ public class PermissionCache extends Object {
             } finally {
                 rLock.unlock();
             }
-        } else {
-            // set the load indicators so that readers will
-            // bypass the cache until it is loaded
-            // release the writelock and return
-            cache = null;
-            loading = true;
-            wLock.unlock();
         }
+        // set the load indicators so that readers will
+        // bypass the cache until it is loaded
+        // release the writelock and return
+        cache = null;
+        loading = true;
+        wLock.unlock();
 
         // cache will be null if we proceed past this point
         // NO LOCKS ARE HELD AT THIS POINT
@@ -313,7 +312,7 @@ public class PermissionCache extends Object {
                 // since cache is non-null, we know we are NOT loading
                 // setting cache to null will force a (re)load
                 cache = null;
-                epoch = (epoch + 1 == 0) ? 1 : epoch + 1;
+                epoch = epoch + 1 == 0 ? 1 : epoch + 1;
             }
         } finally {
             wLock.unlock();

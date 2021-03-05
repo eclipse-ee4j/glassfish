@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.security.web.integration;
 
+import static java.util.logging.Level.FINE;
+
 import java.security.Permission;
 import java.security.Permissions;
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.deployment.web.WebResourceCollection;
 
 import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebRoleRefPermission;
 import jakarta.security.jacc.WebUserDataPermission;
@@ -57,9 +60,6 @@ public class WebPermissionUtil {
 
     static Logger logger = LogUtils.getLogger();
 
-    public WebPermissionUtil() {
-    }
-
     /* changed to order default pattern / below extension */
     private static final int PT_DEFAULT = 0;
     private static final int PT_EXTENSION = 1;
@@ -71,20 +71,22 @@ public class WebPermissionUtil {
         if (pattern.startsWith("*.")) {
             return PT_EXTENSION;
         }
+
         if (pattern.startsWith("/") && pattern.endsWith("/*")) {
             return PT_PREFIX;
-        } else if (pattern.equals("/")) {
-            return PT_DEFAULT;
-        } else {
-            return PT_EXACT;
         }
+
+        if (pattern.equals("/")) {
+            return PT_DEFAULT;
+        }
+
+        return PT_EXACT;
     }
 
     static boolean implies(String pattern, String path) {
-
         // Check for exact match
         if (pattern.equals(path)) {
-            return (true);
+            return true;
         }
 
         // Check for path prefix matching
@@ -94,39 +96,39 @@ public class WebPermissionUtil {
             int length = pattern.length();
 
             if (length == 0) {
-                return (true); // "/*" is the same as "/"
+                return true; // "/*" is the same as "/"
             }
 
-            return (path.startsWith(pattern) && (path.length() == length || path.substring(length).startsWith("/")));
+            return path.startsWith(pattern) && (path.length() == length || path.substring(length).startsWith("/"));
         }
 
         // Check for suffix matching
         if (pattern.startsWith("*.")) {
             int slash = path.lastIndexOf('/');
             int period = path.lastIndexOf('.');
-            if ((slash >= 0) && (period > slash) && path.endsWith(pattern.substring(1))) {
-                return (true);
+            if (slash >= 0 && period > slash && path.endsWith(pattern.substring(1))) {
+                return true;
             }
-            return (false);
+
+            return false;
         }
 
         // Check for universal mapping
         if (pattern.equals("/")) {
-            return (true);
+            return true;
         }
 
-        return (false);
+        return false;
     }
 
-    public static HashMap parseConstraints(WebBundleDescriptor wbd) {
-
-        if (logger.isLoggable(Level.FINE)) {
+    public static Map<String, MapValue> parseConstraints(WebBundleDescriptor webBundleDescriptor) {
+        if (logger.isLoggable(FINE)) {
             logger.entering("WebPermissionUtil", "parseConstraints");
         }
 
-        Set<Role> roleSet = wbd.getRoles();
+        Set<Role> roleSet = webBundleDescriptor.getRoles();
 
-        HashMap<String, MapValue> qpMap = new HashMap();
+        Map<String, MapValue> qpMap = new HashMap<>();
 
         /*
          * bootstrap the map with the default pattern; the default pattern will not be "committed", unless a constraint is
@@ -135,33 +137,33 @@ public class WebPermissionUtil {
         qpMap.put("/", new MapValue("/"));
 
         // Enumerate over security constraints
-        Enumeration<SecurityConstraint> esc = wbd.getSecurityConstraints();
-        while (esc.hasMoreElements()) {
+        Enumeration<SecurityConstraint> securityConstraints = webBundleDescriptor.getSecurityConstraints();
+        while (securityConstraints.hasMoreElements()) {
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "JACC: constraint translation: begin parsing security constraint");
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, "JACC: constraint translation: begin parsing security constraint");
             }
 
-            SecurityConstraint sc = esc.nextElement();
-            AuthorizationConstraint ac = sc.getAuthorizationConstraint();
-            UserDataConstraint udc = sc.getUserDataConstraint();
+            SecurityConstraint securityConstraint = securityConstraints.nextElement();
+            AuthorizationConstraint authorizationConstraint = securityConstraint.getAuthorizationConstraint();
+            UserDataConstraint userDataConstraint = securityConstraint.getUserDataConstraint();
 
             // Enumerate over collections of URLPatterns within constraint
-            for (WebResourceCollection wrc : sc.getWebResourceCollections()) {
+            for (WebResourceCollection webResourceCollection : securityConstraint.getWebResourceCollections()) {
 
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "JACC: constraint translation: begin parsing web resource collection");
+                if (logger.isLoggable(FINE)) {
+                    logger.log(FINE, "JACC: constraint translation: begin parsing web resource collection");
                 }
 
                 // Enumerate over URLPatterns within collection
-                for (String url : wrc.getUrlPatterns()) {
+                for (String url : webResourceCollection.getUrlPatterns()) {
                     if (url != null) {
                         // FIX TO BE CONFIRMED: encode all colons
                         url = url.replaceAll(":", "%3A");
                     }
 
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE, "JACC: constraint translation: process url: " + url);
+                    if (logger.isLoggable(FINE)) {
+                        logger.log(FINE, "JACC: constraint translation: process url: " + url);
                     }
 
                     // determine if pattern is already in map
@@ -198,8 +200,7 @@ public class WebPermissionUtil {
                             case PT_PREFIX:
                                 if ((otherUrlType == PT_PREFIX || otherUrlType == PT_EXACT) && implies(url, otherUrl)) {
                                     mValue.addQualifier(otherUrl);
-                                } else if ((otherUrlType == PT_PREFIX && implies(otherUrl, url))
-                                        || (otherUrlType == PT_EXTENSION || otherUrlType == PT_DEFAULT)) {
+                                } else if (otherUrlType == PT_PREFIX && implies(otherUrl, url) || otherUrlType == PT_EXTENSION || otherUrlType == PT_DEFAULT) {
                                     qpVal.getValue().addQualifier(url);
                                 }
                                 break;
@@ -213,7 +214,7 @@ public class WebPermissionUtil {
                             // the defualt pattern, if it exists in the
                             // map.
                             case PT_EXTENSION:
-                                if (otherUrlType == PT_PREFIX || (otherUrlType == PT_EXACT && implies(url, otherUrl))) {
+                                if (otherUrlType == PT_PREFIX || otherUrlType == PT_EXACT && implies(url, otherUrl)) {
                                     mValue.addQualifier(otherUrl);
                                 } else if (otherUrlType == PT_DEFAULT) {
                                     qpVal.getValue().addQualifier(url);
@@ -235,8 +236,8 @@ public class WebPermissionUtil {
                             // every path-prefix or extension pattern (in
                             // the map) that implies the new pattern.
                             case PT_EXACT:
-                                if (((otherUrlType == PT_PREFIX || otherUrlType == PT_EXTENSION) && implies(otherUrl, url))
-                                        || (otherUrlType == PT_DEFAULT)) {
+                                if ((otherUrlType == PT_PREFIX || otherUrlType == PT_EXTENSION) && implies(otherUrl, url)
+                                        || otherUrlType == PT_DEFAULT) {
                                     qpVal.getValue().addQualifier(url);
                                 }
                                 break;
@@ -250,37 +251,36 @@ public class WebPermissionUtil {
 
                     }
 
-                    String[] methodNames = wrc.getHttpMethodsAsArray();
+                    String[] methodNames = webResourceCollection.getHttpMethodsAsArray();
                     BitSet methods = MethodValue.methodArrayToSet(methodNames);
 
                     BitSet omittedMethods = null;
 
                     if (methods.isEmpty()) {
-                        String[] omittedNames = wrc.getHttpMethodOmissionsAsArray();
-                        omittedMethods = MethodValue.methodArrayToSet(omittedNames);
+                        omittedMethods = MethodValue.methodArrayToSet(webResourceCollection.getHttpMethodOmissionsAsArray());
                     }
 
                     // set and commit the method outcomes on the pattern
                     // note that an empty omitted method set is used to represent
                     // the set of all http methods
 
-                    mValue.setMethodOutcomes(roleSet, ac, udc, methods, omittedMethods);
+                    mValue.setMethodOutcomes(roleSet, authorizationConstraint, userDataConstraint, methods, omittedMethods);
 
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE, "JACC: constraint translation: end processing url: " + url);
+                    if (logger.isLoggable(FINE)) {
+                        logger.log(FINE, "JACC: constraint translation: end processing url: " + url);
                     }
                 }
 
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "JACC: constraint translation: end parsing web resource collection");
+                if (logger.isLoggable(FINE)) {
+                    logger.log(FINE, "JACC: constraint translation: end parsing web resource collection");
                 }
             }
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "JACC: constraint translation: end parsing security constraint");
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, "JACC: constraint translation: end parsing security constraint");
             }
         }
 
-        if (logger.isLoggable(Level.FINE)) {
+        if (logger.isLoggable(FINE)) {
             logger.exiting("WebPermissionUtil", "parseConstraints");
         }
 
@@ -305,8 +305,8 @@ public class WebPermissionUtil {
         collection.add(new WebResourcePermission(name, actions));
         collection.add(new WebUserDataPermission(name, actions));
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "JACC: constraint capture: adding excluded methods: " + actions);
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "JACC: constraint capture: adding excluded methods: " + actions);
         }
     }
 
@@ -317,8 +317,8 @@ public class WebPermissionUtil {
             map.put(roleName, collection);
         }
         collection.add(p);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "JACC: constraint capture: adding methods to role: " + roleName + " methods: " + p.getActions());
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "JACC: constraint capture: adding methods to role: " + roleName + " methods: " + p.getActions());
         }
         return collection;
     }
@@ -343,6 +343,7 @@ public class WebPermissionUtil {
                 addToRoleMap(map, roleName, new WebResourcePermission(name, actions));
             }
         }
+        
         // handle explicit methods, skip roles that were handled above
         BitSet methods = m.getMethodSet();
         if (!methods.isEmpty()) {
@@ -376,8 +377,8 @@ public class WebPermissionUtil {
 
         collection.add(new WebResourcePermission(name, actions));
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "JACC: constraint capture: adding unchecked (for authorization) methods: " + actions);
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "JACC: constraint capture: adding unchecked (for authorization) methods: " + actions);
         }
     }
 
@@ -428,13 +429,13 @@ public class WebPermissionUtil {
                 continue;
             }
 
-            actions = (actions == null) ? "" : actions;
+            actions = actions == null ? "" : actions;
             String combinedActions = actions + ":" + transport;
 
             collection.add(new WebUserDataPermission(name, combinedActions));
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "JACC: constraint capture: adding methods that accept connections with protection: " + transport
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, "JACC: constraint capture: adding methods that accept connections with protection: " + transport
                         + " methods: " + actions);
             }
         }
@@ -462,106 +463,104 @@ public class WebPermissionUtil {
         pc.removeRole("*");
     }
 
-    public static void processConstraints(WebBundleDescriptor wbd, PolicyConfiguration pc)
-            throws jakarta.security.jacc.PolicyContextException {
-        if (logger.isLoggable(Level.FINE)) {
+    public static void processConstraints(WebBundleDescriptor webBundleDescriptor, PolicyConfiguration policyConfiguration) throws PolicyContextException {
+        if (logger.isLoggable(FINE)) {
             logger.entering("WebPermissionUtil", "processConstraints");
-            logger.log(Level.FINE, "JACC: constraint translation: CODEBASE = " + pc.getContextID());
+            logger.log(FINE, "JACC: constraint translation: CODEBASE = " + policyConfiguration.getContextID());
         }
 
-        HashMap qpMap = parseConstraints(wbd);
+        Map<String, MapValue> qpMap = parseConstraints(webBundleDescriptor);
         HashMap<String, Permissions> roleMap = new HashMap<>();
 
         Permissions excluded = new Permissions();
         Permissions unchecked = new Permissions();
 
-        boolean deny = wbd.isDenyUncoveredHttpMethods();
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "JACC: constraint capture: begin processing qualified url patterns"
+        boolean deny = webBundleDescriptor.isDenyUncoveredHttpMethods();
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "JACC: constraint capture: begin processing qualified url patterns"
                     + " - uncovered http methods will be " + (deny ? "denied" : "permitted"));
         }
 
         // for each urlPatternSpec in the map
-        Iterator it = qpMap.values().iterator();
+        Iterator<MapValue> it = qpMap.values().iterator();
         while (it.hasNext()) {
-            MapValue m = (MapValue) it.next();
-            if (!m.irrelevantByQualifier) {
+            MapValue mapValue = it.next();
+            if (!mapValue.irrelevantByQualifier) {
 
-                String name = m.urlPatternSpec.toString();
+                String name = mapValue.urlPatternSpec.toString();
 
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "JACC: constraint capture: urlPattern: " + name);
+                if (logger.isLoggable(FINE)) {
+                    logger.log(FINE, "JACC: constraint capture: urlPattern: " + name);
                 }
 
                 // handle Uncovered Methods
-                m.handleUncoveredMethods(deny);
+                mapValue.handleUncoveredMethods(deny);
 
                 // handle excluded methods
-                handleExcluded(excluded, m, name);
+                handleExcluded(excluded, mapValue, name);
 
                 // handle methods requiring role
-                handleRoles(roleMap, m, name);
+                handleRoles(roleMap, mapValue, name);
 
                 // handle methods that are not auth constrained
-                handleNoAuth(unchecked, m, name);
+                handleNoAuth(unchecked, mapValue, name);
 
                 // handle transport constraints
-                handleConnections(unchecked, m, name);
+                handleConnections(unchecked, mapValue, name);
             }
         }
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "JACC: constraint capture: end processing qualified url patterns");
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "JACC: constraint capture: end processing qualified url patterns");
 
             Enumeration e = excluded.elements();
             while (e.hasMoreElements()) {
                 Permission p = (Permission) e.nextElement();
-                String ptype = (p instanceof WebResourcePermission) ? "WRP  " : "WUDP ";
-                logger.log(Level.FINE,
+                String ptype = p instanceof WebResourcePermission ? "WRP  " : "WUDP ";
+                logger.log(FINE,
                         "JACC: permission(excluded) type: " + ptype + " name: " + p.getName() + " actions: " + p.getActions());
             }
 
             e = unchecked.elements();
             while (e.hasMoreElements()) {
                 Permission p = (Permission) e.nextElement();
-                String ptype = (p instanceof WebResourcePermission) ? "WRP  " : "WUDP ";
-                logger.log(Level.FINE,
+                String ptype = p instanceof WebResourcePermission ? "WRP  " : "WUDP ";
+                logger.log(FINE,
                         "JACC: permission(unchecked) type: " + ptype + " name: " + p.getName() + " actions: " + p.getActions());
             }
         }
 
-        pc.addToExcludedPolicy(excluded);
+        policyConfiguration.addToExcludedPolicy(excluded);
 
-        pc.addToUncheckedPolicy(unchecked);
+        policyConfiguration.addToUncheckedPolicy(unchecked);
 
         for (Map.Entry<String, Permissions> rVal : roleMap.entrySet()) {
             String role = rVal.getKey();
             Permissions pCollection = rVal.getValue();
-            pc.addToRole(role, pCollection);
+            policyConfiguration.addToRole(role, pCollection);
 
-            if (logger.isLoggable(Level.FINE)) {
+            if (logger.isLoggable(FINE)) {
                 Enumeration e = pCollection.elements();
                 while (e.hasMoreElements()) {
                     Permission p = (Permission) e.nextElement();
-                    String ptype = (p instanceof WebResourcePermission) ? "WRP  " : "WUDP ";
-                    logger.log(Level.FINE,
+                    String ptype = p instanceof WebResourcePermission ? "WRP  " : "WUDP ";
+                    logger.log(FINE,
                             "JACC: permission(" + role + ") type: " + ptype + " name: " + p.getName() + " actions: " + p.getActions());
                 }
 
             }
         }
 
-        if (logger.isLoggable(Level.FINE)) {
+        if (logger.isLoggable(FINE)) {
             logger.exiting("WebPermissionUtil", "processConstraints");
         }
 
     }
 
-    public static void createWebRoleRefPermission(WebBundleDescriptor wbd, PolicyConfiguration pc)
-            throws jakarta.security.jacc.PolicyContextException {
-        if (logger.isLoggable(Level.FINE)) {
+    public static void createWebRoleRefPermission(WebBundleDescriptor wbd, PolicyConfiguration pc) throws PolicyContextException {
+        if (logger.isLoggable(FINE)) {
             logger.entering("WebPermissionUtil", "createWebRoleRefPermission");
-            logger.log(Level.FINE, "JACC: role-reference translation: Processing WebRoleRefPermission : CODEBASE = " + pc.getContextID());
+            logger.log(FINE, "JACC: role-reference translation: Processing WebRoleRefPermission : CODEBASE = " + pc.getContextID());
         }
         List role = new ArrayList();
         Set roleset = wbd.getRoles();
@@ -582,8 +581,8 @@ public class WebPermissionUtil {
                     WebRoleRefPermission wrrp = new WebRoleRefPermission(name, action);
                     role.add(new Role(action));
                     pc.addToRole(srr.getSecurityRoleLink().getName(), wrrp);
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE,
+                    if (logger.isLoggable(FINE)) {
+                        logger.log(FINE,
                                 "JACC: role-reference translation: RoleRefPermission created with name(servlet-name)  = " + name
                                         + " and action(Role-name tag) = " + action + " added to role(role-link tag) = "
                                         + srr.getSecurityRoleLink().getName());
@@ -591,23 +590,23 @@ public class WebPermissionUtil {
 
                 }
             }
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE,
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE,
                         "JACC: role-reference translation: Going through the list of roles not present in RoleRef elements and creating WebRoleRefPermissions ");
             }
             for (Object element : roleset) {
                 Role r = (Role) element;
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "JACC: role-reference translation: Looking at Role =  " + r.getName());
+                if (logger.isLoggable(FINE)) {
+                    logger.log(FINE, "JACC: role-reference translation: Looking at Role =  " + r.getName());
                 }
                 if (!role.contains(r)) {
                     String action = r.getName();
                     WebRoleRefPermission wrrp = new WebRoleRefPermission(name, action);
                     pc.addToRole(action, wrrp);
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE,
+                    if (logger.isLoggable(FINE)) {
+                        logger.log(FINE,
                                 "JACC: role-reference translation: RoleRef  = " + action + " is added for servlet-resource = " + name);
-                        logger.log(Level.FINE, "JACC: role-reference translation: Permission added for above role-ref =" + wrrp.getName()
+                        logger.log(FINE, "JACC: role-reference translation: Permission added for above role-ref =" + wrrp.getName()
                                 + " " + wrrp.getActions());
                     }
                 }
@@ -615,11 +614,11 @@ public class WebPermissionUtil {
             /**
              * JACC MR8 add WebRoleRefPermission for the any authenticated user role '**'
              */
-            if ((!role.contains(anyAuthUserRole)) && !rolesetContainsAnyAuthUserRole) {
+            if (!role.contains(anyAuthUserRole) && !rolesetContainsAnyAuthUserRole) {
                 addAnyAuthenticatedUserRoleRef(pc, name);
             }
         }
-        if (logger.isLoggable(Level.FINE)) {
+        if (logger.isLoggable(FINE)) {
             logger.exiting("WebPermissionUtil", "createWebRoleRefPermission");
         }
 
@@ -632,16 +631,16 @@ public class WebPermissionUtil {
          */
         for (Object element : roleset) {
             Role r = (Role) element;
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "JACC: role-reference translation: Looking at Role =  " + r.getName());
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, "JACC: role-reference translation: Looking at Role =  " + r.getName());
             }
             String action = r.getName();
             WebRoleRefPermission wrrp = new WebRoleRefPermission("", action);
             pc.addToRole(action, wrrp);
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE,
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE,
                         "JACC: role-reference translation: RoleRef  = " + action + " is added for jsp's that can't be mapped to servlets");
-                logger.log(Level.FINE, "JACC: role-reference translation: Permission added for above role-ref =" + wrrp.getName() + " "
+                logger.log(FINE, "JACC: role-reference translation: Permission added for above role-ref =" + wrrp.getName() + " "
                         + wrrp.getActions());
             }
         }
@@ -662,8 +661,8 @@ public class WebPermissionUtil {
         String action = "**";
         WebRoleRefPermission wrrp = new WebRoleRefPermission(name, action);
         pc.addToRole(action, wrrp);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "JACC: any authenticated user role-reference translation: Permission added for role-ref ="
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "JACC: any authenticated user role-reference translation: Permission added for role-ref ="
                     + wrrp.getName() + " " + wrrp.getActions());
         }
     }
@@ -753,7 +752,7 @@ class ConstraintValue {
     }
 
     boolean isTransportConstrained() {
-        if (excluded || (connectSet != 0 && !bitIsSet(connectSet, connectTypeNone))) {
+        if (excluded || connectSet != 0 && !bitIsSet(connectSet, connectTypeNone)) {
             return true;
         }
         return false;
@@ -799,8 +798,8 @@ class ConstraintValue {
         }
         addConnectType(udc == null ? null : udc.getTransportGuarantee());
 
-        if (WebPermissionUtil.logger.isLoggable(Level.FINE)) {
-            WebPermissionUtil.logger.log(Level.FINE, "JACC: setOutcome yields: " + toString());
+        if (WebPermissionUtil.logger.isLoggable(FINE)) {
+            WebPermissionUtil.logger.log(FINE, "JACC: setOutcome yields: " + toString());
         }
 
     }
@@ -838,7 +837,7 @@ class ConstraintValue {
      * allow access without authentication.
      */
     boolean isUncovered() {
-        return (!excluded && !ignoreRoleList && roleList.isEmpty() && connectSet == 0);
+        return !excluded && !ignoreRoleList && roleList.isEmpty() && connectSet == 0;
     }
 }
 
@@ -890,7 +889,7 @@ class MethodValue extends ConstraintValue {
             actions.append(getMethodName(i));
         }
 
-        return (actions == null ? null : actions.toString());
+        return actions == null ? null : actions.toString();
     }
 
     static String[] getMethodArray(BitSet methodSet) {
@@ -970,8 +969,8 @@ class MapValue {
                 methodValue = new MethodValue(methodName, otherConstraint);
                 methodValues.put(methodName, methodValue);
 
-                if (WebPermissionUtil.logger.isLoggable(Level.FINE)) {
-                    WebPermissionUtil.logger.log(Level.FINE, "JACC: created MethodValue: " + methodValue);
+                if (WebPermissionUtil.logger.isLoggable(FINE)) {
+                    WebPermissionUtil.logger.log(FINE, "JACC: created MethodValue: " + methodValue);
                 }
             }
             return methodValue;

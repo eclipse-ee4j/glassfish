@@ -66,7 +66,7 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
         protected final boolean validate(Password passwd, DigestAlgorithmParameter[] params) throws NoSuchAlgorithmException {
 
             for (DigestAlgorithmParameter dap : params) {
-                if (A1.equals(dap.getName()) && (dap instanceof Key)) {
+                if (A1.equals(dap.getName()) && dap instanceof Key) {
                     key = dap;
                 } else if (RESPONSE.equals(dap.getName())) {
                     clientResponse = dap;

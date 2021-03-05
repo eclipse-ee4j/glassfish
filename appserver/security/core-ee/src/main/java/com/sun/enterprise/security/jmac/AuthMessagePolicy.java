@@ -100,8 +100,8 @@ public class AuthMessagePolicy {
     public static MessagePolicy getMessagePolicy(String authSource, String authRecipient) {
         boolean sourceSender = SENDER.equals(authSource);
         boolean sourceContent = CONTENT.equals(authSource);
-        boolean recipientAuth = (authRecipient != null);
-        boolean mandatory = (sourceSender || sourceContent) || recipientAuth;
+        boolean recipientAuth = authRecipient != null;
+        boolean mandatory = sourceSender || sourceContent || recipientAuth;
         return getMessagePolicy(authSource, authRecipient, mandatory);
     }
 
@@ -109,7 +109,7 @@ public class AuthMessagePolicy {
 
         boolean sourceSender = SENDER.equals(authSource);
         boolean sourceContent = CONTENT.equals(authSource);
-        boolean recipientAuth = (authRecipient != null);
+        boolean recipientAuth = authRecipient != null;
         boolean beforeContent = BEFORE_CONTENT.equals(authRecipient);
 
         List<TargetPolicy> targetPolicies = new ArrayList<>();
@@ -214,7 +214,7 @@ public class AuthMessagePolicy {
                             // XXX don't know how to get JavaMethod from operation
                             MessageDescriptor msgDesc = (MessageDescriptor) msgDescs.get(j);
                             String opName = msgDesc.getOperationName();
-                            if ((opName == null && matchMsd == null)) {
+                            if (opName == null && matchMsd == null) {
                                 matchMsd = msd;
                             } else if (opName != null && opName.equals(operation)) {
                                 matchMsd = msd;
@@ -258,7 +258,7 @@ public class AuthMessagePolicy {
             // we cannot determine the opcode of a request at runtime.
 
             for (int j = 0; j < msgSecDescs.size(); j++) {
-                if (j != i && !policiesAreEqual(msd, ((MessageSecurityDescriptor) msgSecDescs.get(j)))) {
+                if (j != i && !policiesAreEqual(msd, (MessageSecurityDescriptor) msgSecDescs.get(j))) {
                     onePolicy = false;
                 }
             }
@@ -314,8 +314,8 @@ public class AuthMessagePolicy {
     }
 
     private static boolean policiesAreEqual(MessageSecurityDescriptor reference, MessageSecurityDescriptor other) {
-        return (protectionDescriptorsAreEqual(reference.getRequestProtectionDescriptor(), other.getRequestProtectionDescriptor())
-                && protectionDescriptorsAreEqual(reference.getResponseProtectionDescriptor(), other.getResponseProtectionDescriptor()));
+        return protectionDescriptorsAreEqual(reference.getRequestProtectionDescriptor(), other.getRequestProtectionDescriptor())
+                && protectionDescriptorsAreEqual(reference.getResponseProtectionDescriptor(), other.getResponseProtectionDescriptor());
     }
 
     private static boolean protectionDescriptorsAreEqual(ProtectionDescriptor pd1, ProtectionDescriptor pd2) {
@@ -325,9 +325,9 @@ public class AuthMessagePolicy {
         String authSource2 = pd2.getAttributeValue(ProtectionDescriptor.AUTH_SOURCE);
         String authRecipient2 = pd2.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT);
 
-        boolean sameAuthSource = (authSource1 == null && authSource2 == null) || (authSource1 != null && authSource1.equals(authSource2));
-        boolean sameAuthRecipient = (authRecipient1 == null && authRecipient2 == null)
-                || (authRecipient1 != null && authRecipient1.equals(authRecipient2));
+        boolean sameAuthSource = authSource1 == null && authSource2 == null || authSource1 != null && authSource1.equals(authSource2);
+        boolean sameAuthRecipient = authRecipient1 == null && authRecipient2 == null
+                || authRecipient1 != null && authRecipient1.equals(authRecipient2);
 
         return sameAuthSource && sameAuthRecipient;
     }

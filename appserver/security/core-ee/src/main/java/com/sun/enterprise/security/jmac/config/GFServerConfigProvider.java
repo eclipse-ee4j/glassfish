@@ -116,7 +116,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
             boolean hasSlaveFactory = false;
             try {
                 rwLock.readLock().lock();
-                hasSlaveFactory = (slaveFactory != null);
+                hasSlaveFactory = slaveFactory != null;
             } finally {
                 rwLock.readLock().unlock();
             }
@@ -136,7 +136,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
         boolean hasSlaveProvider = false;
         try {
             rwLock.readLock().lock();
-            hasSlaveProvider = (slaveProvider != null);
+            hasSlaveProvider = slaveProvider != null;
         } finally {
             rwLock.readLock().unlock();
         }
@@ -205,9 +205,9 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
                     com.sun.enterprise.security.jauth.ServerAuthModule sam0 = (com.sun.enterprise.security.jauth.ServerAuthModule) newModule;
 
-                    AuthPolicy requestPolicy = (entry.getRequestPolicy() != null) ? new AuthPolicy(entry.getRequestPolicy()) : null;
+                    AuthPolicy requestPolicy = entry.getRequestPolicy() != null ? new AuthPolicy(entry.getRequestPolicy()) : null;
 
-                    AuthPolicy responsePolicy = (entry.getResponsePolicy() != null) ? new AuthPolicy(entry.getResponsePolicy()) : null;
+                    AuthPolicy responsePolicy = entry.getResponsePolicy() != null ? new AuthPolicy(entry.getResponsePolicy()) : null;
 
                     sam0.initialize(requestPolicy, responsePolicy, handler, map);
                 }
@@ -339,9 +339,9 @@ public class GFServerConfigProvider implements AuthConfigProvider {
         }
 
         // check whether a policy is set
-        MessagePolicy reqP = (requestPolicy != null || responsePolicy != null) ? requestPolicy : idEntry.requestPolicy; // default;
+        MessagePolicy reqP = requestPolicy != null || responsePolicy != null ? requestPolicy : idEntry.requestPolicy; // default;
 
-        MessagePolicy respP = (requestPolicy != null || responsePolicy != null) ? responsePolicy : idEntry.responsePolicy; // default;
+        MessagePolicy respP = requestPolicy != null || responsePolicy != null ? responsePolicy : idEntry.responsePolicy; // default;
 
         // optimization: if policy was not set, return null
         if (reqP == null && respP == null) {
@@ -642,8 +642,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
         boolean hasSlaveProvider = false;
         rwLock.readLock().lock();
         try {
-            hasSlaveFactory = (slaveFactory != null);
-            hasSlaveProvider = (slaveProvider != null);
+            hasSlaveFactory = slaveFactory != null;
+            hasSlaveProvider = slaveProvider != null;
         } finally {
             rwLock.readLock().unlock();
         }
@@ -694,7 +694,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
                     }
                 }
             }
-            epoch = (next == 0 ? 1 : next);
+            epoch = next == 0 ? 1 : next;
             parser = nextParser;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -864,7 +864,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
             Entry entry = getEntry(layer, providerID, requestPolicy, responsePolicy, type);
 
-            return (entry != null) ? createModuleInfo(entry, handler, type, properties) : null;
+            return entry != null ? createModuleInfo(entry, handler, type, properties) : null;
         }
 
         // lazy initialize this as SunWebApp is not available in

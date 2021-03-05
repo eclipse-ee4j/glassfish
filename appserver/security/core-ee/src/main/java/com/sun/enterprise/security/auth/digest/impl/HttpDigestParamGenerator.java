@@ -110,7 +110,7 @@ public final class HttpDigestParamGenerator extends DigestParameterGenerator {
             }
         }
 
-        if ((userName == null) || (realmName == null) || (nOnce == null) || (uri == null) || (response == null)) {
+        if (userName == null || realmName == null || nOnce == null || uri == null || response == null) {
             return null;
         }
         if (qop == null) {
@@ -208,8 +208,7 @@ public final class HttpDigestParamGenerator extends DigestParameterGenerator {
         }
         if (quotedString.length() > 2) {
             return quotedString.substring(1, quotedString.length() - 1);
-        } else {
-            return "";
         }
+        return "";
     }
 }

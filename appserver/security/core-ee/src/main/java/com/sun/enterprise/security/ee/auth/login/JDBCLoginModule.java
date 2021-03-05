@@ -45,7 +45,7 @@ public class JDBCLoginModule extends PasswordLoginModule {
         final JDBCRealm jdbcRealm = (JDBCRealm) _currentRealm;
 
         // A JDBC user must have a name not null and non-empty.
-        if ((_username == null) || (_username.length() == 0)) {
+        if (_username == null || _username.length() == 0) {
             String msg = sm.getString("jdbclm.nulluser");
             throw new LoginException(msg);
         }

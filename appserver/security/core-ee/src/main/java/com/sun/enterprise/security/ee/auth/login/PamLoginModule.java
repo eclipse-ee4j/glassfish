@@ -40,7 +40,7 @@ public class PamLoginModule extends AppservPasswordLoginModule {
     protected void authenticateUser() throws LoginException {
 
         // A Unix user must have a name not null so check here.
-        if ((_username == null) || (_username.length() == 0)) {
+        if (_username == null || _username.length() == 0) {
             throw new LoginException("Invalid Username");
         }
         UnixUser user = authenticate(_username, _password);

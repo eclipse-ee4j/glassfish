@@ -59,7 +59,7 @@ public class HttpServletHelper extends ConfigHelper {
             map.put(HttpServletConstants.POLICY_CONTEXT, policyContextId);
 
             SunWebApp sunWebApp = webBundle.getSunDescriptor();
-            String pid = (sunWebApp != null ? sunWebApp.getAttributeValue(SunWebApp.HTTPSERVLET_SECURITY_PROVIDER) : null);
+            String pid = sunWebApp != null ? sunWebApp.getAttributeValue(SunWebApp.HTTPSERVLET_SECURITY_PROVIDER) : null;
             boolean nullConfigProvider = false;
 
             if (isSystemApp && (pid == null || pid.length() == 0)) {
@@ -69,8 +69,8 @@ public class HttpServletHelper extends ConfigHelper {
                 }
             }
 
-            if (((pid != null && pid.length() > 0) || nullConfigProvider) && (!hasExactMatchAuthProvider())) {
-                AuthConfigProvider configProvider = ((nullConfigProvider) ? null : new GFServerConfigProvider(new HashMap(), null));
+            if ((pid != null && pid.length() > 0 || nullConfigProvider) && !hasExactMatchAuthProvider()) {
+                AuthConfigProvider configProvider = nullConfigProvider ? null : new GFServerConfigProvider(new HashMap(), null);
                 String jmacProviderRegisID = factory.registerConfigProvider(configProvider, GFServerConfigProvider.HTTPSERVLET, appContext,
                         "GlassFish provider: " + GFServerConfigProvider.HTTPSERVLET + ":" + appContext);
                 this.setJmacProviderRegisID(jmacProviderRegisID);

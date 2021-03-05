@@ -35,7 +35,7 @@ public class EJBResource extends Resource {
             return true;
         }
 
-        if ((obj == null) || (obj.getClass() != getClass())) {
+        if (obj == null || obj.getClass() != getClass()) {
             return false;
         }
 

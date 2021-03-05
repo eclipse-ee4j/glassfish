@@ -132,7 +132,7 @@ public class ProgrammaticLogin {
                 @Override
                 public java.lang.Boolean run() {
                     // if realm is null, LCD will log into the default realm
-                    if (((SecurityServicesUtil.getInstance() != null) && SecurityServicesUtil.getInstance().isServer())
+                    if (SecurityServicesUtil.getInstance() != null && SecurityServicesUtil.getInstance().isServer()
                             || Util.isEmbeddedServer()) {
                         LoginContextDriver.login(user, password, realm);
                     } else {

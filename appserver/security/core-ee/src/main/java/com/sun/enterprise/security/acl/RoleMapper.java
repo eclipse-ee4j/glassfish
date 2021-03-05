@@ -106,7 +106,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         if (defaultRole == null) {
             defaultRoleName = DEFAULT_ROLE_NAME;
             try {
-                assert (secService != null);
+                assert secService != null;
                 defaultRoleName = secService.getAnonymousRole();
             } catch (Exception e) {
                 _logger.log(Level.WARNING, "java_security.anonymous_role_reading_exception", e);
@@ -142,7 +142,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     private void addRoleToPrincipal(final Principal principal, String role) {
         assert roleToSubject != null;
         Subject subject = roleToSubject.get(role);
-        final Subject sub = (subject == null) ? new Subject() : subject;
+        final Subject sub = subject == null ? new Subject() : subject;
         AppservAccessController.doPrivileged(new PrivilegedAction<>() {
 
             @Override
@@ -195,7 +195,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     // @return true or false depending on activation of
     // the mapping via domain.xml.
     boolean isDefaultRTSMActivated() {
-        return (defaultP2RMappingClassName != null);
+        return defaultP2RMappingClassName != null;
     }
 
     /**
@@ -418,10 +418,9 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         }
         if (rdd.getModuleDescriptor() != null) {
             return rdd.getModuleDescriptor().getArchiveUri();
-        } else {
-            // cannot happen unless glassfish code is changed
-            throw new AssertionError(rdd.getClass() + " is not a known descriptor type");
         }
+        // cannot happen unless glassfish code is changed
+        throw new AssertionError(rdd.getClass() + " is not a known descriptor type");
 
     }
 
@@ -507,8 +506,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         int actualNum = 0;
         Set<Principal> pSet = roleToPrincipal.get(r.getName());
         Set<Group> gSet = roleToGroup.get(r.getName());
-        actualNum += (pSet == null) ? 0 : pSet.size();
-        actualNum += (gSet == null) ? 0 : gSet.size();
+        actualNum += pSet == null ? 0 : pSet.size();
+        actualNum += gSet == null ? 0 : gSet.size();
         if (targetNumPrin != actualNum) {
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Module " + currentMapping.owner + " has different number of mappings for role " + r.getName()
@@ -620,7 +619,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         public Subject get(Object key) {
             synchronized (roleMap) {
                 Subject s = roleMap.get(key);
-                if ((s == null) && (key instanceof String) && (!"**".equals(key))) {
+                if (s == null && key instanceof String && !"**".equals(key)) {
                     final Subject fs = new Subject();
                     final String roleName = (String) key;
                     AppservAccessController.doPrivileged(new PrivilegedAction<>() {

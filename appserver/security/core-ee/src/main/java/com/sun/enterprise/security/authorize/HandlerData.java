@@ -60,7 +60,8 @@ public class HandlerData {
         }
         if (PolicyContextHandlerImpl.SUBJECT.equalsIgnoreCase(key)) {
             return SecurityContext.getCurrent().getSubject();
-        } else if (PolicyContextHandlerImpl.REUSE.equalsIgnoreCase(key)) {
+        }
+        if (PolicyContextHandlerImpl.REUSE.equalsIgnoreCase(key)) {
             PermissionCacheFactory.resetCaches();
             return Integer.valueOf(0);
         }
@@ -70,12 +71,13 @@ public class HandlerData {
         }
 
         if (PolicyContextHandlerImpl.SOAP_MESSAGE.equalsIgnoreCase(key)) {
-            return (ejbDelegate != null) ? ejbDelegate.getSOAPMessage(inv) : null;
+            return ejbDelegate != null ? ejbDelegate.getSOAPMessage(inv) : null;
         }
         if (PolicyContextHandlerImpl.ENTERPRISE_BEAN.equalsIgnoreCase(key)) {
-            return (ejbDelegate != null) ? ejbDelegate.getEnterpriseBean(inv) : null;
-        } else if (PolicyContextHandlerImpl.EJB_ARGUMENTS.equalsIgnoreCase(key)) {
-            return (ejbDelegate != null) ? ejbDelegate.getEJbArguments(inv) : null;
+            return ejbDelegate != null ? ejbDelegate.getEnterpriseBean(inv) : null;
+        }
+        if (PolicyContextHandlerImpl.EJB_ARGUMENTS.equalsIgnoreCase(key)) {
+            return ejbDelegate != null ? ejbDelegate.getEJbArguments(inv) : null;
         }
         return null;
     }

@@ -358,7 +358,7 @@ public class WebSecurityManager {
         if (prdm == null) {
 
             Principal[] principals = null;
-            principals = (principalSet == null ? null : (Principal[]) principalSet.toArray(new Principal[0]));
+            principals = principalSet == null ? null : (Principal[]) principalSet.toArray(new Principal[0]);
 
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "[Web-Security] Generating a protection domain for Permission check.");
@@ -571,10 +571,10 @@ public class WebSecurityManager {
 
     private void recordWebInvocation(final HttpServletRequest httpsr, final String type, final boolean isGranted) {
         AuditManager auditManager = SecurityServicesUtil.getInstance().getAuditManager();
-        if (auditManager != null && auditManager.isAuditOn() && (auditManager instanceof AppServerAuditManager)) {
+        if (auditManager != null && auditManager.isAuditOn() && auditManager instanceof AppServerAuditManager) {
             final AppServerAuditManager appServerAuditManager = (AppServerAuditManager) auditManager;
             Principal prin = httpsr.getUserPrincipal();
-            String user = (prin != null) ? prin.getName() : null;
+            String user = prin != null ? prin.getName() : null;
             appServerAuditManager.webInvocation(user, httpsr, type, isGranted);
         }
     }
@@ -655,7 +655,7 @@ public class WebSecurityManager {
                 }
             }
         }
-        return ((result != null) ? result.toString() : null);
+        return result != null ? result.toString() : null;
     }
 
     /*

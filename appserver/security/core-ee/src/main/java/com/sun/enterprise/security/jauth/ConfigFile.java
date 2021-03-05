@@ -139,7 +139,7 @@ class ConfigFile extends AuthConfig {
             } catch (IOException ioe) {
                 throw new AuthException(ioe.toString());
             }
-            this.epoch = (next == 0 ? 1 : next);
+            this.epoch = next == 0 ? 1 : next;
             parser = nextParser;
         }
     }
@@ -558,7 +558,7 @@ class ConfigFile extends AuthConfig {
 
             for (int i = 0; rValues != null && i < rValues.length; i++) {
                 if (rValues[i] != null) {
-                    boolean thisValue = ((Boolean) rValues[i]);
+                    boolean thisValue = (Boolean) rValues[i];
                     rvalue = rvalue | thisValue;
                 }
             }

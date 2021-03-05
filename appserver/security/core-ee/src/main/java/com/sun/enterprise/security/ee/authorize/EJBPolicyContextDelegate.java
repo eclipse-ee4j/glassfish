@@ -48,7 +48,7 @@ public class EJBPolicyContextDelegate implements PolicyContextDelegate {
             if (eInv.isAWebService()) {
                 return null;
             }
-            return (eInv.getMethodParams() != null) ? eInv.getMethodParams() : new Object[0];
+            return eInv.getMethodParams() != null ? eInv.getMethodParams() : new Object[0];
         }
         return null;
     }

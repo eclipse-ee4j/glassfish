@@ -20,52 +20,48 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
- * AuthConfigImpl relies on a ConfigParser to read
- * the module configuration.
+ * AuthConfigImpl relies on a ConfigParser to read the module configuration.
  *
- * <p> The ConfigParser is expected to parse that information
- * into the HashMap described below.
+ * <p>
+ * The ConfigParser is expected to parse that information into the HashMap described below.
  *
  * @version %I%, %G%
  */
 public interface ConfigParser {
 
     /**
-     * Initialize the parser.
-     * Passing null as argument means the parser is to find 
-     * configuration object as necessary.
+     * Initialize the parser. Passing null as argument means the parser is to find configuration object as necessary.
      */
     public void initialize(Object config) throws IOException;
-    
+
     /**
-     * Get the module configuration information.
-     * The information is returned as a HashMap.
+     * Get the module configuration information. The information is returned as a HashMap.
      *
-     * <p> The key is an intercept:
+     * <p>
+     * The key is an intercept:
      * <ul>
      * <li>SOAP
      * <li>HttpServlet
      * </ul>
      *
-     * <p>The value is a AuthConfigImpl.InterceptEntry, which contains:
+     * <p>
+     * The value is a AuthConfigImpl.InterceptEntry, which contains:
      * <ul>
-     * <li> default provider ID
-     * <li> default type (client or server)
-     * <li> HashMap, where
-     *		key	= provider ID
-     *		value	= BaseAuthConfigImpl.IDEntry
+     * <li>default provider ID
+     * <li>default type (client or server)
+     * <li>HashMap, where key = provider ID value = BaseAuthConfigImpl.IDEntry
      * </ul>
      *
-     * <p> An IDEntry contains:
+     * <p>
+     * An IDEntry contains:
      * <ul>
-     * <li> type (client or server)
-     * <li> moduleClassName
-     * <li> default requestPolicy
-     * <li> default responsePolicy
-     * <li> options
-     * <li> 
+     * <li>type (client or server)
+     * <li>moduleClassName
+     * <li>default requestPolicy
+     * <li>default responsePolicy
+     * <li>options
+     * <li>
      * </ul>
      */
     public Map getConfigMap();

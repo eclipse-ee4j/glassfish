@@ -22,26 +22,27 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-
 import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
 
 /**
  *
- * @author  Jerome Dochez
+ * @author Jerome Dochez
  */
 @Service
 @Singleton
 public class RoleMapperFactory implements SecurityRoleMapperFactory {
-    private  Map CONTEXT_TO_APPNAME = new HashMap();
-    private  Hashtable ROLEMAPPER = new Hashtable();
-    
+    private Map CONTEXT_TO_APPNAME = new HashMap();
+    private Hashtable ROLEMAPPER = new Hashtable();
+
     /** Creates a new instance of RoleMapperFactory */
     public RoleMapperFactory() {
     }
-    
-    /** Returns a RoleMapper corresponding to the AppName.
-     * @param  The Application Name of this RoleMapper.
+
+    /**
+     * Returns a RoleMapper corresponding to the AppName.
+     * 
+     * @param The Application Name of this RoleMapper.
      *
      */
     public SecurityRoleMapper getRoleMapper(String appName) {
@@ -50,44 +51,47 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
         String contextId = appName;
         String appname = getAppNameForContext(appName);
         SecurityRoleMapper srm = null;
-        if(appname != null)
+        if (appname != null)
             srm = getRoleMapper(appname, this);
-        if(srm == null){
+        if (srm == null) {
             srm = getRoleMapper(contextId, this);
         }
         return srm;
     }
-     
+
     /**
      * remove the RoleMapping associated with this application
+     * 
      * @param the application name for this RoleMapper
-     
-    public void removeRoleMapper(String appName) {
-        RoleMapper.removeRoleMapper(appName);
-    }*/
-    
+     * 
+     *            public void removeRoleMapper(String appName) { RoleMapper.removeRoleMapper(appName); }
+     */
+
     /**
      * Sets a new RoleMapper for a particular Application
+     * 
      * @param the application name
      * @param the new role mapper
-     
-    public void setRoleMapper(String appName, SecurityRoleMapper rmap) {
-        RoleMapper.setRoleMapper(appName, rmap);
-    }*/
-    
+     * 
+     *            public void setRoleMapper(String appName, SecurityRoleMapper rmap) { RoleMapper.setRoleMapper(appName,
+     *            rmap); }
+     */
+
     public String getAppNameForContext(String contextId) {
-        return (String)CONTEXT_TO_APPNAME.get(contextId);
+        return (String) CONTEXT_TO_APPNAME.get(contextId);
     }
-    
+
     public void setAppNameForContext(String appName, String contextId) {
-        CONTEXT_TO_APPNAME.put(contextId, appName); 
+        CONTEXT_TO_APPNAME.put(contextId, appName);
     }
-    
+
     public void removeAppNameForContext(String contextId) {
         CONTEXT_TO_APPNAME.remove(contextId);
     }
-    
-     /** Returns a RoleMapper corresponding to the AppName.
+
+    /**
+     * Returns a RoleMapper corresponding to the AppName.
+     * 
      * @param appName Application Name of this RoleMapper.
      * @return SecurityRoleMapper for the application
      */
@@ -99,13 +103,15 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
         }
         return r;
     }
-    
-    /** Set a RoleMapper for the application
+
+    /**
+     * Set a RoleMapper for the application
+     * 
      * @param appName Application or module name
-     * @param rmap <I>SecurityRoleMapper</I> for the application or the module
+     * @param rmap    <I>SecurityRoleMapper</I> for the application or the module
      */
-    public  void setRoleMapper(String appName, SecurityRoleMapper rmap) {
-            ROLEMAPPER.put(appName, rmap);
+    public void setRoleMapper(String appName, SecurityRoleMapper rmap) {
+        ROLEMAPPER.put(appName, rmap);
     }
 
     /**
@@ -113,7 +119,7 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
      */
     public void removeRoleMapper(String appName) {
         if (ROLEMAPPER.containsKey(appName)) {
-                ROLEMAPPER.remove(appName);
+            ROLEMAPPER.remove(appName);
         }
     }
 }

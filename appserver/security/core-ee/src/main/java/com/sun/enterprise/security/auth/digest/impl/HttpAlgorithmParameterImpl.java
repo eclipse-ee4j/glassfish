@@ -30,16 +30,18 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * represents HttpServlet request parameter
+ * 
  * @author K.Venugopal@sun.com
  */
 public class HttpAlgorithmParameterImpl implements AlgorithmParameterSpec {
 
     private HttpServletRequest req = null;
+
     public HttpAlgorithmParameterImpl(HttpServletRequest req) {
         this.req = req;
     }
 
-    public HttpServletRequest getValue(){
+    public HttpServletRequest getValue() {
         return req;
-    } 
+    }
 }

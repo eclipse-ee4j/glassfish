@@ -33,27 +33,24 @@ import org.apache.catalina.Context;
 import org.apache.catalina.HttpResponse;
 import org.apache.catalina.Request;
 
+class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResponse {
 
-class HttpResponseWrapper extends HttpServletResponseWrapper 
-        implements HttpResponse {
-        
-    private HttpResponse httpResponse;         
+    private HttpResponse httpResponse;
 
-    HttpResponseWrapper(HttpResponse response,
-            HttpServletResponse servletResponse) {
+    HttpResponseWrapper(HttpResponse response, HttpServletResponse servletResponse) {
         super(servletResponse);
         httpResponse = response;
     }
-    
+
     // ----- HttpResponse Methods -----
     public String getHeader(String name) {
         return httpResponse.getHeader(name);
     }
-    
+
     public Collection<String> getHeaderNames() {
         return httpResponse.getHeaderNames();
     }
-    
+
     public Collection<String> getHeaders(String name) {
         return httpResponse.getHeaders(name);
     }
@@ -61,7 +58,7 @@ class HttpResponseWrapper extends HttpServletResponseWrapper
     public void addSessionCookieInternal(final Cookie cookie) {
         httpResponse.addSessionCookieInternal(cookie);
     }
-    
+
     public String getMessage() {
         return httpResponse.getMessage();
     }
@@ -69,24 +66,24 @@ class HttpResponseWrapper extends HttpServletResponseWrapper
     public int getStatus() {
         return httpResponse.getStatus();
     }
-    
+
     public void reset(int status, String message) {
         httpResponse.reset(status, message);
     }
-    
+
     // ----- Response Methods -----
     public Connector getConnector() {
         return httpResponse.getConnector();
     }
-    
+
     public void setConnector(Connector connector) {
         httpResponse.setConnector(connector);
     }
-    
+
     public int getContentCount() {
         return httpResponse.getContentCount();
     }
-    
+
     public Context getContext() {
         return httpResponse.getContext();
     }
@@ -106,7 +103,7 @@ class HttpResponseWrapper extends HttpServletResponseWrapper
     public boolean getIncluded() {
         return httpResponse.getIncluded();
     }
-    
+
     public void setIncluded(boolean included) {
         httpResponse.setIncluded(included);
     }
@@ -126,7 +123,7 @@ class HttpResponseWrapper extends HttpServletResponseWrapper
     public ServletResponse getResponse() {
         return super.getResponse();
     }
-    
+
     public OutputStream getStream() {
         return httpResponse.getStream();
     }
@@ -158,7 +155,7 @@ class HttpResponseWrapper extends HttpServletResponseWrapper
     public String getDetailMessage() {
         return httpResponse.getDetailMessage();
     }
-    
+
     public ServletOutputStream createOutputStream() throws IOException {
         return httpResponse.createOutputStream();
     }
@@ -166,16 +163,14 @@ class HttpResponseWrapper extends HttpServletResponseWrapper
     public void finishResponse() throws IOException {
         httpResponse.finishResponse();
     }
-    
+
     public int getContentLength() {
         return httpResponse.getContentLength();
     }
-    
-    /* Delegate to HttpServletResponse
-      public String getContentType() {
-      return httpResponse.getContentType();
-      }
-      */
+
+    /*
+     * Delegate to HttpServletResponse public String getContentType() { return httpResponse.getContentType(); }
+     */
 
     public PrintWriter getReporter() throws IOException {
         return httpResponse.getReporter();
@@ -185,16 +180,14 @@ class HttpResponseWrapper extends HttpServletResponseWrapper
         httpResponse.recycle();
     }
 
-    /* Delegate to HttpServletResponse
-       public void resetBuffer() {
-       httpResponse.resetBuffer();
-       }
-       */
-    
+    /*
+     * Delegate to HttpServletResponse public void resetBuffer() { httpResponse.resetBuffer(); }
+     */
+
     public void resetBuffer(boolean resetWriterStreamFlags) {
         httpResponse.resetBuffer(resetWriterStreamFlags);
     }
-    
+
     public void sendAcknowledgement() throws IOException {
         httpResponse.sendAcknowledgement();
     }

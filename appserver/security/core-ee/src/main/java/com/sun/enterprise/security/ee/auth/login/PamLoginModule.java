@@ -26,8 +26,9 @@ import org.jvnet.libpam.PAMException;
 import org.jvnet.libpam.UnixUser;
 
 /**
- * This is the main LoginModule for PAM realm that invokes the calls to libpam4j
- * classes to authenticate the given username and password
+ * This is the main LoginModule for PAM realm that invokes the calls to libpam4j classes to authenticate the given
+ * username and password
+ * 
  * @author Nithya Subramanian
  */
 public class PamLoginModule extends AppservPasswordLoginModule {
@@ -40,60 +41,54 @@ public class PamLoginModule extends AppservPasswordLoginModule {
         }
         UnixUser user = authenticate(_username, _password);
 
-        if (user == null) {  // JAAS behavior
+        if (user == null) { // JAAS behavior
             throw new LoginException("Failed Pam Login for " + _username);
         }
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "PAM login succeeded for: " + _username);
         }
-        
+
         /*
-         * Get the groups from the libpam4j UnixUser class that has been 
-         * returned after a successful authentication.
+         * Get the groups from the libpam4j UnixUser class that has been returned after a successful authentication.
          */
 
         String[] grpList = null;
         Set<String> groupSet = user.getGroups();
-        
+
         if (groupSet != null) {
             grpList = new String[groupSet.size()];
             user.getGroups().toArray(grpList);
-        }
-        else {
-            //Empty group list, create a zero-length group list
-             grpList = new String[0];
+        } else {
+            // Empty group list, create a zero-length group list
+            grpList = new String[0];
         }
         commitUserAuthentication(grpList);
     }
 
     /**
-     * Invokes the  authentication call.This class uses the default PAM service
-     * - sshd
+     * Invokes the authentication call.This class uses the default PAM service - sshd
+     * 
      * @param username OS User to authenticate.
      * @param password Given password.
-     * @returns null if authentication failed,
-     * returns the UnixUser object if authentication succeeded.
+     * @returns null if authentication failed, returns the UnixUser object if authentication succeeded.
      *
      */
     private UnixUser authenticate(String username, String password) throws LoginException {
         UnixUser user = null;
         String pamService = null;
 
-        if(_currentRealm instanceof PamRealm) {
-            pamService = ((PamRealm)_currentRealm).getPamService();
-        }
-        else {
+        if (_currentRealm instanceof PamRealm) {
+            pamService = ((PamRealm) _currentRealm).getPamService();
+        } else {
             throw new LoginException("pamrealm.invalid_realm");
         }
-       
+
         try {
             user = new PAM(pamService).authenticate(username, password);
 
         } catch (PAMException e) {
-              _logger.log(Level.SEVERE, "pam_exception_authenticate", e);
+            _logger.log(Level.SEVERE, "pam_exception_authenticate", e);
         }
         return user;
     }
 }
-
-

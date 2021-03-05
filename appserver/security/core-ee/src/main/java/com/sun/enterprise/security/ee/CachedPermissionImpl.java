@@ -19,7 +19,8 @@ package com.sun.enterprise.security.ee;
 import java.security.Permission;
 
 /**
- * This class is 
+ * This class is
+ * 
  * @author Ron Monzillo
  */
 
@@ -30,42 +31,39 @@ public class CachedPermissionImpl extends Object implements CachedPermission {
     Epoch epoch;
 
     public CachedPermissionImpl(PermissionCache c, Permission p) {
-	this.permissionCache = c;
-	this.permission = p;
-	epoch = new Epoch();
+        this.permissionCache = c;
+        this.permission = p;
+        epoch = new Epoch();
     }
 
     public Permission getPermission() {
-	return this.permission;
+        return this.permission;
     }
 
     public PermissionCache getPermissionCache() {
-	return this.permissionCache;
+        return this.permissionCache;
     }
 
-    //synchronization done in PermissionCache
+    // synchronization done in PermissionCache
     public boolean checkPermission() {
-	boolean granted = false;
-	if (permissionCache != null) {
-	    granted = permissionCache.checkPermission(this.permission,this.epoch);
-	}
-	return granted;
+        boolean granted = false;
+        if (permissionCache != null) {
+            granted = permissionCache.checkPermission(this.permission, this.epoch);
+        }
+        return granted;
     }
 
     // used to hold last result obtained from cache and cache epoch.
     // epoch is used by PermissionCache to determine when result is out of date.
     static class Epoch {
 
-	int epoch;
-	boolean granted;
+        int epoch;
+        boolean granted;
 
-	Epoch() {
-	    this.epoch = 0;
-	    this.granted = false;
-	}
+        Epoch() {
+            this.epoch = 0;
+            this.granted = false;
+        }
     }
 
 }
-
-
-

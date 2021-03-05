@@ -19,7 +19,8 @@ package com.sun.enterprise.security.ee;
 import java.security.Permission;
 
 /**
- * This class is 
+ * This class is
+ * 
  * @author Ron Monzillo
  */
 
@@ -36,6 +37,3 @@ public interface CachedPermission {
     public boolean checkPermission();
 
 }
-
-
-

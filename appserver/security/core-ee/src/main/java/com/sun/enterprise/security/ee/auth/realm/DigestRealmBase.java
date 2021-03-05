@@ -29,6 +29,7 @@ import static com.sun.enterprise.security.auth.digest.api.Constants.*;
 
 /**
  * Base class for all realms wanting to support Digest based authentication.
+ * 
  * @author K.Venugopal@sun.com
  */
 public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
@@ -38,16 +39,14 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
     public DigestRealmBase() {
     }
 
-
-    protected  boolean validate(final Password passwd, DigestAlgorithmParameter[] params) {
+    protected boolean validate(final Password passwd, DigestAlgorithmParameter[] params) {
         try {
             return new DigestValidatorImpl().validate(passwd, params);
-        } catch (NoSuchAlgorithmException ex) {            
-            _logger.log(Level.SEVERE,"invalid.digest.algo",ex);
+        } catch (NoSuchAlgorithmException ex) {
+            _logger.log(Level.SEVERE, "invalid.digest.algo", ex);
         }
         return false;
     }
-
 
     private static class DigestValidatorImpl extends DigestProcessor {
 
@@ -55,15 +54,14 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
         private DigestAlgorithmParameter clientResponse = null;
         private DigestAlgorithmParameter key = null;
         private String algorithm = "MD5";
-        
 
         DigestValidatorImpl() {
-           
+
         }
 
         protected final boolean validate(Password passwd, DigestAlgorithmParameter[] params) throws NoSuchAlgorithmException {
 
-             for (int i = 0; i < params.length; i++) {
+            for (int i = 0; i < params.length; i++) {
                 DigestAlgorithmParameter dap = params[i];
                 if (A1.equals(dap.getName()) && (dap instanceof Key)) {
                     key = dap;
@@ -74,7 +72,7 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
                 }
             }
             setPassword(passwd);
-            
+
             try {
                 byte[] p1 = valueOf(key);
                 byte[] p2 = valueOf(data);
@@ -87,7 +85,7 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
                 byte[] derivedKey = null;
                 byte[] dk = md.digest(bos.toByteArray());
                 String tmp = encode(dk);
-                //new MD5Encoder().encode(dk);
+                // new MD5Encoder().encode(dk);
                 derivedKey = tmp.getBytes();
                 byte[] suppliedKey = clientResponse.getValue();
                 boolean result = true;
@@ -103,9 +101,9 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
                 }
                 return result;
             } catch (IOException ex) {
-                Object[] msg =new String[1];
-                msg[0]=ex.getMessage();                
-               _logger.log(Level.SEVERE,"digest.error",msg);
+                Object[] msg = new String[1];
+                msg[0] = ex.getMessage();
+                _logger.log(Level.SEVERE, "digest.error", msg);
             }
             return false;
         }

@@ -25,29 +25,25 @@ import com.sun.jaspic.config.factory.EntryInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-    
+
 /**
  * This class implements methods in the abstract class AuthConfigFactory.
- * @author  Shing Wai Chan
+ * 
+ * @author Shing Wai Chan
  */
 public class GFAuthConfigFactory extends BaseAuthConfigFactory {
 
- // MUST "hide" regStore in derived class.
-     static RegStoreFileParser regStore = null;
+    // MUST "hide" regStore in derived class.
+    static RegStoreFileParser regStore = null;
 
     /**
-     * to specialize the defaultEntries passed to the RegStoreFileParser
-     * constructor, create another subclass of BaseAuthconfigFactory, that is
-     * basically a copy of this class, with a change to the third argument
-     * of the call to new ResSToreFileParser.
-     * to ensure runtime use of the the associated regStore, make sure that
-     * the new subclass also contains an implementation of the getRegStore method.
-     * As done within this class, use the locks defined in
-     * BaseAuthConfigFactory to serialize access to the regStore (both within
-     * the class constructor, and within getRegStore)
+     * to specialize the defaultEntries passed to the RegStoreFileParser constructor, create another subclass of
+     * BaseAuthconfigFactory, that is basically a copy of this class, with a change to the third argument of the call to new
+     * ResSToreFileParser. to ensure runtime use of the the associated regStore, make sure that the new subclass also
+     * contains an implementation of the getRegStore method. As done within this class, use the locks defined in
+     * BaseAuthConfigFactory to serialize access to the regStore (both within the class constructor, and within getRegStore)
      *
-     * All EentyInfo OBJECTS PASSED as deualtEntries MUST HAVE BEEN
-     * CONSTRCTED USING THE FOLLOWING CONSTRUCTOR:
+     * All EentyInfo OBJECTS PASSED as deualtEntries MUST HAVE BEEN CONSTRCTED USING THE FOLLOWING CONSTRUCTOR:
      *
      * EntryInfo(String className, Map<String, String> properties);
      *
@@ -65,7 +61,7 @@ public class GFAuthConfigFactory extends BaseAuthConfigFactory {
         wLock.lock();
         try {
             if (regStore == null) {
-            	initializeRegStore(userDir);
+                initializeRegStore(userDir);
                 _loadFactory();
             }
         } finally {
@@ -73,14 +69,12 @@ public class GFAuthConfigFactory extends BaseAuthConfigFactory {
         }
     }
 
-	/**
-	 * @param userDir
-	 */
-	private static void initializeRegStore(String userDir) {
-		regStore = new RegStoreFileParser(userDir,
-		        BaseAuthConfigFactory.CONF_FILE_NAME,
-		        getDefaultProviders());
-	}
+    /**
+     * @param userDir
+     */
+    private static void initializeRegStore(String userDir) {
+        regStore = new RegStoreFileParser(userDir, BaseAuthConfigFactory.CONF_FILE_NAME, getDefaultProviders());
+    }
 
     @Override
     protected RegStoreFileParser getRegStore() {
@@ -93,26 +87,22 @@ public class GFAuthConfigFactory extends BaseAuthConfigFactory {
     }
 
     /*
-     * Contains the default providers used when none are
-     * configured in a factory configuration file.
+     * Contains the default providers used when none are configured in a factory configuration file.
      */
     static List<EntryInfo> getDefaultProviders() {
         WebServicesDelegate delegate = null;
         SecurityServicesUtil svcUtil = SecurityServicesUtil.getInstance();
-        if ( svcUtil != null) {
+        if (svcUtil != null) {
             delegate = svcUtil.getHabitat().getService(WebServicesDelegate.class);
         }
         if (delegate != null) {
             List<EntryInfo> entries = new ArrayList<EntryInfo>(2);
-            entries.add(new EntryInfo(
-                    delegate.getDefaultWebServicesProvider(), null));
-            entries.add(new EntryInfo(
-                    GFServerConfigProvider.class.getName(), null));
+            entries.add(new EntryInfo(delegate.getDefaultWebServicesProvider(), null));
+            entries.add(new EntryInfo(GFServerConfigProvider.class.getName(), null));
             return entries;
         }
         List<EntryInfo> entries = new ArrayList<EntryInfo>(1);
-        entries.add(new EntryInfo(
-            GFServerConfigProvider.class.getName(), null));
+        entries.add(new EntryInfo(GFServerConfigProvider.class.getName(), null));
         return entries;
     }
 

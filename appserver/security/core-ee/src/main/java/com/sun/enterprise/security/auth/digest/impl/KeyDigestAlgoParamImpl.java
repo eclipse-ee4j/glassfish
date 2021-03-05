@@ -21,7 +21,7 @@ import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 
 /**
  *
- *  @author K.Venugopal@sun.com
+ * @author K.Venugopal@sun.com
  */
 public class KeyDigestAlgoParamImpl implements DigestAlgorithmParameter, Key {
 

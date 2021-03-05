@@ -36,31 +36,27 @@ import jakarta.security.auth.message.callback.TrustStoreCallback;
 
 /**
  * Callback Handler for ServerContainer
- * @author  Harpreet Singh
- * @author  Shing Wai Chan
+ * 
+ * @author Harpreet Singh
+ * @author Shing Wai Chan
  */
-final class ServerContainerCallbackHandler
-        extends BaseContainerCallbackHandler {
-    
+final class ServerContainerCallbackHandler extends BaseContainerCallbackHandler {
+
     ServerContainerCallbackHandler() {
     }
 
-    protected void handleSupportedCallbacks(Callback[] callbacks) 
-            throws IOException, UnsupportedCallbackException { 
-        for (int i=0; i < callbacks.length; i++) {
+    protected void handleSupportedCallbacks(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+        for (int i = 0; i < callbacks.length; i++) {
             processCallback(callbacks[i]);
         }
     }
 
     protected boolean isSupportedCallback(Callback callback) {
         boolean isSupported = false;
-        if (callback instanceof CertStoreCallback ||
-                callback instanceof PasswordValidationCallback ||
-                callback instanceof CallerPrincipalCallback ||
-                callback instanceof GroupPrincipalCallback ||
-                callback instanceof SecretKeyCallback ||
-                callback instanceof PrivateKeyCallback ||
-                callback instanceof TrustStoreCallback) {
+        if (callback instanceof CertStoreCallback || callback instanceof PasswordValidationCallback
+                || callback instanceof CallerPrincipalCallback || callback instanceof GroupPrincipalCallback
+                || callback instanceof SecretKeyCallback || callback instanceof PrivateKeyCallback
+                || callback instanceof TrustStoreCallback) {
 
             isSupported = true;
         }

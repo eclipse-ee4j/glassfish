@@ -25,7 +25,8 @@ public class HttpServletConstants {
     public static final String POLICY_CONTEXT = "jakarta.security.jacc.PolicyContext";
     public static final String IS_MANDATORY = "jakarta.security.auth.message.MessagePolicy.isMandatory";
     public static final String REGISTER_SESSION = "jakarta.servlet.http.registerSession";
-    @Deprecated public static final String REGISTER_WITH_AUTHENTICATOR = "com.sun.web.RealmAdapter.register";
+    @Deprecated
+    public static final String REGISTER_WITH_AUTHENTICATOR = "com.sun.web.RealmAdapter.register";
 
     private HttpServletConstants() {
     }

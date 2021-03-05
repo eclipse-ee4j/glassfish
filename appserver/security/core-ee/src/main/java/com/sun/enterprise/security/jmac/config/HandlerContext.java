@@ -19,7 +19,7 @@ package com.sun.enterprise.security.jmac.config;
 /**
  * This is an interface for our callback handler context.
  *
- * @author  Shing Wai Chan
+ * @author Shing Wai Chan
  */
 public interface HandlerContext {
     public String getRealmName();

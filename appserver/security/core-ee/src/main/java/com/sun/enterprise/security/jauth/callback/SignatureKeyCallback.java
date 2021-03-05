@@ -35,18 +35,15 @@ public class SignatureKeyCallback implements Callback {
     /**
      * Constructs this SignatureKeyCallback with an authority.
      *
-     * <p> Both a PrivateKey and corresponding certificate chain
-     * will be returned.  The <i>authority</i> input parameter
-     * specifies the X500Principal name of the root CA
-     * certificate returned in the chain.
-     * An authority does not have to be specified.
+     * <p>
+     * Both a PrivateKey and corresponding certificate chain will be returned. The <i>authority</i> input parameter
+     * specifies the X500Principal name of the root CA certificate returned in the chain. An authority does not have to be
+     * specified.
      *
-     * @param authority the X500Principal name of the root CA
-     *			certificate returned in the requested chain,
-     *			or null
+     * @param authority the X500Principal name of the root CA certificate returned in the requested chain, or null
      */
     public SignatureKeyCallback(X500Principal authority) {
-	this.authority = authority;
+        this.authority = authority;
     }
 
     /**
@@ -55,18 +52,18 @@ public class SignatureKeyCallback implements Callback {
      * @return the authority, or null
      */
     public X500Principal getAuthority() {
-	return authority;
+        return authority;
     }
 
     /**
      * Set the requested signing key.
      *
-     * @param key the signing key
+     * @param key   the signing key
      * @param chain the corresponding certificate chain
      */
     public void setKey(PrivateKey key, Certificate[] chain) {
-	this.key = key;
-	this.chain = chain;
+        this.key = key;
+        this.chain = chain;
     }
 
     /**
@@ -75,7 +72,7 @@ public class SignatureKeyCallback implements Callback {
      * @return the signing key
      */
     public PrivateKey getKey() {
-	return key;
+        return key;
     }
 
     /**
@@ -84,6 +81,6 @@ public class SignatureKeyCallback implements Callback {
      * @return the certificate chain
      */
     public Certificate[] getChain() {
-	return chain;
+        return chain;
     }
 }

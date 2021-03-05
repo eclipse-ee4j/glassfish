@@ -37,15 +37,13 @@ import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * @author  Shing Wai Chan
+ * @author Shing Wai Chan
  */
 @Service
-@ContractsProvided({ContainerCallbackHandler.class, CallbackHandler.class})
-public final class ContainerCallbackHandler 
-        implements CallbackHandler, CallbackHandlerConfig {
+@ContractsProvided({ ContainerCallbackHandler.class, CallbackHandler.class })
+public final class ContainerCallbackHandler implements CallbackHandler, CallbackHandlerConfig {
     private CallbackHandler handler = null;
-    
-    
+
     public ContainerCallbackHandler() {
         if (Globals.getDefaultHabitat() == null || SecurityServicesUtil.getInstance().isACC()) {
             handler = new ClientContainerCallbackHandler();
@@ -54,15 +52,14 @@ public final class ContainerCallbackHandler
         }
     }
 
-    public void handle(Callback[] callbacks)
-            throws IOException, UnsupportedCallbackException {
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         handler.handle(callbacks);
     }
 
     public void setHandlerContext(HandlerContext handlerContext) {
-        ((CallbackHandlerConfig)handler).setHandlerContext(handlerContext);
+        ((CallbackHandlerConfig) handler).setHandlerContext(handlerContext);
     }
-    
+
     public void setHandlerContext(String realm) {
         final String fRealmName = realm;
         HandlerContext handlerContext = new HandlerContext() {
@@ -73,8 +70,8 @@ public final class ContainerCallbackHandler
         };
         ((BaseContainerCallbackHandler) handler).setHandlerContext(handlerContext);
     }
-    
-/*    private  boolean isAppclientContainer() {
-        return SecurityServicesUtil.getInstance().isACC();
-    }*/
+
+    /*
+     * private boolean isAppclientContainer() { return SecurityServicesUtil.getInstance().isACC(); }
+     */
 }

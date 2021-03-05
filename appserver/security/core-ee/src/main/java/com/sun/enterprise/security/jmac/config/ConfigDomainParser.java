@@ -53,7 +53,7 @@ public class ConfigDomainParser implements ConfigParser {
     static {
         _logger = LogDomains.getLogger(ConfigDomainParser.class, LogDomains.SECURITY_LOGGER);
     }
-    
+
     private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
@@ -205,7 +205,7 @@ public class ConfigDomainParser implements ConfigParser {
         // map id to Intercept
         intEntry.idMap.put(id, idEntry);
     }
-   
+
     private String expand(String rawProperty) {
         Matcher propertyMatcher = PROPERTY_PATTERN.matcher(rawProperty);
         StringBuilder propertyBuilder = new StringBuilder();
@@ -214,19 +214,19 @@ public class ConfigDomainParser implements ConfigParser {
             if (propertyMatcher.group(1) != null) {
                 // Ignore ${{...}} matched, so just append everything
                 propertyMatcher.appendReplacement(propertyBuilder, quoteReplacement(propertyMatcher.group()));
-            } else { 
-                
+            } else {
+
                 String replacement = System.getProperty(propertyMatcher.group(2));
                 if (replacement == null) {
                     throw new IllegalStateException("No system property for " + propertyMatcher.group(2));
                 }
-                
+
                 // The replacement pattern matched
                 propertyMatcher.appendReplacement(propertyBuilder, quoteReplacement(replacement));
             }
         }
         propertyMatcher.appendTail(propertyBuilder);
-        
+
         return propertyBuilder.toString();
     }
 
@@ -251,5 +251,5 @@ public class ConfigDomainParser implements ConfigParser {
         String authRecipient = policy.getAuthRecipient();
         return AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
-    
+
 }

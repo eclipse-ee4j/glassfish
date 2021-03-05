@@ -39,8 +39,8 @@ public class Role {
     }
 
     /**
-     * NB: Class Overrides equals and hashCode Methods such that 2 Roles are
-     * equal simply based on having a common name.
+     * NB: Class Overrides equals and hashCode Methods such that 2 Roles are equal simply based on having a common name.
+     * 
      * @param o
      * @return
      */
@@ -72,8 +72,7 @@ public class Role {
         if (permissions == null) {
             permissions = new Permissions();
         }
-        for (Enumeration<Permission> e = pc.elements();
-                e.hasMoreElements();) {
+        for (Enumeration<Permission> e = pc.elements(); e.hasMoreElements();) {
             permissions.add(e.nextElement());
         }
     }
@@ -100,7 +99,7 @@ public class Role {
         isAnyAuthenticatedUserRole = false;
         // If no princiapls are present then any authenticated user is possible
         if ((principals == null) || principals.isEmpty()) {
-        	isAnyAuthenticatedUserRole = true;
+            isAnyAuthenticatedUserRole = true;
         }
     }
 

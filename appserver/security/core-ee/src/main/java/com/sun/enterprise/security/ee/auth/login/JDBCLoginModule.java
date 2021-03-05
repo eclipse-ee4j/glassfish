@@ -24,11 +24,10 @@ import com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm;
 
 import java.util.Arrays;
 
-
 /**
  * This class implement a JDBC Login module for Glassfish. The work is derivated from Sun's sample JDBC login module.
- * Enhancement has been done to use latest features.
- * sample setting in server.xml for JDBCLoginModule
+ * Enhancement has been done to use latest features. sample setting in server.xml for JDBCLoginModule
+ * 
  * @author Jean-Baptiste Bugeaud
  */
 public class JDBCLoginModule extends PasswordLoginModule {
@@ -36,34 +35,32 @@ public class JDBCLoginModule extends PasswordLoginModule {
      * Perform JDBC authentication. Delegates to JDBCRealm.
      *
      * @throws LoginException If login fails (JAAS login() behavior).
-     */    
+     */
     protected void authenticate() throws LoginException {
         if (!(_currentRealm instanceof JDBCRealm)) {
             String msg = sm.getString("jdbclm.badrealm");
             throw new LoginException(msg);
         }
-        
-        final JDBCRealm jdbcRealm = (JDBCRealm)_currentRealm;
+
+        final JDBCRealm jdbcRealm = (JDBCRealm) _currentRealm;
 
         // A JDBC user must have a name not null and non-empty.
-        if ( (_username == null) || (_username.length() == 0) ) {
+        if ((_username == null) || (_username.length() == 0)) {
             String msg = sm.getString("jdbclm.nulluser");
             throw new LoginException(msg);
         }
-        
+
         String[] grpList = jdbcRealm.authenticate(_username, getPasswordChar());
 
-        if (grpList == null) {  // JAAS behavior
+        if (grpList == null) { // JAAS behavior
             String msg = sm.getString("jdbclm.loginfail", _username);
             throw new LoginException(msg);
         }
 
         if (_logger.isLoggable(Level.FINEST)) {
-            _logger.finest("JDBC login succeeded for: " + _username
-                + " groups:" + Arrays.toString(grpList));
+            _logger.finest("JDBC login succeeded for: " + _username + " groups:" + Arrays.toString(grpList));
         }
 
-        commitAuthentication(_username, getPasswordChar(),
-                             _currentRealm, grpList);
+        commitAuthentication(_username, getPasswordChar(), _currentRealm, grpList);
     }
 }

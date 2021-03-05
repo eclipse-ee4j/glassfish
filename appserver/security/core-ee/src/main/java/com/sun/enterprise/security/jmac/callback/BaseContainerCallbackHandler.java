@@ -209,7 +209,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
      * @param wp WebPrincipal
      *
      * @return true when Security Context has been obtained from webPrincipal, and CB is finished. returns false when more
-     * CB processing is required.
+     *         CB processing is required.
      */
     private boolean reuseWebPrincipal(final Subject fs, final WebPrincipal wp) {
 
@@ -477,7 +477,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
                 String alias = aliasRequest.getAlias();
                 PrivateKeyEntry privKeyEntry;
-                
+
                 if (alias == null) {
                     // use default key
                     privKeyEntry = getDefaultPrivateKeyEntry(keyStores);
@@ -491,10 +491,10 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                 }
             } else if (request instanceof PrivateKeyCallback.IssuerSerialNumRequest) {
                 PrivateKeyCallback.IssuerSerialNumRequest issuerSerialNumRequest = (PrivateKeyCallback.IssuerSerialNumRequest) request;
-                
+
                 X500Principal issuer = issuerSerialNumRequest.getIssuer();
                 BigInteger serialNum = issuerSerialNumRequest.getSerialNum();
-                
+
                 if (issuer != null && serialNum != null) {
                     boolean found = false;
                     for (int i = 0; i < keyStores.length && !found; i++) {
@@ -518,10 +518,10 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             } else if (request instanceof PrivateKeyCallback.SubjectKeyIDRequest) {
                 PrivateKeyCallback.SubjectKeyIDRequest subjectKeyIDRequest = (PrivateKeyCallback.SubjectKeyIDRequest) request;
                 byte[] subjectKeyID = subjectKeyIDRequest.getSubjectKeyID();
-                
+
                 if (subjectKeyID != null) {
                     boolean found = false;
-                    
+
                     X509CertSelector selector = new X509CertSelector();
                     selector.setSubjectKeyIdentifier(toDerOctetString(subjectKeyID));
 
@@ -530,10 +530,10 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                         while (aliases.hasMoreElements() && !found) {
                             String nextAlias = aliases.nextElement();
                             PrivateKey key = securitySupport.getPrivateKeyForAlias(nextAlias, i);
-                            
+
                             if (key != null) {
                                 Certificate[] certificates = keyStores[i].getCertificateChain(nextAlias);
-                                
+
                                 if (selector.match((X509Certificate) certificates[0])) {
                                     privateKey = key;
                                     certificateChain = certificates;
@@ -580,23 +580,23 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             privKeyCallback.setKey(privateKey, certificateChain);
         }
     }
-    
+
     private byte[] toDerOctetString(byte[] value) throws IOException {
         ByteArrayOutputStream subjectOutputStream = new ByteArrayOutputStream();
-        
+
         subjectOutputStream.write(0x04); // DER Octet String tag
         subjectOutputStream.write(length2Bytes(value.length));
         subjectOutputStream.write(value);
-        
+
         return subjectOutputStream.toByteArray();
     }
-    
+
     /**
-     * Splits out an integer into a variable number of bytes with the first byte containing either
-     * the number of bytes, or the integer itself if small enough.
+     * Splits out an integer into a variable number of bytes with the first byte containing either the number of bytes, or
+     * the integer itself if small enough.
      * 
      * @param length the integer to convert
-     * @return the integer in DER byte array form 
+     * @return the integer in DER byte array form
      */
     private byte[] length2Bytes(int length) {
         // The first byte with the MSB bit a 0 encodes the direct length
@@ -604,7 +604,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         if (length <= 127) {
             return new byte[] { (byte) length };
         }
-        
+
         // Count how many bytes are in the "length" integer
         int byteCount = 1;
         int lengthValue = length;
@@ -612,24 +612,24 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         while ((lengthValue >>>= 8) != 0) {
             byteCount++;
         }
-        
+
         byte[] lengthBytes = new byte[byteCount + 1];
 
         // The first byte with the MSB bit a 1 encodes the number of bytes used for the length
         // E.g. 0b10000001 for 1 additional byte (for values up to 255)
         lengthBytes[0] = (byte) (byteCount | 0b10000000);
-        
+
         // Shift the integer in increments of 8 bits, and truncate the lowest 8 ones in every iteration.
-        // For numbers up to 255 shift 0 times, e.g. for length 255 take the binary version 0b11111111 directly. 
-        // For numbers up to 65535 shift 1 time, e.g. for length 256 
-        //   first byte  = 0b100000000 >> 8 = 0b000000001 -> 0b00000001
-        //   second byte = 0b100000000 >> 0 = 0b000000000 -> 0b00000000
+        // For numbers up to 255 shift 0 times, e.g. for length 255 take the binary version 0b11111111 directly.
+        // For numbers up to 65535 shift 1 time, e.g. for length 256
+        // first byte = 0b100000000 >> 8 = 0b000000001 -> 0b00000001
+        // second byte = 0b100000000 >> 0 = 0b000000000 -> 0b00000000
         int pos = 1;
         for (int i = (byteCount - 1) * 8; i >= 0; i -= 8) {
             lengthBytes[pos] = (byte) (length >> i);
             pos++;
         }
-            
+
         return lengthBytes;
     }
 

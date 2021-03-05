@@ -36,7 +36,6 @@ import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.ee.auth.realm.DigestRealm;
 import java.util.Enumeration;
 
-
 /**
  *
  * @author K.Venugopal@sun.com
@@ -77,61 +76,59 @@ public abstract class DigestLoginModule implements LoginModule {
                 break;
             } else if (obj instanceof com.sun.enterprise.security.auth.login.DigestCredentials) {
                 com.sun.enterprise.security.auth.login.DigestCredentials dc = (com.sun.enterprise.security.auth.login.DigestCredentials) obj;
-                digestCredentials = new DigestCredentials(dc.getRealmName(), 
-                        dc.getUserName(), dc.getParameters());
+                digestCredentials = new DigestCredentials(dc.getRealmName(), dc.getUserName(), dc.getParameters());
             }
         }
         if (digestCredentials == null) {
             throw new LoginException();
         }
-        DigestAlgorithmParameter [] params = digestCredentials.getParameters();
+        DigestAlgorithmParameter[] params = digestCredentials.getParameters();
         String username = digestCredentials.getUserName();
         try {
             _realm = Realm.getInstance(digestCredentials.getRealmName());
         } catch (NoSuchRealmException ex) {
-            _logger.log(Level.FINE,"",ex);
-            _logger.log(Level.SEVERE,"no.realm",digestCredentials.getRealmName());
+            _logger.log(Level.FINE, "", ex);
+            _logger.log(Level.SEVERE, "no.realm", digestCredentials.getRealmName());
             throw new LoginException(ex.getMessage());
         }
-            if (_realm instanceof DigestRealm){
-                if(((DigestRealm)_realm).validate(username, params)) {
-                //change to pass Password Validator
+        if (_realm instanceof DigestRealm) {
+            if (((DigestRealm) _realm).validate(username, params)) {
+                // change to pass Password Validator
                 _succeeded = true;
-                }
-            }else{
-                _logger.log(Level.SEVERE,"digest.realm",digestCredentials.getRealmName());
-                throw new LoginException("Realm" + digestCredentials.getRealmName()+ " does not support Digest validation");                
             }
+        } else {
+            _logger.log(Level.SEVERE, "digest.realm", digestCredentials.getRealmName());
+            throw new LoginException("Realm" + digestCredentials.getRealmName() + " does not support Digest validation");
+        }
 
         return _succeeded;
     }
 
     public final boolean commit() throws LoginException {
-        
-            if (!_succeeded) {
-                _commitSucceeded = false;
-                return false;
-            }
 
-            PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
-            _userPrincipal = factory.getPrincipalInstance(digestCredentials.getUserName(), digestCredentials.getRealmName());
-            java.util.Set principalSet = this.subject.getPrincipals();
-            if (!principalSet.contains(_userPrincipal)) {
-                principalSet.add(_userPrincipal);
-            }
-            java.util.Enumeration groupsList = getGroups(digestCredentials.getUserName());
-            while (groupsList.hasMoreElements()) {
-                java.lang.String value = (java.lang.String) groupsList.nextElement();
-                Group g = factory.getGroupInstance(value, digestCredentials.getRealmName());
-                if (!principalSet.contains(g)) {
-                    principalSet.add(g);
-                }
-                // cleaning the slate
-            }
+        if (!_succeeded) {
+            _commitSucceeded = false;
+            return false;
+        }
 
-            return true;
-        
-	
+        PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
+        _userPrincipal = factory.getPrincipalInstance(digestCredentials.getUserName(), digestCredentials.getRealmName());
+        java.util.Set principalSet = this.subject.getPrincipals();
+        if (!principalSet.contains(_userPrincipal)) {
+            principalSet.add(_userPrincipal);
+        }
+        java.util.Enumeration groupsList = getGroups(digestCredentials.getUserName());
+        while (groupsList.hasMoreElements()) {
+            java.lang.String value = (java.lang.String) groupsList.nextElement();
+            Group g = factory.getGroupInstance(value, digestCredentials.getRealmName());
+            if (!principalSet.contains(g)) {
+                principalSet.add(g);
+            }
+            // cleaning the slate
+        }
+
+        return true;
+
     }
 
     public final boolean abort() throws LoginException {
@@ -145,8 +142,6 @@ public abstract class DigestLoginModule implements LoginModule {
             // login succeeded but overall authentication failed
             _succeeded = false;
 
-
-          
         } else {
             // overall authentication succeeded and commit succeeded,
             // but someone else's commit failed
@@ -162,7 +157,7 @@ public abstract class DigestLoginModule implements LoginModule {
 
         _succeeded = false;
         _commitSucceeded = false;
-       
+
         return true;
     }
 
@@ -172,5 +167,4 @@ public abstract class DigestLoginModule implements LoginModule {
 
     protected abstract Enumeration getGroups(String username);
 
-    
 }

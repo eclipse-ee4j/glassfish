@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
-
 import com.sun.enterprise.security.auth.realm.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 import java.util.Enumeration;
@@ -39,7 +38,7 @@ public class JDBCDigestLoginModule extends DigestLoginModule {
             Logger.getLogger("global").log(Level.SEVERE, null, ex);
         } catch (NoSuchUserException ex) {
             Logger.getLogger("global").log(Level.SEVERE, null, ex);
-        } 
+        }
         return null;
     }
 }

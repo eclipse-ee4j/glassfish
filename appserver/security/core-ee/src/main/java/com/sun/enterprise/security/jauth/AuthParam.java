@@ -17,12 +17,12 @@
 package com.sun.enterprise.security.jauth;
 
 /**
- * An authentication parameter used to encapsulate a
- * request and response objects.
+ * An authentication parameter used to encapsulate a request and response objects.
  *
- * <p> This is a marker interface for container-specific
- * authentication parameters.
+ * <p>
+ * This is a marker interface for container-specific authentication parameters.
  *
  * @version %I%, %G%
  */
-public interface AuthParam { }
+public interface AuthParam {
+}

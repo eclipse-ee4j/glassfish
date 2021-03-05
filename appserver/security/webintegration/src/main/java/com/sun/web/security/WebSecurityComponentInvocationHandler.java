@@ -16,7 +16,6 @@
 
 package com.sun.web.security;
 
-
 import com.sun.logging.LogDomains;
 import java.util.logging.Logger;
 import org.apache.catalina.Realm;
@@ -33,23 +32,23 @@ import jakarta.inject.Singleton;
 
 import jakarta.inject.Inject;
 
-@Service(name="webSecurityCIH")
+@Service(name = "webSecurityCIH")
 @Singleton
 public class WebSecurityComponentInvocationHandler implements RegisteredComponentInvocationHandler {
 
     private static Logger _logger = null;
-    
+
     @Inject
     private InvocationManager invManager;
-    
+
     static {
         _logger = LogDomains.getLogger(WebSecurityComponentInvocationHandler.class, LogDomains.EJB_LOGGER);
     }
 
     private ComponentInvocationHandler webSecurityCompInvHandler = new ComponentInvocationHandler() {
 
-        public void beforePreInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation newInv) throws InvocationException {
+        public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv)
+                throws InvocationException {
             if (invType == ComponentInvocationType.SERVLET_INVOCATION) {
                 Object cont = newInv.getContainer();
                 if (cont instanceof ContainerBase) {
@@ -61,16 +60,16 @@ public class WebSecurityComponentInvocationHandler implements RegisteredComponen
             }
         }
 
-        public void afterPreInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        public void afterPreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
+                throws InvocationException {
         }
 
-        public void beforePostInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        public void beforePostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
+                throws InvocationException {
         }
 
-        public void afterPostInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
+                throws InvocationException {
             if (invType == ComponentInvocationType.SERVLET_INVOCATION) {
                 Object cont = curInv.getContainer();
                 if (cont instanceof ContainerBase) {
@@ -83,15 +82,12 @@ public class WebSecurityComponentInvocationHandler implements RegisteredComponen
         }
     };
 
-    
     public ComponentInvocationHandler getComponentInvocationHandler() {
         return webSecurityCompInvHandler;
     }
-    
+
     public void register() {
         invManager.registerComponentInvocationHandler(ComponentInvocationType.SERVLET_INVOCATION, this);
     }
-    
-    
 
 }

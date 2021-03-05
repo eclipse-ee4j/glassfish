@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.security.authorize;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.sun.enterprise.security.ee.PermissionCacheFactory;
@@ -24,42 +23,42 @@ import com.sun.enterprise.security.SecurityContext;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.internal.api.Globals;
 
-
 /**
  * This class implements a thread scoped data used for PolicyContext.
+ * 
  * @author Harry Singh
  * @author Jyri Virkki
  * @author Shing Wai Chan
  *
  */
 public class HandlerData {
-    
+
     private HttpServletRequest httpReq = null;
     private ComponentInvocation inv = null;
     private PolicyContextDelegate ejbDelegate = null;
-    
-    private HandlerData(){
+
+    private HandlerData() {
         ejbDelegate = Globals.getDefaultHabitat().getService(PolicyContextDelegate.class, "EJB");
     }
 
-
-    public static HandlerData getInstance(){
-	return new HandlerData();
+    public static HandlerData getInstance() {
+        return new HandlerData();
     }
 
     public void setHttpServletRequest(HttpServletRequest httpReq) {
-	this.httpReq = httpReq;
+        this.httpReq = httpReq;
     }
 
     public void setInvocation(ComponentInvocation inv) {
         this.inv = inv;
     }
-    public Object get(String key){
-	if (PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST.equalsIgnoreCase(key)){
-	    return httpReq;
-	} else if (PolicyContextHandlerImpl.SUBJECT.equalsIgnoreCase(key)){
-	    return SecurityContext.getCurrent().getSubject();
-	} else if (PolicyContextHandlerImpl.REUSE.equalsIgnoreCase(key)) {
+
+    public Object get(String key) {
+        if (PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST.equalsIgnoreCase(key)) {
+            return httpReq;
+        } else if (PolicyContextHandlerImpl.SUBJECT.equalsIgnoreCase(key)) {
+            return SecurityContext.getCurrent().getSubject();
+        } else if (PolicyContextHandlerImpl.REUSE.equalsIgnoreCase(key)) {
             PermissionCacheFactory.resetCaches();
             return Integer.valueOf(0);
         }
@@ -75,12 +74,12 @@ public class HandlerData {
         } else if (PolicyContextHandlerImpl.EJB_ARGUMENTS.equalsIgnoreCase(key)) {
             return (ejbDelegate != null) ? ejbDelegate.getEJbArguments(inv) : null;
         }
-	return null;
+        return null;
     }
 
     void reset() {
-       httpReq = null;
-       inv = null;
-       ejbDelegate = null;
+        httpReq = null;
+        inv = null;
+        ejbDelegate = null;
     }
 }

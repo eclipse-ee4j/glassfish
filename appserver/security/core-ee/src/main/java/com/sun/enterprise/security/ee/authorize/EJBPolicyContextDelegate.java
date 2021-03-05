@@ -24,20 +24,21 @@ import org.glassfish.ejb.api.EJBInvocation;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This class is primarily a delegate for PolicyContextHandler related queries
- * But also handles Authorization of WebServiceInvocations
+ * This class is primarily a delegate for PolicyContextHandler related queries But also handles Authorization of
+ * WebServiceInvocations
+ * 
  * @author Kumar
  */
-@Service(name="EJB")
+@Service(name = "EJB")
 public class EJBPolicyContextDelegate implements PolicyContextDelegate {
 
     public Object getEnterpriseBean(ComponentInvocation inv) {
         if (inv instanceof EJBInvocation) {
-            return ((EJBInvocation)inv).getJaccEjb();
+            return ((EJBInvocation) inv).getJaccEjb();
         }
         return null;
     }
-    
+
     public Object getEJbArguments(ComponentInvocation inv) {
         if (inv instanceof EJBInvocation) {
             EJBInvocation eInv = (EJBInvocation) inv;
@@ -49,13 +50,13 @@ public class EJBPolicyContextDelegate implements PolicyContextDelegate {
         }
         return null;
     }
-    
+
     public Object getSOAPMessage(ComponentInvocation inv) {
         if (inv instanceof EJBInvocation) {
             EJBInvocation eInv = (EJBInvocation) inv;
             if (eInv.isAWebService()) {
-               //TODO:V3 does this violate JACC spec?, we may have to convert to SOAPMessage on demand
-               //return eInv.getSOAPMessage();
+                // TODO:V3 does this violate JACC spec?, we may have to convert to SOAPMessage on demand
+                // return eInv.getSOAPMessage();
                 return eInv.getMessage();
             }
         }
@@ -63,21 +64,21 @@ public class EJBPolicyContextDelegate implements PolicyContextDelegate {
     }
 
     public void setSOAPMessage(Object message, ComponentInvocation inv) {
-         if (inv instanceof EJBInvocation) {
+        if (inv instanceof EJBInvocation) {
             EJBInvocation eInv = (EJBInvocation) inv;
             if (eInv.isAWebService()) {
-               eInv.setMessage(message);
+                eInv.setMessage(message);
             }
         }
     }
 
     public boolean authorize(ComponentInvocation inv, Method m) throws Exception {
-         Exception ie = null;
-         if (inv instanceof EJBInvocation) {
-             return ((EJBInvocation)inv).authorizeWebService(m);
-             
-         }
-         return true;
+        Exception ie = null;
+        if (inv instanceof EJBInvocation) {
+            return ((EJBInvocation) inv).authorizeWebService(m);
+
+        }
+        return true;
     }
-    
+
 }

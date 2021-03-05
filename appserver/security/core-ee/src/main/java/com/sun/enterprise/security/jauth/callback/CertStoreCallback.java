@@ -21,25 +21,22 @@ import java.security.cert.CertStore;
 /**
  * Callback for CertStore.
  *
- * <p> A CertStore is a generic repository for certificates.
- * CertStores may be searched to locate public key certificates,
- * as well as to put together certificate chains.
- * Such a search may be necessary when the caller needs to
- * verify a signature.
+ * <p>
+ * A CertStore is a generic repository for certificates. CertStores may be searched to locate public key certificates,
+ * as well as to put together certificate chains. Such a search may be necessary when the caller needs to verify a
+ * signature.
  *
  * @version %I%, %G%
  */
-public class CertStoreCallback extends
-        jakarta.security.auth.message.callback.CertStoreCallback {
+public class CertStoreCallback extends jakarta.security.auth.message.callback.CertStoreCallback {
 
     /**
      * Set the CertStore.
      *
-     * @param certStore the certificate store, which may be null
-     *		If null, the requester is assumed to already have
-     *		access to the relevant certificate and/or chain.
+     * @param certStore the certificate store, which may be null If null, the requester is assumed to already have access to
+     *                  the relevant certificate and/or chain.
      */
     public void setStore(CertStore certStore) {
-	setCertStore(certStore);
+        setCertStore(certStore);
     }
 }

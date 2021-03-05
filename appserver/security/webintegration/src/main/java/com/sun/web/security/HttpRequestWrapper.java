@@ -49,8 +49,7 @@ import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Request;
 import org.glassfish.grizzly.http.util.DataChunk;
 
-class HttpRequestWrapper
-        implements HttpRequest, ServletRequest {
+class HttpRequestWrapper implements HttpRequest, ServletRequest {
 
     private final Request httpRequest;
     private final HttpServletRequest servletRequest;
@@ -63,16 +62,16 @@ class HttpRequestWrapper
         this.servletRequest = servletRequest;
         isDefaultContext = httpRequest.getMappingData().isDefaultContext;
     }
+
     // ----- HttpRequest Methods -----
     public void addCookie(Cookie cookie) {
         httpRequest.addCookie(cookie);
     }
 
-    /* Delegate to HttpServletResponse
-    public void addHeader(String name, String value) {
-        httpRequest.addHeader(name, value);
-    }
-    */
+    /*
+     * Delegate to HttpServletResponse public void addHeader(String name, String value) { httpRequest.addHeader(name,
+     * value); }
+     */
 
     public void addHeader(String name, String value) {
         httpRequest.addHeader(name, value);
@@ -119,7 +118,7 @@ class HttpRequestWrapper
     }
 
     public Session getSessionInternal(boolean create) {
-	return httpRequest.getSessionInternal(create);
+        return httpRequest.getSessionInternal(create);
     }
 
     public String changeSessionId() {
@@ -169,7 +168,7 @@ class HttpRequestWrapper
     // ----- Request Methods -----
     public String getAuthorization() {
         return httpRequest.getAuthorization();
-    }  
+    }
 
     public Connector getConnector() {
         return httpRequest.getConnector();
@@ -211,21 +210,21 @@ class HttpRequestWrapper
         return getRequest(false);
     }
 
-     @Override
-      public ServletRequest getRequest(boolean maskDefaultContextMapping) {
-         ServletRequest rvalue;
-         boolean getMasked = maskDefaultContextMapping && isDefaultContext;
-         rvalue = getMasked ? maskedFacade : facade;
-         if (rvalue == null) {
-             rvalue = new RequestFacadeWrapper(httpRequest, servletRequest, getMasked);
-             if (getMasked) {
-                 maskedFacade = rvalue;
-             } else {
-                 facade = rvalue;
-             }
-         }
-         return rvalue;
-      }
+    @Override
+    public ServletRequest getRequest(boolean maskDefaultContextMapping) {
+        ServletRequest rvalue;
+        boolean getMasked = maskDefaultContextMapping && isDefaultContext;
+        rvalue = getMasked ? maskedFacade : facade;
+        if (rvalue == null) {
+            rvalue = new RequestFacadeWrapper(httpRequest, servletRequest, getMasked);
+            if (getMasked) {
+                maskedFacade = rvalue;
+            } else {
+                facade = rvalue;
+            }
+        }
+        return rvalue;
+    }
 
     public Response getResponse() {
         return httpRequest.getResponse();
@@ -330,8 +329,7 @@ class HttpRequestWrapper
     /**
      * Generate and return a new session ID.
      *
-     * This hook allows connectors to provide their own scalable session
-     * ID generators.
+     * This hook allows connectors to provide their own scalable session ID generators.
      */
     public String generateSessionId() {
         return httpRequest.generateSessionId();
@@ -351,193 +349,192 @@ class HttpRequestWrapper
     public void unlockSession() {
         httpRequest.unlockSession();
     }
-    
-         // ----- ServletRequest Methods -----     
-     // implementation of ServletRequest interface
-     @Override
-     public Object getAttribute(String name) {
-         return servletRequest.getAttribute(name);
-     }
- 
-     @Override
-     public Enumeration<String> getAttributeNames() {
-         return servletRequest.getAttributeNames();
-     }
- 
-     @Override
-     public String getCharacterEncoding() {
-         return servletRequest.getCharacterEncoding();
-     }
- 
-     @Override
-     public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
-         servletRequest.setCharacterEncoding(env);
-     }
- 
-     @Override
-     public int getContentLength() {
-         return servletRequest.getContentLength();
-     }
- 
-     @Override
-     public String getContentType() {
-         return servletRequest.getContentType();
-     }
- 
-     @Override
-     public ServletInputStream getInputStream() throws IOException {
-         return servletRequest.getInputStream();
-     }
- 
-     @Override
-     public String getParameter(String name) {
-         return servletRequest.getParameter(name);
-     }
- 
-     @Override
-     public Enumeration<String> getParameterNames() {
-         return servletRequest.getParameterNames();
-     }
- 
-     @Override
-     public String[] getParameterValues(String name) {
-         return servletRequest.getParameterValues(name);
-     }
- 
-     @Override
-     public Map<String, String[]> getParameterMap() {
-         return servletRequest.getParameterMap();
-     }
- 
-     @Override
-     public String getProtocol() {
-         return servletRequest.getProtocol();
-     }
- 
-     @Override
-     public String getScheme() {
-         return servletRequest.getScheme();
-     }
- 
-     @Override
-     public String getServerName() {
-         return servletRequest.getServerName();
-     }
- 
-     @Override
-     public int getServerPort() {
-         return servletRequest.getServerPort();
-     }
- 
-     @Override
-     public BufferedReader getReader() throws IOException {
-         return servletRequest.getReader();
-     }
- 
-     @Override
-     public String getRemoteAddr() {
-         return servletRequest.getRemoteAddr();
-     }
- 
-     @Override
-     public String getRemoteHost() {
-         return servletRequest.getRemoteHost();
-     }
- 
-     @Override
-     public void setAttribute(String name, Object o) {
-         servletRequest.setAttribute(name, o);
-     }
- 
-     @Override
-     public void removeAttribute(String name) {
-         servletRequest.removeAttribute(name);
-     }
- 
-     @Override
-     public Locale getLocale() {
-         return servletRequest.getLocale();
-     }
- 
-     @Override
-     public Enumeration<Locale> getLocales() {
-         return servletRequest.getLocales();
-     }
- 
-     @Override
-     public boolean isSecure() {
-         return servletRequest.isSecure();
-     }
- 
-     @Override
-     public RequestDispatcher getRequestDispatcher(String path) {
-         return servletRequest.getRequestDispatcher(path);
-     }
- 
-     @Override
-     public String getRealPath(String path) {
-         return servletRequest.getRealPath(path);
-     }
- 
-     @Override
-     public int getRemotePort() {
-         return servletRequest.getRemotePort();
-     }
- 
-     @Override
-     public String getLocalName() {
-         return servletRequest.getLocalName();
-     }
- 
-     @Override
-     public String getLocalAddr() {
-         return servletRequest.getLocalAddr();
-     }
- 
-     @Override
-     public int getLocalPort() {
-         return servletRequest.getLocalPort();
-     }
- 
-     @Override
-     public ServletContext getServletContext() {
-         return servletRequest.getServletContext();
-     }
- 
-     @Override
-     public AsyncContext startAsync() throws IllegalStateException {
-         return servletRequest.startAsync();
-     }
- 
-     @Override
-     public AsyncContext startAsync(ServletRequest sRequest, ServletResponse sResponse) throws IllegalStateException {
-         return servletRequest.startAsync(sRequest, sResponse);
-     }
- 
-     @Override
-     public boolean isAsyncStarted() {
-         return servletRequest.isAsyncStarted();
-     }
- 
-     @Override
-     public boolean isAsyncSupported() {
-         return servletRequest.isAsyncSupported();
-     }
- 
-     @Override
-     public AsyncContext getAsyncContext() {
-         return servletRequest.getAsyncContext();
-     }
- 
-     @Override
-     public DispatcherType getDispatcherType() {
-         return servletRequest.getDispatcherType();
-     }
- 
-     @Override
-     public long getContentLengthLong() {
-         return servletRequest.getContentLengthLong();
-     }
- 
+
+    // ----- ServletRequest Methods -----
+    // implementation of ServletRequest interface
+    @Override
+    public Object getAttribute(String name) {
+        return servletRequest.getAttribute(name);
+    }
+
+    @Override
+    public Enumeration<String> getAttributeNames() {
+        return servletRequest.getAttributeNames();
+    }
+
+    @Override
+    public String getCharacterEncoding() {
+        return servletRequest.getCharacterEncoding();
+    }
+
+    @Override
+    public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
+        servletRequest.setCharacterEncoding(env);
+    }
+
+    @Override
+    public int getContentLength() {
+        return servletRequest.getContentLength();
+    }
+
+    @Override
+    public String getContentType() {
+        return servletRequest.getContentType();
+    }
+
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
+        return servletRequest.getInputStream();
+    }
+
+    @Override
+    public String getParameter(String name) {
+        return servletRequest.getParameter(name);
+    }
+
+    @Override
+    public Enumeration<String> getParameterNames() {
+        return servletRequest.getParameterNames();
+    }
+
+    @Override
+    public String[] getParameterValues(String name) {
+        return servletRequest.getParameterValues(name);
+    }
+
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        return servletRequest.getParameterMap();
+    }
+
+    @Override
+    public String getProtocol() {
+        return servletRequest.getProtocol();
+    }
+
+    @Override
+    public String getScheme() {
+        return servletRequest.getScheme();
+    }
+
+    @Override
+    public String getServerName() {
+        return servletRequest.getServerName();
+    }
+
+    @Override
+    public int getServerPort() {
+        return servletRequest.getServerPort();
+    }
+
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return servletRequest.getReader();
+    }
+
+    @Override
+    public String getRemoteAddr() {
+        return servletRequest.getRemoteAddr();
+    }
+
+    @Override
+    public String getRemoteHost() {
+        return servletRequest.getRemoteHost();
+    }
+
+    @Override
+    public void setAttribute(String name, Object o) {
+        servletRequest.setAttribute(name, o);
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+        servletRequest.removeAttribute(name);
+    }
+
+    @Override
+    public Locale getLocale() {
+        return servletRequest.getLocale();
+    }
+
+    @Override
+    public Enumeration<Locale> getLocales() {
+        return servletRequest.getLocales();
+    }
+
+    @Override
+    public boolean isSecure() {
+        return servletRequest.isSecure();
+    }
+
+    @Override
+    public RequestDispatcher getRequestDispatcher(String path) {
+        return servletRequest.getRequestDispatcher(path);
+    }
+
+    @Override
+    public String getRealPath(String path) {
+        return servletRequest.getRealPath(path);
+    }
+
+    @Override
+    public int getRemotePort() {
+        return servletRequest.getRemotePort();
+    }
+
+    @Override
+    public String getLocalName() {
+        return servletRequest.getLocalName();
+    }
+
+    @Override
+    public String getLocalAddr() {
+        return servletRequest.getLocalAddr();
+    }
+
+    @Override
+    public int getLocalPort() {
+        return servletRequest.getLocalPort();
+    }
+
+    @Override
+    public ServletContext getServletContext() {
+        return servletRequest.getServletContext();
+    }
+
+    @Override
+    public AsyncContext startAsync() throws IllegalStateException {
+        return servletRequest.startAsync();
+    }
+
+    @Override
+    public AsyncContext startAsync(ServletRequest sRequest, ServletResponse sResponse) throws IllegalStateException {
+        return servletRequest.startAsync(sRequest, sResponse);
+    }
+
+    @Override
+    public boolean isAsyncStarted() {
+        return servletRequest.isAsyncStarted();
+    }
+
+    @Override
+    public boolean isAsyncSupported() {
+        return servletRequest.isAsyncSupported();
+    }
+
+    @Override
+    public AsyncContext getAsyncContext() {
+        return servletRequest.getAsyncContext();
+    }
+
+    @Override
+    public DispatcherType getDispatcherType() {
+        return servletRequest.getDispatcherType();
+    }
+
+    @Override
+    public long getContentLengthLong() {
+        return servletRequest.getContentLengthLong();
+    }
 
 }

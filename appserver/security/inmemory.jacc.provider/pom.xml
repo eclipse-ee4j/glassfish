@@ -17,18 +17,21 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-         <groupId>org.glassfish.main.security</groupId>
+        <groupId>org.glassfish.main.security</groupId>
         <artifactId>securitymodule</artifactId>
         <version>6.1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>        
-    </parent>    
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>inmemory.jacc.provider</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>A Pluggable InMemory JACC Provider</name>
+
     <developers>
         <developer>
             <id>monzillo</id>
@@ -39,19 +42,7 @@
             </roles>
         </developer>
     </developers>
-    
-    <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
@@ -77,4 +68,16 @@
             <!-- Don't set scope as provided. See issue #5992 -->
         </dependency>
     </dependencies>
+
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

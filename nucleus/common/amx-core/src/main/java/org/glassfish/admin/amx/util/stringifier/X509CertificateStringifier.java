@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -67,7 +67,7 @@ public final class X509CertificateStringifier implements Stringifier
 		final String		NL	= "\n";
 		
 		buf.append( "Issuer: " + cert.getIssuerDN().getName() + NL);
-		buf.append( "Issued to: " + cert.getSubjectDN().getName()  + NL);
+		buf.append( "Issued to: " + cert.getSubjectX500Principal().getName()  + NL);
 		buf.append( "Version: " + cert.getVersion()  + NL);
 		buf.append( "Not valid before: " + cert.getNotBefore()  + NL);
 		buf.append( "Not valid after: " + cert.getNotAfter()  + NL);

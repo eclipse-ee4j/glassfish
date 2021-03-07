@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,11 +29,10 @@ import com.sun.ejte.ccl.reporter.*;
  */
 public class WebTest {
 
-    private static SimpleReporterAdapter stat
-        = new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
     private static final String TEST_NAME = "jsp-precompiled-bundled-in-jar";
-    private static final String EXPECTED_RESPONSE = "this is a test";
+    private static final String EXPECTED_RESPONSE = "This is my UPDATED output";
 
     private String host;
     private String port;
@@ -44,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6273340");
         WebTest webTest = new WebTest(args);
@@ -52,8 +51,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -62,39 +61,23 @@ public class WebTest {
     }
 
     public void invokeJsp() throws Exception {
+        String url = "http://" + host + ":" + port + contextRoot + "/jsp/test.jsp";
+        HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
 
-        InputStream is = null;
-        BufferedReader input = null;
-        try {
-            String url = "http://" + host + ":" + port + contextRoot
-                         + "/jsps/test.jsp";
-            HttpURLConnection conn = (HttpURLConnection)
-                (new URL(url)).openConnection();
-
-            int code = conn.getResponseCode();
-            if (code != 200) {
-                System.err.println("Unexpected return code: " + code);
-                stat.addStatus(TEST_NAME, stat.FAIL);
-            } else {
-                is = conn.getInputStream();
-                input = new BufferedReader(new InputStreamReader(is));
+        int code = conn.getResponseCode();
+        if (code != 200) {
+            System.err.println("Unexpected return code: " + code);
+            stat.addStatus(TEST_NAME, stat.FAIL);
+        } else {
+            try (InputStream is = conn.getInputStream(); BufferedReader input = new BufferedReader(new InputStreamReader(is))) { 
                 String line = input.readLine();
                 if (!EXPECTED_RESPONSE.equals(line)) {
-                    System.err.println("Wrong response. "
-                                       + "Expected: " + EXPECTED_RESPONSE
-                                       + ", received: " + line);
+                    System.err.println("Wrong response. " + "Expected: " + EXPECTED_RESPONSE + ", received: " + line);
                     stat.addStatus(TEST_NAME, stat.FAIL);
                 } else {
                     stat.addStatus(TEST_NAME, stat.PASS);
                 }
             }
-        } finally {
-            try {
-                if (is != null) is.close();
-            } catch (IOException ex) {}
-            try {
-                if (input != null) input.close();
-            } catch (IOException ex) {}
         }
     }
 }

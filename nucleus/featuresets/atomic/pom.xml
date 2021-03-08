@@ -57,9 +57,9 @@
 
         <!-- nucleus-osgi -->
         <dependency>
-           <groupId>org.apache.felix</groupId>
-           <artifactId>org.apache.felix.gogo.runtime</artifactId>
-           <exclusions>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.gogo.runtime</artifactId>
+            <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -67,9 +67,9 @@
             </exclusions>
         </dependency>
         <dependency>
-           <groupId>org.apache.felix</groupId>
-           <artifactId>org.apache.felix.gogo.shell</artifactId>
-           <exclusions>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.gogo.shell</artifactId>
+            <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -77,21 +77,21 @@
             </exclusions>
         </dependency>
         <dependency>
-           <groupId>org.apache.felix</groupId>
-           <artifactId>org.apache.felix.gogo.command</artifactId>
-           <exclusions>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.gogo.command</artifactId>
+            <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- We install fileinstall bundle which monitors modules
-              dir and autodeploy dir for addition/removal/updation of bundles -->
+        <!-- We install fileinstall bundle which monitors modules dir and autodeploy dir for addition/removal/updation of 
+            bundles -->
         <dependency>
-           <groupId>org.apache.felix</groupId>
-           <artifactId>org.apache.felix.fileinstall</artifactId>
-           <exclusions>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.fileinstall</artifactId>
+            <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -100,9 +100,9 @@
         </dependency>
         <!-- fileinstall needs configadmin service -->
         <dependency>
-           <groupId>org.apache.felix</groupId>
-           <artifactId>org.apache.felix.configadmin</artifactId>
-           <exclusions>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.configadmin</artifactId>
+            <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -111,9 +111,9 @@
         </dependency>
         <!-- Felix SCR always needs to be deployed as 3 bundles since 2.0.12 -->
         <dependency>
-           <groupId>org.apache.felix</groupId>
-           <artifactId>org.apache.felix.scr</artifactId>
-           <exclusions>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr</artifactId>
+            <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -962,16 +962,8 @@
             </exclusions>
         </dependency>
         <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
-<!--        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-processing</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
+        <!-- <dependency> <groupId>org.glassfish.jersey.media</groupId> <artifactId>jersey-media-json-processing</artifactId> 
+            <exclusions> <exclusion> <groupId>*</groupId> <artifactId>*</artifactId> </exclusion> </exclusions> </dependency> -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
@@ -982,7 +974,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <exclusions>

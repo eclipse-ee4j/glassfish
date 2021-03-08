@@ -17,13 +17,15 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>nucleus-security</artifactId>
         <version>6.1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>security</artifactId>
     <packaging>glassfish-jar</packaging>
 
@@ -52,101 +54,6 @@
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
 
-    <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-             <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-             <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.1</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/admin-keyfile</include>
-                </includes>
-            </resource>
-             <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/keyfile</include>
-                </includes>
-            </resource>
-             <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.jks</include>
-                </includes>
-            </resource>
-             <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/secure.seed</include>
-                </includes>
-            </resource>
-             <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/server.policy</include>
-                </includes>
-            </resource>
-             <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/login.conf</include>
-                </includes>
-            </resource>
-        </resources>
-        <plugins>
-           <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-dependency-plugin</artifactId>
-           <executions>
-             <execution>
-               <id>copy-installed</id>
-               <phase>process-classes</phase>
-               <goals>
-                 <goal>copy</goal>
-               </goals>
-               <configuration>
-                 <artifactItems>
-                   <artifactItem>
-                     <groupId>solarisrealm</groupId>
-                     <artifactId>libsolsparcauth</artifactId>
-                     <version>1.0</version>
-                     <type>so</type>
-                   </artifactItem>
-                   <artifactItem>
-                     <groupId>solarisrealm</groupId>
-                     <artifactId>libsolx86auth</artifactId>
-                     <version>1.0</version>
-                     <type>so</type>
-                   </artifactItem>
-                 </artifactItems>
-                 <stripVersion>
-                    true
-                 </stripVersion>
-                 <!--<outputDirectory>${maven.project.build.outputDirectory}</outputDirectory>-->
-                 <outputDirectory>target/classes</outputDirectory>
-               </configuration>
-             </execution>
-           </executions>
-         </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
@@ -182,19 +89,19 @@
             <artifactId>glassfish-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency> <!-- for FindBugs -->
+        <dependency><!-- for FindBugs -->
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>simple-glassfish-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-	    <groupId>org.glassfish.external</groupId>
-	    <artifactId>management-api</artifactId>
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>management-api</artifactId>
         </dependency>
         <dependency>
-    	    <groupId>org.glassfish.gmbal</groupId>
-	    <artifactId>gmbal</artifactId>
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.annotations</groupId>
@@ -202,4 +109,100 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.1</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/admin-keyfile</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/keyfile</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.jks</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/secure.seed</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/server.policy</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/login.conf</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-installed</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>solarisrealm</groupId>
+                                    <artifactId>libsolsparcauth</artifactId>
+                                    <version>1.0</version>
+                                    <type>so</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>solarisrealm</groupId>
+                                    <artifactId>libsolx86auth</artifactId>
+                                    <version>1.0</version>
+                                    <type>so</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <stripVersion>
+                                true
+                            </stripVersion>
+                            <!--<outputDirectory>${maven.project.build.outputDirectory}</outputDirectory> -->
+                            <outputDirectory>target/classes</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

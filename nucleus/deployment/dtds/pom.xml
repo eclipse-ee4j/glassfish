@@ -17,29 +17,20 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.deployment</groupId>
         <artifactId>nucleus-deployment</artifactId>
         <version>6.1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>nucleus-dtds</artifactId>
     <packaging>distribution-fragment</packaging>
+
     <name>Set of DTDs for Nucleus distributions</name>
-    
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/.ade_path/**</exclude>
-                </excludes>
-                <targetPath>${project.build.outputDirectory}</targetPath>
-            </resource>
-        </resources>
-    </build>
-    
+
     <developers>
         <developer>
             <id>hzhang_jn</id>
@@ -61,4 +52,16 @@
             </roles>
         </developer>
     </developers>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/.ade_path/**</exclude>
+                </excludes>
+                <targetPath>${project.build.outputDirectory}</targetPath>
+            </resource>
+        </resources>
+    </build>
 </project>

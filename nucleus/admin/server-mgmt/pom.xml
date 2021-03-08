@@ -45,7 +45,7 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>common-util</artifactId>
@@ -61,7 +61,7 @@
             <artifactId>admin-cli</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -92,11 +92,8 @@
             </resource>
         </resources>
         <plugins>
-            <!--
-                XXX: no maven plugin for jakarta xml binding impl exists,
-                so we have to stick with Ant
-                and attach source root to the build ourselves...
-            -->
+            <!-- XXX: no maven plugin for jakarta xml binding impl exists, so we have to stick with Ant and attach source 
+                root to the build ourselves... -->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.0.0</version>
@@ -116,18 +113,19 @@
                         </goals>
                         <configuration>
                             <target>
-                                <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"/>
-                                <property name="dest" location="${project.build.directory}/generated-sources/xjc"/>
-                                <mkdir dir="${dest}"/>
+                                <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" />
+                                <property name="dest"
+                                    location="${project.build.directory}/generated-sources/xjc" />
+                                <mkdir dir="${dest}" />
                                 <xjc destdir="${dest}"
-                                     schema="${project.basedir}/src/main/resources/xsd/schema/template-info.xsd"
-                                     package="com.sun.enterprise.admin.servermgmt.xml.templateinfo"/>
+                                    schema="${project.basedir}/src/main/resources/xsd/schema/template-info.xsd"
+                                    package="com.sun.enterprise.admin.servermgmt.xml.templateinfo" />
                                 <xjc destdir="${dest}"
-                                     schema="${project.basedir}/src/main/resources/xsd/schema/domain-info.xsd"
-                                     package="com.sun.enterprise.admin.servermgmt.xml.domaininfo"/>
+                                    schema="${project.basedir}/src/main/resources/xsd/schema/domain-info.xsd"
+                                    package="com.sun.enterprise.admin.servermgmt.xml.domaininfo" />
                                 <xjc destdir="${dest}"
-                                     schema="${project.basedir}/src/main/resources/xsd/schema/stringsubs.xsd"
-                                     package="com.sun.enterprise.admin.servermgmt.xml.stringsubs"/>
+                                    schema="${project.basedir}/src/main/resources/xsd/schema/stringsubs.xsd"
+                                    package="com.sun.enterprise.admin.servermgmt.xml.stringsubs" />
                             </target>
                         </configuration>
                     </execution>

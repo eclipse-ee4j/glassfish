@@ -17,32 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>nucleus-security</artifactId>
         <version>6.1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>security-services</artifactId>
     <packaging>glassfish-jar</packaging>
-    
-    <name>Security Services and SPI</name>
 
-    <build>
-        <plugins>
-            <!-- JDK 8u171+, PasswordAliasTest fails due to serialization issue
-                 Using forked process helps the tests to pass -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <forkCount>1</forkCount> 
-                    <reuseForks>false</reuseForks>
-                </configuration>
-            </plugin>
-          </plugins>
-    </build>
+    <name>Security Services and SPI</name>
 
     <dependencies>
         <dependency>
@@ -85,4 +72,18 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- JDK 8u171+, PasswordAliasTest fails due to serialization issue Using forked process helps the tests to pass -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

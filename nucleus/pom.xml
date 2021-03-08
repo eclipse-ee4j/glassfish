@@ -17,8 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
@@ -30,22 +31,10 @@
     <artifactId>glassfish-nucleus-parent</artifactId>
     <version>6.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>GlassFish Nucleus Project</name>
 
+    <name>GlassFish Nucleus Project</name>
     <description>Glassfish Nucleus Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
-
-    <scm>
-      <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
-      <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
-      <url>https://github.com/eclipse-ee4j/glassfish</url>
-    </scm>
-
-    <issueManagement>
-        <system>IssueTracker</system>
-        <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
-    </issueManagement>
-
     <licenses>
         <license>
             <name>EPL 2.0</name>
@@ -58,13 +47,14 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
     <mailingLists>
         <mailingList>
-          <name>Glassfish dev mailing list</name>
-          <post>glassfish-dev@eclipse.org</post>
-          <subscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</subscribe>
-          <unsubscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</unsubscribe>
-          <archive>https://dev.eclipse.org/mhonarc/lists/glassfish-dev</archive>
+            <name>Glassfish dev mailing list</name>
+            <post>glassfish-dev@eclipse.org</post>
+            <subscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</subscribe>
+            <unsubscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</unsubscribe>
+            <archive>https://dev.eclipse.org/mhonarc/lists/glassfish-dev</archive>
         </mailingList>
     </mailingLists>
 
@@ -86,6 +76,16 @@
         <module>resources</module>
         <module>featuresets</module>
     </modules>
+
+    <scm>
+        <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
+        <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
+        <url>https://github.com/eclipse-ee4j/glassfish</url>
+    </scm>
+    <issueManagement>
+        <system>IssueTracker</system>
+        <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
+    </issueManagement>
 
     <build>
         <pluginManagement>
@@ -117,7 +117,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
@@ -129,5 +128,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

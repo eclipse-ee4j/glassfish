@@ -17,18 +17,28 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
         <version>6.1.0-SNAPSHOT</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
+
     <groupId>org.glassfish.main.hk2</groupId>
     <artifactId>glassfish-nucleus-hk2</artifactId>
     <packaging>pom</packaging>
+
     <name>Glassfish Nucleus HK2 Modules</name>
+
+    <modules>
+        <module>tiger-types</module>
+        <module>hk2-config</module>
+        <module>config-types</module>
+    </modules>
+
     <build>
         <plugins>
             <plugin>
@@ -37,21 +47,16 @@
                 <executions>
                     <execution>
                         <id>default-generate-test-injectors</id>
-                        <phase/>
-                        <goals/>
+                        <phase />
+                        <goals />
                     </execution>
                     <execution>
                         <id>default-generate-injectors</id>
-                        <phase/>
-                        <goals/>
+                        <phase />
+                        <goals />
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-    <modules>
-        <module>tiger-types</module>
-        <module>hk2-config</module>
-        <module>config-types</module>
-    </modules>
 </project>

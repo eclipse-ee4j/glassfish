@@ -23,7 +23,8 @@ env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 def jobs = [
   "cdi_all",
   "ql_gf_full_profile_all",
-  "ql_gf_web_profile_all"
+  "ql_gf_web_profile_all",
+  "web_jsp"
 ]
 
 
@@ -31,8 +32,8 @@ def jobs_all = [
   "cdi_all",
   "ql_gf_full_profile_all",
   "ql_gf_web_profile_all",
-  
   "web_jsp",
+  
   "deployment_all",
   "ejb_group_1",
   "ejb_group_2",

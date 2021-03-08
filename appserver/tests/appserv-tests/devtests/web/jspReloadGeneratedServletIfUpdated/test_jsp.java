@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,11 +25,11 @@ public final class test_jsp extends org.apache.jasper.runtime.HttpJspBase
 
   private static final JspFactory _jspxFactory = JspFactory.getDefaultFactory();
 
-  private static java.util.Vector _jspx_dependants;
+  private static java.util.List<String> _jspx_dependants;
 
   private org.glassfish.jsp.api.ResourceInjector _jspx_resourceInjector;
 
-  public Object getDependants() {
+  public java.util.List<String> getDependants() {
     return _jspx_dependants;
   }
 
@@ -47,7 +47,7 @@ public final class test_jsp extends org.apache.jasper.runtime.HttpJspBase
 
     try {
       response.setContentType("text/html");
-      response.setHeader("X-Powered-By", "JSP/2.1");
+      response.setHeader("X-Powered-By", "JSP/2.3");
       pageContext = _jspxFactory.getPageContext(this, request, response,
       			null, true, 8192, true);
       _jspx_page_context = pageContext;
@@ -58,13 +58,14 @@ public final class test_jsp extends org.apache.jasper.runtime.HttpJspBase
       _jspx_out = out;
       _jspx_resourceInjector = (org.glassfish.jsp.api.ResourceInjector) application.getAttribute("com.sun.appserv.jsp.resource.injector");
 
-      out.write("This is my UPDATED output\n");
+      out.write("This is my UPDATED output\n\n");
     } catch (Throwable t) {
       if (!(t instanceof SkipPageException)){
         out = _jspx_out;
         if (out != null && out.getBufferSize() != 0)
           out.clearBuffer();
         if (_jspx_page_context != null) _jspx_page_context.handlePageException(t);
+        else throw new ServletException(t);
       }
     } finally {
       _jspxFactory.releasePageContext(_jspx_page_context);

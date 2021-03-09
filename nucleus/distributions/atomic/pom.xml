@@ -61,7 +61,7 @@
                         </goals>
                         <phase>process-resources</phase>
                     </execution>
-                    
+
                 </executions>
             </plugin>
         </plugins>

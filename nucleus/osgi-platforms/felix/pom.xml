@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
@@ -35,8 +36,9 @@
    distribution from Felix project and installs. The only difference being we keep
    the bundles in glassfish/modules dir as opposed to bundle dir in felix.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
       <groupId>org.glassfish.main.osgi-platforms</groupId>
       <artifactId>osgi-platforms</artifactId>
@@ -44,15 +46,18 @@
     </parent>
 
     <artifactId>felix</artifactId>
-    <name>Apache Felix, associated bundles and conf files</name>
     <!-- This is a distribution fragement.
          It is distributed as part of nucleus-base. 
     -->
     <packaging>distribution-fragment</packaging>
+
+    <name>Apache Felix, associated bundles and conf files</name>
+
     <properties>
         <felix.outdir>${project.build.OutputDirectory}/osgi/felix/</felix.outdir>
         <glassfish.modulesdir>${project.build.OutputDirectory}/modules/</glassfish.modulesdir>
     </properties>
+
     <build>
         <plugins>
             <plugin>

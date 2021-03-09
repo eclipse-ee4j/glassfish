@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
@@ -16,8 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.osgi-platforms</groupId>
         <artifactId>osgi-platforms</artifactId>
@@ -26,7 +28,7 @@
 
     <artifactId>osgi-container</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>OSGi Container</name>
     <description>OSGi adapter to use OSGi modules as application code</description>
 
@@ -47,6 +49,7 @@
             <organization>Oracle, Inc.</organization>
         </developer>
     </developers>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>

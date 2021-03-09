@@ -17,29 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>nucleus-common</artifactId>
         <version>6.1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>internal-api</artifactId>
     <packaging>glassfish-jar</packaging>
 
     <name>Private APIs of Glassfish</name>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
 
     <developers>
         <developer>
@@ -62,6 +52,7 @@
             </roles>
         </developer>
     </developers>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
@@ -80,15 +71,15 @@
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>simple-glassfish-api</artifactId>
-	    <version>${project.version}</version>
-	    <scope>provided</scope>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>config-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>common-util</artifactId>
             <version>${project.version}</version>
@@ -97,13 +88,13 @@
             <groupId>org.glassfish.main.grizzly</groupId>
             <artifactId>nucleus-grizzly-all</artifactId>
             <version>${project.version}</version>
-      	    <!-- grizzly was bringing in the following old hk2 jar that we don't want on the classpath -->
+            <!-- grizzly was bringing in the following old hk2 jar that we don't want on the classpath -->
             <exclusions>
-               <exclusion>
-                  <groupId>org.glassfish.main.hk2</groupId>
-                  <artifactId>config-types</artifactId>
-               </exclusion>
-           </exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.main.hk2</groupId>
+                    <artifactId>config-types</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.annotations</groupId>
@@ -111,4 +102,15 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

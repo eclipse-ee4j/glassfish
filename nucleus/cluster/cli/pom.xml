@@ -44,7 +44,7 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>admin-cli</artifactId>
@@ -90,7 +90,7 @@
             <artifactId>ssl-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-gms-api</artifactId>

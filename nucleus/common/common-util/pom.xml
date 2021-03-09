@@ -17,21 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>nucleus-common</artifactId>
         <version>6.1.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <artifactId>common-util</artifactId>
     <packaging>glassfish-jar</packaging>
-    
-    <name>Common Utilities</name>
 
-    <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
-    </properties>
+    <name>Common Utilities</name>
 
     <developers>
         <developer>
@@ -45,31 +43,11 @@
             </roles>
         </developer>
     </developers>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <excludes>
-                        <exclude>**/.ade_path/**</exclude>
-                        <exclude>**/ha/spi/*.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
+
+    <properties>
+        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
@@ -85,17 +63,41 @@
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <!-- Needed to have a bundle activator to set up a different serialization policy-->
+        <dependency><!-- Needed to have a bundle activator to set up a different serialization policy -->
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <!-- Needed to have a bundle activator to set up a different serialization policy-->
+        <dependency><!-- Needed to have a bundle activator to set up a different serialization policy -->
             <groupId>org.osgi</groupId>
             <artifactId>osgi.enterprise</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <excludes>
+                        <exclude>**/.ade_path/**</exclude>
+                        <exclude>**/ha/spi/*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

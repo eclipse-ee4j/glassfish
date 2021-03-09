@@ -65,7 +65,8 @@
         <temp.dir>${project.build.directory}/dependency</temp.dir>
         <include.group.ids>org.glassfish.main.packager</include.group.ids>
         <install.dir.name>${nucleus.install.dir.name}</install.dir.name>
-        <create-domain.args>--user admin create-domain --nopassword --savelogin=true --checkports=false --adminport 4848 --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
+        <create-domain.args>--user admin create-domain --nopassword --savelogin=true --checkports=false --adminport 4848
+            --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
     </properties>
 
     <build>
@@ -91,7 +92,7 @@
                         </execution>
                     </executions>
                 </plugin>
-                
+
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
@@ -111,7 +112,7 @@
                                 </mappings>
                             </configuration>
                         </execution>
-                        
+
                         <execution>
                             <id>create-domain</id>
                             <phase>process-resources</phase>
@@ -120,7 +121,7 @@
                                 <commandlineArgs>${create-domain.args}</commandlineArgs>
                             </configuration>
                         </execution>
-                        
+
                         <execution>
                             <id>default-zip</id>
                             <phase>package</phase>
@@ -146,7 +147,7 @@
                         </execution>
                     </executions>
                 </plugin>
-                
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -170,15 +171,15 @@
                         <useProjectArtifact>false</useProjectArtifact>
                     </configuration>
                 </plugin>
-                
-                 <plugin>
+
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <skip>true</skip>
                     </configuration>
                 </plugin>
-                
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>

@@ -79,15 +79,15 @@
             <artifactId>internal-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        
+        <!-- 
+            We compile against the security module but we don't want to create a hard dependency because that 
+            would drag it into the nucleus distribution which we'd like to avoid. 
+            
+            The actual uses of SSLUtils from the security module are instantiated just-in-time only when needed, 
+            rather than being injected. 
+        -->
         <dependency>
-            <!-- 
-                We compile against the security module but we don't want  to create a hard 
-                dependency because that would drag it into the nucleus distribution 
-                which we'd like to avoid. 
-                
-                The actual uses of SSLUtils from the security module 
-                are instantiated just-in-time only when needed, rather than being injected. 
-            -->
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>security</artifactId>
             <version>${project.parent.version}</version>
@@ -104,7 +104,7 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.annotations</groupId>
             <artifactId>logging-annotation-processor</artifactId>

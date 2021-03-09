@@ -17,8 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
@@ -30,22 +31,10 @@
     <artifactId>nucleus-parent</artifactId>
     <version>6.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>GlassFish Nucleus Parent Project</name>
 
+    <name>GlassFish Nucleus Parent Project</name>
     <description>Glassfish Nucleus Parent Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
-
-    <scm>
-      <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
-      <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
-      <url>https://github.com/eclipse-ee4j/glassfish</url>
-    </scm>
-
-    <issueManagement>
-        <system>IssueTracker</system>
-        <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
-    </issueManagement>
-
     <licenses>
         <license>
             <name>EPL 2.0</name>
@@ -58,6 +47,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
     <mailingLists>
         <mailingList>
           <name>Glassfish dev mailing list</name>
@@ -67,6 +57,16 @@
           <archive>https://dev.eclipse.org/mhonarc/lists/glassfish-dev</archive>
         </mailingList>
     </mailingLists>
+
+    <scm>
+      <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
+      <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
+      <url>https://github.com/eclipse-ee4j/glassfish</url>
+    </scm>
+    <issueManagement>
+        <system>IssueTracker</system>
+        <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
+    </issueManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -157,505 +157,6 @@
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
     </properties>
 
-    <build>
-        <defaultGoal>install</defaultGoal>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <finalName>${project.artifactId}</finalName>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/.ade_path/**</exclude>
-                    <exclude>**/.gitkeep_empty_dir</exclude>
-                </excludes>
-            </resource>
-        </resources>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>hk2-inhabitant-generator</artifactId>
-                    <version>${hk2.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>osgiversion-maven-plugin</artifactId>
-                    <version>${hk2.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>consolidatedbundle-maven-plugin</artifactId>
-                    <version>${hk2.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-                    <artifactId>maven-antrun-extended-plugin</artifactId>
-                    <version>1.43</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <configuration>
-                        <source>11</source>
-                        <target>11</target>
-                        <excludes>
-                            <exclude>**/.ade_path/**</exclude>
-                        </excludes>
-                        <testExcludes>
-                            <testExclude>**/.ade_path/**</testExclude>
-                        </testExcludes>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.glassfish.build</groupId>
-                    <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <version>3.2.27</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.2.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M4</version>
-                    <configuration>
-                        <useSystemClassLoader>true</useSystemClassLoader>
-                        <forkCount>1</forkCount>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.9.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.3.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0-M1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>3.0.0-M1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.2.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.glassfish.copyright</groupId>
-                    <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <version>2.4</version>
-                    <configuration>
-                        <scm>git</scm>
-                        <scmOnly>true</scmOnly>
-                        <exclude>
-                            <pattern>.gif</pattern>
-                            <pattern>.jpg</pattern>
-                            <pattern>.png</pattern>
-                            <pattern>.exe</pattern>
-                            <pattern>.ico</pattern>
-                            <pattern>.jar</pattern>
-                            <pattern>.zip</pattern>
-                            <pattern>.war</pattern>
-                            <pattern>.ear</pattern>
-                            <pattern>.sql</pattern>
-                            <pattern>.jks</pattern>
-                            <pattern>.json</pattern>
-                            <pattern>.class</pattern>
-                            <pattern>.txt</pattern>
-                            <pattern>.log</pattern>
-                            <pattern>.bin</pattern>
-                            <pattern>.bat</pattern>
-                            <pattern>.1</pattern>
-                            <pattern>.1m</pattern>
-                            <pattern>.5asc</pattern>
-                            <pattern>/TODO</pattern>
-                            <pattern>/MANIFEST.MF</pattern>
-                            <pattern>/manifest.mf</pattern>
-                            <pattern>/META-INF/services/</pattern>
-                            <pattern>/META-INF/hiddenservices/</pattern>
-                            <pattern>/README</pattern>
-                            <pattern>/yui/</pattern>
-                            <pattern>/zlib-1.1.4/</pattern>
-                            <pattern>deployment/dtds/</pattern>
-                            <pattern>deployment/schemas/</pattern>
-                            <pattern>admin/cli/src/main/resources/unsupported-legacy-command-names</pattern>
-                            <pattern>admin/cli/src/main/resources/supported-legacy-command-names</pattern>
-                            <pattern>/readme</pattern>
-                            <pattern>cluster/cli/src/test/resources/fake_gf_install_dir/junk</pattern>
-                        </exclude>
-			            <ignoreYear>true</ignoreYear>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>com.google.code.maven-replacer-plugin</groupId>
-                    <artifactId>replacer</artifactId>
-                    <version>${replacer.plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <plugins>
-            <!-- Sets minimal Maven version to 3.5.4 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <executions>
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>3.5.4</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        
-            <!-- force cleaning of the local repository
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>purge-local-dependencies</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>purge-local-repository</goal>
-                        </goals>
-                        <configuration>
-                            <resolutionFuzziness>groupId</resolutionFuzziness>
-                            <includes>
-                                <include>jakarta.ejb</include>
-                                <include>jakarta.transaction</include>
-                                <include>jakarta.resource</include>
-                                <include>jakarta.enterprise.concurrent</include>
-                                <include>jakarta.ws.rs</include>
-                                <include>javax.xml.registry</include>
-                                <include>jakarta.websocket</include>
-                                <include>org.glassfish.jersey</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-	    -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>find-root</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>rootlocation</goal>
-                        </goals>
-                        <configuration>
-                            <rootLocationProperty>legal.doc.source</rootLocationProperty>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-resource</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/manpages</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-legal-resource</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${legal.doc.source}</directory>
-                                    <includes>
-                                        <include>NOTICE.md</include>
-                                        <include>LICENSE.md</include>
-                                    </includes>
-                                    <targetPath>META-INF</targetPath>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>glassfishbuild-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <dir>${project.build.outputDirectory}</dir>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>echo</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>echo</goal>
-                        </goals>
-                        <configuration>
-                            <message>Building in ${project.basedir} </message>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.glassfish.hk2</groupId>
-                <artifactId>hk2-inhabitant-generator</artifactId>
-                <configuration>
-                    <supportedProjectTypes>jar,ejb,war,glassfish-jar</supportedProjectTypes>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <useSystemClassLoader>true</useSystemClassLoader>
-                    <forkCount>1</forkCount>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <!-- By default, we don't export anything. -->
-                    <Export-Package />
-                    <instructions>
-                        <_include>-osgi.bundle</_include>
-                    </instructions>
-                    <excludeDependencies>tools-jar</excludeDependencies>
-                    <supportedProjectTypes>
-                        <supportedProjectType>glassfish-jar</supportedProjectType>
-                        <supportedProjectType>jar</supportedProjectType>
-                    </supportedProjectTypes>
-                    <niceManifest>true</niceManifest>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-manifest</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <echo>Generating manifest for ${project.build.outputDirectory}/META-INF for ${project.artifactId}</echo>
-                                <echo file="${basedir}/target/MANIFEST.MF">Manifest-Version: 1.0</echo>
-                                <copy toDir="${project.build.outputDirectory}/META-INF" overwrite="false">
-                                    <fileset dir="${basedir}/target" includes="MANIFEST.MF">
-                                        <present targetdir="${project.build.outputDirectory}/META-INF" present="srconly" />
-                                    </fileset>
-                                </copy>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
-                        </manifest>
-                        
-                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
-                    <excludes>
-                        <exclude>**/.ade_path/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <configuration>
-                    <includePom>true</includePom>
-                    <excludes>
-                        <exclude>**/.ade_path/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <detectOfflineLinks>false</detectOfflineLinks>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                    <skip>${javadoc.skip}</skip>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.glassfish.hk2</groupId>
-                <artifactId>osgiversion-maven-plugin</artifactId>
-                <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear
-                in package version attribute, we use the following goal to
-                populate a project property with an OSGi version which is
-                equivalent to maven version without qualifier and then use that
-                property in osgi.bundle while exporting. -->
-                <configuration>
-                    <dropVersionComponent>qualifier</dropVersionComponent>
-                    <versionPropertyName>project.osgi.version</versionPropertyName>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
-                    <skip>${deploy.skip}</skip>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
-                <configuration>
-                    <skip>${findbugs.skip}</skip>
-                    <threshold>${findbugs.threshold}</threshold>
-                    <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                    <excludeFilterFile>
-                        ${findbugs.common},${findbugs.exclude}
-                    </excludeFilterFile>
-                    <jvmArgs>-Dfindbugs.glassfish.logging.validLoggerPrefixes=${findbugs.glassfish.logging.validLoggerPrefixes}</jvmArgs>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.glassfish.findbugs</groupId>
-                            <artifactId>findbugs-logging-detectors</artifactId>
-                            <version>1.6</version>
-                        </plugin>
-                    </plugins>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.glassfish.findbugs</groupId>
-                        <artifactId>findbugs</artifactId>
-                        <version>1.6</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>command-security-maven-plugin</artifactId>
-                <version>${command-security-plugin.version}</version>
-                <configuration>
-                    <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
-                <configuration>
-                    <skip>${findbugs.skip}</skip>
-                    <threshold>${findbugs.threshold}</threshold>
-                    <excludeFilterFile>
-                        exclude-common.xml,${findbugs.exclude}
-                    </excludeFilterFile>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -667,8 +168,8 @@
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-bom</artifactId>
                 <version>${hk2.version}</version>
-                <scope>import</scope>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.metro</groupId>
@@ -704,15 +205,15 @@
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-bom</artifactId>
                 <version>${grizzly.version}</version>
-                <scope>import</scope>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey</groupId>
                 <artifactId>jersey-bom</artifactId>
                 <version>${jersey.version}</version>
-                <scope>import</scope>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
@@ -1089,6 +590,511 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/.ade_path/**</exclude>
+                    <exclude>**/.gitkeep_empty_dir</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>hk2-inhabitant-generator</artifactId>
+                    <version>${hk2.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>osgiversion-maven-plugin</artifactId>
+                    <version>${hk2.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>consolidatedbundle-maven-plugin</artifactId>
+                    <version>${hk2.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
+                    <artifactId>maven-antrun-extended-plugin</artifactId>
+                    <version>1.43</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>5.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <source>11</source>
+                        <target>11</target>
+                        <excludes>
+                            <exclude>**/.ade_path/**</exclude>
+                        </excludes>
+                        <testExcludes>
+                            <testExclude>**/.ade_path/**</testExclude>
+                        </testExcludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.glassfish.build</groupId>
+                    <artifactId>glassfishbuild-maven-plugin</artifactId>
+                    <version>3.2.27</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M4</version>
+                    <configuration>
+                        <useSystemClassLoader>true</useSystemClassLoader>
+                        <forkCount>1</forkCount>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.9.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>3.2.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.glassfish.copyright</groupId>
+                    <artifactId>glassfish-copyright-maven-plugin</artifactId>
+                    <version>2.4</version>
+                    <configuration>
+                        <scm>git</scm>
+                        <scmOnly>true</scmOnly>
+                        <exclude>
+                            <pattern>.gif</pattern>
+                            <pattern>.jpg</pattern>
+                            <pattern>.png</pattern>
+                            <pattern>.exe</pattern>
+                            <pattern>.ico</pattern>
+                            <pattern>.jar</pattern>
+                            <pattern>.zip</pattern>
+                            <pattern>.war</pattern>
+                            <pattern>.ear</pattern>
+                            <pattern>.sql</pattern>
+                            <pattern>.jks</pattern>
+                            <pattern>.json</pattern>
+                            <pattern>.class</pattern>
+                            <pattern>.txt</pattern>
+                            <pattern>.log</pattern>
+                            <pattern>.bin</pattern>
+                            <pattern>.bat</pattern>
+                            <pattern>.1</pattern>
+                            <pattern>.1m</pattern>
+                            <pattern>.5asc</pattern>
+                            <pattern>/TODO</pattern>
+                            <pattern>/MANIFEST.MF</pattern>
+                            <pattern>/manifest.mf</pattern>
+                            <pattern>/META-INF/services/</pattern>
+                            <pattern>/META-INF/hiddenservices/</pattern>
+                            <pattern>/README</pattern>
+                            <pattern>/yui/</pattern>
+                            <pattern>/zlib-1.1.4/</pattern>
+                            <pattern>deployment/dtds/</pattern>
+                            <pattern>deployment/schemas/</pattern>
+                            <pattern>admin/cli/src/main/resources/unsupported-legacy-command-names</pattern>
+                            <pattern>admin/cli/src/main/resources/supported-legacy-command-names</pattern>
+                            <pattern>/readme</pattern>
+                            <pattern>cluster/cli/src/test/resources/fake_gf_install_dir/junk</pattern>
+                        </exclude>
+			            <ignoreYear>true</ignoreYear>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <version>${replacer.plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!-- Sets minimal Maven version to 3.5.4 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.5.4</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        
+            <!-- force cleaning of the local repository
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>purge-local-dependencies</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>purge-local-repository</goal>
+                        </goals>
+                        <configuration>
+                            <resolutionFuzziness>groupId</resolutionFuzziness>
+                            <includes>
+                                <include>jakarta.ejb</include>
+                                <include>jakarta.transaction</include>
+                                <include>jakarta.resource</include>
+                                <include>jakarta.enterprise.concurrent</include>
+                                <include>jakarta.ws.rs</include>
+                                <include>javax.xml.registry</include>
+                                <include>jakarta.websocket</include>
+                                <include>org.glassfish.jersey</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+	    -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>find-root</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>rootlocation</goal>
+                        </goals>
+                        <configuration>
+                            <rootLocationProperty>legal.doc.source</rootLocationProperty>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/manpages</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-legal-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${legal.doc.source}</directory>
+                                    <includes>
+                                        <include>NOTICE.md</include>
+                                        <include>LICENSE.md</include>
+                                    </includes>
+                                    <targetPath>META-INF</targetPath>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.glassfish.build</groupId>
+                <artifactId>glassfishbuild-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <dir>${project.build.outputDirectory}</dir>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>echo</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>echo</goal>
+                        </goals>
+                        <configuration>
+                            <message>Building in ${project.basedir} </message>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2-inhabitant-generator</artifactId>
+                <configuration>
+                    <supportedProjectTypes>jar,ejb,war,glassfish-jar</supportedProjectTypes>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <forkCount>1</forkCount>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <!-- By default, we don't export anything. -->
+                    <Export-Package />
+                    <instructions>
+                        <_include>-osgi.bundle</_include>
+                    </instructions>
+                    <excludeDependencies>tools-jar</excludeDependencies>
+                    <supportedProjectTypes>
+                        <supportedProjectType>glassfish-jar</supportedProjectType>
+                        <supportedProjectType>jar</supportedProjectType>
+                    </supportedProjectTypes>
+                    <niceManifest>true</niceManifest>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-manifest</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Generating manifest for ${project.build.outputDirectory}/META-INF for ${project.artifactId}</echo>
+                                <echo file="${basedir}/target/MANIFEST.MF">Manifest-Version: 1.0</echo>
+                                <copy toDir="${project.build.outputDirectory}/META-INF" overwrite="false">
+                                    <fileset dir="${basedir}/target" includes="MANIFEST.MF">
+                                        <present targetdir="${project.build.outputDirectory}/META-INF" present="srconly" />
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathLayoutType>custom</classpathLayoutType>
+                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
+                        </manifest>
+                        
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                    <excludes>
+                        <exclude>**/.ade_path/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <includePom>true</includePom>
+                    <excludes>
+                        <exclude>**/.ade_path/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <detectOfflineLinks>false</detectOfflineLinks>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <skip>${javadoc.skip}</skip>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>osgiversion-maven-plugin</artifactId>
+                <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear
+                in package version attribute, we use the following goal to
+                populate a project property with an OSGi version which is
+                equivalent to maven version without qualifier and then use that
+                property in osgi.bundle while exporting. -->
+                <configuration>
+                    <dropVersionComponent>qualifier</dropVersionComponent>
+                    <versionPropertyName>project.osgi.version</versionPropertyName>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
+                    <skip>${deploy.skip}</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.version}</version>
+                <configuration>
+                    <skip>${findbugs.skip}</skip>
+                    <threshold>${findbugs.threshold}</threshold>
+                    <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+                    <excludeFilterFile>
+                        ${findbugs.common},${findbugs.exclude}
+                    </excludeFilterFile>
+                    <jvmArgs>-Dfindbugs.glassfish.logging.validLoggerPrefixes=${findbugs.glassfish.logging.validLoggerPrefixes}</jvmArgs>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.glassfish.findbugs</groupId>
+                            <artifactId>findbugs-logging-detectors</artifactId>
+                            <version>1.6</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.glassfish.findbugs</groupId>
+                        <artifactId>findbugs</artifactId>
+                        <version>1.6</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.glassfish.build</groupId>
+                <artifactId>command-security-maven-plugin</artifactId>
+                <version>${command-security-plugin.version}</version>
+                <configuration>
+                    <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.version}</version>
+                <configuration>
+                    <skip>${findbugs.skip}</skip>
+                    <threshold>${findbugs.threshold}</threshold>
+                    <excludeFilterFile>
+                        exclude-common.xml,${findbugs.exclude}
+                    </excludeFilterFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
         <profile>
@@ -1230,13 +1236,4 @@
         </profile>
 
     </profiles>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
 </project>

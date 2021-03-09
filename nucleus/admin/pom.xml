@@ -17,26 +17,29 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
         <version>6.1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <groupId>org.glassfish.main.admin</groupId>
     <artifactId>nucleus-admin</artifactId>
     <packaging>pom</packaging>
+
     <name>Admin Modules</name>
+
     <modules>
         <module>config-api</module>
         <module>server-mgmt</module>
-        <module>util</module>    
+        <module>util</module>
         <module>cli</module>
         <module>launcher</module>
         <module>monitor</module>
         <module>rest</module>
-	<module>template</module>
+        <module>template</module>
     </modules>
 </project>

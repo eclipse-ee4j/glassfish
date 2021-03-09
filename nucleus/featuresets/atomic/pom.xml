@@ -86,8 +86,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- We install fileinstall bundle which monitors modules dir and autodeploy dir for addition/removal/updation of 
-            bundles -->
+        <!-- 
+            We install fileinstall bundle which monitors modules dir and autodeploy dir for 
+            addition/removal/updation of bundles 
+        -->
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.fileinstall</artifactId>
@@ -961,9 +963,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
-        <!-- <dependency> <groupId>org.glassfish.jersey.media</groupId> <artifactId>jersey-media-json-processing</artifactId> 
-            <exclusions> <exclusion> <groupId>*</groupId> <artifactId>*</artifactId> </exclusion> </exclusions> </dependency> -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>

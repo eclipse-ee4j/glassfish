@@ -146,7 +146,7 @@
         <mimepull.version>1.9.13</mimepull.version>
         <asm.version>9.1</asm.version>
 
-        <testng.version>7.1.0</testng.version>
+        <testng.version>7.4.0</testng.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
@@ -425,7 +425,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.13</version>
+                <version>4.13.2</version>
             </dependency>
             <dependency>
                 <groupId>org.testng</groupId>
@@ -1060,7 +1060,7 @@
                     <dependency>
                         <groupId>org.glassfish.findbugs</groupId>
                         <artifactId>findbugs</artifactId>
-                        <version>1.6</version>
+                        <version>1.7</version>
                     </dependency>
                 </dependencies>
             </plugin>

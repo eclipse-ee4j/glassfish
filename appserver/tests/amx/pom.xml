@@ -69,19 +69,6 @@
 		
 		
 	   </plugins>
-
-	<!--
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>org/glassfish/admin/amx/cmd/*.properties</include>
-                    <include>org/glassfish/admin/amx/dotted/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
-      -->
-      
     </build>
 
 
@@ -107,20 +94,10 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-     
-     <!--
-        <dependency>
-            <groupId>org.glassfish.tests</groupId>
-            <artifactId>utils</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-     -->
           
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>compile</scope>
 		</dependency>
         

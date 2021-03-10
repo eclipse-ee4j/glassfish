@@ -552,11 +552,6 @@
                 <version>1.7.3</version>
             </dependency>
             <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.7</version>
-            </dependency>
-            <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>
                 <artifactId>dataprovider</artifactId>
                 <version>1.0</version>

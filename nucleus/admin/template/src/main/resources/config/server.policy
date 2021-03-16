@@ -138,3 +138,8 @@ grant codeBase "jrt:/jdk.compiler" {
       permission java.lang.RuntimePermission "getenv.JDK_JAVAC_OPTIONS";
       permission java.lang.RuntimePermission "createClassLoader";
 };
+
+// Following grant block is required for using JDK JarSigner
+grant {
+    permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.misc";
+};

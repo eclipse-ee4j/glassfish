@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,8 +72,8 @@ public class ASJarSigner implements PostConstruct {
     /** default alias for signing if the admin does not specify one */
     private static final String DEFAULT_ALIAS_VALUE = "s1as";
 
-    private static final String DEFAULT_DIGEST_ALGORITHM = "SHA1";
-    private static final String DEFAULT_KEY_ALGORITHM = "RSA";
+    private static final String DEFAULT_DIGEST_ALGORITHM = "SHA-1";
+    private static final String DEFAULT_SIGNATURE_ALGORITHM = "SHA1withRSA";
     
     private static final SecuritySupport securitySupport = SecuritySupport.getDefaultInstance();
 
@@ -154,7 +154,7 @@ public class ASJarSigner implements PostConstruct {
                 
                 JarSigner signer = new JarSigner.Builder(privateKey, certPath)
                         .digestAlgorithm(DEFAULT_DIGEST_ALGORITHM)
-                        .signatureAlgorithm(DEFAULT_KEY_ALGORITHM)
+                        .signatureAlgorithm(DEFAULT_SIGNATURE_ALGORITHM)
                         .build();
                 
                 // TODO: add Attributes to Manifest and additionalContent

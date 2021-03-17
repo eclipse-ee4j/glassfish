@@ -258,7 +258,6 @@
                 <include>appserv-rt.jar</include>
                 <include>gf-client.jar</include>
                 <include>grizzly-npn-bootstrap.jar</include>
-                <include>resolver.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/lib</outputDirectory>
         </fileSet>
@@ -330,7 +329,6 @@
                 <exclude>mejb.jar</exclude>
                 <exclude>weld-se-core.jar</exclude>
                 <exclude>weld-se-shaded.jar</exclude>
-                <exclude>resolver.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/glassfish/modules</outputDirectory>
         </fileSet>

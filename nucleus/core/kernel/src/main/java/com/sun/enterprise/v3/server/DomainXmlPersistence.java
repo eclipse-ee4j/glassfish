@@ -103,9 +103,7 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
     @Override
     public void save(DomDocument doc) throws IOException {
         if (modularityUtils.isIgnorePersisting() && !modularityUtils.isCommandInvocation()) {
-            if (skippedDoc != null) {
-                assert(doc == skippedDoc);
-            }
+            assert skippedDoc == null || (doc == skippedDoc);
             skippedDoc = doc;
             return;
         }
@@ -116,7 +114,7 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
             logger.severe(msg);
             throw new IOException(msg);
         }
-        Lock writeLock=null;
+        Lock writeLock = null;
         try {
             try {
                 writeLock = accessWrite();
@@ -136,37 +134,32 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
             }
             // write to the temporary file
             XMLStreamWriter writer = null;
-            OutputStream fos = getOutputStream(f);
-            try {
+            try (OutputStream fos = getOutputStream(f)) {
                 writer = xmlFactory.createXMLStreamWriter(new BufferedOutputStream(fos));
                 IndentingXMLStreamWriter indentingXMLStreamWriter = new IndentingXMLStreamWriter(writer);
                 doc.writeTo(indentingXMLStreamWriter);
                 indentingXMLStreamWriter.close();
-            }
-            catch (XMLStreamException e) {
+            } catch (XMLStreamException e) {
                 String msg = localStrings.getLocalString("TmpFileNotSaved",
-                                "Configuration could not be saved to temporary file");
+                        "Configuration could not be saved to temporary file");
                 logger.log(Level.SEVERE, msg, e);
                 throw new IOException(e.getMessage(), e);
                 // return after calling finally clause, because since temp file couldn't be saved,
                 // renaming should not be attempted
-            }
-            finally {
+            } finally {
                 if (writer != null) {
                     try {
                         writer.close();
-                    }
-                    catch (XMLStreamException e) {
-                        logger.log(Level.SEVERE, localStrings.getLocalString("CloseFailed", 
+                    } catch (XMLStreamException e) {
+                        logger.log(Level.SEVERE, localStrings.getLocalString("CloseFailed",
                                 "Cannot close configuration writer stream"), e);
                         throw new IOException(e.getMessage(), e);
                     }
                 }
-                fos.close();
             }
 
             // backup the current file
-            File backup = new File(env.getConfigDirPath(), "domain.xml.bak");
+            File backup = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
             if (destination.exists() && backup.exists() && !backup.delete()) {
                 String msg = localStrings.getLocalString("BackupDeleteFailed",
                         "Could not delete previous backup file at {0}" , backup.getAbsolutePath());
@@ -196,7 +189,7 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
                     "IOException while saving the configuration, changes not persisted"), e);
             throw e;
         } finally {
-            if (writeLock!=null) {
+            if (writeLock != null) {
                 writeLock.unlock();
             }
         }

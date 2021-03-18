@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +20,8 @@ package org.glassfish.webservices;
 import javax.xml.ws.http.HTTPBinding;
 
 import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.assembler.ServerPipelineHook;
-import com.sun.xml.ws.api.pipe.ServerPipeAssemblerContext;
+import com.sun.xml.ws.assembler.metro.ServerPipelineHook;
+import com.sun.xml.ws.api.pipe.ServerTubeAssemblerContext;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.xml.ws.api.model.SEIModel;
@@ -32,7 +32,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This is used by JAXWSContainer to return proper 196 security and
- *  app server monitoing pipes to the StandAlonePipeAssembler and 
+ *  app server monitoring pipes to the StandAlonePipeAssembler and 
  *  TangoPipeAssembler
  */
 @Contract
@@ -51,7 +51,7 @@ public abstract class ServerPipeCreator extends ServerPipelineHook {
 	      (endpoint.getProtocolBinding())) ? true : false); 
     }
 
-    public Pipe createMonitoringPipe(ServerPipeAssemblerContext ctxt, Pipe tail) {
+    public Pipe createMonitoringPipe(ServerTubeAssemblerContext ctxt, Pipe tail) {
         return new MonitoringPipe(ctxt, tail, endpoint);
     }    
     

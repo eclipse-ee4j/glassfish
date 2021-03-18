@@ -80,10 +80,10 @@
         <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
 
         <jsftemplating.version>2.1.4</jsftemplating.version>
-        <webservices.version>2.4.4</webservices.version>
-        <woodstox.version>5.1.0</woodstox.version>
-        <jaxb.version>2.3.3</jaxb.version>
-        <stax2-api.version>4.1</stax2-api.version>
+        <webservices.version>2.4.5</webservices.version>
+        <woodstox.version>6.2.4</woodstox.version>
+        <jaxb.version>2.3.4</jaxb.version>
+        <stax2-api.version>4.2.1</stax2-api.version>
         <jakarta.xml.registry-api.version>1.0.9</jakarta.xml.registry-api.version>
         <eclipselink.version>2.7.4</eclipselink.version>
         <jakarta-persistence-api.version>2.2.2</jakarta-persistence-api.version>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import com.sun.enterprise.security.web.integration.WebPrincipal;
 import com.sun.web.security.RealmAdapter;
 import com.sun.xml.rpc.spi.runtime.SOAPMessageContext;
 import com.sun.xml.rpc.spi.runtime.SystemHandlerDelegate;
-import com.sun.xml.ws.assembler.ClientPipelineHook;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;

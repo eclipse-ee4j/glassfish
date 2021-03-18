@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,20 +18,16 @@ package org.glassfish.webservices;
 
 import org.glassfish.webservices.monitoring.*;
 
-import javax.xml.namespace.QName;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.http.HTTPBinding;
 
 import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.pipe.PipeCloner;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.model.SEIModel;
-import com.sun.xml.ws.api.model.JavaMethod;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.ws.api.server.WSEndpoint;
-import com.sun.xml.ws.api.pipe.ServerPipeAssemblerContext;
+import com.sun.xml.ws.api.pipe.ServerTubeAssemblerContext;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 
@@ -48,7 +44,7 @@ public class MonitoringPipe extends AbstractFilterPipeImpl {
     private final WebServiceEndpoint endpoint;
     private final WebServiceEngineImpl wsEngine;
 
-    public MonitoringPipe(ServerPipeAssemblerContext ctxt, Pipe tail,
+    public MonitoringPipe(ServerTubeAssemblerContext ctxt, Pipe tail,
                           WebServiceEndpoint ep) {
         super(tail);
         this.endpoint = ep;

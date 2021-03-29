@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -962,9 +962,14 @@ public class ASURLClassLoader
         /**
          * @see java.lang.Object#finalize()
          */
+        @Deprecated(since = "6.1.0", forRemoval = true)
         protected void finalize() throws IOException {
-            super.finalize();
-            reallyClose();
+            try {
+                super.finalize();
+                reallyClose();
+            } catch (Throwable t) {
+                throw new IOException(t);
+            }
         }
     }
 

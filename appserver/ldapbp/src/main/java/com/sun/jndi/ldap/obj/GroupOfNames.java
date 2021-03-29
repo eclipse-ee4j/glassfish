@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,7 @@
 package com.sun.jndi.ldap.obj;
 
 import java.security.Principal;
-import java.security.acl.Group;
+import com.sun.enterprise.security.GroupPrincipal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -112,7 +112,7 @@ import com.sun.jndi.ldap.LdapURL;
  *
  * @author Vincent Ryan
  */
-public class GroupOfNames implements Group {
+public class GroupOfNames implements GroupPrincipal {
 
     private static final boolean debug = false;
     private static final String OBJECT_CLASS = "groupOfNames";
@@ -382,7 +382,7 @@ public class GroupOfNames implements Group {
      * @return Enumeration The list of members of the group. 
      *         When only the {@link LdapGroupFactory} object factory is active 
      *         then each element in the enumeration is of class 
-     *         {@link java.security.acl.Group} or
+     *         {@link com.sun.enterprise.security.GroupPrincipal} or
      *         {@link java.security.Principal}. However, when additional
      *         object factories are active then the enumeration may contain
      *         elements of a different class.
@@ -842,7 +842,7 @@ class Members implements NamingEnumeration {
     /**
      * Retrieve the next member of the group.
      * Some members may themselves be groups. Such a member is returned as 
-     * an object of class {@link java.security.acl.Group}.
+     * an object of class {@link com.sun.enterprise.security.GroupPrincipal}.
      * <p>
      * Note that in order to determine whether a member is itself a group
      * this method reads each member's LDAP entry. As this is potentially an
@@ -857,7 +857,7 @@ class Members implements NamingEnumeration {
      *         When only the {@link LdapGroupFactory} object factory is active 
      *         then an object of class 
      *         {@link java.security.Principal} or
-     *         {@link java.security.acl.Group} is returned.
+     *         {@link com.sun.enterprise.security.GroupPrincipal} is returned.
      *         However, when additional object factories are active then an
      *         object of a different class may be returned.
      * @throws NoSuchElementException If no more members exist or if a
@@ -876,7 +876,7 @@ class Members implements NamingEnumeration {
     /**
      * Retrieve the next member of the group.
      * Some members may themselves be groups. Such a member is returned as 
-     * an object of class {@link java.security.acl.Group}.
+     * an object of class {@link com.sun.enterprise.security.GroupPrincipal}.
      * <p>
      * Note that in order to determine whether a member is itself a group
      * this method reads each member's LDAP entry. As this is potentially an
@@ -891,7 +891,7 @@ class Members implements NamingEnumeration {
      *         When only the {@link LdapGroupFactory} object factory is active 
      *         then an object of class 
      *         {@link java.security.Principal} or
-     *         {@link java.security.acl.Group} is returned.
+     *         {@link com.sun.enterprise.security.GroupPrincipal} is returned.
      *         However, when additional object factories are active then an
      *         object of a different class may be returned.
      * @throws NamingException If a problem is encountered while retrieving the

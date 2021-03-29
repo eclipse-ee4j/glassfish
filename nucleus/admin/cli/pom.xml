@@ -115,7 +115,12 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.cluster</groupId>
+            <artifactId>cluster-common</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        </dependencies>
 
     <build>
         <resources>

@@ -24,29 +24,27 @@ import org.glassfish.api.Param;
 import java.beans.PropertyVetoException;
 
 /**
- * A cluster defines a homogeneous set of server instances that share the same
- * applications, resources, and configuration.
+ * A cluster defines a homogeneous set of server instances that share the same applications, resources, and
+ * configuration.
  */
 @Configured
-public interface SshAuth  extends ConfigBeanProxy {
- 
-    
+public interface SshAuth extends ConfigBeanProxy {
+
     /**
-     * points to a named host. 
+     * points to a named host.
      *
      * @return a named host name
      */
-    @Attribute(defaultValue="${user.name}")
+    @Attribute(defaultValue = "${user.name}")
     String getUserName();
 
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="sshuser", optional=true,defaultValue="${user.name}")
+    @Param(name = "sshuser", optional = true, defaultValue = "${user.name}")
     void setUserName(String value) throws PropertyVetoException;
 
     /**
@@ -61,18 +59,16 @@ public interface SshAuth  extends ConfigBeanProxy {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="sshkeyfile", optional=true)
+    @Param(name = "sshkeyfile", optional = true)
     void setKeyfile(String value) throws PropertyVetoException;
 
     /**
      * SSH Password
      *
-     * @return SSH Password which may be a password alias of the form
-     *         ${ALIAS=aliasname}
+     * @return SSH Password which may be a password alias of the form ${ALIAS=aliasname}
      */
 
     @Attribute
@@ -81,18 +77,16 @@ public interface SshAuth  extends ConfigBeanProxy {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="sshpassword", optional=true)
+    @Param(name = "sshpassword", optional = true)
     void setPassword(String value) throws PropertyVetoException;
 
     /**
      * SSH Keyfile passphrase
      *
-     * @return SSH keyfile encryption passphrase which may be a password alias
-     * of the form ${ALIAS=aliasname}
+     * @return SSH keyfile encryption passphrase which may be a password alias of the form ${ALIAS=aliasname}
      */
 
     @Attribute
@@ -101,11 +95,10 @@ public interface SshAuth  extends ConfigBeanProxy {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="sshkeypassphrase", optional=true)
+    @Param(name = "sshkeypassphrase", optional = true)
     void setKeyPassphrase(String value) throws PropertyVetoException;
 
 }

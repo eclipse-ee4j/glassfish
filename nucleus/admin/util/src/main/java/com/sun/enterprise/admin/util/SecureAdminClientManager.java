@@ -43,21 +43,16 @@ import org.jvnet.hk2.config.DomDocument;
 /**
  * Encapsulates the implementation of secure admin.
  * <p>
- * A process that needs to send admin messages to another server and might not
- * have a user-provided username and password should inject this class and
- * invoke {@link #initClientAuthentication(char[], boolean) } before it
- * sends a message to the admin listener.  The code which actually prepares
- * the message can then retrieve the initialized information from this
- * class in constructing the outbound admin message.
+ * A process that needs to send admin messages to another server and might not have a user-provided username and
+ * password should inject this class and invoke {@link #initClientAuthentication(char[], boolean) } before it sends a
+ * message to the admin listener. The code which actually prepares the message can then retrieve the initialized
+ * information from this class in constructing the outbound admin message.
  * <p>
- * The class offers static accessors to the important values so, for example,
- * RemoteAdminCommand (which is not a service and it therefore not subject
- * to injection) can retrieve what it needs to build the outbound admin
- * request.
+ * The class offers static accessors to the important values so, for example, RemoteAdminCommand (which is not a service
+ * and it therefore not subject to injection) can retrieve what it needs to build the outbound admin request.
  * <p>
- * This allows us to support CLI commands which need to connect to the DAS
- * securely but will have neither a user-provided master password nor
- * a human who we could prompt for the master password.
+ * This allows us to support CLI commands which need to connect to the DAS securely but will have neither a
+ * user-provided master password nor a human who we could prompt for the master password.
  *
  * @author Tim Quinn
  */
@@ -81,12 +76,11 @@ public class SecureAdminClientManager {
     private KeyManager[] keyManagers = null;
 
     /**
-     * suitable for setting as the value in an HTTP header to flag a
-     * message source as trusted to submit admin requests (only in the
-     * non-secure case)
+     * suitable for setting as the value in an HTTP header to flag a message source as trusted to submit admin requests
+     * (only in the non-secure case)
      */
     private String configuredAdminIndicator = null;
-    
+
     private Domain domain;
 
     private SecureAdmin secureAdmin = null;
@@ -94,9 +88,9 @@ public class SecureAdminClientManager {
     private String instanceAlias = null;
 
     /**
-     * Returns KeyManagers which access the SSL key store for use in
-     * performing client cert authentication.  The returned KeyManagers will
-     * most likely be passed to {@link SSLContext.init }.
+     * Returns KeyManagers which access the SSL key store for use in performing client cert authentication. The returned
+     * KeyManagers will most likely be passed to {@link SSLContext.init }.
+     * 
      * @return KeyManagers
      */
     public static KeyManager[] getKeyManagers() {
@@ -104,23 +98,19 @@ public class SecureAdminClientManager {
     }
 
     /**
-     * Prepares the manager so SSL/TLS will provide the correct client cert
-     * when connecting to a remote admin port.  The main result of invoking this method is to
-     * build an array of KeyManagers which can be passed to SSLContext.initClientAuthentication
-     * so SSL can use the managers to find certs that meet the requirements of
-     * the partner on the other end of the connection.
+     * Prepares the manager so SSL/TLS will provide the correct client cert when connecting to a remote admin port. The main
+     * result of invoking this method is to build an array of KeyManagers which can be passed to
+     * SSLContext.initClientAuthentication so SSL can use the managers to find certs that meet the requirements of the
+     * partner on the other end of the connection.
      * <p>
-     * This method opens the keystore, so it will need the master password.  The calling
-     * command should pass the master password which the user specified in the
-     * file specified by the --passwordfile option (if any).
-     * Because the user-provided password might be
-     * wrong or missing, the caller also indicates whether a human user is present to
-     * respond to a prompt for the password.  This will not be the case, for
-     * example, during an unattended start-up of an instance.
+     * This method opens the keystore, so it will need the master password. The calling command should pass the master
+     * password which the user specified in the file specified by the --passwordfile option (if any). Because the
+     * user-provided password might be wrong or missing, the caller also indicates whether a human user is present to
+     * respond to a prompt for the password. This will not be the case, for example, during an unattended start-up of an
+     * instance.
      * <p>
-     * The caller also provides at least one of the server name, the node directory,
-     * or the node.  These are used to locate where the domain.xml file is
-     * that contains security config information we need.
+     * The caller also provides at least one of the server name, the node directory, or the node. These are used to locate
+     * where the domain.xml file is that contains security config information we need.
      *
      * @param commandMasterPassword master password provided by the user on the command line; null if none
      * @param isInteractive whether the caller is in a context where a human could be prompted to enter a password
@@ -128,13 +118,8 @@ public class SecureAdminClientManager {
      * @param nodeDir directory of the node where domain.xml resides
      * @param node name of the node whose directory contains domain.xml
      */
-    public synchronized static void initClientAuthentication(
-            final char[] commandMasterPassword,
-            final boolean isInteractive,
-            final String serverName,
-            final String nodeDir,
-            final String node,
-            final File nodeDirRoot) {
+    public synchronized static void initClientAuthentication(final char[] commandMasterPassword, final boolean isInteractive,
+            final String serverName, final String nodeDir, final String node, final File nodeDirRoot) {
 
         /*
          * The client/instance security information is common to a whole domain.
@@ -145,17 +130,12 @@ public class SecureAdminClientManager {
          * should be used or not.
          */
         if (instance == null) {
-            instance = new SecureAdminClientManager(commandMasterPassword,
-                    isInteractive, serverName, nodeDir, node, nodeDirRoot);
+            instance = new SecureAdminClientManager(commandMasterPassword, isInteractive, serverName, nodeDir, node, nodeDirRoot);
         }
     }
 
-    private SecureAdminClientManager(final char[] commandMasterPassword,
-            final boolean isInteractive,
-            final String serverName,
-            final String nodeDir,
-            final String node,
-            final File nodeDirRoot) {
+    private SecureAdminClientManager(final char[] commandMasterPassword, final boolean isInteractive, final String serverName,
+            final String nodeDir, final String node, final File nodeDirRoot) {
         domain = prepareDomain(serverName, nodeDir, node, nodeDirRoot);
         if (domain == null) {
             return;
@@ -200,8 +180,7 @@ public class SecureAdminClientManager {
     }
 
     /**
-     * Reports whether the secure admin is enabled, according to the current
-     * configuration.
+     * Reports whether the secure admin is enabled, according to the current configuration.
      *
      * @return if secure admin is enabled
      */
@@ -217,10 +196,7 @@ public class SecureAdminClientManager {
         return configuredAdminIndicator;
     }
 
-    private Domain prepareDomain(final String serverName,
-            final String nodeDir,
-            final String node,
-            final File nodeDirRoot) {
+    private Domain prepareDomain(final String serverName, final String nodeDir, final String node, final File nodeDirRoot) {
         /*
          * At least one of serverName, nodeDir, or node must be non-null.
          * Otherwise we'll have no way of figuring out which domain.xml to
@@ -230,16 +206,12 @@ public class SecureAdminClientManager {
          * secure admin is enabled the user should provide --user and
          * --passwordfile on the command line to authenticate to the DAS.
          */
-        if (serverName == null
-                && nodeDir == null
-                && node == null) {
+        if (serverName == null && nodeDir == null && node == null) {
             return null;
         }
         final ServerDirsSelector selector;
         try {
-            final String nodeDirToUse = (nodeDir != null
-                ? nodeDir
-                : nodeDirRoot.getAbsolutePath());
+            final String nodeDirToUse = (nodeDir != null ? nodeDir : nodeDirRoot.getAbsolutePath());
             selector = ServerDirsSelector.getInstance(null, serverName, nodeDirToUse, node);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -255,7 +227,7 @@ public class SecureAdminClientManager {
         }
 
         final File domainXMLFile = dirs.getDomainXml();
-        if ( ! domainXMLFile.exists()) {
+        if (!domainXMLFile.exists()) {
             return null;
         }
 
@@ -272,8 +244,8 @@ public class SecureAdminClientManager {
         }
     }
 
-    private KeyManager[] prepareKeyManagers(final char[] commandMasterPassword,
-            final boolean isPromptable) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+    private KeyManager[] prepareKeyManagers(final char[] commandMasterPassword, final boolean isPromptable)
+            throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
 
         /*
          * The configuration specifies what alias we should use for SSL client
@@ -281,8 +253,7 @@ public class SecureAdminClientManager {
          * extract the required cert from the on-disk keystore and add it to a
          * temporary key store so it's the only cert there.
          */
-        Certificate instanceCert = getCertForConfiguredAlias(
-                commandMasterPassword, isPromptable);
+        Certificate instanceCert = getCertForConfiguredAlias(commandMasterPassword, isPromptable);
 
         final KeyStore ks = instanceCertOnlyKS(instanceCert);
 
@@ -304,12 +275,9 @@ public class SecureAdminClientManager {
         return ks;
     }
 
-    private Certificate getCertForConfiguredAlias(
-            final char[] commandMasterPassword,
-            final boolean isPromptable) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-        final KeyStore permanentKS = AsadminSecurityUtil
-                .getInstance(commandMasterPassword, isPromptable)
-                .getAsadminKeystore();
+    private Certificate getCertForConfiguredAlias(final char[] commandMasterPassword, final boolean isPromptable)
+            throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+        final KeyStore permanentKS = AsadminSecurityUtil.getInstance(commandMasterPassword, isPromptable).getAsadminKeystore();
         Certificate cert = permanentKS.getCertificate(instanceAlias);
         if (cert != null) {
             logger.log(Level.FINER, "Found matching cert in keystore for instance alias {0}", instanceAlias);

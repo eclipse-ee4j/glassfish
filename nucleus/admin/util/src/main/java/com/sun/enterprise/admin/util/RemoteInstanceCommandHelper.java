@@ -30,14 +30,11 @@ import org.glassfish.config.support.PropertyResolver;
  *
  * Implementation Note:
  *
- * Ideally this class would be extended by AdminCommand's that need these
- * services.  The problem is getting the values out of the habitat.  The ctor
- * call would be TOO EARLY  in the derived classes.  The values are injected AFTER
- * construction.  We can't easily inject here -- because we don't want this class
- * to be a Service.
- * We could do it by having the derived class call a set method in here but that
- * gets very messy as we have to make sure we are in a valid state for every single
- * method call.
+ * Ideally this class would be extended by AdminCommand's that need these services. The problem is getting the values
+ * out of the habitat. The ctor call would be TOO EARLY in the derived classes. The values are injected AFTER
+ * construction. We can't easily inject here -- because we don't want this class to be a Service. We could do it by
+ * having the derived class call a set method in here but that gets very messy as we have to make sure we are in a valid
+ * state for every single method call.
  *
  */
 public final class RemoteInstanceCommandHelper {
@@ -47,8 +44,7 @@ public final class RemoteInstanceCommandHelper {
         try {
             habitat = habitatIn;
             servers = habitat.<Servers>getService(Servers.class).getServer();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -70,8 +66,7 @@ public final class RemoteInstanceCommandHelper {
             if (serverName == null) {
                 if (name == null) // they match!!
                     return server;
-            }
-            else if (serverName.equals(name))
+            } else if (serverName.equals(name))
                 return server;
         }
         return null;

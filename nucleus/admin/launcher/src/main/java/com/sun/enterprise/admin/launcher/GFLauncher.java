@@ -67,7 +67,7 @@ import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.io.FileUtils;
 
 /**
- * This is the main Launcher class designed for external and internal usage. 
+ * This is the main Launcher class designed for external and internal usage.
  * 
  * <p>
  * Each of the 3 kinds of server, domain, node-agent and instance, need to subclass this class.
@@ -75,111 +75,109 @@ import com.sun.enterprise.util.io.FileUtils;
  * @author bnevins
  */
 public abstract class GFLauncher {
-    
+
     private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncher.class);
-    
+
     /**
-     * Parameters provided by the caller of a launcher, either programmatically (for GF embedded) or as
-     * commandline parameters (GF DAS or Instance).
+     * Parameters provided by the caller of a launcher, either programmatically (for GF embedded) or as commandline
+     * parameters (GF DAS or Instance).
      * 
      */
     private GFLauncherInfo callerParameters;
-    
+
     /**
      * Properties from asenv.conf, such as <code>AS_DEF_DOMAINS_PATH="../domains"</code>
      */
     private Map<String, String> asenvProps;
-    
-    /** 
+
+    /**
      * The <code>java-config</code> attributes in domain.xml
      */
     private JavaConfig domainXMLjavaConfig;
-    
-    /** 
+
+    /**
      * the <code>debug-options</code> attribute from <code>java-config</code> in domain.xml
      */
     private List<String> domainXMLjavaConfigDebugOptions;
-    
+
     /**
      * The debug port (<code>address</code>) primarily extracted from <code>domainXMLjavaConfigDebugOptions</code>
      */
     private int debugPort = -1;
-    
+
     /**
      * The debug suspend (<code>suspend</code>) primarily extracted from <code>domainXMLjavaConfigDebugOptions</code>
      */
     private boolean debugSuspend;
-    
+
     /**
-     * The combined <code>jvm-options</code> from <code>java-config</code>, <code>profiler</code> in domain.xml and extra ones
-     * added by this launcher
+     * The combined <code>jvm-options</code> from <code>java-config</code>, <code>profiler</code> in domain.xml and extra
+     * ones added by this launcher
      */
     private JvmOptions domainXMLjvmOptions;
-    
+
     /**
      * Same data as domainXMLjvmOptions, but as list
      */
     private List<String> domainXMLJvmOptionsAsList = new ArrayList<>();
-    
+
     /**
      * The <code>profiler<code> from <code>java-config</code> in domain.xml
      */
     private Profiler domainXMLJavaConfigProfiler;
-    
+
     /**
      * The (combined) <code>system-property</code> elements in domain.xml
      */
     private Map<String, String> domainXMLSystemProperty;
-    
+
     private String javaExe;
     private String classpath;
     private String adminFileRealmKeyFile;
     private boolean secureAdminEnabled;
-    
+
     /**
      * The file name to log to using a <code>java.util.logging.FileHandler.FileHandler</code>
      */
     private String logFilename; // defaults to "logs/server.log"
-    
+
     /**
      * Tracks whether the fixLogFileName() method was called.
      */
     private boolean logFilenameWasFixed;
-    
+
     /**
      * Tracks whether the setup() had been called and/or should be called again.
      */
     private boolean setupCalledByClients; // handle with care
-    
+
     // Tracks upgrading from V2 to V3. Since we're at V6 atm of wring, is this really needed?
     private boolean needsAutoUpgrade;
     private boolean needsManualUpgrade;
-    
+
     private LaunchType mode = LaunchType.normal;
-    
-    
+
     /**
      * The full commandline string used to start GlassFish in process <code<>glassFishProcess</code>
      */
     private List<String> commandLine = new ArrayList<>();
-    
+
     /**
      * Time when GlassFish was launched
      */
     private long startTime;
-    
+
     /**
      * The process which is running GlassFish
      */
     private Process glassFishProcess;
     private ProcessWhacker processWhacker;
     private ProcessStreamDrainer processStreamDrainer;
-    
+
     /**
      * Exit value of the glassFishProcess, IFF we waited on the process
      */
     private int exitValue = -1;
-    
 
     GFLauncher(GFLauncherInfo info) {
         this.callerParameters = info;
@@ -188,7 +186,6 @@ public abstract class GFLauncher {
     ///////////////////////////////////////////////////////////////////////////
     ////// PUBLIC api area starts here ////////////////////////
     ///////////////////////////////////////////////////////////////////////////
-   
 
     /**
      * Launches the server. Any fatal error results in a GFLauncherException No unchecked Throwables of any kind will be
@@ -251,9 +248,9 @@ public abstract class GFLauncher {
         asenvProps = getAsEnvConfReader().getProps();
         callerParameters.setup();
         setupLogLevels();
-        
+
         MiniXmlParser domainXML = new MiniXmlParser(getInfo().getConfigFile(), getInfo().getInstanceName());
-        
+
         String domainName = domainXML.getDomainName();
         if (ok(domainName)) {
             callerParameters.setDomainName(domainName);
@@ -287,16 +284,16 @@ public abstract class GFLauncher {
         if (ok(javaHome) && !javaHome.trim().equals("${" + JAVA_ROOT_PROPERTY + "}")) {
             asenvProps.put(JAVA_ROOT_PROPERTY, javaHome);
         }
-        
+
         domainXMLjavaConfigDebugOptions = getDebugOptionsFromDomainXMLJavaConfig();
         parseJavaConfigDebugOptions();
         domainXML.setupConfigDir(getInfo().getConfigDir(), getInfo().getInstallDir());
-        
+
         setLogFilename(domainXML);
         resolveAllTokens();
         fixLogFilename();
         addLogFileHandler(logFilename, callerParameters);
-        
+
         setJavaExecutable();
         setClasspath();
         setCommandLine();
@@ -308,7 +305,7 @@ public abstract class GFLauncher {
         needsManualUpgrade = !domainXML.hasDefaultConfig();
         setupCalledByClients = true;
     }
-    
+
     /**
      *
      * @return The callerParameters object that contains startup callerParameters
@@ -333,8 +330,8 @@ public abstract class GFLauncher {
     }
 
     /**
-     * Returns the exit value of the glassFishProcess. This only makes sense when we ran in verbose mode and waited for the glassFishProcess
-     * to exit in the wait() method. Caveat Emptor!
+     * Returns the exit value of the glassFishProcess. This only makes sense when we ran in verbose mode and waited for the
+     * glassFishProcess to exit in the wait() method. Caveat Emptor!
      *
      * @return the glassFishProcess' exit value if it completed and we waited. Otherwise it returns -1
      */
@@ -345,8 +342,8 @@ public abstract class GFLauncher {
     /**
      * You don't want to call this before calling launch because it would not make sense.
      *
-     * @return The Process object of the launched Server glassFishProcess. you will either get a valid Process object or an Exceptio
-     * will be thrown. You are guaranteed not to get a null.
+     * @return The Process object of the launched Server glassFishProcess. you will either get a valid Process object or an
+     * Exceptio will be thrown. You are guaranteed not to get a null.
      * @throws GFLauncherException if the Process has not been created yet - call launch() before calling this method.
      */
     public final Process getProcess() throws GFLauncherException {
@@ -523,8 +520,6 @@ public abstract class GFLauncher {
         return startTime;
     }
 
-
-
     abstract List<File> getMainClasspath() throws GFLauncherException;
 
     abstract String getMainClass() throws GFLauncherException;
@@ -563,37 +558,33 @@ public abstract class GFLauncher {
             return false;
         }
     }
-    
+
     private ASenvPropertyReader getAsEnvConfReader() {
         if (isFakeLaunch()) {
             return new ASenvPropertyReader(callerParameters.getInstallDir());
         }
-        
+
         return new ASenvPropertyReader();
     }
-    
+
     private List<String> getDebugOptionsFromDomainXMLJavaConfig() {
         if (callerParameters.isDebug() || callerParameters.isSuspend() || domainXMLjavaConfig.isDebugEnabled()) {
             // Suspend setting from domain.xml can be overridden by caller
             if (!callerParameters.isSuspend()) {
                 return domainXMLjavaConfig.getDebugOptions();
             }
-            
-            return domainXMLjavaConfig.getDebugOptions()
-                                      .stream()
-                                      .filter(e -> e.startsWith("-agentlib:jdwp"))
-                                      .map(e -> e.replace("suspend=n", "suspend=y"))
-                                      .collect(toList());
+
+            return domainXMLjavaConfig.getDebugOptions().stream().filter(e -> e.startsWith("-agentlib:jdwp"))
+                    .map(e -> e.replace("suspend=n", "suspend=y")).collect(toList());
         }
 
         return emptyList();
     }
-    
+
     /**
      * 
-     * look for an option of this form:
-     * <code>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</code>
-     * and extract the suspend and port values.
+     * look for an option of this form: <code>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</code> and
+     * extract the suspend and port values.
      * 
      */
     private void parseJavaConfigDebugOptions() {
@@ -601,7 +592,7 @@ public abstract class GFLauncher {
             if (!option.startsWith("-agentlib:jdwp")) {
                 continue;
             }
-            
+
             String[] attributes = option.substring(10).split(",");
             for (String attribute : attributes) {
                 if (attribute.startsWith("address=")) {
@@ -611,7 +602,7 @@ public abstract class GFLauncher {
                         debugPort = -1;
                     }
                 }
-                
+
                 if (attribute.startsWith("suspend=")) {
                     try {
                         debugSuspend = attribute.substring(8).toLowerCase(Locale.getDefault()).equals("y");
@@ -620,8 +611,7 @@ public abstract class GFLauncher {
                     }
                 }
             }
-            
-            
+
         }
     }
 
@@ -632,7 +622,7 @@ public abstract class GFLauncher {
             logFilename = DEFAULT_LOGFILE;
         }
     }
-    
+
     private void resolveAllTokens() {
         // resolve jvm-options against:
         // 1. itself
@@ -663,7 +653,7 @@ public abstract class GFLauncher {
         logFilename = resolver.resolve(logFilename);
         adminFileRealmKeyFile = resolver.resolve(adminFileRealmKeyFile);
     }
-    
+
     private void fixLogFilename() throws GFLauncherException {
         if (!ok(logFilename)) {
             logFilename = DEFAULT_LOGFILE;
@@ -701,7 +691,7 @@ public abstract class GFLauncher {
 
         logFilenameWasFixed = true;
     }
-    
+
     private void setJavaExecutable() throws GFLauncherException {
         // first choice is from domain.xml
         if (setJavaExecutableIfValid(domainXMLjavaConfig.getJavaHome())) {
@@ -739,7 +729,7 @@ public abstract class GFLauncher {
 
         return false;
     }
-    
+
     void setClasspath() throws GFLauncherException {
         List<File> mainCP = getMainClasspath(); // subclass provides this
         List<File> envCP = domainXMLjavaConfig.getEnvClasspath();
@@ -771,7 +761,7 @@ public abstract class GFLauncher {
         if (CLIStartTime != null && CLIStartTime.length() > 0) {
             cmdLine.add("-DWALL_CLOCK_START=" + CLIStartTime);
         }
-        
+
         if (debugPort >= 0) {
             cmdLine.add("-D" + DEBUG_MODE_PROPERTY + "=" + TRUE);
         }
@@ -780,7 +770,8 @@ public abstract class GFLauncher {
             addIgnoreNull(cmdLine, domainXMLjvmOptions.toList());
         }
 
-        GFLauncherNativeHelper nativeHelper = new GFLauncherNativeHelper(callerParameters, domainXMLjavaConfig, domainXMLjvmOptions, domainXMLJavaConfigProfiler);
+        GFLauncherNativeHelper nativeHelper = new GFLauncherNativeHelper(callerParameters, domainXMLjavaConfig, domainXMLjvmOptions,
+                domainXMLJavaConfigProfiler);
         addIgnoreNull(cmdLine, nativeHelper.getCommands());
         addIgnoreNull(cmdLine, getMainClass());
 
@@ -801,7 +792,7 @@ public abstract class GFLauncher {
         }
 
     }
-    
+
     void logCommandLine() {
         StringBuilder sb = new StringBuilder();
 
@@ -868,7 +859,8 @@ public abstract class GFLauncher {
 
     private void setupProfilerAndJvmOptions(MiniXmlParser domainXML) throws MiniXmlParserException, GFLauncherException {
         // Add JVM options from Profiler *last* so they override config's JVM options
-        domainXMLJavaConfigProfiler = new Profiler(domainXML.getProfilerConfig(), domainXML.getProfilerJvmOptions(), domainXML.getProfilerSystemProperties());
+        domainXMLJavaConfigProfiler = new Profiler(domainXML.getProfilerConfig(), domainXML.getProfilerJvmOptions(),
+                domainXML.getProfilerSystemProperties());
 
         List<String> rawJvmOptions = domainXML.getJvmOptions();
         rawJvmOptions.addAll(getSpecialSystemProperties());
@@ -881,7 +873,7 @@ public abstract class GFLauncher {
             domainXMLjvmOptions.sysProps.put(DROP_INTERRUPTED_COMMANDS, TRUE.toString());
         }
     }
-    
+
     private void writeSecurityTokens(Process sp) throws GFLauncherException, IOException {
         handleDeadProcess();
         OutputStream os = sp.getOutputStream();
@@ -997,8 +989,7 @@ public abstract class GFLauncher {
             if (key.startsWith("javaagent:")) {
                 // complications -- of course!! They may have mix&match forward and back slashes
                 key = key.replace('\\', '/');
-                if (key.indexOf(FLASHLIGHT_AGENT_NAME) >= 0)
-                 {
+                if (key.indexOf(FLASHLIGHT_AGENT_NAME) >= 0) {
                     return; // Done!!!!
                 }
             }
@@ -1034,7 +1025,7 @@ public abstract class GFLauncher {
         Map<String, String> props = new HashMap<>();
         props.put(INSTALL_ROOT_PROPERTY, getInfo().getInstallDir().getAbsolutePath());
         props.put(INSTANCE_ROOT_PROPERTY, getInfo().getInstanceRootDir().getAbsolutePath());
-        
+
         return propsToJvmOptions(props);
     }
 
@@ -1114,8 +1105,6 @@ public abstract class GFLauncher {
         }
     }
 
-
-
     ///////////////////////////////////////////////////////////////////////////
     private static class ProcessWhacker implements Runnable {
 
@@ -1138,7 +1127,6 @@ public abstract class GFLauncher {
             System.out.println(message);
             process.destroy();
         }
-
 
     }
 }

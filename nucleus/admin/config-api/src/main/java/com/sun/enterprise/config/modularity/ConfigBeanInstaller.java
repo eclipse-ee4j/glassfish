@@ -72,7 +72,6 @@ public class ConfigBeanInstaller implements PostConstruct {
         }
     }
 
-
     private void applyConfigIfNeeded(Class clz) {
         //TODO find a way to get the parent and do complete check for all config beans type rather than just these two
         if (!RankedConfigBeanProxy.class.isAssignableFrom(clz)) {
@@ -84,8 +83,8 @@ public class ConfigBeanInstaller implements PostConstruct {
             }
         }
 
-        List<ConfigBeanDefaultValue> configBeanDefaultValueList =
-                configModularityUtils.getDefaultConfigurations(clz, configModularityUtils.getRuntimeTypePrefix(startupContext));
+        List<ConfigBeanDefaultValue> configBeanDefaultValueList = configModularityUtils.getDefaultConfigurations(clz,
+                configModularityUtils.getRuntimeTypePrefix(startupContext));
         configurationParser.parseAndSetConfigBean(configBeanDefaultValueList);
     }
 }

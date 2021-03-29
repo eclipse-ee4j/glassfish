@@ -29,10 +29,7 @@ public final class GfSseEventReceiver implements Closeable {
     private enum State {
         START,
 
-        COMMENT,
-        FIELD_NAME,
-        FIELD_VALUE_FIRST,
-        FIELD_VALUE,
+        COMMENT, FIELD_NAME, FIELD_VALUE_FIRST, FIELD_VALUE,
 
         EVENT_FIRED
     }
@@ -55,72 +52,72 @@ public final class GfSseEventReceiver implements Closeable {
 
         try {
             int data = 0;
-            while((data = inputStream.read()) != -1) {
+            while ((data = inputStream.read()) != -1) {
 
                 switch (currentState) {
 
-                    case START:
-                        if(data == ':') {
-                            currentState = State.COMMENT;
-                        } else if(data != '\n') {
-                            baos.write(data);
-                            currentState = State.FIELD_NAME;
-                        } else {
-//                            System.out.println(sbr);
-                            if(!inboundEvent.isEmpty()) {
-                                return inboundEvent;
-                            }
-                            inboundEvent = new GfSseInboundEvent();
+                case START:
+                    if (data == ':') {
+                        currentState = State.COMMENT;
+                    } else if (data != '\n') {
+                        baos.write(data);
+                        currentState = State.FIELD_NAME;
+                    } else {
+                        //                            System.out.println(sbr);
+                        if (!inboundEvent.isEmpty()) {
+                            return inboundEvent;
                         }
-                        break;
-                    case COMMENT:
-                        if(data == '\n') {
-                            currentState = State.START;
-                        }
-                        break;
-                    case FIELD_NAME:
-                        if(data == ':') {
-                            fieldName = baos.toString();
-                            baos.reset();
-                            currentState = State.FIELD_VALUE_FIRST;
-                        } else if(data == '\n') {
-                            processField(inboundEvent, baos.toString(), "".getBytes());
-                            baos.reset();
-                            currentState = State.START;
-                        } else {
-                            baos.write(data);
-                        }
-                        break;
-                    case FIELD_VALUE_FIRST:
-                        // first space has to be skipped
-                        if(data != ' ') {
-                            baos.write(data);
-                        }
+                        inboundEvent = new GfSseInboundEvent();
+                    }
+                    break;
+                case COMMENT:
+                    if (data == '\n') {
+                        currentState = State.START;
+                    }
+                    break;
+                case FIELD_NAME:
+                    if (data == ':') {
+                        fieldName = baos.toString();
+                        baos.reset();
+                        currentState = State.FIELD_VALUE_FIRST;
+                    } else if (data == '\n') {
+                        processField(inboundEvent, baos.toString(), "".getBytes());
+                        baos.reset();
+                        currentState = State.START;
+                    } else {
+                        baos.write(data);
+                    }
+                    break;
+                case FIELD_VALUE_FIRST:
+                    // first space has to be skipped
+                    if (data != ' ') {
+                        baos.write(data);
+                    }
 
-                        if(data == '\n') {
-                            processField(inboundEvent, fieldName, baos.toByteArray());
-                            baos.reset();
-                            currentState = State.START;
-                            break;
-                        }
+                    if (data == '\n') {
+                        processField(inboundEvent, fieldName, baos.toByteArray());
+                        baos.reset();
+                        currentState = State.START;
+                        break;
+                    }
 
-                        currentState = State.FIELD_VALUE;
-                        break;
-                    case FIELD_VALUE:
-                        if(data == '\n') {
-                            processField(inboundEvent, fieldName, baos.toByteArray());
-                            baos.reset();
-                            currentState = State.START;
-                        } else {
-                            baos.write(data);
-                        }
-                        break;
-                    default:
-                        //No-op default
+                    currentState = State.FIELD_VALUE;
+                    break;
+                case FIELD_VALUE:
+                    if (data == '\n') {
+                        processField(inboundEvent, fieldName, baos.toByteArray());
+                        baos.reset();
+                        currentState = State.START;
+                    } else {
+                        baos.write(data);
+                    }
+                    break;
+                default:
+                    //No-op default
                 }
 
             }
-            if(data == -1) {
+            if (data == -1) {
                 closed = true;
             }
             return null;
@@ -132,12 +129,12 @@ public final class GfSseEventReceiver implements Closeable {
     }
 
     private void processField(GfSseInboundEvent inboundEvent, String name, byte[] value) {
-        if(name.equals("event")) {
+        if (name.equals("event")) {
             inboundEvent.setName(new String(value));
-        } else if(name.equals("data")) {
+        } else if (name.equals("data")) {
             inboundEvent.addData(value);
-            inboundEvent.addData(new byte[]{'\n'});
-        } else if(name.equals("id")) {
+            inboundEvent.addData(new byte[] { '\n' });
+        } else if (name.equals("id")) {
             String s = "";
             if (value != null) {
                 s = new String(value);

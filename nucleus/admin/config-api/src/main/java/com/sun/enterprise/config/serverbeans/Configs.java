@@ -25,21 +25,29 @@ import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 
-
 @Configured
 public interface Configs extends ConfigBeanProxy {
     /**
-     * Gets the value of the config property. <p/> <p/> This accessor method returns a reference to the live list, not a
-     * snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This
-     * is why there is not a <CODE>set</CODE> method for the config property. <p/> <p/> For example, to add a new item,
-     * do as follows:
+     * Gets the value of the config property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * config property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getConfig().add(newItem);
+     * getConfig().add(newItem);
      * </pre>
-     * <p/> <p/> <p/> Objects of the following type(s) are allowed in the list {@link Config }
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list {@link Config }
      */
-    @Create(value="_create-config", i18n=@I18n("create.config.command"))
-    @Element(required=true)
+    @Create(value = "_create-config", i18n = @I18n("create.config.command"))
+    @Element(required = true)
     List<Config> getConfig();
 
     @DuckTyped

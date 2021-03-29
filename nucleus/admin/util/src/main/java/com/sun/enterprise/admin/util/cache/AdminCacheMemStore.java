@@ -23,16 +23,16 @@ import java.util.Map;
 import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
-/** In memory {@link AdminCache} containing fixed amount of items. Rotation
- * is based on last update first out.<br/>
- * This implementation is backgrounded by {@link AdminCacheWeakReference} and
- * all non locally cached items are searched from that implementation.
+/**
+ * In memory {@link AdminCache} containing fixed amount of items. Rotation is based on last update first out.<br/>
+ * This implementation is backgrounded by {@link AdminCacheWeakReference} and all non locally cached items are searched
+ * from that implementation.
  *
  * @author mmares
  */
 public class AdminCacheMemStore implements AdminCache {
 
-     private final static class CachedItem implements Comparable<CachedItem> {
+    private final static class CachedItem implements Comparable<CachedItem> {
 
         private Object item;
         private long touched;
@@ -51,23 +51,24 @@ public class AdminCacheMemStore implements AdminCache {
         public int compareTo(CachedItem o) {
             return (int) (this.touched - o.touched);
         }
+
         @Override
         public boolean equals(Object o) {
-            if(o == null || !( o instanceof CachedItem))
+            if (o == null || !(o instanceof CachedItem))
                 return false;
             return compareTo((CachedItem) o) == 0;
         }
 
         @Override
         public int hashCode() {
-            return (int)touched;
+            return (int) touched;
         }
-     }
+    }
 
-     private static final AdminCacheMemStore instance = new AdminCacheMemStore();
+    private static final AdminCacheMemStore instance = new AdminCacheMemStore();
 
-    /** Maximal count of items in cache. Rotation is based on last used first
-     * out.
+    /**
+     * Maximal count of items in cache. Rotation is based on last used first out.
      */
     private static final int MAX_CACHED_ITEMS_COUNT = 16;
 

@@ -51,9 +51,9 @@ import java.util.logging.Logger;
  */
 @Service
 public class ConfigurationParser<C extends ConfigLoader> {
-    
+
     private static final Logger LOG = ConfigApiLoggerInfo.getLogger();
-    
+
     //TODO Until the TranslatedView issue is fixed this remain true.
     private static boolean replaceSystemProperties = false;
 
@@ -72,7 +72,8 @@ public class ConfigurationParser<C extends ConfigLoader> {
         // I don't use the GlassFish document here as I don't need persistence
         final DomDocument doc = new DomDocument<GlassFishConfigBean>(serviceLocator) {
             @Override
-            public Dom make(final ServiceLocator serviceLocator, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom, ConfigModel configModel) {
+            public Dom make(final ServiceLocator serviceLocator, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom,
+                    ConfigModel configModel) {
                 return new GlassFishConfigBean(serviceLocator, this, dom, configModel, xmlStreamReader);
             }
         };
@@ -81,14 +82,13 @@ public class ConfigurationParser<C extends ConfigLoader> {
         //the solution is to put the loop into the apply method...  But it would be some fine amount of work
         for (final ConfigBeanDefaultValue configBeanDefaultValue : values) {
             final ConfigBeanProxy parent = configModularityUtils.getOwningObject(configBeanDefaultValue.getLocation());
-            if (parent == null) continue;
+            if (parent == null)
+                continue;
             ConfigurationPopulator populator = null;
             if (replaceSystemProperties)
                 try {
-                    populator = new ConfigurationPopulator(
-                            configModularityUtils.replacePropertiesWithCurrentValue(
-                                    configBeanDefaultValue.getXmlConfiguration(), configBeanDefaultValue)
-                            , doc, parent);
+                    populator = new ConfigurationPopulator(configModularityUtils.replacePropertiesWithCurrentValue(
+                            configBeanDefaultValue.getXmlConfiguration(), configBeanDefaultValue), doc, parent);
                 } catch (Exception e) {
                     LOG.log(Level.SEVERE, ConfigApiLoggerInfo.CFG_EXT_ADD_FAILED, e);
                 }

@@ -69,8 +69,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
     protected boolean isLinkedToParent = false;
 
     public TemplateExecCommand(String resourceName, String commandName, String commandMethod, String commandAction,
-                               String commandDisplayName,
-                               boolean isLinkedToParent) {
+            String commandDisplayName, boolean isLinkedToParent) {
         this.resourceName = resourceName;
         this.commandName = commandName;
         this.commandMethod = commandMethod;
@@ -91,10 +90,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
     }
 
     @OPTIONS
-    @Produces({
-            MediaType.APPLICATION_JSON,
-            MediaType.TEXT_HTML,
-            MediaType.APPLICATION_XML})
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.APPLICATION_XML })
     public ActionReportResult optionsLegacyFormat() {
         RestActionReporter ar = new RestActionReporter();
         ar.setExtraProperties(new Properties());
@@ -102,8 +98,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
 
         OptionsResult optionsResult = new OptionsResult(resourceName);
         Map<String, MethodMetaData> mmd = new HashMap<String, MethodMetaData>();
-        MethodMetaData methodMetaData = ResourceUtil.getMethodMetaData(commandName, getCommandParams(),
-                locatorBridge.getRemoteLocator());
+        MethodMetaData methodMetaData = ResourceUtil.getMethodMetaData(commandName, getCommandParams(), locatorBridge.getRemoteLocator());
 
         optionsResult.putMethodMetaData(commandMethod, methodMetaData);
         mmd.put(commandMethod, methodMetaData);
@@ -115,7 +110,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
     }
 
     @OPTIONS
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public String options() throws JSONException {
         try {
             return new RestResourceMetadata(this).toJson().toString(Util.getFormattingIndentLevel());
@@ -132,8 +127,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
     protected Response executeCommandLegacyFormat(ParameterMap data) {
         RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
         final ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
-        final int status = (exitCode == ActionReport.ExitCode.FAILURE) ?
-                     HttpURLConnection.HTTP_INTERNAL_ERROR : HttpURLConnection.HTTP_OK;
+        final int status = (exitCode == ActionReport.ExitCode.FAILURE) ? HttpURLConnection.HTTP_INTERNAL_ERROR : HttpURLConnection.HTTP_OK;
         ActionReportResult option = (ActionReportResult) optionsLegacyFormat();
         ActionReportResult results = new ActionReportResult(commandName, actionReport, option.getMetaData());
         results.getActionReport().getExtraProperties().putAll(option.getActionReport().getExtraProperties());
@@ -147,9 +141,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
         RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
         ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
         if (exitCode == ActionReport.ExitCode.FAILURE) {
-            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(actionReport.getMessage())
-                    .build());
+            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(actionReport.getMessage()).build());
         }
 
         CommandResult cr = CompositeUtil.instance().getModel(CommandResult.class);
@@ -257,7 +249,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
 
     protected String getParent(UriInfo uriInfo) {
         List<PathSegment> segments = uriInfo.getPathSegments(true);
-        String parent = segments.get(segments.size()-2).getPath();
+        String parent = segments.get(segments.size() - 2).getPath();
 
         return parent;
     }

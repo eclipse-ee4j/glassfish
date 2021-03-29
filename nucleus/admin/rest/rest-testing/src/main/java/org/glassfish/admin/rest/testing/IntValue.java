@@ -21,7 +21,7 @@ public class IntValue extends ScalarValue {
 
     IntValue() {
     }
-    
+
     public int getValue() {
         return this.value;
     }

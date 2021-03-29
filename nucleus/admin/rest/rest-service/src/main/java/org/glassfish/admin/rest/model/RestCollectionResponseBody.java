@@ -28,6 +28,7 @@ import org.glassfish.admin.rest.utils.JsonUtil;
 
 /**
  * Used to return a standard REST response body that contains a collection of entities
+ * 
  * @author tmoreau
  */
 public class RestCollectionResponseBody<T extends RestModel> extends ResponseBody {
@@ -90,7 +91,7 @@ public class RestCollectionResponseBody<T extends RestModel> extends ResponseBod
     public void addItem(T item, String collectionName, String name, URI uri) {
         getItems().add(item);
         if (collectionName != null && uri != null) {
-           addResourceLink(collectionName, name, uri);
+            addResourceLink(collectionName, name, uri);
         }
     }
 

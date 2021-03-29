@@ -47,7 +47,7 @@ public class RestClient {
         client = ClientBuilder.newClient();
 
         client.register(new CsrfProtectionFilter());
-        if(user != null) {
+        if (user != null) {
             client.register(HttpAuthenticationFeature.basic(user, password));
         }
     }

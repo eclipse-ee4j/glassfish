@@ -44,4 +44,3 @@ public class PropertyExceptions extends Exception {
         return this.propertyExceptions;
     }
 }
-

@@ -57,11 +57,11 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.media.sse.EventOutput;
 
-
 /**
  * This is the base class for all composite resources. It provides all of the basic configuration and utilities needed
- * by composites.  For top-level resources, the <code>@Path</code> and <code>@Service</code> annotations are still
+ * by composites. For top-level resources, the <code>@Path</code> and <code>@Service</code> annotations are still
  * required, though, in order for the resource to be located and configured properly.
+ * 
  * @author jdlee
  */
 @Produces(Constants.MEDIA_TYPE_JSON)
@@ -92,10 +92,10 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * This method creates a sub-resource of the specified type. Since the JAX-RS does not allow for injection into
-     * sub-resources (as it doesn't know or control the lifecycle of the object), this method performs a manual
-     * "injection" of the various system objects the resource might need. If the requested Class can not be instantiated
-     * (e.g., it does not have a no-arg public constructor), the system will throw a <code>WebApplicationException</code>
-     * with an HTTP status code of 500 (internal server error).
+     * sub-resources (as it doesn't know or control the lifecycle of the object), this method performs a manual "injection"
+     * of the various system objects the resource might need. If the requested Class can not be instantiated (e.g., it does
+     * not have a no-arg public constructor), the system will throw a <code>WebApplicationException</code> with an HTTP
+     * status code of 500 (internal server error).
      *
      * @param clazz The Class of the desired sub-resource
      * @return
@@ -103,7 +103,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     public <T> T getSubResource(Class<T> clazz) {
         try {
             T resource = clazz.newInstance();
-            CompositeResource cr = (CompositeResource)resource;
+            CompositeResource cr = (CompositeResource) resource;
             cr.locatorBridge = locatorBridge;
             cr.subjectRef = subjectRef;
             cr.uriInfo = uriInfo;
@@ -121,6 +121,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected <T> T newModel(Class<T> modelIface) {
         return getCompositeUtil().getModel(modelIface);
     }
+
     protected <T extends RestModel> T newTemplate(Class<T> modelIface) {
         // We don't want any model trimming to happen on templates since the caller is supposed to
         // get the template, modify it, then POST it back and since POST should be getting full entities.
@@ -128,29 +129,34 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         template.allFieldsSet();
         return template;
     }
+
     protected <T extends RestModel> T getTypedModel(Class<T> modelIface, JSONObject jsonModel) throws Exception {
         if (jsonModel == null) {
-          return null;
+            return null;
         }
         return CompositeUtil.instance().unmarshallClass(getLocale(), modelIface, jsonModel);
     }
+
     protected JSONObject getJsonModel(RestModel typedModel) throws Exception {
-        return (JSONObject)JsonUtil.getJsonObject(typedModel, false); // include confidential properties
+        return (JSONObject) JsonUtil.getJsonObject(typedModel, false); // include confidential properties
     }
 
     // Convenience methods for constructing URIs
     /**
      * Every resource that returns a collection will need to return the URI for each item in the colleciton. This method
      * handles the creation of that URI, ensuring a correct and consistent URI pattern.
+     * 
      * @param name
      * @return
      */
     protected URI getChildItemUri(String name) {
         return getSubUri("id/" + name);
     }
+
     protected URI getUri(String path) {
         return this.uriInfo.getBaseUriBuilder().path(path).build();
     }
+
     protected URI getSubUri(String name) {
         return this.uriInfo.getAbsolutePathBuilder().path(name).build();
     }
@@ -159,6 +165,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected void addResourceLink(ResponseBody rb, String rel) throws Exception {
         rb.addResourceLink(rel, getSubUri(rel));
     }
+
     protected void addActionResourceLink(ResponseBody rb, String action) throws Exception {
         rb.addActionResourceLink(action, getSubUri(action));
     }
@@ -173,9 +180,11 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected URI getParentUri() throws Exception {
         return getParentUri(false);
     }
+
     protected URI getCollectionChildParentUri() throws Exception {
         return getParentUri(true);
     }
+
     private URI getParentUri(boolean isCollectionChild) throws Exception {
         List<PathSegment> pathSegments = this.uriInfo.getPathSegments();
         int count = pathSegments.size() - 1; // go up a level to get to the parent
@@ -195,6 +204,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a delete <code>AdminCommand</code> with no parameters.
+     * 
      * @param command
      * @return
      */
@@ -204,6 +214,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a delete <code>AdminCommand</code> with the specified parameters.
+     * 
      * @param command
      * @param parameters
      * @return
@@ -214,6 +225,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a delete <code>AdminCommand</code> with the specified parameters.
+     * 
      * @param command
      * @param parameters
      * @return
@@ -224,6 +236,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a writing <code>AdminCommand</code> with no parameters.
+     * 
      * @param command
      * @return
      */
@@ -233,6 +246,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a writing <code>AdminCommand</code> with the specified parameters.
+     * 
      * @param command
      * @param parameters
      * @return
@@ -243,6 +257,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a writing <code>AdminCommand</code> with the specified parameters.
+     * 
      * @param command
      * @param parameters
      * @return
@@ -253,6 +268,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a read-only <code>AdminCommand</code> with the specified parameters.
+     * 
      * @param command
      * @param parameters
      * @return
@@ -263,6 +279,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a read-only <code>AdminCommand</code> with no parameters.
+     * 
      * @param command
      * @param parameters
      * @return
@@ -273,6 +290,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute an <code>AdminCommand</code> with the specified parameters.
+     * 
      * @param command
      * @param parameters
      * @param status
@@ -280,18 +298,18 @@ public abstract class CompositeResource extends AbstractResource implements Rest
      * @param throwOnWarning (vs.ignore warning)
      * @return
      */
-    protected ActionReporter executeCommand(String command, ParameterMap parameters, Status status, boolean includeFailureMessage, boolean throwOnWarning) {
+    protected ActionReporter executeCommand(String command, ParameterMap parameters, Status status, boolean includeFailureMessage,
+            boolean throwOnWarning) {
         return getCompositeUtil().executeCommand(getSubject(), command, parameters, status, includeFailureMessage, throwOnWarning, false);
     }
 
     /**
-     * Execute an <code>AdminCommand</code> via SSE, but provide an <code>ActionReportProcessor</code> that allows
-     * the calling resource, via an <code>EntityBuilder</code> instance, to return a <code>ResponseBody</code> that
-     * extra information such as the newly create entity, as well as any messages returned by the subsystem.
+     * Execute an <code>AdminCommand</code> via SSE, but provide an <code>ActionReportProcessor</code> that allows the
+     * calling resource, via an <code>EntityBuilder</code> instance, to return a <code>ResponseBody</code> that extra
+     * information such as the newly create entity, as well as any messages returned by the subsystem.
      */
-    protected EventOutput executeSseCommand(final Subject subject, final String command,
-                                        final ParameterMap parameters,
-                                        final ResponseBodyBuilder builder) {
+    protected EventOutput executeSseCommand(final Subject subject, final String command, final ParameterMap parameters,
+            final ResponseBodyBuilder builder) {
         return getCompositeUtil().executeSseCommand(subject, command, parameters, new SseCommandHelper.ActionReportProcessor() {
             @Override
             public ActionReport process(ActionReport report, EventOutput ec) {
@@ -308,20 +326,18 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         });
     }
 
-    /** Execute an <code>AdminCommand</code> with the specified parameters and
-     * return EventOutput suitable for SSE.
+    /**
+     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
      */
-    protected EventOutput executeSseCommand(final Subject subject, final String command,
-                                        final ParameterMap parameters,
-                                        final SseCommandHelper.ActionReportProcessor processor) {
+    protected EventOutput executeSseCommand(final Subject subject, final String command, final ParameterMap parameters,
+            final SseCommandHelper.ActionReportProcessor processor) {
         return getCompositeUtil().executeSseCommand(subject, command, parameters, processor);
     }
 
-    /** Execute an <code>AdminCommand</code> with the specified parameters and
-     * return EventOutput suitable for SSE.
+    /**
+     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
      */
-    protected EventOutput executeSseCommand(final Subject subject, final String command,
-                                        final ParameterMap parameters) {
+    protected EventOutput executeSseCommand(final Subject subject, final String command, final ParameterMap parameters) {
         return getCompositeUtil().executeSseCommand(subject, command, parameters);
     }
 
@@ -349,13 +365,16 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected Response created(String name, String message) throws Exception {
         return created(responseBody(), name, message);
     }
+
     protected Response created(ResponseBody rb, String name, String message) throws Exception {
         rb.addSuccess(message);
         return created(rb, name);
     }
+
     protected Response created(ResponseBody rb, String name) throws Exception {
         return created(rb, getChildItemUri(name));
     }
+
     protected Response created(ResponseBody rb, URI uri) throws Exception {
         return Response.created(uri).entity(rb).build();
     }
@@ -364,10 +383,12 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected Response updated(String message) {
         return updated(responseBody(), message);
     }
+
     protected Response updated(ResponseBody rb, String message) {
         rb.addSuccess(message);
         return updated(rb);
     }
+
     protected Response updated(ResponseBody rb) {
         return ok(rb);
     }
@@ -376,10 +397,12 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected Response deleted(String message) {
         return deleted(responseBody(), message);
     }
+
     protected Response deleted(ResponseBody rb, String message) {
         rb.addSuccess(message);
         return deleted(rb);
     }
+
     protected Response deleted(ResponseBody rb) {
         return ok(rb);
     }
@@ -388,10 +411,12 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected Response acted(String message) {
         return acted(responseBody(), message);
     }
+
     protected Response acted(ResponseBody rb, String message) {
         rb.addSuccess(message);
         return acted(rb);
     }
+
     protected Response acted(ResponseBody rb) {
         return ok(rb);
     }
@@ -400,10 +425,12 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected Response accepted(String message, URI jobUri, URI newItemUri) {
         return accepted(responseBody(), message, jobUri, newItemUri);
     }
+
     protected Response accepted(ResponseBody rb, String message, URI jobUri, URI newItemUri) {
         rb.addSuccess(message);
         return accepted(rb, jobUri, newItemUri);
     }
+
     protected Response accepted(ResponseBody rb, URI jobUri, URI newItemUri) {
         ResponseBuilder bldr = Response.status(Status.ACCEPTED).entity(rb);
         if (jobUri != null) {
@@ -414,15 +441,15 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         }
         return bldr.build();
     }
+
     protected Response accepted(String command, ParameterMap parameters, URI childUri) {
         return accepted(responseBody(), launchDetachedCommand(command, parameters), childUri);
     }
+
     protected URI launchDetachedCommand(String command, ParameterMap parameters) {
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         final RestActionReporter ar = new RestActionReporter();
-        final CommandRunner.CommandInvocation commandInvocation =
-                cr.getCommandInvocation(command, ar, getSubject()).
-                parameters(parameters);
+        final CommandRunner.CommandInvocation commandInvocation = cr.getCommandInvocation(command, ar, getSubject()).parameters(parameters);
         final String jobId = DetachedCommandHelper.invokeAsync(commandInvocation);
         return getUri("jobs/id/" + jobId);
     }
@@ -436,47 +463,57 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         rb.addFailure(message);
         return badRequest(rb);
     }
+
     protected Response badRequest(ResponseBody rb) {
         return Response.status(Status.BAD_REQUEST).entity(rb).build();
     }
+
     protected WebApplicationException badRequest(Throwable cause) {
         return new WebApplicationException(cause, Status.BAD_REQUEST);
     }
+
     protected WebApplicationException badRequest(String message) {
         return new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(message).build());
     }
+
     protected WebApplicationException notFound(String message) {
         return new WebApplicationException(Response.status(Status.NOT_FOUND).entity(message).build());
     }
 
-/*
+    /*
     protected void internalServerError(Exception e) {
         ExceptionUtils.log(e);
     }
-*/
+    */
 
     // Convenience methods for creating response bodies
-    protected <T extends RestModel> RestCollectionResponseBody<T> restCollectionResponseBody(Class<T> modelIface, String collectionName, URI parentUri) {
+    protected <T extends RestModel> RestCollectionResponseBody<T> restCollectionResponseBody(Class<T> modelIface, String collectionName,
+            URI parentUri) {
         RestCollectionResponseBody<T> rb = restCollectionResponseBody(modelIface, collectionName);
         rb.addParentResourceLink(parentUri);
         return rb;
     }
+
     protected <T extends RestModel> RestCollectionResponseBody<T> restCollectionResponseBody(Class<T> modelIface, String collectionName) {
         return new RestCollectionResponseBody<T>(includeResourceLinks(), this.uriInfo, collectionName);
     }
+
     protected <T extends RestModel> RestModelResponseBody<T> restModelResponseBody(Class<T> modelIface, URI parentUri, T entity) {
         RestModelResponseBody<T> rb = restModelResponseBody(modelIface, parentUri);
         rb.setEntity(entity);
         return rb;
     }
+
     protected <T extends RestModel> RestModelResponseBody<T> restModelResponseBody(Class<T> modelIface, URI parentUri) {
         RestModelResponseBody<T> rb = restModelResponseBody(modelIface);
         rb.addParentResourceLink(parentUri);
         return rb;
     }
+
     protected <T extends RestModel> RestModelResponseBody<T> restModelResponseBody(Class<T> modelIface) {
         return new RestModelResponseBody<T>(includeResourceLinks());
     }
+
     protected ResponseBody responseBody() {
         return new ResponseBody(includeResourceLinks());
     }
@@ -485,6 +522,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected Response getResponse(ResponseBody responseBody) {
         return getResponse(Status.OK, responseBody);
     }
+
     protected Response getResponse(Status status, ResponseBody responseBody) {
         return Response.status(status).entity(responseBody).build();
     }
@@ -493,17 +531,22 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     protected JsonFilter getFilter(String include, String exclude) throws Exception {
         return new JsonFilter(getLocale(), include, exclude);
     }
+
     protected JsonFilter getFilter(String include, String exclude, String identityAttr) throws Exception {
         return new JsonFilter(getLocale(), include, exclude, identityAttr);
     }
+
     protected <T extends RestModel> T filterModel(Class<T> modelIface, T unfilteredModel, String include, String exclude) throws Exception {
         return filterModel(modelIface, unfilteredModel, getFilter(include, exclude));
     }
-    protected <T extends RestModel> T filterModel(Class<T> modelIface, T unfilteredModel, String include, String exclude, String identityAttr) throws Exception {
+
+    protected <T extends RestModel> T filterModel(Class<T> modelIface, T unfilteredModel, String include, String exclude,
+            String identityAttr) throws Exception {
         return filterModel(modelIface, unfilteredModel, getFilter(include, exclude, identityAttr));
     }
+
     protected <T extends RestModel> T filterModel(Class<T> modelIface, T unfilteredModel, JsonFilter filter) throws Exception {
-        JSONObject unfilteredJson = (JSONObject)JsonUtil.getJsonObject(unfilteredModel, false); // don't hide confidential properties
+        JSONObject unfilteredJson = (JSONObject) JsonUtil.getJsonObject(unfilteredModel, false); // don't hide confidential properties
         JSONObject filteredJson = filter.trim(unfilteredJson);
         T filteredModel = getTypedModel(modelIface, filteredJson);
         filteredModel.trimmed(); // TBD - remove once the conversion to the new REST style guide is completed
@@ -515,7 +558,8 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     }
 
     /**
-     * Convenience method for getting a path parameter.  Equivalent to uriInfo.getPathParameters().getFirst(name)
+     * Convenience method for getting a path parameter. Equivalent to uriInfo.getPathParameters().getFirst(name)
+     * 
      * @param name
      * @return
      */
@@ -532,13 +576,10 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     }
 
     private static class ExecutorServiceHolder {
-        private static ExecutorService INSTANCE = new ThreadPoolExecutor(
-                    THREAD_POOL_CORE, // core thread pool size
-                    THREAD_POOL_MAX, // maximum thread pool size
-                    1, // time to wait before resizing pool
-                    TimeUnit.MINUTES,
-                    new ArrayBlockingQueue<Runnable>(THREAD_POOL_MAX, true),
-                    new ThreadPoolExecutor.CallerRunsPolicy());
+        private static ExecutorService INSTANCE = new ThreadPoolExecutor(THREAD_POOL_CORE, // core thread pool size
+                THREAD_POOL_MAX, // maximum thread pool size
+                1, // time to wait before resizing pool
+                TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(THREAD_POOL_MAX, true), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     protected Response act(final CommandInvoker invoker, boolean detached) {
@@ -560,6 +601,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
                 responseBody.addSuccess(invoker.getSuccessMessage());
                 return responseBody;
             }
+
             @Override
             protected boolean includeResourceLinks() {
                 return includeResourceLinks;
@@ -592,6 +634,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
                         .addSuccess(invoker.getSuccessMessage());
                 return responseBody;
             }
+
             @Override
             protected boolean includeResourceLinks() {
                 return includeResourceLinks;
@@ -603,7 +646,8 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     public class CommandInvoker {
 
-        public CommandInvoker() {}
+        public CommandInvoker() {
+        }
 
         public CommandInvoker(String command, ParameterMap params, String successMessage) {
             setCommand(command);
@@ -612,23 +656,44 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         }
 
         private String command;
-        public void setCommand(String val) { this.command = val; }
-        public String getCommand() { return this.command; }
+
+        public void setCommand(String val) {
+            this.command = val;
+        }
+
+        public String getCommand() {
+            return this.command;
+        }
 
         private ParameterMap params;
-        public void setParams(ParameterMap val) { this.params = val; }
-        public ParameterMap getParams() { return this.params; }
+
+        public void setParams(ParameterMap val) {
+            this.params = val;
+        }
+
+        public ParameterMap getParams() {
+            return this.params;
+        }
 
         private String successMsg;
-        public void setSuccessMessage(String val) { this.successMsg = val; }
-        public String getSuccessMessage() { return this.successMsg; }
 
-        public void setResult(Properties extraProperties) {}
+        public void setSuccessMessage(String val) {
+            this.successMsg = val;
+        }
+
+        public String getSuccessMessage() {
+            return this.successMsg;
+        }
+
+        public void setResult(Properties extraProperties) {
+        }
     }
 
     public class CreateCommandInvoker extends CommandInvoker {
 
-        public CreateCommandInvoker() { super(); }
+        public CreateCommandInvoker() {
+            super();
+        }
 
         public CreateCommandInvoker(String command, ParameterMap params, String successMessage, String newItemName) {
             super(command, params, successMessage);
@@ -636,7 +701,13 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         }
 
         private String newItemName;
-        public void setNewItemName(String val) { this.newItemName = val; }
-        public String getNewItemName() { return this.newItemName; }
+
+        public void setNewItemName(String val) {
+            this.newItemName = val;
+        }
+
+        public String getNewItemName() {
+            return this.newItemName;
+        }
     }
 }

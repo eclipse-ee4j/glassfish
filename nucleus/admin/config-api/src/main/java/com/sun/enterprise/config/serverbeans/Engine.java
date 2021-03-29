@@ -51,26 +51,23 @@ public interface Engine extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the sniffer property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
     String getSniffer();
 
     /**
      * Sets the value of the sniffer property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setSniffer(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the description property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getDescription();
@@ -78,17 +75,15 @@ public interface Engine extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the description property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setDescription(String value) throws PropertyVetoException;
-
 
     // TODO: Make this not a list once the hk2/config bug with a single (not list) ("*") is working.
     @Element("*")
     List<ApplicationConfig> getApplicationConfigs();
 
-//    void setConfig(ApplicationConfig config) throws PropertyVetoException;
+    //    void setConfig(ApplicationConfig config) throws PropertyVetoException;
 
     // TODO: remove this once hk2/config supports non-list @Element("*").
     @DuckTyped
@@ -100,28 +95,27 @@ public interface Engine extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Creates a new instance of the specified type of app config.
+     * 
      * @param <T> stands for the specific type required
      * @param configType the Class for the type required
      * @return new instance of the specified type of ApplicationConfig
      * @throws TransactionFailure
      */
     @DuckTyped
-    <T extends ApplicationConfig> T newApplicationConfig(Class<T> configType)
-            throws TransactionFailure;
+    <T extends ApplicationConfig> T newApplicationConfig(Class<T> configType) throws TransactionFailure;
 
     /**
-    	Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
     // TODO: remove this once hk2/config supports non-list @Element("*").
     class Duck {
         public static ApplicationConfig getApplicationConfig(Engine instance) {
-            return (instance.getApplicationConfigs().size() == 0) ? null :
-                    instance.getApplicationConfigs().get(0);
+            return (instance.getApplicationConfigs().size() == 0) ? null : instance.getApplicationConfigs().get(0);
         }
 
         public static void setApplicationConfig(Engine instance, ApplicationConfig config) {
@@ -129,8 +123,8 @@ public interface Engine extends ConfigBeanProxy, PropertyBag {
             instance.getApplicationConfigs().add(config);
         }
 
-        public static <T extends ApplicationConfig> T newApplicationConfig(
-                final Engine instance, final Class<T> configType) throws TransactionFailure {
+        public static <T extends ApplicationConfig> T newApplicationConfig(final Engine instance, final Class<T> configType)
+                throws TransactionFailure {
             return (T) ConfigSupport.apply(new SingleConfigCode<Engine>() {
 
                 public Object run(Engine e) throws PropertyVetoException, TransactionFailure {

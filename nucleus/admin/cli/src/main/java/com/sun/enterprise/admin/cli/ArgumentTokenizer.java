@@ -26,8 +26,7 @@ public class ArgumentTokenizer {
     protected String str;
     protected StringBuilder token = new StringBuilder();
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ArgumentTokenizer.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ArgumentTokenizer.class);
 
     public static class ArgumentException extends Exception {
         public ArgumentException(String s) {
@@ -38,7 +37,7 @@ public class ArgumentTokenizer {
     /**
      * Construct a tokenizer for the specified string.
      *
-     * @param   str            a string to be parsed.
+     * @param str a string to be parsed.
      */
     public ArgumentTokenizer(String str) {
         currentPosition = 0;
@@ -50,8 +49,7 @@ public class ArgumentTokenizer {
      * Skip white space.
      */
     protected void skipWhiteSpace() {
-        while ((currentPosition < maxPosition) &&
-               Character.isWhitespace(str.charAt(currentPosition))) {
+        while ((currentPosition < maxPosition) && Character.isWhitespace(str.charAt(currentPosition))) {
             currentPosition++;
         }
     }
@@ -59,8 +57,8 @@ public class ArgumentTokenizer {
     /**
      * Test if there are more tokens available from this tokenizer's string.
      *
-     * @return  <code>true</code> if there are more tokens available from this
-     *          tokenizer's string; <code>false</code> otherwise.
+     * @return <code>true</code> if there are more tokens available from this tokenizer's string; <code>false</code>
+     * otherwise.
      */
     public boolean hasMoreTokens() {
         skipWhiteSpace();
@@ -70,9 +68,8 @@ public class ArgumentTokenizer {
     /**
      * Return the next token from this tokenizer.
      *
-     * @return     the next token from this tokenizer.
-     * @exception  NoSuchElementException  if there are no more tokens in this
-     *               tokenizer's string.
+     * @return the next token from this tokenizer.
+     * @exception NoSuchElementException if there are no more tokens in this tokenizer's string.
      */
     public String nextToken() throws ArgumentTokenizer.ArgumentException {
         skipWhiteSpace();
@@ -83,8 +80,7 @@ public class ArgumentTokenizer {
     }
 
     /**
-     * Return the next token starting at the current position,
-     * assuming whitespace has already been skipped.
+     * Return the next token starting at the current position, assuming whitespace has already been skipped.
      */
     protected String scanToken() throws ArgumentTokenizer.ArgumentException {
         while (currentPosition < maxPosition) {
@@ -95,8 +91,7 @@ public class ArgumentTokenizer {
                     c = str.charAt(currentPosition++);
                     if (c == '\\' && quote == '"') {
                         if (currentPosition >= maxPosition)
-                            throw new ArgumentTokenizer.ArgumentException(
-                                strings.get("token.escapeAtEOL"));
+                            throw new ArgumentTokenizer.ArgumentException(strings.get("token.escapeAtEOL"));
                         c = str.charAt(currentPosition++);
                         if (!(c == '\\' || c == '"' || c == '\''))
                             token.append('\\');
@@ -106,12 +101,10 @@ public class ArgumentTokenizer {
                     token.append(c);
                 }
                 if (c != quote)
-                    throw new ArgumentTokenizer.ArgumentException(
-                                strings.get("token.unbalancedQuotes"));
+                    throw new ArgumentTokenizer.ArgumentException(strings.get("token.unbalancedQuotes"));
             } else if (c == '\\') {
                 if (currentPosition >= maxPosition)
-                    throw new ArgumentTokenizer.ArgumentException(
-                                strings.get("token.escapeAtEOL"));
+                    throw new ArgumentTokenizer.ArgumentException(strings.get("token.escapeAtEOL"));
                 c = str.charAt(currentPosition++);
                 token.append(c);
             } else if (Character.isWhitespace(c)) {

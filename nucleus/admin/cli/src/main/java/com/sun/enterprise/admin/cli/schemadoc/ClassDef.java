@@ -94,7 +94,7 @@ public class ClassDef {
     public Map<String, String> getAggregatedTypes() {
         return types;
     }
-    
+
     @Override
     public String toString() {
         return def;
@@ -129,6 +129,6 @@ public class ClassDef {
     }
 
     public String getXmlName() {
-        return Dom.convertName(def.substring(def.lastIndexOf(".")+1));
+        return Dom.convertName(def.substring(def.lastIndexOf(".") + 1));
     }
 }

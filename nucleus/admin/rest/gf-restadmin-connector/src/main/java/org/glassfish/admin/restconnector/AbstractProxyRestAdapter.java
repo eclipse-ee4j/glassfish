@@ -27,9 +27,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Base class for our implementation of Adapter proxies.
- * To avoid early loading of adapter implentations, use a handle-body idiom here.
- * Only operations related to metadata is handled by this class. The rest of the operations are
+ * Base class for our implementation of Adapter proxies. To avoid early loading of adapter implentations, use a
+ * handle-body idiom here. Only operations related to metadata is handled by this class. The rest of the operations are
  * delegated to a delegate which is looked up in the service registry on demand.
  *
  * @author Sanjeeb.Sahoo@Sun.COM

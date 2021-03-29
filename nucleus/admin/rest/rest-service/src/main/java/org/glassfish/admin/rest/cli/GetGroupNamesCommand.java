@@ -47,7 +47,6 @@ import org.jvnet.hk2.config.types.Property;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-
 /**
  * returns the list of targets
  *
@@ -56,22 +55,16 @@ import jakarta.inject.Named;
 @Service(name = "__list-group-names")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,
-    CommandTarget.CLUSTER, CommandTarget.CONFIG,CommandTarget.CLUSTERED_INSTANCE})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG,
+        CommandTarget.CLUSTERED_INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=AuthRealm.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-group-names", 
-        description="List Group Names",
-        params={
-            @RestParam(name="realmName", value="$parent")
-        })
-})
+        @RestEndpoint(configBean = AuthRealm.class, opType = RestEndpoint.OpType.GET, path = "list-group-names", description = "List Group Names", params = {
+                @RestParam(name = "realmName", value = "$parent") }) })
 public class GetGroupNamesCommand implements AdminCommand {
     @Inject
     com.sun.enterprise.config.serverbeans.Domain domain;
-    
+
     //TODO: for consistency with other commands dealing with realms
     //uncomment this below.
     //@Param(name="authrealmname")
@@ -81,9 +74,7 @@ public class GetGroupNamesCommand implements AdminCommand {
     @Param
     String userName;
 
-
-    @Param(name = "target", primary=true, optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
     @Inject
@@ -96,8 +87,7 @@ public class GetGroupNamesCommand implements AdminCommand {
     @Inject
     RealmsManager realmsManager;
 
-    private static final LocalStringManagerImpl _localStrings =
-	new LocalStringManagerImpl(GetGroupNamesCommand.class);
+    private static final LocalStringManagerImpl _localStrings = new LocalStringManagerImpl(GetGroupNamesCommand.class);
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -143,12 +133,11 @@ public class GetGroupNamesCommand implements AdminCommand {
             report.setFailureCause(ex);
             report.setActionExitCode(ExitCode.FAILURE);
         }
-       
+
     }
 
     private String[] getGroupNames(String realmName, String userName)
-            throws NoSuchRealmException, BadRealmException,
-            InvalidOperationException, NoSuchUserException {
+            throws NoSuchRealmException, BadRealmException, InvalidOperationException, NoSuchUserException {
         //account for updates to file-realm contents from outside this config 
         //which are sharing the same keyfile
         realmsManager.refreshRealm(config.getName(), realmName);
@@ -169,13 +158,10 @@ public class GetGroupNamesCommand implements AdminCommand {
                 return getGroupNames(r, userName);
             }
         }
-        throw new NoSuchRealmException(
-                _localStrings.getLocalString("NO_SUCH_REALM", "No Such Realm: {0}",
-                new Object[] {realmName}));
+        throw new NoSuchRealmException(_localStrings.getLocalString("NO_SUCH_REALM", "No Such Realm: {0}", new Object[] { realmName }));
     }
 
-    private String[] getGroupNames(Realm r, String userName) 
-            throws InvalidOperationException, NoSuchUserException {
+    private String[] getGroupNames(Realm r, String userName) throws InvalidOperationException, NoSuchUserException {
         List<String> l = new ArrayList<String>();
         Enumeration<String> groupNames = r.getGroupNames(userName);
         while (groupNames.hasMoreElements()) {

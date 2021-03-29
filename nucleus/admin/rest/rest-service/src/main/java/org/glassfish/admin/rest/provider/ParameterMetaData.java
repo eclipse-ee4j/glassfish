@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Meta-data store for a method parameter. Used to hold meta-data for
- * a message or query parameter of the resource method.
+ * Meta-data store for a method parameter. Used to hold meta-data for a message or query parameter of the resource
+ * method.
  *
  * @author Rajeshwar Patil
  */
@@ -31,31 +31,25 @@ public class ParameterMetaData {
         __metaData = new HashMap<String, String>();
     }
 
-
     public String getAttributeValue(String attributeName) {
         return __metaData.get(attributeName);
     }
-
 
     public String putAttribute(String attributeName, String attributeValue) {
         return __metaData.put(attributeName, attributeValue);
     }
 
-
     public Set<String> attributes() {
         return __metaData.keySet();
     }
-
 
     public boolean isFileParameter() {
         return __isFileParameter;
     }
 
-
     public void setIsFileParameter(boolean isFileParameter) {
         __isFileParameter = isFileParameter;
     }
-
 
     HashMap<String, String> __metaData;
     boolean __isFileParameter = false;

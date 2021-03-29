@@ -38,6 +38,7 @@ public class PropertyException extends Exception {
         this.field = field;
     }
 
-    public String getField() { return this.field; }
+    public String getField() {
+        return this.field;
+    }
 }
-

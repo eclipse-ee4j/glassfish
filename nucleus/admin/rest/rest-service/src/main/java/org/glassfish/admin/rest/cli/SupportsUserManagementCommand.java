@@ -58,18 +58,12 @@ import jakarta.inject.Named;
 @Service(name = "__supports-user-management")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,
-    CommandTarget.CLUSTER, CommandTarget.CONFIG,CommandTarget.CLUSTERED_INSTANCE})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG,
+        CommandTarget.CLUSTERED_INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=AuthRealm.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="supports-user-management", 
-        description="Check Support",
-        params={
-            @RestParam(name="realmName", value="$parent")
-        })
-})
+        @RestEndpoint(configBean = AuthRealm.class, opType = RestEndpoint.OpType.GET, path = "supports-user-management", description = "Check Support", params = {
+                @RestParam(name = "realmName", value = "$parent") }) })
 public class SupportsUserManagementCommand implements AdminCommand {
 
     @Inject
@@ -81,9 +75,7 @@ public class SupportsUserManagementCommand implements AdminCommand {
     @Param
     String realmName;
 
-
-    @Param(name = "target", primary=true, optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
     @Inject
@@ -96,8 +88,7 @@ public class SupportsUserManagementCommand implements AdminCommand {
     @Inject
     RealmsManager realmsManager;
 
-    private static final LocalStringManagerImpl _localStrings =
-	new LocalStringManagerImpl(SupportsUserManagementCommand.class);
+    private static final LocalStringManagerImpl _localStrings = new LocalStringManagerImpl(SupportsUserManagementCommand.class);
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -139,8 +130,7 @@ public class SupportsUserManagementCommand implements AdminCommand {
 
     }
 
-    private boolean supportsUserManagement(String realmName)
-            throws BadRealmException, NoSuchRealmException {
+    private boolean supportsUserManagement(String realmName) throws BadRealmException, NoSuchRealmException {
         Realm r = realmsManager.getFromLoadedRealms(config.getName(), realmName);
         if (r != null) {
             return r.supportsUserManagement();
@@ -158,11 +148,7 @@ public class SupportsUserManagementCommand implements AdminCommand {
                 return r.supportsUserManagement();
             }
         }
-        throw new NoSuchRealmException(
-                _localStrings.getLocalString("NO_SUCH_REALM", "No Such Realm: {0}",
-                new Object[] {realmName}));
+        throw new NoSuchRealmException(_localStrings.getLocalString("NO_SUCH_REALM", "No Such Realm: {0}", new Object[] { realmName }));
     }
-    
+
 }
-
-

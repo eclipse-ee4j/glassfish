@@ -49,5 +49,4 @@ public class RegisterInstanceCommandParameters implements CommandParameters {
         public static final String PARAM_CHECKPORTS = "checkports";
     }
 
-
 }

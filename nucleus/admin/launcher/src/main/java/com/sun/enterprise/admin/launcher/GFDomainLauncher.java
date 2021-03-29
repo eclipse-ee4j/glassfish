@@ -30,7 +30,6 @@ import java.util.List;
  */
 class GFDomainLauncher extends GFLauncher {
 
-
     /* sample profiler config
      *
            <java-config classpath-suffix="" debug-enabled="false" debug-options="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009" env-classpath-ignored="true" java-home="${com.sun.aas.javaRoot}" javac-options="-g" rmic-options="-iiop -poa -alwaysgenerate -keepgenerated -g" system-classpath="">

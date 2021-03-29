@@ -49,8 +49,7 @@ public class LinuxService extends NonSMFServiceAdapter {
         super(dirs, type);
         if (!apropos()) {
             // programmer error
-            throw new IllegalArgumentException(Strings.get("internal.error",
-                    "Constructor called but Linux Services are not available."));
+            throw new IllegalArgumentException(Strings.get("internal.error", "Constructor called but Linux Services are not available."));
         }
         setRcDirs();
     }
@@ -63,11 +62,9 @@ public class LinuxService extends NonSMFServiceAdapter {
             setTemplateFile(TEMPLATE_FILE_NAME);
             checkFileSystem();
             setTarget();
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             throw e;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -86,11 +83,9 @@ public class LinuxService extends NonSMFServiceAdapter {
                 trace("No preexisting Service with that name was found");
 
             install();
-        }
-        catch (RuntimeException ex) {
+        } catch (RuntimeException ex) {
             throw ex;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -99,11 +94,9 @@ public class LinuxService extends NonSMFServiceAdapter {
     public final void deleteServiceInternal() {
         try {
             uninstall();
-        }
-        catch (RuntimeException ex) {
+        } catch (RuntimeException ex) {
             throw ex;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -113,12 +106,7 @@ public class LinuxService extends NonSMFServiceAdapter {
         if (info.dryRun)
             return Strings.get("dryrun");
 
-        return Strings.get("LinuxServiceCreated",
-                info.serviceName,
-                info.type.toString(),
-                target,
-                getFinalUser(),
-                target.getName());
+        return Strings.get("LinuxServiceCreated", info.serviceName, info.type.toString(), target, getFinalUser(), target.getName());
     }
 
     // called by outside caller (createService)
@@ -138,10 +126,9 @@ public class LinuxService extends NonSMFServiceAdapter {
     public final String getLocationArgsStart() {
         if (isDomain()) {
             return " --domaindir " + getServerDirs().getServerParentDir().getPath() + " ";
-        }
-        else {
-            return " --nodedir " + getServerDirs().getServerGrandParentDir().getPath()
-                    + " --node " + getServerDirs().getServerParentDir().getName() + " ";
+        } else {
+            return " --nodedir " + getServerDirs().getServerGrandParentDir().getPath() + " --node "
+                    + getServerDirs().getServerParentDir().getName() + " ";
         }
     }
 
@@ -162,7 +149,7 @@ public class LinuxService extends NonSMFServiceAdapter {
         // On Ubuntu they are real dirs in /etc
 
         // try to make this as forgiving as possible.
-        File[] rcDirs = new File[8];    // 0, 1, 2...6, S
+        File[] rcDirs = new File[8]; // 0, 1, 2...6, S
         if (!setRcDirs(new File(Constants.ETC), rcDirs))
             if (!setRcDirs(new File(Constants.INITD), rcDirs))
                 throw new RuntimeException(Strings.get("no_rc2"));
@@ -174,7 +161,7 @@ public class LinuxService extends NonSMFServiceAdapter {
 
     private boolean setRcDirs(File dir, File[] rcDirs) {
 
-        if(LINUX_HACK) {
+        if (LINUX_HACK) {
             return true;
         }
         // some have 4 missing, some have S missing etc.  All seem to have 5
@@ -294,15 +281,14 @@ public class LinuxService extends NonSMFServiceAdapter {
             else if (matches.length == 1)
                 deathRow.add(matches[0]);
             else {
-                tooManyLinks(matches);  // error!!
+                tooManyLinks(matches); // error!!
             }
         }
 
         for (File f : deathRow) {
             if (info.dryRun) {
                 dryRun("Would have deleted: " + f);
-            }
-            else {
+            } else {
                 if (!f.delete())
                     throw new RuntimeException(Strings.get("cant_delete", f));
                 else
@@ -346,8 +332,7 @@ public class LinuxService extends NonSMFServiceAdapter {
             trace("Create Link Output: " + mgr.getStdout() + mgr.getStderr());
             link.setExecutable(true, false);
             trace("Created link file: " + link);
-        }
-        catch (ProcessManagerException e) {
+        } catch (ProcessManagerException e) {
             throw new RuntimeException(Strings.get("ln_error", toString(cmds), e));
         }
     }
@@ -388,7 +373,7 @@ public class LinuxService extends NonSMFServiceAdapter {
     }
 
     private String getServiceUserStop() {
-        if(hasStartStopTokens)
+        if (hasStartStopTokens)
             return "\"";
         return "";
     }
@@ -418,6 +403,7 @@ public class LinuxService extends NonSMFServiceAdapter {
 
         return sb.toString();
     }
+
     private String targetName;
     File target;
     private static final String TEMPLATE_FILE_NAME = "linux-service.template";

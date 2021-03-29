@@ -27,11 +27,13 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, TYPE})
+@Target({ METHOD, FIELD, TYPE })
 @Documented
 @Constraint(validatedBy = SolarisRealmPropertyCheckValidator.class)
 public @interface SolarisRealmPropertyCheck {
     String message() default "jaas-context has to be specified for SolarisRealm";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

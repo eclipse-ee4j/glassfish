@@ -23,8 +23,7 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
- * Resolver for an DomainExtension type. The type instance is accessed as a 
- * DomainExtension from the Domain.
+ * Resolver for an DomainExtension type. The type instance is accessed as a DomainExtension from the Domain.
  *
  * @author tmueller
  */
@@ -35,7 +34,7 @@ public class DomainExtensionResolver implements CrudResolver {
     Domain domain;
 
     @Override
-    public <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, final Class<T> type) {       
-        return type.cast(domain.getExtensionByType((Class<DomainExtension>)type));
+    public <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, final Class<T> type) {
+        return type.cast(domain.getExtensionByType((Class<DomainExtension>) type));
     }
 }

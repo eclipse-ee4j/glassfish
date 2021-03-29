@@ -51,13 +51,13 @@ public class SubstitutableTokens {
     public static final String JMX_SYSTEM_CONNECTOR_PORT_TOKEN_NAME = "JMX_SYSTEM_CONNECTOR_PORT";
 
     // Tokens for index.html
-    public static final String VERSION_TOKEN_NAME      = "VERSION";
+    public static final String VERSION_TOKEN_NAME = "VERSION";
     public static final String INSTALL_ROOT_TOKEN_NAME = "INSTALL_ROOT";
 
     // Tokens for glassfish-acc.xml
-    public static final String SERVER_ROOT  = "SERVER_ROOT";
-    public static final String SERVER_NAME  = "SERVER_NAME";
-    public static final String ORB_LISTENER1_PORT = "ORB_LISTENER1_PORT"; 
+    public static final String SERVER_ROOT = "SERVER_ROOT";
+    public static final String SERVER_NAME = "SERVER_NAME";
+    public static final String ORB_LISTENER1_PORT = "ORB_LISTENER1_PORT";
 
     private static final String DOMAIN_DIR = "DOMAIN_DIR";
 
@@ -77,7 +77,7 @@ public class SubstitutableTokens {
 
         substitutableTokens.put(ADMIN_PORT_TOKEN_NAME, domainConfig.get(DomainConfig.K_ADMIN_PORT).toString());
         substitutableTokens.put(HTTP_PORT_TOKEN_NAME, domainConfig.get(DomainConfig.K_INSTANCE_PORT).toString());
-        substitutableTokens.put(ORB_LISTENER_PORT_TOKEN_NAME,  domainConfig.get(DomainConfig.K_ORB_LISTENER_PORT).toString());
+        substitutableTokens.put(ORB_LISTENER_PORT_TOKEN_NAME, domainConfig.get(DomainConfig.K_ORB_LISTENER_PORT).toString());
         substitutableTokens.put(JMS_PROVIDER_PORT_TOKEN_NAME, domainConfig.get(DomainConfig.K_JMS_PORT).toString());
         substitutableTokens.put(HTTP_SSL_PORT_TOKEN_NAME, domainConfig.get(DomainConfig.K_HTTP_SSL_PORT).toString());
         substitutableTokens.put(ORB_SSL_PORT_TOKEN_NAME, domainConfig.get(DomainConfig.K_IIOP_SSL_PORT).toString());
@@ -90,13 +90,13 @@ public class SubstitutableTokens {
         substitutableTokens.put(INSTANCE_CERT_DN_TOKEN_NAME, (String) domainConfig.get(DomainConfig.K_INSTANCE_CERT_DN));
         substitutableTokens.put(SECURE_ADMIN_IDENTIFIER_TOKEN_NAME, (String) domainConfig.get(DomainConfig.K_SECURE_ADMIN_IDENTIFIER));
 
-        substitutableTokens.put(VERSION_TOKEN_NAME,  Version.getFullVersion());
-        substitutableTokens.put(INSTALL_ROOT_TOKEN_NAME,  domainConfig.getInstallRoot());
+        substitutableTokens.put(VERSION_TOKEN_NAME, Version.getFullVersion());
+        substitutableTokens.put(INSTALL_ROOT_TOKEN_NAME, domainConfig.getInstallRoot());
 
-        substitutableTokens.put(SERVER_ROOT,  FileUtils.makeForwardSlashes(domainConfig.getInstallRoot()));
-        substitutableTokens.put(SERVER_NAME,  domainConfig.get(DomainConfig.K_HOST_NAME).toString());
-        substitutableTokens.put(ORB_LISTENER1_PORT,  domainConfig.get(DomainConfig.K_ORB_LISTENER_PORT).toString());
-        String domainLocation =  new File(domainConfig.getRepositoryRoot(), domainConfig.getRepositoryName()).getAbsolutePath();
+        substitutableTokens.put(SERVER_ROOT, FileUtils.makeForwardSlashes(domainConfig.getInstallRoot()));
+        substitutableTokens.put(SERVER_NAME, domainConfig.get(DomainConfig.K_HOST_NAME).toString());
+        substitutableTokens.put(ORB_LISTENER1_PORT, domainConfig.get(DomainConfig.K_ORB_LISTENER_PORT).toString());
+        String domainLocation = new File(domainConfig.getRepositoryRoot(), domainConfig.getRepositoryName()).getAbsolutePath();
         substitutableTokens.put(DOMAIN_DIR, domainLocation);
 
         for (String pname : domainProperties.stringPropertyNames()) {

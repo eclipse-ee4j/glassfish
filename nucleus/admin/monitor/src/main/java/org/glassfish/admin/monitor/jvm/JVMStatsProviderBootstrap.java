@@ -35,7 +35,7 @@ import org.glassfish.internal.api.*;
  * @author PRASHANTH ABBAGANI
  */
 @Service
-@RunLevel(value=PostStartupRunLevel.VAL, mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
+@RunLevel(value = PostStartupRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
 public class JVMStatsProviderBootstrap implements PostConstruct {
 
     private ServerRuntimeStatsProvider sRuntimeStatsProvider = new ServerRuntimeStatsProvider();
@@ -49,26 +49,31 @@ public class JVMStatsProviderBootstrap implements PostConstruct {
     private ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
     public static final String JVM = "jvm";
 
-    public void postConstruct(){
+    public void postConstruct() {
 
         /* register with monitoring */
         StatsProviderManager.register("jvm", PluginPoint.SERVER, "", sRuntimeStatsProvider, ContainerMonitoring.LEVEL_LOW);
-        StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/class-loading-system", clStatsProvider, ContainerMonitoring.LEVEL_LOW);
-        StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/compilation-system", compileStatsProvider, ContainerMonitoring.LEVEL_LOW);
+        StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/class-loading-system", clStatsProvider,
+                ContainerMonitoring.LEVEL_LOW);
+        StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/compilation-system", compileStatsProvider,
+                ContainerMonitoring.LEVEL_LOW);
         for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
             JVMGCStatsProvider jvmStatsProvider = new JVMGCStatsProvider(gc.getName());
             jvmStatsProviderList.add(jvmStatsProvider);
-            StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/garbage-collectors/"+gc.getName(), jvmStatsProvider, ContainerMonitoring.LEVEL_LOW);
+            StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/garbage-collectors/" + gc.getName(), jvmStatsProvider,
+                    ContainerMonitoring.LEVEL_LOW);
         }
         StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/memory", memoryStatsProvider, ContainerMonitoring.LEVEL_LOW);
         StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/operating-system", osStatsProvider, ContainerMonitoring.LEVEL_LOW);
         StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/runtime", runtimeStatsProvider, ContainerMonitoring.LEVEL_LOW);
-        StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/thread-system", threadSysStatsProvider, ContainerMonitoring.LEVEL_LOW);
+        StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/thread-system", threadSysStatsProvider,
+                ContainerMonitoring.LEVEL_LOW);
         for (ThreadInfo t : threadBean.getThreadInfo(threadBean.getAllThreadIds(), 5)) {
-            if (t == null) continue; // See issue #12636
+            if (t == null)
+                continue; // See issue #12636
             JVMThreadInfoStatsProvider threadInfoStatsProvider = new JVMThreadInfoStatsProvider(t);
-            StatsProviderManager.register("jvm", PluginPoint.SERVER, 
-                    "jvm/thread-system/thread-"+t.getThreadId(), threadInfoStatsProvider, ContainerMonitoring.LEVEL_HIGH);
+            StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/thread-system/thread-" + t.getThreadId(), threadInfoStatsProvider,
+                    ContainerMonitoring.LEVEL_HIGH);
         }
-    } 
+    }
 }

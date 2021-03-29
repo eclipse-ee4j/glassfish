@@ -27,7 +27,6 @@ import jakarta.validation.UnexpectedTypeException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.Dom;
 
-
 /**
  * Validation logic for ContextRootCheck constraint
  *
@@ -49,17 +48,19 @@ public class ContextRootCheckValidator implements ConstraintValidator<ContextRoo
         Dom dom = Dom.unwrap(app);
 
         ServiceLocator locator = dom.getHabitat();
-        if (locator == null) return true;
+        if (locator == null)
+            return true;
 
         ConfigBeansUtilities cbu = locator.getService(ConfigBeansUtilities.class);
-        if (cbu == null) return true;
+        if (cbu == null)
+            return true;
 
         Domain domain = cbu.getDomain();
         String appName = app.getName();
 
         String contextRoot = app.getContextRoot();
 
-        if (contextRoot!=null && !contextRoot.startsWith("/")) {
+        if (contextRoot != null && !contextRoot.startsWith("/")) {
             contextRoot = "/" + contextRoot;
         }
 
@@ -75,7 +76,7 @@ public class ContextRootCheckValidator implements ConstraintValidator<ContextRoo
                     for (Application application : domain.getApplications().getApplications()) {
                         if (isSameApp(appName, application.getName())) {
                             // skip the check if the validation is for different versions of the same application
-                        } else if ((application.getContextRoot()!=null) && application.getContextRoot().equals(contextRoot)) {
+                        } else if ((application.getContextRoot() != null) && application.getContextRoot().equals(contextRoot)) {
 
                             String virtualServers = applicationRef.getVirtualServers();
                             List<String> vsList = Arrays.asList(virtualServers.split(","));
@@ -123,10 +124,10 @@ public class ContextRootCheckValidator implements ConstraintValidator<ContextRoo
 
     private static final String getUntaggedName(String appName) throws Exception {
 
-        if(appName != null && !appName.isEmpty()){
+        if (appName != null && !appName.isEmpty()) {
             int colonIndex = appName.indexOf(":");
             // if the appname contains a EXPRESSION_SEPARATOR
-            if (colonIndex >= 0){
+            if (colonIndex >= 0) {
                 if (colonIndex == 0) {
                     // if appName is starting with a colon
                     throw new Exception("excepted application name before colon: " + appName);

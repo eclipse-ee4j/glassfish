@@ -23,8 +23,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.jvnet.hk2.annotations.Service;
 
-
-/** DataProvider for byte array. (Super simple)
+/**
+ * DataProvider for byte array. (Super simple)
  *
  * @author mmares
  */
@@ -47,5 +47,5 @@ public class ByteArrayDataProvider implements DataProvider {
         FileUtils.copy(stream, baos, 0);
         return baos.toByteArray();
     }
-    
+
 }

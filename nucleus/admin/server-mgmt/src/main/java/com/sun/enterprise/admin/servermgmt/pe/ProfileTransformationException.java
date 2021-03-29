@@ -17,19 +17,19 @@
 package com.sun.enterprise.admin.servermgmt.pe;
 
 public class ProfileTransformationException extends Exception {
-    
+
     public ProfileTransformationException() {
     }
-    
-    
+
     /**
      * Constructs an instance of <code>ProfleTransformationException</code> with the specified detail message.
+     * 
      * @param msg the detail message.
      */
     public ProfileTransformationException(String msg) {
         super(msg);
     }
-    
+
     public ProfileTransformationException(final Exception e) {
         super(e);
     }

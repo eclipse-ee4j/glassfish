@@ -17,15 +17,14 @@
 package com.sun.enterprise.admin.servermgmt;
 
 /**
- * The KeyStoreManager implementation for a node.
- * This is used by the change-master-password command which will
- * change the master password for a node
+ * The KeyStoreManager implementation for a node. This is used by the change-master-password command which will change
+ * the master password for a node
  *
  * @author Bhakti Mehta
  */
 public class NodeKeystoreManager extends KeystoreManager {
 
-    public NodeKeystoreManager(){
+    public NodeKeystoreManager() {
 
     }
 

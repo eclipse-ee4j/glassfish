@@ -28,37 +28,34 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 
-
 public final class HttpConnectorAddress {
     static final String HTTP_CONNECTOR = "http";
     static final String HTTPS_CONNECTOR = "https";
-    public static final String  AUTHORIZATION_KEY     = "Authorization";
+    public static final String AUTHORIZATION_KEY = "Authorization";
     private static final String AUTHORIZATION_TYPE = "Basic ";
 
     private String host;
-    private int    port;
+    private int port;
     private String path;
     private boolean secure;
-    private AuthenticationInfo  authInfo;
+    private AuthenticationInfo authInfo;
     private boolean interactive = true;
 
     private SSLSocketFactory sslSocketFactory;
 
-    
     public HttpConnectorAddress() {
     }
 
     public HttpConnectorAddress(String host, int port) {
         this(host, port, false);
     }
-    
+
     /**
-     * construct an address which indicates the host, port and
-     * security attributes desired.
+     * construct an address which indicates the host, port and security attributes desired.
+     * 
      * @param host a host address
      * @param port a port number
-     * @param secure a boolean indication of whether the connection should be
-     *  secure (i.e. confidential) or not
+     * @param secure a boolean indication of whether the connection should be secure (i.e. confidential) or not
      */
     public HttpConnectorAddress(String host, int port, boolean secure) {
         this(host, port, secure, null);
@@ -72,8 +69,7 @@ public final class HttpConnectorAddress {
         this(host, port, true /* secure */, null /* path */, sslSocketFactory);
     }
 
-    public HttpConnectorAddress(String host, int port, boolean secure, String path,
-            SSLSocketFactory sslSocketFactory) {
+    public HttpConnectorAddress(String host, int port, boolean secure, String path, SSLSocketFactory sslSocketFactory) {
         this.host = host;
         this.port = port;
         this.secure = secure;
@@ -81,34 +77,28 @@ public final class HttpConnectorAddress {
         this.sslSocketFactory = sslSocketFactory;
     }
 
-
     /**
      * Open a connection using the reciever and the given path
-     * @param path the path to the required resource (path here is
-     * the portion after the <code>hostname:port</code> portion of a URL)
-     * @return a connection to the required resource. The
-     * connection returned may be a sub-class of
-     * <code>URLConnection</code> including
-     * <code>HttpsURLConnection</code>. If the sub-class is a
-     * <code>HttpsURLConnection</code> then this connection will
-     * accept any certificate from any server where the server's
-     * name matches the host name of this object. Specifically we
-     * allows the certificate <em>not</em> to contain the name of
-     * the server. This is a potential security hole, but is also a
-     * usability enhancement.
-     * @throws IOException if there's a problem in connecting to the
-     * resource
+     * 
+     * @param path the path to the required resource (path here is the portion after the <code>hostname:port</code> portion
+     * of a URL)
+     * @return a connection to the required resource. The connection returned may be a sub-class of
+     * <code>URLConnection</code> including <code>HttpsURLConnection</code>. If the sub-class is a
+     * <code>HttpsURLConnection</code> then this connection will accept any certificate from any server where the server's
+     * name matches the host name of this object. Specifically we allows the certificate <em>not</em> to contain the name of
+     * the server. This is a potential security hole, but is also a usability enhancement.
+     * @throws IOException if there's a problem in connecting to the resource
      */
     public URLConnection openConnection(String path) throws IOException {
         if (path == null || path.trim().length() == 0)
             path = this.path;
         final URLConnection cnx = this.openConnection(this.toURL(path));
-        if (! (cnx instanceof HttpsURLConnection)) {
+        if (!(cnx instanceof HttpsURLConnection)) {
             return cnx;
         }
 
         configureSSL((HttpsURLConnection) cnx);
-        
+
         return cnx;
     }
 
@@ -147,7 +137,7 @@ public final class HttpConnectorAddress {
              */
             AsadminTrustManager atm = new AsadminTrustManager();
             atm.setInteractive(interactive);
-            cntxt.init(null, new TrustManager[] {atm}, null);
+            cntxt.init(null, new TrustManager[] { atm }, null);
 
             return cntxt.getSocketFactory();
         } catch (Exception e) {
@@ -156,10 +146,9 @@ public final class HttpConnectorAddress {
     }
 
     /**
-     * get the protocol prefix to be used for a connection for the
-     * receiver
-     * @return the protocol prefix - one of <code>http</code> or
-     *<code>https</code> depending upon the security setting.
+     * get the protocol prefix to be used for a connection for the receiver
+     * 
+     * @return the protocol prefix - one of <code>http</code> or <code>https</code> depending upon the security setting.
      */
     public String getConnectorType() {
         return this.isSecure() ? HTTPS_CONNECTOR : HTTP_CONNECTOR;
@@ -203,7 +192,6 @@ public final class HttpConnectorAddress {
     public void setSecure(boolean secure) {
         this.secure = secure;
     }
-  
 
     /**
      * Indicate if the receiver represents a secure address
@@ -211,7 +199,7 @@ public final class HttpConnectorAddress {
     public boolean isSecure() {
         return secure;
     }
-    
+
     /**
      * Set the interactive mode for the connection.
      */
@@ -219,15 +207,14 @@ public final class HttpConnectorAddress {
         interactive = mode;
     }
 
-    public URL toURL(String path) throws MalformedURLException{
-        return new URL(getConnectorType(), getHost(), getPort(), 
-                path == null ? "" : path);
+    public URL toURL(String path) throws MalformedURLException {
+        return new URL(getConnectorType(), getHost(), getPort(), path == null ? "" : path);
     }
 
     public synchronized SSLSocketFactory getSSLSocketFactory() {
         return sslSocketFactory;
     }
-  
+
     private String getUser() {
         return authInfo != null ? authInfo.getUser() : "";
     }
@@ -236,19 +223,19 @@ public final class HttpConnectorAddress {
         return authInfo != null ? authInfo.getPassword() : "".toCharArray();
     }
 
-    private URLConnection openConnection(URL url) throws IOException    {
+    private URLConnection openConnection(URL url) throws IOException {
         return this.setOptions(this.makeConnection(url));
     }
 
     private URLConnection makeConnection(URL url) throws IOException {
-        return ( url.openConnection() );
+        return (url.openConnection());
     }
 
     private URLConnection setOptions(URLConnection uc) {
         uc.setDoOutput(true);
         uc.setUseCaches(false);
         //uc.setRequestProperty("Content-type", "application/octet-stream");
-        uc.setRequestProperty("Connection", "Keep-Alive"); 
+        uc.setRequestProperty("Connection", "Keep-Alive");
         return this.setAuthentication(uc);
     }
 
@@ -277,15 +264,16 @@ public final class HttpConnectorAddress {
         cs = up + ":" + pp;
         String enc = this.getBase64Encoded(cs);
         enc = enc.replaceAll(System.getProperty("line.separator"), "");
-        return ( AUTHORIZATION_TYPE + enc );
+        return (AUTHORIZATION_TYPE + enc);
     }
-  
+
     private String getBase64Encoded(String clearString) {
         return new GFBase64Encoder().encode(clearString.getBytes());
     }
 
     public static class BasicHostnameVerifier implements HostnameVerifier {
         private final String host;
+
         public BasicHostnameVerifier(String host) {
             if (host == null)
                 throw new IllegalArgumentException("null host");

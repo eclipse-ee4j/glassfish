@@ -33,13 +33,14 @@ import jakarta.inject.Singleton;
 /**
  * Bunch of utility methods for the new serverbeans config api based on jaxb
  */
-@Service @Singleton
+@Service
+@Singleton
 public final class ConfigBeansUtilities {
 
     private final Applications apps;
 
     private final Domain domain;
-    
+
     // dochez : this class needs to be killed but I have no time to do it now
     // I am making it a singleton, will force its initialization early enough so
     // users can continue using the static method. Eventually all these methods will
@@ -88,27 +89,23 @@ public final class ConfigBeansUtilities {
     /**
      * This method is used to convert a string value to boolean.
      *
-     * @return true if the value is one of true, on, yes, 1. Note
-     *         that the values are case sensitive. If it is not one of these
-     *         values, then, it returns false.
+     * @return true if the value is one of true, on, yes, 1. Note that the values are case sensitive. If it is not one of
+     * these values, then, it returns false.
      */
     public static boolean toBoolean(final String value) {
         if (value != null) {
             final String v = value.trim();
-            return "true".equals(v)
-                || "yes".equals(v)
-                || "on".equals(v)
-                || "1".equals(v);
+            return "true".equals(v) || "yes".equals(v) || "on".equals(v) || "1".equals(v);
         } else {
             return false;
         }
     }
 
-    /** Returns the list of system-applications that are referenced from the given server.
-     *  A server references an application, if the server has an element named
-     *  &lt;application-ref> in it that points to given application. The given server
-     *  is a &lt;server> element inside domain.
-     *  
+    /**
+     * Returns the list of system-applications that are referenced from the given server. A server references an
+     * application, if the server has an element named &lt;application-ref> in it that points to given application. The
+     * given server is a &lt;server> element inside domain.
+     * 
      * @param sn the string denoting name of the server
      * @return List of system-applications for that server, an empty list in case there is none
      */
@@ -132,7 +129,7 @@ public final class ConfigBeansUtilities {
         }
         return referencedApps;
     }
-    
+
     public Application getSystemApplicationReferencedFrom(String sn, String appName) {
         //returns null in case there is none
         List<Application> allApps = getSystemApplicationsReferencedFrom(sn);
@@ -143,24 +140,25 @@ public final class ConfigBeansUtilities {
         }
         return null;
     }
+
     public boolean isNamedSystemApplicationReferencedFrom(String appName, String serverName) {
-        List <Application> referencedApps = getSystemApplicationsReferencedFrom(serverName);
+        List<Application> referencedApps = getSystemApplicationsReferencedFrom(serverName);
         for (Application app : referencedApps) {
             if (app.getName().equals(appName))
                 return true;
         }
         return false;
     }
-    
+
     public List<Server> getServers() {
-        if (domain == null || domain.getServers() == null )
-            throw new IllegalArgumentException ("Either domain is null or no <servers> element");
+        if (domain == null || domain.getServers() == null)
+            throw new IllegalArgumentException("Either domain is null or no <servers> element");
         return domain.getServers().getServer();
     }
 
     public Server getServerNamed(String name) {
         if (domain == null || domain.getServers() == null || name == null)
-            throw new IllegalArgumentException ("Either domain is null or no <servers> element");
+            throw new IllegalArgumentException("Either domain is null or no <servers> element");
         List<Server> servers = domain.getServers().getServer();
         for (Server s : servers) {
             if (name.equals(s.getName().trim())) {
@@ -169,36 +167,37 @@ public final class ConfigBeansUtilities {
         }
         return null;
     }
-    
+
     public List<Application> getAllDefinedSystemApplications() {
         List<Application> allSysApps = new ArrayList<Application>();
         SystemApplications sa = domain.getSystemApplications();
         if (sa != null) {
             for (ApplicationName m : sa.getModules()) {
                 if (m instanceof Application)
-                    allSysApps.add((Application)m);
+                    allSysApps.add((Application) m);
             }
         }
         return allSysApps;
     }
 
-   /**
-    * Lists the app refs for non-system apps assigned to the specified server
-    * @param sn server name
-    * @return List of ApplicationRef for non-system apps assigned to the specified server
-    */
-   public List<ApplicationRef> getApplicationRefsInServer(String sn) {
-       return getApplicationRefsInServer(sn, true);
-   }
+    /**
+     * Lists the app refs for non-system apps assigned to the specified server
+     * 
+     * @param sn server name
+     * @return List of ApplicationRef for non-system apps assigned to the specified server
+     */
+    public List<ApplicationRef> getApplicationRefsInServer(String sn) {
+        return getApplicationRefsInServer(sn, true);
+    }
 
-   /**
-    * Lists the app refs for apps assigned to the specified server, excluding
-    * system apps from the result if requested.
-    * @param sn server name to check
-    * @param excludeSystemApps whether system apps should be excluded
-    * @return List of ApplicationRef for apps assigned to the specified server
-    */
-   public List<ApplicationRef> getApplicationRefsInServer(String sn, boolean excludeSystemApps) {
+    /**
+     * Lists the app refs for apps assigned to the specified server, excluding system apps from the result if requested.
+     * 
+     * @param sn server name to check
+     * @param excludeSystemApps whether system apps should be excluded
+     * @return List of ApplicationRef for apps assigned to the specified server
+     */
+    public List<ApplicationRef> getApplicationRefsInServer(String sn, boolean excludeSystemApps) {
 
         Servers ss = domain.getServers();
         List<Server> list = ss.getServer();
@@ -210,10 +209,10 @@ public final class ConfigBeansUtilities {
             }
         }
         if (theServer != null) {
-            List<ApplicationName> modulesToExclude = excludeSystemApps ?
-                domain.getSystemApplications().getModules() : Collections.<ApplicationName>emptyList();
+            List<ApplicationName> modulesToExclude = excludeSystemApps ? domain.getSystemApplications().getModules()
+                    : Collections.<ApplicationName>emptyList();
             List<ApplicationRef> result = new ArrayList<ApplicationRef>();
-              for (ApplicationRef candidateRef : theServer.getApplicationRef()) {
+            for (ApplicationRef candidateRef : theServer.getApplicationRef()) {
                 String appRefModuleName = candidateRef.getRef();
                 boolean isSystem = false;
                 for (ApplicationName sysModule : modulesToExclude) {
@@ -232,7 +231,6 @@ public final class ConfigBeansUtilities {
         }
     }
 
-
     public ApplicationRef getApplicationRefInServer(String sn, String name) {
         Servers ss = domain.getServers();
         List<Server> list = ss.getServer();
@@ -245,7 +243,7 @@ public final class ConfigBeansUtilities {
         }
         ApplicationRef aref = null;
         if (theServer != null) {
-            List <ApplicationRef> arefs = theServer.getApplicationRef();
+            List<ApplicationRef> arefs = theServer.getApplicationRef();
             for (ApplicationRef ar : arefs) {
                 if (ar.getRef().equals(name)) {
                     aref = ar;
@@ -267,7 +265,7 @@ public final class ConfigBeansUtilities {
 
     public String getEnabled(String sn, String moduleID) {
         ApplicationRef appRef = getApplicationRefInServer(sn, moduleID);
-        if (appRef != null) { 
+        if (appRef != null) {
             return appRef.getEnabled();
         } else {
             return null;
@@ -276,21 +274,21 @@ public final class ConfigBeansUtilities {
 
     public String getVirtualServers(String sn, String moduleID) {
         ApplicationRef appRef = getApplicationRefInServer(sn, moduleID);
-        if (appRef != null) { 
+        if (appRef != null) {
             return appRef.getVirtualServers();
         } else {
             return null;
         }
     }
 
-   public String getContextRoot(String moduleID) {
+    public String getContextRoot(String moduleID) {
         ApplicationName module = getModule(moduleID);
         if (module == null) {
             return null;
         }
 
         if (module instanceof Application) {
-            return ((Application)module).getContextRoot();
+            return ((Application) module).getContextRoot();
         } else {
             return null;
         }
@@ -303,7 +301,7 @@ public final class ConfigBeansUtilities {
         }
 
         if (module instanceof Application) {
-            return ((Application)module).getLibraries();
+            return ((Application) module).getLibraries();
         } else {
             return null;
         }
@@ -313,14 +311,14 @@ public final class ConfigBeansUtilities {
         ApplicationName module = getModule(moduleID);
         if (module == null) {
             return null;
-        } 
-
-        String location = null; 
-        if (module instanceof Application) {
-            location =  ((Application)module).getLocation();
         }
 
-        try { 
+        String location = null;
+        if (module instanceof Application) {
+            location = ((Application) module).getLocation();
+        }
+
+        try {
             if (location != null) {
                 return new URI(location).getPath();
             } else {
@@ -328,17 +326,17 @@ public final class ConfigBeansUtilities {
             }
         } catch (URISyntaxException e) {
             return null;
-        }            
+        }
     }
 
     public String getDirectoryDeployed(String moduleID) {
         ApplicationName module = getModule(moduleID);
         if (module == null) {
             return null;
-        } 
+        }
 
         if (module instanceof Application) {
-            return ((Application)module).getDirectoryDeployed();
+            return ((Application) module).getDirectoryDeployed();
         } else {
             return null;
         }
@@ -362,7 +360,7 @@ public final class ConfigBeansUtilities {
         return writer.toString();
     }
 
-   public Domain getDomain() {
+    public Domain getDomain() {
         return domain;
-   }
+    }
 }

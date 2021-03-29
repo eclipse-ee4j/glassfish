@@ -40,27 +40,23 @@ import org.jvnet.hk2.config.TransactionFailure;
 /**
  * Delete Resource Ref Command
  *
- * @author Jennifer Chou, Jagadish Ramu 
+ * @author Jennifer Chou, Jagadish Ramu
  */
-@TargetType(value={CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
+@TargetType(value = { CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @RestEndpoints({
-        @RestEndpoint(configBean = Resources.class,
-                opType = RestEndpoint.OpType.DELETE,
-                path = "delete-resource-ref",
-                description = "delete-resource-ref")
-})
-@org.glassfish.api.admin.ExecuteOn(value={RuntimeType.DAS, RuntimeType.INSTANCE})
-@Service(name="delete-resource-ref")
+        @RestEndpoint(configBean = Resources.class, opType = RestEndpoint.OpType.DELETE, path = "delete-resource-ref", description = "delete-resource-ref") })
+@org.glassfish.api.admin.ExecuteOn(value = { RuntimeType.DAS, RuntimeType.INSTANCE })
+@Service(name = "delete-resource-ref")
 @PerLookup
 @I18n("delete.resource.ref")
 public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteResourceRef.class);
 
-    @Param(optional=true)
+    @Param(optional = true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
-    @Param(name="reference_name", primary=true)
+    @Param(name = "reference_name", primary = true)
     private String refName;
 
     //not needed, but mvn based test might not have initialized ConfigBeanUtilities
@@ -72,28 +68,28 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
 
     @Inject
     private Domain domain;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
     private RefContainer refContainer = null;
-    
+
     @AccessRequired.To("delete")
     private ResourceRef resourceRef = null;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         refContainer = CLIUtil.chooseRefContainer(domain, target, configBeansUtilities);
         if (refContainer != null) {
             resourceRef = getResourceRef();
         }
-        
+
         if (resourceRef == null) {
             setResourceRefDoNotExistMessage(context.getActionReport());
         }
         return resourceRef != null;
     }
-    
+
     private ResourceRef getResourceRef() {
         for (ResourceRef rr : refContainer.getResourceRef()) {
             if (rr.getRef().equals(refName)) {
@@ -102,22 +98,22 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
         }
         return null;
     }
-    
+
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the parameter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the parameter names and the
+     * values the parameter values
      *
      * @param context information
      */
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        
+
         try {
             if (refName.equals("jdbc/__default")) {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                report.setMessage(localStrings.getLocalString("delete.resource.ref.jdbc.default",
-                        "Default JDBC resource ref cannot be deleted."));
+                report.setMessage(
+                        localStrings.getLocalString("delete.resource.ref.jdbc.default", "Default JDBC resource ref cannot be deleted."));
                 return;
             }
             if (refName.equals("jms/__defaultConnectionFactory")) {
@@ -136,7 +132,7 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
                     svr.deleteResourceRef(refName);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             setFailureMessage(report, e);
             return;
         }
@@ -144,7 +140,7 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
         report.setMessage(localStrings.getLocalString("delete.resource.ref.success",
                 "resource-ref {0} deleted successfully from target {1}.", refName, target));
     }
-    
+
     private void deleteResourceRef() throws TransactionFailure {
         if (resourceRef != null) {
             ConfigSupport.apply(new SingleConfigCode<RefContainer>() {
@@ -164,8 +160,7 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     }
 
     private void setFailureMessage(ActionReport report, Exception e) {
-        report.setMessage(localStrings.getLocalString("delete.resource.ref.failed",
-                "Resource ref {0} deletion failed", refName));
+        report.setMessage(localStrings.getLocalString("delete.resource.ref.failed", "Resource ref {0} deletion failed", refName));
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         report.setFailureCause(e);
     }

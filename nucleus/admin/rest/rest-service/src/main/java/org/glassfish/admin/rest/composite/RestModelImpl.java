@@ -21,8 +21,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * All RestModel implementations will extend this base class, which will provide the functionality for dirty field
- * field checking. It is an implementation detail, and should not be accessed directly.
+ * All RestModel implementations will extend this base class, which will provide the functionality for dirty field field
+ * checking. It is an implementation detail, and should not be accessed directly.
  *
  * @author jdlee
  */
@@ -45,9 +45,11 @@ public class RestModelImpl {
 
     // TBD - remove once the conversion to the new REST style guide is completed
     private boolean trimmed = false;
+
     public void trimmed() {
         this.trimmed = true;
     }
+
     public boolean isTrimmed() {
         return trimmed;
     }

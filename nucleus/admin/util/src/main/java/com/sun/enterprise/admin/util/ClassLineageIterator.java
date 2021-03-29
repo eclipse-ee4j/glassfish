@@ -48,5 +48,5 @@ public class ClassLineageIterator implements Iterator<Class> {
     public void remove() {
         throw new UnsupportedOperationException();
     }
-    
+
 }

@@ -28,14 +28,13 @@ import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * Abstract class initialize the input file for the string substitution.
- * The sub-classes provides the way to create the {@link Reader} and
- * {@link Writer} for the input & output file.
+ * Abstract class initialize the input file for the string substitution. The sub-classes provides the way to create the
+ * {@link Reader} and {@link Writer} for the input & output file.
  */
 public abstract class FileSubstitutionHandler implements Substitutable {
 
-    protected static final Logger _logger = SLogger.getLogger(); 
-            
+    protected static final Logger _logger = SLogger.getLogger();
+
     protected static final LocalStringsImpl _strings = new LocalStringsImpl(FileLister.class);
 
     /** A {@link Reader} to read the character stream from input file. */
@@ -66,18 +65,18 @@ public abstract class FileSubstitutionHandler implements Substitutable {
             try {
                 _reader.close();
             } catch (Exception e) {
-            	if (_logger.isLoggable(Level.FINER)) {
-            		_logger.log(Level.FINER, _strings.get("errorInClosingStream", _inputFile.getAbsolutePath() ), e);
-            	}
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.log(Level.FINER, _strings.get("errorInClosingStream", _inputFile.getAbsolutePath()), e);
+                }
             }
         }
         if (_writer != null) {
             try {
                 _writer.close();
             } catch (Exception e) {
-            	if (_logger.isLoggable(Level.FINER)) {
-            		_logger.log(Level.FINER, _strings.get("errorInClosingStream"), e);
-            	}
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.log(Level.FINER, _strings.get("errorInClosingStream"), e);
+                }
             }
         }
     }

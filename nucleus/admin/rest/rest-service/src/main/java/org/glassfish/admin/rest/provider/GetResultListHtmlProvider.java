@@ -48,7 +48,8 @@ public class GetResultListHtmlProvider extends BaseProvider<GetResultList> {
         final String typeKey = upperCaseFirstLetter((decode(getName(uriInfo.get().getPath(), '/'))));
         result = result + "<h1>" + typeKey + "</h1>";
 
-        String postCommand = getHtmlRespresentationsForCommand(proxy.getMetaData().getMethodMetaData("POST"), "POST", "Create", uriInfo.get());
+        String postCommand = getHtmlRespresentationsForCommand(proxy.getMetaData().getMethodMetaData("POST"), "POST", "Create",
+                uriInfo.get());
         result = getHtmlForComponent(postCommand, "Create " + typeKey, result);
 
         String childResourceLinks = getResourcesLinks(proxy.getDomList());
@@ -65,11 +66,7 @@ public class GetResultListHtmlProvider extends BaseProvider<GetResultList> {
         StringBuilder result = new StringBuilder("<div>");
         Collections.sort(proxyList, new DomConfigurator());
         for (Map.Entry<String, String> link : getResourceLinks(proxyList).entrySet()) {
-            result.append("<a href=\"")
-                    .append(link.getValue())
-                    .append("\">")
-                    .append(link.getKey())
-                    .append("</a><br>");
+            result.append("<a href=\"").append(link.getValue()).append("\">").append(link.getKey()).append("</a><br>");
         }
 
         result.append("</div><br/>");
@@ -80,11 +77,8 @@ public class GetResultListHtmlProvider extends BaseProvider<GetResultList> {
         StringBuilder result = new StringBuilder("<div>");
         for (String[] commandResourcePath : commandResourcesPaths) {
             try {
-                result.append("<a href=\"")
-                        .append(getElementLink(uriInfo.get(), commandResourcePath[0]))
-                        .append("\">")
-                        .append(commandResourcePath[0])
-                        .append("</a><br/>");
+                result.append("<a href=\"").append(getElementLink(uriInfo.get(), commandResourcePath[0])).append("\">")
+                        .append(commandResourcePath[0]).append("</a><br/>");
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

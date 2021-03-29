@@ -38,11 +38,9 @@ public interface HealthChecker extends ConfigBeanProxy {
     /**
      * Gets the value of the url property.
      *
-     * URL to ping so as to determine the health state of a listener.
-     * This must be a relative URL.
+     * URL to ping so as to determine the health state of a listener. This must be a relative URL.
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     public String getUrl();
@@ -50,51 +48,45 @@ public interface HealthChecker extends ConfigBeanProxy {
     /**
      * Sets the value of the url property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setUrl(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the intervalInSeconds property.
      *
-     * Interval, in seconds, between health checks. A value of "0"  means that
-     * the health check is disabled. Default is 30 seconds. Must be 0 or greater.
+     * Interval, in seconds, between health checks. A value of "0" means that the health check is disabled. Default is 30
+     * seconds. Must be 0 or greater.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="30")
-    @Min(value=0)
+    @Attribute(defaultValue = "30")
+    @Min(value = 0)
     public String getIntervalInSeconds();
 
     /**
      * Sets the value of the intervalInSeconds property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setIntervalInSeconds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the timeoutInSeconds property.
      *
-     * Maximum time, in seconds, that a server must respond to a health check
-     * request to be considered healthy. Default is 10 seconds. Must be greater
-     * than 0.
+     * Maximum time, in seconds, that a server must respond to a health check request to be considered healthy. Default is
+     * 10 seconds. Must be greater than 0.
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="10")
-    @Min(value=1)
+    @Attribute(defaultValue = "10")
+    @Min(value = 1)
     public String getTimeoutInSeconds();
 
     /**
      * Sets the value of the timeoutInSeconds property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setTimeoutInSeconds(String value) throws PropertyVetoException;
 }

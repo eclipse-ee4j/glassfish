@@ -37,18 +37,15 @@ public abstract class BaseLegacyConfigurationUpgrade implements LegacyConfigurat
         context.getActionReport().setMessage("DEPRECATION WARNING: " + message);
     }
 
-    protected void updatePropertyToAttribute(final AdminCommandContext context, final ConfigBeanProxy target,
-        final String property, final String attribute)
-        throws TransactionFailure {
+    protected void updatePropertyToAttribute(final AdminCommandContext context, final ConfigBeanProxy target, final String property,
+            final String attribute) throws TransactionFailure {
         ConfigSupport.apply(new SingleConfigCode<ConfigBeanProxy>() {
             public Object run(ConfigBeanProxy param) {
                 PropertyBag bag = (PropertyBag) param;
                 final List<Property> propertyList = new ArrayList<Property>(bag.getProperty());
                 setProperty(target, attribute, getValue(propertyList, property));
                 final String message = MessageFormat.format("Moved {0}.property.{1} to {0}.{2}",
-                    Dom.convertName(Dom.unwrap(target).getProxyType().getSimpleName()),
-                    property,
-                    Dom.convertName(attribute));
+                        Dom.convertName(Dom.unwrap(target).getProxyType().getSimpleName()), property, Dom.convertName(attribute));
                 report(context, message);
                 bag.getProperty().clear();
                 bag.getProperty().addAll(propertyList);
@@ -57,8 +54,7 @@ public abstract class BaseLegacyConfigurationUpgrade implements LegacyConfigurat
         }, target);
     }
 
-    protected void removeProperty(final ConfigBeanProxy target, final String property)
-        throws TransactionFailure {
+    protected void removeProperty(final ConfigBeanProxy target, final String property) throws TransactionFailure {
         ConfigSupport.apply(new SingleConfigCode<ConfigBeanProxy>() {
             public Object run(ConfigBeanProxy param) {
                 PropertyBag bag = (PropertyBag) param;
@@ -90,6 +86,5 @@ public abstract class BaseLegacyConfigurationUpgrade implements LegacyConfigurat
         }
         return null;
     }
-
 
 }

@@ -31,7 +31,7 @@ import org.glassfish.admin.rest.utils.JsonUtil;
  * @author jdlee
  */
 @Provider
-@Produces({Constants.MEDIA_TYPE_JSON})
+@Produces({ Constants.MEDIA_TYPE_JSON })
 public class RestModelWriter extends BaseProvider<RestModel> {
     public RestModelWriter() {
         super(RestModel.class, Constants.MEDIA_TYPE_JSON_TYPE);
@@ -44,7 +44,7 @@ public class RestModelWriter extends BaseProvider<RestModel> {
         final List<String> wrapObjectHeader = requestHeaders.get().getRequestHeader("X-Wrap-Object");
         boolean wrapObject = ((wrapObjectHeader != null) && (wrapObjectHeader.size() > 0));
         try {
-            JSONObject object = (JSONObject)JsonUtil.getJsonObject(proxy);
+            JSONObject object = (JSONObject) JsonUtil.getJsonObject(proxy);
             sb.append(object.toString(getFormattingIndentLevel()));
         } catch (JSONException ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);

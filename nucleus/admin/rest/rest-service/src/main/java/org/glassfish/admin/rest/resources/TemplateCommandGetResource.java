@@ -16,7 +16,6 @@
 
 package org.glassfish.admin.rest.resources;
 
-
 import org.glassfish.api.admin.ParameterMap;
 
 import jakarta.ws.rs.GET;
@@ -30,9 +29,8 @@ import org.glassfish.jersey.media.sse.SseFeature;
 
 /**
  *
- * @author ludovic champenois ludo@dev.java.net
- * Code moved from generated classes to here. Gen code inherits from this template class
- * that contains the logic for mapped commands RS Resources
+ * @author ludovic champenois ludo@dev.java.net Code moved from generated classes to here. Gen code inherits from this
+ * template class that contains the logic for mapped commands RS Resources
  *
  */
 public class TemplateCommandGetResource extends TemplateExecCommand {
@@ -42,23 +40,20 @@ public class TemplateCommandGetResource extends TemplateExecCommand {
     }
 
     @GET
-    @Produces({
-        "text/html",
-        MediaType.APPLICATION_JSON+";qs=0.5",
-        MediaType.APPLICATION_XML+";qs=0.5",
-        MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+            MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
     public Response processGetLegacyFormat() {
         return executeCommandLegacyFormat(prepareParameters());
     }
 
     @GET
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public CommandResult processGet() {
         return executeCommand(prepareParameters());
     }
 
     @GET
-    @Produces(SseFeature.SERVER_SENT_EVENTS+";qs=0.5")
+    @Produces(SseFeature.SERVER_SENT_EVENTS + ";qs=0.5")
     public Response processSseGet() {
         return executeCommandAsSse(prepareParameters());
     }

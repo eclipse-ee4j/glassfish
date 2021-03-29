@@ -37,8 +37,7 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.ServerDirs;
 
 /**
- * Create a "service" in the operating system to start this domain
- * automatically.
+ * Create a "service" in the operating system to start this domain automatically.
  */
 @org.jvnet.hk2.annotations.Service(name = "create-service")
 @PerLookup
@@ -47,8 +46,7 @@ public final class CreateServiceCommand extends CLICommand {
     private String serviceName;
     @Param(name = "serviceproperties", optional = true)
     private String serviceProperties;
-    @Param(name = "dry-run", shortName = "n", optional = true,
-            defaultValue = "false")
+    @Param(name = "dry-run", shortName = "n", optional = true, defaultValue = "false")
     private boolean dry_run;
     @Param(name = "force", optional = true, defaultValue = "false")
     private boolean force;
@@ -65,12 +63,11 @@ public final class CreateServiceCommand extends CLICommand {
     @Param(name = "domain_or_instance_name", primary = true, optional = true, alias = "domain_name")
     private String userSpecifiedServerName;
     @Param(name = "nodedir", optional = true, alias = "agentdir")
-    private String userSpecifiedNodeDir;           // nodeDirRoot
+    private String userSpecifiedNodeDir; // nodeDirRoot
     @Param(name = "node", optional = true, alias = "nodeagent")
     private String userSpecifiedNode;
     private File asadminScript;
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(CreateServiceCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(CreateServiceCommand.class);
     private ServerDirs dirs;
     private ServerDirsSelector selector = null;
 
@@ -81,27 +78,21 @@ public final class CreateServiceCommand extends CLICommand {
         try {
             super.validate(); // pointless empty method but who knows what the future holds?
 
-
             if (ok(serviceUser) && !OS.isLinux()) {
                 // serviceUser is only supported on Linux
                 throw new CommandException(strings.get("serviceUser_wrong_os"));
             }
             // The order that you make these calls matters!!
 
-            selector = ServerDirsSelector.getInstance(
-                    userSpecifiedDomainDirParent,
-                    userSpecifiedServerName,
-                    userSpecifiedNodeDir,
+            selector = ServerDirsSelector.getInstance(userSpecifiedDomainDirParent, userSpecifiedServerName, userSpecifiedNodeDir,
                     userSpecifiedNode);
             dirs = selector.dirs();
 
             validateServiceName();
             validateAsadmin();
-        }
-        catch (CommandException e) {
+        } catch (CommandException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // plenty of RuntimeException possibilities!
             throw new CommandException(e.getMessage(), e);
         }
@@ -123,8 +114,7 @@ public final class CreateServiceCommand extends CLICommand {
                 info.setServiceUser(serviceUser);
 
             if (programOpts.getPasswordFile() != null)
-                info.setPasswordFile(SmartFile.sanitize(
-                        new File(programOpts.getPasswordFile())));
+                info.setPasswordFile(SmartFile.sanitize(new File(programOpts.getPasswordFile())));
 
             service.setServiceProperties(serviceProperties);
             service.createService();
@@ -137,8 +127,7 @@ public final class CreateServiceCommand extends CLICommand {
             logger.info(tellUserAboutHelp);
             service.writeReadmeFile(help);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // We only want to wrap the string -- not the Exception.
             // Otherwise the message that is printed out to the user will be like this:
             // java.lang.IllegalArgumentException: The passwordfile blah blah blah
@@ -161,7 +150,7 @@ public final class CreateServiceCommand extends CLICommand {
             serviceName = dirs.getServerDir().getName();
 
         // On Windows we need a legal filename for the service name.
-        if(OS.isWindowsForSure() && !FileUtils.isFriendlyFilename(serviceName)) {
+        if (OS.isWindowsForSure() && !FileUtils.isFriendlyFilename(serviceName)) {
             throw new CommandException(strings.get("create.service.badServiceName", serviceName));
         }
 
@@ -173,15 +162,12 @@ public final class CreateServiceCommand extends CLICommand {
         String s = SystemPropertyConstants.getAsAdminScriptLocation();
 
         if (!ok(s))
-            throw new CommandException(
-                    strings.get("internal.error",
-                    "Can't get Asadmin script location"));
+            throw new CommandException(strings.get("internal.error", "Can't get Asadmin script location"));
 
         asadminScript = SmartFile.sanitize(new File(s));
 
         if (!asadminScript.isFile()) {
-            throw new CommandException(
-                    strings.get("create.service.noAsadminScript", asadminScript));
+            throw new CommandException(strings.get("create.service.noAsadminScript", asadminScript));
         }
     }
 

@@ -67,6 +67,7 @@ public abstract class ClientGenerator {
     }
 
     public abstract ClientClassWriter getClassWriter(ConfigModel model, String className, Class parent);
+
     public abstract Map<String, URI> getArtifact();
 
     public List<String> getMessages() {
@@ -87,7 +88,7 @@ public abstract class ClientGenerator {
         return habitat;
     }
 
-    public void generateSingle (ConfigModel model)  {
+    public void generateSingle(ConfigModel model) {
         String className = Util.getBeanName(model.getTagName());
 
         if (alreadyGenerated(className)) {
@@ -105,23 +106,24 @@ public abstract class ClientGenerator {
         writer.done();
     }
 
-    public void generateList (ClientClassWriter writer, ConfigModel model) {
+    public void generateList(ClientClassWriter writer, ConfigModel model) {
         String serverConfigName = ResourceUtil.getUnqualifiedTypeName(model.targetTypeName);
         String beanName = Util.getBeanName(serverConfigName);
 
         generateCommandMethods(writer, "List" + beanName);
 
-//        generateGetPostCommandMethod(writer, beanName);
+        //        generateGetPostCommandMethod(writer, beanName);
 
         generateSingle(model);
     }
 
     protected void generateGetPostCommandMethod(ClientClassWriter writer, String resourceName) {
-        String commandName = ResourcesGeneratorBase.configBeanToPOSTCommand.get("List"+resourceName);
+        String commandName = ResourcesGeneratorBase.configBeanToPOSTCommand.get("List" + resourceName);
         if (commandName != null) {
             final CommandModel cm = getCommandModel(commandName);
-            if (cm != null ) {//and the command exits
-                writer.generateCommandMethod(Util.methodNameFromDtdName(commandName, null), "POST", ResourceUtil.convertToXMLName(resourceName), cm);
+            if (cm != null) {//and the command exits
+                writer.generateCommandMethod(Util.methodNameFromDtdName(commandName, null), "POST",
+                        ResourceUtil.convertToXMLName(resourceName), cm);
             }
         }
     }
@@ -172,7 +174,7 @@ public abstract class ClientGenerator {
         Param param = model.getParam();
         final String paramName = (!param.alias().isEmpty()) ? param.alias() : model.getName();
 
-        return  paramName;
+        return paramName;
     }
 
     protected CommandModel getCommandModel(String commandName) {
@@ -203,7 +205,7 @@ public abstract class ClientGenerator {
                         processNonLeafChildConfigModel(writer, subChildConfigModel, childElement);
                     }
                 }
-            } else  if (childElement.isLeaf()) {
+            } else if (childElement.isLeaf()) {
                 if (processed.contains(childElement.xmlName)) {
                     continue;
                 }
@@ -215,7 +217,7 @@ public abstract class ClientGenerator {
                     generateCollectionLeafResource(writer, childElement.xmlName);
                 } else {
                     System.out.println("generateLeafResource for " + elementName + " off of " + model.getTagName());
-//                    generateSingle(document.getModelByElementName(elementName));
+                    //                    generateSingle(document.getModelByElementName(elementName));
                     generateLeafResource(writer, childElement.xmlName);
                 }
             } else {
@@ -243,7 +245,8 @@ public abstract class ClientGenerator {
         childClass.done();
     }
 
-    protected void processNonLeafChildConfigModel(ClientClassWriter writer, ConfigModel childConfigModel, ConfigModel.Property childElement) {
+    protected void processNonLeafChildConfigModel(ClientClassWriter writer, ConfigModel childConfigModel,
+            ConfigModel.Property childElement) {
         String childResourceClassName = ResourceUtil.getUnqualifiedTypeName(childConfigModel.targetTypeName);
         writer.createGetChildResource(childConfigModel, childResourceClassName, childResourceClassName);
         if (childElement.isCollection()) {

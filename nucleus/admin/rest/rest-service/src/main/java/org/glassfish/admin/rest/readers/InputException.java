@@ -27,18 +27,15 @@ public class InputException extends Exception {
         super(message);
     }
 
-
     public InputException(Throwable t) {
         super(t.getMessage());
         this.cause = t;
     }
 
-
     @Override
     public Throwable getCause() {
         return this.cause;
     }
-
 
     private Throwable cause;
 }

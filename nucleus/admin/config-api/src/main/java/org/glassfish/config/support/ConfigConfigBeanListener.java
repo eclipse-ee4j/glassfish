@@ -42,20 +42,19 @@ import com.sun.logging.LogDomains;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
 
 /**
- * Listens for changes to the Config for the current server and adds an 
- * index for the name ServerEnvironment.DEFAULT_INSTANCE_NAME to any objects
- * that are added.
+ * Listens for changes to the Config for the current server and adds an index for the name
+ * ServerEnvironment.DEFAULT_INSTANCE_NAME to any objects that are added.
  */
 @Service
-@RunLevel(mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING,value=StartupRunLevel.VAL)
+@RunLevel(mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING, value = StartupRunLevel.VAL)
 public final class ConfigConfigBeanListener implements ConfigListener {
 
     @Inject
     private ServiceLocator habitat;
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
     static final Logger logger = ConfigApiLoggerInfo.getLogger();
-
 
     /* force serial behavior; don't allow more than one thread to make a mess here */
     @Override
@@ -70,23 +69,18 @@ public final class ConfigConfigBeanListener implements ConfigListener {
             Object ov = e.getOldValue();
             if (ov instanceof ConfigBeanProxy) {
                 ConfigBeanProxy ovbp = (ConfigBeanProxy) ov;
-                logger.log(Level.FINE, removingDefaultInstanceIndexFor,
-                        ConfigSupport.getImpl(ovbp).getProxyType().getName());
+                logger.log(Level.FINE, removingDefaultInstanceIndexFor, ConfigSupport.getImpl(ovbp).getProxyType().getName());
                 ServiceLocatorUtilities.removeFilter(habitat, BuilderHelper.createNameAndContractFilter(
-                        ConfigSupport.getImpl(ovbp).getProxyType().getName(),
-                        ServerEnvironment.DEFAULT_INSTANCE_NAME));
+                        ConfigSupport.getImpl(ovbp).getProxyType().getName(), ServerEnvironment.DEFAULT_INSTANCE_NAME));
             }
-            
+
             // add the DEFAULT_INSTANCE_NAME entry for a new value
             Object nv = e.getNewValue();
             if (nv instanceof ConfigBean) {
                 ConfigBean nvb = (ConfigBean) nv;
                 ConfigBeanProxy nvbp = nvb.getProxy(nvb.getProxyType());
-                logger.log(Level.FINE, AddingDefaultInstanceIndexFor,
-                        nvb.getProxyType().getName());
-                ServiceLocatorUtilities.addOneConstant(habitat, nvbp,
-                        ServerEnvironment.DEFAULT_INSTANCE_NAME,
-                        nvb.getProxyType());
+                logger.log(Level.FINE, AddingDefaultInstanceIndexFor, nvb.getProxyType().getName());
+                ServiceLocatorUtilities.addOneConstant(habitat, nvbp, ServerEnvironment.DEFAULT_INSTANCE_NAME, nvb.getProxyType());
             }
         }
         return null;

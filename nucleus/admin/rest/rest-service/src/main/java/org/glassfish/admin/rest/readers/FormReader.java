@@ -36,7 +36,7 @@ import jakarta.ws.rs.ext.Provider;
  * @author mh124079
  * @author Ludovic Champenois ludo@dev.java.net
  */
-@Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_OCTET_STREAM})
+@Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_OCTET_STREAM })
 @Provider
 public class FormReader implements MessageBodyReader<HashMap<String, String>> {
 
@@ -46,9 +46,8 @@ public class FormReader implements MessageBodyReader<HashMap<String, String>> {
     }
 
     @Override
-    public HashMap<String, String> readFrom(Class<HashMap<String, String>> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers, 
-            InputStream in) throws IOException {
+    public HashMap<String, String> readFrom(Class<HashMap<String, String>> type, Type genericType, Annotation[] annotations,
+            MediaType mediaType, MultivaluedMap<String, String> headers, InputStream in) throws IOException {
         String formData = readAsString(in);
 
         HashMap<String, String> map = new HashMap<String, String>();
@@ -58,15 +57,15 @@ public class FormReader implements MessageBodyReader<HashMap<String, String>> {
             token = tokenizer.nextToken();
             int idx = token.indexOf('=');
             if (idx < 0) {
-                map.put(URLDecoder.decode(token,"UTF-8"), null);
+                map.put(URLDecoder.decode(token, "UTF-8"), null);
             } else if (idx > 0) {
-                map.put(URLDecoder.decode(token.substring(0, idx),"UTF-8"), URLDecoder.decode(token.substring(idx+1),"UTF-8"));
+                map.put(URLDecoder.decode(token.substring(0, idx), "UTF-8"), URLDecoder.decode(token.substring(idx + 1), "UTF-8"));
             }
         }
         return map;
         //return new NameValuePair(map.get("name"), map.get("value"));
     }
-    
+
     public final String readAsString(InputStream in) throws IOException {
         Reader reader = new InputStreamReader(in);
         StringBuilder sb = new StringBuilder();
@@ -74,7 +73,7 @@ public class FormReader implements MessageBodyReader<HashMap<String, String>> {
         int l;
         while ((l = reader.read(c)) != -1) {
             sb.append(c, 0, l);
-        } 
+        }
         return sb.toString();
     }
 }

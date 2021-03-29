@@ -24,8 +24,8 @@ import java.util.TreeMap;
 import org.glassfish.admin.rest.provider.MethodMetaData;
 
 /**
- * Response information object. Returned on call to OPTIONS method.
- * Information used by provider to generate the appropriate output.
+ * Response information object. Returned on call to OPTIONS method. Information used by provider to generate the
+ * appropriate output.
  *
  * @author Rajeshwar Patil
  */
@@ -38,12 +38,10 @@ public class OptionsResult extends Result {
         this(null);
     }
 
-
     public OptionsResult(String name) {
         __name = name;
         __metaData = new HashMap<String, MethodMetaData>();
     }
-
 
     /**
      * Returns meta-data object for the given method
@@ -51,7 +49,6 @@ public class OptionsResult extends Result {
     public MethodMetaData getMethodMetaData(String method) {
         return __metaData.get(method);
     }
-
 
     /**
      * Adds meta-data object for the given method
@@ -61,8 +58,7 @@ public class OptionsResult extends Result {
     }
 
     /**
-     * Returns no of method meta-data available.
-     * Should be equal to the number of methods on resource.
+     * Returns no of method meta-data available. Should be equal to the number of methods on resource.
      */
     public int size() {
         return __metaData.size();

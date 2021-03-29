@@ -22,7 +22,7 @@ import org.glassfish.admin.rest.resources.TemplateCommandGetResource;
  *
  * @author jasonlee
  */
-public class TokenResource extends TemplateCommandGetResource{
+public class TokenResource extends TemplateCommandGetResource {
     public TokenResource(String resourceName, String commandName, String commandMethod, boolean b) {
         super(resourceName, commandName, commandMethod, b);
 

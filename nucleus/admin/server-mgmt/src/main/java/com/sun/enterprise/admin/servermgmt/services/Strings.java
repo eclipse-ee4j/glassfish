@@ -20,6 +20,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * Package-wide String getter
+ * 
  * @author bnevins
  */
 public class Strings {

@@ -20,7 +20,7 @@ package org.glassfish.admin.rest.composite.metadata;
  *
  * @author jdlee
  */
-public class RestModelMetadata implements Comparable<RestModelMetadata>{
+public class RestModelMetadata implements Comparable<RestModelMetadata> {
     private String id;
 
     public RestModelMetadata(String id) {

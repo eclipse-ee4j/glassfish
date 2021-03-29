@@ -35,19 +35,14 @@ class Pager {
     private String line;
 
     /**
-     * Construct an object which will copy one pages worth of lines
-     * at a time from the input to the
-     * the output.
+     * Construct an object which will copy one pages worth of lines at a time from the input to the the output.
      *
-     * No attempt is made under any circumstances to close the input
-     * or output.
+     * No attempt is made under any circumstances to close the input or output.
      *
-     * @param lines the number of lines in a page. A number less
-     * than 0 means copy all the input to the output.
+     * @param lines the number of lines in a page. A number less than 0 means copy all the input to the output.
      * @param in the source of the copy operation
      * @param out the destination of the copy operation
-     * @throws IOException if there's a problem reading from, or
-     * writing to, the source or destination
+     * @throws IOException if there's a problem reading from, or writing to, the source or destination
      */
     Pager(int lines, Reader in, Writer out) throws IOException {
         this.in = new BufferedReader(in);
@@ -70,6 +65,7 @@ class Pager {
 
     /**
      * Indicate if there are lines left to be copied
+     * 
      * @return true iff there is at least one line left to be copied
      */
     boolean hasNext() {
@@ -77,8 +73,7 @@ class Pager {
     }
 
     /**
-     * Get the next line and copy it inot the internal buffer so's
-     * we can answer the hasNext() question
+     * Get the next line and copy it inot the internal buffer so's we can answer the hasNext() question
      */
     private void nextLine() throws IOException {
         line = in.readLine();

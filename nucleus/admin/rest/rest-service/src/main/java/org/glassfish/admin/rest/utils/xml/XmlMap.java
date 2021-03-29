@@ -34,7 +34,7 @@ public class XmlMap extends XmlObject {
         super(name);
         this.map = new HashMap<String, Object>();
     }
-    
+
     public XmlMap(String name, Map<String, Object> map) {
         super(name);
         this.map = map;
@@ -49,7 +49,7 @@ public class XmlMap extends XmlObject {
     }
 
     @Override
-    public XmlMap put (String key, Object value) {
+    public XmlMap put(String key, Object value) {
         map.put(key, value);
 
         return this;
@@ -64,11 +64,11 @@ public class XmlMap extends XmlObject {
             Object value = entry.getValue();
 
             Node entryNode = document.createElement("entry");
-            Element entryElement = (Element)entryNode;
+            Element entryElement = (Element) entryNode;
             entryElement.setAttribute("key", key);
 
             if (value instanceof XmlObject) {
-                entryNode.appendChild(((XmlObject)value).createNode(document));
+                entryNode.appendChild(((XmlObject) value).createNode(document));
                 mapNode.appendChild(entryNode);
             } else {
                 if (value != null) {

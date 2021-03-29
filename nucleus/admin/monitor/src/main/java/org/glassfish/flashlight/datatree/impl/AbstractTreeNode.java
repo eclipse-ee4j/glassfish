@@ -29,18 +29,15 @@ import java.util.regex.Pattern;
 /**
  *
  * @author Harpreet Singh
- * @author Byron Nevins
- * 12/18/2010 -- Added encode/decode.  Note that the encoded form for a dot is
- * NOT something like "\\." -- there is too much code around making assumptions
- * about dots, splitting strings, etc.  So we replace with ___MONDOT___
+ * @author Byron Nevins 12/18/2010 -- Added encode/decode. Note that the encoded form for a dot is NOT something like
+ * "\\." -- there is too much code around making assumptions about dots, splitting strings, etc. So we replace with
+ * ___MONDOT___
  */
 public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode> {
-    protected Map<String, TreeNode> children =
-            new ConcurrentHashMap<String, TreeNode>();
+    protected Map<String, TreeNode> children = new ConcurrentHashMap<String, TreeNode>();
     // bnevins 6/25/2011  -- why is normalizedChildren static ?!?
-    private static Map<String, TreeNode> normalizedChildren =
-            new ConcurrentHashMap<String, TreeNode>();
-    protected String name;    // The node object itself
+    private static Map<String, TreeNode> normalizedChildren = new ConcurrentHashMap<String, TreeNode>();
+    protected String name; // The node object itself
     protected String category;
     protected String description;
     protected boolean enabled = false;
@@ -65,8 +62,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
     public void setName(String aname) {
 
         if (aname == null)
-            throw new RuntimeException("Flashlight-utils: Tree Node needs a"
-                    + " non-null name");
+            throw new RuntimeException("Flashlight-utils: Tree Node needs a" + " non-null name");
         name = encodeNodeName(aname);
     }
 
@@ -93,8 +89,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
     public TreeNode addChild(TreeNode newChild) {
         if (newChild == null) {
             return null;
-        }
-        else if (newChild.getName() == null) {
+        } else if (newChild.getName() == null) {
             // log it and return null
             return null;
         }
@@ -107,10 +102,8 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
     public String getCompletePathName() {
 
         if (getParent() != null) {
-            return getParent().getCompletePathName()
-                    + this.NAME_SEPARATOR + getName();
-        }
-        else {
+            return getParent().getCompletePathName() + this.NAME_SEPARATOR + getName();
+        } else {
             return getName();
         }
     }
@@ -127,6 +120,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
     /**
      * Returns a mutable view of the children
+     * 
      * @return
      */
     @Override
@@ -136,6 +130,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
     /**
      * Returns a mutable view of the children
+     * 
      * @return
      */
     @Override
@@ -277,11 +272,12 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
     /**
      * Returns all the nodes under the current tree
+     * 
      * @return List of all nodes in the current tree
      */
     @Override
     public List<TreeNode> traverse(boolean ignoreDisabled) {
-//        System.out.println ("Node: " + this.getName ()+ " is enabled "+isEnabled());
+        //        System.out.println ("Node: " + this.getName ()+ " is enabled "+isEnabled());
         List<TreeNode> list = new ArrayList<TreeNode>();
 
         if (ignoreDisabled) {
@@ -331,7 +327,6 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
     private List<TreeNode> getNodesInternal(String pattern, boolean ignoreDisabled, boolean gfv2Compatible) {
         List<TreeNode> regexMatchedTree = new ArrayList<TreeNode>();
 
-
         try {
             if (gfv2Compatible)
                 pattern = convertGFv2PatternToRegex(pattern);
@@ -350,16 +345,14 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
                 if (matcher.matches()) {
                     regexMatchedTree.add(node);
-                }
-                else if (path2 != null) {
+                } else if (path2 != null) {
                     Matcher matcher2 = mPattern.matcher(path2);
                     if (matcher2.matches()) {
                         regexMatchedTree.add(node);
                     }
                 }
             }
-        }
-        catch (java.util.regex.PatternSyntaxException e) {
+        } catch (java.util.regex.PatternSyntaxException e) {
             // log this
             // e.printStackTrace ();
         }
@@ -390,13 +383,13 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+        if (this == o)
             return true;
 
         // don't waste time checking o for null
         // if instanceof's first param is null it will return false
         // see JLS, 15.19.2
-        if(!(o instanceof AbstractTreeNode))
+        if (!(o instanceof AbstractTreeNode))
             return false;
 
         // guaranteed to not throw an Exception because of above!
@@ -430,7 +423,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
             String aname = n.getCompletePathName();
 
             if (aname == null)
-                continue;   // defensive pgming
+                continue; // defensive pgming
 
             // JIRA 15500 -- there may be a backslash in the name!
 
@@ -515,8 +508,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
                 }
                 return sb.toString();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // fall through
         }
         return null;
@@ -526,7 +518,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
         // Normalized means a literal dot is "\."  (one 'real' backslash followed by dot
         // in a java string in source code it would be:  "\\."  -- where one of the backslashes isn't 'real'
 
-        if(s == null || !hasDots(s)) // return quick for performance
+        if (s == null || !hasDots(s)) // return quick for performance
             return s;
 
         // to avoid expensive regexp work I do it this way...
@@ -538,11 +530,11 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
     }
 
     private static boolean hasDots(String s) {
-        if(s == null)
+        if (s == null)
             return false;
-        if(s.indexOf(MONDOT) >= 0)
+        if (s.indexOf(MONDOT) >= 0)
             return true;
-        if(s.indexOf(".") >= 0)
+        if (s.indexOf(".") >= 0)
             return true;
         return false;
     }

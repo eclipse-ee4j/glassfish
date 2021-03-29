@@ -31,7 +31,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class ReloadResource {
 
     @POST
-    public void reload(@Context Reloader r, @Context ResourceConfig rc ,  @Context ServerContext sc) {
+    public void reload(@Context Reloader r, @Context ResourceConfig rc, @Context ServerContext sc) {
         ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             ClassLoader apiClassLoader = sc.getCommonClassLoader();

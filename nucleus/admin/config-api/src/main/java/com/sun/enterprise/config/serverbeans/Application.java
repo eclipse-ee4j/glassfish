@@ -40,16 +40,13 @@ import org.jvnet.hk2.config.Element;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ContextRootCheck;
 
-
 @Configured
-@RestRedirects({
-    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "undeploy"),
-    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "redeploy")
-})
-@ContextRootCheck(message="{contextroot.duplicate}", payload=Application.class)
+@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "undeploy"),
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "redeploy") })
+@ContextRootCheck(message = "{contextroot.duplicate}", payload = Application.class)
 public interface Application extends ApplicationName, PropertyBag {
 
-    public static final String APP_LOCATION_PROP_NAME = "appLocation";           
+    public static final String APP_LOCATION_PROP_NAME = "appLocation";
     public static final String DEPLOYMENT_PLAN_LOCATION_PROP_NAME = "deploymentPlanLocation";
     public static final String ARCHIVE_TYPE_PROP_NAME = "archiveType";
     public static final String ALT_DD_LOCATION_PROP_NAME = "altDDLocation";
@@ -58,8 +55,7 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Gets the value of the contextRoot property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getContextRoot();
@@ -67,16 +63,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the contextRoot property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setContextRoot(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the location property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getLocation();
@@ -84,16 +78,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the location property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setLocation(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the objectType property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(required = true)
     @NotNull
@@ -102,16 +94,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the objectType property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setObjectType(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
@@ -119,16 +109,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the libraries property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getLibraries();
@@ -136,16 +124,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the libraries property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setLibraries(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the availabilityEnabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getAvailabilityEnabled();
@@ -153,16 +139,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the availabilityEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setAvailabilityEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the asyncReplication property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getAsyncReplication();
@@ -170,16 +154,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the asyncReplication property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setAsyncReplication(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the directoryDeployed property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getDirectoryDeployed();
@@ -187,16 +169,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the directoryDeployed property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setDirectoryDeployed(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the description property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getDescription();
@@ -204,16 +184,14 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the description property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setDescription(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the deploymentOrder property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "100", dataType = Integer.class)
     String getDeploymentOrder();
@@ -221,8 +199,7 @@ public interface Application extends ApplicationName, PropertyBag {
     /**
      * Sets the value of the deploymentOrder property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setDeploymentOrder(String value) throws PropertyVetoException;
 
@@ -233,21 +210,20 @@ public interface Application extends ApplicationName, PropertyBag {
      * Gets the value of the engine property.
      * <p/>
      * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the engine property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * engine property.
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getEngine().add(newItem);
+     * getEngine().add(newItem);
      * </pre>
      * <p/>
      * <p/>
      * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Engine }
+     * Objects of the following type(s) are allowed in the list {@link Engine }
      */
     @Element
     List<Engine> getEngine();
@@ -331,16 +307,13 @@ public interface Application extends ApplicationName, PropertyBag {
                 }
             }
             if (instance.getObjectType() != null) {
-                deploymentProps.setProperty(ServerTags.OBJECT_TYPE,
-                    instance.getObjectType());
+                deploymentProps.setProperty(ServerTags.OBJECT_TYPE, instance.getObjectType());
             }
             if (instance.getContextRoot() != null) {
-                deploymentProps.setProperty(ServerTags.CONTEXT_ROOT,
-                        instance.getContextRoot());
+                deploymentProps.setProperty(ServerTags.CONTEXT_ROOT, instance.getContextRoot());
             }
             if (instance.getDirectoryDeployed() != null) {
-                deploymentProps.setProperty(ServerTags.DIRECTORY_DEPLOYED,
-                        instance.getDirectoryDeployed());
+                deploymentProps.setProperty(ServerTags.DIRECTORY_DEPLOYED, instance.getDirectoryDeployed());
             }
             return deploymentProps;
         }
@@ -351,8 +324,7 @@ public interface Application extends ApplicationName, PropertyBag {
             try {
                 uri = new URI(app.getLocation());
             } catch (URISyntaxException e) {
-                Logger.getAnonymousLogger().log(
-                        Level.SEVERE, e.getMessage(), e);
+                Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage(), e);
             }
 
             if (uri == null) {
@@ -362,8 +334,7 @@ public interface Application extends ApplicationName, PropertyBag {
             DeployCommandParameters deploymentParams = new DeployCommandParameters(new File(uri));
             deploymentParams.name = app.getName();
             deploymentParams.description = app.getDescription();
-            if (Boolean.valueOf(app.getEnabled()) && appRef != null
-                    && Boolean.valueOf(appRef.getEnabled())) {
+            if (Boolean.valueOf(app.getEnabled()) && appRef != null && Boolean.valueOf(appRef.getEnabled())) {
                 deploymentParams.enabled = Boolean.TRUE;
             } else {
                 deploymentParams.enabled = Boolean.FALSE;
@@ -382,26 +353,22 @@ public interface Application extends ApplicationName, PropertyBag {
             for (Property prop : app.getProperty()) {
                 if (prop.getName().equals(ARCHIVE_TYPE_PROP_NAME)) {
                     deploymentParams.type = prop.getValue();
-                }
-                else if (prop.getName().equals(ALT_DD_LOCATION_PROP_NAME)) {
+                } else if (prop.getName().equals(ALT_DD_LOCATION_PROP_NAME)) {
                     URI altDDUri = null;
                     try {
                         altDDUri = new URI(prop.getValue());
                     } catch (URISyntaxException e) {
-                        Logger.getAnonymousLogger().log(
-                            Level.SEVERE, e.getMessage(), e);
+                        Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage(), e);
                     }
                     if (altDDUri != null) {
                         deploymentParams.altdd = new File(altDDUri);
                     }
-                } else if (prop.getName().equals(
-                        RUNTIME_ALT_DD_LOCATION_PROP_NAME)) {
+                } else if (prop.getName().equals(RUNTIME_ALT_DD_LOCATION_PROP_NAME)) {
                     URI runtimeAltDDUri = null;
                     try {
                         runtimeAltDDUri = new URI(prop.getValue());
                     } catch (URISyntaxException e) {
-                        Logger.getAnonymousLogger().log(
-                            Level.SEVERE, e.getMessage(), e);
+                        Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage(), e);
                     }
                     if (runtimeAltDDUri != null) {
                         deploymentParams.runtimealtdd = new File(runtimeAltDDUri);
@@ -411,17 +378,14 @@ public interface Application extends ApplicationName, PropertyBag {
             return deploymentParams;
         }
 
-        public static Map<String, Properties> getModulePropertiesMap(
-                Application me) {
-            Map<String, Properties> modulePropertiesMap =
-                    new HashMap<String, Properties>();
+        public static Map<String, Properties> getModulePropertiesMap(Application me) {
+            Map<String, Properties> modulePropertiesMap = new HashMap<String, Properties>();
             for (Module module : me.getModule()) {
                 if (module.getProperty() != null) {
                     Properties moduleProps = new Properties();
                     for (Property property : module.getProperty()) {
                         if (property.getValue() != null) {
-                            moduleProps.put(property.getName(),
-                                property.getValue());
+                            moduleProps.put(property.getName(), property.getValue());
                         }
                     }
                     modulePropertiesMap.put(module.getName(), moduleProps);
@@ -438,8 +402,7 @@ public interface Application extends ApplicationName, PropertyBag {
             return Boolean.valueOf(me.getDeployProperties().getProperty(ServerTags.IS_LIFECYCLE));
         }
 
-        public static boolean containsSnifferType(Application app,
-                String snifferType) {
+        public static boolean containsSnifferType(Application app, String snifferType) {
             List<Engine> engineList = new ArrayList<Engine>();
 
             // first add application level engines
@@ -484,8 +447,7 @@ public interface Application extends ApplicationName, PropertyBag {
             return null;
         }
 
-        private static File fileForProp(final Application instance,
-                final String propName) {
+        private static File fileForProp(final Application instance, final String propName) {
             for (Property p : instance.getProperty()) {
                 if (p.getName().equals(propName)) {
                     return new File(URI.create(p.getValue()));
@@ -519,7 +481,7 @@ public interface Application extends ApplicationName, PropertyBag {
     }
 
     /**
-    Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})

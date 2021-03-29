@@ -70,34 +70,31 @@ public abstract class AbstractRestResourceProvider implements RestResourceProvid
     }
 
     @Override
-    public ResourceConfig getResourceConfig(Set<Class<?>> classes,
-                                            final ServerContext sc,
-                                            final ServiceLocator habitat,
-                                            final Set<? extends Binder> additionalBinders)
-            throws EndpointRegistrationException {
+    public ResourceConfig getResourceConfig(Set<Class<?>> classes, final ServerContext sc, final ServiceLocator habitat,
+            final Set<? extends Binder> additionalBinders) throws EndpointRegistrationException {
         final Reloader r = new Reloader();
 
         ResourceConfig rc = new ResourceConfig(classes);
         rc.property(ServerProperties.MEDIA_TYPE_MAPPINGS, getMimeMappings());
         rc.register(CsrfProtectionFilter.class);
 
-//        TODO - JERSEY2
-//        RestConfig restConf = ResourceUtil.getRestConfig(habitat);
-//        if (restConf != null) {
-//            if (restConf.getLogOutput().equalsIgnoreCase("true")) { //enable output logging
-//                rc.getContainerResponseFilters().add(LoggingFilter.class);
-//            }
-//            if (restConf.getLogInput().equalsIgnoreCase("true")) { //enable input logging
-//                rc.getContainerRequestFilters().add(LoggingFilter.class);
-//            }
-//            if (restConf.getWadlGeneration().equalsIgnoreCase("false")) { //disable WADL
-//                rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
-//            }
-//        }
-//        else {
-//                 rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
-//        }
-//
+        //        TODO - JERSEY2
+        //        RestConfig restConf = ResourceUtil.getRestConfig(habitat);
+        //        if (restConf != null) {
+        //            if (restConf.getLogOutput().equalsIgnoreCase("true")) { //enable output logging
+        //                rc.getContainerResponseFilters().add(LoggingFilter.class);
+        //            }
+        //            if (restConf.getLogInput().equalsIgnoreCase("true")) { //enable input logging
+        //                rc.getContainerRequestFilters().add(LoggingFilter.class);
+        //            }
+        //            if (restConf.getWadlGeneration().equalsIgnoreCase("false")) { //disable WADL
+        //                rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
+        //            }
+        //        }
+        //        else {
+        //                 rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
+        //        }
+        //
         rc.register(r);
         rc.register(ReloadResource.class);
         rc.register(new MultiPartFeature());
@@ -119,8 +116,7 @@ public abstract class AbstractRestResourceProvider implements RestResourceProvid
                 bind(hDescriptor);
 
                 RestSessionManager rsm = habitat.getService(RestSessionManager.class);
-                AbstractActiveDescriptor<RestSessionManager> rmDescriptor =
-                        BuilderHelper.createConstantDescriptor(rsm);
+                AbstractActiveDescriptor<RestSessionManager> rmDescriptor = BuilderHelper.createConstantDescriptor(rsm);
                 bind(rmDescriptor);
             }
         });

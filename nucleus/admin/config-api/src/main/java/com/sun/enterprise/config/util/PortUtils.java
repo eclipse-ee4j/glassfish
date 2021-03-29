@@ -26,6 +26,7 @@ import static com.sun.enterprise.config.util.PortConstants.*;
 
 /**
  * static methods useful for dealing with ports.
+ * 
  * @author Byron Nevins
  */
 final class PortUtils {
@@ -36,8 +37,9 @@ final class PortUtils {
 
     /**
      * Make sure all ports that are specified by the user make sense.
+     * 
      * @param server The new Server element
-     * @return null if all went OK.  Otherwise return a String with the error message.
+     * @return null if all went OK. Otherwise return a String with the error message.
      */
     static void checkInternalConsistency(Server server) throws TransactionFailure {
         // Make sure all the system properties for ports have different numbers.
@@ -55,12 +57,10 @@ final class PortUtils {
 
                     if (!wasAdded) //TODO unit test
                         throw new TransactionFailure(Strings.get("PortUtils.duplicate_port", val, server.getName()));
-                }
-                catch(TransactionFailure tf) {
+                } catch (TransactionFailure tf) {
                     // don't re-wrap the same Exception type!
                     throw tf;
-                }
-                catch (Exception e) {  //TODO unit test
+                } catch (Exception e) { //TODO unit test
                     throw new TransactionFailure(Strings.get("PortUtils.non_int_port", val, server.getName()));
                 }
             }

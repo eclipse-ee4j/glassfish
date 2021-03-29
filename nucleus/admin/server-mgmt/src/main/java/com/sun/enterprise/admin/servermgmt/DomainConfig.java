@@ -26,16 +26,13 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import java.util.Locale;
 
 /**
- * This class defines the keys that are used to create the domain config object.
- * Almost all the methods of DomainsManager require the domain config to be
- * passed as java.util.Map, the key set of which is defined here.
+ * This class defines the keys that are used to create the domain config object. Almost all the methods of
+ * DomainsManager require the domain config to be passed as java.util.Map, the key set of which is defined here.
  */
 public class DomainConfig extends RepositoryConfig {
     /**
-     * These constants define the possbile Hash Map keys that can reside in
-     * DomainConfig MAKE SURE THAT KEYS FOR PORTS END IN THE STRING "PORT" (case
-     * ignored) - this is used in PEDomainConfigValidator to ensure that the
-     * ports are unique!
+     * These constants define the possbile Hash Map keys that can reside in DomainConfig MAKE SURE THAT KEYS FOR PORTS END
+     * IN THE STRING "PORT" (case ignored) - this is used in PEDomainConfigValidator to ensure that the ports are unique!
      */
     public static final String K_USER = "domain.user";
     public static final String K_PASSWORD = "domain.password";
@@ -70,13 +67,12 @@ public class DomainConfig extends RepositoryConfig {
     public static final String K_ADMIN_CERT_DN = "domain.admin.cert.dn";
     public static final String K_INSTANCE_CERT_DN = "domain.instance.cert.dn";
     public static final String K_SECURE_ADMIN_IDENTIFIER = "domain.indicator";
-    public static final String K_INITIAL_ADMIN_USER_GROUPS="domain.admin.groups";
+    public static final String K_INITIAL_ADMIN_USER_GROUPS = "domain.admin.groups";
 
     private Properties _domainProperties;
 
     /**
-     * The DomainConfig always contains the K_DOMAINS_ROOT and K_HOST_NAME
-     * attributes.
+     * The DomainConfig always contains the K_DOMAINS_ROOT and K_HOST_NAME attributes.
      */
     public DomainConfig(String domainName, String domainRoot) throws DomainException {
         super(domainName, domainRoot);
@@ -85,10 +81,8 @@ public class DomainConfig extends RepositoryConfig {
             // net to get fully qualified host, not just hostname
             ASenvPropertyReader pr = new ASenvPropertyReader();
             Map<String, String> envProperties = pr.getProps();
-            put(K_HOST_NAME,
-                    envProperties.get(SystemPropertyConstants.HOST_NAME_PROPERTY));
-        }
-        catch (Exception ex) {
+            put(K_HOST_NAME, envProperties.get(SystemPropertyConstants.HOST_NAME_PROPERTY));
+        } catch (Exception ex) {
             throw new DomainException(ex);
         }
     }
@@ -96,13 +90,9 @@ public class DomainConfig extends RepositoryConfig {
     /**
      * This constructor is used at domain creation time only.
      */
-    public DomainConfig(String domainName, Integer adminPort, String domainRoot,
-            String adminUser, String adminPassword, String masterPassword,
-            Boolean saveMasterPassword, Integer instancePort, Integer jmsPort,
-            Integer orbPort, Integer httpSSLPort,
-            Integer iiopSSLPort, Integer iiopMutualAuthPort,
-            Integer jmxAdminPort, Integer osgiShellTelnetPort,
-            Integer javaDebuggerPort,
+    public DomainConfig(String domainName, Integer adminPort, String domainRoot, String adminUser, String adminPassword,
+            String masterPassword, Boolean saveMasterPassword, Integer instancePort, Integer jmsPort, Integer orbPort, Integer httpSSLPort,
+            Integer iiopSSLPort, Integer iiopMutualAuthPort, Integer jmxAdminPort, Integer osgiShellTelnetPort, Integer javaDebuggerPort,
             Properties domainProperties) throws DomainException {
         this(domainName, domainRoot);
         try {
@@ -126,8 +116,7 @@ public class DomainConfig extends RepositoryConfig {
                     put(pname, domainProperties.getProperty(pname));
                 }
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new DomainException(ex);
         }
     }
@@ -135,10 +124,8 @@ public class DomainConfig extends RepositoryConfig {
     /**
      * This constructor is used at domain creation time only.
      */
-    public DomainConfig(String domainName, String domainRoot,
-            String adminUser, String adminPassword, String masterPassword,
-            Boolean saveMasterPassword, String adminPort, String instancePort,
-            Properties domainProperties) throws DomainException {
+    public DomainConfig(String domainName, String domainRoot, String adminUser, String adminPassword, String masterPassword,
+            Boolean saveMasterPassword, String adminPort, String instancePort, Properties domainProperties) throws DomainException {
         this(domainName, domainRoot);
         put(K_ADMIN_PORT, adminPort);
         put(K_PASSWORD, adminPassword);
@@ -173,13 +160,13 @@ public class DomainConfig extends RepositoryConfig {
     }
 
     public void add(String key, Object value) {
-       put(key, value);
+        put(key, value);
     }
 
     public Properties getDomainProperties() {
-    	if (_domainProperties == null) {
-    		_domainProperties = new Properties();
-    	}
-    	return _domainProperties;
+        if (_domainProperties == null) {
+            _domainProperties = new Properties();
+        }
+        return _domainProperties;
     }
 }

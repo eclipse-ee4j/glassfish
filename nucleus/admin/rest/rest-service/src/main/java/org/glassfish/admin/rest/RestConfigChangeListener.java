@@ -36,13 +36,12 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 // TODO: Delete this once we're sure it's no longer needed
 @Deprecated
 public class RestConfigChangeListener implements ConfigListener {
-//    private Reloader r;
+    //    private Reloader r;
     private ServerContext sc;
 
     public RestConfigChangeListener(ServiceLocator habitat, Reloader reload, ResourceConfig rc, ServerContext sc) {
-//        this.r = reload;
+        //        this.r = reload;
         this.sc = sc;
-
 
         RestConfig target = ResourceUtil.getRestConfig(habitat);
 
@@ -61,24 +60,24 @@ public class RestConfigChangeListener implements ConfigListener {
             Thread.currentThread().setContextClassLoader(apiClassLoader);
 
             // TODO - JERSEY2
-//            rc.getContainerResponseFilters().clear();
-//            rc.getContainerRequestFilters().clear();
-//            rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.FALSE);
+            //            rc.getContainerResponseFilters().clear();
+            //            rc.getContainerRequestFilters().clear();
+            //            rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.FALSE);
 
-//            RestConfig restConf = ResourceUtil.getRestConfig(habitat);
-//            if (restConf != null) {
-//                if (restConf.getLogOutput().equalsIgnoreCase("true")) { //enable output logging
-//                    rc.getContainerResponseFilters().add(LoggingFilter.class);
-//                }
-//                if (restConf.getLogInput().equalsIgnoreCase("true")) { //enable input logging
-//                    rc.getContainerRequestFilters().add(LoggingFilter.class);
-//                }
-//                if (restConf.getWadlGeneration().equalsIgnoreCase("false")) { //disable WADL
-//                    rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
-//                }
-//            }
+            //            RestConfig restConf = ResourceUtil.getRestConfig(habitat);
+            //            if (restConf != null) {
+            //                if (restConf.getLogOutput().equalsIgnoreCase("true")) { //enable output logging
+            //                    rc.getContainerResponseFilters().add(LoggingFilter.class);
+            //                }
+            //                if (restConf.getLogInput().equalsIgnoreCase("true")) { //enable input logging
+            //                    rc.getContainerRequestFilters().add(LoggingFilter.class);
+            //                }
+            //                if (restConf.getWadlGeneration().equalsIgnoreCase("false")) { //disable WADL
+            //                    rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
+            //                }
+            //            }
 
-//            r.reload();
+            //            r.reload();
         } finally {
             Thread.currentThread().setContextClassLoader(originalContextClassLoader);
         }

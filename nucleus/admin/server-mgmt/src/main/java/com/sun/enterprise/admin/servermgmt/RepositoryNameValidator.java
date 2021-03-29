@@ -25,68 +25,56 @@ import javax.management.ObjectName;
 import com.sun.enterprise.util.i18n.StringManager;
 
 /**
- * Validates the repository name. A repository name must be a
- * - valid file name, 
- * - valid xml CDATA value &
- * - valid javax.management.ObjectName property value.
+ * Validates the repository name. A repository name must be a - valid file name, - valid xml CDATA value & - valid
+ * javax.management.ObjectName property value.
  */
-public class RepositoryNameValidator extends StringValidator
-{
-    private static final String VALID_CHAR = 
-        "[^\\,\\/ \\&\\;\\`\\'\\\\\"\\|\\*\\!\\?\\~\\<\\>\\^\\(\\)\\[\\]\\{\\}\\$\\:\\%]*";
+public class RepositoryNameValidator extends StringValidator {
+    private static final String VALID_CHAR = "[^\\,\\/ \\&\\;\\`\\'\\\\\"\\|\\*\\!\\?\\~\\<\\>\\^\\(\\)\\[\\]\\{\\}\\$\\:\\%]*";
 
     private static final String IAS_NAME = "com.sun.appserv:name=";
 
-    private static final String XML_1 = 
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <xml>";
+    private static final String XML_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <xml>";
 
     private static final String XML_2 = "</xml>";
 
     /**
      * i18n strings manager object
      */
-    private static final StringManager strMgr = 
-        StringManager.getManager(RepositoryNameValidator.class);
+    private static final StringManager strMgr = StringManager.getManager(RepositoryNameValidator.class);
 
     /**
      * Constructs new RepositoryNameValidator object.
+     * 
      * @param name
      */
-    public RepositoryNameValidator(String name)
-    {
+    public RepositoryNameValidator(String name) {
         super(name);
     }
 
     /**
-     * Validates the given value for the given entry. This method first invokes
-     * its superclass's validate method and then performs additional validations.
+     * Validates the given value for the given entry. This method first invokes its superclass's validate method and then
+     * performs additional validations.
+     * 
      * @throws InvalidConfigException
      */
-    public void validate(Object str) throws InvalidConfigException
-    {
+    public void validate(Object str) throws InvalidConfigException {
         super.validate(str);
-        checkValidName((String)str);
-        checkValidXmlToken((String)str);
-        checkValidObjectNameToken((String)str);
+        checkValidName((String) str);
+        checkValidXmlToken((String) str);
+        checkValidObjectNameToken((String) str);
     }
 
-    public void checkValidName(String name) throws InvalidConfigException
-    {
-        if (!name.matches(VALID_CHAR))
-        {
-            throw new InvalidConfigException(
-                strMgr.getString("validator.invalid_value", getName(), name));
+    public void checkValidName(String name) throws InvalidConfigException {
+        if (!name.matches(VALID_CHAR)) {
+            throw new InvalidConfigException(strMgr.getString("validator.invalid_value", getName(), name));
         }
     }
 
     /**
-     * Implementation copied from 
-     * com.sun.enterprise.admin.verifier.tests.StaticTest
+     * Implementation copied from com.sun.enterprise.admin.verifier.tests.StaticTest
      */
-    public void checkValidXmlToken(String name) throws InvalidConfigException
-    {
-        try
-        {
+    public void checkValidXmlToken(String name) throws InvalidConfigException {
+        try {
             //Construct a valid xml string
             String xml = XML_1 + name + XML_2;
             ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
@@ -95,25 +83,16 @@ public class RepositoryNameValidator extends StringValidator
             dbf.setValidating(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
             db.parse(is);
-        }
-        catch (Exception e)
-        {
-            throw new InvalidConfigException(
-                strMgr.getString("validator.invalid_value", getName(), name));
+        } catch (Exception e) {
+            throw new InvalidConfigException(strMgr.getString("validator.invalid_value", getName(), name));
         }
     }
 
-    public void checkValidObjectNameToken(String name) 
-        throws InvalidConfigException
-    {
-        try
-        {
+    public void checkValidObjectNameToken(String name) throws InvalidConfigException {
+        try {
             new ObjectName(IAS_NAME + name);
-        }
-        catch (Exception e)
-        {
-            throw new InvalidConfigException(
-                strMgr.getString("validator.invalid_value", getName(), name));
+        } catch (Exception e) {
+            throw new InvalidConfigException(strMgr.getString("validator.invalid_value", getName(), name));
         }
     }
 }

@@ -23,18 +23,26 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 
-
 @Configured
 public interface ThreadPools extends ConfigBeanProxy {
     /**
-     * Gets the value of the threadPool property. <p/> <p/> This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the threadPool property. <p/> <p/> For example, to add a
-     * new item, do as follows:
+     * Gets the value of the threadPool property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * threadPool property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getThreadPool().add(newItem);
+     * getThreadPool().add(newItem);
      * </pre>
-     * <p/> <p/> <p/> Objects of the following type(s) are allowed in the list {@link ThreadPool }
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list {@link ThreadPool }
      */
     @Element(required = true)
     List<ThreadPool> getThreadPool();

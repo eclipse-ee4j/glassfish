@@ -51,23 +51,23 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
 
     @Inject
     CommandRunner runner;
-    
+
     private ConfigBeanProxy parentBean;
-    
+
     private ConfigBeanProxy tgt;
-    
+
     private ConfigBean child;
-    
+
     private String name;
 
     CommandModel model;
-    Delete delete = null;    
-    
+    Delete delete = null;
+
     @Override
     public CommandModel getModel() {
         return model;
     }
-       
+
     @Override
     public void postConstruct() {
 
@@ -76,28 +76,23 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
         resolverType = delete.resolver();
         try {
             // we pass false for "useAnnotations" as the @Param declarations on
-	    // the target type are not used for the Delete method parameters.
-            model = new GenericCommandModel(targetType, false, delete.cluster(), delete.i18n(),
-                    new LocalStringManagerImpl(targetType),
-                    habitat.<DomDocument>getService(DomDocument.class), commandName, 
-                    AnnotationUtil.presentTransitive(ManagedJob.class, delete.decorator()),
-                    delete.resolver(), delete.decorator());
+            // the target type are not used for the Delete method parameters.
+            model = new GenericCommandModel(targetType, false, delete.cluster(), delete.i18n(), new LocalStringManagerImpl(targetType),
+                    habitat.<DomDocument>getService(DomDocument.class), commandName,
+                    AnnotationUtil.presentTransitive(ManagedJob.class, delete.decorator()), delete.resolver(), delete.decorator());
             if (logger.isLoggable(level)) {
                 for (String paramName : model.getParametersNames()) {
                     CommandModel.ParamModel param = model.getModelFor(paramName);
                     logger.log(Level.FINE, "I take {0} parameters", param.getName());
                 }
             }
-        } catch(Exception e) {
-            String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                    "GenericCreateCommand.command_model_exception",
-                    "Exception while creating the command model for the generic command {0} : {1}",
-                    commandName, e.getMessage());
-            LogHelper.log(logger, Level.SEVERE, ConfigApiLoggerInfo.GENERIC_CREATE_CMD_FAILED, e, 
-                    new Object[] {commandName});
+        } catch (Exception e) {
+            String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericCreateCommand.command_model_exception",
+                    "Exception while creating the command model for the generic command {0} : {1}", commandName, e.getMessage());
+            LogHelper.log(logger, Level.SEVERE, ConfigApiLoggerInfo.GENERIC_CREATE_CMD_FAILED, e, new Object[] { commandName });
             throw new RuntimeException(msg, e);
         }
-        
+
     }
 
     @Override
@@ -111,8 +106,7 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
         checks.add(new AccessCheck(parentBean, targetType, name, "delete"));
         return checks;
     }
-    
-    
+
     @Override
     void prepareInjection(final AdminCommandContext ctx) {
         super.prepareInjection(ctx);
@@ -127,18 +121,17 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
     public void execute(final AdminCommandContext context) {
 
         final ActionReport result = context.getActionReport();
-        
-        if (tgt==null) {
-            
-            String msg = localStrings.getLocalString(GenericDeleteCommand.class,
-                    "TypeAndNameResolver.target_object_not_found",
+
+        if (tgt == null) {
+
+            String msg = localStrings.getLocalString(GenericDeleteCommand.class, "TypeAndNameResolver.target_object_not_found",
                     "Cannot find a {0} with a name {1}", targetType.getSimpleName(), name);
-            logger.log(Level.SEVERE, ConfigApiLoggerInfo.TARGET_OBJ_NOT_FOUND, 
-                    new Object[] {resolver.getClass().toString(), parentType, targetType});
+            logger.log(Level.SEVERE, ConfigApiLoggerInfo.TARGET_OBJ_NOT_FOUND,
+                    new Object[] { resolver.getClass().toString(), parentType, targetType });
             result.failure(logger, msg);
             return;
         }
-        
+
         try {
             ConfigBeanProxy parentProxy = child.parent().createProxy();
             ConfigSupport.apply(new SingleConfigCode<ConfigBeanProxy>() {
@@ -147,7 +140,7 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
                     ConfigSupport._deleteChild(child.parent(), (WriteableView) Proxy.getInvocationHandler(parentProxy), child);
 
                     DeletionDecorator<ConfigBeanProxy, ConfigBeanProxy> decorator = habitat.getService(delete.decorator());
-                    if (decorator==null) {
+                    if (decorator == null) {
                         String msg = localStrings.getLocalString(GenericCrudCommand.class,
                                 "GenericCreateCommand.deletion_decorator_not_found",
                                 "The DeletionDecorator {0} could not be found in the habitat,is it annotated with @Service ?",
@@ -166,17 +159,14 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
                 }
             }, parentProxy);
 
-
-        } catch(TransactionFailure e) {
-            String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                    "GenericDeleteCommand.transaction_exception",
-                    "Exception while deleting the configuration {0} :{1}",
-                    child.getImplementation(), e.getMessage());
+        } catch (TransactionFailure e) {
+            String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericDeleteCommand.transaction_exception",
+                    "Exception while deleting the configuration {0} :{1}", child.getImplementation(), e.getMessage());
             result.failure(logger, msg);
         }
 
     }
-    
+
     @Override
     public Class getDecoratorClass() {
         if (delete != null) {

@@ -53,44 +53,36 @@ public class FormWriter implements MessageBodyWriter<Dom> {
     }
 
     @Override
-    public void writeTo(Dom data,
-            Class<?> type, Type genericType, Annotation[] annotations,
-            MediaType mediaType, MultivaluedMap<String, Object> headers,
-            OutputStream out) throws IOException {
-//        out.write(preamble.getBytes());
-//        for (String name : data.keySet()) {
-//            out.write("<tr><td>".getBytes());
-//            out.write(name.getBytes());
-//            out.write("</td><td>".getBytes());
-//            out.write(data.get(name).getBytes());
-//            out.write("</td></tr>".getBytes());
-//        }
-//        out.write(postamble.getBytes());
+    public void writeTo(Dom data, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+            MultivaluedMap<String, Object> headers, OutputStream out) throws IOException {
+        //        out.write(preamble.getBytes());
+        //        for (String name : data.keySet()) {
+        //            out.write("<tr><td>".getBytes());
+        //            out.write(name.getBytes());
+        //            out.write("</td><td>".getBytes());
+        //            out.write(data.get(name).getBytes());
+        //            out.write("</td></tr>".getBytes());
+        //        }
+        //        out.write(postamble.getBytes());
         out.write(constructForm(data).getBytes());
     }
 
     private String constructForm(Dom data) {
-        StringBuilder sb= new StringBuilder();
-        sb.append(
-                "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>\n").
-                append("<html><head><title>Data</title></head>\n").
-                append("<body><p>Change ").append(data.toString()).append(":</p>\n" ).
-                append("<form name='pair' action='").append(uriInfo.get().getAbsolutePath()).append("' method='POST'>\n").
-                append("<table>\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>\n").append("<html><head><title>Data</title></head>\n")
+                .append("<body><p>Change ").append(data.toString()).append(":</p>\n").append("<form name='pair' action='")
+                .append(uriInfo.get().getAbsolutePath()).append("' method='POST'>\n").append("<table>\n");
 
         Set<String> ss = data.model.getAttributeNames();
 
-            for (String name : ss) {
-            sb.append(
-                    "   <tr>\n").
-                    append("       <td align='right'>").append(name).append(":</td>\n").
-                    append("       <td><input type='text' name='").append(name).append("' value='").append(data.attribute(name)).append("' size='30' /></td>\n").
-                    append("   </tr>\n");
+        for (String name : ss) {
+            sb.append("   <tr>\n").append("       <td align='right'>").append(name).append(":</td>\n")
+                    .append("       <td><input type='text' name='").append(name).append("' value='").append(data.attribute(name))
+                    .append("' size='30' /></td>\n").append("   </tr>\n");
         }
 
-        sb.append(
-                "   <tr><td></td><td><input type='submit' value='Set' name='submit' /></td></tr>\n" ).
-                append("</table></form>\n</body></html>");
+        sb.append("   <tr><td></td><td><input type='submit' value='Set' name='submit' /></td></tr>\n")
+                .append("</table></form>\n</body></html>");
 
         return sb.toString();
     }

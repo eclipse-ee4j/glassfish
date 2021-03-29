@@ -34,44 +34,33 @@ import jakarta.validation.constraints.Pattern;
     "property"
 }) */
 /**
- * Admin Service exists in every instance. It is the configuration for either
- * a normal server, DAS or PE instance
+ * Admin Service exists in every instance. It is the configuration for either a normal server, DAS or PE instance
  */
 
 @Configured
 public interface AdminService extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the type property.
-     * An instance can either be of type
-     * das
-         Domain Administration Server in SE/EE or the PE instance
-     * das-and-server
-     *   same as das
-     * server
-     *   Any non-DAS instance in SE/EE. Not valid for PE.
+     * Gets the value of the type property. An instance can either be of type das Domain Administration Server in SE/EE or
+     * the PE instance das-and-server same as das server Any non-DAS instance in SE/EE. Not valid for PE.
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="server")
-    @Pattern(regexp="(das|das-and-server|server)")
+    @Attribute(defaultValue = "server")
+    @Pattern(regexp = "(das|das-and-server|server)")
     String getType();
 
     /**
      * Sets the value of the type property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setType(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the systemJmxConnectorName property.
-     * The name of the internal jmx connector
+     * Gets the value of the systemJmxConnectorName property. The name of the internal jmx connector
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getSystemJmxConnectorName();
@@ -79,17 +68,13 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the systemJmxConnectorName property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setSystemJmxConnectorName(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jmxConnector property.
-     * The jmx-connector element defines the configuration of a JSR 160
-     * compliant remote JMX Connector.
-     * Objects of the following type(s) are allowed in the list
-     * {@link JmxConnector }
+     * Gets the value of the jmxConnector property. The jmx-connector element defines the configuration of a JSR 160
+     * compliant remote JMX Connector. Objects of the following type(s) are allowed in the list {@link JmxConnector }
      */
     @Element("jmx-connector")
     List<JmxConnector> getJmxConnector();
@@ -97,8 +82,7 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the dasConfig property.
      *
-     * @return possible object is
-     *         {@link DasConfig }
+     * @return possible object is {@link DasConfig }
      */
     @Element("das-config")
     @NotNull
@@ -107,28 +91,27 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the dasConfig property.
      *
-     * @param value allowed object is
-     *              {@link DasConfig }
+     * @param value allowed object is {@link DasConfig }
      */
     void setDasConfig(DasConfig value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
-
-    /** Gets the name of the auth realm to be used for administration. This obsoletes/deprecates the similarly named
-     *  attribute on JmxConnector. Note that this is of essence where admin access is done outside the containers.
-     *  Container managed security is still applicable and is handled via security annotations and deployment
-     *  descriptors of the admin applications (aka admin GUI application, MEjb application).
+    /**
+     * Gets the name of the auth realm to be used for administration. This obsoletes/deprecates the similarly named
+     * attribute on JmxConnector. Note that this is of essence where admin access is done outside the containers. Container
+     * managed security is still applicable and is handled via security annotations and deployment descriptors of the admin
+     * applications (aka admin GUI application, MEjb application).
      *
      * @return name of the auth realm to be used for admin access
      */
-    @Attribute (defaultValue="admin-realm")
+    @Attribute(defaultValue = "admin-realm")
     @NotNull
     String getAuthRealmName();
 
@@ -154,17 +137,18 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
             return null;
         }
 
-        /** This is the place where the iteration for the {@link AuthRealm} for administration should be carried out
-         *  in server. A convenience method for the same. 
+        /**
+         * This is the place where the iteration for the {@link AuthRealm} for administration should be carried out in server. A
+         * convenience method for the same.
          *
          * @param as AdminService implemented by those who implement the interface (outer interface).
          * @return AuthRealm instance for which the name is same as as.getAuthRealmName(), null otherwise.
          */
         public static AuthRealm getAssociatedAuthRealm(AdminService as) {
-            String rn                = as.getAuthRealmName();  //this is the name of admin-service@auth-realm-name
-            Config cfg               = as.getParent(Config.class); //assumes the structure where <admin-service> resides directly under <config>
-            SecurityService ss       = cfg.getSecurityService();
-            List<AuthRealm> realms   = ss.getAuthRealm();
+            String rn = as.getAuthRealmName(); //this is the name of admin-service@auth-realm-name
+            Config cfg = as.getParent(Config.class); //assumes the structure where <admin-service> resides directly under <config>
+            SecurityService ss = cfg.getSecurityService();
+            List<AuthRealm> realms = ss.getAuthRealm();
             for (AuthRealm realm : realms) {
                 if (rn.equals(realm.getName()))
                     return realm;
@@ -172,10 +156,12 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
             return null;
         }
 
-        /** Returns true if the classname of associated authrealm is same as fully qualified FileRealm classname.
+        /**
+         * Returns true if the classname of associated authrealm is same as fully qualified FileRealm classname.
          *
          * @param as "This" Admin Service
-         * @return  true if associated authrealm is nonnull and its classname equals "com.sun.enterprise.security.auth.realm.file.FileRealm", false otherwise 
+         * @return true if associated authrealm is nonnull and its classname equals
+         * "com.sun.enterprise.security.auth.realm.file.FileRealm", false otherwise
          */
         public static boolean usesFileRealm(AdminService as) {
             boolean usesFR = false;

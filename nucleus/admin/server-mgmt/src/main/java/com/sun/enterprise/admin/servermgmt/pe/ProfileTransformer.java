@@ -36,52 +36,51 @@ import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 
 final class ProfileTransformer {
-    
+
     private final File baseXml;
     private final List<File> styleSheets;
     private final File destDir;
     private final EntityResolver er;
     private final Properties op;
     private static final StringManager sm = StringManager.getManager(ProfileTransformer.class);
-    
-    ProfileTransformer(final File baseXml, final List<File> styleSheets, final File destDir,
-        final EntityResolver er, final Properties op) {
+
+    ProfileTransformer(final File baseXml, final List<File> styleSheets, final File destDir, final EntityResolver er, final Properties op) {
         if (baseXml == null || styleSheets == null || destDir == null) {
             throw new IllegalArgumentException("null arguments");
         }
-        this.baseXml     = baseXml;
+        this.baseXml = baseXml;
         this.styleSheets = Collections.unmodifiableList(styleSheets);
-        this.destDir     = destDir;
-        this.er          = er;
-        this.op          = new Properties(op);
+        this.destDir = destDir;
+        this.er = er;
+        this.op = new Properties(op);
     }
-    
+
     File transform() throws ProfileTransformationException {
         if (styleSheets.isEmpty()) {
-            return ( baseXml );
+            return (baseXml);
         }
         BufferedOutputStream bos = null;
         try {
             final String fn = baseXml.getName();
             final DocumentBuilderFactory bf = DocumentBuilderFactory.newInstance();
             // it is OK to keep this as a non-validating parser.
-            final DocumentBuilder builder   = bf.newDocumentBuilder();
+            final DocumentBuilder builder = bf.newDocumentBuilder();
             builder.setEntityResolver(er);
-            final TransformerFactory tf     = TransformerFactory.newInstance();
-            Document doc  = null;
+            final TransformerFactory tf = TransformerFactory.newInstance();
+            Document doc = null;
             DOMSource src;
-            int cnt       = 0;
-            File   rfn    = null;
+            int cnt = 0;
+            File rfn = null;
             for (final File ss : styleSheets) {
                 //System.out.println("ss = " + ss.getAbsolutePath());
                 if (cnt == 0)
                     doc = builder.parse(baseXml);
-                src             = new DOMSource(doc);
-                rfn             = new File(destDir, fn + "transformed" + cnt);
-                bos             = new BufferedOutputStream(new FileOutputStream(rfn));
+                src = new DOMSource(doc);
+                rfn = new File(destDir, fn + "transformed" + cnt);
+                bos = new BufferedOutputStream(new FileOutputStream(rfn));
                 final StreamResult result = new StreamResult(bos);
-                final StreamSource sss    = new StreamSource(ss);
-                final Transformer xf      = tf.newTransformer(sss);
+                final StreamSource sss = new StreamSource(ss);
+                final Transformer xf = tf.newTransformer(sss);
                 xf.setURIResolver(new TemplateUriResolver());
                 xf.setOutputProperties(op);
                 xf.transform(src, result);
@@ -90,36 +89,37 @@ final class ProfileTransformer {
                 final String msg = sm.getString("xformPhaseComplete", ss.getAbsolutePath(), rfn.getAbsolutePath());
                 System.out.println(msg);
             }
-            return ( rfn );
+            return (rfn);
         } catch (final Exception e) {
             throw new ProfileTransformationException(e);
         } finally {
             try {
-                if (bos != null) bos.close();
+                if (bos != null)
+                    bos.close();
             } catch (IOException eee) {
                 //Have to squelch
             }
         }
     }
-    
+
     private static class TemplateUriResolver implements URIResolver {
-        
+
         @Override
-        public Source resolve (final String href, final String base) throws TransformerException {
+        public Source resolve(final String href, final String base) throws TransformerException {
             try {
-                StreamSource source     = null;
-                final URI baseUri       = new URI(base);
-                final URI tbResolved    = baseUri.resolve(href);
+                StreamSource source = null;
+                final URI baseUri = new URI(base);
+                final URI tbResolved = baseUri.resolve(href);
                 final boolean isFileUri = tbResolved.toString().toLowerCase(Locale.ENGLISH).startsWith("file:");
                 if (isFileUri) {
                     final File f = new File(tbResolved);
                     if (f.exists()) {
                         //System.out.println("File Exists: " + f.toURI());
-                        source = new StreamSource (f);
+                        source = new StreamSource(f);
                     }
                 } // in all other cases, let the processor take care of it
-                return ( source ) ;
-            } catch(final Exception e) {
+                return (source);
+            } catch (final Exception e) {
                 throw new TransformerException(e);
             }
         }

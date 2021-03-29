@@ -30,7 +30,7 @@ import jakarta.ws.rs.ext.Provider;
 import org.glassfish.admin.rest.provider.ProviderUtil;
 
 /**
-  * @author Rajeshwar Patil
+ * @author Rajeshwar Patil
  */
 @Consumes(MediaType.APPLICATION_XML)
 @Provider
@@ -42,16 +42,15 @@ public class XmlHashMapProvider extends ProviderUtil implements MessageBodyReade
     }
 
     @Override
-    public HashMap<String, String> readFrom(Class<HashMap<String, String>> type, Type genericType,
-        Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers, 
-        InputStream in) throws IOException {
+    public HashMap<String, String> readFrom(Class<HashMap<String, String>> type, Type genericType, Annotation[] annotations,
+            MediaType mediaType, MultivaluedMap<String, String> headers, InputStream in) throws IOException {
         try {
             XmlInputObject xmlObject = new XmlInputObject(in);
-            return getStringMap((HashMap)xmlObject.initializeMap());
+            return getStringMap((HashMap) xmlObject.initializeMap());
         } catch (InputException exception) {
             HashMap map = new HashMap();
             map.put("error", "Entity Parsing Error: " + exception.getMessage());
-              
+
             return map;
             ///throw new RuntimeException(exception); 
         }

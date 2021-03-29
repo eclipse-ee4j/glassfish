@@ -27,10 +27,9 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 /**
  * Utility class for the substitutable files.
  */
-public class SubstitutionFileUtil
-{
+public class SubstitutionFileUtil {
     private static final Logger _logger = SLogger.getLogger();
-            
+
     private static final LocalStringsImpl _strings = new LocalStringsImpl(SubstitutionFileUtil.class);
 
     private static final String INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB = "inmemory.substitution.file.size.in.kb";
@@ -52,14 +51,14 @@ public class SubstitutionFileUtil
             return PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES;
         }
         try {
-            PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES = Integer.parseInt(
-                    StringSubstitutionProperties.getProperty(INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB)) * 1024;
+            PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES = Integer
+                    .parseInt(StringSubstitutionProperties.getProperty(INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB)) * 1024;
         } catch (Exception e) {
             _logger.log(Level.INFO, SLogger.MISSING_MEMORY_FILE_SIZE);
             PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES = DEFAULT_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB;
         }
-        return PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES > 0 ?
-                PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES : DEFAULT_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB;
+        return PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES > 0 ? PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES
+                : DEFAULT_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB;
     }
 
     /**
@@ -73,15 +72,14 @@ public class SubstitutionFileUtil
         File extractDir = null;
         File extractBaseFile = new File(extractBase);
         if (!extractBaseFile.mkdirs()) {
-            _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR,
-                    extractBaseFile.getAbsolutePath());
+            _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR, extractBaseFile.getAbsolutePath());
         }
         extractDir = File.createTempFile(prefix, null, extractBaseFile);
         // ensure it's a directory
         if (extractDir.delete()) {
-        	if (_logger.isLoggable(Level.FINE)) {
-        		_logger.log(Level.FINE, _strings.get("recreateDirectories", extractDir.getAbsolutePath()));
-        	}
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, _strings.get("recreateDirectories", extractDir.getAbsolutePath()));
+            }
         }
         if (!extractDir.mkdirs()) {
             _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR, extractDir.getAbsolutePath());
@@ -90,8 +88,7 @@ public class SubstitutionFileUtil
     }
 
     /**
-     * Delete's the given file, if the file is a directory then method will
-     * recursively delete the content of it. 
+     * Delete's the given file, if the file is a directory then method will recursively delete the content of it.
      *
      * @param file File to delete.
      */
@@ -101,16 +98,16 @@ public class SubstitutionFileUtil
         }
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            if(files != null) {
+            if (files != null) {
                 for (File f : files) {
                     removeDir(f);
                 }
             }
         }
         if (!file.delete()) {
-        	if (_logger.isLoggable(Level.FINE)) {
-        		_logger.log(Level.FINE, _strings.get("failureInFileDeletion", file.getAbsolutePath()));
-        	}
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, _strings.get("failureInFileDeletion", file.getAbsolutePath()));
+            }
         }
     }
 }

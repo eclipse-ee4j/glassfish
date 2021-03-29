@@ -27,8 +27,9 @@ import jakarta.annotation.PostConstruct;
  * @author tjquinn
  */
 public class PostConstructRunner {
-    
-    public static void runPostConstructs(final Object obj) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, PrivilegedActionException {
+
+    public static void runPostConstructs(final Object obj)
+            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, PrivilegedActionException {
         /*
          * As we ascend the hierarchy, record the @PostConstruct methods we find
          * at each level at the beginning of the list.  After we have processed
@@ -37,7 +38,7 @@ public class PostConstructRunner {
          * from the top of the hierarchy down.
          */
         final LinkedList<Method> postConstructMethods = new LinkedList<Method>();
-        for (ClassLineageIterator cIT = new ClassLineageIterator(obj.getClass()); cIT.hasNext(); ) {
+        for (ClassLineageIterator cIT = new ClassLineageIterator(obj.getClass()); cIT.hasNext();) {
             final Class<?> c = cIT.next();
             for (Method m : c.getDeclaredMethods()) {
                 /*
@@ -48,24 +49,23 @@ public class PostConstructRunner {
                  * the injection manager implementation.
                  */
                 if (m.getAnnotation(PostConstruct.class) != null) {
-                    if ( ( ! PostConstruct.class.isAssignableFrom(c)) || ! m.getName().equals("postConstruct")) {
+                    if ((!PostConstruct.class.isAssignableFrom(c)) || !m.getName().equals("postConstruct")) {
                         postConstructMethods.addFirst(m);
                     }
                 }
             }
         }
         for (final Method m : postConstructMethods) {
-            java.security.AccessController.doPrivileged(
-                new java.security.PrivilegedExceptionAction() {
-                    public java.lang.Object run() throws Exception {
-                        if( !m.isAccessible() ) {
-                            m.setAccessible(true);
-                        }
-                        m.invoke(obj);
-                        return null;
+            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                public java.lang.Object run() throws Exception {
+                    if (!m.isAccessible()) {
+                        m.setAccessible(true);
                     }
-                });
+                    m.invoke(obj);
+                    return null;
+                }
+            });
         }
     }
-    
+
 }

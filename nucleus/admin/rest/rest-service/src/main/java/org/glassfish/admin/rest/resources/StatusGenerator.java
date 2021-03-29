@@ -42,7 +42,6 @@ import org.glassfish.admin.rest.generator.ClassWriter;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData.ParameterMetaData;
 
-
 import org.glassfish.admin.rest.generator.ResourcesGenerator;
 import org.glassfish.admin.rest.generator.ResourcesGeneratorBase;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
@@ -87,10 +86,10 @@ public class StatusGenerator extends AbstractResource {
     }
 
     @GET
-    @Produces({"text/plain"})
+    @Produces({ "text/plain" })
     public String getPlain() {
-//        status.append("\n------------------------");
-//        status.append("Status of Command usage\n");
+        //        status.append("\n------------------------");
+        //        status.append("Status of Command usage\n");
         try {
             Domain entity = serviceLocator.getService(Domain.class);
             Dom dom = Dom.unwrap(entity);
@@ -133,7 +132,6 @@ public class StatusGenerator extends AbstractResource {
             status.append(ss + "\n");
         }
 
-
         status.append("\n------------------------");
         status.append("Commands to Resources Mapping Usage in REST Admin:\n");
 
@@ -175,7 +173,7 @@ public class StatusGenerator extends AbstractResource {
     }
 
     @GET
-    @Produces({MediaType.TEXT_HTML})
+    @Produces({ MediaType.TEXT_HTML })
     public String getHtml() {
         try {
             Domain entity = serviceLocator.getService(Domain.class);
@@ -200,8 +198,7 @@ public class StatusGenerator extends AbstractResource {
             allCommands.remove(ss);
         }
 
-        status.append("</ul>\n<hr/>\n")
-                .append("<h4>Missing Commands not used in REST Admin</h4>\n<ul>\n");
+        status.append("</ul>\n<hr/>\n").append("<h4>Missing Commands not used in REST Admin</h4>\n<ul>\n");
 
         for (String ss : allCommands) {
             if (hasTargetParam(ss)) {
@@ -211,35 +208,29 @@ public class StatusGenerator extends AbstractResource {
             }
         }
 
-        status.append("</ul>\n<hr/>\n")
-                .append("<h4>REST-REDIRECT Commands defined on ConfigBeans</h4>\n<ul>\n");
+        status.append("</ul>\n<hr/>\n").append("<h4>REST-REDIRECT Commands defined on ConfigBeans</h4>\n<ul>\n");
 
         for (String ss : restRedirectCommands) {
             status.append("<li>").append(ss).append("</li>\n");
         }
 
-
-        status.append("</ul>\n<hr/>\n")
-                .append("<h4>Commands to Resources Mapping Usage in REST Admin</h4>\n")
+        status.append("</ul>\n<hr/>\n").append("<h4>Commands to Resources Mapping Usage in REST Admin</h4>\n")
                 .append("<table border=\"1\" style=\"border-collapse: collapse\">\n")
                 .append("<tr><th>Command</th><th>Target</th><th>Resource</th></tr>\n");
 
         Iterator<Map.Entry<String, String>> entryIterator = commandsToResources.entrySet().iterator();
         while (entryIterator.hasNext()) {
             Map.Entry<String, String> entry = entryIterator.next();
-            status.append("<tr><td>").append(entry.getKey()).append("</td><td>")
-                    .append(hasTargetParam(entry.getKey()) ? "target" : "").append("</td><td>")
-                    .append(entry.getValue()).append("</td></tr>\n");
+            status.append("<tr><td>").append(entry.getKey()).append("</td><td>").append(hasTargetParam(entry.getKey()) ? "target" : "")
+                    .append("</td><td>").append(entry.getValue()).append("</td></tr>\n");
         }
-        status.append("</table>\n<hr/>\n")
-                .append("<h4>Resources with Delete Commands in REST Admin (not counting RESTREDIRECT)</h4>\n")
+        status.append("</table>\n<hr/>\n").append("<h4>Resources with Delete Commands in REST Admin (not counting RESTREDIRECT)</h4>\n")
                 .append("<table border=\"1\" style=\"border-collapse: collapse\">\n")
                 .append("<tr><th>Resource</th><th>Delete Command</th></tr>\n");
         entryIterator = resourcesToDeleteCommands.entrySet().iterator();
         while (entryIterator.hasNext()) {
             Map.Entry<String, String> entry = entryIterator.next();
-            status.append("<tr><td>").append(entry.getKey())
-                    .append("</td><td>").append(entry.getValue()).append("</td></tr>\n");
+            status.append("<tr><td>").append(entry.getKey()).append("</td><td>").append(entry.getValue()).append("</td></tr>\n");
         }
         status.append("</table>");
 
@@ -266,8 +257,7 @@ public class StatusGenerator extends AbstractResource {
         CommandRunner cr = serviceLocator.getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();
         ParameterMap parameters = new ParameterMap();
-        cr.getCommandInvocation("list-commands", ar, getSubject())
-                .parameters(parameters).execute();
+        cr.getCommandInvocation("list-commands", ar, getSubject()).parameters(parameters).execute();
         List<ActionReport.MessagePart> children = ar.getTopMessagePart().getChildren();
         for (ActionReport.MessagePart part : children) {
             allCommands.add(part.getMessage());
@@ -299,8 +289,8 @@ public class StatusGenerator extends AbstractResource {
         @Override
         public void createGetCommandResourcePaths(List<CommandResourceMetaData> commandMetaData) {
             for (CommandResourceMetaData metaData : commandMetaData) {
-//                StatusGenerator.this.status.append("   ");
-//                StatusGenerator.this.status.append(metaData.command);
+                //                StatusGenerator.this.status.append("   ");
+                //                StatusGenerator.this.status.append(metaData.command);
                 commandsUsed.add(metaData.command);
 
                 if (commandsToResources.containsKey(metaData.command)) {
@@ -311,10 +301,10 @@ public class StatusGenerator extends AbstractResource {
                     commandsToResources.put(metaData.command, className);
                 }
 
-//                StatusGenerator.this.status.append("\n");
+                //                StatusGenerator.this.status.append("\n");
             }
 
-//            StatusGenerator.this.status.append("\n");
+            //            StatusGenerator.this.status.append("\n");
 
         }
 
@@ -323,7 +313,8 @@ public class StatusGenerator extends AbstractResource {
         }
 
         @Override
-        public void createCommandResourceConstructor(String commandResourceClassName, String commandName, String httpMethod, boolean linkedToParent, ParameterMetaData[] commandParams, String commandDisplayName, String commandAction) {
+        public void createCommandResourceConstructor(String commandResourceClassName, String commandName, String httpMethod,
+                boolean linkedToParent, ParameterMetaData[] commandParams, String commandDisplayName, String commandAction) {
         }
 
         @Override
@@ -336,9 +327,9 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetDeleteCommand(String commandName) {
-//            StatusGenerator.this.status.append("   ");
-//            StatusGenerator.this.status.append(commandName);
-//            StatusGenerator.this.status.append("\n");
+            //            StatusGenerator.this.status.append("   ");
+            //            StatusGenerator.this.status.append(commandName);
+            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
@@ -352,9 +343,9 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetPostCommand(String commandName) {
-//            StatusGenerator.this.status.append("   ");
-//            StatusGenerator.this.status.append(commandName);
-//            StatusGenerator.this.status.append("\n");
+            //            StatusGenerator.this.status.append("   ");
+            //            StatusGenerator.this.status.append(commandName);
+            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
@@ -376,9 +367,9 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetPostCommandForCollectionLeafResource(String commandName) {
-//            StatusGenerator.this.status.append("   ");
-//            StatusGenerator.this.status.append(commandName);
-//            StatusGenerator.this.status.append("\n");
+            //            StatusGenerator.this.status.append("   ");
+            //            StatusGenerator.this.status.append(commandName);
+            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
@@ -391,9 +382,9 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetDeleteCommandForCollectionLeafResource(String commandName) {
-//            StatusGenerator.this.status.append("   ");
-//            StatusGenerator.this.status.append(commandName);
-//            StatusGenerator.this.status.append("\n");
+            //            StatusGenerator.this.status.append("   ");
+            //            StatusGenerator.this.status.append(commandName);
+            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
@@ -435,7 +426,6 @@ public class StatusGenerator extends AbstractResource {
                 propsI18N.setProperty(key + ".help", a);
             }
 
-
             Class<? extends ConfigBeanProxy> cbp = null;
             try {
                 cbp = (Class<? extends ConfigBeanProxy>) model.classLoaderHolder.loadClass(model.targetTypeName);
@@ -461,7 +451,6 @@ public class StatusGenerator extends AbstractResource {
             if (command != null) {
                 Collection<CommandModel.ParamModel> params;
                 params = getParamMetaData(command);
-
 
                 Iterator<CommandModel.ParamModel> iterator = params.iterator();
                 CommandModel.ParamModel paramModel;

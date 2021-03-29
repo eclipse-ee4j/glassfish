@@ -47,28 +47,29 @@ import static org.glassfish.admin.rest.resources.TemplateExecCommand.localString
 
 /**
  *
- * @author ludovic champenois ludo@dev.java.net
- * Code moved from generated classes to here. Gen code inherits from this template class
- * that contains the logic for mapped commands RS Resources
+ * @author ludovic champenois ludo@dev.java.net Code moved from generated classes to here. Gen code inherits from this
+ * template class that contains the logic for mapped commands RS Resources
  *
  */
-@Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5"})
+@Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
 public class TemplateCommandPostResource extends TemplateExecCommand {
 
-    public TemplateCommandPostResource(String resourceName, String commandName, String commandMethod, String commandAction, String commandDisplayName, boolean isLinkedToParent) {
+    public TemplateCommandPostResource(String resourceName, String commandName, String commandMethod, String commandAction,
+            String commandDisplayName, boolean isLinkedToParent) {
         super(resourceName, commandName, commandMethod, commandAction, commandDisplayName, isLinkedToParent);
     }
 
     // ---------------- POST
 
     @POST
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response processPostLegacyFormat(ParameterMap data) {
         if (data == null) {
             data = new ParameterMap();
         }
         if (data.containsKey("error")) {
-            String errorMessage = localStrings.getLocalString("rest.request.parsing.error", "Unable to parse the input entity. Please check the syntax.");
+            String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
+                    "Unable to parse the input entity. Please check the syntax.");
             throw new WebApplicationException(ResourceUtil.getResponse(400, /*parsing error*/ errorMessage, requestHeaders, uriInfo));
         }
         return super.executeCommandLegacyFormat(preprocessData(data));
@@ -76,13 +77,14 @@ public class TemplateCommandPostResource extends TemplateExecCommand {
 
     @POST
     @Consumes(Constants.MEDIA_TYPE_JSON)
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public CommandResult processPost(ParameterMap data) {
         if (data == null) {
             data = new ParameterMap();
         }
         if (data.containsKey("error")) {
-            String errorMessage = localStrings.getLocalString("rest.request.parsing.error", "Unable to parse the input entity. Please check the syntax.");
+            String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
+                    "Unable to parse the input entity. Please check the syntax.");
             throw new WebApplicationException(ResourceUtil.getResponse(400, /*parsing error*/ errorMessage, requestHeaders, uriInfo));
         }
         return super.executeCommand(preprocessData(data));
@@ -112,14 +114,15 @@ public class TemplateCommandPostResource extends TemplateExecCommand {
     // ---------------- SSE POST
 
     @POST
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces(SseFeature.SERVER_SENT_EVENTS+";qs=0.5")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces(SseFeature.SERVER_SENT_EVENTS + ";qs=0.5")
     public Response processSsePost(ParameterMap data) {
         if (data == null) {
             data = new ParameterMap();
         }
         if (data.containsKey("error")) {
-            String errorMessage = localStrings.getLocalString("rest.request.parsing.error", "Unable to parse the input entity. Please check the syntax.");
+            String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
+                    "Unable to parse the input entity. Please check the syntax.");
             throw new WebApplicationException(ResourceUtil.getResponse(400, /*parsing error*/ errorMessage, requestHeaders, uriInfo));
         }
         return super.executeCommandAsSse(preprocessData(data));
@@ -127,13 +130,13 @@ public class TemplateCommandPostResource extends TemplateExecCommand {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(SseFeature.SERVER_SENT_EVENTS+";qs=0.5")
+    @Produces(SseFeature.SERVER_SENT_EVENTS + ";qs=0.5")
     public Response ssePost(FormDataMultiPart formData) {
         return processSsePost(createDataBasedOnForm(formData));
     }
 
     @POST
-    @Produces(SseFeature.SERVER_SENT_EVENTS+";qs=0.5")
+    @Produces(SseFeature.SERVER_SENT_EVENTS + ";qs=0.5")
     public Response processSsePost() {
         try {
             return processSsePost(new ParameterMap());
@@ -150,7 +153,7 @@ public class TemplateCommandPostResource extends TemplateExecCommand {
     }
 
     @GET
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public String get() {
         try {
             return options();

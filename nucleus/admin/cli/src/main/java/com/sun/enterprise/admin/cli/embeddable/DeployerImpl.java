@@ -48,20 +48,19 @@ import java.util.logging.Logger;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 
 /**
- * This is an implementation of {@link Deployer}.
- * Unlike the other EmbeddedDeployer, this deployer uses admin command execution
- * framework to execute the underlying command, as a result we don't by-pass things like command replication code.
+ * This is an implementation of {@link Deployer}. Unlike the other EmbeddedDeployer, this deployer uses admin command
+ * execution framework to execute the underlying command, as a result we don't by-pass things like command replication
+ * code.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 
 @Service()
 @PerLookup
-@ContractsProvided({DeployerImpl.class, Deployer.class}) // bcos Deployer interface can't depend on HK2, we need ContractProvided here.
+@ContractsProvided({ DeployerImpl.class, Deployer.class }) // bcos Deployer interface can't depend on HK2, we need ContractProvided here.
 public class DeployerImpl implements Deployer {
 
-    private static final Logger logger =
-            Logger.getLogger(DeployerImpl.class.getPackage().getName());
+    private static final Logger logger = Logger.getLogger(DeployerImpl.class.getPackage().getName());
 
     /*
      * This class currently copies generic URIs to a file before processing. Once deployment backend
@@ -70,7 +69,7 @@ public class DeployerImpl implements Deployer {
 
     @Inject
     ServiceLocator habitat;
-    
+
     @Inject
     private InternalSystemAdministrator kernelIdentity;
 
@@ -95,8 +94,8 @@ public class DeployerImpl implements Deployer {
             String command = "deploy";
             ActionReport actionReport = executer.createActionReport();
             ParameterMap commandParams = executer.getParameters(command, newParams);
-            org.glassfish.api.admin.CommandRunner.CommandInvocation inv =
-                    executer.getCommandRunner().getCommandInvocation(command, actionReport, kernelIdentity.getSubject());
+            org.glassfish.api.admin.CommandRunner.CommandInvocation inv = executer.getCommandRunner().getCommandInvocation(command,
+                    actionReport, kernelIdentity.getSubject());
             inv.parameters(commandParams);
             // set outputbound payload if --retrieve option is specified.
             Payload.Outbound outboundPayload = null;
@@ -111,7 +110,7 @@ public class DeployerImpl implements Deployer {
             if (outboundPayload != null) {
                 extractPayload(outboundPayload, actionReport, retrieve);
             }
-            
+
             return actionReport.getResultType(String.class);
         } catch (CommandException e) {
             throw new GlassFishException(e);
@@ -201,15 +200,13 @@ public class DeployerImpl implements Deployer {
     }
 
     /**
-     * Extract the payload (client side stub jar files) to the directory specified via
-     * --retrieve option.
+     * Extract the payload (client side stub jar files) to the directory specified via --retrieve option.
      *
      * @param outboundPayload Payload to be extracted
-     * @param actionReport    ActionReport of the deploy command.
-     * @param retrieveDir     Directory where the payload should be extracted to.
+     * @param actionReport ActionReport of the deploy command.
+     * @param retrieveDir Directory where the payload should be extracted to.
      */
-    private void extractPayload(Payload.Outbound outboundPayload,
-                                ActionReport actionReport, File retrieveDir) {
+    private void extractPayload(Payload.Outbound outboundPayload, ActionReport actionReport, File retrieveDir) {
         File payloadZip = null;
         FileOutputStream payloadOutputStream = null;
         FileInputStream payloadInputStream = null;
@@ -240,11 +237,10 @@ public class DeployerImpl implements Deployer {
             * Use the temp file's contents as the inbound payload to
             * correctly process the downloaded files.
             */
-            final PayloadFilesManager pfm = new PayloadFilesManager.Perm(
-                    retrieveDir, null /* no action report to record extraction results */, logger);
+            final PayloadFilesManager pfm = new PayloadFilesManager.Perm(retrieveDir,
+                    null /* no action report to record extraction results */, logger);
             payloadInputStream = new FileInputStream(payloadZip);
-            final PayloadImpl.Inbound inboundPayload = PayloadImpl.Inbound.newInstance(
-                    "application/zip", payloadInputStream);
+            final PayloadImpl.Inbound inboundPayload = PayloadImpl.Inbound.newInstance("application/zip", payloadInputStream);
             pfm.processParts(inboundPayload); // explodes the payloadZip.
         } catch (Exception ex) {
             // Log error and ignore exception.
@@ -266,8 +262,7 @@ public class DeployerImpl implements Deployer {
             }
             if (payloadZip != null) {
                 if (payloadZip.delete() == false) {
-                    logger.log(Level.WARNING, "Cannot delete payload: {0}", 
-                            payloadZip.toString());
+                    logger.log(Level.WARNING, "Cannot delete payload: {0}", payloadZip.toString());
                 }
             }
         }

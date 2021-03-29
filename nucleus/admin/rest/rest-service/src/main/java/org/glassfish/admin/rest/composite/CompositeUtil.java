@@ -106,14 +106,13 @@ public class CompositeUtil {
     }
 
     /**
-     * This method will return a generated concrete class that implements the interface requested, as well as any
-     * interfaces intended to extend the base model interface.  Model extensions must be annotated with
+     * This method will return a generated concrete class that implements the interface requested, as well as any interfaces
+     * intended to extend the base model interface. Model extensions must be annotated with
      *
-     * @param modelIface   The base interface for the desired data model
+     * @param modelIface The base interface for the desired data model
      * @return An instance of a concrete class implementing the requested interfaces
-     * @throws Exception
-     * @RestModelExtension, and must be compiled with rest-annotation-processor library on the compile classpath
-     * for metadata generation.
+     * @throws Exception @RestModelExtension, and must be compiled with rest-annotation-processor library on the compile
+     * classpath for metadata generation.
      */
     public synchronized <T> T getModel(Class<T> modelIface) {
         String className = modelIface.getName() + "Impl";
@@ -155,8 +154,8 @@ public class CompositeUtil {
         }
     }
 
-        public Set<Class<?>> getRestModels() {
-        Set<Class<?>>classes = new HashSet<Class<?>>();
+    public Set<Class<?>> getRestModels() {
+        Set<Class<?>> classes = new HashSet<Class<?>>();
         for (ActiveDescriptor ad : Globals.getDefaultBaseServiceLocator()
                 .getDescriptors(BuilderHelper.createContractFilter(RestModel.class.getName()))) {
             try {
@@ -170,8 +169,7 @@ public class CompositeUtil {
     }
 
     /**
-     * Find and execute all resource extensions for the specified base resource and HTTP method
-     * TODO: method enum?
+     * Find and execute all resource extensions for the specified base resource and HTTP method TODO: method enum?
      *
      * @param baseClass
      * @param data
@@ -195,11 +193,9 @@ public class CompositeUtil {
         return void.class;
     }
 
-    public ParameterMap addToParameterMap(ParameterMap parameters, String basePath,
-            Class<?> configBean, Object source, Subject subject) {
+    public ParameterMap addToParameterMap(ParameterMap parameters, String basePath, Class<?> configBean, Object source, Subject subject) {
         String name;
-        Map<String, String> currentValues =
-                Util.getCurrentValues(basePath, Globals.getDefaultHabitat(), subject);
+        Map<String, String> currentValues = Util.getCurrentValues(basePath, Globals.getDefaultHabitat(), subject);
         for (Method cbMethod : configBean.getMethods()) {
             name = cbMethod.getName();
             if (name.startsWith("set")/* && (cbMethod.getAnnotation(Attribute.class) !=null)*/) {
@@ -233,7 +229,7 @@ public class CompositeUtil {
      * Convert the given <code>RestModel</code> encoded as JSON to a live Java Object.
      *
      * @param modelClass The target <code>RestModel</code> type
-     * @param json       The json encoding of the object
+     * @param json The json encoding of the object
      * @return
      */
     public <T> T unmarshallClass(Locale locale, Class<T> modelClass, JSONObject json) throws JSONException {
@@ -267,7 +263,7 @@ public class CompositeUtil {
         if (!(value instanceof String)) {
             return false;
         }
-        String s = (String)value;
+        String s = (String) value;
         if (!JsonUtil.CONFIDENTIAL_PROPERTY_SET.equals(s)) {
             return false;
         }
@@ -281,13 +277,11 @@ public class CompositeUtil {
         if (ParameterizedType.class.isAssignableFrom(param0.getClass())) {
             type = ((ParameterizedType) param0).getActualTypeArguments()[0];
         } else {
-            isArray = ((Class<?>)param0).isArray();
-            type = ((Class<?>)param0).getComponentType();
+            isArray = ((Class<?>) param0).isArray();
+            type = ((Class<?>) param0).getComponentType();
         }
         // TODO: We either have a List<T> or T[]. While this works, perhaps we should only support List<T>. It's cleaner.
-        Object values = isArray ?
-                Array.newInstance((Class<?>) type, array.length()) :
-                new ArrayList();
+        Object values = isArray ? Array.newInstance((Class<?>) type, array.length()) : new ArrayList();
 
         for (int i = 0; i < array.length(); i++) {
             Object element = array.get(i);
@@ -295,13 +289,13 @@ public class CompositeUtil {
                 if (isArray) {
                     Array.set(values, i, unmarshallClass(locale, (Class) type, (JSONObject) element));
                 } else {
-                    ((List)values).add(unmarshallClass(locale, (Class) type, (JSONObject) element));
+                    ((List) values).add(unmarshallClass(locale, (Class) type, (JSONObject) element));
                 }
             } else {
                 if (isArray) {
                     Array.set(values, i, element);
                 } else {
-                    ((List)values).add(element);
+                    ((List) values).add(element);
                 }
             }
         }
@@ -313,12 +307,12 @@ public class CompositeUtil {
             m.invoke(o, args);
         } catch (IllegalArgumentException iae) {
             // TODO: i18n
-            String message = "An exception occured while trying to set the value for the property '" + 
-                    attribute + "': " + iae.getLocalizedMessage();
+            String message = "An exception occured while trying to set the value for the property '" + attribute + "': "
+                    + iae.getLocalizedMessage();
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(message).build());
         } catch (Exception e) {
-            String message = "An exception occured while trying to set the value for the property '" + 
-                    attribute + "': " + e.getLocalizedMessage();
+            String message = "An exception occured while trying to set the value for the property '" + attribute + "': "
+                    + e.getLocalizedMessage();
             throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).build());
         }
     }
@@ -358,14 +352,12 @@ public class CompositeUtil {
 
     public <T> String getValidationFailureMessages(Locale locale, Set<ConstraintViolation<T>> constraintViolations, T model) {
         StringBuilder msg = new StringBuilder(adminStrings.getLocalString("rest.model.validationFailure",
-                "Properties for model {0} violate the following constraints: ",
-                model.getClass().getSimpleName()));
+                "Properties for model {0} violate the following constraints: ", model.getClass().getSimpleName()));
         String sep = "";
         String violationMsg = adminStrings.getLocalString("rest.model.validationFailure.reason",
                 "on property [ {1} ] violation reason [ {0} ]");
         for (ConstraintViolation cv : constraintViolations) {
-            msg.append(sep)
-                    .append(MessageFormat.format(violationMsg, cv.getMessage(), cv.getPropertyPath()));
+            msg.append(sep).append(MessageFormat.format(violationMsg, cv.getMessage(), cv.getPropertyPath()));
 
             sep = "\n";
         }
@@ -381,8 +373,7 @@ public class CompositeUtil {
     public void applyChanges(Map<String, String> changes, String basePath, Subject subject) {
         RestActionReporter ar = Util.applyChanges(changes, basePath, subject);
         if (!ar.getActionExitCode().equals(ExitCode.SUCCESS)) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).
-                    entity(ar.getCombinedMessage()).build());
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ar.getCombinedMessage()).build());
         }
     }
 
@@ -420,7 +411,6 @@ public class CompositeUtil {
     public ActionReporter executeDeleteCommandManaged(Subject subject, String command, ParameterMap parameters) {
         return executeCommand(subject, command, parameters, Status.BAD_REQUEST, true, true, true);
     }
-
 
     /**
      * Execute a writing <code>AdminCommand</code> with no parameters.
@@ -486,16 +476,17 @@ public class CompositeUtil {
      * @param command
      * @param parameters
      * @param throwBadRequest (vs. NOT_FOUND)
-     * @param throwOnWarning  (vs.ignore warning)
+     * @param throwOnWarning (vs.ignore warning)
      * @return
      */
-    public ActionReporter executeCommand(Subject subject, String command, ParameterMap parameters, Status status, boolean includeFailureMessage, boolean throwOnWarning, boolean managed) {
+    public ActionReporter executeCommand(Subject subject, String command, ParameterMap parameters, Status status,
+            boolean includeFailureMessage, boolean throwOnWarning, boolean managed) {
         RestActionReporter ar = ResourceUtil.runCommand(command, parameters, subject, managed);
         ExitCode code = ar.getActionExitCode();
         if (code.equals(ExitCode.FAILURE) || (code.equals(ExitCode.WARNING) && throwOnWarning)) {
             Throwable t = ar.getFailureCause();
             if (t instanceof SecurityException) {
-              throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).build());
+                throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).build());
             }
             if (includeFailureMessage) {
                 throw new WebApplicationException(Response.status(status).entity(ar.getCombinedMessage()).build());
@@ -506,17 +497,18 @@ public class CompositeUtil {
         return ar;
     }
 
-    /** Execute an <code>AdminCommand</code> with the specified parameters and
-     * return EventOutput suitable for SSE.
+    /**
+     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
      */
     public EventOutput executeSseCommand(Subject subject, String command, ParameterMap parameters) {
         return executeSseCommand(subject, command, parameters, null);
     }
 
-    /** Execute an <code>AdminCommand</code> with the specified parameters and
-     * return EventOutput suitable for SSE.
+    /**
+     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
      */
-    public EventOutput executeSseCommand(Subject subject, String command, ParameterMap parameters, SseCommandHelper.ActionReportProcessor processor) {
+    public EventOutput executeSseCommand(Subject subject, String command, ParameterMap parameters,
+            SseCommandHelper.ActionReportProcessor processor) {
         return ResourceUtil.runCommandWithSse(command, parameters, subject, processor);
     }
 
@@ -524,7 +516,7 @@ public class CompositeUtil {
         return getLocale(requestHeaders.getRequestHeaders());
     }
 
-    public Locale getLocale(MultivaluedMap<String,String> requestHeaders) {
+    public Locale getLocale(MultivaluedMap<String, String> requestHeaders) {
         String hdr = requestHeaders.getFirst("Accept-Language");
         return (hdr != null) ? new Locale(hdr) : null;
     }
@@ -583,12 +575,8 @@ public class CompositeUtil {
                     }
                     if (line.charAt(0) != '#') {
                         if (!line.contains(":")) {
-                            RestLogging.restLogger.log(Level.INFO,
-                                    RestLogging.INCORRECTLY_FORMATTED_ENTRY,
-                                    new String[]{
-                                        "META-INF/restmodelextensions",
-                                        line
-                                    });
+                            RestLogging.restLogger.log(Level.INFO, RestLogging.INCORRECTLY_FORMATTED_ENTRY,
+                                    new String[] { "META-INF/restmodelextensions", line });
                         }
                         String[] entry = line.split(":");
                         String base = entry[0];
@@ -633,7 +621,7 @@ public class CompositeUtil {
         String defaultBean = null;
         if (iface.isAnnotationPresent(DefaultBeanReference.class)) {
             DefaultBeanReference beanRef = iface.getAnnotation(DefaultBeanReference.class);
-            defaultBean = beanRef.bean();   
+            defaultBean = beanRef.bean();
         }
 
         for (Method method : iface.getMethods()) {
@@ -667,9 +655,7 @@ public class CompositeUtil {
                 if (attr != null) {
                     property.put("defaultValue", attr.defaultValue());
                 }
-                Class<?> type = isGetter
-                        ? method.getReturnType()
-                        : method.getParameterTypes()[0];
+                Class<?> type = isGetter ? method.getReturnType() : method.getParameterTypes()[0];
                 property.put("type", type);
             }
         }
@@ -718,8 +704,7 @@ public class CompositeUtil {
      * @return
      */
     private String getInternalTypeString(Class<?> type) {
-        return type.isPrimitive()
-                ? Primitive.getPrimitive(type.getName()).getInternalType()
+        return type.isPrimitive() ? Primitive.getPrimitive(type.getName()).getInternalType()
                 : (type.isArray() ? getInternalName(type.getName()) : ("L" + getInternalName(type.getName() + ";")));
     }
 
@@ -738,10 +723,7 @@ public class CompositeUtil {
             ifaceNames[i++] = iface.getName().replace(".", "/");
         }
         className = getInternalName(className);
-        classWriter.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className,
-                null,
-                "org/glassfish/admin/rest/composite/RestModelImpl",
-                ifaceNames);
+        classWriter.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className, null, "org/glassfish/admin/rest/composite/RestModelImpl", ifaceNames);
 
         // Add @XmlRootElement
         classWriter.visitAnnotation("Ljakarta/xml/bind/annotation/XmlRootElement;", true).visitEnd();
@@ -753,8 +735,8 @@ public class CompositeUtil {
     }
 
     /**
-     * This method creates the default constructor for the class. Default values are set for any @Attribute defined with
-     * a defaultValue.
+     * This method creates the default constructor for the class. Default values are set for any @Attribute defined with a
+     * defaultValue.
      *
      */
     private void createConstructor(ClassWriter cw, String className, Map<String, Map<String, Object>> properties) {
@@ -778,10 +760,10 @@ public class CompositeUtil {
 
     /**
      * This method generates the byte code to set the default value for a given field. Efforts are made to determine the
-     * best way to create the correct value. If the field is a primitive, the one-arg, String constructor of the
-     * appropriate wrapper class is called to generate the value. If the field is not a primitive, a one-arg, String
-     * constructor is requested to build the value. If both of these attempts fail, the default value is set using the
-     * String representation as given via the @Attribute annotation.
+     * best way to create the correct value. If the field is a primitive, the one-arg, String constructor of the appropriate
+     * wrapper class is called to generate the value. If the field is not a primitive, a one-arg, String constructor is
+     * requested to build the value. If both of these attempts fail, the default value is set using the String
+     * representation as given via the @Attribute annotation.
      * <p/>
      * TODO: it may make sense to treat primitives here as non-String types.
      */
@@ -792,28 +774,28 @@ public class CompositeUtil {
 
         if (fieldClass.isPrimitive()) {
             switch (Primitive.getPrimitive(type)) {
-                case SHORT:
-                    value = Short.valueOf(defaultValue);
-                    break;
-                case LONG:
-                    value = Long.valueOf(defaultValue);
-                    break;
-                case INT:
-                    value = Integer.valueOf(defaultValue);
-                    break;
-                case FLOAT:
-                    value = Float.valueOf(defaultValue);
-                    break;
-                case DOUBLE:
-                    value = Double.valueOf(defaultValue);
-                    break;
-//                case CHAR: value = Character.valueOf(defaultValue.charAt(0)); break;
-                case BYTE:
-                    value = Byte.valueOf(defaultValue);
-                    break;
-                case BOOLEAN:
-                    value = Boolean.valueOf(defaultValue);
-                    break;
+            case SHORT:
+                value = Short.valueOf(defaultValue);
+                break;
+            case LONG:
+                value = Long.valueOf(defaultValue);
+                break;
+            case INT:
+                value = Integer.valueOf(defaultValue);
+                break;
+            case FLOAT:
+                value = Float.valueOf(defaultValue);
+                break;
+            case DOUBLE:
+                value = Double.valueOf(defaultValue);
+                break;
+            //                case CHAR: value = Character.valueOf(defaultValue.charAt(0)); break;
+            case BYTE:
+                value = Byte.valueOf(defaultValue);
+                break;
+            case BOOLEAN:
+                value = Boolean.valueOf(defaultValue);
+                break;
             }
             method.visitVarInsn(ALOAD, 0);
             method.visitLdcInsn(value);
@@ -858,9 +840,7 @@ public class CompositeUtil {
         getter.visitCode();
         getter.visitVarInsn(ALOAD, 0);
         getter.visitFieldInsn(GETFIELD, className, getPropertyName(name), internalType);
-        getter.visitInsn(type.isPrimitive()
-                ? Primitive.getPrimitive(internalType).getReturnOpcode()
-                : ARETURN);
+        getter.visitInsn(type.isPrimitive() ? Primitive.getPrimitive(internalType).getReturnOpcode() : ARETURN);
         getter.visitMaxs(0, 0);
         getter.visitEnd();
         Map<String, Map<String, Object>> annotations = (Map<String, Map<String, Object>>) props.get("annotations");
@@ -888,9 +868,7 @@ public class CompositeUtil {
         MethodVisitor setter = cw.visitMethod(ACC_PUBLIC, "set" + name, "(" + internalType + ")V", null, null);
         setter.visitCode();
         setter.visitVarInsn(ALOAD, 0);
-        setter.visitVarInsn(type.isPrimitive()
-                ? Primitive.getPrimitive(internalType).getSetOpCode()
-                : ALOAD, 1);
+        setter.visitVarInsn(type.isPrimitive() ? Primitive.getPrimitive(internalType).getSetOpCode() : ALOAD, 1);
         setter.visitFieldInsn(PUTFIELD, className, getPropertyName(name), internalType);
         setter.visitVarInsn(ALOAD, 0);
         setter.visitLdcInsn(name);
@@ -924,22 +902,20 @@ public class CompositeUtil {
         }
         final java.lang.reflect.Method clM = jm;
         try {
-            java.security.AccessController.doPrivileged(
-                    new java.security.PrivilegedExceptionAction() {
-                        @Override
-                        public java.lang.Object run() throws Exception {
-                            if (!clM.isAccessible()) {
-                                clM.setAccessible(true);
-                            }
-                            return null;
-                        }
-                    });
+            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                @Override
+                public java.lang.Object run() throws Exception {
+                    if (!clM.isAccessible()) {
+                        clM.setAccessible(true);
+                    }
+                    return null;
+                }
+            });
 
             RestLogging.restLogger.log(Level.FINEST, "Loading bytecode for {0}", className);
-            final ClassLoader classLoader =
-                    similarClass.getClassLoader();
+            final ClassLoader classLoader = similarClass.getClassLoader();
             //Thread.currentThread().getContextClassLoader();
-//                    Thread.currentThread().getContextClassLoader();
+            //                    Thread.currentThread().getContextClassLoader();
             try {
                 clM.invoke(classLoader, className, byteContent, 0, byteContent.length, pd);
             } catch (Exception e) {
@@ -960,14 +936,13 @@ public class CompositeUtil {
         if (beanValidator != null) {
             return;
         }
-        ClassLoader cl = System.getSecurityManager() == null
-                ? Thread.currentThread().getContextClassLoader()
+        ClassLoader cl = System.getSecurityManager() == null ? Thread.currentThread().getContextClassLoader()
                 : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-            @Override
-            public ClassLoader run() {
-                return Thread.currentThread().getContextClassLoader();
-            }
-        });
+                    @Override
+                    public ClassLoader run() {
+                        return Thread.currentThread().getContextClassLoader();
+                    }
+                });
         try {
             Thread.currentThread().setContextClassLoader(Validation.class.getClassLoader());
             ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();

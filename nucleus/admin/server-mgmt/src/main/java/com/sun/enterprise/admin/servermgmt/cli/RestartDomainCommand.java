@@ -32,17 +32,16 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import jakarta.inject.Inject;
 
 /**
- * THe restart-domain command.
- * The local portion of this command is only used to block until:
- * <ul><li>the old server dies
+ * THe restart-domain command. The local portion of this command is only used to block until:
+ * <ul>
+ * <li>the old server dies
  * <li>the new server starts
  * </ul>
  * Tactics:
  * <ul>
  * <li>Get the uptime for the current server
  * <li>start the remote Restart command
- * <li>Call uptime in a loop until the uptime number is less than
- * the original uptime
+ * <li>Call uptime in a loop until the uptime number is less than the original uptime
  *
  * @author bnevins
  * @author Bill Shannon
@@ -56,24 +55,21 @@ public class RestartDomainCommand extends StopDomainCommand {
 
     @Inject
     private ServiceLocator habitat;
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(RestartDomainCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(RestartDomainCommand.class);
 
     /**
      * Execute the restart-domain command.
      */
     @Override
-    protected void doCommand()
-            throws CommandException {
+    protected void doCommand() throws CommandException {
 
-        if(!isRestartable())
+        if (!isRestartable())
             throw new CommandException(Strings.get("restartDomain.notRestartable"));
 
         int oldServerPid = getServerPid(); // might be < 0
 
         // run the remote restart-domain command and throw away the output
-        RemoteCLICommand cmd =
-                new RemoteCLICommand("restart-domain", programOpts, env);
+        RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);
 
         if (debug != null)
             cmd.executeAndReturnOutput("restart-domain", "--debug", debug.toString());
@@ -91,8 +87,7 @@ public class RestartDomainCommand extends StopDomainCommand {
     @Override
     protected int dasNotRunning() throws CommandException {
         if (!isLocal())
-            throw new CommandException(
-                Strings.get("restart.dasNotRunningNoRestart"));
+            throw new CommandException(Strings.get("restart.dasNotRunningNoRestart"));
         logger.warning(strings.get("restart.dasNotRunning"));
         CLICommand cmd = habitat.getService(CLICommand.class, "start-domain");
         /*

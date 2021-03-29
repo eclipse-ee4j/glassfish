@@ -27,35 +27,36 @@ import org.glassfish.api.admin.progress.ProgressStatusDTO;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusEventCreateChild;
 
-/** Provides mirroring of events into given ProgressStatus substructure.
- * Never rewrites name in base ProgressStatus (i.e. only children will have copied
- * names).
+/**
+ * Provides mirroring of events into given ProgressStatus substructure. Never rewrites name in base ProgressStatus (i.e.
+ * only children will have copied names).
  *
  * @author mmares
  */
 public class ProgressStatusClient {
-    
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ProgressStatusClient.class);
-    
+
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ProgressStatusClient.class);
+
     private ProgressStatus status;
     private final Map<String, ProgressStatus> map = new HashMap<String, ProgressStatus>();
 
-    /** Mirror incoming events and structures into given ProgressStatus.
-     * If null, CommandProgess will be created with first event or structure.
-     * @param status 
+    /**
+     * Mirror incoming events and structures into given ProgressStatus. If null, CommandProgess will be created with first
+     * event or structure.
+     * 
+     * @param status
      */
     public ProgressStatusClient(ProgressStatus status) {
         this.status = status;
     }
-    
+
     private synchronized void preventNullStatus(String name, String id) {
         if (status == null) {
             status = new CommandProgressImpl(name, id);
         }
         map.put(id, status);
     }
-    
+
     public synchronized void mirror(ProgressStatusDTO dto) {
         if (dto == null) {
             return;
@@ -63,7 +64,7 @@ public class ProgressStatusClient {
         preventNullStatus(dto.getName(), dto.getId());
         mirror(dto, status);
     }
-    
+
     private void mirror(ProgressStatusDTO dto, ProgressStatus stat) {
         //TODO: copy-paste problem because of ProgressStatusDTO and ProgressStatusBase we have to create shared interface
         stat.setTotalStepCount(dto.getTotalStepCount());
@@ -80,7 +81,7 @@ public class ProgressStatusClient {
             mirror(chld.getProgressStatus(), dst);
         }
     }
-    
+
     public synchronized void mirror(ProgressStatusBase source) {
         if (source == null) {
             return;
@@ -88,7 +89,7 @@ public class ProgressStatusClient {
         preventNullStatus(source.getName(), source.getId());
         mirror(source, status);
     }
-    
+
     private void mirror(ProgressStatusBase source, ProgressStatus stat) {
         stat.setTotalStepCount(source.getTotalStepCount());
         stat.setCurrentStepCount(source.getCurrentStepCount());
@@ -104,8 +105,9 @@ public class ProgressStatusClient {
             mirror(chld.getProgressStatus(), dst);
         }
     }
-    
-    /** Applies event on existing structures. If not appliable do nothing.
+
+    /**
+     * Applies event on existing structures. If not appliable do nothing.
      */
     public synchronized void mirror(ProgressStatusEvent event) {
         if (event == null) {
@@ -121,7 +123,7 @@ public class ProgressStatusClient {
     public synchronized ProgressStatus getProgressStatus() {
         return status;
     }
-    
+
     public static String composeMessageForPrint(CommandProgress cp) {
         if (cp == null) {
             return null;
@@ -133,14 +135,14 @@ public class ProgressStatusClient {
             if (percentage >= 0) {
                 result.append(percentage);
                 switch (result.length()) {
-                    case 1:
-                        result.insert(0, "  ");
-                        break;
-                    case 2:
-                        result.insert(0, ' ');
-                        break;
-                    default:
-                        break;
+                case 1:
+                    result.insert(0, "  ");
+                    break;
+                case 2:
+                    result.insert(0, ' ');
+                    break;
+                default:
+                    break;
                 }
                 result.append('%');
             } else {
@@ -159,5 +161,5 @@ public class ProgressStatusClient {
         }
         return result.toString();
     }
-    
+
 }

@@ -46,6 +46,7 @@ import org.glassfish.jersey.internal.util.collection.Ref;
 
 /**
  * Represents sessions with GlassFish Rest service
+ * 
  * @author Mitesh Meswani
  */
 @Path("/sessions")
@@ -57,13 +58,14 @@ public class SessionsResource extends AbstractResource {
     private Ref<Request> request;
 
     /**
-     * Get a new session with GlassFish Rest service
-     * If a request lands here when authentication has been turned on => it has been authenticated.
+     * Get a new session with GlassFish Rest service If a request lands here when authentication has been turned on => it
+     * has been authenticated.
+     * 
      * @return a new session with GlassFish Rest service
      */
     @POST
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces({MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", "text/html"})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces({ MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5", "text/html" })
     public Response create(HashMap<String, String> data) {
         if (data == null) {
             data = new HashMap<String, String>();
@@ -85,9 +87,10 @@ public class SessionsResource extends AbstractResource {
         boolean responseErrorStatusSet = false;
         Subject subject = null;
         try {
-//            subject = ResourceUtil.authenticateViaAdminRealm(Globals.getDefaultHabitat(), grizzlyRequest, hostName);
+            //            subject = ResourceUtil.authenticateViaAdminRealm(Globals.getDefaultHabitat(), grizzlyRequest, hostName);
             subject = ResourceUtil.authenticateViaAdminRealm(locatorBridge.getRemoteLocator(), grizzlyRequest, hostName);
-            isAuthorized = ResourceUtil.isAuthorized(locatorBridge.getRemoteLocator(), subject, "domain/rest-sessions/rest-session", "create");
+            isAuthorized = ResourceUtil.isAuthorized(locatorBridge.getRemoteLocator(), subject, "domain/rest-sessions/rest-session",
+                    "create");
         } catch (RemoteAdminAccessException e) {
             responseBuilder.status(FORBIDDEN);
             responseErrorStatusSet = true;
@@ -103,10 +106,11 @@ public class SessionsResource extends AbstractResource {
             if (username != null) {
                 ar.getExtraProperties().put("username", username);
             }
-            ar.getExtraProperties().put("token", sessionManager.createSession(grizzlyRequest.getRemoteAddr(), subject, chooseTimeout(restConfig)));
+            ar.getExtraProperties().put("token",
+                    sessionManager.createSession(grizzlyRequest.getRemoteAddr(), subject, chooseTimeout(restConfig)));
 
         } else {
-            if ( ! responseErrorStatusSet) {
+            if (!responseErrorStatusSet) {
                 responseBuilder.status(UNAUTHORIZED);
             }
         }
@@ -123,7 +127,7 @@ public class SessionsResource extends AbstractResource {
     }
 
     @Path("{sessionId}/")
-    public SessionResource getSessionResource(@PathParam("sessionId")String sessionId) {
+    public SessionResource getSessionResource(@PathParam("sessionId") String sessionId) {
         return new SessionResource(sessionManager, sessionId, requestHeaders, uriInfo);
     }
 }

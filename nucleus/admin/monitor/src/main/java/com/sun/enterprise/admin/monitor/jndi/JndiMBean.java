@@ -29,13 +29,13 @@ import javax.naming.NamingException;
 
 /**
  * The JndiMBean DynamicMBean interface.
+ * 
  * @author Rob Ruyak
  */
 public interface JndiMBean extends DynamicMBean {
 
     /**
-     * Gets the jndi naming entries given a particular context
-     * or subcontext.
+     * Gets the jndi naming entries given a particular context or subcontext.
      *
      * @param context The context name under which the entries live.
      * @return An array of serializable NameClassPair objects.

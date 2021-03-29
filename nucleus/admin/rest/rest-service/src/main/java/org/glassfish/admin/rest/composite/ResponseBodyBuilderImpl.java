@@ -45,4 +45,3 @@ public abstract class ResponseBodyBuilderImpl implements ResponseBodyBuilder {
 
     abstract protected ResponseBody success(final ActionReport report);
 }
-

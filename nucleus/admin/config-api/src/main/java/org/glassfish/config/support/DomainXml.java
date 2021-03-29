@@ -78,8 +78,7 @@ public abstract class DomainXml implements Populator {
     @Inject
     ConfigurationAccess configAccess;
 
-    final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(DomainXml.class);
+    final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DomainXml.class);
 
     @Override
     public void run(ConfigParser parser) throws ConfigPopulatorException {
@@ -87,9 +86,9 @@ public abstract class DomainXml implements Populator {
         lr.setLoggerName(getClass().getName());
         EarlyLogHandler.earlyMessages.add(lr);
 
-        ClassLoader parentClassLoader = (registry == null) ?
-                getClass().getClassLoader() : registry.getParentClassLoader();
-        if (parentClassLoader == null) parentClassLoader = getClass().getClassLoader();
+        ClassLoader parentClassLoader = (registry == null) ? getClass().getClassLoader() : registry.getParentClassLoader();
+        if (parentClassLoader == null)
+            parentClassLoader = getClass().getClassLoader();
 
         ServiceLocatorUtilities.addOneConstant(habitat, parentClassLoader, null, ClassLoader.class);
 
@@ -171,21 +170,18 @@ public abstract class DomainXml implements Populator {
 
         Server server = habitat.getService(Server.class, env.getInstanceName());
         if (server == null) {
-            LogRecord lr = new LogRecord(Level.SEVERE,
-                    badEnv);
+            LogRecord lr = new LogRecord(Level.SEVERE, badEnv);
             lr.setLoggerName(getClass().getName());
             EarlyLogHandler.earlyMessages.add(lr);
             return;
         }
-        ServiceLocatorUtilities.addOneConstant(habitat, server,
-                ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
+        ServiceLocatorUtilities.addOneConstant(habitat, server, ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
 
         server.getConfig().addIndex(habitat, ServerEnvironment.DEFAULT_INSTANCE_NAME);
 
         Cluster c = server.getCluster();
         if (c != null) {
-            ServiceLocatorUtilities.addOneConstant(habitat, c,
-                    ServerEnvironment.DEFAULT_INSTANCE_NAME, Cluster.class);
+            ServiceLocatorUtilities.addOneConstant(habitat, c, ServerEnvironment.DEFAULT_INSTANCE_NAME, Cluster.class);
         }
     }
 
@@ -235,8 +231,7 @@ public abstract class DomainXml implements Populator {
     private static class NoBackupException extends IOException {
 
         private NoBackupException(File configDirectory) {
-            super(localStrings.getLocalString("NoUsableConfigFile",
-                    "No usable configuration file at {0}",
+            super(localStrings.getLocalString("NoUsableConfigFile", "No usable configuration file at {0}",
                     configDirectory.getAbsolutePath()));
         }
 
@@ -266,11 +261,7 @@ public abstract class DomainXml implements Populator {
             // file doesn't support entity references.
             xif.setXMLResolver(new XMLResolver() {
                 @Override
-                public Object resolveEntity(String publicID,
-                                            String systemID,
-                                            String baseURI,
-                                            String namespace)
-                        throws XMLStreamException {
+                public Object resolveEntity(String publicID, String systemID, String baseURI, String namespace) throws XMLStreamException {
                     return new ByteArrayInputStream(new byte[0]);
                 }
             });
@@ -280,8 +271,7 @@ public abstract class DomainXml implements Populator {
             else if (env.getRuntimeType() == RuntimeType.INSTANCE)
                 xsr = new InstanceReaderFilter(env.getInstanceName(), domainXml, xif);
             else
-                throw new RuntimeException("Internal Error: Unknown server type: "
-                        + env.getRuntimeType());
+                throw new RuntimeException("Internal Error: Unknown server type: " + env.getRuntimeType());
 
             Lock lock = null;
             try {

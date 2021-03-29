@@ -61,17 +61,11 @@ import jakarta.inject.Named;
 @Service(name = "__synchronize-realm-from-config")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE,
-    CommandTarget.CLUSTER, CommandTarget.CONFIG, CommandTarget.CLUSTERED_INSTANCE})
-@RestEndpoints({
-    @RestEndpoint(configBean=Config.class,
-        opType=OpType.POST,
-        path="synchronize-realm-from-config",
-        params={
-            @RestParam(name="target", value="$parent")
-        })
-})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG,
+        CommandTarget.CLUSTERED_INSTANCE })
+@RestEndpoints({ @RestEndpoint(configBean = Config.class, opType = OpType.POST, path = "synchronize-realm-from-config", params = {
+        @RestParam(name = "target", value = "$parent") }) })
 public class SynchronizeRealmFromConfig implements AdminCommand {
 
     @Inject
@@ -81,8 +75,7 @@ public class SynchronizeRealmFromConfig implements AdminCommand {
     //@Param(name="authrealmname")
     @Param
     String realmName;
-    @Param(name = "target", primary = true, optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
@@ -91,8 +84,7 @@ public class SynchronizeRealmFromConfig implements AdminCommand {
     private Configs configs;
     @Inject
     RealmsManager realmsManager;
-    private static final LocalStringManagerImpl _localStrings =
-            new LocalStringManagerImpl(SupportsUserManagementCommand.class);
+    private static final LocalStringManagerImpl _localStrings = new LocalStringManagerImpl(SupportsUserManagementCommand.class);
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -125,10 +117,8 @@ public class SynchronizeRealmFromConfig implements AdminCommand {
             Realm r = realmsManager.getFromLoadedRealms(realConfig.getName(), realmName);
             if (r == null) {
                 //realm is not loaded yet
-                report.setMessage(
-                        _localStrings.getLocalString("REALM_SYNCH_SUCCESSFUL",
-                        "Synchronization of Realm {0} from Configuration Successful.",
-                        new Object[]{realmName}));
+                report.setMessage(_localStrings.getLocalString("REALM_SYNCH_SUCCESSFUL",
+                        "Synchronization of Realm {0} from Configuration Successful.", new Object[] { realmName }));
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
                 return;
             }
@@ -136,10 +126,8 @@ public class SynchronizeRealmFromConfig implements AdminCommand {
             realmsManager.removeFromLoadedRealms(realConfig.getName(), realmName);
             boolean done = this.instantiateRealm(realConfig, realmName);
             if (done) {
-                report.setMessage(
-                        _localStrings.getLocalString("REALM_SYNCH_SUCCESSFUL",
-                        "Synchronization of Realm {0} from Configuration Successful.",
-                        new Object[]{realmName}));
+                report.setMessage(_localStrings.getLocalString("REALM_SYNCH_SUCCESSFUL",
+                        "Synchronization of Realm {0} from Configuration Successful.", new Object[] { realmName }));
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
                 return;
             }
@@ -165,15 +153,13 @@ public class SynchronizeRealmFromConfig implements AdminCommand {
         Properties extraProperties = new Properties();
         Map<String, Object> entity = new HashMap<String, Object>();
         mp.setMessage(_localStrings.getLocalString("RESTART_REQUIRED",
-                "Restart required for configuration updates to active server realm: {0}.",
-                new Object[]{realmName}));
+                "Restart required for configuration updates to active server realm: {0}.", new Object[] { realmName }));
         entity.put("restartRequired", "true");
         extraProperties.put("entity", entity);
         ((ActionReport) report).setExtraProperties(extraProperties);
     }
 
-    private boolean instantiateRealm(Config cfg, String realmName)
-            throws BadRealmException, NoSuchRealmException {
+    private boolean instantiateRealm(Config cfg, String realmName) throws BadRealmException, NoSuchRealmException {
         List<AuthRealm> authRealmConfigs = cfg.getSecurityService().getAuthRealm();
         for (AuthRealm authRealm : authRealmConfigs) {
             if (realmName.equals(authRealm.getName())) {
@@ -187,8 +173,6 @@ public class SynchronizeRealmFromConfig implements AdminCommand {
                 return true;
             }
         }
-        throw new NoSuchRealmException(
-                _localStrings.getLocalString("NO_SUCH_REALM", "No Such Realm: {0}",
-                new Object[]{realmName}));
+        throw new NoSuchRealmException(_localStrings.getLocalString("NO_SUCH_REALM", "No Such Realm: {0}", new Object[] { realmName }));
     }
 }

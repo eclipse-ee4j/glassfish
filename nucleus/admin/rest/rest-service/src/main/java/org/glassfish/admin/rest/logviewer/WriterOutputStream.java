@@ -28,8 +28,7 @@ import java.nio.*;
 import java.nio.ByteBuffer;
 
 /**
- * {@link OutputStream} that writes to {@link Writer}
- * by assuming the platform default encoding.
+ * {@link OutputStream} that writes to {@link Writer} by assuming the platform default encoding.
  *
  * @author Kohsuke Kawaguchi
  */
@@ -48,21 +47,21 @@ public class WriterOutputStream extends OutputStream {
     }
 
     public WriterOutputStream(Writer out) {
-        this(out,DEFAULT_CHARSET);
+        this(out, DEFAULT_CHARSET);
     }
 
     public void write(int b) throws IOException {
-        if(buf.remaining()==0)
+        if (buf.remaining() == 0)
             decode(false);
-        buf.put((byte)b);
+        buf.put((byte) b);
     }
 
     public void write(byte b[], int off, int len) throws IOException {
-        while(len>0) {
-            if(buf.remaining()==0)
+        while (len > 0) {
+            if (buf.remaining() == 0)
                 decode(false);
-            int sz = Math.min(buf.remaining(),len);
-            buf.put(b,off,sz);
+            int sz = Math.min(buf.remaining(), len);
+            buf.put(b, off, sz);
             off += sz;
             len -= sz;
         }
@@ -75,7 +74,7 @@ public class WriterOutputStream extends OutputStream {
     }
 
     private void flushOutput() throws IOException {
-        writer.write(out.array(),0,out.position());
+        writer.write(out.array(), 0, out.position());
         out.clear();
     }
 
@@ -88,25 +87,23 @@ public class WriterOutputStream extends OutputStream {
     }
 
     /**
-     * Decodes the contents of {@link #buf} as much as possible to {@link #out}.
-     * If necessary {@link #out} is further sent to {@link #writer}.
+     * Decodes the contents of {@link #buf} as much as possible to {@link #out}. If necessary {@link #out} is further sent
+     * to {@link #writer}.
      *
      * <p>
-     * When this method returns, the {@link #buf} is back to the 'accumulation'
-     * mode.
+     * When this method returns, the {@link #buf} is back to the 'accumulation' mode.
      *
-     * @param last
-     *      if true, tell the decoder that all the input bytes are ready.
+     * @param last if true, tell the decoder that all the input bytes are ready.
      */
     private void decode(boolean last) throws IOException {
         buf.flip();
-        while(true) {
+        while (true) {
             CoderResult r = decoder.decode(buf, out, last);
-            if(r==CoderResult.OVERFLOW) {
+            if (r == CoderResult.OVERFLOW) {
                 flushOutput();
                 continue;
             }
-            if(r==CoderResult.UNDERFLOW) {
+            if (r == CoderResult.UNDERFLOW) {
                 buf.compact();
                 return;
             }

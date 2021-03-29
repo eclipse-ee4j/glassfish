@@ -27,11 +27,12 @@ import com.sun.enterprise.util.net.NetUtils;
 import static com.sun.enterprise.config.util.PortConstants.*;
 
 /**
- * Port base utilities used by create-local-instance.  Similar to create-domain.
+ * Port base utilities used by create-local-instance. Similar to create-domain.
+ * 
  * @author Jennifer
  */
 public class PortBaseHelper {
-    
+
     final private static LocalStringsImpl strings = new LocalStringsImpl(PortBaseHelper.class);
 
     public PortBaseHelper(Server instance, String portbase, boolean checkports, Logger logger) {
@@ -95,13 +96,11 @@ public class PortBaseHelper {
      * @return the port number as an int
      * @throws TransactionFailure if port string is not numeric
      */
-    private int convertPortStr(final String port)
-            throws TransactionFailure {
+    private int convertPortStr(final String port) throws TransactionFailure {
         try {
             return Integer.parseInt(port);
         } catch (Exception e) {
-            throw new TransactionFailure(
-                    strings.get("InvalidPortNumber", port));
+            throw new TransactionFailure(strings.get("InvalidPortNumber", port));
         }
     }
 
@@ -115,70 +114,55 @@ public class PortBaseHelper {
         return false;
     }
 
-    private void setOptionsWithPortBase(final int portbase)
-            throws TransactionFailure {
+    private void setOptionsWithPortBase(final int portbase) throws TransactionFailure {
         // set the option name and value in the options list
-        verifyPortBasePortIsValid(ADMIN,
-            portbase + PORTBASE_ADMINPORT_SUFFIX);
+        verifyPortBasePortIsValid(ADMIN, portbase + PORTBASE_ADMINPORT_SUFFIX);
         adminPort = String.valueOf(portbase + PORTBASE_ADMINPORT_SUFFIX);
 
-        verifyPortBasePortIsValid(HTTP,
-            portbase + PORTBASE_INSTANCE_SUFFIX);
+        verifyPortBasePortIsValid(HTTP, portbase + PORTBASE_INSTANCE_SUFFIX);
         instancePort = String.valueOf(portbase + PORTBASE_INSTANCE_SUFFIX);
 
-        verifyPortBasePortIsValid(HTTPS,
-            portbase + PORTBASE_HTTPSSL_SUFFIX);
+        verifyPortBasePortIsValid(HTTPS, portbase + PORTBASE_HTTPSSL_SUFFIX);
         httpsPort = String.valueOf(portbase + PORTBASE_HTTPSSL_SUFFIX);
 
-        verifyPortBasePortIsValid(IIOPS,
-            portbase + PORTBASE_IIOPSSL_SUFFIX);
+        verifyPortBasePortIsValid(IIOPS, portbase + PORTBASE_IIOPSSL_SUFFIX);
         iiopsPort = String.valueOf(portbase + PORTBASE_IIOPSSL_SUFFIX);
 
-        verifyPortBasePortIsValid(IIOPM,
-                portbase + PORTBASE_IIOPMUTUALAUTH_SUFFIX);
+        verifyPortBasePortIsValid(IIOPM, portbase + PORTBASE_IIOPMUTUALAUTH_SUFFIX);
         iiopmPort = String.valueOf(portbase + PORTBASE_IIOPMUTUALAUTH_SUFFIX);
 
-        verifyPortBasePortIsValid(JMS,
-            portbase + PORTBASE_JMS_SUFFIX);
+        verifyPortBasePortIsValid(JMS, portbase + PORTBASE_JMS_SUFFIX);
         jmsPort = String.valueOf(portbase + PORTBASE_JMS_SUFFIX);
 
-        verifyPortBasePortIsValid(IIOP,
-            portbase + PORTBASE_IIOP_SUFFIX);
+        verifyPortBasePortIsValid(IIOP, portbase + PORTBASE_IIOP_SUFFIX);
         iiopPort = String.valueOf(portbase + PORTBASE_IIOP_SUFFIX);
 
-        verifyPortBasePortIsValid(JMX,
-            portbase + PORTBASE_JMX_SUFFIX);
+        verifyPortBasePortIsValid(JMX, portbase + PORTBASE_JMX_SUFFIX);
         jmxPort = String.valueOf(portbase + PORTBASE_JMX_SUFFIX);
 
-        verifyPortBasePortIsValid(OSGI,
-            portbase + PORTBASE_OSGI_SUFFIX);
+        verifyPortBasePortIsValid(OSGI, portbase + PORTBASE_OSGI_SUFFIX);
         osgiPort = String.valueOf(portbase + PORTBASE_OSGI_SUFFIX);
 
-        verifyPortBasePortIsValid(DEBUG,
-            portbase + PORTBASE_DEBUG_SUFFIX);
+        verifyPortBasePortIsValid(DEBUG, portbase + PORTBASE_DEBUG_SUFFIX);
         debugPort = String.valueOf(portbase + PORTBASE_DEBUG_SUFFIX);
-}
+    }
 
     /**
-     * Verify that the portbase port is valid
-     * Port must be greater than 0 and less than 65535.
-     * This method will also check if the port is in used.
+     * Verify that the portbase port is valid Port must be greater than 0 and less than 65535. This method will also check
+     * if the port is in used.
      *
      * @param portNum the port number to verify
      * @throws TransactionFailure if Port is not valid
      * @throws TransactionFailure if port number is not a numeric value.
      */
-    private void verifyPortBasePortIsValid(String portName, int portNum)
-            throws TransactionFailure {
+    private void verifyPortBasePortIsValid(String portName, int portNum) throws TransactionFailure {
         if (portNum <= 0 || portNum > PORT_MAX_VAL) {
-            throw new TransactionFailure(
-                strings.get("InvalidPortBaseRange", portNum, portName));
+            throw new TransactionFailure(strings.get("InvalidPortBaseRange", portNum, portName));
         }
         if (checkPorts && !NetUtils.isPortFree(portNum)) {
-            throw new TransactionFailure(
-                strings.get("PortBasePortInUse", portNum, portName));
+            throw new TransactionFailure(strings.get("PortBasePortInUse", portNum, portName));
         }
-        _logger.log(Level.FINER,ConfigApiLoggerInfo.portBaseHelperPort, portNum);
+        _logger.log(Level.FINER, ConfigApiLoggerInfo.portBaseHelperPort, portNum);
     }
 
     public void setPorts() throws TransactionFailure, PropertyVetoException {

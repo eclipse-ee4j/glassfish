@@ -67,16 +67,16 @@ import org.glassfish.api.logging.LogHelper;
  *
  * Java EE Application Server Configuration
  *
- * Each Application Server instance is a Java EE compliant container. One
- * server instance is specially designated as the Administration Server in SE/EE
+ * Each Application Server instance is a Java EE compliant container. One server instance is specially designated as the
+ * Administration Server in SE/EE
  *
  * User applications cannot be deployed to an Administration Server instance
  */
 @Configured
-@ConfigRefConstraint(message="{configref.invalid}", payload=ConfigRefValidator.class)
+@ConfigRefConstraint(message = "{configref.invalid}", payload = ConfigRefValidator.class)
 @SuppressWarnings("unused")
-@NotDuplicateTargetName(message="{server.duplicate.name}", payload=Server.class)
-@ReferenceConstraint(skipDuringCreation=true, payload=Server.class)
+@NotDuplicateTargetName(message = "{server.duplicate.name}", payload = Server.class)
+@ReferenceConstraint(skipDuringCreation = true, payload = Server.class)
 public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPropertyBag, ReferenceContainer, RefContainer, Payload {
 
     String lbEnabledSystemProperty = "org.glassfish.lb-enabled-default";
@@ -85,32 +85,30 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     @Override
     public void setName(String value) throws PropertyVetoException;
 
-    @NotTargetKeyword(message="{server.reserved.name}", payload=Server.class)
-    @Pattern(regexp=NAME_SERVER_REGEX, message="{server.invalid.name}", payload=Server.class)
+    @NotTargetKeyword(message = "{server.reserved.name}", payload = Server.class)
+    @Pattern(regexp = NAME_SERVER_REGEX, message = "{server.invalid.name}", payload = Server.class)
     @Override
     public String getName();
 
     /**
      * Gets the value of the configRef property.
      *
-     * Points to a named config. Needed for stand-alone servers. If server
-     * instance is part of a cluster, then it points to the cluster config
+     * Points to a named config. Needed for stand-alone servers. If server instance is part of a cluster, then it points to
+     * the cluster config
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
-    @NotTargetKeyword(message="{server.reserved.name}", payload=Server.class)
+    @NotTargetKeyword(message = "{server.reserved.name}", payload = Server.class)
     @Pattern(regexp = NAME_SERVER_REGEX)
-    @ReferenceConstraint.RemoteKey(message="{resourceref.invalid.configref}", type=Config.class)
+    @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.configref}", type = Config.class)
     String getConfigRef();
 
     /**
      * Sets the value of the configRef property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = PARAM_CONFIG, optional = true)
@@ -121,8 +119,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
      *
      * SE/EE only. Specifies name of node agent where server instance is hosted
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @Deprecated
@@ -131,8 +128,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     /**
      * Sets the value of the nodeAgentRef property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Deprecated
@@ -141,8 +137,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     /**
      * Sets the value of the node property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = PARAM_NODE, optional = true)
@@ -153,24 +148,20 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
      *
      * SE/EE only. Specifies name of node agent where server instance is hosted
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getNodeRef();
-    
+
     /**
      * Gets the value of the lbWeight property.
      *
-     * Each server instance in a cluster has a weight, which may be used to
-     * represent the relative processing capacity of that instance. Default
-     * weight is 100 for every instance. Weighted load balancing policies will
-     * use this weight while load balancing requests within the cluster.
-     * It is the responsibility of the administrator to set the relative weights
+     * Each server instance in a cluster has a weight, which may be used to represent the relative processing capacity of
+     * that instance. Default weight is 100 for every instance. Weighted load balancing policies will use this weight while
+     * load balancing requests within the cluster. It is the responsibility of the administrator to set the relative weights
      * correctly, keeping in mind deployed hardware capacity
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "100")
     @Min(value = 1)
@@ -179,8 +170,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     /**
      * Sets the value of the lbWeight property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     void setLbWeight(String value) throws PropertyVetoException;
@@ -189,21 +179,20 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
      * Gets the value of the systemProperty property.
      * <p/>
      * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the systemProperty property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * systemProperty property.
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSystemProperty().add(newItem);
+     * getSystemProperty().add(newItem);
      * </pre>
      * <p/>
      * <p/>
      * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link SystemProperty }
+     * Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal system properties")
     @Element
@@ -212,7 +201,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     List<SystemProperty> getSystemProperty();
 
     /**
-    Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
@@ -241,11 +230,10 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     ApplicationRef getApplicationRef(String appName);
 
     /**
-     * Returns the cluster instance this instance is referenced in or null
-     * if there is no cluster referencing this server instance.
+     * Returns the cluster instance this instance is referenced in or null if there is no cluster referencing this server
+     * instance.
      *
-     * @return the cluster owning this instance or null if this is a standalone
-     * instance
+     * @return the cluster owning this instance or null if this is a standalone instance
      */
     @DuckTyped
     Cluster getCluster();
@@ -318,8 +306,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             return server.getConfigRef();
         }
 
-        public static ApplicationRef getApplicationRef(Server server,
-                String appName) {
+        public static ApplicationRef getApplicationRef(Server server, String appName) {
             for (ApplicationRef appRef : server.getApplicationRef()) {
                 if (appRef.getRef().equals(appName)) {
                     return appRef;
@@ -385,8 +372,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                         return config;
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // drop through...
             }
             return null;
@@ -396,8 +382,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             try {
                 ServerHelper helper = new ServerHelper(server, getConfig(server));
                 return helper.getAdminPort();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // drop through...
             }
             return -1;
@@ -407,17 +392,16 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             try {
                 ServerHelper helper = new ServerHelper(server, getConfig(server));
                 return helper.getAdminHost();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // drop through...
             }
             return null;
         }
 
-        /** this is NOT a reliable test.  It just checks if ANYTHING has setup shop
-         * on the host and port.
-         * I wanted to run RemoteAdminCommand but that is (inexplicably) in
-         * admin/util -- and we would have a circular dependency
+        /**
+         * this is NOT a reliable test. It just checks if ANYTHING has setup shop on the host and port. I wanted to run
+         * RemoteAdminCommand but that is (inexplicably) in admin/util -- and we would have a circular dependency
+         * 
          * @param server
          * @return
          */
@@ -425,8 +409,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             try {
                 ServerHelper helper = new ServerHelper(server, getConfig(server));
                 return helper.isRunning();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // drop through...
             }
             return false;
@@ -447,7 +430,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
         boolean checkPorts = true;
         @Param(name = PARAM_PORTBASE, optional = true)
         private String portBase;
-        @Param(optional=true, defaultValue="false", shortName="t")
+        @Param(optional = true, defaultValue = "false", shortName = "t")
         public Boolean terse = false;
         @Inject
         Domain domain;
@@ -468,23 +451,20 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             Clusters clusters = domain.getClusters();
 
             if (tx == null) {
-                throw new TransactionFailure(localStrings.getLocalString(
-                        "noTransaction", "Internal Error - Cannot obtain transaction object"));
+                throw new TransactionFailure(
+                        localStrings.getLocalString("noTransaction", "Internal Error - Cannot obtain transaction object"));
             }
 
-            if (node != null){
+            if (node != null) {
                 Node theNode = domain.getNodeNamed(node);
                 if (theNode == null) {
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noSuchNode", "Node {0} does not exist.", node));
+                    throw new TransactionFailure(localStrings.getLocalString("noSuchNode", "Node {0} does not exist.", node));
                 }
 
                 /* 16034: see if instance creation is turned off on node */
-                if (! theNode.instanceCreationAllowed()) {
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "instanceCreationNotAllowed",
-                            "Instance creation is disabled on node {0}.",
-                            node));
+                if (!theNode.instanceCreationAllowed()) {
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("instanceCreationNotAllowed", "Instance creation is disabled on node {0}.", node));
                 }
             }
 
@@ -497,8 +477,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             // cluster instance using cluster config
             if (clusterName != null) {
                 if (configRef != null) {
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "Server.cannotSpecifyBothConfigAndCluster",
+                    throw new TransactionFailure(localStrings.getLocalString("Server.cannotSpecifyBothConfigAndCluster",
                             "A configuration name and cluster name cannot both be specified."));
                 }
                 boolean clusterExists = false;
@@ -517,8 +496,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 }
 
                 if (ourCluster == null) {
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noSuchCluster", "Cluster {0} does not exist.", clusterName));
+                    throw new TransactionFailure(localStrings.getLocalString("noSuchCluster", "Cluster {0} does not exist.", clusterName));
                 }
 
                 /*
@@ -526,12 +504,10 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                  * is set to "generate." Otherwise the user must set this
                  * properly to match the discovery uri list.
                  */
-                if (ourCluster.getProperty("GMS_DISCOVERY_URI_LIST") != null &&
-                    "generate".equals(
-                        ourCluster.getProperty("GMS_DISCOVERY_URI_LIST").getValue())) {
+                if (ourCluster.getProperty("GMS_DISCOVERY_URI_LIST") != null
+                        && "generate".equals(ourCluster.getProperty("GMS_DISCOVERY_URI_LIST").getValue())) {
 
-                    final String propName = "GMS_LISTENER_PORT-" +
-                        ourCluster.getName();
+                    final String propName = "GMS_LISTENER_PORT-" + ourCluster.getName();
 
                     /*
                      * Currently all the instances will use the same port
@@ -540,11 +516,9 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                      * calculated differently.
                      */
                     Config serverConf = domain.getConfigNamed("server-config");
-                    SystemProperty dasGmsPortProp =
-                        serverConf.getSystemProperty(propName);
+                    SystemProperty dasGmsPortProp = serverConf.getSystemProperty(propName);
                     if (dasGmsPortProp != null) {
-                        SystemProperty gmsListenerPortProp =
-                            instance.createChild(SystemProperty.class);
+                        SystemProperty gmsListenerPortProp = instance.createChild(SystemProperty.class);
                         gmsListenerPortProp.setName(propName);
                         gmsListenerPortProp.setValue(dasGmsPortProp.getValue());
                         instance.getSystemProperty().add(gmsListenerPortProp);
@@ -554,14 +528,14 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 final String instanceName = instance.getName();
                 File configConfigDir = new File(env.getConfigDirPath(), ourCluster.getConfigRef());
                 File docroot = new File(configConfigDir, "docroot");
-                if (!docroot.exists() && !docroot.mkdirs()) { 
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noMkdir", "Cannot create configuration specific directory {0}", "docroot"));
+                if (!docroot.exists() && !docroot.mkdirs()) {
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("noMkdir", "Cannot create configuration specific directory {0}", "docroot"));
                 }
                 File lib = new File(configConfigDir, "lib/ext");
-                if (!lib.exists() && !lib.mkdirs()) { 
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noMkdir", "Cannot create configuration specific directory {0}", "lib/ext"));
+                if (!lib.exists() && !lib.mkdirs()) {
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("noMkdir", "Cannot create configuration specific directory {0}", "lib/ext"));
                 }
 
                 Cluster c = tx.enroll(ourCluster);
@@ -585,8 +559,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                         newServerRef.setLbEnabled("false");
                     } else {
                         //check if system property exists and use that
-                        String lbEnabledDefault =
-                                System.getProperty(lbEnabledSystemProperty);
+                        String lbEnabledDefault = System.getProperty(lbEnabledSystemProperty);
                         if (lbEnabledDefault != null) {
                             newServerRef.setLbEnabled(lbEnabledDefault);
                         }
@@ -599,46 +572,43 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             if (configRef != null) {
                 Config specifiedConfig = domain.getConfigs().getConfigByName(configRef);
                 if (specifiedConfig == null) {
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noSuchConfig", "Configuration {0} does not exist.", configRef));
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("noSuchConfig", "Configuration {0} does not exist.", configRef));
                 }
                 ourConfig = specifiedConfig;
                 File configConfigDir = new File(env.getConfigDirPath(), specifiedConfig.getName());
                 File docroot = new File(configConfigDir, "docroot");
-                if (!docroot.exists() && !docroot.mkdirs()) { 
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noMkdir", "Cannot create configuration specific directory {0}", "docroot"));
+                if (!docroot.exists() && !docroot.mkdirs()) {
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("noMkdir", "Cannot create configuration specific directory {0}", "docroot"));
                 }
                 File lib = new File(configConfigDir, "lib/ext");
-                if (!lib.exists() && !lib.mkdirs()) { 
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noMkdir", "Cannot create configuration specific directory {0}", "lib/ext"));
+                if (!lib.exists() && !lib.mkdirs()) {
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("noMkdir", "Cannot create configuration specific directory {0}", "lib/ext"));
                 }
-             }
+            }
 
             //stand-alone instance using default-config if config not specified
             if (configRef == null && clusterName == null) {
                 Config defaultConfig = domain.getConfigs().getConfigByName("default-config");
 
                 if (defaultConfig == null) {
-                    final String msg = localStrings.getLocalString(Server.class,
-                            "Cluster.noDefaultConfig",
+                    final String msg = localStrings.getLocalString(Server.class, "Cluster.noDefaultConfig",
                             "Can''t find the default config (an element named \"default-config\") "
-                            + "in domain.xml.  You may specify the name of an existing config element next time.");
+                                    + "in domain.xml.  You may specify the name of an existing config element next time.");
 
                     logger.log(Level.SEVERE, ConfigApiLoggerInfo.noDefaultConfig);
                     throw new TransactionFailure(msg);
                 }
-               final String configName = instance.getName() + "-config";
-               instance.setConfigRef(configName);
-               final CopyConfig command = (CopyConfig) runner
-                        .getCommand("copy-config", context.getActionReport(), context.getLogger());
-               
+                final String configName = instance.getName() + "-config";
+                instance.setConfigRef(configName);
+                final CopyConfig command = (CopyConfig) runner.getCommand("copy-config", context.getActionReport(), context.getLogger());
+
                 Configs configs = domain.getConfigs();
                 Configs writableConfigs = tx.enroll(configs);
 
-                ourConfig = command.copyConfig(writableConfigs,defaultConfig,configName,logger);
-                
+                ourConfig = command.copyConfig(writableConfigs, defaultConfig, configName, logger);
 
             }
 
@@ -670,10 +640,9 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
 
             this.addClusterRefs(ourCluster, instance);
             if (checkPorts) {
-                
-                PortManager pm = new PortManager(ourCluster,
-                        ourConfig, domain, instance);
-                String message = pm.process();      
+
+                PortManager pm = new PortManager(ourCluster, ourConfig, domain, instance);
+                String message = pm.process();
 
                 if (message != null && !terse) {
                     ActionReport report = context.getActionReport();
@@ -685,7 +654,8 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
             setupSupplemental(context, instance);
         }
 
-        private void checkAdminPort(final Server instance, final Config config, LocalStringManagerImpl localStrings) throws TransactionFailure {
+        private void checkAdminPort(final Server instance, final Config config, LocalStringManagerImpl localStrings)
+                throws TransactionFailure {
             if (node != null) {
                 Node n = domain.getNodeNamed(node);
                 if (n != null) {
@@ -696,9 +666,9 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                         int instanceAdminPort = new ServerHelper(instance, config).getAdminPort();
                         if (instanceAdminPort != -1 && dasAdminPort != -1) {
                             if (instanceAdminPort == dasAdminPort) {
-                                throw new TransactionFailure(localStrings.getLocalString(
-                                        "Server.cannotHaveSameAdminPortAsDAS",
-                                        "Cannot create an instance on the same host as DAS with the same admin port as DAS: {0}.", instanceAdminPort + ""));
+                                throw new TransactionFailure(localStrings.getLocalString("Server.cannotHaveSameAdminPortAsDAS",
+                                        "Cannot create an instance on the same host as DAS with the same admin port as DAS: {0}.",
+                                        instanceAdminPort + ""));
                             }
                         }
                     }
@@ -709,8 +679,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
         private void setupSupplemental(AdminCommandContext context, final Server instance) {
             if (clusterName != null) {
                 InstanceRegisterInstanceCommandParameters cp = new InstanceRegisterInstanceCommandParameters();
-                context.getActionReport().
-                        setResultType(InstanceRegisterInstanceCommandParameters.class, cp);
+                context.getActionReport().setResultType(InstanceRegisterInstanceCommandParameters.class, cp);
 
                 Node instNode = domain.getNodeNamed(node);
 
@@ -767,7 +736,8 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
         private ServerEnvironment env;
 
         @Override
-        public void decorate(AdminCommandContext context, Servers parent, final Server child) throws PropertyVetoException, TransactionFailure {
+        public void decorate(AdminCommandContext context, Servers parent, final Server child)
+                throws PropertyVetoException, TransactionFailure {
             final Logger logger = ConfigApiLoggerInfo.getLogger();
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Server.class);
             final ActionReport report = context.getActionReport();
@@ -777,8 +747,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
 
             /* setup supplemental */
             if (!isStandAlone && env.isDas()) {
-                context.getActionReport().
-                        setResultType(String.class, cluster.getName());
+                context.getActionReport().setResultType(String.class, cluster.getName());
             }
 
             if (isStandAlone) { // remove config <instance>-config
@@ -796,14 +765,13 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 final String autoGeneratedName = child.getName() + "-config";
                 if (!autoGeneratedName.equals(instanceConfig))
                     return;
-                
+
                 try {
                     if (config != null) {
                         File configConfigDir = new File(env.getConfigDirPath(), config.getName());
                         FileUtils.whack(configConfigDir);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // no big deal - just ignore
                 }
                 try {
@@ -812,20 +780,16 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                         List<Config> configList = c.getConfig();
                         configList.remove(config);
                     }
-                }
-                catch (TransactionFailure ex) {
-                	LogHelper.log(logger, Level.SEVERE, 
-                			ConfigApiLoggerInfo.deleteConfigFailed, ex, instanceConfig);
+                } catch (TransactionFailure ex) {
+                    LogHelper.log(logger, Level.SEVERE, ConfigApiLoggerInfo.deleteConfigFailed, ex, instanceConfig);
                     String msg = ex.getMessage() != null ? ex.getMessage()
-                            : localStrings.getLocalString("deleteConfigFailed",
-                            "Unable to remove config {0}", instanceConfig);
+                            : localStrings.getLocalString("deleteConfigFailed", "Unable to remove config {0}", instanceConfig);
                     report.setMessage(msg);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setFailureCause(ex);
                     throw ex;
                 }
-            }
-            else { // remove server-ref from cluster
+            } else { // remove server-ref from cluster
                 final String instanceName = child.getName();
                 if (t != null) {
                     try {
@@ -843,13 +807,11 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                         if (serverRef != null) {
                             serverRefList.remove(serverRef);
                         }
-                    }
-                    catch (TransactionFailure ex) {
-                        LogHelper.log(logger, Level.SEVERE,ConfigApiLoggerInfo.deleteServerRefFailed,
-                        		ex, instanceName, cluster.getName());
+                    } catch (TransactionFailure ex) {
+                        LogHelper.log(logger, Level.SEVERE, ConfigApiLoggerInfo.deleteServerRefFailed, ex, instanceName, cluster.getName());
                         String msg = ex.getMessage() != null ? ex.getMessage()
-                                : localStrings.getLocalString("deleteServerRefFailed",
-                                "Unable to remove server-ref {0} from cluster {1}", instanceName, cluster.getName());
+                                : localStrings.getLocalString("deleteServerRefFailed", "Unable to remove server-ref {0} from cluster {1}",
+                                        instanceName, cluster.getName());
                         report.setMessage(msg);
                         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                         report.setFailureCause(ex);

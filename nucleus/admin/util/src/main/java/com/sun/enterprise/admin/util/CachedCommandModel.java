@@ -25,7 +25,8 @@ import jakarta.xml.bind.DatatypeConverter;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandModel;
 
-/** Stores ETeg with command model.
+/**
+ * Stores ETeg with command model.
  *
  * @author mmares
  */
@@ -97,11 +98,11 @@ public class CachedCommandModel extends CommandModelData {
         if (cm.getParameters() != null) {
             //sort
             SortedSet<ParamModel> tree = new TreeSet<ParamModel>(new Comparator<ParamModel>() {
-                    @Override
-                    public int compare(ParamModel o1, ParamModel o2) {
-                        return o1.getName().compareTo(o2.getName());
-                    }
-                });
+                @Override
+                public int compare(ParamModel o1, ParamModel o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
             for (ParamModel paramModel : cm.getParameters()) {
                 tree.add(paramModel);
             }

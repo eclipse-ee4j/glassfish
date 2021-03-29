@@ -34,15 +34,13 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.LocalPassword;
 
 /**
- * Handles callbacks for admin authentication other than user-provided
- * username and password, such as the local password, a limited-use token,
- * a ReST token.
+ * Handles callbacks for admin authentication other than user-provided username and password, such as the local
+ * password, a limited-use token, a ReST token.
  * <p>
- * Note that some of the information the callback handler stores is really for
- * the use of the admin LoginModule.  But because we don't control how the
- * login module is instantiated or initialized - but we do control that for the
- * callback handler - we can put that information here.  This callback handler
- * sets the info in the callback, which is then available to the LoginModule.
+ * Note that some of the information the callback handler stores is really for the use of the admin LoginModule. But
+ * because we don't control how the login module is instantiated or initialized - but we do control that for the
+ * callback handler - we can put that information here. This callback handler sets the info in the callback, which is
+ * then available to the LoginModule.
  * 
  * @author tjquinn
  */
@@ -50,36 +48,31 @@ public class AdminCallbackHandler implements CallbackHandler {
 
     public static final String COOKIE_REST_TOKEN = "gfresttoken";
     public static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
-    
-    
+
     private static final Level PROGRESS_LEVEL = Level.FINE;
-    
+
     private static final Logger logger = GenericAdminAuthenticator.ADMSEC_LOGGER;
-    
+
     private final Request request;
-    
-    private Map<String,String> headers = null;
-    
+
+    private Map<String, String> headers = null;
+
     private static final GFBase64Decoder decoder = new GFBase64Decoder();
     private static final String BASIC = "Basic ";
 
     private final Principal clientPrincipal;
     private final String originHost;
-    
+
     private final PasswordAuthentication passwordAuthentication;
-    
+
     private final String specialAdminIndicator;
     private final String token;
     private final String defaultAdminUsername;
     private final LocalPassword localPassword;
     private final ServiceLocator serviceLocator;
-    
-    public AdminCallbackHandler(
-            final ServiceLocator serviceLocator,
-            final Request request,
-            final String alternateHostName,
-            final String defaultAdminUsername,
-            final LocalPassword localPassword) throws IOException {
+
+    public AdminCallbackHandler(final ServiceLocator serviceLocator, final Request request, final String alternateHostName,
+            final String defaultAdminUsername, final LocalPassword localPassword) throws IOException {
         this.serviceLocator = serviceLocator;
         this.request = request;
         this.defaultAdminUsername = defaultAdminUsername;
@@ -89,79 +82,82 @@ public class AdminCallbackHandler implements CallbackHandler {
         passwordAuthentication = basicAuth();
         specialAdminIndicator = specialAdminIndicator();
         token = token();
-        
-        
+
     }
-    
+
     ServiceLocator getServiceLocator() {
         return serviceLocator;
     }
-    
-    private static Map<String,String> headers(final Request req) {
-        final Map<String,String> result = new HashMap<String,String>();
+
+    private static Map<String, String> headers(final Request req) {
+        final Map<String, String> result = new HashMap<String, String>();
         for (String headerName : req.getHeaderNames()) {
             result.put(headerName(headerName), req.getHeader(headerName));
         }
         return result;
     }
-    
-    
-//    private List<String> headers(final String headerName) {
-//        return headers.get(headerName);
-//    }
-    
+
+    //    private List<String> headers(final String headerName) {
+    //        return headers.get(headerName);
+    //    }
+
     private static String headerName(final String headerName) {
         return headerName.toLowerCase(Locale.ENGLISH);
     }
-    
-    private synchronized Map<String,String> headers() {
+
+    private synchronized Map<String, String> headers() {
         if (headers == null) {
             headers = headers(request);
         }
         return headers;
     }
+
     private String header(final String headerName) {
-//        final List<String> matches = headers(headerName);
-//        if (matches != null && matches.size() > 0) {
-//            return matches.get(0);
-//        }
-//        return null;
+        //        final List<String> matches = headers(headerName);
+        //        if (matches != null && matches.size() > 0) {
+        //            return matches.get(0);
+        //        }
+        //        return null;
         return headers().get(headerName(headerName));
     }
-    
+
     private PasswordAuthentication basicAuth() throws IOException {
         final String authHeader = header("Authorization");
         if (authHeader == null) {
-            logger.log(PROGRESS_LEVEL, "No Authorization header found; preparing default with username {0} and empty password", defaultAdminUsername);
+            logger.log(PROGRESS_LEVEL, "No Authorization header found; preparing default with username {0} and empty password",
+                    defaultAdminUsername);
             return new PasswordAuthentication(defaultAdminUsername, new char[0]);
         }
-        
+
         String enc = authHeader.substring(BASIC.length());
         String dec = new String(decoder.decodeBuffer(enc));
         int i = dec.indexOf(':');
         if (i < 0) {
-            logger.log(PROGRESS_LEVEL, "Authorization header contained no : to separate the username from the password; proceeding with an empty username and empty password");
+            logger.log(PROGRESS_LEVEL,
+                    "Authorization header contained no : to separate the username from the password; proceeding with an empty username and empty password");
             return new PasswordAuthentication("", new char[0]);
         }
         final char[] password = dec.substring(i + 1).toCharArray();
         String username = dec.substring(0, i);
-        if (username.isEmpty() && ! localPassword.isLocalPassword(new String(password))) {
-            logger.log(PROGRESS_LEVEL, "Authorization header contained no username and the password is not the local password, so continue with the default username {0}", defaultAdminUsername);
-            username  = defaultAdminUsername;
+        if (username.isEmpty() && !localPassword.isLocalPassword(new String(password))) {
+            logger.log(PROGRESS_LEVEL,
+                    "Authorization header contained no username and the password is not the local password, so continue with the default username {0}",
+                    defaultAdminUsername);
+            username = defaultAdminUsername;
         }
         logger.log(PROGRESS_LEVEL, "basicAuth processing returning PasswordAuthentication with username {0}", username);
-        return new PasswordAuthentication(username, password);    
-        
+        return new PasswordAuthentication(username, password);
+
     }
-    
+
     private String specialAdminIndicator() {
         return header(SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME);
     }
-    
+
     private String token() {
         return header(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME);
     }
-    
+
     private String restToken() {
         final Cookie[] cookies = request.getCookies();
         String result = null;
@@ -172,17 +168,17 @@ public class AdminCallbackHandler implements CallbackHandler {
                 }
             }
         }
-        
+
         if (result == null) {
             result = request.getHeader(HEADER_X_AUTH_TOKEN);
         }
         return result;
     }
-    
+
     public String getRemoteHost() {
         return originHost;
     }
-    
+
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         for (Callback cb : callbacks) {
@@ -209,29 +205,29 @@ public class AdminCallbackHandler implements CallbackHandler {
             }
         }
     }
-    
+
     PasswordAuthentication pw() {
         return passwordAuthentication;
     }
-    
+
     Principal clientPrincipal() {
         return clientPrincipal;
     }
-    
+
     String tkn() {
         return token;
     }
-    
+
     String remoteHost() {
         return originHost;
     }
-    
+
     String adminIndicator() {
         return specialAdminIndicator;
     }
-    
+
     String remoteAddr() {
         return request.getRemoteAddr();
     }
-    
+
 }

@@ -43,15 +43,12 @@ public class ClientCookieStore implements CookieStore {
 
     private final CookieStore cookieStore;
     private File cookieStoreFile;
-    private static final int CACHE_WRITE_DELTA = 60 * 60 * 1000;  // 60 minutes
+    private static final int CACHE_WRITE_DELTA = 60 * 60 * 1000; // 60 minutes
     private static final String COOKIE_URI = "http://CLI_Session/";
-    private static final String CACHE_COMMENT = 
-              "# These cookies are used strictly for command routing.\n"
-            + "# These cookies are not used for authentication and they are\n"
-            + "# not assoicated with server state."; 
+    private static final String CACHE_COMMENT = "# These cookies are used strictly for command routing.\n"
+            + "# These cookies are not used for authentication and they are\n" + "# not assoicated with server state.";
 
     protected URI uri = null;
-
 
     public ClientCookieStore(CookieStore cookieStore, File file) {
         this.cookieStore = cookieStore;
@@ -104,8 +101,7 @@ public class ClientCookieStore implements CookieStore {
      * 
      * The store has this schema:
      * 
-     * COOKIE1=xxx; ...
-     * COOKIE2=yyy; ...
+     * COOKIE1=xxx; ... COOKIE2=yyy; ...
      **/
     public void load() throws IOException {
         BufferedReader in = null;
@@ -122,10 +118,11 @@ public class ClientCookieStore implements CookieStore {
             while ((str = in.readLine()) != null) {
 
                 // Ignore comment lines
-                if (str.startsWith("#")) continue;
+                if (str.startsWith("#"))
+                    continue;
 
                 List<HttpCookie> cookies = HttpCookie.parse(str);
-                for (HttpCookie cookie: cookies) {
+                for (HttpCookie cookie : cookies) {
                     this.add(getStaticURI(), cookie);
                 }
             }
@@ -133,40 +130,38 @@ public class ClientCookieStore implements CookieStore {
             try {
                 if (in != null) {
                     in.close();
-                } 
+                }
             } catch (IOException e) {
 
             }
         }
     }
 
-        
     /**
-     * Store the cookies in the CookieStore to the provided location.
-     * This method will overwrite the contents of the target file.
+     * Store the cookies in the CookieStore to the provided location. This method will overwrite the contents of the target
+     * file.
      * 
      **/
     public void store() throws IOException {
         PrintWriter out = null;
 
         // Create the directory if it doesn't exist.
-        if (!cookieStoreFile.getParentFile().exists() &&
-                !cookieStoreFile.getParentFile().mkdirs()) {
+        if (!cookieStoreFile.getParentFile().exists() && !cookieStoreFile.getParentFile().mkdirs()) {
             throw new IOException("Unable to create directory: " + cookieStoreFile.toString());
         }
 
-        out = new PrintWriter(new BufferedWriter(
-                              new FileWriter(cookieStoreFile)));
+        out = new PrintWriter(new BufferedWriter(new FileWriter(cookieStoreFile)));
 
         // Write comment at top of cache file.
         out.println(CACHE_COMMENT);
 
-        for (URI uri: this.getURIs()) {
-            for (HttpCookie cookie: this.get(uri)) {
+        for (URI uri : this.getURIs()) {
+            for (HttpCookie cookie : this.get(uri)) {
 
                 // Expire the cookie immediately if Max-Age = 0 or -1
                 // Expire the cookie immediately if Discard is true
-                if (cookie.getMaxAge() < 1 || cookie.getDiscard()) continue;
+                if (cookie.getMaxAge() < 1 || cookie.getDiscard())
+                    continue;
 
                 StringBuilder sb = new StringBuilder();
 
@@ -207,8 +202,7 @@ public class ClientCookieStore implements CookieStore {
      * what's in the file and the file is less than CACHE_WRITE_DELTA old.
      */
     public boolean touchStore() {
-        if (cookieStoreFile.lastModified() + CACHE_WRITE_DELTA >
-                System.currentTimeMillis()) {
+        if (cookieStoreFile.lastModified() + CACHE_WRITE_DELTA > System.currentTimeMillis()) {
             // The cache is less than CACHE_WRITE_DELTA so we
             // won't update the mod time on the file.
             return false;

@@ -31,7 +31,7 @@ public class StringProprietaryReader implements ProprietaryReader<String> {
     public boolean isReadable(Class<?> type, String mimetype) {
         return type.isAssignableFrom(String.class);
     }
-    
+
     public String readFrom(final HttpURLConnection urlConnection) throws IOException {
         return readFrom(urlConnection.getInputStream(), urlConnection.getContentType());
     }
@@ -46,5 +46,5 @@ public class StringProprietaryReader implements ProprietaryReader<String> {
         }
         return baos.toString("UTF-8");
     }
-    
+
 }

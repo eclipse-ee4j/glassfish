@@ -51,12 +51,12 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * A class to encapsulate string-subs definition. Parse, validate and performs
- * String substitution for the given string-subs.xml.
+ * A class to encapsulate string-subs definition. Parse, validate and performs String substitution for the given
+ * string-subs.xml.
  */
 public class StringSubstitutionEngine implements StringSubstitutor {
     private static final Logger _logger = SLogger.getLogger();
-    
+
     private static final LocalStringsImpl _strings = new LocalStringsImpl(StringSubstitutionEngine.class);
     private InputStream _configInputStream = null;
 
@@ -68,9 +68,8 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     private AttributePreprocessor _attrPreprocessor = new AttributePreprocessorImpl();
 
     /**
-     * Constructs {@link StringSubstitutionEngine} based on the given string-subs
-     * configuration stream. Engine parse and validate the configuration and build
-     * the internal representation to perform string substitution.
+     * Constructs {@link StringSubstitutionEngine} based on the given string-subs configuration stream. Engine parse and
+     * validate the configuration and build the internal representation to perform string substitution.
      *
      * @param inputStream The string-subs configuration stream.
      * @throws StringSubstitutionException If any error occurs in engine initialization.
@@ -80,7 +79,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
             throw new StringSubstitutionException("InputStream is null");
         }
         _configInputStream = inputStream;
-        _root =  StringSubstitutionParser.parse(_configInputStream);
+        _root = StringSubstitutionParser.parse(_configInputStream);
     }
 
     @Override
@@ -124,8 +123,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     }
 
     @Override
-    public void substituteComponents(List<String> components)
-            throws StringSubstitutionException {
+    public void substituteComponents(List<String> components) throws StringSubstitutionException {
         if (!isValid(components)) {
             throw new StringSubstitutionException(_strings.get("missingComponentIdentifiers"));
         }
@@ -140,8 +138,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     }
 
     @Override
-    public void substituteGroups(List<String> groups)
-            throws StringSubstitutionException {
+    public void substituteGroups(List<String> groups) throws StringSubstitutionException {
         if (!isValid(groups)) {
             throw new StringSubstitutionException(_strings.get("missingGroupIdentifiers"));
         }
@@ -163,13 +160,10 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     /**
      * Perform's string substitution for a given component.
      *
-     * @param component {@link Component} for which the string substitution
-     *  has to be performed.
-     * @throws StringSubstitutionException If any error occurs during
-     *  substitution.
+     * @param component {@link Component} for which the string substitution has to be performed.
+     * @throws StringSubstitutionException If any error occurs during substitution.
      */
-    private void doSubstitution(Component component) 
-            throws StringSubstitutionException {
+    private void doSubstitution(Component component) throws StringSubstitutionException {
         List<? extends GroupRef> refList = component.getGroupRef();
         for (GroupRef ref : refList) {
             doSubstitution(findGroupById(ref.getName()));
@@ -179,26 +173,23 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     /**
      * Perform's string substitution for a given group.
      *
-     * @param groups Groups for which the string substitution
-     *  has to be performed.
-     * @throws StringSubstitutionException If any error occurs during
-     *  substitution.
+     * @param groups Groups for which the string substitution has to be performed.
+     * @throws StringSubstitutionException If any error occurs during substitution.
      */
-    private void doSubstitution(Group group)
-            throws StringSubstitutionException {
+    private void doSubstitution(Group group) throws StringSubstitutionException {
         List<? extends FileEntry> fileList = group.getFileEntry();
         List<? extends Archive> archiveList = group.getArchive();
         if (!isValid(fileList) && !isValid(archiveList)) {
-        	if (_logger.isLoggable(Level.FINER)) {
-        		_logger.log(Level.FINER, _strings.get("noSubstitutableGroupEntry", group.getId()));
-        	}
+            if (_logger.isLoggable(Level.FINER)) {
+                _logger.log(Level.FINER, _strings.get("noSubstitutableGroupEntry", group.getId()));
+            }
             return;
         }
         List<? extends ChangePairRef> refList = group.getChangePairRef();
         if (!isValid(refList)) {
-        	if (_logger.isLoggable(Level.FINE)) {
-        		_logger.log(Level.FINE, _strings.get("noChangePairForGroup", group.getId()));
-        	}
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, _strings.get("noChangePairForGroup", group.getId()));
+            }
             return;
         }
 
@@ -220,18 +211,17 @@ public class StringSubstitutionEngine implements StringSubstitutor {
 
             Pair pair = _changePairsMap.get(name);
             if (pair == null) {
-                _logger.log(Level.INFO, SLogger.MISSING_CHANGE_PAIR, new Object[] {name, group.getId()});
+                _logger.log(Level.INFO, SLogger.MISSING_CHANGE_PAIR, new Object[] { name, group.getId() });
                 continue;
             }
             String beforeString = pair.getBefore();
             String afterString = pair.getAfter();
 
             if (localMode == null || localMode.length() == 0) {
-            	if (_logger.isLoggable(Level.FINEST)) {
-            		_logger.log(Level.FINEST, _strings.get("noModeValue", group.getId()));
-            	}
-            }
-            else {
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.log(Level.FINEST, _strings.get("noModeValue", group.getId()));
+                }
+            } else {
                 try {
                     afterString = ModeProcessor.processModeType(ModeType.fromValue(localMode), afterString);
                 } catch (Exception e) {
@@ -265,20 +255,19 @@ public class StringSubstitutionEngine implements StringSubstitutor {
                     substituable.finish();
                 }
             } catch (Exception e) {
-            	LogHelper.log(_logger, Level.WARNING, SLogger.ERR_ARCHIVE_SUBSTITUTION, e, archive.getName());
+                LogHelper.log(_logger, Level.WARNING, SLogger.ERR_ARCHIVE_SUBSTITUTION, e, archive.getName());
             }
         }
     }
 
     /**
-     * Build's a HashMap containing an entry for each <change-pair> in the string-subs
-     * configuration file. The HashMap is created so that <change-pair> elements do not
-     * need to be re-analyzed each time they're referenced.
+     * Build's a HashMap containing an entry for each <change-pair> in the string-subs configuration file. The HashMap is
+     * created so that <change-pair> elements do not need to be re-analyzed each time they're referenced.
      *
      */
     private void buildChangePairsMap() {
         if (_changePairsMap == null || _changePairsMap.isEmpty()) {
-            Defaults defaults = _root.getDefaults();    	
+            Defaults defaults = _root.getDefaults();
             if (defaults != null) {
                 List<Property> properties = defaults.getProperty();
                 if (!properties.isEmpty()) {
@@ -295,7 +284,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
                 String beforeValue = pair.getBefore();
                 String afterValue = pair.getAfter();
                 if (id == null || beforeValue == null || afterValue == null) {
-                    _logger.log(Level.INFO,  SLogger.EMPTY_CHANGE_PAIR);
+                    _logger.log(Level.INFO, SLogger.EMPTY_CHANGE_PAIR);
                     continue;
                 }
                 beforeValue = _attrPreprocessor.substituteBefore(beforeValue);
@@ -306,8 +295,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     }
 
     /**
-     * Find {@link Group} by the given id. Returns <code>null</code> if no
-     * group found.
+     * Find {@link Group} by the given id. Returns <code>null</code> if no group found.
      *
      * @param id Identifier for a group.
      * @return Matched Group.
@@ -331,8 +319,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     }
 
     /**
-     * Find {@link Component} by the given id. Returns <code>null</code> if no
-     * component found.
+     * Find {@link Component} by the given id. Returns <code>null</code> if no component found.
      *
      * @param id Identifier for a component.
      * @return Matched component.
@@ -356,25 +343,22 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     }
 
     /**
-     * Check's if the give {@link Collection} is valid. A non null and non empty Collection is
-     * termed as valid Collection.
+     * Check's if the give {@link Collection} is valid. A non null and non empty Collection is termed as valid Collection.
      *
      * @param collection Collection to validate
-     * @return <code>true</code> for valid Collection and
-     *  <code>false</code> for invalid Collection. 
+     * @return <code>true</code> for valid Collection and <code>false</code> for invalid Collection.
      */
     private boolean isValid(Collection<? extends Object> collection) {
         return collection != null && !collection.isEmpty();
     }
 
     /**
-     * A class to store the before, after tuple.
-     * Use to store before and after value of change-pair.
+     * A class to store the before, after tuple. Use to store before and after value of change-pair.
      */
     private static class Pair {
         String _before, _after;
 
-        Pair (String before, String after) {
+        Pair(String before, String after) {
             _before = before;
             _after = after;
         }

@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.admin.remote.reader;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +24,7 @@ import java.util.*;
 import org.glassfish.api.ActionReport;
 
 /**
- * Temporary implementation. Copy of AcctionReporter. It is here until 
- * ActionReport refactoring will be complete. 
+ * Temporary implementation. Copy of AcctionReporter. It is here until ActionReport refactoring will be complete.
  *
  * @author mmares
  */
@@ -34,7 +32,7 @@ import org.glassfish.api.ActionReport;
 public class CliActionReport extends ActionReport {
 
     private static final String EOL = System.getProperty("line.separator");
-    
+
     protected Throwable exception = null;
     protected String actionDescription = null;
     protected List<CliActionReport> subActions = new ArrayList<CliActionReport>();
@@ -48,11 +46,11 @@ public class CliActionReport extends ActionReport {
     public void setFailure() {
         setActionExitCode(ExitCode.FAILURE);
     }
-    
+
     public boolean isFailure() {
         return getActionExitCode() == ExitCode.FAILURE;
     }
-    
+
     public void setWarning() {
         setActionExitCode(ExitCode.WARNING);
     }
@@ -60,15 +58,15 @@ public class CliActionReport extends ActionReport {
     public boolean isWarning() {
         return getActionExitCode() == ExitCode.WARNING;
     }
-    
+
     public boolean isSuccess() {
         return getActionExitCode() == ExitCode.SUCCESS;
     }
-    
+
     public void setSuccess() {
         setActionExitCode(ExitCode.SUCCESS);
     }
-    
+
     @Override
     public void setActionDescription(String message) {
         this.actionDescription = message;
@@ -82,11 +80,12 @@ public class CliActionReport extends ActionReport {
     public void setFailureCause(Throwable t) {
         this.exception = t;
     }
+
     @Override
     public Throwable getFailureCause() {
         return exception;
     }
-        
+
     @Override
     public MessagePart getTopMessagePart() {
         return topMessage;
@@ -128,19 +127,17 @@ public class CliActionReport extends ActionReport {
     public String getMessage() {
         return topMessage.getMessage();
     }
-        
-    
+
     @Override
     public void setMessage(InputStream in) {
         try {
-            if(in == null)
+            if (in == null)
                 throw new NullPointerException("Internal Error - null InputStream");
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             copyStream(in, baos);
             setMessage(baos.toString());
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             setActionExitCode(ExitCode.FAILURE);
             setFailureCause(ex);
         }
@@ -156,51 +153,52 @@ public class CliActionReport extends ActionReport {
         out.close();
         in.close();
     }
-    
+
     @Override
     public String getContentType() {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public void setContentType(String s) {
         throw new UnsupportedOperationException();
     }
 
-//    public static void getCombinedMessages(CliActionReport aReport, StringBuilder sb) {
-//        if (aReport == null || sb == null)
-//            return;
-//        String mainMsg = ""; //this is the message related to the topMessage
-//        String failMsg; //this is the message related to failure cause
-//        // Other code in the server may write something like report.setMessage(exception.getMessage())
-//        // and also set report.setFailureCause(exception). We need to avoid the duplicate message.
-//        if (aReport.getMessage() != null && aReport.getMessage().length() != 0) {
-//            if (sb.length() > 0) sb.append(EOL);
-//            sb.append(aReport.getMessage());
-//        }
-//        if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && aReport.getFailureCause().getMessage().length() != 0) {
-//            failMsg = aReport.getFailureCause().getMessage();
-//            if (!failMsg.equals(mainMsg))
-//                if (sb.length() > 0) sb.append(EOL);
-//                sb.append(failMsg);
-//        }
-//        for (CliActionReport sub : aReport.subActions) {
-//            getCombinedMessages(sub, sb);
-//        }
-//    }
+    //    public static void getCombinedMessages(CliActionReport aReport, StringBuilder sb) {
+    //        if (aReport == null || sb == null)
+    //            return;
+    //        String mainMsg = ""; //this is the message related to the topMessage
+    //        String failMsg; //this is the message related to failure cause
+    //        // Other code in the server may write something like report.setMessage(exception.getMessage())
+    //        // and also set report.setFailureCause(exception). We need to avoid the duplicate message.
+    //        if (aReport.getMessage() != null && aReport.getMessage().length() != 0) {
+    //            if (sb.length() > 0) sb.append(EOL);
+    //            sb.append(aReport.getMessage());
+    //        }
+    //        if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && aReport.getFailureCause().getMessage().length() != 0) {
+    //            failMsg = aReport.getFailureCause().getMessage();
+    //            if (!failMsg.equals(mainMsg))
+    //                if (sb.length() > 0) sb.append(EOL);
+    //                sb.append(failMsg);
+    //        }
+    //        for (CliActionReport sub : aReport.subActions) {
+    //            getCombinedMessages(sub, sb);
+    //        }
+    //    }
 
     @Override
     public boolean hasSuccesses() {
-        return has(this,ExitCode.SUCCESS);
+        return has(this, ExitCode.SUCCESS);
     }
 
     @Override
     public boolean hasWarnings() {
-        return has(this,ExitCode.WARNING);
+        return has(this, ExitCode.WARNING);
     }
 
     @Override
     public boolean hasFailures() {
-        return has(this,ExitCode.FAILURE);
+        return has(this, ExitCode.FAILURE);
     }
 
     private static boolean has(CliActionReport ar, ExitCode value) {
@@ -225,13 +223,13 @@ public class CliActionReport extends ActionReport {
     public void writeReport(OutputStream os) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private void addIndent(int level, StringBuilder sb) {
         for (int i = 0; i < level; i++) {
             sb.append("    ");
         }
     }
-    
+
     private void messageToString(int indentLevel, String id, MessagePart msg, StringBuilder sb) {
         if (msg == null) {
             return;
@@ -259,7 +257,7 @@ public class CliActionReport extends ActionReport {
             }
         }
     }
-    
+
     private String toString(int indentLevel, String id, CliActionReport ar) {
         if (id == null) {
             id = "0";
@@ -301,7 +299,7 @@ public class CliActionReport extends ActionReport {
         }
         return r.toString();
     }
-    
+
     @Override
     public String toString() {
         return toString(0, "0", this);

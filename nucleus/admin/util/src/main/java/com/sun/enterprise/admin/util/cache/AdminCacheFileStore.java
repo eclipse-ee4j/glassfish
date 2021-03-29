@@ -24,7 +24,8 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** {@link AdminCahce} based on file system.<br/>
+/**
+ * {@link AdminCahce} based on file system.<br/>
  * <i>Singleton</i>
  *
  * @author mmares
@@ -62,15 +63,15 @@ public class AdminCacheFileStore implements AdminCache {
             return null;
         } catch (IOException ex) {
             if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, AdminLoggerInfo.mCannotReadCache,
-                        new Object[] { key });
+                logger.log(Level.WARNING, AdminLoggerInfo.mCannotReadCache, new Object[] { key });
             }
             return null;
         } finally {
             if (is != null) {
                 try {
                     is.close();
-                } catch (Exception ex) {}
+                } catch (Exception ex) {
+                }
             }
         }
 
@@ -87,13 +88,13 @@ public class AdminCacheFileStore implements AdminCache {
         return new BufferedInputStream(new FileInputStream(f));
     }
 
-    private File getCacheFile(String key) throws IOException{
+    private File getCacheFile(String key) throws IOException {
         File dir = AsadminSecurityUtil.getDefaultClientDir();
         int idx = key.lastIndexOf('/');
         if (idx > 0) {
             dir = new File(dir, key.substring(0, idx));
 
-            if(!FileUtils.mkdirsMaybe(dir))
+            if (!FileUtils.mkdirsMaybe(dir))
                 throw new IOException("Can't create directory: " + dir);
             key = key.substring(idx + 1);
             if (key.isEmpty()) {
@@ -121,8 +122,7 @@ public class AdminCacheFileStore implements AdminCache {
         File cacheFile;
         try {
             cacheFile = getCacheFile(key);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return;
         }
         // @todo Java SE 7 - use try with resources
@@ -135,22 +135,22 @@ public class AdminCacheFileStore implements AdminCache {
 
             if (!FileUtils.deleteFileMaybe(cacheFile) || !tempFile.renameTo(cacheFile)) {
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, AdminLoggerInfo.mCannotWriteCache,
-                            new Object[] { cacheFile.getPath() });
+                    logger.log(Level.WARNING, AdminLoggerInfo.mCannotWriteCache, new Object[] { cacheFile.getPath() });
                 }
-                if(!FileUtils.deleteFileMaybe(tempFile)) {
+                if (!FileUtils.deleteFileMaybe(tempFile)) {
                     logger.log(Level.FINE, "can't delete file: {0}", tempFile);
                 }
-
 
             }
         } catch (IOException e) {
             if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, AdminLoggerInfo.mCannotWriteCache,
-                            new Object[] { cacheFile.getPath() });
+                logger.log(Level.WARNING, AdminLoggerInfo.mCannotWriteCache, new Object[] { cacheFile.getPath() });
             }
         } finally {
-            try { os.close(); } catch (Exception ex) {}
+            try {
+                os.close();
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -165,8 +165,7 @@ public class AdminCacheFileStore implements AdminCache {
         File cacheFile;
         try {
             cacheFile = getCacheFile(key);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return false;
         }
         return cacheFile.exists() && cacheFile.isFile();
@@ -183,8 +182,7 @@ public class AdminCacheFileStore implements AdminCache {
         File cacheFile;
         try {
             cacheFile = getCacheFile(key);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return null;
         }
         if (!cacheFile.exists() || !cacheFile.isFile()) {

@@ -33,25 +33,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * The change-master-password command.
- * This is a command which can operate on both the DAS and the node
- * The master password is the password that is used to encrypt the DAS (and instances) keystore. Therefore the DAS and associated server instances need the password to open the keystore at startup.
- * The master password is the same for the DAS and all instances in the domain
- * The default master password is "changeit"and can be saved in a master-password file:
-
- * 1. DAS: domains/domainname/master-password
- * 2. Instance: nodes/node-name/master-password
- * The master-password may be changed on the DAS by running change-master-password.
- * The DAS must be down to run this command. change-master-password supports the --savemasterpassword option.
- * To change the master-password file on a node you run change-master-password with --nodedir
- * and the node name.  The instances must be down to run this command on a node
+ * The change-master-password command. This is a command which can operate on both the DAS and the node The master
+ * password is the password that is used to encrypt the DAS (and instances) keystore. Therefore the DAS and associated
+ * server instances need the password to open the keystore at startup. The master password is the same for the DAS and
+ * all instances in the domain The default master password is "changeit"and can be saved in a master-password file:
  * 
- * If --nodedir is not specified it will look in the default location of nodes folder and find
- * the node
+ * 1. DAS: domains/domainname/master-password 2. Instance: nodes/node-name/master-password The master-password may be
+ * changed on the DAS by running change-master-password. The DAS must be down to run this command.
+ * change-master-password supports the --savemasterpassword option. To change the master-password file on a node you run
+ * change-master-password with --nodedir and the node name. The instances must be down to run this command on a node
+ * 
+ * If --nodedir is not specified it will look in the default location of nodes folder and find the node
  *
- * If the domain and node have the same name it will execute the command for the domain. Incase
- * you want the command to be executed for a node when the domain and node name is same
- * you will need to specify the --nodedir option
+ * If the domain and node have the same name it will execute the command for the domain. Incase you want the command to
+ * be executed for a node when the domain and node name is same you will need to specify the --nodedir option
  *
  * @author Bhakti Mehta
  */
@@ -74,16 +69,11 @@ public class ChangeMasterPasswordCommand extends CLICommand {
     @Param(name = "domaindir", optional = true)
     protected String domainDirParam = null;
 
-    private final String CHANGE_MASTER_PASSWORD_DAS =
-            "_change-master-password-das";
+    private final String CHANGE_MASTER_PASSWORD_DAS = "_change-master-password-das";
 
-    private final String CHANGE_MASTER_PASSWORD_NODE =
-            "_change-master-password-node";
+    private final String CHANGE_MASTER_PASSWORD_NODE = "_change-master-password-node";
 
-    private static final LocalStringsImpl strings =
-       new LocalStringsImpl(ChangeMasterPasswordCommand.class);
-
-
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ChangeMasterPasswordCommand.class);
 
     @Override
     protected int executeCommand() throws CommandException {
@@ -93,15 +83,13 @@ public class ChangeMasterPasswordCommand extends CLICommand {
             throw new CommandException(strings.get("both.domaindir.nodedir.not.allowed"));
         }
         try {
-            if (isDomain()) {  // is it domain
-                command = CLICommand.getCommand(habitat,
-                        CHANGE_MASTER_PASSWORD_DAS);
+            if (isDomain()) { // is it domain
+                command = CLICommand.getCommand(habitat, CHANGE_MASTER_PASSWORD_DAS);
                 return command.execute(argv);
             }
 
             if (nodeDir != null) {
-                command = CLICommand.getCommand(habitat,
-                        CHANGE_MASTER_PASSWORD_NODE);
+                command = CLICommand.getCommand(habitat, CHANGE_MASTER_PASSWORD_NODE);
                 return command.execute(argv);
             } else {
 
@@ -109,42 +97,41 @@ public class ChangeMasterPasswordCommand extends CLICommand {
                 // It could be a node
                 // We add defaultNodeDir parameter to args
                 ArrayList arguments = new ArrayList<String>(Arrays.asList(argv));
-                arguments.remove(argv.length -1);
+                arguments.remove(argv.length - 1);
                 arguments.add("--nodedir");
                 arguments.add(getDefaultNodesDirs().getAbsolutePath());
                 arguments.add(domainNameOrNodeName);
                 String[] newargs = (String[]) arguments.toArray(new String[arguments.size()]);
 
-                command = CLICommand.getCommand(habitat,
-                        CHANGE_MASTER_PASSWORD_NODE);
+                command = CLICommand.getCommand(habitat, CHANGE_MASTER_PASSWORD_NODE);
                 return command.execute(newargs);
             }
         } catch (IOException e) {
-            throw new CommandException(e.getMessage(),e);
+            throw new CommandException(e.getMessage(), e);
         }
     }
 
     @Override
-    public int execute(String... args) throws CommandException {  
-        
+    public int execute(String... args) throws CommandException {
+
         //This will parse the args and call executeCommand
         super.execute(args);
         return 0;
-       
+
     }
 
     private boolean isDomain() throws IOException {
         DomainDirs domainDirs = null;
         //if both domainDir and domainNameOrNodeName are null get default domaindir
-        if (domainDirParam == null && domainNameOrNodeName == null ) {
+        if (domainDirParam == null && domainNameOrNodeName == null) {
             domainDirs = new DomainDirs(DomainDirs.getDefaultDomainsDir());
-        } else  {
+        } else {
             if (domainDirParam != null) {
-                domainDirs = new DomainDirs(new File(domainDirParam),domainNameOrNodeName);
+                domainDirs = new DomainDirs(new File(domainDirParam), domainNameOrNodeName);
                 return domainDirs.isValid();
             }
             if (domainNameOrNodeName != null) {
-                return new File(DomainDirs.getDefaultDomainsDir(),domainNameOrNodeName).isDirectory();
+                return new File(DomainDirs.getDefaultDomainsDir(), domainNameOrNodeName).isDirectory();
             }
         }
         //It can be null in the case when this is not a domain but a node
@@ -156,9 +143,7 @@ public class ChangeMasterPasswordCommand extends CLICommand {
     }
 
     private File getDefaultNodesDirs() throws IOException {
-        return new File(DomainDirs.getDefaultDomainsDir().getParent(),
-                "nodes");
+        return new File(DomainDirs.getDefaultDomainsDir().getParent(), "nodes");
     }
-
 
 }

@@ -21,11 +21,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/** {@link AdminCache} based on week references and backgrounded by
- * {@link AdminCacheFileStore} layer. <br/>
- * Max one object representation of cached data are stored by this
- * implementation. If different type is requested, it will be reloaded from
- * file store using {@code AdminCacheFileStore}.<br/>
+/**
+ * {@link AdminCache} based on week references and backgrounded by {@link AdminCacheFileStore} layer. <br/>
+ * Max one object representation of cached data are stored by this implementation. If different type is requested, it
+ * will be reloaded from file store using {@code AdminCacheFileStore}.<br/>
  *
  * @author mmares
  */

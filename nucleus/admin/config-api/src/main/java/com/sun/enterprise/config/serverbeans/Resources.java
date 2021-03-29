@@ -21,8 +21,8 @@ import org.jvnet.hk2.config.*;
 import java.util.*;
 
 /**
- * Applications can lookup resources registered in the server. These can be through portable JNDI names
- * (eg: resource-ref in standard deployment descriptors like ejb-jar.xml, web.xml etc.,) or by doing direct lookup.
+ * Applications can lookup resources registered in the server. These can be through portable JNDI names (eg:
+ * resource-ref in standard deployment descriptors like ejb-jar.xml, web.xml etc.,) or by doing direct lookup.
  *
  * Each of the resource has valid target for defining the resource-ref. (eg: JdbcResource can be referred from Server,
  * Cluster, Stand Alone Instance, ServerResource can be referred from Server, Cluster, Stand Alone Instance, Config)
@@ -42,24 +42,23 @@ import java.util.*;
     ServerResource"
 }) */
 
-
 @Configured
-public interface Resources extends ConfigBeanProxy  {
+public interface Resources extends ConfigBeanProxy {
 
     /**
-     * Returns a list of Resources like Custom Resource Or External Jndi Resource Or Jdbc Resource Or Mail Resource Or
-     * Admin Object Resource Or Connector Resource Or Resource Adapter Config Or Jdbc Connection Pool
-     * Or Connector Connection Pool.
+     * Returns a list of Resources like Custom Resource Or External Jndi Resource Or Jdbc Resource Or Mail Resource Or Admin
+     * Object Resource Or Connector Resource Or Resource Adapter Config Or Jdbc Connection Pool Or Connector Connection
+     * Pool.
      * <p/>
      * <p/>
-     * This accessor method returns a reference to the live list, not a snapshot.
-     * Therefore any modification you make to the returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the customResource Or
-     * ExternalJndiResource Or JdbcResource Or MailResource Or AdminObjectResource Or ConnectorResource
-     * Or ResourceAdapterConfig Or JdbcConnectionPool Or ConnectorConnectionPool.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * customResource Or ExternalJndiResource Or JdbcResource Or MailResource Or AdminObjectResource Or ConnectorResource Or
+     * ResourceAdapterConfig Or JdbcConnectionPool Or ConnectorConnectionPool.
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
      *    get(CustomResource Or ExternalJndiResource Or JdbcResource Or MailResource Or AdminObjectResource Or
      *    ConnectorResource Or ResourceAdapterConfig Or JdbcConnectionPool Or ConnectorConnectionPool).add(newItem);
@@ -78,16 +77,16 @@ public interface Resources extends ConfigBeanProxy  {
     @DuckTyped
     public <T> Resource getResourceByName(Class<T> type, String name);
 
-/*
+    /*
     @DuckTyped
     public Collection<BindableResource> getResourcesOfPool(String connectionPoolName);
-*/
+    */
 
     public class Duck {
 
-        public static <T> Collection<T> getResources(Resources resources, Class<T> type){
+        public static <T> Collection<T> getResources(Resources resources, Class<T> type) {
             Collection<T> filteredResources = new ArrayList<T>();
-            for(Resource resource : resources.getResources()){
+            for (Resource resource : resources.getResources()) {
                 if (type.isInstance(resource)) {
                     filteredResources.add(type.cast(resource));
                 }
@@ -99,7 +98,7 @@ public interface Resources extends ConfigBeanProxy  {
             Resource foundRes = null;
             Iterator itr = resources.getResources(type).iterator();
             while (itr.hasNext()) {
-                Resource res = (Resource)(itr.next());
+                Resource res = (Resource) (itr.next());
                 String resourceName = res.getIdentity();
                 if (name.equals(resourceName)) {
                     foundRes = res;

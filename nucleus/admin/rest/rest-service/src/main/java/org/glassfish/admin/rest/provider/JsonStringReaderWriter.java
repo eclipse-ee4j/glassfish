@@ -35,8 +35,8 @@ import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider
 /**
  * Json String reader writer.
  * <p>
- * The whole purpose is to override (and effectively disable) JSON-B processing of
- * {@link String} returned as application/json.
+ * The whole purpose is to override (and effectively disable) JSON-B processing of {@link String} returned as
+ * application/json.
  *
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
@@ -52,13 +52,8 @@ public class JsonStringReaderWriter extends AbstractMessageReaderWriterProvider<
     }
 
     @Override
-    public String readFrom(
-            Class<String> type,
-            Type genericType,
-            Annotation annotations[],
-            MediaType mediaType,
-            MultivaluedMap<String, String> httpHeaders,
-            InputStream entityStream) throws IOException {
+    public String readFrom(Class<String> type, Type genericType, Annotation annotations[], MediaType mediaType,
+            MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException {
         return readFromAsString(entityStream, mediaType);
     }
 
@@ -73,14 +68,8 @@ public class JsonStringReaderWriter extends AbstractMessageReaderWriterProvider<
     }
 
     @Override
-    public void writeTo(
-            String t,
-            Class<?> type,
-            Type genericType,
-            Annotation annotations[],
-            MediaType mediaType,
-            MultivaluedMap<String, Object> httpHeaders,
-            OutputStream entityStream) throws IOException {
+    public void writeTo(String t, Class<?> type, Type genericType, Annotation annotations[], MediaType mediaType,
+            MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException {
         writeToAsString(t, entityStream, mediaType);
     }
 }

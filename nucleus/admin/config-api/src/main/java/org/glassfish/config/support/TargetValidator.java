@@ -25,8 +25,7 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 public interface TargetValidator {
     /**
-     * returns true if the passed target parameter value is a valid identifier
-     * of a target instance.
+     * returns true if the passed target parameter value is a valid identifier of a target instance.
      *
      * @param habitat the habitat where to lookup all the target instances
      * @param target the target identifier to check

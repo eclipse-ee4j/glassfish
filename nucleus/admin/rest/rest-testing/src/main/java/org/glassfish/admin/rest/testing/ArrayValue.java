@@ -30,7 +30,7 @@ public class ArrayValue extends Value {
 
     ArrayValue() {
     }
-    
+
     public boolean isIgnoreExtra() {
         return this.ignoreExtra;
     }

@@ -17,7 +17,7 @@
 package com.sun.enterprise.admin.util.proxy;
 
 /**
- * Represents state of a call. 
+ * Represents state of a call.
  */
 public class CallState {
     public static final CallState IN_PROCESS = new CallState("Processing");

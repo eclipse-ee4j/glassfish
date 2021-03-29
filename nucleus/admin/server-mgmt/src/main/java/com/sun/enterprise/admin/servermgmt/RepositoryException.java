@@ -24,41 +24,43 @@ package com.sun.enterprise.admin.servermgmt;
 
 /**
  *
- * @author  kebbs
+ * @author kebbs
  */
 public class RepositoryException extends java.lang.Exception {
-    
-       /** Constructs a new InstanceException object.
+
+    /**
+     * Constructs a new InstanceException object.
+     * 
      * @param message
      */
-    public RepositoryException(String message)
-    {
+    public RepositoryException(String message) {
         super(message);
     }
 
-    /** Constructs a new InstanceException object.
+    /**
+     * Constructs a new InstanceException object.
+     * 
      * @param cause
      */
-    public RepositoryException(Throwable cause)
-    {
+    public RepositoryException(Throwable cause) {
         //When created without a message, we take the message of our cause
         this(cause.getLocalizedMessage(), cause);
     }
 
-    /** Constructs a new InstanceException object.
+    /**
+     * Constructs a new InstanceException object.
+     * 
      * @param message
      * @param cause
      */
-    public RepositoryException(String message, Throwable cause)
-    {
+    public RepositoryException(String message, Throwable cause) {
         super(message, cause);
     }
 
     private static final String PREFIX = "( ";
     private static final String POSTFIX = " )";
-   
-    private String format(String msg, String causeMsg, Throwable cause)
-    {
+
+    private String format(String msg, String causeMsg, Throwable cause) {
         if (cause != null) {
             if (msg == null) {
                 if (causeMsg != null) {
@@ -67,7 +69,7 @@ public class RepositoryException extends java.lang.Exception {
                     msg = cause.toString();
                 }
             } else if (causeMsg != null && !causeMsg.equals(msg)) {
-                msg += PREFIX + causeMsg + POSTFIX;               
+                msg += PREFIX + causeMsg + POSTFIX;
             } else {
                 msg += PREFIX + cause.toString() + POSTFIX;
             }
@@ -75,31 +77,29 @@ public class RepositoryException extends java.lang.Exception {
         return msg;
     }
 
-    /** If there is a cause, appends the getCause().getMessage()
-     *  to the original message.
-     */    
+    /**
+     * If there is a cause, appends the getCause().getMessage() to the original message.
+     */
     @Override
-    public String getMessage()
-    {
+    public String getMessage() {
         String msg = super.getMessage();
         Throwable cause = super.getCause();
         if (cause != null) {
             msg = format(msg, cause.getMessage(), cause);
         }
         return msg;
-    } 
-    
-    /** If there is a cause, appends the getCause().getMessage()
-     *  to the original message.
+    }
+
+    /**
+     * If there is a cause, appends the getCause().getMessage() to the original message.
      */
     @Override
-    public String getLocalizedMessage()
-    {
+    public String getLocalizedMessage() {
         String msg = super.getLocalizedMessage();
         Throwable cause = super.getCause();
         if (cause != null) {
             msg = format(msg, cause.getLocalizedMessage(), cause);
         }
         return msg;
-    }       
+    }
 }

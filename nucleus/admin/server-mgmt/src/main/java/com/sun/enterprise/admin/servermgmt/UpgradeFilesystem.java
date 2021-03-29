@@ -41,17 +41,16 @@ public class UpgradeFilesystem implements ConfigurationUpgrade, PostConstruct {
     private void upgradeFilesystem() {
 
         // Rename nodeagents to nodes
-        String installDir = System.getProperty(
-                SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String installDir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
 
         File agentsDir = new File(installDir, "nodeagents");
         File nodesDir = new File(installDir, "nodes");
 
         // Only do this if nodeagents exists and nodes does not
         if (agentsDir.exists() && !nodesDir.exists()) {
-            getLogger().log(Level.INFO, RENAME_CERT_FILE, new Object[]{agentsDir.getPath(), nodesDir.getPath()});
+            getLogger().log(Level.INFO, RENAME_CERT_FILE, new Object[] { agentsDir.getPath(), nodesDir.getPath() });
             if (!agentsDir.renameTo(nodesDir)) {
-                getLogger().log(Level.SEVERE, BAD_RENAME_CERT_FILE, new Object[]{agentsDir.getPath(), nodesDir.getPath()});
+                getLogger().log(Level.SEVERE, BAD_RENAME_CERT_FILE, new Object[] { agentsDir.getPath(), nodesDir.getPath() });
             }
         }
     }

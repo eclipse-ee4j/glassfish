@@ -27,18 +27,18 @@ import javax.xml.stream.XMLStreamWriter;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandModel;
 
-/** Marshals {@code CommandModel} into XML and JSON representation.
+/**
+ * Marshals {@code CommandModel} into XML and JSON representation.
  *
  * @author mmares
  */
 @Provider
-@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class CommandModelStaxProvider extends AbstractStaxProvider<CommandModel> {
     public CommandModelStaxProvider() {
-        super(CommandModel.class, MediaType.APPLICATION_XML_TYPE, 
-              MediaType.TEXT_XML_TYPE, MediaType.APPLICATION_JSON_TYPE);
+        super(CommandModel.class, MediaType.APPLICATION_XML_TYPE, MediaType.TEXT_XML_TYPE, MediaType.APPLICATION_JSON_TYPE);
     }
-    
+
     @Override
     protected void writeContentToStream(CommandModel proxy, XMLStreamWriter wr) throws XMLStreamException {
         if (proxy == null) {
@@ -110,7 +110,7 @@ public class CommandModelStaxProvider extends AbstractStaxProvider<CommandModel>
         wr.writeEndElement(); //</command>
         wr.writeEndDocument();
     }
-    
+
     public static String simplifiedTypeOf(CommandModel.ParamModel p) {
         Class t = p.getType();
         if (t == Boolean.class || t == boolean.class) {

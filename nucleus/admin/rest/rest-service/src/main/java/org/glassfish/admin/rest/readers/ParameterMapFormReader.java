@@ -36,7 +36,7 @@ import org.glassfish.api.admin.ParameterMap;
  * @author mh124079
  * @author Ludovic Champenois ludo@dev.java.net
  */
-@Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_OCTET_STREAM})
+@Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_OCTET_STREAM })
 @Provider
 public class ParameterMapFormReader implements MessageBodyReader<ParameterMap> {
 
@@ -46,9 +46,8 @@ public class ParameterMapFormReader implements MessageBodyReader<ParameterMap> {
     }
 
     @Override
-    public ParameterMap readFrom(Class<ParameterMap> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers, 
-            InputStream in) throws IOException {
+    public ParameterMap readFrom(Class<ParameterMap> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+            MultivaluedMap<String, String> headers, InputStream in) throws IOException {
         String formData = readAsString(in);
 
         ParameterMap map = new ParameterMap();
@@ -58,14 +57,14 @@ public class ParameterMapFormReader implements MessageBodyReader<ParameterMap> {
             token = tokenizer.nextToken();
             int idx = token.indexOf('=');
             if (idx < 0) {
-                map.add(URLDecoder.decode(token,"UTF-8"), null);
+                map.add(URLDecoder.decode(token, "UTF-8"), null);
             } else if (idx > 0) {
-                map.add(URLDecoder.decode(token.substring(0, idx),"UTF-8"), URLDecoder.decode(token.substring(idx+1),"UTF-8"));
+                map.add(URLDecoder.decode(token.substring(0, idx), "UTF-8"), URLDecoder.decode(token.substring(idx + 1), "UTF-8"));
             }
         }
         return map;
     }
-    
+
     public final String readAsString(InputStream in) throws IOException {
         Reader reader = new InputStreamReader(in);
         StringBuilder sb = new StringBuilder();
@@ -73,7 +72,7 @@ public class ParameterMapFormReader implements MessageBodyReader<ParameterMap> {
         int l;
         while ((l = reader.read(c)) != -1) {
             sb.append(c, 0, l);
-        } 
+        }
         return sb.toString();
     }
 }

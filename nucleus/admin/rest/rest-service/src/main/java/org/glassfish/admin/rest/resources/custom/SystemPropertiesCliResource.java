@@ -56,12 +56,13 @@ import org.jvnet.hk2.config.Dom;
  *
  * @author jasonlee
  */
-@Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+@Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+        MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
+@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
 @CommandLock(CommandLock.LockType.NONE)
-@ExecuteOn({RuntimeType.DAS})
-@TargetType(value = {CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG, CommandTarget.DAS,
-    CommandTarget.DOMAIN, CommandTarget.STANDALONE_INSTANCE})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType(value = { CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG, CommandTarget.DAS,
+        CommandTarget.DOMAIN, CommandTarget.STANDALONE_INSTANCE })
 public class SystemPropertiesCliResource extends TemplateExecCommand {
     protected static final String TAG_SYSTEM_PROPERTY = "system-property";
 
@@ -69,7 +70,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
     protected ServiceLocator injector;
 
     protected Dom entity;
-//    protected Dom parent;
+    //    protected Dom parent;
 
     protected Domain domain;
 
@@ -109,7 +110,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
 
     @POST
     public Response create(HashMap<String, String> data) {
-	Response resp = deleteRemovedProperties(data);
+        Response resp = deleteRemovedProperties(data);
         return (resp == null) ? saveProperties(data) : resp;
     }
 
@@ -164,10 +165,11 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
 
         // Figure out how to recurse
         if (dom.getProxyType().equals(Server.class)) {
-//            Server server = (Server) spb;
+            //            Server server = (Server) spb;
             // Clustered instance
-            if (((Server)dom.createProxy()).getCluster() != null) {
-                getSystemProperties(properties, getCluster(dom.parent().parent(), ((Server)dom.createProxy()).getCluster().getName()), true);
+            if (((Server) dom.createProxy()).getCluster() != null) {
+                getSystemProperties(properties, getCluster(dom.parent().parent(), ((Server) dom.createProxy()).getCluster().getName()),
+                        true);
             } else {
                 // Standalone instance or DAS
                 getSystemProperties(properties, getConfig(dom.parent().parent(), dom.attribute("config-ref")), true);
@@ -179,7 +181,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
 
     protected Dom getCluster(Dom domain, String clusterName) {
         List<Dom> configs = domain.nodeElements("clusters").get(0).nodeElements("cluster");
-        for(Dom config : configs) {
+        for (Dom config : configs) {
             if (config.attribute("name").equals(clusterName)) {
                 return config;
             }
@@ -189,7 +191,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
 
     protected Dom getConfig(Dom domain, String configName) {
         List<Dom> configs = domain.nodeElements("configs").get(0).nodeElements("config");
-        for(Dom config : configs) {
+        for (Dom config : configs) {
             if (config.attribute("name").equals(configName)) {
                 return config;
             }
@@ -203,10 +205,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             final String value = entry.getValue();
             if ((value != null) && !value.isEmpty()) {
-                options.append(sep)
-                        .append(entry.getKey())
-                        .append("=")
-                        .append(value.replaceAll(":", "\\\\:").replaceAll("=", "\\\\="));
+                options.append(sep).append(entry.getKey()).append("=").append(value.replaceAll(":", "\\\\:").replaceAll("=", "\\\\="));
                 sep = ":";
             }
         }
@@ -254,22 +253,22 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
     }
 
     //returns null if successful or the Response which contains the error msg.
-    protected Response deleteRemovedProperties(Map<String,String> newProps) {
+    protected Response deleteRemovedProperties(Map<String, String> newProps) {
         List<String> existingList = new ArrayList();
         Dom parent = getEntity();
         for (Dom existingProp : parent.nodeElements(TAG_SYSTEM_PROPERTY)) {
             existingList.add(existingProp.attribute("name"));
         }
         //no existing properites,return null
-        if (existingList.isEmpty()){
+        if (existingList.isEmpty()) {
             return null;
         }
 
         //delete the props thats no longer in the new list.
-        for(String onePropName : existingList){
-            if (!newProps.containsKey(onePropName)){
+        for (String onePropName : existingList) {
+            if (!newProps.containsKey(onePropName)) {
                 Response resp = deleteProperty(null, onePropName);
-                if (resp.getStatus() != HttpURLConnection.HTTP_OK){
+                if (resp.getStatus() != HttpURLConnection.HTTP_OK) {
                     return resp;
                 }
             }

@@ -81,9 +81,8 @@ public class ArgumentManager {
                 map.put("default", args.get(i));
             }
         }
-        
+
         return map;
     }
-
 
 }

@@ -71,7 +71,7 @@ public class Profiler {
         if (ok(cp)) {
             return stringToFiles(cp);
         }
-        
+
         return emptyList();
     }
 
@@ -85,7 +85,7 @@ public class Profiler {
         if (ok(cp)) {
             return stringToFiles(cp);
         }
-            
+
         return emptyList();
     }
 

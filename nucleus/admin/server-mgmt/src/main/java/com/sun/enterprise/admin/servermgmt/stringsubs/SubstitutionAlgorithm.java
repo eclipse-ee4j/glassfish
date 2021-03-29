@@ -23,8 +23,9 @@ public interface SubstitutionAlgorithm {
 
     /**
      * Perform's string substitution.
-     * <p> Reads the character stream from the given {@link Substitutable} object,
-     *  perform substitution and writes it back to the object.
+     * <p>
+     * Reads the character stream from the given {@link Substitutable} object, perform substitution and writes it back to
+     * the object.
      * </p>
      *
      * @param substituable Provide input and output stream.

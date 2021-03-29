@@ -21,8 +21,7 @@ import java.lang.management.ManagementFactory;
 /**
  * Provides V2 compatible JVM stats
  *
- * This is a temporary solution until we decide on the usage
- * JSR77 stats interfaces
+ * This is a temporary solution until we decide on the usage JSR77 stats interfaces
  *
  * @author Sreenivas Munnangi
  */

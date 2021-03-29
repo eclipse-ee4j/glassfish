@@ -22,6 +22,7 @@ import org.jvnet.hk2.config.Configured;
 
 /**
  * Super interface for any extension element to the {@link Cluster} configuration
+ * 
  * @author Jerome Dochez
  */
 @Configured

@@ -28,8 +28,8 @@ import org.glassfish.admin.rest.model.ResponseBody;
 import org.glassfish.admin.rest.utils.Util;
 
 /**
- * This filter reformats string entities from non-success responses
- * into arrays of message entities (when not using the REST legacy mode).
+ * This filter reformats string entities from non-success responses into arrays of message entities (when not using the
+ * REST legacy mode).
  *
  * @author tmoreau
  */
@@ -65,7 +65,7 @@ public class ExceptionFilter implements ContainerResponseFilter {
         // Since we never return links from this filter, instead of looking
         // for the header, we can just always tell the ResponseBody to ignore links.
         ResponseBody rb = new ResponseBody(false);
-        String errorMsg = (String)entity;
+        String errorMsg = (String) entity;
         rb.addFailure(errorMsg);
         resCtx.setEntity(rb, resCtx.getEntityAnnotations(), Constants.MEDIA_TYPE_JSON_TYPE);
     }

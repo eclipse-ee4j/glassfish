@@ -28,14 +28,14 @@ import org.glassfish.admin.rest.results.ActionReportResult;
 @Provider
 @Produces(MediaType.APPLICATION_XML)
 public class ActionReportResultXmlProvider extends BaseProvider<ActionReportResult> {
-    
+
     public ActionReportResultXmlProvider() {
         super(ActionReportResult.class, MediaType.APPLICATION_XML_TYPE);
     }
 
     @Override
     public String getContent(ActionReportResult proxy) {
-        ActionReporter ar = (ActionReporter)proxy.getActionReport();
+        ActionReporter ar = (ActionReporter) proxy.getActionReport();
         ActionReportXmlProvider provider = new ActionReportXmlProvider();
         return provider.getContent(ar);
     }

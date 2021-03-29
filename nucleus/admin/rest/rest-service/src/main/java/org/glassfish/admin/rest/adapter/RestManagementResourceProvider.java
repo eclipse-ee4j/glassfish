@@ -56,7 +56,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
     public Feature getJsonFeature() {
         RestLogging.restLogger.log(Level.SEVERE, "Hey, you... FIX ME!!! {0}", RestManagementResourceProvider.class.getName());
         return super.getJsonFeature();
-//        return new JacksonFeature();
+        //        return new JacksonFeature();
     }
 
     @Override
@@ -65,11 +65,8 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
     }
 
     @Override
-    public ResourceConfig getResourceConfig(Set<Class<?>> classes,
-                                            final ServerContext sc,
-                                            final ServiceLocator serviceLocator,
-                                            final Set<? extends Binder> additionalBinders)
-            throws EndpointRegistrationException {
+    public ResourceConfig getResourceConfig(Set<Class<?>> classes, final ServerContext sc, final ServiceLocator serviceLocator,
+            final Set<? extends Binder> additionalBinders) throws EndpointRegistrationException {
         ResourceConfig rc = super.getResourceConfig(classes, sc, serviceLocator, additionalBinders);
         registerExtendedWadlConfig(classes, rc, serviceLocator);
         rc.register(ExceptionFilter.class);
@@ -79,7 +76,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
 
     @Override
     public Set<Class<?>> getResourceClasses(ServiceLocator habitat) {
-//         return getLazyJersey().getResourcesConfigForManagement(locatorBridge);
+        //         return getLazyJersey().getResourcesConfigForManagement(locatorBridge);
         Class domainResourceClass = null;//org.glassfish.admin.rest.resources.generated.DomainResource.class;
 
         generateASM(habitat);
@@ -97,12 +94,12 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
             r.add(GeneratorResource.class);
         }
         r.add(StatusGenerator.class);
-//        r.add(ClientGenerator.class);
-//        r.add(ModelResource.class);
+        //        r.add(ClientGenerator.class);
+        //        r.add(ModelResource.class);
         //r.add(ActionReportResource.class);
 
         r.add(domainResourceClass);
-//        r.add(DomainResource.class);
+        //        r.add(DomainResource.class);
         r.add(ManagementProxyResource.class);
         r.add(org.glassfish.admin.rest.resources.SessionsResource.class);
 
@@ -131,8 +128,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
         r.add(org.glassfish.admin.rest.provider.ResponseBodyWriter.class);
         r.add(org.glassfish.admin.rest.provider.RestCollectionProvider.class);
         r.add(org.glassfish.admin.rest.provider.RestModelWriter.class);
-//        r.add(ProxyMessageBodyWriter.class);
-
+        //        r.add(ProxyMessageBodyWriter.class);
 
         r.add(org.glassfish.admin.rest.provider.FormWriter.class);
 
@@ -154,9 +150,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
         return r;
     }
 
-    private void registerExtendedWadlConfig(Set<Class<?>> classes,
-            ResourceConfig rc,
-            ServiceLocator serviceLocator) {
+    private void registerExtendedWadlConfig(Set<Class<?>> classes, ResourceConfig rc, ServiceLocator serviceLocator) {
         List<ServiceHandle<JavadocWadlGeneratorConfig>> handles = serviceLocator.getAllServiceHandles(JavadocWadlGeneratorConfig.class);
         for (ServiceHandle<JavadocWadlGeneratorConfig> handle : handles) {
             ActiveDescriptor<JavadocWadlGeneratorConfig> ad = handle.getActiveDescriptor();

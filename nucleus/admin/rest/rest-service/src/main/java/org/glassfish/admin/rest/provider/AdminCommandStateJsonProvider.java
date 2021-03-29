@@ -30,20 +30,20 @@ import org.glassfish.api.admin.AdminCommandState;
  * @author mmares
  */
 @Provider
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class AdminCommandStateJsonProvider extends BaseProvider<AdminCommandState> {
-    
+
     private static final ActionReportJson2Provider actionReportJsonProvider = new ActionReportJson2Provider();
 
     public AdminCommandStateJsonProvider() {
         super(AdminCommandState.class, MediaType.APPLICATION_JSON_TYPE, new MediaType("application", "x-javascript"));
     }
-    
+
     @Override
     protected boolean isGivenTypeWritable(Class<?> type, Type genericType) {
         return desiredType.isAssignableFrom(type);
     }
-    
+
     @Override
     public String getContent(AdminCommandState proxy) {
         try {
@@ -52,7 +52,7 @@ public class AdminCommandStateJsonProvider extends BaseProvider<AdminCommandStat
             throw new RuntimeException(ex);
         }
     }
-    
+
     public JSONObject processState(AdminCommandState state) throws JSONException {
         JSONObject result = new JSONObject();
         result.put("state", state.getState().name());
@@ -62,11 +62,11 @@ public class AdminCommandStateJsonProvider extends BaseProvider<AdminCommandStat
         addActionReporter(ar, result);
         return result;
     }
-    
+
     protected void addActionReporter(ActionReporter ar, JSONObject json) throws JSONException {
         if (ar != null) {
             json.put("action-report", actionReportJsonProvider.processReport(ar));
         }
     }
-    
+
 }

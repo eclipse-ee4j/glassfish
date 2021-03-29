@@ -75,5 +75,4 @@ public class GFLauncherException extends Exception {
         super(t);
     }
 
-
 }

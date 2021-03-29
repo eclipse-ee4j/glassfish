@@ -32,9 +32,8 @@ import org.glassfish.quality.ToDo;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Defines the standard JACC properties used for setting up the JACC provider.
- * It also allows optional properties which can be used by the provider
- * implementation for its configuration.
+ * Defines the standard JACC properties used for setting up the JACC provider. It also allows optional properties which
+ * can be used by the provider implementation for its configuration.
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -49,29 +48,25 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
      *
      * A name for this jacc-provider. Is always "default" for default provider.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
     String getName();
 
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the policyProvider property.
      *
-     * Corresponds to (and can be overridden by) the system property
-     * jakarta.security.jacc.policy.provider
+     * Corresponds to (and can be overridden by) the system property jakarta.security.jacc.policy.provider
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
@@ -80,8 +75,7 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the policyProvider property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setPolicyProvider(String value) throws PropertyVetoException;
 
@@ -91,8 +85,7 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
      * Corresponds to (and can be overridden by) the system property
      * jakarta.security.jacc.PolicyConfigurationFactory.provider
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getPolicyConfigurationFactoryProvider();
@@ -100,16 +93,15 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the policyConfigurationFactoryProvider property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setPolicyConfigurationFactoryProvider(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 }

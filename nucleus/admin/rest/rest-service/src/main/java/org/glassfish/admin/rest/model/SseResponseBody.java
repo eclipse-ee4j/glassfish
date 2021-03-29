@@ -70,5 +70,4 @@ public class SseResponseBody extends ResponseBody {
         return json;
     }
 
-
 }

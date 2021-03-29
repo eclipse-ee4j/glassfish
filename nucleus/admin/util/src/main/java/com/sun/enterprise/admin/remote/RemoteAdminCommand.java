@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
 
-
 import org.glassfish.api.admin.*;
 import org.glassfish.api.admin.CommandModel.ParamModel;
 
@@ -48,90 +47,77 @@ import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 /**
- * Utility class for executing remote admin commands.
- * Each instance of RemoteAdminCommand represents a particular
- * remote command on a particular remote server accessed using
- * particular credentials.  The instance can be reused to execute
+ * Utility class for executing remote admin commands. Each instance of RemoteAdminCommand represents a particular remote
+ * command on a particular remote server accessed using particular credentials. The instance can be reused to execute
  * the same command multiple times with different arguments.
  * <p>
- * Arguments to the command are supplied using a ParameterMap
- * passed to the executeCommand method.
- * ParameterMap is a MultiMap where each key can have multiple
- * values, although this class only supports a single value for
- * each option.  Operands for the command are stored as the option
- * named "DEFAULT" and can have multiple values.
+ * Arguments to the command are supplied using a ParameterMap passed to the executeCommand method. ParameterMap is a
+ * MultiMap where each key can have multiple values, although this class only supports a single value for each option.
+ * Operands for the command are stored as the option named "DEFAULT" and can have multiple values.
  * <p>
- * Before a command can be executed, the metadata for the command
- * (in the form of a CommandModel) is required.  The getCommandModel
- * method will fetch the metadata from the server, save it, and
- * return it.  If the CommandModel for a command is known
- * independently (e.g., stored in a local cache, or known a priori),
- * it can be set using the setCommandModel method.  If the
- * metadata isn't known when the exectureCommand method is
- * called, it will fetch the metadata from the server before executing
- * the command.
+ * Before a command can be executed, the metadata for the command (in the form of a CommandModel) is required. The
+ * getCommandModel method will fetch the metadata from the server, save it, and return it. If the CommandModel for a
+ * command is known independently (e.g., stored in a local cache, or known a priori), it can be set using the
+ * setCommandModel method. If the metadata isn't known when the exectureCommand method is called, it will fetch the
+ * metadata from the server before executing the command.
  * <p>
- * Any files returned by the command will be stored in the current
- * directory.  The setFileOutputDirectory method can be used to control
- * where returned files are saved.
+ * Any files returned by the command will be stored in the current directory. The setFileOutputDirectory method can be
+ * used to control where returned files are saved.
  * 
  * <p>
- * <b>This implementation is now in retention period. All content was migrated
- * to RemoteRestAdminCommand. This implementation will be removed just after
- * all necessary changes and tests will be done.</b>
+ * <b>This implementation is now in retention period. All content was migrated to RemoteRestAdminCommand. This
+ * implementation will be removed just after all necessary changes and tests will be done.</b>
  */
 public class RemoteAdminCommand {
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(RemoteAdminCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(RemoteAdminCommand.class);
 
     private static final String QUERY_STRING_INTRODUCER = "?";
     private static final String QUERY_STRING_SEPARATOR = "&";
     private static final String ADMIN_URI_PATH = "/__asadmin/";
-    private static final String COMMAND_NAME_REGEXP =
-                                    "^[a-zA-Z_][-a-zA-Z0-9_]*$";
+    private static final String COMMAND_NAME_REGEXP = "^[a-zA-Z_][-a-zA-Z0-9_]*$";
     private static final String READ_TIMEOUT = "AS_ADMIN_READTIMEOUT";
     public static final String COMMAND_MODEL_MATCH_HEADER = "X-If-Command-Model-Match";
     private static final int defaultReadTimeout; // read timeout for URL conns
 
-    private String              responseFormatType = "hk2-agent";
-    private OutputStream        userOut;
+    private String responseFormatType = "hk2-agent";
+    private OutputStream userOut;
     // return output string rather than printing it
-    protected String              output;
+    protected String output;
     private Map<String, String> attrs;
-    private boolean             doUpload = false;
-    private boolean             addedUploadOption = false;
-    private Payload.Outbound    outboundPayload;
-    private String              usage;
-    private File                fileOutputDir;
-    private StringBuilder       passwordOptions;
+    private boolean doUpload = false;
+    private boolean addedUploadOption = false;
+    private Payload.Outbound outboundPayload;
+    private String usage;
+    private File fileOutputDir;
+    private StringBuilder passwordOptions;
 
     // constructor parameters
-    protected String            name;
-    protected String            host;
-    private String              canonicalHostCache; //Used by getCanonicalHost() to cache resolved value
-    protected int               port;
-    protected boolean           secure;
-    protected String            user;
-    protected char[]            password;
-    protected Logger            logger;
-    protected String            scope;
-    protected String            authToken = null;
-    protected boolean           prohibitDirectoryUploads = false;
+    protected String name;
+    protected String host;
+    private String canonicalHostCache; //Used by getCanonicalHost() to cache resolved value
+    protected int port;
+    protected boolean secure;
+    protected String user;
+    protected char[] password;
+    protected Logger logger;
+    protected String scope;
+    protected String authToken = null;
+    protected boolean prohibitDirectoryUploads = false;
 
     // executeCommand parameters
-    protected ParameterMap      options;
-    protected List<String>      operands;
+    protected ParameterMap options;
+    protected List<String> operands;
 
-    private CommandModel        commandModel;
-    private boolean             commandModelFromCache = false;
-    private StringBuilder       metadataErrors; // XXX
-    private int                 readTimeout = defaultReadTimeout;
-    private int                 connectTimeout = -1;
-    private boolean             interactive = true;
-    private boolean             omitCache = true;
+    private CommandModel commandModel;
+    private boolean commandModelFromCache = false;
+    private StringBuilder metadataErrors; // XXX
+    private int readTimeout = defaultReadTimeout;
+    private int connectTimeout = -1;
+    private boolean interactive = true;
+    private boolean omitCache = true;
 
-    private List<Header>        requestHeaders = new ArrayList<Header>();
+    private List<Header> requestHeaders = new ArrayList<Header>();
 
     /*
      * Set a default read timeout for URL connections.
@@ -144,89 +130,74 @@ public class RemoteAdminCommand {
         if (rt != null) {
             defaultReadTimeout = Integer.parseInt(rt);
         } else {
-            defaultReadTimeout = 10 * 60 * 1000;       // 10 minutes
+            defaultReadTimeout = 10 * 60 * 1000; // 10 minutes
         }
     }
 
     /**
-     * content-type used for each file-transfer part of a payload to or from
-     * the server
+     * content-type used for each file-transfer part of a payload to or from the server
      */
-    private static final String FILE_PAYLOAD_MIME_TYPE =
-            "application/octet-stream";
+    private static final String FILE_PAYLOAD_MIME_TYPE = "application/octet-stream";
 
     /**
      * Interface to enable factoring out common HTTP connection management code.
      * <p>
      * The implementation of this interface must implement
      * <ul>
-     * <li>{@link #prepareConnection} - to perform all pre-connection configuration - set headers, chunking, etc.
-     * as well as writing any payload to the outbound connection.  In short
-     * anything needed prior to the URLConnection#connect invocation.
+     * <li>{@link #prepareConnection} - to perform all pre-connection configuration - set headers, chunking, etc. as well as
+     * writing any payload to the outbound connection. In short anything needed prior to the URLConnection#connect
+     * invocation.
      * <p>
-     * The caller will invoke this method after it has invoked {@link URL#openConnection}
-     * but before it invokes {@link URL#connect}.
-     * <li>{@link #useConnection} - to read from the
-     * input stream, etc.  The caller will invoke this method after it has
-     * successfully invoked {@link URL#connect}. 
+     * The caller will invoke this method after it has invoked {@link URL#openConnection} but before it invokes
+     * {@link URL#connect}.
+     * <li>{@link #useConnection} - to read from the input stream, etc. The caller will invoke this method after it has
+     * successfully invoked {@link URL#connect}.
      * </ul>
-     * Because the caller might have to work with multiple URLConnection objects
-     * (as it follows redirection, for example) this contract allows the caller
-     * to delegate to the HttpCommand implementation multiple times to configure
-     * each of the URLConnections objects, then to invoke useConnection only
-     * once after it has the "final" URLConnection object.  For this reason
-     * be sure to implement prepareConnection so that it can be invoked
-     * multiple times.
+     * Because the caller might have to work with multiple URLConnection objects (as it follows redirection, for example)
+     * this contract allows the caller to delegate to the HttpCommand implementation multiple times to configure each of the
+     * URLConnections objects, then to invoke useConnection only once after it has the "final" URLConnection object. For
+     * this reason be sure to implement prepareConnection so that it can be invoked multiple times.
      * 
      */
     interface HttpCommand {
 
         /**
-         * Configures the HttpURLConnection (headers, chuncking, etc.) according
-         * to the needs of this use of the connection and then writes any
-         * required outbound payload to the connection.
+         * Configures the HttpURLConnection (headers, chuncking, etc.) according to the needs of this use of the connection and
+         * then writes any required outbound payload to the connection.
          * <p>
-         * This method might be invoked multiple times before the connection is
-         * actually connected, so it should be serially reentrant.  Note that the
-         * caller will
+         * This method might be invoked multiple times before the connection is actually connected, so it should be serially
+         * reentrant. Note that the caller will
+         * 
          * @param urlConnection the connection to be configured
          */
         public void prepareConnection(HttpURLConnection urlConnection) throws IOException;
 
         /**
-         * Uses the configured and connected connection to read
-         * data, process it, etc.
+         * Uses the configured and connected connection to read data, process it, etc.
          * 
          * @param urlConnection the connection to be used
          * @throws CommandException
          * @throws IOException
          */
-        public void useConnection(HttpURLConnection urlConnection)
-                throws CommandException, IOException;
+        public void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException;
     }
 
-    public RemoteAdminCommand(String name, String host, int port)
-            throws CommandException {
+    public RemoteAdminCommand(String name, String host, int port) throws CommandException {
 
         this(name, host, port, false, "admin", null, Logger.getAnonymousLogger());
     }
 
-    public RemoteAdminCommand(String name, String host, int port,
-            boolean secure, String user, char[] password, Logger logger)
+    public RemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger)
             throws CommandException {
         this(name, host, port, secure, user, password, logger, null, null, false);
     }
 
     /**
-     * Construct a new remote command object.  The command and arguments
-     * are supplied later using the execute method in the superclass.
+     * Construct a new remote command object. The command and arguments are supplied later using the execute method in the
+     * superclass.
      */
-    public RemoteAdminCommand(String name, String host, int port,
-            boolean secure, String user, char[] password, Logger logger,
-            final String scope,
-            final String authToken,
-            final boolean prohibitDirectoryUploads)
-            throws CommandException {
+    public RemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger,
+            final String scope, final String authToken, final boolean prohibitDirectoryUploads) throws CommandException {
         this.name = name;
         this.host = host;
         this.port = port;
@@ -241,8 +212,7 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Make sure the command name is legitimate and
-     * won't allow any URL spoofing attacks.
+     * Make sure the command name is legitimate and won't allow any URL spoofing attacks.
      */
     private void checkName() throws CommandException {
         if (!name.matches(COMMAND_NAME_REGEXP)) {
@@ -252,28 +222,24 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Set the response type used in requests to the server.
-     * The response type is sent in the User-Agent HTTP header
-     * and tells the server what format of response to produce.
+     * Set the response type used in requests to the server. The response type is sent in the User-Agent HTTP header and
+     * tells the server what format of response to produce.
      */
     public void setResponseFormatType(String responseFormatType) {
         this.responseFormatType = responseFormatType;
     }
 
     /**
-     * If set, the raw response from the command is written to the
-     * specified stream.
+     * If set, the raw response from the command is written to the specified stream.
      */
     public void setUserOut(OutputStream userOut) {
         this.userOut = userOut;
     }
 
     /**
-     * Set the CommandModel used by this command.  Normally the
-     * CommandModel will be fetched from the server using the
-     * getCommandModel method, which will also save the CommandModel
-     * for further use.  If the CommandModel is known in advance, it
-     * can be set with this method and avoid the call to the server.
+     * Set the CommandModel used by this command. Normally the CommandModel will be fetched from the server using the
+     * getCommandModel method, which will also save the CommandModel for further use. If the CommandModel is known in
+     * advance, it can be set with this method and avoid the call to the server.
      */
     public void setCommandModel(CommandModel commandModel) {
         this.commandModel = commandModel;
@@ -286,7 +252,7 @@ public class RemoteAdminCommand {
     public void setReadTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
     }
-    
+
     public static int getReadTimeout() {
         return defaultReadTimeout;
     }
@@ -297,18 +263,17 @@ public class RemoteAdminCommand {
     public void setConnectTimeout(int connectTimeout) {
         this.connectTimeout = connectTimeout;
     }
-    
+
     /**
-     * Set the interactive mode for the command.  By default, the command is
-     * interactive.
+     * Set the interactive mode for the command. By default, the command is interactive.
      */
     public void setInteractive(boolean state) {
         this.interactive = state;
     }
-    
+
     /**
-     * Omit local {@code AdminCache} to process command metadata. 
-     * If {@code true} it will download the metadata from remote server.<br/>
+     * Omit local {@code AdminCache} to process command metadata. If {@code true} it will download the metadata from remote
+     * server.<br/>
      * <i>Default value is</i> {@code false}
      */
     public void setOmitCache(boolean omitCache) {
@@ -316,9 +281,8 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Get the CommandModel for the command from the server.
-     * If the CommandModel hasn't been set, it's fetched from
-     * the server.
+     * Get the CommandModel for the command from the server. If the CommandModel hasn't been set, it's fetched from the
+     * server.
      *
      * @return the model for the command
      * @throws CommandException if the server can't be contacted
@@ -336,7 +300,9 @@ public class RemoteAdminCommand {
                         addedUploadOption = ccm.isAddedUploadOption();
                     }
                     if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST, "Command model for command {0} was successfully loaded from the cache. [Duration: {1} nanos]", new Object[] {name, System.nanoTime() - startNanos});
+                        logger.log(Level.FINEST,
+                                "Command model for command {0} was successfully loaded from the cache. [Duration: {1} nanos]",
+                                new Object[] { name, System.nanoTime() - startNanos });
                     }
                 } else {
                     if (logger.isLoggable(Level.FINEST)) {
@@ -354,16 +320,16 @@ public class RemoteAdminCommand {
         }
         return commandModel;
     }
-    
-    /** If command model was load from local cache.
+
+    /**
+     * If command model was load from local cache.
      */
     public boolean isCommandModelFromCache() {
         return commandModelFromCache;
     }
 
     /**
-     * Set the directory in which any returned files will be stored.
-     * The default is the user's home directory.
+     * Set the directory in which any returned files will be stored. The default is the user's home directory.
      */
     public void setFileOutputDirectory(File dir) {
         fileOutputDir = dir;
@@ -377,24 +343,23 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Run the command using the specified arguments.
-     * Return the output of the command.
+     * Run the command using the specified arguments. Return the output of the command.
      */
     public String executeCommand(ParameterMap opts) throws CommandException {
         // first, make sure we have the command model
         getCommandModel();
 
         // XXX : This is to take care of camel case from ReST calls that
-	// do not go through usual CLI path
+        // do not go through usual CLI path
         // XXX : This is not clean; this should be handled the same way
-	// it is handled for incoming CLI commands
+        // it is handled for incoming CLI commands
         options = new ParameterMap();
         for (Map.Entry<String, List<String>> o : opts.entrySet()) {
             String key = o.getKey();
             List<String> value = o.getValue();
             options.set(key.toLowerCase(Locale.ENGLISH), value);
         }
-        operands = options.get("default");	// "DEFAULT".toLowerCase()
+        operands = options.get("default"); // "DEFAULT".toLowerCase()
 
         try {
             initializeDoUpload();
@@ -412,21 +377,19 @@ public class RemoteAdminCommand {
                     continue;
                 }
                 String paramName = opt.getName();
-                
+
                 List<String> paramValues = new ArrayList<String>(options.get(paramName.toLowerCase(Locale.ENGLISH)));
-                if (!opt.getParam().alias().isEmpty() && 
-                        !paramName.equalsIgnoreCase(opt.getParam().alias())){
+                if (!opt.getParam().alias().isEmpty() && !paramName.equalsIgnoreCase(opt.getParam().alias())) {
                     paramValues.addAll(options.get(opt.getParam().alias().toLowerCase(Locale.ENGLISH)));
                 }
                 if (!opt.getParam().multiple() && paramValues.size() > 1) {
-                    throw new CommandException(strings.get("tooManyOptions", 
-                            paramName));
+                    throw new CommandException(strings.get("tooManyOptions", paramName));
                 }
                 if (paramValues.isEmpty()) {
                     // perhaps it's set in the environment?
                     String envValue = getFromEnvironment(paramName);
                     if (envValue != null) {
-                        paramValues.add(envValue); 
+                        paramValues.add(envValue);
                     }
                 }
                 if (paramValues.isEmpty()) {
@@ -440,15 +403,13 @@ public class RemoteAdminCommand {
                      * should check it first.
                      */
                     if (!opt.getParam().optional()) {
-                        throw new CommandException(strings.get("missingOption",
-                                paramName));
+                        throw new CommandException(strings.get("missingOption", paramName));
                     }
                     // optional param not set, skip it
                     continue;
                 }
                 for (String paramValue : paramValues) {
-                    if (opt.getType() == File.class ||
-                            opt.getType() == File[].class) {
+                    if (opt.getType() == File.class || opt.getType() == File[].class) {
                         addFileOption(uriString, paramName, paramValue);
                     } else if (opt.getParam().password()) {
                         addPasswordOption(uriString, paramName, paramValue);
@@ -460,8 +421,7 @@ public class RemoteAdminCommand {
 
             // add operands
             for (String operand : operands) {
-                if (operandParam.getType() == File.class ||
-                        operandParam.getType() == File[].class) {
+                if (operandParam.getType() == File.class || operandParam.getType() == File[].class) {
                     addFileOption(uriString, "DEFAULT", operand);
                 } else {
                     addStringOption(uriString, "DEFAULT", operand);
@@ -479,62 +439,55 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * After a successful command execution, the attributes returned
-     * by the command are saved.  This method returns those saved
-     * attributes.
+     * After a successful command execution, the attributes returned by the command are saved. This method returns those
+     * saved attributes.
      */
     public Map<String, String> getAttributes() {
         return attrs;
     }
 
     /**
-     * Return true if we're successful in collecting new information
-     * (and thus the caller should try the request again).
-     * Subclasses can override to (e.g.) collect updated authentication
-     * information by prompting the user.
-     * The implementation in this class returns false, indicating that the
-     * authentication information was not updated.
+     * Return true if we're successful in collecting new information (and thus the caller should try the request again).
+     * Subclasses can override to (e.g.) collect updated authentication information by prompting the user. The
+     * implementation in this class returns false, indicating that the authentication information was not updated.
      */
     protected boolean updateAuthentication() {
         return false;
     }
 
     /**
-     * Subclasses can override to supply parameter values from environment.
-     * The implementation in this class returns null, indicating that the
-     * name is not available in the environment.
+     * Subclasses can override to supply parameter values from environment. The implementation in this class returns null,
+     * indicating that the name is not available in the environment.
      */
     protected String getFromEnvironment(String name) {
         return null;
     }
 
     /**
-     * Called when a non-secure connection attempt fails and it appears
-     * that the server requires a secure connection.
-     * Subclasses can override to indicate that the connection should
-     * The implementation in this class returns false, indicating that the
-     * connection should not be retried.
+     * Called when a non-secure connection attempt fails and it appears that the server requires a secure connection.
+     * Subclasses can override to indicate that the connection should The implementation in this class returns false,
+     * indicating that the connection should not be retried.
      */
     protected boolean retryUsingSecureConnection(String host, int port) {
         return false;
     }
 
     /**
-     * Return the error message to be used in the AuthenticationException.
-     * Subclasses can override to provide a more detailed message, for
-     * example, indicating the source of the password that failed.
-     * The implementation in this class returns a default error message.
+     * Return the error message to be used in the AuthenticationException. Subclasses can override to provide a more
+     * detailed message, for example, indicating the source of the password that failed. The implementation in this class
+     * returns a default error message.
      */
     protected String reportAuthenticationException() {
         return strings.get("InvalidCredentials", user);
     }
-    
+
     /**
      * Get the URI for executing the command.
      */
     protected StringBuilder getCommandURI() {
         StringBuilder rv = new StringBuilder(ADMIN_URI_PATH);
-        if (scope != null) rv.append(scope);
+        if (scope != null)
+            rv.append(scope);
         rv.append(name).append(QUERY_STRING_INTRODUCER);
         return rv;
     }
@@ -544,7 +497,7 @@ public class RemoteAdminCommand {
      */
     private void executeRemoteCommand(String uri) throws CommandException {
         doHttpCommand(uri, chooseRequestMethod(), new HttpCommand() {
-            
+
             @Override
             public void prepareConnection(final HttpURLConnection urlConnection) throws IOException {
                 if (doUpload) {
@@ -553,8 +506,7 @@ public class RemoteAdminCommand {
                      * and add the uploaded part(s) to the payload.
                      */
                     urlConnection.setChunkedStreamingMode(0); // use default value
-                    urlConnection.setRequestProperty("Content-Type",
-                            outboundPayload.getContentType());
+                    urlConnection.setRequestProperty("Content-Type", outboundPayload.getContentType());
                 }
 
                 // add any user-specified headers
@@ -567,28 +519,22 @@ public class RemoteAdminCommand {
                 }
 
             }
-            
+
             @Override
-            public void useConnection(final HttpURLConnection urlConnection)
-                    throws CommandException, IOException {
+            public void useConnection(final HttpURLConnection urlConnection) throws CommandException, IOException {
                 InputStream in = urlConnection.getInputStream();
 
                 String responseContentType = urlConnection.getContentType();
 
-                Payload.Inbound inboundPayload =
-                    PayloadImpl.Inbound.newInstance(responseContentType, in);
+                Payload.Inbound inboundPayload = PayloadImpl.Inbound.newInstance(responseContentType, in);
 
                 if (inboundPayload == null)
-                    throw new IOException(
-                        strings.get("NoPayloadSupport", responseContentType));
-                PayloadFilesManager downloadedFilesMgr =
-                    new PayloadFilesManager.Perm(fileOutputDir, null, logger,
+                    throw new IOException(strings.get("NoPayloadSupport", responseContentType));
+                PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null, logger,
                         new PayloadFilesManager.ActionReportHandler() {
                             @Override
-                            public void handleReport(InputStream reportStream)
-                                                    throws Exception {
-                                handleResponse(options, reportStream,
-                                    urlConnection.getResponseCode(), userOut);
+                            public void handleReport(InputStream reportStream) throws Exception {
+                                handleResponse(options, reportStream, urlConnection.getResponseCode(), userOut);
                             }
                         });
                 try {
@@ -598,32 +544,28 @@ public class RemoteAdminCommand {
                 } catch (Exception ex) {
                     throw new CommandException(ex.getMessage(), ex);
                 }
-                }
-            });
+            }
+        });
     }
 
-    private void doHttpCommand(String uriString, String httpMethod,
-            HttpCommand cmd) throws CommandException {
+    private void doHttpCommand(String uriString, String httpMethod, HttpCommand cmd) throws CommandException {
         doHttpCommand(uriString, httpMethod, cmd, false /* isForMetadata */);
     }
 
     /**
-     * Set up an HTTP connection, call cmd.prepareConnection so the consumer of
-     * the connection can further configure it, then open the connection (following
-     * redirects if needed), then call cmd.useConnection so the consumer of the
+     * Set up an HTTP connection, call cmd.prepareConnection so the consumer of the connection can further configure it,
+     * then open the connection (following redirects if needed), then call cmd.useConnection so the consumer of the
      * connection can use it.
      * <P>
-     * This method will try to execute the command repeatedly, for example,
-     * retrying with updated credentials (typically from the interactive user), etc., until the
-     * command succeeds or there are no more ways to retry that might succeed.
+     * This method will try to execute the command repeatedly, for example, retrying with updated credentials (typically
+     * from the interactive user), etc., until the command succeeds or there are no more ways to retry that might succeed.
      *
-     * @param uriString     the URI to connect to
-     * @param httpMethod    the HTTP method to use for the connection
-     * @param cmd           the HttpCommand object
+     * @param uriString the URI to connect to
+     * @param httpMethod the HTTP method to use for the connection
+     * @param cmd the HttpCommand object
      * @throws CommandException if anything goes wrong
      */
-    private void doHttpCommand(String uriString, String httpMethod,
-            HttpCommand cmd, boolean isForMetadata) throws CommandException {
+    private void doHttpCommand(String uriString, String httpMethod, HttpCommand cmd, boolean isForMetadata) throws CommandException {
         HttpURLConnection urlConnection;
         /*
          * There are various reasons we might retry the command - an authentication
@@ -635,14 +577,14 @@ public class RemoteAdminCommand {
          * shoudTryCommandAgain to true.
          */
         boolean shouldTryCommandAgain;
-        
+
         /*
          * If the DAS challenges us for credentials and we've already sent
          * the caller-provided ones, we might ask the user for a new set
          * and use them.  But we want to ask only once.
          */
         boolean askedUserForCredentials = false;
-        
+
         /*
          * On a subsequent retry we might need to use secure, even if the
          * caller did not request it.
@@ -656,13 +598,12 @@ public class RemoteAdminCommand {
          * be secure.
          */
         boolean usedCallerProvidedCredentials = secure;
-        
+
         /*
          * Note: HttpConnectorAddress will set up SSL/TLS client cert
          * handling if the current configuration calls for it.
          */
-        HttpConnectorAddress url = getHttpConnectorAddress(
-                                host, port, shouldUseSecure);
+        HttpConnectorAddress url = getHttpConnectorAddress(host, port, shouldUseSecure);
         url.setInteractive(interactive);
 
         do {
@@ -676,8 +617,8 @@ public class RemoteAdminCommand {
                     logger.log(Level.FINER, "URL: {0}", url.toString());
                     logger.log(Level.FINER, "URL: {0}", url.toURL(uriString).toString());
                     logger.log(Level.FINER, "Password options: {0}", passwordOptions);
-                    logger.log(Level.FINER, "Using auth info: User: {0}, Password: {1}", 
-                            new Object[]{user, (password != null && password.length > 0) ? "<non-null>" : "<null>"});
+                    logger.log(Level.FINER, "Using auth info: User: {0}, Password: {1}",
+                            new Object[] { user, (password != null && password.length > 0) ? "<non-null>" : "<null>" });
                 }
                 final AuthenticationInfo authInfo = authenticationInfo();
                 if (authInfo != null) {
@@ -694,8 +635,7 @@ public class RemoteAdminCommand {
                      * If this request is for metadata then we expect to reuse
                      * the auth token.   
                      */
-                    urlConnection.setRequestProperty(
-                            SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
+                    urlConnection.setRequestProperty(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
                             (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
                 }
                 if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
@@ -709,7 +649,7 @@ public class RemoteAdminCommand {
                 if (connectTimeout >= 0)
                     urlConnection.setConnectTimeout(connectTimeout);
                 addAdditionalHeaders(urlConnection);
-                
+
                 cmd.prepareConnection(urlConnection);
                 urlConnection.connect();
                 /*
@@ -738,7 +678,7 @@ public class RemoteAdminCommand {
                      * request should use https also.
                      */
                     secure = true;
-                    
+
                     urlConnection.disconnect();
 
                     continue;
@@ -753,7 +693,7 @@ public class RemoteAdminCommand {
                 processHeaders(urlConnection);
                 logger.finer("doHttpCommand succeeds");
             } catch (AuthenticationException authEx) {
-                
+
                 logger.log(Level.FINER, "DAS has challenged for credentials");
 
                 /*
@@ -763,7 +703,7 @@ public class RemoteAdminCommand {
                  * (because the connection was not secure, typically). In that case,
                  * retry using the caller provided credentials (if there are any).
                  */
-                if ( ! usedCallerProvidedCredentials) {
+                if (!usedCallerProvidedCredentials) {
                     logger.log(Level.FINER, "Have not tried caller-supplied credentials yet; will do that next");
                     usedCallerProvidedCredentials = true;
                     shouldTryCommandAgain = true;
@@ -787,7 +727,7 @@ public class RemoteAdminCommand {
                  * Try to update the creds.
                  */
                 logger.log(Level.FINER, "Have not yet tried to update credentials, so will try to update them");
-                if ( ! updateAuthentication()) {
+                if (!updateAuthentication()) {
                     /*
                      * No updated credentials are avaiable, so we
                      * have no more options.
@@ -828,7 +768,7 @@ public class RemoteAdminCommand {
                         }
                     }
                     throw new CommandException(se);
-                } catch(IOException io) {
+                } catch (IOException io) {
                     // XXX - logger.printExceptionStackTrace(io);
                     throw new CommandException(io);
                 }
@@ -837,22 +777,19 @@ public class RemoteAdminCommand {
                 try {
                     boolean serverAppearsSecure = NetUtils.isSecurePort(host, port);
                     if (!serverAppearsSecure && secure) {
-                        logger.log(Level.SEVERE, AdminLoggerInfo.mServerIsNotSecure, 
-                                new Object[] { host, port });
+                        logger.log(Level.SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
                     }
                     throw new CommandException(se);
-                } catch(IOException io) {
+                } catch (IOException io) {
                     // XXX - logger.printExceptionStackTrace(io);
                     throw new CommandException(io);
                 }
             } catch (SocketTimeoutException e) {
                 logger.finer("doHttpCommand: read timeout " + e);
-                throw new CommandException(
-                    strings.get("ReadTimeout", (float)readTimeout / 1000), e);
+                throw new CommandException(strings.get("ReadTimeout", (float) readTimeout / 1000), e);
             } catch (IOException e) {
                 logger.finer("doHttpCommand: IO exception " + e);
-                throw new CommandException(
-                    strings.get("IOError", e.getMessage()), e);
+                throw new CommandException(strings.get("IOError", e.getMessage()), e);
             } catch (CommandException e) {
                 throw e;
             } catch (Exception e) {
@@ -868,60 +805,47 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Creates a new HttpConnectorAddress corresponding to the location to which
-     * an earlier request was redirected.
+     * Creates a new HttpConnectorAddress corresponding to the location to which an earlier request was redirected.
      * <p>
-     * If the new protocol is https then the HttpConnectorAddress secure setting
-     * is turned on.
+     * If the new protocol is https then the HttpConnectorAddress secure setting is turned on.
+     * 
      * @param originalAddr the address which has been redirected elsewhere
      * @param redirection the location to which the attempted connection was redirected
      * @return connector address for the new location
      * @throws MalformedURLException
      */
-    private HttpConnectorAddress followRedirection(
-            final HttpConnectorAddress originalAddr,
-            final String redirection) throws MalformedURLException {
+    private HttpConnectorAddress followRedirection(final HttpConnectorAddress originalAddr, final String redirection)
+            throws MalformedURLException {
         final URL url = new URL(redirection);
         final boolean useSecure = (url.getProtocol().equalsIgnoreCase("https"));
-        HttpConnectorAddress hca = new HttpConnectorAddress(
-                url.getHost(),
-                url.getPort(),
-                useSecure,
-                originalAddr.getPath(),
+        HttpConnectorAddress hca = new HttpConnectorAddress(url.getHost(), url.getPort(), useSecure, originalAddr.getPath(),
                 originalAddr.getSSLSocketFactory());
         hca.setInteractive(interactive);
         return hca;
     }
 
     /**
-     * Provides an HttpConnectorAddress for use in connecting to the desired
-     * admin listener.
+     * Provides an HttpConnectorAddress for use in connecting to the desired admin listener.
      * <p>
-     * This implementation works for true admin clients and will not work
-     * correctly for commands submitted to instances from inside the DAS.  (That
-     * is done from the implementation in ServerRemoteAdminCommand which extends
-     * this class.)
+     * This implementation works for true admin clients and will not work correctly for commands submitted to instances from
+     * inside the DAS. (That is done from the implementation in ServerRemoteAdminCommand which extends this class.)
      * <p>
-     * This code constructs the HttpConnectorAddress in a way that uses either
-     * no SSLSocketFactory (if security is off) or uses an SSLSocketFactory
-     * linked to the asadmin truststore.
+     * This code constructs the HttpConnectorAddress in a way that uses either no SSLSocketFactory (if security is off) or
+     * uses an SSLSocketFactory linked to the asadmin truststore.
      *
      * @param host the host name to which the connection should be made
      * @param port the admin port on that host
      * @param shouldUseSecure whether SSL should be used to connect or not
      * @return
      */
-    protected HttpConnectorAddress getHttpConnectorAddress(
-            final String host, final int port, final boolean shouldUseSecure) {
-        HttpConnectorAddress hca = new HttpConnectorAddress(
-                                host, port, shouldUseSecure);
+    protected HttpConnectorAddress getHttpConnectorAddress(final String host, final int port, final boolean shouldUseSecure) {
+        HttpConnectorAddress hca = new HttpConnectorAddress(host, port, shouldUseSecure);
         hca.setInteractive(interactive);
         return hca;
     }
 
     /**
-     * Adds any headers needed for the current environment to the admin
-     * request.
+     * Adds any headers needed for the current environment to the admin request.
      *
      * @param urlConnection
      */
@@ -933,9 +857,8 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Process any headers needed from the reply to the admin
-     * request.   Subclasses can override this method to handle processing
-     * headers in the command's reply.
+     * Process any headers needed from the reply to the admin request. Subclasses can override this method to handle
+     * processing headers in the command's reply.
      *
      * @param urlConnection
      */
@@ -944,8 +867,7 @@ public class RemoteAdminCommand {
          * No headers are processed by RemoteAdminCommand.
          */
     }
-    
-    
+
     /*
      * Returns the username/password authenticaiton information to use
      * in building the outbound HTTP connection.
@@ -955,22 +877,18 @@ public class RemoteAdminCommand {
     protected AuthenticationInfo authenticationInfo() {
         return ((user != null || password != null) ? new AuthenticationInfo(user, password) : null);
     }
-    
 
     /**
-     * Check that the connection was successful and handle any error responses,
-     * turning them into exceptions.
+     * Check that the connection was successful and handle any error responses, turning them into exceptions.
      */
-    private String checkConnect(HttpURLConnection urlConnection)
-                                throws IOException, CommandException {
+    private String checkConnect(HttpURLConnection urlConnection) throws IOException, CommandException {
         int code = urlConnection.getResponseCode();
         if (logger.isLoggable(Level.FINER)) {
             logger.log(Level.FINER, "Response code: " + code);
         }
         if (code == -1) {
             URL url = urlConnection.getURL();
-            throw new CommandException(
-                strings.get("NotHttpResponse", url.getHost(), url.getPort()));
+            throw new CommandException(strings.get("NotHttpResponse", url.getHost(), url.getPort()));
         }
         if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             throw new AuthenticationException(reportAuthenticationException());
@@ -986,8 +904,7 @@ public class RemoteAdminCommand {
             return urlConnection.getHeaderField("Location");
         }
         if (code != HttpURLConnection.HTTP_OK) {
-            throw new CommandException(strings.get("BadResponse", "" + code,
-                                        urlConnection.getResponseMessage()));
+            throw new CommandException(strings.get("BadResponse", "" + code, urlConnection.getResponseMessage()));
         }
         /*
          * If the connection worked then return null, indicating no
@@ -995,7 +912,7 @@ public class RemoteAdminCommand {
          */
         return null;
     }
-    
+
     private boolean isStatusRedirection(final int returnCode) {
         /*
          * Currently, Grizzly redirects using 302.  For admin requests the
@@ -1005,8 +922,7 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Get the usage text.
-     * If we got usage information from the server, use it.
+     * Get the usage text. If we got usage information from the server, use it.
      *
      * @return usage text
      */
@@ -1015,25 +931,19 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Adds a single option expression to the URI.  Appends a '?' in preparation
-     * for the next option.
+     * Adds a single option expression to the URI. Appends a '?' in preparation for the next option.
      *
      * @param uriString the URI composed so far
      * @param option the option expression to be added
      * @return the URI so far, including the newly-added option
      */
-    private StringBuilder addStringOption(StringBuilder uriString, String name,
-            String option) {
+    private StringBuilder addStringOption(StringBuilder uriString, String name, String option) {
         try {
             String encodedOption = URLEncoder.encode(option, "UTF-8");
-            uriString.append(name).
-                append('=').
-                append(encodedOption).
-                append(QUERY_STRING_SEPARATOR);
+            uriString.append(name).append('=').append(encodedOption).append(QUERY_STRING_SEPARATOR);
         } catch (UnsupportedEncodingException e) {
             // XXX - should never happen
-            throw new RuntimeException("Error encoding value for: " + name 
-                    + ", value:" + option, e);
+            throw new RuntimeException("Error encoding value for: " + name + ", value:" + option, e);
         }
         return uriString;
     }
@@ -1041,22 +951,19 @@ public class RemoteAdminCommand {
     /**
      * Add a password option, passing it as a header in the request
      */
-    private StringBuilder addPasswordOption(StringBuilder uriString, String name,
-            String option) throws IOException {
+    private StringBuilder addPasswordOption(StringBuilder uriString, String name, String option) throws IOException {
         if (passwordOptions == null) {
             passwordOptions = new StringBuilder();
         } else {
             passwordOptions.append(QUERY_STRING_SEPARATOR);
         }
         GFBase64Encoder encoder = new GFBase64Encoder();
-        passwordOptions.append(name).append('=').append(
-                URLEncoder.encode(encoder.encode(option.getBytes()), "UTF-8"));
+        passwordOptions.append(name).append('=').append(URLEncoder.encode(encoder.encode(option.getBytes()), "UTF-8"));
         return uriString;
     }
-    
+
     /**
-     * Adds an option for a file argument, passing the name (for uploads) or the
-     * path (for no-upload) operations.
+     * Adds an option for a file argument, passing the name (for uploads) or the path (for no-upload) operations.
      *
      * @param uriString the URI string so far
      * @param optionName the option which takes a path or name
@@ -1064,25 +971,19 @@ public class RemoteAdminCommand {
      * @return the URI string
      * @throws java.io.IOException
      */
-    private StringBuilder addFileOption(
-            StringBuilder uriString,
-            String optionName,
-            String filename) throws IOException, CommandException {
+    private StringBuilder addFileOption(StringBuilder uriString, String optionName, String filename) throws IOException, CommandException {
         File f = SmartFile.sanitize(new File(filename));
         logger.finer("FILE PARAM: " + optionName + " = " + f);
-        final boolean uploadThisFile = doUpload && ! f.isDirectory();
+        final boolean uploadThisFile = doUpload && !f.isDirectory();
         // attach the file to the payload - include the option name in the
         // relative URI to avoid possible conflicts with same-named files
         // in different directories
         if (uploadThisFile) {
             logger.finer("Uploading file");
             try {
-            outboundPayload.attachFile(FILE_PAYLOAD_MIME_TYPE,
-                URI.create(optionName + "/" + f.getName() + (f.isDirectory() ? "/" : "")),
-                optionName,
-                null,
-                f,
-                true /* isRecursive - in case it's a directory */);
+                outboundPayload.attachFile(FILE_PAYLOAD_MIME_TYPE,
+                        URI.create(optionName + "/" + f.getName() + (f.isDirectory() ? "/" : "")), optionName, null, f,
+                        true /* isRecursive - in case it's a directory */);
             } catch (FileNotFoundException fnfe) {
                 /*
                  * Probably due to an attempt to upload a non-existent file.
@@ -1103,6 +1004,7 @@ public class RemoteAdminCommand {
 
     /**
      * Decide what request method to use in building the HTTP request.
+     * 
      * @return the request method appropriate to the current command and options
      */
     private String chooseRequestMethod() {
@@ -1114,9 +1016,7 @@ public class RemoteAdminCommand {
         }
     }
 
-    private void handleResponse(ParameterMap params,
-            InputStream in, int code, OutputStream userOut)
-            throws IOException, CommandException {
+    private void handleResponse(ParameterMap params, InputStream in, int code, OutputStream userOut) throws IOException, CommandException {
         if (userOut == null) {
             handleResponse(params, in, code);
         } else {
@@ -1124,8 +1024,7 @@ public class RemoteAdminCommand {
         }
     }
 
-    private void handleResponse(ParameterMap params,
-            InputStream in, int code) throws IOException, CommandException {
+    private void handleResponse(ParameterMap params, InputStream in, int code) throws IOException, CommandException {
         RemoteResponseManager rrm = null;
 
         try {
@@ -1134,8 +1033,8 @@ public class RemoteAdminCommand {
         } catch (RemoteSuccessException rse) {
             // save results
             output = rse.getMessage();
-	    assert rrm != null;
-	    attrs = rrm.getMainAtts();
+            assert rrm != null;
+            attrs = rrm.getMainAtts();
             return;
         } catch (RemoteException rfe) {
             // XXX - gross
@@ -1144,8 +1043,7 @@ public class RemoteAdminCommand {
                 // the closest matching commands
                 throw new InvalidCommandException(rfe.getMessage());
             }
-            throw new CommandException(
-                        "remote failure: " + rfe.getMessage(), rfe);
+            throw new CommandException("remote failure: " + rfe.getMessage(), rfe);
         }
     }
 
@@ -1155,10 +1053,10 @@ public class RemoteAdminCommand {
     protected void fetchCommandModel() throws CommandException {
         long startNanos = System.nanoTime();
         commandModel = null; //For sure not be used during request header construction
-        
+
         // XXX - there should be a "help" command, that returns XML output
         //StringBuilder uriString = new StringBuilder(ADMIN_URI_PATH).
-                //append("help").append(QUERY_STRING_INTRODUCER);
+        //append("help").append(QUERY_STRING_INTRODUCER);
         //addStringOption(uriString, "DEFAULT", name);
         StringBuilder uriString = getCommandURI();
         addStringOption(uriString, "Xhelp", "true");
@@ -1175,19 +1073,16 @@ public class RemoteAdminCommand {
             }
 
             @Override
-            public void useConnection(HttpURLConnection urlConnection)
-                    throws CommandException, IOException {
+            public void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException {
 
                 InputStream in = urlConnection.getInputStream();
 
                 String responseContentType = urlConnection.getContentType();
                 logger.finer("Response Content-Type: " + responseContentType);
-                Payload.Inbound inboundPayload =
-                    PayloadImpl.Inbound.newInstance(responseContentType, in);
+                Payload.Inbound inboundPayload = PayloadImpl.Inbound.newInstance(responseContentType, in);
 
                 if (inboundPayload == null)
-                    throw new IOException(
-                        strings.get("NoPayloadSupport", responseContentType));
+                    throw new IOException(strings.get("NoPayloadSupport", responseContentType));
 
                 boolean isReportProcessed = false;
                 Iterator<Payload.Part> partIt = inboundPayload.parts();
@@ -1198,15 +1093,11 @@ public class RemoteAdminCommand {
                      */
                     if (!isReportProcessed) {
                         metadataErrors = new StringBuilder();
-                        commandModel =
-                                parseMetadata(partIt.next().getInputStream(),
-                                metadataErrors);
-                        logger.finer(
-                            "fetchCommandModel: got command opts: " +
-                            commandModel);
+                        commandModel = parseMetadata(partIt.next().getInputStream(), metadataErrors);
+                        logger.finer("fetchCommandModel: got command opts: " + commandModel);
                         isReportProcessed = true;
                     } else {
-                        partIt.next();  // just throw it away
+                        partIt.next(); // just throw it away
                     }
                 }
             }
@@ -1220,28 +1111,28 @@ public class RemoteAdminCommand {
         } else {
             this.commandModelFromCache = false;
             if (logger.isLoggable(Level.FINEST)) {
-                logger.log(Level.FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]", new Object[] {name, System.nanoTime() - startNanos});
+                logger.log(Level.FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
+                        new Object[] { name, System.nanoTime() - startNanos });
             }
             //if (!omitCache) {
-                try {
-                    AdminCacheUtils.getCache().put(createCommandCacheKey(), commandModel);
-                } catch (Exception ex) {
-                    if (logger.isLoggable(Level.WARNING)) {
-                        logger.log(Level.WARNING, AdminLoggerInfo.mCantPutToCache, 
-                                new Object[] { createCommandCacheKey() });
-                    }
+            try {
+                AdminCacheUtils.getCache().put(createCommandCacheKey(), commandModel);
+            } catch (Exception ex) {
+                if (logger.isLoggable(Level.WARNING)) {
+                    logger.log(Level.WARNING, AdminLoggerInfo.mCantPutToCache, new Object[] { createCommandCacheKey() });
                 }
+            }
             //}
         }
     }
-    
+
     private String createCommandCacheKey() {
         StringBuilder result = new StringBuilder(getCanonicalHost().length() + name.length() + 6);
         result.append(getCanonicalHost()).append('_').append(port);
         result.append('/').append(name);
         return result.toString();
-    } 
-    
+    }
+
     protected String getCanonicalHost() {
         if (canonicalHostCache == null) {
             try {
@@ -1268,7 +1159,8 @@ public class RemoteAdminCommand {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try {
                 FileUtils.copy(in, baos, 0);
-            } catch (IOException ex) { }
+            } catch (IOException ex) {
+            }
             in = new ByteArrayInputStream(baos.toByteArray());
             String response = baos.toString();
             logger.finer("------- RAW METADATA RESPONSE ---------");
@@ -1279,9 +1171,8 @@ public class RemoteAdminCommand {
         CachedCommandModel cm = new CachedCommandModel(name);
         boolean sawFile = false;
         try {
-            DocumentBuilder d =
-                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = d.parse(in); 
+            DocumentBuilder d = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = d.parse(in);
             NodeList cmd = doc.getElementsByTagName("command");
             Node cmdnode = cmd.item(0);
             if (cmdnode == null) {
@@ -1290,7 +1181,7 @@ public class RemoteAdminCommand {
                 if (ok(cause))
                     errors.append(cause);
                 else {
-                    Node mp = report.getFirstChild();   // message-part
+                    Node mp = report.getFirstChild(); // message-part
                     if (mp != null)
                         cause = getAttr(mp.getAttributes(), "message");
                     if (ok(cause))
@@ -1314,14 +1205,9 @@ public class RemoteAdminCommand {
                 String def = getAttr(attributes, "default");
                 String obs = getAttr(attributes, "obsolete");
                 String alias = getAttr(attributes, "alias");
-                ParamModelData opt = new ParamModelData(
-                        getAttr(attributes, "name"),
-                        typeOf(getAttr(attributes, "type")),
-                        Boolean.parseBoolean(getAttr(attributes, "optional")),
-                        def,
-                        ok(sn) ? sn : null,
-			ok(obs) ? Boolean.parseBoolean(obs) : false,
-			alias);
+                ParamModelData opt = new ParamModelData(getAttr(attributes, "name"), typeOf(getAttr(attributes, "type")),
+                        Boolean.parseBoolean(getAttr(attributes, "optional")), def, ok(sn) ? sn : null,
+                        ok(obs) ? Boolean.parseBoolean(obs) : false, alias);
                 if (getAttr(attributes, "type").equals("PASSWORD")) {
                     opt.param._password = true;
                     opt.prompt = getAttr(attributes, "prompt");
@@ -1352,8 +1238,7 @@ public class RemoteAdminCommand {
                         type = List.class;
                     }
                 }
-                ParamModelData pm = new ParamModelData(
-                    getAttr(attributes, "name"), type, min == 0, null);
+                ParamModelData pm = new ParamModelData(getAttr(attributes, "name"), type, min == 0, null);
                 pm.param._primary = true;
                 pm.param._multiple = multiple;
                 cm.add(pm);
@@ -1366,8 +1251,7 @@ public class RemoteAdminCommand {
              * XXX - should just define upload parameter on remote command
              */
             if (sawFile) {
-                cm.add(new ParamModelData("upload", Boolean.class,
-                        true, null));
+                cm.add(new ParamModelData("upload", Boolean.class, true, null));
                 addedUploadOption = true;
                 cm.setAddedUploadOption(true);
             }
@@ -1411,9 +1295,8 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Search all the parameters that were actually specified to see
-     * if any of them are FILE type parameters.  If so, check for the
-     * "--upload" option.
+     * Search all the parameters that were actually specified to see if any of them are FILE type parameters. If so, check
+     * for the "--upload" option.
      */
     private void initializeDoUpload() throws CommandException {
         boolean sawFile = false;
@@ -1425,26 +1308,22 @@ public class RemoteAdminCommand {
 
         for (Map.Entry<String, List<String>> param : options.entrySet()) {
             String paramName = param.getKey();
-            if (paramName.equals("DEFAULT"))    // operands handled below
+            if (paramName.equals("DEFAULT")) // operands handled below
                 continue;
             ParamModel opt = commandModel.getModelFor(paramName);
-            if (opt != null && 
-                    (opt.getType() == File.class ||
-                     opt.getType() == File[].class)) {
+            if (opt != null && (opt.getType() == File.class || opt.getType() == File[].class)) {
                 sawFile = true;
                 for (String fname : options.get(opt.getName())) {
                     final File optionFile = new File(fname);
                     sawDirectory |= optionFile.isDirectory();
                     sawUploadableFile |= optionFile.isFile();
-                }              
+                }
             }
         }
 
         // now check the operands for files
         ParamModel operandParam = getOperandModel();
-        if (operandParam != null &&
-                (operandParam.getType() == File.class ||
-                 operandParam.getType() == File[].class)) {
+        if (operandParam != null && (operandParam.getType() == File.class || operandParam.getType() == File[].class)) {
             sawFile |= !operands.isEmpty();
             for (String operandValue : operands) {
                 final File operandFile = new File(operandValue);
@@ -1463,8 +1342,7 @@ public class RemoteAdminCommand {
                 doUpload = !isLocal(host) && sawUploadableFile;
             if (prohibitDirectoryUploads && sawDirectory && doUpload) {
                 // oops, can't upload directories
-                logger.finer("--upload=" + upString +
-                                            ", doUpload=" + doUpload);
+                logger.finer("--upload=" + upString + ", doUpload=" + doUpload);
                 throw new CommandException(strings.get("CantUploadDirectory"));
             }
         }
@@ -1488,7 +1366,7 @@ public class RemoteAdminCommand {
      * Does the given hostname represent the local host?
      */
     private static boolean isLocal(String hostname) {
-        if (hostname.equalsIgnoreCase("localhost"))     // the common case
+        if (hostname.equalsIgnoreCase("localhost")) // the common case
             return true;
         try {
             // let NetUtils do the hard work
@@ -1505,8 +1383,7 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Get the ParamModel that corresponds to the operand
-     * (primary parameter).  Return null if none.
+     * Get the ParamModel that corresponds to the operand (primary parameter). Return null if none.
      */
     private ParamModel getOperandModel() {
         for (ParamModel pm : commandModel.getParameters()) {
@@ -1517,8 +1394,7 @@ public class RemoteAdminCommand {
     }
 
     /**
-     * Get an option value, that might come from the command line
-     * or from the environment.  Return the default value for the
+     * Get an option value, that might come from the command line or from the environment. Return the default value for the
      * option if not otherwise specified.
      */
     private String getOption(String name) {

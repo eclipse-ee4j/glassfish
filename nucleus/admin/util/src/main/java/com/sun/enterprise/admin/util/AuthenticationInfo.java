@@ -19,8 +19,7 @@ package com.sun.enterprise.admin.util;
 import com.sun.enterprise.util.StringUtils;
 
 /**
- * A class that holds the user and password for the connection to the server.
- * Used by the HttpConnectorAddress class.
+ * A class that holds the user and password for the connection to the server. Used by the HttpConnectorAddress class.
  * Instances of this class are immutable.
  */
 public final class AuthenticationInfo {
@@ -29,8 +28,9 @@ public final class AuthenticationInfo {
 
     /**
      * The only way to construct the instances of this class.
-     * @param user      the user name for the connection
-     * @param password  the clear text password for the connection
+     * 
+     * @param user the user name for the connection
+     * @param password the clear text password for the connection
      */
     public AuthenticationInfo(String user, char[] password) {
         this.user = user;
@@ -39,6 +39,7 @@ public final class AuthenticationInfo {
 
     /**
      * Returns the user name.
+     * 
      * @return String
      */
     public String getUser() {
@@ -47,12 +48,13 @@ public final class AuthenticationInfo {
 
     /**
      * Returns the password in clear text.
+     * 
      * @return String
      */
     public char[] getPassword() {
         return password;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

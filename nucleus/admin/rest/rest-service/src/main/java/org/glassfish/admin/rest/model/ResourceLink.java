@@ -21,8 +21,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
- * Describes a link from one resource to another resource.
- * Used to return links in response bodies.
+ * Describes a link from one resource to another resource. Used to return links in response bodies.
  *
  * @author tmoreau
  */
@@ -73,7 +72,7 @@ public class ResourceLink {
         object.put("uri", getURI().toASCIIString());
         String t = getTitle();
         if (t != null && t.length() > 0) {
-          object.put("title", t);
+            object.put("title", t);
         }
         return object;
     }

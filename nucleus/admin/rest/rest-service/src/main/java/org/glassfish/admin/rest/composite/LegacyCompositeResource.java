@@ -32,9 +32,10 @@ import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.api.admin.ParameterMap;
 
 /**
- * This is the base class for all legacy composite resources. It provides all of the basic configuration and utilities needed
- * by composites.  For top-level resources, the <code>@Path</code> and <code>@Service</code> annotations are still
+ * This is the base class for all legacy composite resources. It provides all of the basic configuration and utilities
+ * needed by composites. For top-level resources, the <code>@Path</code> and <code>@Service</code> annotations are still
  * required, though, in order for the resource to be located and configured properly.
+ * 
  * @author jdlee
  */
 public abstract class LegacyCompositeResource extends CompositeResource implements DefaultsGenerator, OptionsCapable {
@@ -51,6 +52,7 @@ public abstract class LegacyCompositeResource extends CompositeResource implemen
 
     /**
      * This method will handle any OPTIONS requests for composite resources.
+     * 
      * @return
      * @throws JSONException
      */
@@ -71,11 +73,9 @@ public abstract class LegacyCompositeResource extends CompositeResource implemen
         rb.addSuccess(message);
         return legacyCreated(getChildItemUri(name), rb);
     }
+
     protected Response legacyCreated(URI location, RestModelResponseBody responseBody) {
-        return Response
-                .status(Status.CREATED)
-                .header("Location", location)
-                .entity(responseBody).build();
+        return Response.status(Status.CREATED).header("Location", location).entity(responseBody).build();
     }
 
     protected Response legacyUpdated(String message, RestModel model) {
@@ -84,6 +84,7 @@ public abstract class LegacyCompositeResource extends CompositeResource implemen
         rb.addSuccess(message);
         return legacyUpdated(rb);
     }
+
     protected Response legacyUpdated(ResponseBody responseBody) {
         return Response.ok().entity(responseBody).build();
     }
@@ -91,6 +92,7 @@ public abstract class LegacyCompositeResource extends CompositeResource implemen
     protected Response legacyDeleted(String message) {
         return deleted(responseBody().addSuccess(message));
     }
+
     protected Response legacyDeleted(ResponseBody responseBody) {
         return Response.ok().entity(responseBody).build();
     }
@@ -98,6 +100,7 @@ public abstract class LegacyCompositeResource extends CompositeResource implemen
     protected Response legacyAccepted(String command, ParameterMap parameters) {
         return legacyAccepted(command, parameters, null);
     }
+
     protected Response legacyAccepted(String command, ParameterMap parameters, URI childUri) {
         URI jobUri = launchDetachedCommand(command, parameters);
         ResponseBuilder rb = Response.status(Response.Status.ACCEPTED).header("Location", jobUri);

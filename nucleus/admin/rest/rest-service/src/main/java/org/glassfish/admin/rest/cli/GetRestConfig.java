@@ -40,9 +40,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "_get-rest-admin-config")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@RestEndpoints({
-    @RestEndpoint(configBean=Domain.class)
-})
+@RestEndpoints({ @RestEndpoint(configBean = Domain.class) })
 public class GetRestConfig implements AdminCommand {
 
     @AccessRequired.To("read")
@@ -59,9 +57,9 @@ public class GetRestConfig implements AdminCommand {
 
         RestConfig restConfig = config.getExtensionByType(RestConfig.class);
 
-
         if (restConfig == null) {
-            report.setMessage("debug=false, indentLevel=-1, showHiddenCommands=false, wadlGeneration=false, logOutput=false, logInput=false, showDeprecatedItems=false, sessionTokenTimeout=30");
+            report.setMessage(
+                    "debug=false, indentLevel=-1, showHiddenCommands=false, wadlGeneration=false, logOutput=false, logInput=false, showDeprecatedItems=false, sessionTokenTimeout=30");
 
             report.getTopMessagePart().addProperty("debug", "false");
             report.getTopMessagePart().addProperty("indentLevel", "-1");
@@ -73,8 +71,10 @@ public class GetRestConfig implements AdminCommand {
             report.getTopMessagePart().addProperty("sessionTokenTimeout", "30");
 
         } else {
-            report.setMessage("debug=" + restConfig.getDebug() + ", indentLevel=" + restConfig.getIndentLevel() + ", showHiddenCommands=" + restConfig.getShowHiddenCommands() + ", wadlGeneration=" + restConfig.getWadlGeneration() + ", logOutput=" + restConfig.getLogOutput()
-                    + ", logInput=" + restConfig.getLogInput() + ", sessionTokenTimeout=" + restConfig.getSessionTokenTimeout());
+            report.setMessage("debug=" + restConfig.getDebug() + ", indentLevel=" + restConfig.getIndentLevel() + ", showHiddenCommands="
+                    + restConfig.getShowHiddenCommands() + ", wadlGeneration=" + restConfig.getWadlGeneration() + ", logOutput="
+                    + restConfig.getLogOutput() + ", logInput=" + restConfig.getLogInput() + ", sessionTokenTimeout="
+                    + restConfig.getSessionTokenTimeout());
 
             report.getTopMessagePart().addProperty("debug", restConfig.getDebug());
             report.getTopMessagePart().addProperty("indentLevel", restConfig.getIndentLevel());
@@ -86,10 +86,7 @@ public class GetRestConfig implements AdminCommand {
             report.getTopMessagePart().addProperty("sessionTokenTimeout", "" + restConfig.getSessionTokenTimeout());
         }
 
-
-
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-
 
         return;
 

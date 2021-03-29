@@ -26,14 +26,11 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.*;
 
 /**
- * A local version command.
- * Prints the version of the server, if running. Prints the version from locally
- * available Version class if server is not running, if the --local flag is passed
- * or if the version could not
- * be obtained from a server for some reason. The idea is to get the version
- * of server software, the server process need not be running. This command
- * does not return the version of local server installation if its
- * options (host, port, user, passwordfile) identify a running server.
+ * A local version command. Prints the version of the server, if running. Prints the version from locally available
+ * Version class if server is not running, if the --local flag is passed or if the version could not be obtained from a
+ * server for some reason. The idea is to get the version of server software, the server process need not be running.
+ * This command does not return the version of local server installation if its options (host, port, user, passwordfile)
+ * identify a running server.
  * 
  * @author km@dev.java.net
  * @author Bill Shannon
@@ -51,8 +48,7 @@ public class VersionCommand extends CLICommand {
     @Param(optional = true)
     private boolean terse;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(VersionCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(VersionCommand.class);
 
     @Override
     protected int executeCommand() throws CommandException {
@@ -67,14 +63,14 @@ public class VersionCommand extends CLICommand {
                 version = cmd.executeAndReturnOutput("version", "--verbose");
             else
                 version = cmd.executeAndReturnOutput("version");
-            version = version.trim();   // get rid of gratuitous newlines
+            version = version.trim(); // get rid of gratuitous newlines
             logger.info(terse ? version : strings.get("version.remote", version));
         } catch (Exception e) {
             // suppress all output and infer that the server is not running
             printRemoteException(e);
             invokeLocal();
         }
-        return 0;       // always succeeds
+        return 0; // always succeeds
     }
 
     private void invokeLocal() {
@@ -82,19 +78,15 @@ public class VersionCommand extends CLICommand {
 
         logger.info(terse ? fv : strings.get("version.local", fv));
         if (verbose)
-            logger.info(strings.get("version.local.java",
-				    System.getProperty("java.version")));
+            logger.info(strings.get("version.local.java", System.getProperty("java.version")));
     }
 
     private void printRemoteException(Exception e) {
-        logger.info(strings.get("remote.version.failed",
-                programOpts.getHost(), programOpts.getPort() + ""));
+        logger.info(strings.get("remote.version.failed", programOpts.getHost(), programOpts.getPort() + ""));
         if (logger.isLoggable(Level.FINER)) {
             logger.finer(e.getMessage());
-        }
-        else {
-            logger.info(strings.get("remote.version.failed.debug", 
-                Environment.getDebugVar()));
+        } else {
+            logger.info(strings.get("remote.version.failed.debug", Environment.getDebugVar()));
         }
     }
 }

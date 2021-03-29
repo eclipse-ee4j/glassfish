@@ -32,43 +32,43 @@ import org.glassfish.api.admin.AdminCommandEventBroker;
  * @author mmares
  */
 public class AdminCommandEventBrokerImpl<T> implements AdminCommandEventBroker<T> {
-    
+
     private static class ListenerGroup {
-        
+
         private final Pattern pattern;
         private final List<AdminCommandListener> listeners = new ArrayList<AdminCommandListener>(1);
 
         private ListenerGroup(String pattern) {
             this.pattern = Pattern.compile(pattern);
         }
-        
+
         public String getOriginalPattern() {
             return pattern.pattern();
         }
-        
+
         public boolean matches(CharSequence name) {
             return pattern.matcher(name).matches();
         }
-        
+
         public Iterator<AdminCommandListener> listeners() {
             return listeners.iterator();
         }
-        
+
         public boolean add(AdminCommandListener listener) {
             return listeners.add(listener);
         }
-        
+
         public boolean remove(AdminCommandListener listener) {
             return listeners.remove(listener);
         }
     }
-    
+
     private final List<ListenerGroup> listenerGroups = new ArrayList<ListenerGroup>();
     private static final Logger logger = AdminLoggerInfo.getLogger();
 
     public AdminCommandEventBrokerImpl() {
     }
-    
+
     @Override
     public void fireEvent(String name, Object event) {
         if (event == null) {
@@ -77,8 +77,7 @@ public class AdminCommandEventBrokerImpl<T> implements AdminCommandEventBroker<T
         if (name == null) {
             throw new IllegalArgumentException("Argument name must be defined");
         }
-        IdentityHashMap<AdminCommandListener, AdminCommandListener> deduplicated 
-                = new IdentityHashMap<AdminCommandListener, AdminCommandListener>();
+        IdentityHashMap<AdminCommandListener, AdminCommandListener> deduplicated = new IdentityHashMap<AdminCommandListener, AdminCommandListener>();
         synchronized (this) {
             for (ListenerGroup listenerGroup : listenerGroups) {
                 if (listenerGroup.matches(name)) {
@@ -87,7 +86,7 @@ public class AdminCommandEventBrokerImpl<T> implements AdminCommandEventBroker<T
                     }
                 }
             }
-        }//Call all listeners
+        } //Call all listeners
         for (AdminCommandListener listener : deduplicated.keySet()) {
             try {
                 listener.onAdminCommandEvent(name, event);
@@ -125,10 +124,9 @@ public class AdminCommandEventBrokerImpl<T> implements AdminCommandEventBroker<T
             listenerGroups.add(lgrp);
         }
         lgrp.add(listener);
-        fireEvent(BrokerListenerRegEvent.EVENT_NAME_LISTENER_REG, 
-                new BrokerListenerRegEvent(this, listener));
+        fireEvent(BrokerListenerRegEvent.EVENT_NAME_LISTENER_REG, new BrokerListenerRegEvent(this, listener));
     }
-    
+
     @Override
     public synchronized boolean listening(String eventName) {
         if (eventName == null) {
@@ -157,11 +155,10 @@ public class AdminCommandEventBrokerImpl<T> implements AdminCommandEventBroker<T
             //No break. Can be registered for more names
         }
         if (removed) {
-            fireEvent(BrokerListenerRegEvent.EVENT_NAME_LISTENER_UNREG, 
-                new BrokerListenerRegEvent(this, listener));
+            fireEvent(BrokerListenerRegEvent.EVENT_NAME_LISTENER_UNREG, new BrokerListenerRegEvent(this, listener));
         }
     }
-    
+
     @Override
     public EventBrokerUtils getUtils() {
         return new EventBrokerUtils() {
@@ -172,8 +169,8 @@ public class AdminCommandEventBrokerImpl<T> implements AdminCommandEventBroker<T
                     fireEvent(USER_MESSAGE_NAME, message);
                 }
             }
-            
+
         };
     }
-    
+
 }

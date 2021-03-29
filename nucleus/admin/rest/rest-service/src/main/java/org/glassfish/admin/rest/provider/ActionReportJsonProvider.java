@@ -38,13 +38,13 @@ import org.glassfish.api.ActionReport.MessagePart;
  * @author mmares
  */
 @Provider
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class ActionReportJsonProvider extends BaseProvider<ActionReporter> {
-    
+
     public ActionReportJsonProvider() {
         super(ActionReporter.class, MediaType.APPLICATION_JSON_TYPE);
     }
-    
+
     @Override
     protected boolean isGivenTypeWritable(Class<?> type, Type genericType) {
         return desiredType.isAssignableFrom(type);
@@ -52,21 +52,21 @@ public class ActionReportJsonProvider extends BaseProvider<ActionReporter> {
 
     @Override
     public String getContent(ActionReporter ar) {
-        String JSONP=getCallBackJSONP();
+        String JSONP = getCallBackJSONP();
         try {
             JSONObject result = processReport(ar);
             int indent = getFormattingIndentLevel();
             if (indent > -1) {
-                if (JSONP==null){
+                if (JSONP == null) {
                     return result.toString(indent);
-                }else{
-                    return JSONP +"("+result.toString(indent)+")";
+                } else {
+                    return JSONP + "(" + result.toString(indent) + ")";
                 }
             } else {
-                if (JSONP==null){
+                if (JSONP == null) {
                     return result.toString();
-                }else{
-                    return JSONP +"("+result.toString()+")";
+                } else {
+                    return JSONP + "(" + result.toString() + ")";
                 }
             }
         } catch (JSONException ex) {
@@ -76,7 +76,8 @@ public class ActionReportJsonProvider extends BaseProvider<ActionReporter> {
 
     protected JSONObject processReport(ActionReporter ar) throws JSONException {
         JSONObject result = new JSONObject();
-        result.put("message", (ar instanceof RestActionReporter) ? ((RestActionReporter)ar).getCombinedMessage() : decodeEol(ar.getMessage()));
+        result.put("message",
+                (ar instanceof RestActionReporter) ? ((RestActionReporter) ar).getCombinedMessage() : decodeEol(ar.getMessage()));
         result.put("command", ar.getActionDescription());
         result.put("exit_code", ar.getActionExitCode());
 
@@ -158,7 +159,7 @@ public class ActionReportJsonProvider extends BaseProvider<ActionReporter> {
             }
         });
     }
-    
+
     protected String decodeEol(String str) {
         if (str == null) {
             return str;

@@ -30,7 +30,7 @@ import org.glassfish.api.admin.RestRedirect;
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
- * Syntax for supplying system properties as name value pairs        
+ * Syntax for supplying system properties as name value pairs
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -38,36 +38,31 @@ import static org.glassfish.config.support.Constants.NAME_REGEX;
 }) */
 
 @Configured
-@RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property")
-})
-public interface SystemProperty extends ConfigBeanProxy  {
+@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property") })
+public interface SystemProperty extends ConfigBeanProxy {
 
     /**
      * Gets the value of the name property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_REGEX)
+    @Pattern(regexp = NAME_REGEX)
     public String getName();
 
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the value property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
@@ -76,16 +71,14 @@ public interface SystemProperty extends ConfigBeanProxy  {
     /**
      * Sets the value of the value property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setValue(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the description property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     public String getDescription();
@@ -93,11 +86,8 @@ public interface SystemProperty extends ConfigBeanProxy  {
     /**
      * Sets the value of the description property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setDescription(String value) throws PropertyVetoException;
-
-
 
 }

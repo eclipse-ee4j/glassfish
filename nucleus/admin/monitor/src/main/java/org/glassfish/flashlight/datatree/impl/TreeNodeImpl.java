@@ -26,11 +26,11 @@ package org.glassfish.flashlight.datatree.impl;
  * @author Harpreet Singh
  */
 public class TreeNodeImpl extends AbstractTreeNode {
-    
-    public TreeNodeImpl(String name, String category){
-        setName (name);
-        setCategory (category);
-        setEnabled (true);
+
+    public TreeNodeImpl(String name, String category) {
+        setName(name);
+        setCategory(category);
+        setEnabled(true);
     }
 
 }

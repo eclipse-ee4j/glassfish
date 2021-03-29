@@ -27,14 +27,16 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, TYPE})
+@Target({ METHOD, FIELD, TYPE })
 @Documented
 @Constraint(validatedBy = JDBCRealmPropertyCheckValidator.class)
 public @interface JDBCRealmPropertyCheck {
-    String message() default "jaas-context, datasource-jndi, user-table, " +
-        "group-table, user-name-column, password-column, group-name-column " +
-        "and digest-algorithm properties need to be specified. " +
-        "Digest-algorithm needs to be: 'none' or other JDK supported algorithms such as MD5 or SHA";
+    String message() default "jaas-context, datasource-jndi, user-table, "
+            + "group-table, user-name-column, password-column, group-name-column "
+            + "and digest-algorithm properties need to be specified. "
+            + "Digest-algorithm needs to be: 'none' or other JDK supported algorithms such as MD5 or SHA";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

@@ -39,10 +39,8 @@ public interface DeletionDecorator<T extends ConfigBeanProxy, U extends ConfigBe
     /**
      * notification of a configuration element of type U deletion.
      * 
-     * Note that this notification is called within the boundaries of the
-     * configuration transaction, therefore the parent instance is a
-     * writable copy and further changes to the parent can be made without
-     * enrolling it inside a transaction.
+     * Note that this notification is called within the boundaries of the configuration transaction, therefore the parent
+     * instance is a writable copy and further changes to the parent can be made without enrolling it inside a transaction.
      *
      * @param context the command context to lead to the element deletion
      * @param parent the parent instance the element was removed from
@@ -53,7 +51,8 @@ public interface DeletionDecorator<T extends ConfigBeanProxy, U extends ConfigBe
     @Service
     public static class NoDecoration implements DeletionDecorator<ConfigBeanProxy, ConfigBeanProxy> {
         @Override
-        public void decorate(AdminCommandContext context, ConfigBeanProxy parent, ConfigBeanProxy child) throws TransactionFailure, PropertyVetoException {
+        public void decorate(AdminCommandContext context, ConfigBeanProxy parent, ConfigBeanProxy child)
+                throws TransactionFailure, PropertyVetoException {
             // do nothing.
         }
     }

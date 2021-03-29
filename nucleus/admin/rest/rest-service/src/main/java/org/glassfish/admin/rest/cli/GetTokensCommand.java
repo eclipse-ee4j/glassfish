@@ -42,68 +42,48 @@ import jakarta.inject.Inject;
  *
  * @author jasonlee
  */
-@Service(name="__resolve-tokens")
+@Service(name = "__resolve-tokens")
 @PerLookup
-@TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
+@TargetType(value = { CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE,
+        CommandTarget.CLUSTERED_INSTANCE })
 @ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
-    @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="resolve-tokens", 
-        description="Resolve Tokens",
-        params={
-            @RestParam(name="target", value="$parent")
-        }),
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="resolve-tokens", 
-        description="Resolve Tokens",
-        params={
-            @RestParam(name="target", value="$parent")
-        }),
-    @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="resolve-tokens", 
-        description="Resolve Tokens",
-        params={
-            @RestParam(name="target", value="$parent")
-        }),
-    @RestEndpoint(configBean=Config.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="resolve-tokens", 
-        description="Resolve Tokens",
-        params={
-            @RestParam(name="target", value="$parent")
-        })
-})
+        @RestEndpoint(configBean = Cluster.class, opType = RestEndpoint.OpType.GET, path = "resolve-tokens", description = "Resolve Tokens", params = {
+                @RestParam(name = "target", value = "$parent") }),
+        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "resolve-tokens", description = "Resolve Tokens", params = {
+                @RestParam(name = "target", value = "$parent") }),
+        @RestEndpoint(configBean = Server.class, opType = RestEndpoint.OpType.GET, path = "resolve-tokens", description = "Resolve Tokens", params = {
+                @RestParam(name = "target", value = "$parent") }),
+        @RestEndpoint(configBean = Config.class, opType = RestEndpoint.OpType.GET, path = "resolve-tokens", description = "Resolve Tokens", params = {
+                @RestParam(name = "target", value = "$parent") }) })
 public class GetTokensCommand implements AdminCommand {
     @Inject
     private Domain domain;
 
     @Inject
     private ServiceLocator habitat;
-    
-    @Param(separator=',', primary=true)
+
+    @Param(separator = ',', primary = true)
     String[] tokens;
-    
-    @Param(name="check-system-properties", defaultValue="false", optional=true)
+
+    @Param(name = "check-system-properties", defaultValue = "false", optional = true)
     boolean checkSystemProperties;
 
-    @Param(optional=true, defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Override
     public void execute(AdminCommandContext context) {
         ActionReporter report = (ActionReporter) context.getActionReport();
         PropertyResolver resolver = new PropertyResolver(domain, target);
-        
+
         String sep = "";
         String eol = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
         Map<String, String> values = new TreeMap<String, String>();
         Properties properties = new Properties();
         properties.put("tokens", values);
-        
+
         for (String token : tokens) {
             String value = resolver.getPropertyValue(token);
             if ((value == null) && (checkSystemProperties)) {
@@ -117,7 +97,7 @@ public class GetTokensCommand implements AdminCommand {
         report.setMessage(output.toString());
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         report.setExtraProperties(properties);
-        
+
         return;
     }
 }

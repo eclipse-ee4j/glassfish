@@ -57,8 +57,7 @@ import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.config.ConfigModel;
 
 /**
- * Utilities class. Extended by ResourceUtil and ProviderUtil utilities. Used by
- * resource and providers.
+ * Utilities class. Extended by ResourceUtil and ProviderUtil utilities. Used by resource and providers.
  *
  * @author Rajeshwar Patil
  */
@@ -72,7 +71,7 @@ public class Util {
 
     public static void logTimingMessage(String msg) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
-        RestLogging.restLogger.log(Level.INFO, RestLogging.TIMESTAMP_MESSAGE, new Object[]{sdf.format(new Date()), msg});
+        RestLogging.restLogger.log(Level.INFO, RestLogging.TIMESTAMP_MESSAGE, new Object[] { sdf.format(new Date()), msg });
     }
 
     /**
@@ -154,9 +153,9 @@ public class Util {
     }
 
     /**
-     * Removes any hypens ( - ) from the given string.
-     * When it removes a hypen, it converts next immediate
-     * character, if any,  to an Uppercase.(schema2beans convention)
+     * Removes any hypens ( - ) from the given string. When it removes a hypen, it converts next immediate character, if
+     * any, to an Uppercase.(schema2beans convention)
+     * 
      * @param string the input string
      * @return a <code>String</code> resulted after removing the hypens
      */
@@ -170,8 +169,7 @@ public class Util {
                     if (index == (string.length() - 1)) {
                         string = string.substring(0, string.length() - 1);
                     } else {
-                        string = string.substring(0, index)
-                                + upperCaseFirstLetter(string.substring(index + 1));
+                        string = string.substring(0, index) + upperCaseFirstLetter(string.substring(index + 1));
                     }
                 }
                 index = string.indexOf('-');
@@ -241,8 +239,7 @@ public class Util {
     }
 
     /**
-     * Constructs a method name from  element's dtd name
-     * name for a given prefix.(schema2beans convention)
+     * Constructs a method name from element's dtd name name for a given prefix.(schema2beans convention)
      *
      * @param elementName the given element name
      * @param prefix the given prefix
@@ -253,8 +250,7 @@ public class Util {
     }
 
     /**
-     * Constructs a method name from  element's bean
-     * name for a given prefix.(schema2beans convention)
+     * Constructs a method name from element's bean name for a given prefix.(schema2beans convention)
      *
      * @param elementName the given element name
      * @param prefix the given prefix
@@ -277,6 +273,7 @@ public class Util {
 
     /**
      * Apply changes passed in <code>data</code> using CLI "set".
+     * 
      * @param data The set of changes to be applied
      * @return ActionReporter containing result of "set" execution
      */
@@ -295,7 +292,7 @@ public class Util {
             }
         }
         if (!parameters.entrySet().isEmpty()) {
-           return ResourceUtil.runCommand("set", parameters, subject);
+            return ResourceUtil.runCommand("set", parameters, subject);
         } else {
             return new RestActionReporter(); // noop
         }
@@ -306,11 +303,11 @@ public class Util {
         // Discard the last segment if it is empty. This happens if some one accesses the resource
         // with trailing '/' at end like in htto://host:port/mangement/domain/.../pathelement/
         PathSegment lastSegment = pathSegments.get(pathSegments.size() - 1);
-        if(lastSegment.getPath().isEmpty()) {
+        if (lastSegment.getPath().isEmpty()) {
             pathSegments = pathSegments.subList(0, pathSegments.size() - 1);
         }
         List<PathSegment> candidatePathSegment = null;
-        if(pathSegments.size() != 1) {
+        if (pathSegments.size() != 1) {
             // Discard "domain"
             candidatePathSegment = pathSegments.subList(1, pathSegments.size());
         } else {
@@ -320,7 +317,7 @@ public class Util {
             candidatePathSegment = pathSegments;
         }
         final StringBuilder sb = new StringBuilder();
-        for(PathSegment pathSegment :  candidatePathSegment) {
+        for (PathSegment pathSegment : candidatePathSegment) {
             sb.append(pathSegment.getPath());
             sb.append('.');
         }
@@ -334,10 +331,12 @@ public class Util {
 
     public static Map<String, String> getCurrentValues(String basePath, ServiceLocator habitat, Subject subject) {
         Map<String, String> values = new HashMap<String, String>();
-        final String path = (basePath.endsWith(".")) ? basePath.substring(0, basePath.length()-1) : basePath;
-        RestActionReporter gr = ResourceUtil.runCommand("get", new ParameterMap() {{
-            add ("DEFAULT", path);
-        }}, subject);
+        final String path = (basePath.endsWith(".")) ? basePath.substring(0, basePath.length() - 1) : basePath;
+        RestActionReporter gr = ResourceUtil.runCommand("get", new ParameterMap() {
+            {
+                add("DEFAULT", path);
+            }
+        }, subject);
 
         MessagePart top = gr.getTopMessagePart();
         for (MessagePart child : top.getChildren()) {
@@ -404,7 +403,7 @@ public class Util {
         return tempDir;
     }
 
-    public static void deleteDirectory (final File dir) {
+    public static void deleteDirectory(final File dir) {
 
         if (dir == null || !dir.exists()) {
             return;
@@ -452,9 +451,8 @@ public class Util {
                 if (withType) {
                     String type = model.getType().getName();
                     if (model.getType().isArray()) {
-                        type = model.getType().getName()
-                                .substring(2);
-                        type = type.substring(0, type.length()-1) + "[]";
+                        type = model.getType().getName().substring(2);
+                        type = type.substring(0, type.length() - 1) + "[]";
 
                     } else if (type.startsWith("java.lang")) {
                         type = model.getType().getSimpleName();
@@ -482,7 +480,6 @@ public class Util {
                 f = new File(new File(System.getProperty("java.io.tmpdir")), fileName);
             }
 
-
             out = new BufferedOutputStream(new FileOutputStream(f));
             byte[] buffer = new byte[32 * 1024];
             int bytesRead = 0;
@@ -491,16 +488,14 @@ public class Util {
             }
             return f;
         } catch (IOException ex) {
-            RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION,
-                    ex.getMessage());
+            RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, ex.getMessage());
         } finally {
             try {
                 if (out != null) {
                     out.close();
                 }
             } catch (IOException ex) {
-                RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, 
-                        ex.getMessage());
+                RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, ex.getMessage());
             }
         }
         return null;
@@ -512,23 +507,23 @@ public class Util {
 
     /**
      * This method takes a Type argument that represents a generic class (e.g., <code>List&lt;String&gt;) and returns the
-     * <code>Class</code> for the first generic type.  If the <code>Class</code> is not a generic type,
-     * <code>null</code> is returned. The primary intended usage for this is in the <code>MessageBodyReader</code>s to
-     * help return a more accurate result from <code>isReadable</code>, though it may also be helpful in other, more
-     * general situations.
+     * <code>Class</code> for the first generic type. If the <code>Class</code> is not a generic type, <code>null</code> is
+     * returned. The primary intended usage for this is in the <code>MessageBodyReader</code>s to help return a more
+     * accurate result from <code>isReadable</code>, though it may also be helpful in other, more general situations.
+     * 
      * @param genericType
      * @return
      */
     public static Class<?> getFirstGenericType(Type genericType) {
         if (genericType instanceof ParameterizedType) {
-            ParameterizedType pt = (ParameterizedType)genericType;
-            Type [] typeArgs = pt.getActualTypeArguments();
+            ParameterizedType pt = (ParameterizedType) genericType;
+            Type[] typeArgs = pt.getActualTypeArguments();
             if ((typeArgs != null) && (typeArgs.length >= 1)) {
                 final Type type = typeArgs[0];
                 if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
-                    return (Class<?>)((ParameterizedType)type).getRawType();
+                    return (Class<?>) ((ParameterizedType) type).getRawType();
                 } else {
-                    return (Class<?>)type;
+                    return (Class<?>) type;
                 }
             }
         }
@@ -538,6 +533,7 @@ public class Util {
 
     /**
      * Get the current configured indenting value for the REST layer
+     * 
      * @return
      */
     public static int getFormattingIndentLevel() {
@@ -557,8 +553,9 @@ public class Util {
         return legacyHeaderPresent || acceptsHtml || !acceptsJson;
     }
 
-   /**
+    /**
      * Convenience wrapper around ParameterMap constructor to make it easier to use its fluent API
+     * 
      * @return ParameterMap
      */
     public static ParameterMap parameterMap() {

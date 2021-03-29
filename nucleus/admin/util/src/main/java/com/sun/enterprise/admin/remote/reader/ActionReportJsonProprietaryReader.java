@@ -34,22 +34,22 @@ import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.MessagePart;
 
-/** Reads ActionReport from JSON format.
+/**
+ * Reads ActionReport from JSON format.
  *
  * @author mmares
  */
 public class ActionReportJsonProprietaryReader implements ProprietaryReader<ActionReport> {
-    
+
     static class LoggerRef {
         private static final Logger logger = AdminLoggerInfo.getLogger();
     }
-            
+
     @Override
-    public boolean isReadable(final Class<?> type,
-                               final String mimetype) {
+    public boolean isReadable(final Class<?> type, final String mimetype) {
         return type.isAssignableFrom(ActionReport.class);
     }
-    
+
     public ActionReport readFrom(final HttpURLConnection urlConnection) throws IOException {
         return readFrom(urlConnection.getInputStream(), urlConnection.getContentType());
     }
@@ -70,7 +70,7 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
             throw new IOException(ex);
         }
     }
-    
+
     public static void fillActionReport(final ActionReport ar, final JSONObject json) throws JSONException {
         ar.setActionExitCode(ActionReport.ExitCode.valueOf(json.getString("exit_code")));
         ar.setActionDescription(json.optString("command"));
@@ -95,7 +95,7 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
             }
         }
     }
-    
+
     private static void fillSubMessages(final ActionReport.MessagePart mp, final JSONArray json) throws JSONException {
         if (json == null) {
             return;
@@ -111,21 +111,21 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
             fillSubMessages(child, subJson.optJSONArray("children"));
         }
     }
-    
-//    private void fillMessage(ActionReport.MessagePart mp, JSONObject json) throws JSONException {
-//        mp.setMessage(json.optString("value"));
-//        mp.setChildrenType(json.optString("children-type"));
-//        Properties props = extractProperties("properties", json);
-//        for (String key : props.stringPropertyNames()) {
-//            mp.addProperty(key, props.getProperty(key));
-//        }
-//        JSONArray subJsons = extractArray("messages", json);
-//        for (int i = 0; i < subJsons.length(); i++) {
-//            JSONObject subJson = subJsons.getJSONObject(i);
-//            fillMessage(mp.addChild(), subJson);
-//        }
-//    }
-    
+
+    //    private void fillMessage(ActionReport.MessagePart mp, JSONObject json) throws JSONException {
+    //        mp.setMessage(json.optString("value"));
+    //        mp.setChildrenType(json.optString("children-type"));
+    //        Properties props = extractProperties("properties", json);
+    //        for (String key : props.stringPropertyNames()) {
+    //            mp.addProperty(key, props.getProperty(key));
+    //        }
+    //        JSONArray subJsons = extractArray("messages", json);
+    //        for (int i = 0; i < subJsons.length(); i++) {
+    //            JSONObject subJson = subJsons.getJSONObject(i);
+    //            fillMessage(mp.addChild(), subJson);
+    //        }
+    //    }
+
     private static Object extractGeneral(final Object obj) throws JSONException {
         if (obj == null) {
             return null;
@@ -138,7 +138,7 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
             return obj;
         }
     }
-    
+
     private static Map extractMap(final JSONObject json, Map preferredResult) throws JSONException {
         if (json == null) {
             return preferredResult;
@@ -153,7 +153,7 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
         }
         return preferredResult;
     }
-    
+
     private static Collection extractCollection(final JSONArray array, Collection preferredResult) throws JSONException {
         if (array == null) {
             return preferredResult;
@@ -166,33 +166,33 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
         }
         return preferredResult;
     }
-    
-//    private Properties extractProperties(final String key, final JSONObject json) throws JSONException {
-//        Properties result = new Properties();
-//        JSONArray array = extractArray(key, json);
-//        for (int i = 0; i < array.length(); i++) {
-//            JSONObject entry = array.getJSONObject(i);
-//            Iterator keys = entry.keys();
-//            while (keys.hasNext()) {
-//                String inKey = (String) keys.next();
-//                result.put(inKey, entry.getString(key));
-//            }
-//        }
-//        return result;
-//    }
-//    
-//    private JSONArray extractArray(final String key, final JSONObject json) {
-//        Object res = json.opt(key);
-//        if (res == null) {
-//            return new JSONArray();
-//        }
-//        if (res instanceof JSONArray) {
-//            return (JSONArray) res;
-//        } else {
-//            JSONArray result = new JSONArray();
-//            result.put(res);
-//            return result;
-//        }
-//    }
-    
+
+    //    private Properties extractProperties(final String key, final JSONObject json) throws JSONException {
+    //        Properties result = new Properties();
+    //        JSONArray array = extractArray(key, json);
+    //        for (int i = 0; i < array.length(); i++) {
+    //            JSONObject entry = array.getJSONObject(i);
+    //            Iterator keys = entry.keys();
+    //            while (keys.hasNext()) {
+    //                String inKey = (String) keys.next();
+    //                result.put(inKey, entry.getString(key));
+    //            }
+    //        }
+    //        return result;
+    //    }
+    //    
+    //    private JSONArray extractArray(final String key, final JSONObject json) {
+    //        Object res = json.opt(key);
+    //        if (res == null) {
+    //            return new JSONArray();
+    //        }
+    //        if (res instanceof JSONArray) {
+    //            return (JSONArray) res;
+    //        } else {
+    //            JSONArray result = new JSONArray();
+    //            result.put(res);
+    //            return result;
+    //        }
+    //    }
+
 }

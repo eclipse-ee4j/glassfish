@@ -31,11 +31,11 @@ import org.glassfish.flashlight.statistics.impl.TimeStatsNanosImpl;
  */
 public class TimeStatsFactory {
 
-    public static TimeStats createTimeStatsMilli (){
-        return new TimeStatsMillisImpl ();
+    public static TimeStats createTimeStatsMilli() {
+        return new TimeStatsMillisImpl();
     }
-    
-    public static TimeStats createTimeStatsNano (){
-        return new TimeStatsNanosImpl ();
+
+    public static TimeStats createTimeStatsNano() {
+        return new TimeStatsNanosImpl();
     }
 }

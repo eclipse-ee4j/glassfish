@@ -49,7 +49,7 @@ public final class PortConstants {
     public static final int PORTBASE_JMX_SUFFIX = 86;
     public static final int PORTBASE_OSGI_SUFFIX = 66;
     public static final int PORTBASE_DEBUG_SUFFIX = 9;
-    
+
     // these are the ports that we support handling conflicts for...
     public static final String ADMIN = "ASADMIN_LISTENER_PORT";
     public static final String HTTP = "HTTP_LISTENER_PORT";
@@ -62,9 +62,7 @@ public final class PortConstants {
     public static final String OSGI = "OSGI_SHELL_TELNET_PORT";
     public static final String DEBUG = "JAVA_DEBUGGER_PORT";
 
-    private static final String[] PORTS = new String[] {
-        ADMIN, HTTP, HTTPS, IIOP, IIOPM, IIOPS, JMS, JMX, OSGI, DEBUG
-    };
+    private static final String[] PORTS = new String[] { ADMIN, HTTP, HTTPS, IIOP, IIOPM, IIOPS, JMS, JMX, OSGI, DEBUG };
 
     public static final List<String> PORTSLIST = Arrays.asList(PORTS);
 }

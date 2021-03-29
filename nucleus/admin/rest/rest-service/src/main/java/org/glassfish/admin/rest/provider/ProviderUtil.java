@@ -43,7 +43,6 @@ import org.glassfish.external.statistics.Statistic;
 import org.glassfish.external.statistics.impl.StatisticImpl;
 import org.jvnet.hk2.config.ConfigBean;
 
-
 /**
  *
  * @author Pajeshwar Patil
@@ -58,8 +57,7 @@ public class ProviderUtil {
     public static final String KEY_METHODS = "methods";
 
     /**
-     * Produce a string in double quotes with backslash sequences in all the
-     * right places.
+     * Produce a string in double quotes with backslash sequences in all the right places.
      */
     public static String quote(String string) {
         if (string == null || string.length() == 0) {
@@ -78,39 +76,39 @@ public class ProviderUtil {
             b = c;
             c = string.charAt(i);
             switch (c) {
-                case '\\':
-                case '"':
+            case '\\':
+            case '"':
+                sb.append('\\');
+                sb.append(c);
+                break;
+            case '/':
+                if (b == '<') {
                     sb.append('\\');
+                }
+                sb.append(c);
+                break;
+            case '\b':
+                sb.append("\\b");
+                break;
+            case '\t':
+                sb.append("\\t");
+                break;
+            case '\n':
+                sb.append("\\n");
+                break;
+            case '\f':
+                sb.append("\\f");
+                break;
+            case '\r':
+                sb.append("\\r");
+                break;
+            default:
+                if (c < ' ') {
+                    t = "000" + Integer.toHexString(c);
+                    sb.append("\\u").append(t.substring(t.length() - 4));
+                } else {
                     sb.append(c);
-                    break;
-                case '/':
-                    if (b == '<') {
-                        sb.append('\\');
-                    }
-                    sb.append(c);
-                    break;
-                case '\b':
-                    sb.append("\\b");
-                    break;
-                case '\t':
-                    sb.append("\\t");
-                    break;
-                case '\n':
-                    sb.append("\\n");
-                    break;
-                case '\f':
-                    sb.append("\\f");
-                    break;
-                case '\r':
-                    sb.append("\\r");
-                    break;
-                default:
-                    if (c < ' ') {
-                        t = "000" + Integer.toHexString(c);
-                        sb.append("\\u").append(t.substring(t.length() - 4));
-                    } else {
-                        sb.append(c);
-                    }
+                }
             }
         }
         sb.append('"');
@@ -142,61 +140,61 @@ public class ProviderUtil {
     }
 
     static protected String getStartXmlElement(String name) {
-        assert((name != null) && name.length() > 0);
-        String result ="<";
+        assert ((name != null) && name.length() > 0);
+        String result = "<";
         result = result + name;
         result = result + ">";
         return result;
     }
 
     static protected String getEndXmlElement(String name) {
-        assert((name != null) && name.length() > 0);
-        String result ="<";
+        assert ((name != null) && name.length() > 0);
+        String result = "<";
         result = result + "/";
         result = result + name;
         result = result + ">";
         return result;
     }
 
-    static public Map getStatistics(Statistic statistic) throws
-            IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    static public Map getStatistics(Statistic statistic)
+            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         HashMap results = new HashMap();
         Class classObject = statistic.getClass();
-        Method[] methods = 	classObject.getMethods();
-        for (Method method: methods) {
-             int modifier = method.getModifiers();
-             //consider only the public methods
-             if (Modifier.isPublic(modifier)) {
-                 String name = method.getName();
-                 //considier only the get* methods
-                 if (name.startsWith("get")) {
-                     name = name.substring("get".length());
-                     Class<?> returnType = method.getReturnType();
-                     //consider only the methods that return primitives or String objects)
-                     if (returnType.isPrimitive() || returnType.getName().equals("java.lang.String")) {
-                         results.put(name, method.invoke(statistic, null));
-                     } else {
-                         //control should never reach here
-                         //we do not expect statistic object to return object
-                         //as value for any of it's stats.
-                     }
-                 }
-             }
+        Method[] methods = classObject.getMethods();
+        for (Method method : methods) {
+            int modifier = method.getModifiers();
+            //consider only the public methods
+            if (Modifier.isPublic(modifier)) {
+                String name = method.getName();
+                //considier only the get* methods
+                if (name.startsWith("get")) {
+                    name = name.substring("get".length());
+                    Class<?> returnType = method.getReturnType();
+                    //consider only the methods that return primitives or String objects)
+                    if (returnType.isPrimitive() || returnType.getName().equals("java.lang.String")) {
+                        results.put(name, method.invoke(statistic, null));
+                    } else {
+                        //control should never reach here
+                        //we do not expect statistic object to return object
+                        //as value for any of it's stats.
+                    }
+                }
+            }
         }
         return results;
     }
 
     static public Map<String, Object> getStatistic(Statistic statistic) {
-        Map<String,Object> statsMap;
+        Map<String, Object> statsMap;
         // Most likely we will get the proxy of the StatisticImpl,
         // reconvert that so you can access getStatisticAsMap method
         if (Proxy.isProxyClass(statistic.getClass())) {
-                statsMap = ((StatisticImpl)Proxy.getInvocationHandler(statistic)).getStaticAsMap();
+            statsMap = ((StatisticImpl) Proxy.getInvocationHandler(statistic)).getStaticAsMap();
         } else {
-            statsMap = ((StatisticImpl)statistic).getStaticAsMap();
+            statsMap = ((StatisticImpl) statistic).getStaticAsMap();
         }
 
-        return  statsMap;
+        return statsMap;
     }
 
     static public HashMap<String, String> getStringMap(Map<String, Object> map) {
@@ -237,22 +235,19 @@ public class ProviderUtil {
             parameterMetaData = methodMetaData.getParameterMetaData(parameter);
             //parameterMetaData contains attributeNames in camelCasedNames convert them to xmlNames to get the attribute's current value
             String xmlAttributeName = ResourceUtil.convertToXMLName(parameter);
-            result.append(getHtmlRespresentationForParameter(parameter, parameterMetaData,
-                    proxy.attribute(xmlAttributeName)));
+            result.append(getHtmlRespresentationForParameter(parameter, parameterMetaData, proxy.attribute(xmlAttributeName)));
         }
 
         if (result.length() > 0) {
-            return "<div><form action=\"" + uriInfo.getAbsolutePath().toString() +
-                    "\" method=\"post\"><dl>" + result.toString() +
-                    "<dt class=\"button\"></dt><dd class=\"button\"><input value=\"Update\" type=\"submit\"></dd>" +
-                    "</dl></form></div>";
+            return "<div><form action=\"" + uriInfo.getAbsolutePath().toString() + "\" method=\"post\"><dl>" + result.toString()
+                    + "<dt class=\"button\"></dt><dd class=\"button\"><input value=\"Update\" type=\"submit\"></dd>" + "</dl></form></div>";
         } else {
             return "";
         }
     }
 
     static protected String getHtmlRespresentationsForCommand(MethodMetaData methodMetaData, String commandMethod,
-                                                              String commandDisplayName, UriInfo uriInfo) {
+            String commandDisplayName, UriInfo uriInfo) {
         StringBuilder result = new StringBuilder();
         if (methodMetaData != null) {
             Set<String> parameters = methodMetaData.parameters();
@@ -277,35 +272,26 @@ public class ProviderUtil {
         }
         //hack-1 : support delete method for html
         //hardcode "post" instead of commandMethod which should be post or delete.
-        String webMethod="post";
-        if (commandMethod.equalsIgnoreCase("get")){
-             webMethod="get";
+        String webMethod = "post";
+        if (commandMethod.equalsIgnoreCase("get")) {
+            webMethod = "get";
         }
         if (result.length() != 0) {
             //set encType if file upload operation
-            String encType = methodMetaData.isFileUploadOperation() ?
-                " enctype=\"multipart/form-data\"" : "" ;
-            result = new StringBuilder("<div><form action=\"")
-                    .append(uriInfo.getAbsolutePath().toString())
-                    .append("\" method=\"")
-                    .append(webMethod)
-                    .append("\"")
-                    .append(encType)
-                    .append(">")
-                    .append("<dl>")
-                    .append(result);
+            String encType = methodMetaData.isFileUploadOperation() ? " enctype=\"multipart/form-data\"" : "";
+            result = new StringBuilder("<div><form action=\"").append(uriInfo.getAbsolutePath().toString()).append("\" method=\"")
+                    .append(webMethod).append("\"").append(encType).append(">").append("<dl>").append(result);
 
             //hack-1 : support delete method for html
             //add hidden field
-            if(commandMethod.equalsIgnoreCase("DELETE")) {
+            if (commandMethod.equalsIgnoreCase("DELETE")) {
                 result.append("<dd><input name=\"operation\" value=\"__deleteoperation\" type=\"hidden\"></dd>");
             }
             //hack-2 : put a flag to delte the empty value for CLI parameters...
             //add hidden field
             result.append("<dd><input name=\"__remove_empty_entries__\" value=\"true\" type=\"hidden\"></dd>");
 
-            result.append("<dt class=\"button\"></dt><dd class=\"button\"><input value=\"")
-                    .append(commandDisplayName)
+            result.append("<dt class=\"button\"></dt><dd class=\"button\"><input value=\"").append(commandDisplayName)
                     .append("\" type=\"submit\"></dd>");
             result.append("</dl></form></div>");
         }
@@ -332,51 +318,47 @@ public class ProviderUtil {
     static protected String getHint(UriInfo uriInfo, String mediaType) {
         String result = "";
         java.net.URI baseUri = uriInfo.getBaseUri();
-        String monitoringLevelsConfigUrl = baseUri.getScheme() + "://" +
-            baseUri.getHost() + ":" +  baseUri.getPort() +
-                "/management/domain/configs/config/server-config/monitoring-service/module-monitoring-levels";
+        String monitoringLevelsConfigUrl = baseUri.getScheme() + "://" + baseUri.getHost() + ":" + baseUri.getPort()
+                + "/management/domain/configs/config/server-config/monitoring-service/module-monitoring-levels";
 
-        String name = Util.localStrings.getLocalString(
-            "rest.monitoring.levels.hint.heading", "Hint");
+        String name = Util.localStrings.getLocalString("rest.monitoring.levels.hint.heading", "Hint");
         String value = Util.localStrings.getLocalString("rest.monitoring.levels.hint.message",
-            "Module monitoring levels may be OFF. To set module monitoring levels please visit following url: {0}",
-                new Object[] {monitoringLevelsConfigUrl});
+                "Module monitoring levels may be OFF. To set module monitoring levels please visit following url: {0}",
+                new Object[] { monitoringLevelsConfigUrl });
 
         if (mediaType.equals(MediaType.TEXT_HTML)) {
-            monitoringLevelsConfigUrl =
-                "<br><a href=\"" + monitoringLevelsConfigUrl + "\">" +
-                    monitoringLevelsConfigUrl + "</a>";
+            monitoringLevelsConfigUrl = "<br><a href=\"" + monitoringLevelsConfigUrl + "\">" + monitoringLevelsConfigUrl + "</a>";
 
             value = Util.localStrings.getLocalString("rest.monitoring.levels.hint.message",
-                "Module monitoring levels may be OFF. To set module monitoring levels please visit following url: {0}",
-                    new Object[] {monitoringLevelsConfigUrl});
+                    "Module monitoring levels may be OFF. To set module monitoring levels please visit following url: {0}",
+                    new Object[] { monitoringLevelsConfigUrl });
 
             result = result + "<h2>" + name + "</h2>";
             result = result + value + "<br>";
             result = "<div>" + result + "</div>" + "<br>";
             return result;
-       }
+        }
 
-       if (mediaType.equals(MediaType.APPLICATION_JSON)) {
-           result = " " + quote(name) + ":" + jsonValue(value);
-           return result;
-       }
+        if (mediaType.equals(MediaType.APPLICATION_JSON)) {
+            result = " " + quote(name) + ":" + jsonValue(value);
+            return result;
+        }
 
-       if (mediaType.equals(MediaType.APPLICATION_XML)) {
-           result = result + " " + name + "=" + quote(value);
-           return result;
-       }
+        if (mediaType.equals(MediaType.APPLICATION_XML)) {
+            result = result + " " + name + "=" + quote(value);
+            return result;
+        }
 
-       return result;
+        return result;
     }
 
     static public String jsonValue(Object value) {
-        String result ="";
+        String result = "";
 
         if (value.getClass().getName().equals("java.lang.String")) {
             result = quote(value.toString());
         } else {
-            result =  value.toString();
+            result = value.toString();
         }
 
         return result;
@@ -412,10 +394,9 @@ public class ProviderUtil {
         return getHtmlRespresentationForParameter(parameter, parameterMetaData, null);
     }
 
-    static private String getHtmlRespresentationForParameter(String parameter,
-            ParameterMetaData parameterMetaData, String parameterValue) {
+    static private String getHtmlRespresentationForParameter(String parameter, ParameterMetaData parameterMetaData, String parameterValue) {
 
-      if ("true".equals(parameterMetaData.getAttributeValue(Constants.DEPRECATED))) {
+        if ("true".equals(parameterMetaData.getAttributeValue(Constants.DEPRECATED))) {
             return "";
         }
 
@@ -424,17 +405,13 @@ public class ProviderUtil {
         String parameterType = parameterMetaData.isFileParameter() ? "file" : "text";
 
         StringBuilder result = new StringBuilder();
-        result.append("<dt><label for=\"")
-                .append(parameter)
-                .append("\">")
-                .append(parameter)
+        result.append("<dt><label for=\"").append(parameter).append("\">").append(parameter)
                 .append(parameterMetaData.getAttributeValue(Constants.OPTIONAL).equalsIgnoreCase("false") ? "<sup>*</sup>" : "") //indicate mandatory field with * super-script
-                .append(":&nbsp;")
-                .append("</label></dt>");
+                .append(":&nbsp;").append("</label></dt>");
 
         boolean isBoolean = false;
-        if((parameterMetaData.getAttributeValue(Constants.TYPE).endsWith(Constants.JAVA_BOOLEAN_TYPE)) ||
-                (parameterMetaData.getAttributeValue(Constants.TYPE).equals(Constants.XSD_BOOLEAN_TYPE))) {
+        if ((parameterMetaData.getAttributeValue(Constants.TYPE).endsWith(Constants.JAVA_BOOLEAN_TYPE))
+                || (parameterMetaData.getAttributeValue(Constants.TYPE).equals(Constants.XSD_BOOLEAN_TYPE))) {
             isBoolean = true;
         }
 
@@ -459,35 +436,28 @@ public class ProviderUtil {
         boolean keyAttribute = Boolean.valueOf(parameterMetaData.getAttributeValue(Constants.KEY)).booleanValue();
         if (keyAttribute) {
             if (hasValue) {
-                result.append("<dd><input name=\"")
-                        .append(parameter)
-                        .append("\" value =\"")
-                        .append(parameterValue)
-                        .append("\" type=\"")
-                        .append(parameterType)
-                        .append("\" disabled=\"disabled\"></dd>");
+                result.append("<dd><input name=\"").append(parameter).append("\" value =\"").append(parameterValue).append("\" type=\"")
+                        .append(parameterType).append("\" disabled=\"disabled\"></dd>");
             } else { //no value for the key, so we are in create mode, enable the entry field in the ui
                 //control should never reach here.
-                result.append("<dd><input name=\"")
-                        .append(parameter)
-                        .append("\" type=\"")
-                        .append(parameterType)
-                        .append("\"></dd>");
-           }
+                result.append("<dd><input name=\"").append(parameter).append("\" type=\"").append(parameterType).append("\"></dd>");
+            }
         } else {
             if (isBoolean || hasAcceptableValues) {
                 //use combo box
                 result.append("<dd><select name=").append(parameter).append(">");
                 String[] values;
                 if (isBoolean) {
-                    values = new String[] {"true", "false"};
+                    values = new String[] { "true", "false" };
                 } else {
                     values = stringToArray(acceptableValues, ",");
                 }
 
                 for (String value : values) {
-                    if ((hasValue) && (value.equalsIgnoreCase(parameterValue))){
-                        if (isBoolean) { parameterValue = parameterValue.toLowerCase(Locale.US);} //boolean options are all displayed as lowercase
+                    if ((hasValue) && (value.equalsIgnoreCase(parameterValue))) {
+                        if (isBoolean) {
+                            parameterValue = parameterValue.toLowerCase(Locale.US);
+                        } //boolean options are all displayed as lowercase
                         result.append("<option selected>").append(parameterValue).append("<br>");
                     } else {
                         result.append("<option>").append(value).append("<br>");
@@ -499,14 +469,14 @@ public class ProviderUtil {
                 String field;
                 boolean isList = parameterMetaData.getAttributeValue(Constants.TYPE).equals("interface java.util.List");
                 if (hasValue) {
-                    field = "<input name=\"" + parameter + "\" value =\"" +
-                        parameterValue + "\" type=\"" +  parameterType + "\">";
+                    field = "<input name=\"" + parameter + "\" value =\"" + parameterValue + "\" type=\"" + parameterType + "\">";
                 } else {
                     field = "<input name=\"" + parameter + "\" type=\"" + parameterType + "\">";
                 }
                 result.append("<dd>").append(field);
                 if (isList) {
-                    result.append("<a href=\"#\" onclick=\"try { var newNode = this.previousSibling.cloneNode(false); this.parentNode.insertBefore(newNode, this);} catch (err) { alert (err); } return false; return false;\">Add row<a/>");
+                    result.append(
+                            "<a href=\"#\" onclick=\"try { var newNode = this.previousSibling.cloneNode(false); this.parentNode.insertBefore(newNode, this);} catch (err) { alert (err); } return false; return false;\">Add row<a/>");
                 }
                 result.append("</dd>");
             }
@@ -516,20 +486,20 @@ public class ProviderUtil {
     }
 
     /**
-     *  This method converts a string into string array, uses the delimeter as the
-     *  separator character. If the delimiter is null, uses space as default.
+     * This method converts a string into string array, uses the delimeter as the separator character. If the delimiter is
+     * null, uses space as default.
      */
     private static String[] stringToArray(String str, String delimiter) {
         String[] retString = new String[0];
 
         if (str != null) {
-            if(delimiter == null) {
+            if (delimiter == null) {
                 delimiter = " ";
             }
             StringTokenizer tokens = new StringTokenizer(str, delimiter);
             retString = new String[tokens.countTokens()];
             int i = 0;
-            while(tokens.hasMoreTokens()) {
+            while (tokens.hasMoreTokens()) {
                 retString[i++] = tokens.nextToken();
             }
         }
@@ -538,10 +508,10 @@ public class ProviderUtil {
 
     private static String getInternalStyleSheet(String baseUri) {
 
-        return " <link rel=\"stylesheet\" type=\"text/css\" href=\""+baseUri+"static/std.css\" />";
+        return " <link rel=\"stylesheet\" type=\"text/css\" href=\"" + baseUri + "static/std.css\" />";
     }
 
     private static String getAjaxJavascript(String baseUri) {
-        return " <script type=\"text/javascript\" src=\""+baseUri+"static/ajax.javascript\"></script>";
+        return " <script type=\"text/javascript\" src=\"" + baseUri + "static/ajax.javascript\"></script>";
     }
 }

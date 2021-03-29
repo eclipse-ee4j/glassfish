@@ -21,9 +21,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Message {
     public static enum Severity {
-        SUCCESS,
-        WARNING,
-        FAILURE
+        SUCCESS, WARNING, FAILURE
     };
 
     private Severity severity;
@@ -71,7 +69,7 @@ public class Message {
         object.put("severity", getSeverity());
         String f = getField();
         if (f != null && f.length() > 0) {
-          object.put("field", f);
+            object.put("field", f);
         }
         return object;
     }

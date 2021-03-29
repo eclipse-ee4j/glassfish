@@ -21,10 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * To annotated the config beans that cannot have default configuration value build by the generic configuration creation mechanism.
- * For example, the org.glassfish.loadbalancer.config.LoadBalancers cannot have default value because it will be an empty
- * collection and thus meaningless. This annotation preserve the current behaviour of the system and help developers
- * mark a config bean and prevent it being created using the default mechanisms.
+ * To annotated the config beans that cannot have default configuration value build by the generic configuration
+ * creation mechanism. For example, the org.glassfish.loadbalancer.config.LoadBalancers cannot have default value
+ * because it will be an empty collection and thus meaningless. This annotation preserve the current behaviour of the
+ * system and help developers mark a config bean and prevent it being created using the default mechanisms.
  *
  * @author Masoud Kalali
  */

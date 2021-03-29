@@ -53,10 +53,9 @@ class RespawnInfo {
         if (!ok(classname)) {
             throw new GFLauncherException("respawninfo.empty", "classname");
         }
-        if (!ok(classpath))
-         {
+        if (!ok(classpath)) {
             throw new GFLauncherException("respawninfo.empty", "classpath");
-        // args are idiot-proof
+            // args are idiot-proof
         }
     }
 

@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
  * @author mmares
  */
 @Provider
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class ActionReportJson2Provider extends ActionReportJsonProvider {
 
     @Override
@@ -44,7 +44,5 @@ public class ActionReportJson2Provider extends ActionReportJsonProvider {
         }
         return result;
     }
-    
-    
-    
+
 }

@@ -29,14 +29,12 @@ import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderInfo;
 
 public class StatsProviderRegistry {
-    private Map<String, List<StatsProviderRegistryElement>>
-                        configToRegistryElementMap = new HashMap();
-    private Map<Object, StatsProviderRegistryElement>
-                        statsProviderToRegistryElementMap = new HashMap();
+    private Map<String, List<StatsProviderRegistryElement>> configToRegistryElementMap = new HashMap();
+    private Map<Object, StatsProviderRegistryElement> statsProviderToRegistryElementMap = new HashMap();
     private boolean isAMXReady = false;
     private boolean isMBeanEnabled = true;
-    
-    static final String[] defaultConfigLevels = new String[] {"LOW","HIGH"};
+
+    static final String[] defaultConfigLevels = new String[] { "LOW", "HIGH" };
     public static final Map<String, Integer> configLevelsMap = new ConcurrentHashMap();
 
     public StatsProviderRegistry(MonitoringRuntimeDataRegistry mrdr) {
@@ -50,11 +48,10 @@ public class StatsProviderRegistry {
 
         if (configLevelStr == null) {
             // Pick the highest in the configLevels
-            spInfo.setConfigLevel(defaultConfigLevels[defaultConfigLevels.length-1]);
+            spInfo.setConfigLevel(defaultConfigLevels[defaultConfigLevels.length - 1]);
         }
 
-        StatsProviderRegistryElement spre =
-                    new StatsProviderRegistryElement(spInfo);
+        StatsProviderRegistryElement spre = new StatsProviderRegistryElement(spInfo);
         initialize(spre, spInfo.getConfigElement(), spInfo.getStatsProvider());
     }
 
@@ -78,8 +75,7 @@ public class StatsProviderRegistry {
 
         StatsProviderRegistryElement spre = statsProviderToRegistryElementMap.get(statsProvider);
         // Remove the entry of statsProviderRegistryElement from configToRegistryElementMap
-        List<StatsProviderRegistryElement> spreList =
-                    configToRegistryElementMap.get(spre.getConfigStr());
+        List<StatsProviderRegistryElement> spreList = configToRegistryElementMap.get(spre.getConfigStr());
         if (spreList != null) {
             spreList.remove(spre);
             if (spreList.isEmpty())
@@ -95,7 +91,7 @@ public class StatsProviderRegistry {
     }
 
     StatsProviderRegistryElement getStatsProviderRegistryElement(Object statsProvider) {
-        return statsProviderToRegistryElementMap.get(statsProvider);    
+        return statsProviderToRegistryElementMap.get(statsProvider);
     }
 
     List<StatsProviderRegistryElement> getStatsProviderRegistryElement(String configElement) {
@@ -151,12 +147,11 @@ public class StatsProviderRegistry {
             this.mbeanName = spInfo.getSubTreeRoot();
             String configLevelStr = spInfo.getConfigLevel();
 
-            configLevel =
-                    StatsProviderRegistry.configLevelsMap.get(configLevelStr.toUpperCase(Locale.ENGLISH));
+            configLevel = StatsProviderRegistry.configLevelsMap.get(configLevelStr.toUpperCase(Locale.ENGLISH));
         }
 
         public String getConfigStr() {
-           return configStr;
+            return configStr;
         }
 
         public PluginPoint getPluginPoint() {
@@ -229,19 +224,19 @@ public class StatsProviderRegistry {
         public void setHandles(Collection<ProbeClientMethodHandle> handles) {
             this.handles = handles;
         }
+
         void setResetMethod(Method method) {
             this.resetMethod = method;
         }
+
         Method getResetMethod() {
             return this.resetMethod;
         }
 
         public String toString() {
-            String str = "    configStr = " + configStr + "\n" +
-                         "    statsProvider = " + statsProvider.getClass().getName() + "\n" +
-                         "    PluginPoint = " + pp + "\n" +
-                         "    handles = " + ((handles==null)?"null":"not null") + "\n" +
-                         "    parentTreeNodePath = " + parentTreeNodePath;
+            String str = "    configStr = " + configStr + "\n" + "    statsProvider = " + statsProvider.getClass().getName() + "\n"
+                    + "    PluginPoint = " + pp + "\n" + "    handles = " + ((handles == null) ? "null" : "not null") + "\n"
+                    + "    parentTreeNodePath = " + parentTreeNodePath;
             return str;
         }
     }

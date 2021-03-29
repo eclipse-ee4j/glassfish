@@ -30,7 +30,6 @@ public class GfSseInboundEvent {
     private String id = null;
     private ByteArrayOutputStream data = null;
 
-
     GfSseInboundEvent() {
     }
 
@@ -43,7 +42,7 @@ public class GfSseInboundEvent {
     }
 
     void addData(byte[] data) {
-        if(this.data == null) {
+        if (this.data == null) {
             this.data = new ByteArrayOutputStream();
         }
 
@@ -103,11 +102,7 @@ public class GfSseInboundEvent {
             s = "";
         }
 
-        return "InboundEvent{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
-                ", data=" + s +
-                '}';
+        return "InboundEvent{" + "name='" + name + '\'' + ", id='" + id + '\'' + ", data=" + s + '}';
     }
 
     /**
@@ -117,7 +112,7 @@ public class GfSseInboundEvent {
      * @return updated byte array.
      */
     private byte[] stripLastLineBreak(byte[] data) {
-        if((data.length >= 1) && (data[data.length - 1] == '\n')) {
+        if ((data.length >= 1) && (data[data.length - 1] == '\n')) {
             byte[] newArray = new byte[data.length - 1];
             System.arraycopy(data, 0, newArray, 0, data.length - 1);
             data = newArray;

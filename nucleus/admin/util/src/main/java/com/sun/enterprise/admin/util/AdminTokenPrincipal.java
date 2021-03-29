@@ -19,12 +19,10 @@ package com.sun.enterprise.admin.util;
 import org.glassfish.security.services.api.authorization.AuthorizationAdminConstants;
 
 /**
- * Indicates that the identity of a Subject has, at least partially, been
- * derived using a token.
+ * Indicates that the identity of a Subject has, at least partially, been derived using a token.
  * <p>
- * One main use of this principal is to allow us to trust incoming requests 
- * from remote hosts even if secure admin is disabled if the request has an
- * admin token.
+ * One main use of this principal is to allow us to trust incoming requests from remote hosts even if secure admin is
+ * disabled if the request has an admin token.
  * 
  * @author tjquinn
  */

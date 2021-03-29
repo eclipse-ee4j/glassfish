@@ -16,37 +16,38 @@
 
 package com.sun.enterprise.admin.servermgmt.services;
 
-/** A type that defines the application server entity that can have service
- *  support. Currently, only a <code> Domain </code> and <code> Instance </code>
- *  can have such support.
- *  @since 9.1
- *  @author Kedar Mhaswade
- *  @author Byron Nevins
+/**
+ * A type that defines the application server entity that can have service support. Currently, only a
+ * <code> Domain </code> and <code> Instance </code> can have such support.
+ * 
+ * @since 9.1
+ * @author Kedar Mhaswade
+ * @author Byron Nevins
  *
  */
-    public enum AppserverServiceType {
-        Domain("start-domain", "restart-domain", "stop-domain"),
-        Instance("start-local-instance", "restart-local-instance", "stop-local-instance");
+public enum AppserverServiceType {
+    Domain("start-domain", "restart-domain", "stop-domain"),
+    Instance("start-local-instance", "restart-local-instance", "stop-local-instance");
 
-        public String startCommand() {
-            return start;
-        }
-
-        public String restartCommand() {
-            return restart;
-        }
-
-        public String stopCommand() {
-            return stop;
-        }
-
-        private AppserverServiceType(String start, String restart, String stop) {
-            this.start = start;
-            this.restart = restart;
-            this.stop = stop;
-        }
-        
-        private final String start;
-        private final String restart;
-        private final String stop;
+    public String startCommand() {
+        return start;
     }
+
+    public String restartCommand() {
+        return restart;
+    }
+
+    public String stopCommand() {
+        return stop;
+    }
+
+    private AppserverServiceType(String start, String restart, String stop) {
+        this.start = start;
+        this.restart = restart;
+        this.stop = stop;
+    }
+
+    private final String start;
+    private final String restart;
+    private final String stop;
+}

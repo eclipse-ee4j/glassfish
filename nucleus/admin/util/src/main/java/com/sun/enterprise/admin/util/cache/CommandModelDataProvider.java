@@ -28,9 +28,8 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * Works with {@link com.sun.enterprise.admin.util.CachedCommandModel} and
- * {@link com.sun.enterprise.admin.util.CommandModelData).<br/>
- * This is <i>hand made</i> implementation which is focused on human readability
- * and fastness.
+ * {@link com.sun.enterprise.admin.util.CommandModelData).<br/> This is <i>hand made</i> implementation which is focused
+ * on human readability and fastness.
  *
  * @author mmares
  */
@@ -67,9 +66,7 @@ public class CommandModelDataProvider implements DataProvider {
 
     @Override
     public boolean accept(Class clazz) {
-        return clazz == CommandModel.class ||
-                clazz == CachedCommandModel.class ||
-                clazz == CommandModelData.class;
+        return clazz == CommandModel.class || clazz == CachedCommandModel.class || clazz == CommandModelData.class;
     }
 
     @Override
@@ -80,8 +77,8 @@ public class CommandModelDataProvider implements DataProvider {
         writeToStreamSimpleFormat((CommandModel) o, stream);
     }
 
-    /** Super simple format possible because there can't be any problematic
-     * symbol like EOL in attributes.
+    /**
+     * Super simple format possible because there can't be any problematic symbol like EOL in attributes.
      *
      * @throws IOException
      */
@@ -221,8 +218,14 @@ public class CommandModelDataProvider implements DataProvider {
                 }
             }
         } finally {
-            try { bw.close(); } catch (Exception ex) {}
-            try { writer.close(); } catch (Exception ex) {}
+            try {
+                bw.close();
+            } catch (Exception ex) {
+            }
+            try {
+                writer.close();
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -282,10 +285,8 @@ public class CommandModelDataProvider implements DataProvider {
                 if (inParam) {
                     if (NAME_ELEMENT.equals(key)) {
                         //Add before parameter
-                        CommandModelData.ParamModelData pmd =
-                                new CommandModelData.ParamModelData(pName,
-                                pCls, pOptional, pDefaultValue, pShortName,
-                                pObsolete, pAlias);
+                        CommandModelData.ParamModelData pmd = new CommandModelData.ParamModelData(pName, pCls, pOptional, pDefaultValue,
+                                pShortName, pObsolete, pAlias);
                         pmd.param._primary = pPrimary;
                         pmd.param._multiple = pMultiple;
                         pmd.param._password = pPassword;
@@ -359,9 +360,7 @@ public class CommandModelDataProvider implements DataProvider {
             }
             if (inParam) {
                 //Add parameter
-                CommandModelData.ParamModelData pmd =
-                        new CommandModelData.ParamModelData(pName,
-                        pCls, pOptional, pDefaultValue, pShortName,
+                CommandModelData.ParamModelData pmd = new CommandModelData.ParamModelData(pName, pCls, pOptional, pDefaultValue, pShortName,
                         pObsolete, pAlias);
                 pmd.param._primary = pPrimary;
                 pmd.param._multiple = pMultiple;
@@ -376,11 +375,16 @@ public class CommandModelDataProvider implements DataProvider {
                 result.setAddedUploadOption(addedUploadOption);
             }
         } finally {
-            try {r.close();} catch (Exception ex) {}
-            try {isr.close();} catch (Exception ex) {}
+            try {
+                r.close();
+            } catch (Exception ex) {
+            }
+            try {
+                isr.close();
+            } catch (Exception ex) {
+            }
         }
         return result;
     }
-
 
 }

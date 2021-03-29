@@ -23,27 +23,20 @@ import org.glassfish.api.admin.config.ApplicationName;
 
 import java.util.List;
 
-
-/** Element describing the system-applications in domain.xml
+/**
+ * Element describing the system-applications in domain.xml
  *
  */
 
-
 @Configured
-public interface SystemApplications extends Applications  {
+public interface SystemApplications extends Applications {
 
     /**
-     * Gets the value of the lifecycleModuleOrJ2EeApplicationOrEjbModuleOrWebModuleOrConnectorModuleOrAppclientModuleOrMbeanOrExtensionModuleorApplication property.
-     * Objects of the following type(s) are allowed in the list
-     * {@link LifecycleModule }
-     * {@link J2eeApplication }
-     * {@link EjbModule }
-     * {@link WebModule }
-     * {@link ConnectorModule }
-     * {@link AppclientModule }
-     * {@link Mbean }
-     * {@link ExtensionModule }
-     * {@link Application }
+     * Gets the value of the
+     * lifecycleModuleOrJ2EeApplicationOrEjbModuleOrWebModuleOrConnectorModuleOrAppclientModuleOrMbeanOrExtensionModuleorApplication
+     * property. Objects of the following type(s) are allowed in the list {@link LifecycleModule } {@link J2eeApplication }
+     * {@link EjbModule } {@link WebModule } {@link ConnectorModule } {@link AppclientModule } {@link Mbean }
+     * {@link ExtensionModule } {@link Application }
      */
     @Element("*")
     public List<ApplicationName> getModules();

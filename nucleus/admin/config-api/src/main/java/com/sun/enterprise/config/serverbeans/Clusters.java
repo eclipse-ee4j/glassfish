@@ -25,32 +25,28 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 
 import java.util.List;
 
-
 /**
- * Clusters configuration. Maintain a list of {@link Cluster}
- * active configurations.
+ * Clusters configuration. Maintain a list of {@link Cluster} active configurations.
  */
 @Configured
 public interface Clusters extends ConfigBeanProxy {
 
-     /**
-      * Return the list of clusters currently configured
-      *
-      * @return list of {@link Cluster }
-      */
+    /**
+     * Return the list of clusters currently configured
+     *
+     * @return list of {@link Cluster }
+     */
     @Element
-    @Create(value="create-cluster", decorator=Cluster.Decorator.class, i18n=@I18n("create.cluster.command"))
-    @Delete(value="delete-cluster", resolver= TypeAndNameResolver.class, decorator=Cluster.DeleteDecorator.class
-        , i18n=@I18n("delete.cluster.command"))
-
+    @Create(value = "create-cluster", decorator = Cluster.Decorator.class, i18n = @I18n("create.cluster.command"))
+    @Delete(value = "delete-cluster", resolver = TypeAndNameResolver.class, decorator = Cluster.DeleteDecorator.class, i18n = @I18n("delete.cluster.command"))
 
     public List<Cluster> getCluster();
 
     /**
      * Return the cluster with the given name, or null if no such cluster exists.
      *
-     * @param   name    the name of the cluster
-     * @return          the Cluster object, or null if no such server
+     * @param name the name of the cluster
+     * @return the Cluster object, or null if no such server
      */
     @DuckTyped
     public Cluster getCluster(String name);

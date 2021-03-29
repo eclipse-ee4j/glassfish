@@ -33,14 +33,15 @@ import jakarta.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Units {
-  public static final String SECONDS = "seconds";
-  public static final String MINUTES = "minutes";
-  public static final String HOURS = "hours";
-  public static final String MILLISECONDS = "milliseconds";
-  public static final String BYTES = "bytes";
-  public static final String KILOBYTES = "kilobytes";
-  public static final String MEGABYTES = "megabytes";
-  public static final String DATE = "date";
-  public static final String PERCENT = "percent";
-  String units();
+    public static final String SECONDS = "seconds";
+    public static final String MINUTES = "minutes";
+    public static final String HOURS = "hours";
+    public static final String MILLISECONDS = "milliseconds";
+    public static final String BYTES = "bytes";
+    public static final String KILOBYTES = "kilobytes";
+    public static final String MEGABYTES = "megabytes";
+    public static final String DATE = "date";
+    public static final String PERCENT = "percent";
+
+    String units();
 }

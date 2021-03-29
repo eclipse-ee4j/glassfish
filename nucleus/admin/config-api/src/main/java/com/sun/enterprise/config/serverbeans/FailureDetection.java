@@ -25,14 +25,11 @@ import java.beans.PropertyVetoException;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-
 /**
- * failure-detection enables its members to periodically monitor other
- * group members to determine their availability in the group.
- * group-discovery is used for discovery of group &
- * its members. failure-detection.verify-failure-timeout-in-millis
- * verifies suspect instances by adding a verification
- * layer to mark a failure suspicion as a confirmed failure.
+ * failure-detection enables its members to periodically monitor other group members to determine their availability in
+ * the group. group-discovery is used for discovery of group & its members.
+ * failure-detection.verify-failure-timeout-in-millis verifies suspect instances by adding a verification layer to mark
+ * a failure suspicion as a confirmed failure.
  *
  * @since glassfish v3.1
  */
@@ -42,11 +39,10 @@ public interface FailureDetection extends ConfigBeanProxy {
     /**
      * Gets the value of the maxMissedHeartbeats property.
      * <p/>
-     * Maximum number of attempts to try before GMS confirms that a failure is
-     * suspected in the group. Must be a positive integer.
+     * Maximum number of attempts to try before GMS confirms that a failure is suspected in the group. Must be a positive
+     * integer.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "3")
     @Min(value = 1)
@@ -55,8 +51,7 @@ public interface FailureDetection extends ConfigBeanProxy {
     /**
      * Sets the value of the maxMissedHeartbeats property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setMaxMissedHeartbeats(String value) throws PropertyVetoException;
 
@@ -65,8 +60,7 @@ public interface FailureDetection extends ConfigBeanProxy {
      * <p/>
      * Must be a positive integer.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "2000")
     @Min(value = 1000)
@@ -76,6 +70,7 @@ public interface FailureDetection extends ConfigBeanProxy {
     /**
      * Sets the value of heartbeatFrequencyInMillis property.
      * <p/>
+     * 
      * @param value allowed is {@link String }
      */
     void setHeartbeatFrequencyInMillis(String value) throws PropertyVetoException;
@@ -83,20 +78,16 @@ public interface FailureDetection extends ConfigBeanProxy {
     /**
      * Sets the value of the verifyFailureWaittimeInMillis property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setVerifyFailureWaittimeInMillis(String value) throws PropertyVetoException;
-
 
     /**
      * Gets the value of the verifyFailureWaittimeInMillis property.
      * <p/>
-     * After this timeout a suspected failure is marked as verified.
-     * Must be a positive integer.
+     * After this timeout a suspected failure is marked as verified. Must be a positive integer.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "1500")
     @Min(value = 1500)
@@ -106,6 +97,7 @@ public interface FailureDetection extends ConfigBeanProxy {
     /**
      * sets the value of the verifyFailureConnectTimeoutInMillis.
      * <p/>
+     * 
      * @param value allowed object is {@link String}
      * @since glassfish v3.1
      */
@@ -113,6 +105,7 @@ public interface FailureDetection extends ConfigBeanProxy {
 
     /**
      * Gets the value of the verifyFailureConnectTimeoutInMillis.
+     * 
      * @since glassfish v3.1
      */
     @Attribute(defaultValue = "10000")

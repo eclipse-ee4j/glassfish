@@ -27,24 +27,21 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * A local export command.
- *  
+ * 
  * @author Bill Shannon
  */
 @Service(name = "export")
 @PerLookup
 public class ExportCommand extends CLICommand {
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ExportCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ExportCommand.class);
 
-    @Param(name = "environment-variable", primary = true, optional = true,
-	    multiple = true)
+    @Param(name = "environment-variable", primary = true, optional = true, multiple = true)
     private List<String> vars;
 
     @Override
-    public int executeCommand()
-            throws CommandException, CommandValidationException {
-        int ret = 0;    // by default, success
+    public int executeCommand() throws CommandException, CommandValidationException {
+        int ret = 0; // by default, success
 
         // if no operands, print out everything
         if (vars == null || vars.size() == 0) {
@@ -56,7 +53,7 @@ public class ExportCommand extends CLICommand {
                 // separate into name and value
                 String name, value;
                 int eq = arg.indexOf('=');
-                if (eq < 0) {   // no value
+                if (eq < 0) { // no value
                     name = arg;
                     value = null;
                 } else {

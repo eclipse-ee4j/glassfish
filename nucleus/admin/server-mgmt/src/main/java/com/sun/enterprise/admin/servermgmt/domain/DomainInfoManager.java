@@ -40,15 +40,14 @@ public class DomainInfoManager {
     private static final String JAVA_HOME = "JAVA_HOME";
 
     /**
-     * Parses template information file and uses its information to create 
-     * domain info file.
+     * Parses template information file and uses its information to create domain info file.
      */
     public void process(DomainTemplate domainTemplate, File domainDir) {
         FileOutputStream outputStream = null;
         try {
             TemplateInfo templateInfo = domainTemplate.getInfo();
             File infoDir = new File(domainDir, DomainConstants.INFO_DIRECTORY);
-            if(!infoDir.exists() && !infoDir.mkdirs()) {
+            if (!infoDir.exists() && !infoDir.mkdirs()) {
                 _logger.log(Level.INFO, SLogger.DIR_CREATION_ERROR, infoDir.getAbsolutePath());
                 return;
             }
@@ -74,15 +73,14 @@ public class DomainInfoManager {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(objFactory.createDomainInfo(domainInfo), outputStream);
         } catch (Exception e) {
-        	LogHelper.log(_logger, Level.WARNING, 
-        		SLogger.DOMAIN_INFO_CREATION_ERROR, e, 
-        		DomainConstants.DOMAIN_INFO_XML);
+            LogHelper.log(_logger, Level.WARNING, SLogger.DOMAIN_INFO_CREATION_ERROR, e, DomainConstants.DOMAIN_INFO_XML);
         } finally {
             if (outputStream != null) {
                 try {
                     outputStream.close();
-                } catch (Exception io)
-                { /** ignore*/ }
+                } catch (Exception io) {
+                    /** ignore */
+                }
             }
         }
     }

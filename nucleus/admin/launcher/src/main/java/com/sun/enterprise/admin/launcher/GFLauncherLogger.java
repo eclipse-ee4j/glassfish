@@ -64,11 +64,8 @@ public class GFLauncherLogger {
         logger.addHandler(new ConsoleHandler());
     }
 
-    @LogMessageInfo(
-        message = "Single and double quote characters are not allowed in the CLASSPATH environmental variable.  "
-                  + "They were stripped out for you.\nBefore: {0}\nAfter: {1}",
-        comment = "CLASSPATH is illegal.",
-        cause = "see message", action = "see message", level = "SEVERE")
+    @LogMessageInfo(message = "Single and double quote characters are not allowed in the CLASSPATH environmental variable.  "
+            + "They were stripped out for you.\nBefore: {0}\nAfter: {1}", comment = "CLASSPATH is illegal.", cause = "see message", action = "see message", level = "SEVERE")
     public static final String NO_QUOTES_ALLOWED = "NCLS-GFLAUNCHER-00001";
 
     @LogMessageInfo(message = "Error Launching: {0}", comment = "Launcher Error", cause = "see message", action = "fix the CLASSPATH", level = "SEVERE")
@@ -148,6 +145,5 @@ public class GFLauncherLogger {
             logfileHandler = null;
         }
     }
-
 
 }

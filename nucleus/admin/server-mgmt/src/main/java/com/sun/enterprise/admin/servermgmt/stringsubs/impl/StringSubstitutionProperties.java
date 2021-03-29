@@ -30,7 +30,7 @@ import com.sun.enterprise.admin.servermgmt.SLogger;
 public class StringSubstitutionProperties {
 
     private static final Logger _logger = SLogger.getLogger();
-    
+
     private static final String STRINGSUBS_PROPERTIES = "/com/sun/enterprise/admin/servermgmt/stringsubs/stringsubs.properties";
     private static Properties _properties = null;
 
@@ -49,18 +49,19 @@ public class StringSubstitutionProperties {
             if (in != null) {
                 try {
                     in.close();
-                } catch (Exception io)
-                { /** ignore*/ }
+                } catch (Exception io) {
+                    /** ignore */
+                }
             }
         }
     }
 
     /**
-     * Searches for the property with the specified key in this property list.
-     * The method returns <code>null</code> if the property is not found.
+     * Searches for the property with the specified key in this property list. The method returns <code>null</code> if the
+     * property is not found.
      *
-     * @param   key   the property key.
-     * @return  the value in this property list with the specified key value.
+     * @param key the property key.
+     * @return the value in this property list with the specified key value.
      */
     public static String getProperty(String key) {
         if (_properties == null) {

@@ -21,8 +21,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Meta-data store for resource method. Holds meta-data for message
- *  and query paramters of the method.
+ * Meta-data store for resource method. Holds meta-data for message and query paramters of the method.
  *
  * @author Rajeshwar Patil
  */
@@ -32,42 +31,33 @@ public class MethodMetaData {
         __parameterMetaData = new TreeMap<String, ParameterMetaData>();
     }
 
-
     public ParameterMetaData getParameterMetaData(String parameter) {
         return __parameterMetaData.get(parameter);
     }
 
-
-    public ParameterMetaData putParameterMetaData(String parameter,
-            ParameterMetaData parameterMetaData) {
+    public ParameterMetaData putParameterMetaData(String parameter, ParameterMetaData parameterMetaData) {
         return __parameterMetaData.put(parameter, parameterMetaData);
     }
-
 
     public ParameterMetaData removeParamMetaData(String param) {
         return __parameterMetaData.remove(param);
     }
 
-
     public int sizeParameterMetaData() {
         return __parameterMetaData.size();
     }
-
 
     public Set<String> parameters() {
         return __parameterMetaData.keySet();
     }
 
-
     public boolean isFileUploadOperation() {
         return __isFileUploadOperation;
     }
 
-
     public void setIsFileUploadOperation(boolean isFileUploadOperation) {
         __isFileUploadOperation = isFileUploadOperation;
     }
-
 
     Map<String, ParameterMetaData> __parameterMetaData;
     boolean __isFileUploadOperation = false;

@@ -28,8 +28,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 
 /**
- * The change-master-password command for the DAS.
- * This is a hidden command which is called from change-master-password  command.
+ * The change-master-password command for the DAS. This is a hidden command which is called from change-master-password
+ * command.
  * 
  * @author Bhakti Mehta
  */
@@ -37,20 +37,18 @@ import org.glassfish.hk2.api.PerLookup;
 @PerLookup
 public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
 
-    @Param(name="domain",primary=true, optional=true)
+    @Param(name = "domain", primary = true, optional = true)
     protected String domainName0;
 
     @Param(name = "savemasterpassword", optional = true, defaultValue = "false")
     protected boolean savemp;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ChangeMasterPasswordCommandDAS.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ChangeMasterPasswordCommandDAS.class);
 
     @Override
-    protected void validate()
-            throws CommandException  {
+    protected void validate() throws CommandException {
         String dName;
-        if (domainName0 != null ) {
+        if (domainName0 != null) {
             dName = domainName0;
         } else {
             dName = getDomainName();
@@ -60,8 +58,7 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
     }
 
     @Override
-    public int execute(String... argv)
-                    throws CommandException {
+    public int execute(String... argv) throws CommandException {
         // This will parse the args and then call executeCommand
         return super.execute(argv);
     }
@@ -72,10 +69,8 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
         try {
             HostAndPort adminAddress = getAdminAddress();
             if (isRunning(adminAddress.getHost(), adminAddress.getPort()))
-                throw new CommandException(strings.get("domain.is.running",
-                                                    getDomainName(), getDomainRootDir()));
-            DomainConfig domainConfig = new DomainConfig(getDomainName(),
-                getDomainsDir().getAbsolutePath());
+                throw new CommandException(strings.get("domain.is.running", getDomainName(), getDomainRootDir()));
+            DomainConfig domainConfig = new DomainConfig(getDomainName(), getDomainsDir().getAbsolutePath());
             PEDomainsManager manager = new PEDomainsManager();
             String mp = super.readFromMasterPasswordFile();
             if (mp == null) {
@@ -85,15 +80,15 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
                     mp = mpCharArr != null ? new String(mpCharArr) : null;
                 }
             }
-            if (mp == null)     throw new CommandException(strings.get("no.console"));
+            if (mp == null)
+                throw new CommandException(strings.get("no.console"));
             if (!super.verifyMasterPassword(mp))
                 throw new CommandException(strings.get("incorrect.mp"));
-            char[] nmpCharArr = getPassword("newmasterpassword", strings.get("new.mp"),
-                    strings.get("new.mp.again"), true);
+            char[] nmpCharArr = getPassword("newmasterpassword", strings.get("new.mp"), strings.get("new.mp.again"), true);
             String nmp = nmpCharArr != null ? new String(nmpCharArr) : null;
             if (nmp == null)
                 throw new CommandException(strings.get("no.console"));
-            if(nmp.trim().length() < 6)
+            if (nmp.trim().length() < 6)
                 throw new CommandException(strings.get("incorrect.password.length"));
             domainConfig.put(DomainConfig.K_MASTER_PASSWORD, mp);
             domainConfig.put(DomainConfig.K_NEW_MASTER_PASSWORD, nmp);
@@ -101,11 +96,8 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
             manager.changeMasterPassword(domainConfig);
 
             return 0;
-        } catch(Exception e) {
-            throw new CommandException(e.getMessage(),e);
+        } catch (Exception e) {
+            throw new CommandException(e.getMessage(), e);
         }
     }
 }
-
-
-

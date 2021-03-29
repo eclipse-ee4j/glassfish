@@ -29,5 +29,5 @@ public class AdminLocalPasswordPrincipal implements Principal {
     public String getName() {
         return AuthorizationAdminConstants.LOCAL_PASSWORD;
     }
-    
+
 }

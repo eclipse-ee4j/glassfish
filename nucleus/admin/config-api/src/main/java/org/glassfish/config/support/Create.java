@@ -31,74 +31,57 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Create command annotation.
  *
- * Methods annotated with this annotation delegates to the framework
- * to provide a generic administrative command that create configured
- * instances.
+ * Methods annotated with this annotation delegates to the framework to provide a generic administrative command that
+ * create configured instances.
  *
- * A Create annotation is used on a method of a configured interface.
- * The method identifies the setter of a type that can be added to the
- * configured interface.
+ * A Create annotation is used on a method of a configured interface. The method identifies the setter of a type that
+ * can be added to the configured interface.
  *
- * The annotated method must follow one of the two pattern :
- *    List<X> getXs();
- * or
- *    void setX(X x);
+ * The annotated method must follow one of the two pattern : List<X> getXs(); or void setX(X x);
  *
- * the name of the method is immaterial, only the generic type of the
- * returned List or the single parameter of the setter method are used
- * to determine the type of configured instance the command will create.
+ * the name of the method is immaterial, only the generic type of the returned List or the single parameter of the
+ * setter method are used to determine the type of configured instance the command will create.
  *
- * the resolver is used to find which instance of the parent type should
- * be used to add the newly created child. The resolver can also
- * be annotated with {@link org.glassfish.api.Param} to get parameters
- * passed to the command invocation (like a name or a target parameter).
+ * the resolver is used to find which instance of the parent type should be used to add the newly created child. The
+ * resolver can also be annotated with {@link org.glassfish.api.Param} to get parameters passed to the command
+ * invocation (like a name or a target parameter).
  *
- * The generic command implementation will use the parameters passed to
- * the command invocation with the {@link org.glassfish.api.Param}
- * annotations on the child type to match command parameters to
- * configuration attributes.
+ * The generic command implementation will use the parameters passed to the command invocation with the
+ * {@link org.glassfish.api.Param} annotations on the child type to match command parameters to configuration
+ * attributes.
  *
- * Sometimes, the creation of a new configuration will require more
- * work or more attributes/elements creation than what can be provided
- * or specified during the command invocation. In such a case, the
- * Create annotation can specify a decorator that will be called during
- * the generic command execution, with the newly created instance.
+ * Sometimes, the creation of a new configuration will require more work or more attributes/elements creation than what
+ * can be provided or specified during the command invocation. In such a case, the Create annotation can specify a
+ * decorator that will be called during the generic command execution, with the newly created instance.
  *
- * The {@link CreationDecorator} will be looked up by its type and
- * normal injection or parameter injection can happen.
+ * The {@link CreationDecorator} will be looked up by its type and normal injection or parameter injection can happen.
  *
- * Internationalization of generic commands follow the same rule as
- * described in the {@link AdminCommand} javadocs. The {@link I18n}
- * annotation referenced from this annotation will be used as the
- * top level command annotation, which should provide the command
- * description and expected result.
+ * Internationalization of generic commands follow the same rule as described in the {@link AdminCommand} javadocs. The
+ * {@link I18n} annotation referenced from this annotation will be used as the top level command annotation, which
+ * should provide the command description and expected result.
  *
- * Parameters can be annotated with @I18n as well to override the
- * default mapping and all resources must be located in the target
- * type module local strings properties file.
+ * Parameters can be annotated with @I18n as well to override the default mapping and all resources must be located in
+ * the target type module local strings properties file.
  *
- * Sometimes, the @Create annotation cannot be used in the parent
- * configuration object because the parent cannot have a direct
- * reference its children types.
+ * Sometimes, the @Create annotation cannot be used in the parent configuration object because the parent cannot have a
+ * direct reference its children types.
  *
- * For instance, if you have a declaration like
- * <code>
+ * For instance, if you have a declaration like <code>
  *     public interface ParentContainer {
- *      @Element("*)
+ *      &#64;Element("*)
  *      List<ParentConfigType> children();
  *     }
  * </code>
  *
- * you cannot use the @Create annotation in such declaration because
- * you do not know which subtypes of ParentConfigType will exist.
+ * you cannot use the @Create annotation in such declaration because you do not know which subtypes of ParentConfigType
+ * will exist.
  *
- * In such cases, you should place the @Create on the child type
- * and use the @Decorate annotation alongside to specify the parent's
- * method used to add the element to the parent.
+ * In such cases, you should place the @Create on the child type and use the @Decorate annotation alongside to specify
+ * the parent's method used to add the element to the parent.
  *
  * <code>
- *     @Create(....)
- *     @Decorate(parentType=ParentContainer.class, methodName="children",
+ *     &#64;Create(....)
+ *     &#64;Decorate(parentType=ParentContainer.class, methodName="children",
  *      with={Create.class})
  *     public interface SomeChild extends ParentConfigType {
  *      ...
@@ -108,9 +91,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Jerome Dochez
  */
 @Retention(RUNTIME)
-@Target({ ElementType.METHOD, ElementType.TYPE})
-@GenerateServiceFromMethod(implementation="org.glassfish.config.support.GenericCreateCommand",
-                           advertisedContracts="org.glassfish.api.admin.AdminCommand")
+@Target({ ElementType.METHOD, ElementType.TYPE })
+@GenerateServiceFromMethod(implementation = "org.glassfish.config.support.GenericCreateCommand", advertisedContracts = "org.glassfish.api.admin.AdminCommand")
 public @interface Create {
 
     /**
@@ -122,33 +104,30 @@ public @interface Create {
     String value();
 
     /**
-     * Returns the instance of the parent that should be used to add the newly created
-     * instance under. The implementation of that interface can use the command parameters
-     * to make a determination about which instance should be used.
+     * Returns the instance of the parent that should be used to add the newly created instance under. The implementation of
+     * that interface can use the command parameters to make a determination about which instance should be used.
      *
-     * @return the parent instance. 
+     * @return the parent instance.
      */
     Class<? extends CrudResolver> resolver() default CrudResolver.DefaultResolver.class;
 
     /**
-     * Returns a decorator type that should be looked up and called when a new
-     * configuration element of the annotated type is created.
+     * Returns a decorator type that should be looked up and called when a new configuration element of the annotated type
+     * is created.
      *
      * @return a decorator for the annotated type
      */
     Class<? extends CreationDecorator> decorator() default CreationDecorator.NoDecoration.class;
 
     /**
-     * Returns the desired behaviors in a clustered environment. By default, using all the
-     * {@link ExecuteOn} default values
+     * Returns the desired behaviors in a clustered environment. By default, using all the {@link ExecuteOn} default values
      *
      * @return the cluster information
      */
     ExecuteOn cluster() default @ExecuteOn();
 
     /**
-     * Returns the i18n key that will be used to look up a localized string in the annotated
-     * type module.
+     * Returns the i18n key that will be used to look up a localized string in the annotated type module.
      *
      * @return the key to look up localized description for the command.
      */

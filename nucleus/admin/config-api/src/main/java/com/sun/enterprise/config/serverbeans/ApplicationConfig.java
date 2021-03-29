@@ -24,12 +24,11 @@ import org.jvnet.hk2.config.Configured;
 /**
  * Represents the {@literal <application-config>} child element of {@literal <application-ref>}.
  * <p>
- * The <code>type</code> attribute identifies the container type for which
- * the application configuration customizations apply.
+ * The <code>type</code> attribute identifies the container type for which the application configuration customizations
+ * apply.
  * <p>
- * Each different container type provides its own sub-interface of ApplicationConfig
- * to reprsent the customizable parts of its application config information.
- * See WebAppConfig in web/webgui-plugin-common for an example.
+ * Each different container type provides its own sub-interface of ApplicationConfig to reprsent the customizable parts
+ * of its application config information. See WebAppConfig in web/webgui-plugin-common for an example.
  * 
  * @author tjquinn
  */

@@ -26,23 +26,22 @@ import java.util.*;
 import org.glassfish.api.admin.config.ApplicationName;
 
 @Configured
-public interface Applications extends ConfigBeanProxy  {
+public interface Applications extends ConfigBeanProxy {
 
     /**
-     * Gets the value of the MbeanorApplication property.
-     * Objects of the following type(s) are allowed in the list
+     * Gets the value of the MbeanorApplication property. Objects of the following type(s) are allowed in the list
      * {@link Application }
-     */             
+     */
     @Element("*")
-    @RestRedirect(opType= RestRedirect.OpType.PUT, commandName="deploy")
+    @RestRedirect(opType = RestRedirect.OpType.PUT, commandName = "deploy")
     public List<ApplicationName> getModules();
-            
+
     /**
      * Gets a subset of {@link #getModules()} that has the given type.
      */
     @DuckTyped
     <T> List<T> getModules(Class<T> type);
-    
+
     @DuckTyped
     <T> T getModule(Class<T> type, String moduleID);
 
@@ -50,11 +49,10 @@ public interface Applications extends ConfigBeanProxy  {
     List<Application> getApplications();
 
     /**
-     * Return the application with the given module ID (name), or null if
-     * no such application exists.
+     * Return the application with the given module ID (name), or null if no such application exists.
      *
-     * @param   moduleID        the module ID of the application
-     * @return                  the Application object, or null if no such app
+     * @param moduleID the module ID of the application
+     * @return the Application object, or null if no such app
      */
     @DuckTyped
     Application getApplication(String moduleID);
@@ -64,7 +62,7 @@ public interface Applications extends ConfigBeanProxy  {
 
     @DuckTyped
     List<Application> getApplicationsWithSnifferType(String snifferType, boolean onlyStandaloneModules);
-    
+
     public class Duck {
         public static <T> List<T> getModules(Applications apps, Class<T> type) {
             List<T> modules = new ArrayList<T>();
@@ -77,7 +75,7 @@ public interface Applications extends ConfigBeanProxy  {
             // is not the real list of elements as maintained by this config bean
             return Collections.unmodifiableList(modules);
         }
-                                                                                              
+
         public static <T> T getModule(Applications apps, Class<T> type, String moduleID) {
             if (moduleID == null) {
                 return null;
@@ -102,25 +100,22 @@ public interface Applications extends ConfigBeanProxy  {
 
             for (ApplicationName module : apps.getModules())
                 if (module instanceof Application && module.getName().equals(moduleID))
-                    return (Application)module;
+                    return (Application) module;
 
             return null;
         }
 
-        public static List<Application> getApplicationsWithSnifferType(
-            Applications apps, String snifferType) {
+        public static List<Application> getApplicationsWithSnifferType(Applications apps, String snifferType) {
             return getApplicationsWithSnifferType(apps, snifferType, false);
         }
 
-        public static List<Application> getApplicationsWithSnifferType(
-            Applications apps, String snifferType, 
-            boolean onlyStandaloneModules) {
-            List <Application> result = new ArrayList<Application>() {
+        public static List<Application> getApplicationsWithSnifferType(Applications apps, String snifferType,
+                boolean onlyStandaloneModules) {
+            List<Application> result = new ArrayList<Application>() {
 
             };
 
-            List<Application> applications = 
-                getModules(apps, Application.class);      
+            List<Application> applications = getModules(apps, Application.class);
 
             for (Application app : applications) {
                 if (app.containsSnifferType(snifferType)) {

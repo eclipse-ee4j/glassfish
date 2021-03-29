@@ -28,30 +28,30 @@ import org.glassfish.api.admin.config.Named;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
 
-
 /**
  * Validation logic for NotDuplicateTargetName constraint
  *
  * @author Joe Di Pol
  */
-public class NotDuplicateTargetNameValidator implements
-                        ConstraintValidator<NotDuplicateTargetName, Named> {
+public class NotDuplicateTargetNameValidator implements ConstraintValidator<NotDuplicateTargetName, Named> {
 
     Domain domain = null;
 
     @Override
     public void initialize(NotDuplicateTargetName constraintAnnotation) {
-    	ServiceLocator locator = ServiceLocatorFactory.getInstance().find("default");
-    	if (locator == null) return;
-    	
-    	ConfigBeansUtilities cbu = locator.getService(ConfigBeansUtilities.class);
-    	if (cbu == null) return;
-    	
+        ServiceLocator locator = ServiceLocatorFactory.getInstance().find("default");
+        if (locator == null)
+            return;
+
+        ConfigBeansUtilities cbu = locator.getService(ConfigBeansUtilities.class);
+        if (cbu == null)
+            return;
+
         domain = cbu.getDomain();
     }
 
     @Override
-    public boolean isValid(Named bean, ConstraintValidatorContext context ) {
+    public boolean isValid(Named bean, ConstraintValidatorContext context) {
 
         // When we search for name clashes we typically do not check the
         // type of object being created since that check has already been
@@ -81,13 +81,11 @@ public class NotDuplicateTargetNameValidator implements
             return true;
         }
 
-        if ((checkCluster && domain.getClusterNamed(name) != null) ||
-            (checkConfig  && domain.getConfigNamed(name) != null) ||
-            (checkNode    && domain.getNodeNamed(name) != null) ||
-            (checkServer  && domain.getServerNamed(name) != null)) {
+        if ((checkCluster && domain.getClusterNamed(name) != null) || (checkConfig && domain.getConfigNamed(name) != null)
+                || (checkNode && domain.getNodeNamed(name) != null) || (checkServer && domain.getServerNamed(name) != null)) {
             return false;
         } else {
-           return true;
+            return true;
         }
     }
 }

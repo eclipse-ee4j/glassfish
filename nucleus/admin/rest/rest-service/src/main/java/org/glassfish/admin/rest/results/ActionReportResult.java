@@ -22,10 +22,9 @@ import org.glassfish.admin.rest.resources.LeafResource.LeafContent;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.jvnet.hk2.config.ConfigBean;
 
-
 /**
- * Response information object. Returned on call to GET methods on command
- * resources. Information used by provider to generate the appropriate output.
+ * Response information object. Returned on call to GET methods on command resources. Information used by provider to
+ * generate the appropriate output.
  *
  * @author Ludovic Champenois
  */
@@ -44,7 +43,6 @@ public class ActionReportResult extends Result {
         this.leafContent = leafContent;
     }
 
-
     /**
      * Constructor
      */
@@ -53,31 +51,32 @@ public class ActionReportResult extends Result {
         this(null, r);
     }
 
-    public ActionReportResult(RestActionReporter r,  OptionsResult metaData) {
+    public ActionReportResult(RestActionReporter r, OptionsResult metaData) {
         this(null, r, metaData);
     }
 
-    public ActionReportResult(RestActionReporter r, ConfigBean entity,  OptionsResult metaData) {
+    public ActionReportResult(RestActionReporter r, ConfigBean entity, OptionsResult metaData) {
         this(r, metaData);
         __entity = entity;
     }
 
     public ActionReportResult(String name, RestActionReporter r) {
-        this(name, r, new OptionsResult());    
+        this(name, r, new OptionsResult());
     }
 
-    public ActionReportResult(String name, RestActionReporter r,  OptionsResult metaData) {
+    public ActionReportResult(String name, RestActionReporter r, OptionsResult metaData) {
         __name = name;
         __message = r;
         __metaData = metaData;
     }
 
-    public ActionReportResult(String name, RestActionReporter r,  OptionsResult metaData, String displayName) {
+    public ActionReportResult(String name, RestActionReporter r, OptionsResult metaData, String displayName) {
         __name = name;
         __message = r;
         __metaData = metaData;
         commandDisplayName = displayName;
     }
+
     /**
      * Returns the result string this object represents
      */
@@ -91,13 +90,14 @@ public class ActionReportResult extends Result {
     public String getCommandDisplayName() {
         return commandDisplayName;
     }
-    
+
     /**
      * change display name for command associated with the command resource.
      */
     public void setCommandDisplayName(String s) {
-         commandDisplayName =s;
+        commandDisplayName = s;
     }
+
     /**
      * Returns OptionsResult - the meta-data of this resource.
      */

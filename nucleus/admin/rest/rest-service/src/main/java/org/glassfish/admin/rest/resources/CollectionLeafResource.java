@@ -51,11 +51,11 @@ import org.jvnet.hk2.config.Dom;
 import static org.glassfish.admin.rest.utils.Util.decode;
 import static org.glassfish.admin.rest.utils.Util.upperCaseFirstLetter;
 
-
 /**
  * @author Rajeshwar Patil
  */
-@Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
+@Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+        MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
 public abstract class CollectionLeafResource extends AbstractResource {
     protected List<String> entity;
     protected Dom parent;
@@ -80,7 +80,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
     public void setParentAndTagName(Dom parent, String tagName) {
         this.parent = parent;
         this.tagName = tagName;
-        if (parent!=null){
+        if (parent != null) {
             entity = parent.leafElements(tagName);
 
             if (parent.getImplementationClass().equals(JavaConfig.class)) {
@@ -102,14 +102,13 @@ public abstract class CollectionLeafResource extends AbstractResource {
     }
 
     @POST //create
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response create(HashMap<String, String> data) throws TransactionFailure {
         //hack-1 : support delete method for html
         //Currently, browsers do not support delete method. For html media,
         //delete operations can be supported through POST. Redirect html
         //client POST request for delete operation to DELETE method.
-        if ((data.containsKey("operation")) &&
-                (data.get("operation").equals("__deleteoperation"))) {
+        if ((data.containsKey("operation")) && (data.get("operation").equals("__deleteoperation"))) {
             data.remove("operation");
             return delete(data);
         }
@@ -126,19 +125,19 @@ public abstract class CollectionLeafResource extends AbstractResource {
         }
 
         // Create all JVM options.
-        Response response = runCommand(postCommand, payload, "rest.resource.create.message",
-            "\"{0}\" created successfully.", "rest.resource.post.forbidden","POST on \"{0}\" is forbidden.");
+        Response response = runCommand(postCommand, payload, "rest.resource.create.message", "\"{0}\" created successfully.",
+                "rest.resource.post.forbidden", "POST on \"{0}\" is forbidden.");
         if (response.getStatus() != 200) {
             // If creating JVM options is error, restore JVM options with exsiting.  
             payload = processData(existing);
-            runCommand(postCommand, payload, "rest.resource.create.message",
-                "\"{0}\" created successfully.", "rest.resource.post.forbidden","POST on \"{0}\" is forbidden.");
+            runCommand(postCommand, payload, "rest.resource.create.message", "\"{0}\" created successfully.",
+                    "rest.resource.post.forbidden", "POST on \"{0}\" is forbidden.");
         }
         return response;
     }
 
     @PUT //create
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     @Deprecated
     public Response add(HashMap<String, String> data) throws TransactionFailure {
         String postCommand = getPostCommand();
@@ -150,13 +149,12 @@ public abstract class CollectionLeafResource extends AbstractResource {
             payload = data;
         }
 
-
-        return runCommand(postCommand, payload, "rest.resource.create.message",
-            "\"{0}\" created successfully.", "rest.resource.post.forbidden","POST on \"{0}\" is forbidden.");
+        return runCommand(postCommand, payload, "rest.resource.create.message", "\"{0}\" created successfully.",
+                "rest.resource.post.forbidden", "POST on \"{0}\" is forbidden.");
     }
 
     @DELETE //delete
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response delete(HashMap<String, String> data) {
         if (data == null) {
             data = new HashMap<String, String>();
@@ -169,18 +167,18 @@ public abstract class CollectionLeafResource extends AbstractResource {
                 deleteExistingOptions();
                 return Response.ok().build();
             } else {
-                return runCommand(deleteCommand, processData(data), "rest.resource.delete.message",
-                    "\"{0}\" deleted successfully.", "rest.resource.delete.forbidden", "DELETE on \"{0}\" is forbidden.");
+                return runCommand(deleteCommand, processData(data), "rest.resource.delete.message", "\"{0}\" deleted successfully.",
+                        "rest.resource.delete.forbidden", "DELETE on \"{0}\" is forbidden.");
             }
         } else {
-            return runCommand(deleteCommand, data, "rest.resource.delete.message",
-                "\"{0}\" deleted successfully.", "rest.resource.delete.forbidden", "DELETE on \"{0}\" is forbidden.");
+            return runCommand(deleteCommand, data, "rest.resource.delete.message", "\"{0}\" deleted successfully.",
+                    "rest.resource.delete.forbidden", "DELETE on \"{0}\" is forbidden.");
         }
 
     }
 
     @OPTIONS
-    @Produces({MediaType.APPLICATION_JSON+";qs=0.5", "text/html", MediaType.APPLICATION_XML+";qs=0.5"})
+    @Produces({ MediaType.APPLICATION_JSON + ";qs=0.5", "text/html", MediaType.APPLICATION_XML + ";qs=0.5" })
     public Response options() {
         return Response.ok(buildActionReportResult()).build();
     }
@@ -228,7 +226,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
         data.put("DEFAULT", defaultParameterValue);
     }
 
-    protected String getPostCommand(){
+    protected String getPostCommand() {
         return null;
     }
 
@@ -240,15 +238,15 @@ public abstract class CollectionLeafResource extends AbstractResource {
         return Util.getResourceName(uriInfo);
     }
 
-    private Response runCommand(String commandName, Map<String, String> data,
-        String successMsgKey, String successMsg, String operationForbiddenMsgKey, String operationForbiddenMsg ) {
+    private Response runCommand(String commandName, Map<String, String> data, String successMsgKey, String successMsg,
+            String operationForbiddenMsgKey, String operationForbiddenMsg) {
         try {
             if (data.containsKey("error")) {
                 String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
                         "Unable to parse the input entity. Please check the syntax.");
-                return Response.status(400).
-                        entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE,
-                            errorMessage, requestHeaders, uriInfo)).build();
+                return Response.status(400)
+                        .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo))
+                        .build();
             }
 
             ResourceUtil.purgeEmptyEntries(data);
@@ -257,24 +255,22 @@ public abstract class CollectionLeafResource extends AbstractResource {
             String attributeName = data.get("DEFAULT");
 
             if (null != commandName) {
-                RestActionReporter actionReport = ResourceUtil.runCommand(commandName,
-                    data, getSubject());
+                RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
 
                 ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
                 if (exitCode != ActionReport.ExitCode.FAILURE) {
-                    String successMessage =
-                        localStrings.getLocalString(successMsgKey,
-                            successMsg, new Object[] {attributeName});
+                    String successMessage = localStrings.getLocalString(successMsgKey, successMsg, new Object[] { attributeName });
                     return Response.ok(ResourceUtil.getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo)).build();
                 }
 
                 String errorMessage = getErrorMessage(data, actionReport);
-                return Response.status(400).entity(ResourceUtil.getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo)).build();
+                return Response.status(400).entity(ResourceUtil.getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo))
+                        .build();
             }
-            String message =
-                localStrings.getLocalString(operationForbiddenMsgKey,
-                    operationForbiddenMsg, new Object[] {uriInfo.getAbsolutePath()});
-            return Response.status(403).entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
+            String message = localStrings.getLocalString(operationForbiddenMsgKey, operationForbiddenMsg,
+                    new Object[] { uriInfo.getAbsolutePath() });
+            return Response.status(403)
+                    .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
 
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
@@ -305,12 +301,12 @@ public abstract class CollectionLeafResource extends AbstractResource {
             if ("target".equals(key) || "profiler".equals(key)) {
                 results.put(key, entry.getValue());
             } else {
-//                options.append(sep).append(escapeOptionPart(entry.getKey()));
+                //                options.append(sep).append(escapeOptionPart(entry.getKey()));
                 options.append(sep).append(entry.getKey());
 
                 String value = entry.getValue();
                 if ((value != null) && (!value.isEmpty())) {
-//                    options.append("=").append(escapeOptionPart(entry.getValue()));
+                    //                    options.append("=").append(escapeOptionPart(entry.getValue()));
                     options.append("=").append(entry.getValue());
                 }
                 sep = ":";
@@ -330,13 +326,12 @@ public abstract class CollectionLeafResource extends AbstractResource {
 
     /**
      * Escapes special chars (e.g., colons) in a JVM Option part
+     * 
      * @param part
      * @return
      */
     protected String escapeOptionPart(String part) {
-        String changed = part
-                .replace("\\", "\\\\")
-                .replace(":", "\\:");
+        String changed = part.replace("\\", "\\\\").replace(":", "\\:");
         return changed;
     }
 
@@ -352,17 +347,14 @@ public abstract class CollectionLeafResource extends AbstractResource {
         for (String option : getEntity()) {
             int index = option.indexOf("=");
             if (index > -1) {
-                existing.put(escapeOptionPart(option.substring(0, index)), escapeOptionPart(option.substring(index+1)));
+                existing.put(escapeOptionPart(option.substring(0, index)), escapeOptionPart(option.substring(index + 1)));
             } else {
                 existing.put(escapeOptionPart(option), "");
             }
         }
 
-        runCommand(getDeleteCommand(), processData(existing),
-                "rest.resource.delete.message",
-                "\"{0}\" deleted successfully.",
-                "rest.resource.delete.forbidden",
-                "DELETE on \"{0}\" is forbidden.");
+        runCommand(getDeleteCommand(), processData(existing), "rest.resource.delete.message", "\"{0}\" deleted successfully.",
+                "rest.resource.delete.forbidden", "DELETE on \"{0}\" is forbidden.");
         return existing;
     }
 

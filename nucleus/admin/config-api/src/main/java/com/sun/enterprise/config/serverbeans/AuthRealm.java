@@ -36,46 +36,38 @@ import java.util.List;
 @LDAPRealmPropertyCheck
 @JDBCRealmPropertyCheck
 @SolarisRealmPropertyCheck
-@RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-auth-realm"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-auth-realm")
-})
+@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-auth-realm"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-auth-realm") })
 /**
- * The auth-realm element defines and configures one authentication realm. 
- * There must be at least one realm available for a server instance; 
- * any number can be configured, as desired.               
- * Authentication realms need provider-specific parameters which vary depending 
- * on what a particular implementation needs; these are defined as properties 
- * since they vary by provider and cannot be predicted for any custom or add-on 
- * providers.
- * For the default file provider, the param used is: file                     
+ * The auth-realm element defines and configures one authentication realm. There must be at least one realm available
+ * for a server instance; any number can be configured, as desired. Authentication realms need provider-specific
+ * parameters which vary depending on what a particular implementation needs; these are defined as properties since they
+ * vary by provider and cannot be predicted for any custom or add-on providers. For the default file provider, the param
+ * used is: file
  */
 public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the name property.
-     * Defines the name of this realm
-     * @return possible object is
-     *         {@link String }
+     * Gets the value of the name property. Defines the name of this realm
+     * 
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_REGEX)
+    @Pattern(regexp = NAME_REGEX)
     String getName();
 
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setName(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the classname property.
-     * Defines the java class which implements this realm
-     * @return possible object is
-     *         {@link String }
+     * Gets the value of the classname property. Defines the java class which implements this realm
+     * 
+     * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
@@ -85,8 +77,7 @@ public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the classname property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setClassname(String value) throws PropertyVetoException;
 
@@ -101,55 +92,29 @@ public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
             return null;
         }
     }
+
     /**
-        Properties.
+     * Properties.
      */
-@PropertiesDesc(
-    props={
-        @PropertyDesc(name="jaas-context",
-            description="jaas-contextfile,jdbcSpecifies the JAAS (Java Authentication and Authorization Service) context"),
-        @PropertyDesc(name="file", defaultValue="${com.sun.aas.instanceRoot}/config/keyfile",
-            description="file realm. Specifies the file that stores user names, passwords, and group names."),
-        @PropertyDesc(name="assign-groups",
-            description="file, jdbc realms. Comma-separated list of group names."),
-        @PropertyDesc(name="datasource-jndi",
-            description="Specifies name of the jdbc-resource for the database"),
-        @PropertyDesc(name="user-table",
-            description="Specifies the name of the user table in the database"),
-        @PropertyDesc(name="user-name-column",
-            description="Specifies the name of the user name column in the database user table"),
-        @PropertyDesc(name="password-column",
-            description="Specifies the name of the password column in the database user table"),
-        @PropertyDesc(name="group-table",
-            description="Specifies the name of the group table in the database"),
-        @PropertyDesc(name="group-name-column",
-            description="Specifies the name of the group name column in the database user table"),
-        @PropertyDesc(name="db-user",
-            description="The database user name in the realm instead of that in the jdbc-connection-pool. " +
-                "Prevents other applications from looking up the database, getting a connection, and browsing the user table"),
-        @PropertyDesc(name="db-password",
-            description="The database password in the realm instead of that in the jdbc-connection-pool. " +
-                "Prevents other applications from looking up the database, getting a connection, and browsing the user table"),
-        @PropertyDesc(name="digest-algorithm", defaultValue="MD5", values={"MD5", "none", "SHA"},
-            description="Any algorithm supported in the JDK"),
-        @PropertyDesc(name="encoding", values={"Hex", "Base64"},
-            description="Specifies the encoding. If digest-algorithm is specified, the default is Hex, otherwise no encoding is specified"),
-        @PropertyDesc(name="charset",
-            description="Specifies the charset for the digest algorithm")
-    }
-    )
+    @PropertiesDesc(props = {
+            @PropertyDesc(name = "jaas-context", description = "jaas-contextfile,jdbcSpecifies the JAAS (Java Authentication and Authorization Service) context"),
+            @PropertyDesc(name = "file", defaultValue = "${com.sun.aas.instanceRoot}/config/keyfile", description = "file realm. Specifies the file that stores user names, passwords, and group names."),
+            @PropertyDesc(name = "assign-groups", description = "file, jdbc realms. Comma-separated list of group names."),
+            @PropertyDesc(name = "datasource-jndi", description = "Specifies name of the jdbc-resource for the database"),
+            @PropertyDesc(name = "user-table", description = "Specifies the name of the user table in the database"),
+            @PropertyDesc(name = "user-name-column", description = "Specifies the name of the user name column in the database user table"),
+            @PropertyDesc(name = "password-column", description = "Specifies the name of the password column in the database user table"),
+            @PropertyDesc(name = "group-table", description = "Specifies the name of the group table in the database"),
+            @PropertyDesc(name = "group-name-column", description = "Specifies the name of the group name column in the database user table"),
+            @PropertyDesc(name = "db-user", description = "The database user name in the realm instead of that in the jdbc-connection-pool. "
+                    + "Prevents other applications from looking up the database, getting a connection, and browsing the user table"),
+            @PropertyDesc(name = "db-password", description = "The database password in the realm instead of that in the jdbc-connection-pool. "
+                    + "Prevents other applications from looking up the database, getting a connection, and browsing the user table"),
+            @PropertyDesc(name = "digest-algorithm", defaultValue = "MD5", values = { "MD5", "none",
+                    "SHA" }, description = "Any algorithm supported in the JDK"),
+            @PropertyDesc(name = "encoding", values = { "Hex",
+                    "Base64" }, description = "Specifies the encoding. If digest-algorithm is specified, the default is Hex, otherwise no encoding is specified"),
+            @PropertyDesc(name = "charset", description = "Specifies the charset for the digest algorithm") })
     @Element
     List<Property> getProperty();
 }
-
-
-
-
-
-
-
-
-
-
-
-

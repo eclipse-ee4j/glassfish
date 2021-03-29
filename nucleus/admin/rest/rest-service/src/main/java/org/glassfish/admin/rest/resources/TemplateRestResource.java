@@ -76,10 +76,11 @@ import java.net.URLDecoder;
  * @author Ludovic Champenois ludo@java.net
  * @author Rajeshwar Patil
  */
-@Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+@Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+        MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
+@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
 public class TemplateRestResource extends AbstractResource implements OptionsCapable {
-    protected Dom entity;  //may be null when not created yet...
+    protected Dom entity; //may be null when not created yet...
     protected Dom parent;
     protected String tagName;
     protected ConfigModel childModel; //good model even if the child entity is null
@@ -111,8 +112,8 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     }
 
     @GET
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
-    public Map<String,String> getEntity(@QueryParam("expandLevel") @DefaultValue("1") int expandLevel) {
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
+    public Map<String, String> getEntity(@QueryParam("expandLevel") @DefaultValue("1") int expandLevel) {
         if (childModel == null) {//wrong entity name at this point
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -124,25 +125,23 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     //create or update
     public Response createOrUpdateEntityLegacyFormat(HashMap<String, String> data) {
         return Response.ok(ResourceUtil.getActionReportResult(doCreateOrUpdate(data),
-                localStrings.getLocalString("rest.resource.update.message",
-                "\"{0}\" updated successfully.", uriInfo.getAbsolutePath()),
+                localStrings.getLocalString("rest.resource.update.message", "\"{0}\" updated successfully.", uriInfo.getAbsolutePath()),
                 requestHeaders, uriInfo)).build();
     }
 
     @POST
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public Response createOrUpdateEntity(HashMap<String, String> data) {
         doCreateOrUpdate(data);
         return Response.status(Status.CREATED).build();
     }
 
     /**
-     * allows for remote files to be put in a tmp area and we pass the
-     * local location of this file to the corresponding command instead of the content of the file
-     * * Yu need to add  enctype="multipart/form-data" in the form
-     * for ex:  <form action="http://localhost:4848/management/domain/applications/application" method="post" enctype="multipart/form-data">
-     * then any param of type="file" will be uploaded, stored locally and the param will use the local location
-     * on the server side (ie. just the path)
+     * allows for remote files to be put in a tmp area and we pass the local location of this file to the corresponding
+     * command instead of the content of the file * Yu need to add enctype="multipart/form-data" in the form for ex:
+     * <form action="http://localhost:4848/management/domain/applications/application" method="post" enctype=
+     * "multipart/form-data"> then any param of type="file" will be uploaded, stored locally and the param will use the
+     * local location on the server side (ie. just the path)
      */
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -152,19 +151,15 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public Object post(FormDataMultiPart formData) {
         return createOrUpdateEntity(createDataBasedOnForm(formData)); //execute the deploy command with a copy of the file locally
     }
 
     @DELETE
     public Response delete(HashMap<String, String> data) {
-        return Response.ok(ResourceUtil.getActionReportResult(doDelete(data),
-                localStrings.getLocalString("rest.resource.delete.message", "\"{0}\" deleted successfully.",
-                new Object[]{ uriInfo.getAbsolutePath() }),
-                requestHeaders,
-                uriInfo))
-                .build(); //200 - ok
+        return Response.ok(ResourceUtil.getActionReportResult(doDelete(data), localStrings.getLocalString("rest.resource.delete.message",
+                "\"{0}\" deleted successfully.", new Object[] { uriInfo.getAbsolutePath() }), requestHeaders, uriInfo)).build(); //200 - ok
     }
 
     @OPTIONS
@@ -174,15 +169,15 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     }
 
     @OPTIONS
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public RestResourceMetadata options() {
         return new RestResourceMetadata(this);
     }
 
     /**
-     * This method performs the creation or updating of an entity, regardless of the
-     * request's mime type.  If an error occurs, a <code>WebApplicationException</code>
-     * is thrown, so if the method returns, the create/update was successful.
+     * This method performs the creation or updating of an entity, regardless of the request's mime type. If an error
+     * occurs, a <code>WebApplicationException</code> is thrown, so if the method returns, the create/update was successful.
+     * 
      * @param data
      * @return
      */
@@ -194,10 +189,13 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             //data.remove("submit");
             removeAttributesToBeSkipped(data);
             if (data.containsKey("error")) {
-                throw new WebApplicationException(Response.status(400)
-                        .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE,
-                            localStrings.getLocalString("rest.request.parsing.error", "Unable to parse the input entity. Please check the syntax."),
-                            requestHeaders, uriInfo)).build());
+                throw new WebApplicationException(
+                        Response.status(400)
+                                .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE,
+                                        localStrings.getLocalString("rest.request.parsing.error",
+                                                "Unable to parse the input entity. Please check the syntax."),
+                                        requestHeaders, uriInfo))
+                                .build());
             }
 
             ResourceUtil.purgeEmptyEntries(data);
@@ -219,8 +217,8 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             }
 
             return ar;
-        } catch(WebApplicationException wae) {
-           throw wae;
+        } catch (WebApplicationException wae) {
+            throw wae;
         } catch (Exception ex) {
             throw new WebApplicationException(ex, Response.Status.INTERNAL_SERVER_ERROR);
         }
@@ -231,14 +229,13 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             data = new HashMap<String, String>();
         }
         if (entity == null) {//wrong resource
-//            return Response.status(404).entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo)).build();
-            throwError(Status.NOT_FOUND,
-                localStrings.getLocalString("rest.resource.erromessage.noentity", "Resource not found."));
+            //            return Response.status(404).entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo)).build();
+            throwError(Status.NOT_FOUND, localStrings.getLocalString("rest.resource.erromessage.noentity", "Resource not found."));
         }
 
         if (getDeleteCommand() == null) {
-            String message = localStrings.getLocalString("rest.resource.delete.forbidden",
-                    "DELETE on \"{0}\" is forbidden.", new Object[]{uriInfo.getAbsolutePath()});
+            String message = localStrings.getLocalString("rest.resource.delete.forbidden", "DELETE on \"{0}\" is forbidden.",
+                    new Object[] { uriInfo.getAbsolutePath() });
             throwError(Status.FORBIDDEN, message);
         }
 
@@ -257,8 +254,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
         //do the delete via the command:
         if (data.containsKey("error")) {
-            throwError(Status.BAD_REQUEST,
-                    localStrings.getLocalString("rest.request.parsing.error",
+            throwError(Status.BAD_REQUEST, localStrings.getLocalString("rest.request.parsing.error",
                     "Unable to parse the input entity. Please check the syntax."));
         }
 
@@ -271,8 +267,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
         } else {
             String resourceName = getResourceName(uriInfo.getAbsolutePath().getPath(), "/");
             if (!data.get("DEFAULT").equals(resourceName)) {
-                throwError(Status.FORBIDDEN,
-                        localStrings.getLocalString("rest.resource.not.deleted",
+                throwError(Status.FORBIDDEN, localStrings.getLocalString("rest.resource.not.deleted",
                         "Resource not deleted. Value of \"name\" should be the name of this resource."));
             }
         }
@@ -288,9 +283,8 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             throwError(Status.BAD_REQUEST, actionReport.getMessage());
         }
 
-        throw new WebApplicationException(handleError(Status.BAD_REQUEST,
-                localStrings.getLocalString("rest.resource.delete.forbidden",
-                "DELETE on \"{0}\" is forbidden.", new Object[]{uriInfo.getAbsolutePath()})));
+        throw new WebApplicationException(handleError(Status.BAD_REQUEST, localStrings.getLocalString("rest.resource.delete.forbidden",
+                "DELETE on \"{0}\" is forbidden.", new Object[] { uriInfo.getAbsolutePath() })));
     }
 
     @Override
@@ -329,7 +323,8 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             // the Dom tree. Once that's done, we can return that node and proceed as normal
             String location = buildPath(parent) + "/" + tagName;
             if (location.startsWith("domain/configs")) {
-                final ConfigModularityUtils cmu = locatorBridge.getRemoteLocator().<ConfigModularityUtils>getService(ConfigModularityUtils.class);
+                final ConfigModularityUtils cmu = locatorBridge.getRemoteLocator()
+                        .<ConfigModularityUtils>getService(ConfigModularityUtils.class);
                 ConfigBeanProxy cbp = cmu.getOwningObject(location);
                 if (cbp == null) {
                     cbp = cmu.getConfigBeanInstanceFor(cmu.getOwningClassForLocation(location));
@@ -346,21 +341,20 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     }
 
     /**
-     * This method will build the path string as needed by ConfigModularityUtils.getOwningObject().
-     * There is a mismatch between what the method expects and the way the REST URIs are constructed.
-     * For example, for the transaction-service element, the REST URI, stripped of the HTTP and
-     * server context information, looks like this:
-     * /domain/configs/config/server-config/transaction-service.  The format expected by the
-     * getOwningObject(), however, looks like this:
-     * domain/configs/server-config/transaction-service. In the REST URIs, if there is a collection of
-     * Named items, the type of the collection is inserted into the URI ("config" here) followed by
-     * the name of the particular instance ("server-config").  In building the path, we must identify
-     * Named instances and insert the name of the instance rather than the type.  We apply this logic
-     * as we recurse up to the top of the Dom tree to finish building the path desired.
+     * This method will build the path string as needed by ConfigModularityUtils.getOwningObject(). There is a mismatch
+     * between what the method expects and the way the REST URIs are constructed. For example, for the transaction-service
+     * element, the REST URI, stripped of the HTTP and server context information, looks like this:
+     * /domain/configs/config/server-config/transaction-service. The format expected by the getOwningObject(), however,
+     * looks like this: domain/configs/server-config/transaction-service. In the REST URIs, if there is a collection of
+     * Named items, the type of the collection is inserted into the URI ("config" here) followed by the name of the
+     * particular instance ("server-config"). In building the path, we must identify Named instances and insert the name of
+     * the instance rather than the type. We apply this logic as we recurse up to the top of the Dom tree to finish building
+     * the path desired.
+     * 
      * @param node
      * @return
      */
-    private String buildPath (Dom node) {
+    private String buildPath(Dom node) {
         final Dom parentNode = node.parent();
         String part = node.model.getTagName();
         String name = node.attribute("name");
@@ -371,12 +365,11 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     }
 
     /**
-     * allows for remote files to be put in a tmp area and we pass the
-     * local location of this file to the corresponding command instead of the content of the file
-     * * Yu need to add  enctype="multipart/form-data" in the form
-     * for ex:  <form action="http://localhost:4848/management/domain/applications/application" method="post" enctype="multipart/form-data">
-     * then any param of type="file" will be uploaded, stored locally and the param will use the local location
-     * on the server side (ie. just the path)
+     * allows for remote files to be put in a tmp area and we pass the local location of this file to the corresponding
+     * command instead of the content of the file * Yu need to add enctype="multipart/form-data" in the form for ex:
+     * <form action="http://localhost:4848/management/domain/applications/application" method="post" enctype=
+     * "multipart/form-data"> then any param of type="file" will be uploaded, stored locally and the param will use the
+     * local location on the server side (ie. just the path)
      */
     public static HashMap<String, String> createDataBasedOnForm(FormDataMultiPart formData) {
         HashMap<String, String> data = new HashMap<String, String>();
@@ -484,8 +477,8 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
         ResourceUtil.addMethodMetaData(ar, mmd);
         if (entity != null) {
-            ar.getExtraProperties().put("childResources", ResourceUtil.getResourceLinks(entity, uriInfo,
-                    ResourceUtil.canShowDeprecatedItems(locatorBridge.getRemoteLocator())));
+            ar.getExtraProperties().put("childResources",
+                    ResourceUtil.getResourceLinks(entity, uriInfo, ResourceUtil.canShowDeprecatedItems(locatorBridge.getRemoteLocator())));
         }
         ar.getExtraProperties().put("commands", ResourceUtil.getCommandLinks(getCommandResourcesPaths()));
 
@@ -499,21 +492,21 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     }
 
     protected String[][] getCommandResourcesPaths() {
-        return new String[][]{};
+        return new String[][] {};
     }
 
     protected String getDeleteCommand() {
         if (entity == null) {
             return null;
         }
-        String result =
-                ResourceUtil.getCommand(RestRedirect.OpType.DELETE, getEntity().model);
+        String result = ResourceUtil.getCommand(RestRedirect.OpType.DELETE, getEntity().model);
 
         if ((result == null) && (entity.parent() != null)) {
             //trying @Delete annotation that as a generic CRUD delete command, possibly...
             Class<? extends ConfigBeanProxy> cbp = null;
             try {
-                cbp = (Class<? extends ConfigBeanProxy>) entity.parent().model.classLoaderHolder.loadClass(entity.parent().model.targetTypeName);
+                cbp = (Class<? extends ConfigBeanProxy>) entity.parent().model.classLoaderHolder
+                        .loadClass(entity.parent().model.targetTypeName);
             } catch (MultiException e) {
                 return null;//
             }
@@ -590,7 +583,6 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
         MethodMetaData postMethodMetaData = ResourceUtil.getMethodMetaData(childModel);
         map.put("POST", postMethodMetaData);
 
-
         //DELETE meta data
         String command = getDeleteCommand();
         if (command != null) {
@@ -598,8 +590,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             if (command.equals("GENERIC-DELETE")) {
                 deleteMethodMetaData = new MethodMetaData();
             } else {
-                deleteMethodMetaData = ResourceUtil.getMethodMetaData(
-                        command, locatorBridge.getRemoteLocator());
+                deleteMethodMetaData = ResourceUtil.getMethodMetaData(command, locatorBridge.getRemoteLocator());
 
                 //In case of delete operation(command), do not  display/provide id attribute.
                 deleteMethodMetaData.removeParamMetaData("id");
@@ -616,7 +607,8 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
     protected Response handleError(final Status error, final String message) throws WebApplicationException {
         //TODO better error handling.
-//                return Response.status(400).entity(ResourceUtil.getActionReportResult(ar, "Could not apply changes" + ar.getMessage(), requestHeaders, uriInfo)).build();
-        return Response.status(error).entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
+        //                return Response.status(400).entity(ResourceUtil.getActionReportResult(ar, "Could not apply changes" + ar.getMessage(), requestHeaders, uriInfo)).build();
+        return Response.status(error)
+                .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
     }
 }

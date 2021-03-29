@@ -23,19 +23,19 @@ import java.security.Principal;
  * @author tjquinn
  */
 public abstract class TokenPrincipal implements Principal {
-    
+
     private final String name;
     private final String token;
-    
+
     @Override
     public String getName() {
         return name;
     }
-    
+
     public String getToken() {
         return token;
     }
-    
+
     public TokenPrincipal(final String name, final String token) {
         this.name = name;
         this.token = token;

@@ -24,13 +24,13 @@ import javax.xml.stream.XMLStreamException;
  * @author Byron Nevins
  */
 class DasReaderFilter extends ServerReaderFilter {
-    DasReaderFilter(URL theDomainXml,
-            XMLInputFactory theXif) throws XMLStreamException {
+    DasReaderFilter(URL theDomainXml, XMLInputFactory theXif) throws XMLStreamException {
         super(theDomainXml, theXif);
     }
 
     /**
      * DAS wants ALL elements so just return false!
+     * 
      * @return
      * @throws XMLStreamException
      */

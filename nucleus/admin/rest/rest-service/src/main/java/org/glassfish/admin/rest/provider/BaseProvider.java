@@ -65,7 +65,7 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
 
     protected MediaType[] supportedMediaTypes;
 
-    public BaseProvider(Class desiredType, MediaType ... mediaType) {
+    public BaseProvider(Class desiredType, MediaType... mediaType) {
         this.desiredType = desiredType;
         if (mediaType == null) {
             mediaType = new MediaType[0];
@@ -85,8 +85,8 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
         return false;
     }
 
-    /** Overwrite this if you need different test of type compatibility.
-     * Used from isWritable method.
+    /**
+     * Overwrite this if you need different test of type compatibility. Used from isWritable method.
      */
     protected boolean isGivenTypeWritable(Class<?> type, Type genericType) {
         return desiredType.isAssignableFrom(type);
@@ -107,18 +107,17 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
 
     protected int getFormattingIndentLevel() {
         RestConfig rg = ResourceUtil.getRestConfig(habitat);
-        if (rg == null){
+        if (rg == null) {
             return -1;
-        }
-        else {
+        } else {
             return Integer.parseInt(rg.getIndentLevel());
         }
 
     }
 
-     /**
-      * returns true if the HTML viewer displays the hidden CLI command links
-      */
+    /**
+     * returns true if the HTML viewer displays the hidden CLI command links
+     */
     protected boolean canShowHiddenCommands() {
 
         RestConfig rg = ResourceUtil.getRestConfig(habitat);
@@ -129,8 +128,7 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
     }
 
     /**
-     * returns true if the HTML viewer displays the deprecated elements or attributes
-     * of a config bean
+     * returns true if the HTML viewer displays the deprecated elements or attributes of a config bean
      */
 
     protected boolean canShowDeprecatedItems() {
@@ -141,6 +139,7 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
         }
         return false;
     }
+
     /**
      * check for the __debug request header
      *
@@ -160,8 +159,7 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
     }
 
     /**
-     * if a query param of name "jsoncallback" is there, returns its value
-     * or returns null otherwise.
+     * if a query param of name "jsoncallback" is there, returns its value or returns null otherwise.
      */
     protected String getCallBackJSONP() {
         if (uriInfo == null) {
@@ -179,7 +177,8 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
     protected String getXmlCommandLinks(String[][] commandResourcesPaths, String indent) {
         StringBuilder result = new StringBuilder();
         for (String[] commandResourcePath : commandResourcesPaths) {
-            result.append("\n").append(indent).append(getStartXmlElement(KEY_COMMAND)).append(getElementLink(uriInfo.get(), commandResourcePath[0])).append(getEndXmlElement(KEY_COMMAND));
+            result.append("\n").append(indent).append(getStartXmlElement(KEY_COMMAND))
+                    .append(getElementLink(uriInfo.get(), commandResourcePath[0])).append(getEndXmlElement(KEY_COMMAND));
         }
         return result.toString();
     }

@@ -30,7 +30,7 @@ public class Common {
     public static final int SC_BAD_REQUEST = Status.BAD_REQUEST.getStatusCode();
     public static final int SC_UNAUTHORIZED = Status.UNAUTHORIZED.getStatusCode();
     public static final int SC_ANY = -1;
-    
+
     // Commonly used property names:
     public static final String PROP_ITEM = "item";
     public static final String PROP_ITEMS = "items";
@@ -216,28 +216,23 @@ public class Common {
     }
 
     public static ObjectValue message(String severity, String message) {
-        return objectVal()
-                .put("severity", stringVal(severity))
-                .put("message", stringRegexp(message));
+        return objectVal().put("severity", stringVal(severity)).put("message", stringRegexp(message));
     }
 
     public static ObjectValue message(String severity, String field, String message) {
-        return objectVal()
-                .put("severity", severity)
-                .put("field", field)
-                .put("message", stringRegexp(message));
+        return objectVal().put("severity", severity).put("field", field).put("message", stringRegexp(message));
     }
 
     public static ObjectValue rootResource(String rel) {
         return objectVal().put("rel", rel).put("uri", anyString());
     }
- 
+
     public static ObjectValue resource(String rel, String title, String uri) {
         return resource(rel, uri).put("title", stringVal(title));
     }
- 
+
     public static ObjectValue resource(String rel, String uri) {
-         return objectVal().put("rel", rel).put("uri", stringRegexp(".*/" + uri));
+        return objectVal().put("rel", rel).put("uri", stringRegexp(".*/" + uri));
     }
 
     public static String print(Value value) {

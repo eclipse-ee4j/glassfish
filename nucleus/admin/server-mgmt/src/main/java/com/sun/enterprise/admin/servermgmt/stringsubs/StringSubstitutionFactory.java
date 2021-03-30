@@ -29,11 +29,10 @@ public abstract class StringSubstitutionFactory {
      *
      * @param stringsubs An input stream of string substitution file.
      * @return An object facilitate string substitution process.
-     * @throws StringSubstitutionException If the input stream is invalid
-     *  or any exception occurs during parsing or in validation.
+     * @throws StringSubstitutionException If the input stream is invalid or any exception occurs during parsing or in
+     * validation.
      */
-    public static StringSubstitutor createStringSubstitutor(InputStream stringsubs)
-            throws StringSubstitutionException {
+    public static StringSubstitutor createStringSubstitutor(InputStream stringsubs) throws StringSubstitutionException {
         return new StringSubstitutionEngine(stringsubs);
     }
 }

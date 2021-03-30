@@ -37,24 +37,22 @@ import jakarta.inject.Inject;
  */
 @Service(name = "__anonymous-user-enabled")
 @PerLookup
-@RestEndpoints({
-    @RestEndpoint(configBean=Domain.class, path="anonymous-user-enabled")
-})
+@RestEndpoints({ @RestEndpoint(configBean = Domain.class, path = "anonymous-user-enabled") })
 public class IsAnonymousUserEnabledCommand implements AdminCommand {
     @Inject
     Domain domain;
-    
+
     @Inject
     ServiceLocator habitat;
 
     @Override
     public void execute(AdminCommandContext context) {
         SecurityUtil su = new SecurityUtil(domain);
-        
+
         String userName = su.getAnonymousUser(habitat);
         ActionReport report = context.getActionReport();
         report.setActionExitCode(ExitCode.SUCCESS);
-        
+
         Properties ep = new Properties();
         ep.put("anonymousUserEnabled", userName != null);
         report.setExtraProperties(ep);

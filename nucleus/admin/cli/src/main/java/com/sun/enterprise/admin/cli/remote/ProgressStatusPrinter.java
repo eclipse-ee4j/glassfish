@@ -29,14 +29,15 @@ import org.glassfish.api.admin.CommandProgress;
 import org.glassfish.api.admin.progress.ProgressStatusDTO;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 
-/** Prints ProgressStatus changes to given logger
+/**
+ * Prints ProgressStatus changes to given logger
  *
  * @author mmares
  */
 public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundEvent> {
-    
+
     private class Ticker extends Thread {
-        
+
         private final long pause;
         private volatile boolean stop = false;
 
@@ -44,11 +45,11 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
             this.pause = pause;
             this.setDaemon(true);
         }
-        
+
         public void stopit() {
             this.stop = true;
         }
-        
+
         @Override
         public void run() {
             do {
@@ -61,32 +62,32 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
                 }
             } while (spin());
         }
-        
+
     }
-    
+
     private static final String CONTENT_TYPE = "application/json";
-    
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ProgressStatusPrinter.class);
-    
-    private static final char[] spinner = new char[] {'|', '/', '-', '\\'};
-    
+
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ProgressStatusPrinter.class);
+
+    private static final char[] spinner = new char[] { '|', '/', '-', '\\' };
+
     private String lastMessage;
     private int lastMsgLength = 0;
     private boolean firstPrint = true;
     private int spinnerIndex = -1;
     private Ticker ticker = null;
-    
+
     private ProgressStatusClient client = new ProgressStatusClient(null);
     private CommandProgress commandProgress;
     private final boolean disableAnimation;
-    private final boolean debugOutput; 
+    private final boolean debugOutput;
     private final Logger logger;
 
-    /** Construct new printer
+    /**
+     * Construct new printer
+     * 
      * @param disableAnimation will print each message on new line and spinner as dots
-     * @param debugOutput expect printing of other data together with progress. 
-     *                    New line must be printed ASAP.
+     * @param debugOutput expect printing of other data together with progress. New line must be printed ASAP.
      */
     public ProgressStatusPrinter(boolean disableAnimation, boolean debugOutput, Logger logger) {
         this.disableAnimation = disableAnimation;
@@ -97,12 +98,9 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
             this.logger = logger;
         }
     }
-    
+
     private synchronized boolean spin() {
-        if (commandProgress == null || 
-                !commandProgress.isSpinnerActive() || 
-                debugOutput ||
-                lastMsgLength <= 1) {
+        if (commandProgress == null || !commandProgress.isSpinnerActive() || debugOutput || lastMsgLength <= 1) {
             return false;
         }
         if (spinnerIndex >= 0 && !disableAnimation) {
@@ -123,7 +121,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
         }
         return true;
     }
-    
+
     @Override
     public synchronized void onAdminCommandEvent(String name, GfSseInboundEvent event) {
         try {
@@ -151,7 +149,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
             logger.log(Level.SEVERE, strings.get("progressstatus.event.parseerror", "Can not parse progress status event"), ex);
         }
     }
-    
+
     private synchronized void printUserMessage(String message) {
         if (message == null) {
             return;
@@ -180,7 +178,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
             System.out.println(message);
         }
     }
-    
+
     private synchronized void printCommandProgress() {
         //Now print
         if (commandProgress != null) {
@@ -230,7 +228,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
             }
         }
     }
-    
+
     public synchronized void deleteLastMessage() {
         if (lastMsgLength <= 0) {
             return;
@@ -262,5 +260,5 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
             this.ticker = null;
         }
     }
-    
+
 }

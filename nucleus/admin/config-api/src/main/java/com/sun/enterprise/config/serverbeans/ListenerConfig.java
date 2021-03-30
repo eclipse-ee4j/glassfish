@@ -32,9 +32,8 @@ import org.glassfish.quality.ToDo;
 
 import jakarta.validation.constraints.NotNull;
 
-
 /**
- * Connects a specific listener class with specific managed objects  
+ * Connects a specific listener class with specific managed objects
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -47,32 +46,27 @@ public interface ListenerConfig extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the listenerClassName property.
      *
-     * The name of a class that can act as a listener for alerts.
-     * Non-empty string containing a Java class name.
+     * The name of a class that can act as a listener for alerts. Non-empty string containing a Java class name.
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
     String getListenerClassName();
 
     /**
      * Sets the value of the listenerClassName property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setListenerClassName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the subscribeListenerWith property.
      *
-     * A list of managed object names that the listener should be subscribed to.
-     * A non-empty, comma separated list.
+     * A list of managed object names that the listener should be subscribed to. A non-empty, comma separated list.
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
@@ -81,16 +75,15 @@ public interface ListenerConfig extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the subscribeListenerWith property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setSubscribeListenerWith(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 }

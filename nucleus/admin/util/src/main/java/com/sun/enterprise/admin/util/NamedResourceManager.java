@@ -32,29 +32,22 @@ import org.glassfish.logging.annotation.LoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * Records classes that are annotated as NamedResources and specific instances
- * of such classes.
+ * Records classes that are annotated as NamedResources and specific instances of such classes.
  * <p>
- * The NamedResource support mimics some of what's provided by the ConfigBean
- * implementation in hk2, primarily for security authorization support.  Developers
- * annotate a POJO class with @NamedResource.  If the class is a singleton (as
- * the top-level Domain interface is in the config structure) no further annos
- * are needed on the class.  If the class can have multiple occurrences then
- * each instance will need a unique identifier and the developer annotates that
- * field on the class with {@code @NamedResource.ID}.  
+ * The NamedResource support mimics some of what's provided by the ConfigBean implementation in hk2, primarily for
+ * security authorization support. Developers annotate a POJO class with @NamedResource. If the class is a singleton (as
+ * the top-level Domain interface is in the config structure) no further annos are needed on the class. If the class can
+ * have multiple occurrences then each instance will need a unique identifier and the developer annotates that field on
+ * the class with {@code @NamedResource.ID}.
  * <p>
- * When some code has fully populated an instance of such a {@code @NamedResource} 
- * class it invokes the {@link #prepare(java.lang.Object) } method, passing
- * the just-created object.  The manager records the new instance and its
- * named resource children, primarily so
- * that authorization-related annotations such as {@code @AccessRequired.To} 
- * can refer to such an object.  The secure admin infrastructure can then 
- * automatically determine the resource name for that instance for use in 
- * authorization checks.
+ * When some code has fully populated an instance of such a {@code @NamedResource} class it invokes the
+ * {@link #prepare(java.lang.Object) } method, passing the just-created object. The manager records the new instance and
+ * its named resource children, primarily so that authorization-related annotations such as {@code @AccessRequired.To}
+ * can refer to such an object. The secure admin infrastructure can then automatically determine the resource name for
+ * that instance for use in authorization checks.
  * <p>
- * The named resource POJO class can have fields that point to other named 
- * resource classes or fields that are collections or arrays of named resource
- * classes.  
+ * The named resource POJO class can have fields that point to other named resource classes or fields that are
+ * collections or arrays of named resource classes.
  * 
  * @author tjquinn
  */
@@ -64,14 +57,14 @@ public class NamedResourceManager {
 
     private final WeakHashMap<Class<?>, Model> models = new WeakHashMap<Class<?>, Model>();
     private final WeakHashMap<Object, String> instanceNames = new WeakHashMap<Object, String>();
-    
+
     private final String LINE_SEP = System.getProperty("line.separator");
-    
-    private static final Logger  ADMSEC_LOGGER = GenericAdminAuthenticator.ADMSEC_LOGGER;
+
+    private static final Logger ADMSEC_LOGGER = GenericAdminAuthenticator.ADMSEC_LOGGER;
 
     public <T> T register(T instance) throws IllegalArgumentException, IllegalAccessException {
         final Model model = findOrCreateModel(instance.getClass());
-        if ( ! model.isPrimary) {
+        if (!model.isPrimary) {
             throw new IllegalArgumentException(instance.getClass().getName() + " ! isPrimary");
         }
         final StringBuilder addedNames = new StringBuilder();
@@ -80,40 +73,32 @@ public class NamedResourceManager {
             ADMSEC_LOGGER.log(Level.FINER, "Added named resources:\n{0}", addedNames.toString());
         }
         return result;
-        
+
     }
-    
+
     public String find(final Object resource) {
         return instanceNames.get(resource);
     }
-    
-    private <T> T register(String prefix, 
-            final String containingCollectionName,
-            final T instance,
-            final StringBuilder addedNames) throws IllegalArgumentException, IllegalAccessException {
+
+    private <T> T register(String prefix, final String containingCollectionName, final T instance, final StringBuilder addedNames)
+            throws IllegalArgumentException, IllegalAccessException {
         final Model model = findOrCreateModel(instance.getClass());
         //return prepare(prefix, (model.isSingleton ? null : model.owningCollectionName + '/' + model.name + '/'), instance, model, addedNames);
         return register(prefix, containingCollectionName, instance, model, addedNames);
     }
-    
-    private <T> T register(String prefix, 
-            String containingCollectionName, 
-            final T instance, 
-            final Model model, 
+
+    private <T> T register(String prefix, String containingCollectionName, final T instance, final Model model,
             final StringBuilder addedNames) throws IllegalArgumentException, IllegalAccessException {
-        final String instanceName = prefix + 
-                instanceName(instance, containingCollectionName, model);
-        
+        final String instanceName = prefix + instanceName(instance, containingCollectionName, model);
+
         instanceNames.put(instance, instanceName);
         addedNames.append(instanceName).append(LINE_SEP);
         registerChildren(instanceName + "/", instance, model, addedNames);
         return instance;
     }
-    
-    private <T> void registerChildren(final String prefix, 
-            final T instance, 
-            final Model model, 
-            final StringBuilder addedNames) throws IllegalArgumentException, IllegalAccessException {
+
+    private <T> void registerChildren(final String prefix, final T instance, final Model model, final StringBuilder addedNames)
+            throws IllegalArgumentException, IllegalAccessException {
         for (Field f : model.resourceNamedFields) {
             Object child = f.get(instance);
             if (f.getClass().isArray()) {
@@ -130,13 +115,13 @@ public class NamedResourceManager {
             }
         }
     }
-    
+
     private String collectionName(final Field f) {
-//        final Class<?> c = f.getClass();
-//        final String shortClassName = c.getName().substring(c.getName().lastIndexOf('.'));
+        //        final Class<?> c = f.getClass();
+        //        final String shortClassName = c.getName().substring(c.getName().lastIndexOf('.'));
         return f.getName();
     }
-    
+
     private Model findOrCreateModel(Class<?> c) {
         Model result = models.get(c);
         if (result == null) {
@@ -145,20 +130,21 @@ public class NamedResourceManager {
         }
         return result;
     }
-    
-    private String instanceName(final Object instance, final String containingCollectionName, final Model model) throws IllegalArgumentException, IllegalAccessException {
+
+    private String instanceName(final Object instance, final String containingCollectionName, final Model model)
+            throws IllegalArgumentException, IllegalAccessException {
         final StringBuilder sb = new StringBuilder();
-        if (containingCollectionName != null && ! containingCollectionName.isEmpty()) {
+        if (containingCollectionName != null && !containingCollectionName.isEmpty()) {
             sb.append(containingCollectionName).append('/').append(model.subpath).append('/');
         }
         return sb.append(model.keyField.get(instance).toString()).toString();
     }
-    
+
     private Model buildModel(final Class<?> c) {
         final Model model = new Model(c);
         return model;
     }
-    
+
     /**
      * 
      */
@@ -169,56 +155,60 @@ public class NamedResourceManager {
         private String subpath;
         private final Collection<Field> resourceNamedFields = new ArrayList<Field>();
         private Field keyField;
-        
+
         /*
          * Next block stolen shamelessly from the hk2 config Dom class, pending
          * a slight refactoring of that code there to expose the part we need.
          */
         static final Pattern TOKENIZER;
-        private static String split(String lookback,String lookahead) {
-            return "((?<="+lookback+")(?="+lookahead+"))";
+
+        private static String split(String lookback, String lookahead) {
+            return "((?<=" + lookback + ")(?=" + lookahead + "))";
         }
+
         private static String or(String... tokens) {
             StringBuilder buf = new StringBuilder();
             for (String t : tokens) {
-                if(buf.length()>0)  buf.append('|');
+                if (buf.length() > 0)
+                    buf.append('|');
                 buf.append(t);
             }
             return buf.toString();
         }
+
         static {
-            String pattern = or(
-                    split("x","X"),     // AbcDef -> Abc|Def
-                    split("X","Xx"),    // USArmy -> US|Army
+            String pattern = or(split("x", "X"), // AbcDef -> Abc|Def
+                    split("X", "Xx"), // USArmy -> US|Army
                     //split("\\D","\\d"), // SSL2 -> SSL|2
-                    split("\\d","\\D")  // SSL2Connector -> SSL|2|Connector
+                    split("\\d", "\\D") // SSL2Connector -> SSL|2|Connector
             );
-            pattern = pattern.replace("x","\\p{Lower}").replace("X","\\p{Upper}");
+            pattern = pattern.replace("x", "\\p{Lower}").replace("X", "\\p{Upper}");
             TOKENIZER = Pattern.compile(pattern);
         }
-        
+
         private static String convertName(final String name) {
             // tokenize by finding 'x|X' and 'X|Xx' then insert '-'.
-            StringBuilder buf = new StringBuilder(name.length()+5);
-            for(String t : TOKENIZER.split(name)) {
-                if(buf.length()>0)  buf.append('-');
+            StringBuilder buf = new StringBuilder(name.length() + 5);
+            for (String t : TOKENIZER.split(name)) {
+                if (buf.length() > 0)
+                    buf.append('-');
                 buf.append(t.toLowerCase(Locale.ENGLISH));
             }
-            return buf.toString();  
+            return buf.toString();
         }
-        
+
         /* end of shameless copy */
-        
+
         private static String defaultSubpath(final Class<?> c) {
             final String className = convertName(c.getName());
             final String shortClassName = className.substring(className.lastIndexOf('.') + 1);
             return shortClassName;
         }
-        
+
         private static String defaultCollectionName(final Class<?> c) {
             return pluralize(defaultSubpath(c));
         }
-        
+
         private static String pluralize(final String s) {
             final char lastChar = s.charAt(s.length() - 1);
             if (lastChar == 's' || lastChar == 'S' || lastChar == 'x' || lastChar == 'X') {
@@ -227,9 +217,9 @@ public class NamedResourceManager {
                 return s + "s";
             }
         }
-        
+
         private Model(final Class<?> c) {
-                
+
             /*
              * Any field that is also annotated with @NamedResource is a child
              * that itself is treated as named within the containing class.
@@ -259,18 +249,17 @@ public class NamedResourceManager {
                         }
                     }
                     if (isSingleton) {
-                        if ( ! r.collectionName().isEmpty()) {
+                        if (!r.collectionName().isEmpty()) {
                             throw new IllegalArgumentException(c.getName() + " @NamedResource isSingleton & collectionName");
                         }
                         owningCollectionName = null;
                     } else {
                         owningCollectionName = (r.collectionName().isEmpty() ? defaultCollectionName(c) : r.collectionName());
                     }
-                
-                    
+
                 }
             }
-            if ( ! isNamedResource) {
+            if (!isNamedResource) {
                 throw new IllegalArgumentException(c.getName() + " ! @NamedResource");
             }
             if (keyField == null) {
@@ -278,5 +267,5 @@ public class NamedResourceManager {
             }
         }
     }
-    
+
 }

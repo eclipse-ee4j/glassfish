@@ -38,12 +38,8 @@ public class AttributeMethodVisitor extends EmptyVisitor {
 
     @Override
     public String toString() {
-        return "AttributeMethodVisitor{" +
-            "def=" + def +
-            ", name='" + name + '\'' +
-            ", type='" + type + '\'' +
-            ", duckTyped=" + duckTyped +
-            '}';
+        return "AttributeMethodVisitor{" + "def=" + def + ", name='" + name + '\'' + ", type='" + type + '\'' + ", duckTyped=" + duckTyped
+                + '}';
     }
 
     /**
@@ -52,8 +48,8 @@ public class AttributeMethodVisitor extends EmptyVisitor {
      * @param desc the class descriptor of the annotation class.
      * @param visible <tt>true</tt> if the annotation is visible at runtime.
      *
-     * @return a visitor to visit the annotation values, or <tt>null</tt> if this visitor is not interested in visiting
-     *         this annotation.
+     * @return a visitor to visit the annotation values, or <tt>null</tt> if this visitor is not interested in visiting this
+     * annotation.
      */
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {

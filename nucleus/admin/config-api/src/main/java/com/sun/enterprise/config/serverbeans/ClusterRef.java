@@ -27,8 +27,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 /**
- * Element relating a reference to a cluster to be load balanced to an
- * (optional) health-checker
+ * Element relating a reference to a cluster to be load balanced to an (optional) health-checker
  *
  */
 
@@ -37,27 +36,25 @@ import jakarta.validation.constraints.Pattern;
 }) */
 
 @Configured
-@ReferenceConstraint(skipDuringCreation=true, payload=ClusterRef.class)
-public interface ClusterRef extends ConfigBeanProxy, Ref, Payload  {
-    
+@ReferenceConstraint(skipDuringCreation = true, payload = ClusterRef.class)
+public interface ClusterRef extends ConfigBeanProxy, Ref, Payload {
+
     /**
      * Gets the value of the ref property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Override
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_SERVER_REGEX)
-    @ReferenceConstraint.RemoteKey(message="{resourceref.invalid.cluster-ref}", type=Cluster.class)
+    @Pattern(regexp = NAME_SERVER_REGEX)
+    @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.cluster-ref}", type = Cluster.class)
     public String getRef();
 
     /**
      * Sets the value of the ref property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     @Override
     public void setRef(String value) throws PropertyVetoException;
@@ -65,39 +62,31 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload  {
     /**
      * Gets the value of the lbPolicy property.
      *
-     * load balancing policy to be used for this cluster. Possible
-     * values are round-robin , weighted-round-robin or
-     * user-defined. round-robin is the default. For
-     * weighted-round-robin, the weights of the instance are
-     * considered while load balancing. For user-defined, the policy
-     * is implemented by a shared library which is loaded by the
-     * load balancer and the instance selected is delegated to the
-     * loaded module.
+     * load balancing policy to be used for this cluster. Possible values are round-robin , weighted-round-robin or
+     * user-defined. round-robin is the default. For weighted-round-robin, the weights of the instance are considered while
+     * load balancing. For user-defined, the policy is implemented by a shared library which is loaded by the load balancer
+     * and the instance selected is delegated to the loaded module.
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="round-robin")
+    @Attribute(defaultValue = "round-robin")
     public String getLbPolicy();
 
     /**
      * Sets the value of the lbPolicy property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setLbPolicy(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the lbPolicyModule property.
      *
-     * Specifies the absolute path to the shared library implementing the
-     * user-defined policy. This should be specified only when the lb-policy
-     * is user-defined. The shared library should exist and be readable in
-     * the machine where load balancer is running.
+     * Specifies the absolute path to the shared library implementing the user-defined policy. This should be specified only
+     * when the lb-policy is user-defined. The shared library should exist and be readable in the machine where load
+     * balancer is running.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     public String getLbPolicyModule();
@@ -105,8 +94,7 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload  {
     /**
      * Sets the value of the lbPolicyModule property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setLbPolicyModule(String value) throws PropertyVetoException;
 
@@ -115,8 +103,7 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload  {
      *
      * Each cluster would be configured for a ping based health check mechanism.
      * 
-     * @return possible object is
-     *         {@link HealthChecker }
+     * @return possible object is {@link HealthChecker }
      */
     @Element
     public HealthChecker getHealthChecker();
@@ -124,8 +111,7 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload  {
     /**
      * Sets the value of the healthChecker property.
      *
-     * @param value allowed object is
-     *              {@link HealthChecker }
+     * @param value allowed object is {@link HealthChecker }
      */
     public void setHealthChecker(HealthChecker value) throws PropertyVetoException;
 }

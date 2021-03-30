@@ -35,8 +35,8 @@ public final class IntrospectionUtils {
     }
 
     /**
-     * Find a method with the right name If found, call the method ( if param is int or boolean we'll convert value to
-     * the right type before) - that means you can have setDebug(1).
+     * Find a method with the right name If found, call the method ( if param is int or boolean we'll convert value to the
+     * right type before) - that means you can have setDebug(1).
      */
     public static boolean setProperty(Object o, String name, String value) {
         if (debugLevel > 1) {
@@ -50,8 +50,7 @@ public final class IntrospectionUtils {
             // First, the ideal case - a setFoo( String ) method
             for (Method method : methods) {
                 Class<?> paramTypes[] = method.getParameterTypes();
-                if (setter.equals(method.getName()) && paramTypes.length == 1
-                    && "java.lang.String".equals(paramTypes[0].getName())) {
+                if (setter.equals(method.getName()) && paramTypes.length == 1 && "java.lang.String".equals(paramTypes[0].getName())) {
                     method.invoke(o, value);
                     return true;
                 }
@@ -59,8 +58,7 @@ public final class IntrospectionUtils {
             // Try a setFoo ( int ) or ( boolean )
             for (Method method : methods) {
                 boolean ok = true;
-                if (setter.equals(method.getName())
-                    && method.getParameterTypes().length == 1) {
+                if (setter.equals(method.getName()) && method.getParameterTypes().length == 1) {
                     // match - find the type and invoke it
                     Class<?> paramType = method.getParameterTypes()[0];
                     Object params[] = new Object[1];
@@ -134,24 +132,21 @@ public final class IntrospectionUtils {
             logger.log(Level.INFO, "IAE " + o + " " + name + " " + value, ex2);
         } catch (SecurityException ex1) {
             if (debugLevel > 0) {
-                debug("SecurityException for " + o.getClass() + " " + name + "="
-                    + value + ")");
+                debug("SecurityException for " + o.getClass() + " " + name + "=" + value + ")");
             }
             if (debugLevel > 1) {
                 ex1.printStackTrace();
             }
         } catch (IllegalAccessException iae) {
             if (debugLevel > 0) {
-                debug("IllegalAccessException for " + o.getClass() + " " + name
-                    + "=" + value + ")");
+                debug("IllegalAccessException for " + o.getClass() + " " + name + "=" + value + ")");
             }
             if (debugLevel > 1) {
                 iae.printStackTrace();
             }
         } catch (InvocationTargetException ie) {
             if (debugLevel > 0) {
-                debug("InvocationTargetException for " + o.getClass() + " " + name
-                    + "=" + value + ")");
+                debug("InvocationTargetException for " + o.getClass() + " " + name + "=" + value + ")");
             }
             if (debugLevel > 1) {
                 ie.printStackTrace();
@@ -174,6 +169,5 @@ public final class IntrospectionUtils {
         chars[0] = Character.toUpperCase(chars[0]);
         return new String(chars);
     }
-
 
 }

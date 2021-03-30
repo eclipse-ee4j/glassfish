@@ -28,23 +28,22 @@ import java.util.*;
  */
 public class ServicesUtils {
     private ServicesUtils() {
-        
+
     }
 
-    static TokenValueSet map2Set(final Map<String, String> map){
-        final Set<TokenValue> set = new HashSet<TokenValue> ();
-        for (final Map.Entry<String,String> e : map.entrySet()) {
+    static TokenValueSet map2Set(final Map<String, String> map) {
+        final Set<TokenValue> set = new HashSet<TokenValue>();
+        for (final Map.Entry<String, String> e : map.entrySet()) {
             final String key = e.getKey();
             final String value = e.getValue();
             final TokenValue tv = new TokenValue(key, value);
             set.add(tv);
         }
         final TokenValueSet tvset = new TokenValueSet(set);
-        return ( tvset );
+        return (tvset);
     }
-    
-    static void tokenReplaceTemplateAtDestination(
-                Map<String,String> map, String templatePath, String targetPath) {
+
+    static void tokenReplaceTemplateAtDestination(Map<String, String> map, String templatePath, String targetPath) {
 
         final LineTokenReplacer tr = new LineTokenReplacer(map2Set(map));
         tr.replace(templatePath, targetPath);
@@ -53,7 +52,7 @@ public class ServicesUtils {
     static void appendTextToFile(File to, String what) {
 
         // todo - this should be a high-level utility
-        if(what == null || to == null)
+        if (what == null || to == null)
             return;
 
         // It is very annoying in Windows when text files have "\n" instead of
@@ -67,22 +66,19 @@ public class ServicesUtils {
             pw.println(SEP);
             pw.println(new Date());
 
-            for(String s : lines)
+            for (String s : lines)
                 pw.println(s);
 
             pw.println(SEP);
             pw.println();
             pw.println();
             pw.flush();
-        }
-        catch (IOException ioe) {
-        }
-        finally {
+        } catch (IOException ioe) {
+        } finally {
             try {
-                if(pw != null)
+                if (pw != null)
                     pw.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // ignore
             }
         }

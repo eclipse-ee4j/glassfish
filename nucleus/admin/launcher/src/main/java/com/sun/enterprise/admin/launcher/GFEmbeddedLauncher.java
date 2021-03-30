@@ -45,13 +45,12 @@ class GFEmbeddedLauncher extends GFLauncher {
     private static final String JAVA_HOME = "JAVA_HOME";
     // private static final String DOMAIN_DIR = "GFE_DOMAIN";
     private static final String GENERAL_MESSAGE = " *********  GENERAL MESSAGE ********\n"
-            + "You must setup four different environmental variables to run embedded" + " with asadmin.  They are\n" + "GFE_JAR - path to the embedded jar\n"
-            + "S1AS_HOME - path to installation directory.  This can be empty or not exist yet.\n"
+            + "You must setup four different environmental variables to run embedded" + " with asadmin.  They are\n"
+            + "GFE_JAR - path to the embedded jar\n" + "S1AS_HOME - path to installation directory.  This can be empty or not exist yet.\n"
             + "JAVA_HOME - path to a JDK installation.  JRE installation is generally not good enough\n"
             + "GFE_DEBUG_PORT - optional debugging port.  It will start suspended.\n" + "\n*********  SPECIFIC MESSAGE ********\n";
 
     private String[] DERBY_FILES = { "derby.jar", "derbyclient.jar", };
-
 
     public GFEmbeddedLauncher(GFLauncherInfo info) {
         super(info);
@@ -261,8 +260,8 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     private void setupInstallationDir() throws GFLauncherException {
-        String err = "You must set the environmental variable S1AS_HOME to point " + "at a GlassFish installation or at an empty directory or at a "
-                + "location where an empty directory can be created.";
+        String err = "You must set the environmental variable S1AS_HOME to point "
+                + "at a GlassFish installation or at an empty directory or at a " + "location where an empty directory can be created.";
         String installDirName = System.getenv(INSTALL_HOME);
 
         if (!ok(installDirName)) {
@@ -348,6 +347,5 @@ class GFEmbeddedLauncher extends GFLauncher {
     private boolean ok(String s) {
         return s != null && s.length() > 0;
     }
-
 
 }

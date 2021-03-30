@@ -32,15 +32,11 @@ import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
 
 /**
- * Representation of the options known to the asadmin program.
- * These options control the overall behavior of asadmin, e.g.,
- * the server to contact, and aren't specific to any of the
- * commands supported by asadmin.
+ * Representation of the options known to the asadmin program. These options control the overall behavior of asadmin,
+ * e.g., the server to contact, and aren't specific to any of the commands supported by asadmin.
  * <p>
- * In GlassFish v3, asadmin program options are normally specified
- * before the asadmin command name, with command options after the
- * command name (although intermixed program and command options
- * are still supported for compatibility).
+ * In GlassFish v3, asadmin program options are normally specified before the asadmin command name, with command options
+ * after the command name (although intermixed program and command options are still supported for compatibility).
  */
 public class ProgramOptions {
 
@@ -52,40 +48,38 @@ public class ProgramOptions {
     private static final Set<ParamModel> helpOption; //--help can be after command name also if all others are before
 
     // the known program option names
-    public static final String HOST             = "host";
-    public static final String PORT             = "port";
-    public static final String USER             = "user";
-    public static final String PASSWORDFILE     = "passwordfile";
-    public static final String TERSE            = "terse";
-    public static final String ECHO             = "echo";
-    public static final String INTERACTIVE      = "interactive";
-    public static final String SECURE           = "secure";
-    public static final String HELP             = "help";
-    public static final String DETACH           = "detach";
-    public static final String NOTIFY           = "notify";
-    public static final String AUTHTOKEN        = AuthTokenManager.AUTH_TOKEN_OPTION_NAME;
-    public static final String AUXINPUT         = AsadminInput.CLI_INPUT_OPTION_NAME;
+    public static final String HOST = "host";
+    public static final String PORT = "port";
+    public static final String USER = "user";
+    public static final String PASSWORDFILE = "passwordfile";
+    public static final String TERSE = "terse";
+    public static final String ECHO = "echo";
+    public static final String INTERACTIVE = "interactive";
+    public static final String SECURE = "secure";
+    public static final String HELP = "help";
+    public static final String DETACH = "detach";
+    public static final String NOTIFY = "notify";
+    public static final String AUTHTOKEN = AuthTokenManager.AUTH_TOKEN_OPTION_NAME;
+    public static final String AUXINPUT = AsadminInput.CLI_INPUT_OPTION_NAME;
 
-    private static final Logger logger =
-        Logger.getLogger(ProgramOptions.class.getPackage().getName());
+    private static final Logger logger = Logger.getLogger(ProgramOptions.class.getPackage().getName());
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ProgramOptions.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ProgramOptions.class);
 
-    private ParameterMap                    options;
-    private Environment                     env;
-    private boolean                         optionsSet;
-    private char[]                          password;
-    private PasswordLocation                location;
-    private String                          commandName;
+    private ParameterMap options;
+    private Environment env;
+    private boolean optionsSet;
+    private char[] password;
+    private PasswordLocation location;
+    private String commandName;
 
     /*
      * Information passed in from AsadminMain and used by start-domain.
      * XXX - this is somewhat of a kludge but this seems the best place
      * to put it for now
      */
-    private String                          classPath;
-    private String                          className;
+    private String classPath;
+    private String className;
 
     /*
      * Define the meta-options known by the asadmin command.
@@ -93,10 +87,8 @@ public class ProgramOptions {
     static {
         Set<ParamModel> opts = new HashSet<ParamModel>();
         Set<ParamModel> hopts = new HashSet<ParamModel>();
-        addMetaOption(opts, HOST, 'H', String.class, false,
-                CLIConstants.DEFAULT_HOSTNAME);
-        addMetaOption(opts, PORT, 'p', String.class, false,
-                "" + CLIConstants.DEFAULT_ADMIN_PORT);
+        addMetaOption(opts, HOST, 'H', String.class, false, CLIConstants.DEFAULT_HOSTNAME);
+        addMetaOption(opts, PORT, 'p', String.class, false, "" + CLIConstants.DEFAULT_ADMIN_PORT);
         addMetaOption(opts, USER, 'u', String.class, false, null);
         addMetaOption(opts, PASSWORDFILE, 'W', File.class, false, null);
         addMetaOption(opts, SECURE, 's', Boolean.class, false, "false");
@@ -116,22 +108,19 @@ public class ProgramOptions {
     /**
      * Helper method to define a meta-option.
      *
-     * @param name  long option name
+     * @param name long option name
      * @param sname short option name
-     * @param type  option type (String.class, Boolean.class, etc.)
-     * @param req   is option required?
-     * @param def   default value for option
+     * @param type option type (String.class, Boolean.class, etc.)
+     * @param req is option required?
+     * @param def default value for option
      */
-    private static void addMetaOption(Set<ParamModel> opts, String name,
-            char sname, Class type, boolean req, String def) {
-        ParamModel opt = new ParamModelData(name, type, !req, def, 
-                                                Character.toString(sname));
+    private static void addMetaOption(Set<ParamModel> opts, String name, char sname, Class type, boolean req, String def) {
+        ParamModel opt = new ParamModelData(name, type, !req, def, Character.toString(sname));
         opts.add(opt);
     }
 
     /**
-     * Initialize program options based only on environment defaults,
-     * with no options from the command line.
+     * Initialize program options based only on environment defaults, with no options from the command line.
      */
     public ProgramOptions(Environment env) throws CommandException {
         this(new ParameterMap(), env);
@@ -139,19 +128,16 @@ public class ProgramOptions {
     }
 
     /**
-     * Initialize the programoptions based on parameters parsed
-     * from the command line, with defaults supplied by the
+     * Initialize the programoptions based on parameters parsed from the command line, with defaults supplied by the
      * environment.
      */
-    public ProgramOptions(ParameterMap options, Environment env)
-            throws CommandException {
+    public ProgramOptions(ParameterMap options, Environment env) throws CommandException {
         this.env = env;
         updateOptions(options);
     }
 
     /**
-     * Copy constructor.  Create a new ProgramOptions with the same
-     * options as the specified ProgramOptions.
+     * Copy constructor. Create a new ProgramOptions with the same options as the specified ProgramOptions.
      */
     public ProgramOptions(ProgramOptions other) {
         this.options = new ParameterMap(other.options);
@@ -162,11 +148,9 @@ public class ProgramOptions {
     }
 
     /**
-     * Update the program options based on the specified
-     * options from the command line.
+     * Update the program options based on the specified options from the command line.
      */
-    public final void updateOptions(ParameterMap newOptions)
-            throws CommandException {
+    public final void updateOptions(ParameterMap newOptions) throws CommandException {
         if (options == null)
             options = newOptions;
         else {
@@ -202,7 +186,7 @@ public class ProgramOptions {
     public static Collection<ParamModel> getValidOptions() {
         return programOptions;
     }
-    
+
     /**
      * Return a set of all the valid program options.
      *
@@ -213,8 +197,7 @@ public class ProgramOptions {
     }
 
     /**
-     * Copy the program options that were specified on the
-     * command line into the corresponding environment variables.
+     * Copy the program options that were specified on the command line into the corresponding environment variables.
      */
     public void toEnvironment(Environment env) {
         // copy all the parameters into corresponding environment variables
@@ -268,9 +251,9 @@ public class ProgramOptions {
             try {
                 port = Integer.parseInt(sport);
                 if (port < 1 || port > 65535)
-                    port = -1;  // should've been verified in constructor
+                    port = -1; // should've been verified in constructor
             } catch (NumberFormatException e) {
-                port = -1;  // should've been verified in constructor
+                port = -1; // should've been verified in constructor
             }
         } else
             port = CLIConstants.DEFAULT_ADMIN_PORT; // the default port
@@ -285,10 +268,9 @@ public class ProgramOptions {
     }
 
     /**
-     * Convenience method to set the host and port (and secure)
-     * attributes from a HostAndPort object.
+     * Convenience method to set the host and port (and secure) attributes from a HostAndPort object.
      *
-     * @param   address the HostAndPort object from which to set the attributes
+     * @param address the HostAndPort object from which to set the attributes
      */
     public void setHostAndPort(HostAndPort address) {
         setHost(address.getHost());
@@ -336,8 +318,7 @@ public class ProgramOptions {
      */
     public void setPassword(char[] password, PasswordLocation location) {
         if (logger.isLoggable(Level.FINER))
-            logger.finer("Setting password to: " +
-                                    ((password != null && password.length > 0) ? "<non-null>" : "<null>"));
+            logger.finer("Setting password to: " + ((password != null && password.length > 0) ? "<non-null>" : "<null>"));
         this.password = password;
         this.location = location;
     }
@@ -352,7 +333,7 @@ public class ProgramOptions {
             passwordFile = env.getStringOption(PASSWORDFILE);
 
         if (!ok(passwordFile))
-            return null;        // no default
+            return null; // no default
 
         // weird, huh?  This means use standard input
         if (!passwordFile.equals("-"))
@@ -394,25 +375,25 @@ public class ProgramOptions {
     public void setAuthToken(final String token) {
         options.set(AUTHTOKEN, token);
     }
-    
+
     public String getAuthToken() {
         return getString(AUTHTOKEN);
     }
-    
+
     public void setAuxInput(final String authInput) {
         options.set(AUXINPUT, authInput);
     }
-    
+
     public String getAuxInput() {
         return getString(AUXINPUT);
     }
-    
+
     private String getString(final String optionName) {
         String result;
         result = options.getOne(optionName);
-        if ( ! ok(result)) {
+        if (!ok(result)) {
             result = env.getStringOption(optionName);
-            if ( ! ok(result)) {
+            if (!ok(result)) {
                 result = null;
             }
         }
@@ -434,7 +415,7 @@ public class ProgramOptions {
             terse = env.getBooleanOption(TERSE);
         return terse;
     }
-    
+
     /**
      * @return detach option
      */
@@ -456,7 +437,7 @@ public class ProgramOptions {
         }
         return false;
     }
-    
+
     public void removeDetach() {
         if (options.containsKey(DETACH)) {
             options.remove(DETACH);
@@ -556,8 +537,7 @@ public class ProgramOptions {
     }
 
     /**
-     * Return an array of asadmin command line options that specify
-     * all the options of this ProgramOptions instance.
+     * Return an array of asadmin command line options that specify all the options of this ProgramOptions instance.
      */
     public String[] getProgramArguments() {
         List<String> args = new ArrayList<String>(15);
@@ -589,8 +569,9 @@ public class ProgramOptions {
         args.toArray(a);
         return a;
     }
-    
-    /** Option by name just as was parsed. No added value.
+
+    /**
+     * Option by name just as was parsed. No added value.
      */
     public String getPlainOption(String name) {
         return options.getOne(name);
@@ -623,8 +604,8 @@ public class ProgramOptions {
     public void setClassName(String className) {
         this.className = className;
     }
-    
-    /** 
+
+    /**
      * @return the name of the command (not the subcommand)
      */
     public String getCommandName() {
@@ -637,11 +618,9 @@ public class ProgramOptions {
     public void setCommandName(String commandName) {
         this.commandName = commandName;
     }
-    
 
     /**
-     * String representation of the asadmin program options.
-     * Included in the --echo output.
+     * String representation of the asadmin program options. Included in the --echo output.
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -652,17 +631,13 @@ public class ProgramOptions {
         if (ok(getUser()))
             sb.append("--user ").append(getUser()).append(' ');
         if (ok(getPasswordFile()))
-            sb.append("--passwordfile ").
-                append(getPasswordFile()).append(' ');
+            sb.append("--passwordfile ").append(getPasswordFile()).append(' ');
         if (isSecure())
             sb.append("--secure ");
-        sb.append("--interactive=").
-            append(Boolean.toString(isInteractive())).append(' ');
-        sb.append("--echo=").
-            append(Boolean.toString(isEcho())).append(' ');
-        sb.append("--terse=").
-            append(Boolean.toString(isTerse())).append(' ');
-        sb.setLength(sb.length() - 1);  // strip trailing space
+        sb.append("--interactive=").append(Boolean.toString(isInteractive())).append(' ');
+        sb.append("--echo=").append(Boolean.toString(isEcho())).append(' ');
+        sb.append("--terse=").append(Boolean.toString(isTerse())).append(' ');
+        sb.setLength(sb.length() - 1); // strip trailing space
         return sb.toString();
     }
 }

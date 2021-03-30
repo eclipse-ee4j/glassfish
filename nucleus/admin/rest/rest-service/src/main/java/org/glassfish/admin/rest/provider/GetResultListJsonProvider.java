@@ -32,7 +32,6 @@ import org.glassfish.admin.rest.RestLogging;
 
 import static org.glassfish.admin.rest.provider.ProviderUtil.*;
 
-
 /**
  *
  * @author Rajeshwar Patil
@@ -69,7 +68,7 @@ public class GetResultListJsonProvider extends BaseProvider<GetResultList> {
         JSONArray array = new JSONArray();
         String elementName;
         for (Map.Entry<String, String> link : getResourceLinks(proxyList).entrySet()) {
-             array.put(link.getValue());
+            array.put(link.getValue());
         }
         return array;
     }

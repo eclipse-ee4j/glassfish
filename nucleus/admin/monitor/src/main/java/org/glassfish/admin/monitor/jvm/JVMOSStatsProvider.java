@@ -30,49 +30,45 @@ import org.glassfish.gmbal.ManagedObject;
 /* jvm.operating-system */
 // v2 mbean: com.sun.appserv:name=operating-system,type=operating-system,category=monitor,server=server
 // v3 mbean: 
-@AMXMetadata(type="operating-system-mon", group="monitoring")
+@AMXMetadata(type = "operating-system-mon", group = "monitoring")
 @ManagedObject
-@Description( "JVM Operating System Statistics" )
+@Description("JVM Operating System Statistics")
 public class JVMOSStatsProvider {
 
     private OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
 
-    private StringStatisticImpl arch = new StringStatisticImpl("Architecture", "String",
-                "Operating system architecture" );
-    private CountStatisticImpl availableProcessors = new CountStatisticImpl(
-            "AvailableProcessors", CountStatisticImpl.UNIT_COUNT,
-                "Number of processors available to the Java virtual machine" );
-    private StringStatisticImpl osName = new StringStatisticImpl("Name", "String",
-                "Operating system name" );
-    private StringStatisticImpl osVersion = new StringStatisticImpl("Version", "String",
-                "operating system version" );
+    private StringStatisticImpl arch = new StringStatisticImpl("Architecture", "String", "Operating system architecture");
+    private CountStatisticImpl availableProcessors = new CountStatisticImpl("AvailableProcessors", CountStatisticImpl.UNIT_COUNT,
+            "Number of processors available to the Java virtual machine");
+    private StringStatisticImpl osName = new StringStatisticImpl("Name", "String", "Operating system name");
+    private StringStatisticImpl osVersion = new StringStatisticImpl("Version", "String", "operating system version");
     //private CountStatisticImpl sysLoadAverage = new CountStatisticImpl(
     //        "SystemLoadAverage", CountStatisticImpl.UNIT_COUNT,
     //            "System load average for the last minute" );
 
-    @ManagedAttribute(id="arch-current")
-    @Description( "operating system architecture" )
+    @ManagedAttribute(id = "arch-current")
+    @Description("operating system architecture")
     public StringStatistic getArch() {
         arch.setCurrent(osBean.getArch());
         return arch;
     }
 
-    @ManagedAttribute(id="availableprocessors-count")
-    @Description( "number of processors available to the Java virtual machine" )
+    @ManagedAttribute(id = "availableprocessors-count")
+    @Description("number of processors available to the Java virtual machine")
     public CountStatistic getAvailableProcessors() {
         availableProcessors.setCount(osBean.getAvailableProcessors());
         return availableProcessors;
     }
 
-    @ManagedAttribute(id="name-current")
-    @Description( "operating system name" )
+    @ManagedAttribute(id = "name-current")
+    @Description("operating system name")
     public StringStatistic getOSName() {
         osName.setCurrent(osBean.getName());
         return osName;
     }
 
-    @ManagedAttribute(id="version-current")
-    @Description( "operating system version" )
+    @ManagedAttribute(id = "version-current")
+    @Description("operating system version")
     public StringStatistic getOSVersion() {
         osVersion.setCurrent(osBean.getVersion());
         return osVersion;

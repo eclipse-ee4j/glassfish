@@ -46,22 +46,22 @@ import org.jvnet.hk2.config.*;
  * @author Tom Mueller
  */
 @PerLookup
-public class GenericListCommand  extends GenericCrudCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
+public class GenericListCommand extends GenericCrudCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
-    @Param(primary=true, optional=true)
+    @Param(primary = true, optional = true)
     String name;
-    @Param(name="long", shortName="l", defaultValue="false", optional=true) 
+    @Param(name = "long", shortName = "l", defaultValue = "false", optional = true)
     boolean longOpt;
-    @Param(name="header", shortName="h", defaultValue="true", optional=true)
+    @Param(name = "header", shortName = "h", defaultValue = "true", optional = true)
     boolean headerOpt;
-    @Param(name="output", shortName="o", optional=true)
+    @Param(name = "output", shortName = "o", optional = true)
     String outputOpts[];
-    
+
     CommandModel cmdModel;
     ConfigModel targetModel;
     Listing listing;
-    
-//    @AccessRequired.To("read")
+
+    //    @AccessRequired.To("read")
     private ConfigBeanProxy parentBean;
 
     @Override
@@ -72,12 +72,10 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
         listing = targetMethod.getAnnotation(Listing.class);
         resolverType = listing.resolver();
         try {
-	    // we pass false for "useAnnotations" as the @Param declarations on
-	    // the target type are not used for the List method parameters.
-            cmdModel = new GenericCommandModel(targetType, false, null, listing.i18n(),
-                    new LocalStringManagerImpl(targetType),
-                    habitat.<DomDocument>getService(DomDocument.class), commandName, 
-                    false, listing.resolver(), GenericListCommand.class);
+            // we pass false for "useAnnotations" as the @Param declarations on
+            // the target type are not used for the List method parameters.
+            cmdModel = new GenericCommandModel(targetType, false, null, listing.i18n(), new LocalStringManagerImpl(targetType),
+                    habitat.<DomDocument>getService(DomDocument.class), commandName, false, listing.resolver(), GenericListCommand.class);
             targetModel = habitat.<DomDocument>getService(DomDocument.class).buildModel(targetType);
             if (logger.isLoggable(level)) {
                 for (String paramName : cmdModel.getParametersNames()) {
@@ -85,15 +83,13 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
                     logger.log(Level.FINE, "I take {0} parameters", param.getName());
                 }
             }
-        } catch(Exception e) {
-            String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                    "GenericCreateCommand.command_model_exception",
-                    "Exception while creating the command model for the generic command {0} : {1}",
-                    commandName, e.getMessage());
-            LogHelper.log(logger, Level.SEVERE,ConfigApiLoggerInfo.GENERIC_CREATE_CMD_FAILED, e, commandName);
+        } catch (Exception e) {
+            String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericCreateCommand.command_model_exception",
+                    "Exception while creating the command model for the generic command {0} : {1}", commandName, e.getMessage());
+            LogHelper.log(logger, Level.SEVERE, ConfigApiLoggerInfo.GENERIC_CREATE_CMD_FAILED, e, commandName);
             throw new RuntimeException(msg, e);
 
-        }      
+        }
     }
 
     @Override
@@ -108,34 +104,30 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
                         checks.add(new AccessCheck(AccessRequired.Util.resourceNameFromConfigBeanProxy(child), "read"));
                     }
                 }
-            } catch (Exception ex) { 
-                String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                    "GenericListCommand.accesschecks",
-                    "Exception while creating access checks for generic command {0}: {1}",
-                    commandName, ex.getMessage());
+            } catch (Exception ex) {
+                String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericListCommand.accesschecks",
+                        "Exception while creating access checks for generic command {0}: {1}", commandName, ex.getMessage());
                 LogHelper.log(logger, Level.SEVERE, ConfigApiLoggerInfo.ACCESS_CHK_CREATE_FAILED, ex, commandName);
                 throw new RuntimeException(msg, ex);
-            } 
+            }
         }
         return checks;
     }
-    
-    
+
     @Override
     void prepareInjection(final AdminCommandContext ctx) {
         super.prepareInjection(ctx);
 
         parentBean = resolver.resolve(ctx, parentType);
-        
+
     }
-    
+
     @Override
     public void execute(final AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
-        if (parentBean==null) {
-            String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                    "GenericCreateCommand.target_object_not_found",
+        if (parentBean == null) {
+            String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericCreateCommand.target_object_not_found",
                     "The CrudResolver {0} could not find the configuration object of type {1} where instances of {2} should be added",
                     resolver.getClass().toString(), parentType, targetType);
             report.failure(logger, msg);
@@ -151,10 +143,8 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
             cols = getColumnInfo(targetType);
             if (!isOutputOptsValid(cols, outputOpts)) {
                 String collist = arrayToString(getColumnHeadings(cols));
-                String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                    "GenericListCommand.invalidOutputOpts",
-                    "Invalid output option. Choose from the following columns: {0}",
-                    collist);
+                String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericListCommand.invalidOutputOpts",
+                        "Invalid output option. Choose from the following columns: {0}", collist);
                 report.failure(logger, msg);
                 return;
             }
@@ -163,26 +153,26 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
             Collections.sort(cols, new Comparator<ColumnInfo>() {
                 @Override
                 public int compare(ColumnInfo o1, ColumnInfo o2) {
-                    return Integer.compare(o1.order,o2.order);
+                    return Integer.compare(o1.order, o2.order);
                 }
             });
             colfm = headerOpt ? new ColumnFormatter(getColumnHeadings(cols)) : new ColumnFormatter();
         }
-       
+
         List<Map> list = new ArrayList<Map>();
         Properties props = report.getExtraProperties();
         if (props == null) {
             props = new Properties();
             report.setExtraProperties(props);
         }
-        
-        try {       
+
+        try {
             List<ConfigBeanProxy> children = (List<ConfigBeanProxy>) targetMethod.invoke(parentBean);
             for (ConfigBeanProxy child : children) {
                 if (name != null && !name.equals(Dom.unwrap(child).getKey())) {
                     continue;
                 }
-                Map<String,String> map = new HashMap<String,String>();
+                Map<String, String> map = new HashMap<String, String>();
                 if (longOpt) {
                     String data[] = getColumnData(child, cols);
                     colfm.addRow(data);
@@ -192,11 +182,9 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
                 } else {
                     Dom childDom = Dom.unwrap(child);
                     String key = childDom.getKey();
-                    if (key==null) {
-                        String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                                "GenericListCommand.element_has_no_key",
-                                "The element {0} has no key attribute",
-                                targetType);
+                    if (key == null) {
+                        String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericListCommand.element_has_no_key",
+                                "The element {0} has no key attribute", targetType);
                         report.failure(logger, msg);
                         return;
                     }
@@ -212,25 +200,23 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
                 props.put(elementName(Dom.unwrap(parentBean).document, parentType, targetType), list);
             }
         } catch (Exception e) {
-            String msg = localStrings.getLocalString(GenericCrudCommand.class,
-                    "GenericCrudCommand.method_invocation_exception",
-                    "Exception while invoking {0} method : {1}",
-                    targetMethod.toString(), e.toString());
+            String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericCrudCommand.method_invocation_exception",
+                    "Exception while invoking {0} method : {1}", targetMethod.toString(), e.toString());
             report.failure(logger, msg, e);
         }
     }
 
     @Override
-     public CommandModel getModel() {
+    public CommandModel getModel() {
         return cmdModel;
     }
-    
+
     /*
      * Return the list of columns available from the ConfigBeanProxy clazz
      */
     private List<ColumnInfo> getColumnInfo(Class<? extends ConfigBeanProxy> clazz) {
         List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
-        
+
         for (String aname : targetModel.getAttributeNames()) {
             ColumnInfo ci = new ColumnInfo();
             ci.cprop = targetModel.findIgnoreCase(aname);
@@ -239,7 +225,7 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
             ci.heading = aname.toUpperCase(Locale.ENGLISH);
             cols.add(ci);
         }
-        
+
         for (Method m : targetType.getMethods()) {
             ListingColumn lc = m.getAnnotation(ListingColumn.class);
             if (lc != null) {
@@ -253,16 +239,14 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
                 }
                 if (mci == null) {
                     mci = new ColumnInfo();
-                    mci.xmlName= cname;
+                    mci.xmlName = cname;
                     mci.heading = cname.toUpperCase(Locale.ENGLISH);
                     try {
                         mci.duckGetter = targetModel.getDuckMethod(m);
                     } catch (ClassNotFoundException ex) { // @todo Java SE 7 multicatch
-                        ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, 
-                                ConfigApiLoggerInfo.CANNOT_IDENTIFY_LIST_COL_GETTER, ex);
+                        ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, ConfigApiLoggerInfo.CANNOT_IDENTIFY_LIST_COL_GETTER, ex);
                     } catch (NoSuchMethodException ex) {
-                        ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, 
-                                ConfigApiLoggerInfo.CANNOT_IDENTIFY_LIST_COL_GETTER, ex);
+                        ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, ConfigApiLoggerInfo.CANNOT_IDENTIFY_LIST_COL_GETTER, ex);
                     }
                     cols.add(mci);
                 }
@@ -272,7 +256,7 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
                     mci.heading = lc.header();
                 }
             }
-            
+
         }
         return cols;
     }
@@ -315,7 +299,7 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
         }
         for (int i = 0; i < outputOpts.length; i++) {
             boolean found = false;
-            for (ColumnInfo ci : cols) { 
+            for (ColumnInfo ci : cols) {
                 if (!ci.isExcluded() && ci.heading.equalsIgnoreCase(outputOpts[i])) {
                     found = true;
                     break;
@@ -342,7 +326,7 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
         }
         return sb.toString();
     }
-    
+
     static class ColumnInfo {
         static final int KEY_ORDER = 0;
         static final int NONKEY_ORDER = 1;
@@ -355,20 +339,20 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
 
         private String getValue(ConfigBeanProxy bean) {
             if (cprop != null) {
-                return (String)cprop.get(Dom.unwrap(bean), String.class);
+                return (String) cprop.get(Dom.unwrap(bean), String.class);
             }
             if (duckGetter != null) {
                 try {
-                    return (String)duckGetter.invoke(null, bean);
+                    return (String) duckGetter.invoke(null, bean);
                 } catch (IllegalAccessException ex) {
-                    LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, 
-                            ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex, duckGetter.getName());
+                    LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex,
+                            duckGetter.getName());
                 } catch (IllegalArgumentException ex) {
-                    LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, 
-                            ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex, duckGetter.getName());
+                    LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex,
+                            duckGetter.getName());
                 } catch (InvocationTargetException ex) {
-                    LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, 
-                            ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex, duckGetter.getName());
+                    LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex,
+                            duckGetter.getName());
                 }
             }
             return "";
@@ -377,7 +361,7 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
         private boolean isExcluded() {
             return lcAnn != null && lcAnn.exclude();
         }
-        
+
         private boolean isIncluded(String[] outputOpts) {
             if (isExcluded()) {
                 return false;
@@ -393,10 +377,10 @@ public class GenericListCommand  extends GenericCrudCommand implements AdminComm
             return false;
         }
     }
-    
+
     @Override
     public Class getDecoratorClass() {
         return null; //No decorator support
     }
-    
+
 }

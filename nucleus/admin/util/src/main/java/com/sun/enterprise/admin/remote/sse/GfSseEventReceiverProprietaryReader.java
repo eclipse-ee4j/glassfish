@@ -27,9 +27,7 @@ public class GfSseEventReceiverProprietaryReader implements ProprietaryReader<Gf
 
     @Override
     public boolean isReadable(final Class<?> type, final String contentType) {
-        return type ==  GfSseEventReceiver.class
-                && contentType != null
-                && contentType.startsWith("text/event-stream");
+        return type == GfSseEventReceiver.class && contentType != null && contentType.startsWith("text/event-stream");
     }
 
     @Override

@@ -24,5 +24,6 @@ import jakarta.ws.rs.core.UriInfo;
  */
 public interface OptionsCapable {
     UriInfo getUriInfo();
+
     void setUriInfo(UriInfo uriInfo);
 }

@@ -31,18 +31,14 @@ import java.util.Set;
  */
 public interface RestResourceProvider {
     /**
-     * If resource can provide access for non-GET methods.
-     * By default - NO.
+     * If resource can provide access for non-GET methods. By default - NO.
      */
     boolean enableModifAccessToInstances();
 
     Set<Class<?>> getResourceClasses(ServiceLocator habitat);
 
-    ResourceConfig getResourceConfig(Set<Class<?>> classes,
-                                     final ServerContext sc,
-                                     final ServiceLocator habitat,
-                                     Set<? extends Binder> additionalBinders)
-            throws EndpointRegistrationException;
+    ResourceConfig getResourceConfig(Set<Class<?>> classes, final ServerContext sc, final ServiceLocator habitat,
+            Set<? extends Binder> additionalBinders) throws EndpointRegistrationException;
 
     String getContextRoot();
 }

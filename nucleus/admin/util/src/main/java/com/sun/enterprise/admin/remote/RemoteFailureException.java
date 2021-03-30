@@ -22,8 +22,9 @@ package com.sun.enterprise.admin.remote;
  */
 public class RemoteFailureException extends RemoteException {
     RemoteFailureException(String msg) {
-            super(msg);
+        super(msg);
     }
+
     RemoteFailureException(String msg, String cause) {
         super(msg, cause);
     }

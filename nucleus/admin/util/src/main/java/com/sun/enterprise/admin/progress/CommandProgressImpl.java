@@ -29,16 +29,17 @@ import org.glassfish.api.admin.progress.ProgressStatusImpl;
 import org.glassfish.api.admin.progress.ProgressStatusMessage;
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
 
-/** Basic and probably only implementation of {@code CommandProgress}.
+/**
+ * Basic and probably only implementation of {@code CommandProgress}.
  *
  * @author mmares
  */
 public class CommandProgressImpl extends ProgressStatusImpl implements CommandProgress, Serializable {
-    
+
     private static final long serialVersionUID = 1;
 
     public class LastChangedMessage implements ProgressStatusMessage, Serializable {
-        
+
         private String sourceId;
         private String message;
         private String contextString;
@@ -60,7 +61,7 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
         public String getSourceId() {
             return sourceId;
         }
-        
+
         public String getContextString() {
             if (contextString == null) {
                 StringBuilder result = new StringBuilder();
@@ -69,7 +70,7 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
                     result.append(fnd.getName());
                 }
                 ProgressStatusBase parent;
-                while((parent = fnd.getParrent()) != null) {
+                while ((parent = fnd.getParrent()) != null) {
                     if (StringUtils.ok(parent.getName())) {
                         if (result.length() > 0) {
                             result.insert(0, '.');
@@ -82,9 +83,9 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
             }
             return contextString;
         }
-        
+
     }
-    
+
     private LastChangedMessage lastMessage;
     private long eTag = 0;
     private Date startTime;
@@ -92,12 +93,12 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
     //TODO: Set after resurection
     private transient AdminCommandEventBroker eventBroker;
     private boolean spinner = false;
-    
+
     public CommandProgressImpl(String name, String id) {
         super(name, -1, null, id);
         startTime = new Date();
     }
-    
+
     @Override
     protected synchronized void fireEvent(ProgressStatusEvent event) {
         if (event == null) {
@@ -117,7 +118,7 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
             eventBroker.fireEvent(EVENT_PROGRESSSTATUS_CHANGE, event);
         }
     }
-    
+
     @Override
     public void setEventBroker(AdminCommandEventBroker eventBroker) {
         this.eventBroker = eventBroker;
@@ -125,7 +126,7 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
             eventBroker.fireEvent(EVENT_PROGRESSSTATUS_STATE, this);
         }
     }
-    
+
     @Override
     public synchronized ProgressStatusMirroringImpl createMirroringChild(int allocatedSteps) {
         allocateStapsForChildProcess(allocatedSteps);
@@ -145,7 +146,7 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
     public Date getStartTime() {
         return startTime;
     }
-    
+
     @Override
     public String getId() {
         return this.id;
@@ -155,7 +156,7 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
     public String getName() {
         return this.name;
     }
-    
+
     @Override
     public String getLastMessage() {
         if (lastMessage != null) {
@@ -170,21 +171,21 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
             return null;
         }
     }
-    
+
     @Override
     public void complete() {
         complete(null);
     }
-    
+
     @Override
     public void complete(String message) {
         this.endTime = new Date();
         super.complete(message);
     }
-    
+
     @Override
     public boolean isSpinnerActive() {
         return this.spinner;
     }
-    
+
 }

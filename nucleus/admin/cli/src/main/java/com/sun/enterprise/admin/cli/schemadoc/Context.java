@@ -27,8 +27,7 @@ public class Context {
     private Map<String, ClassDef> classDefs = new HashMap<String, ClassDef>();
     private String rootClassName;
 
-    public Context(Map<String, ClassDef> classDefs, File docDir, Boolean showDeprecated,
-        Boolean showSubclasses, String className) {
+    public Context(Map<String, ClassDef> classDefs, File docDir, Boolean showDeprecated, Boolean showSubclasses, String className) {
         this.classDefs = classDefs;
         this.docDir = docDir;
         this.showDeprecated = showDeprecated;

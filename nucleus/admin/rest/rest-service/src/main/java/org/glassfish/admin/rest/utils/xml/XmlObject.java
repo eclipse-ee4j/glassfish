@@ -73,9 +73,9 @@ public class XmlObject {
         if (child instanceof String) {
             children.put(key, child);
         } else if (child instanceof Number) {
-            children.put(key, new XmlObject("Number", (Number)child));
+            children.put(key, new XmlObject("Number", (Number) child));
         } else if (child instanceof XmlObject) {
-            children.put(key, (XmlObject)child);
+            children.put(key, (XmlObject) child);
         }
         return this;
     }
@@ -94,20 +94,20 @@ public class XmlObject {
         if (value != null) {
             node.setTextContent(value.toString());
         }
-        Element element = (Element)node;
+        Element element = (Element) node;
         for (Map.Entry<String, Object> child : children.entrySet()) {
             String key = child.getKey();
             Object value = child.getValue();
             if (value instanceof String) {
                 element.setAttribute(key, value.toString());
             } else {
-                XmlObject obj = (XmlObject)value;
+                XmlObject obj = (XmlObject) value;
                 Node entryNode = document.createElement("entry");
-                ((Element)entryNode).setAttribute("name", obj.getName());
+                ((Element) entryNode).setAttribute("name", obj.getName());
                 entryNode.appendChild(obj.createNode(document));
                 node.appendChild(entryNode);
             }
-//            element.setAttribute(attribute.getKey(), attribute.getValue());
+            //            element.setAttribute(attribute.getKey(), attribute.getValue());
         }
 
         return node;
@@ -139,4 +139,3 @@ public class XmlObject {
         }
     }
 }
-

@@ -31,9 +31,7 @@ public class Logging {
     @LoggerInfo(subsystem = "RSTCN", description = "REST Connector Logger", publish = true)
     public static final String REST_CONNECTOR_LOGGER = "jakarta.enterprise.admin.rest.connector";
     public static final Logger logger = Logger.getLogger(REST_CONNECTOR_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
-    
-    @LogMessageInfo(
-            message = "The REST connector has been started",
-            level = "INFO")
+
+    @LogMessageInfo(message = "The REST connector has been started", level = "INFO")
     public static final String REST_CONNECTOR_STARTED = "NCLS-RSTCN-00001";
 }

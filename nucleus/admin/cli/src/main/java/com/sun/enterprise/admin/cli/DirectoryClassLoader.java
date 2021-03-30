@@ -23,16 +23,14 @@ import java.util.*;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * A class loader that loads classes from all jar files
- * in a specified directory.
+ * A class loader that loads classes from all jar files in a specified directory.
  */
 public class DirectoryClassLoader extends URLClassLoader {
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(DirectoryClassLoader.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(DirectoryClassLoader.class);
 
     /**
-     * Create a DirectoryClassLoader to load from jar files in
-     * the specified directory, with the specified parent class loader.
+     * Create a DirectoryClassLoader to load from jar files in the specified directory, with the specified parent class
+     * loader.
      *
      * @param dir the directory of jar files to load from
      * @param parent the parent class loader
@@ -41,24 +39,23 @@ public class DirectoryClassLoader extends URLClassLoader {
     public DirectoryClassLoader(String dir, ClassLoader parent) throws IOException {
         super(getJars(new File(dir)), parent);
     }
-    
+
     public DirectoryClassLoader(Set<File> jarsAndDirs, ClassLoader parent) throws IOException {
         super(getJars(jarsAndDirs), parent);
     }
 
     /**
-     * Create a DirectoryClassLoader to load from jar files in
-     * the specified directory, with the specified parent class loader.
+     * Create a DirectoryClassLoader to load from jar files in the specified directory, with the specified parent class
+     * loader.
      *
      * @param dir the directory of jar files to load from
      * @param parent the parent class loader
      * @throws IOException if the directory can't be accessed
      */
-    public DirectoryClassLoader(File dir, ClassLoader parent)
-                        throws IOException {
+    public DirectoryClassLoader(File dir, ClassLoader parent) throws IOException {
         super(getJars(dir), parent);
     }
-    
+
     private static URL[] getJars(Set<File> jarsAndDirs) throws IOException {
         if (jarsAndDirs == null) {
             throw new IOException(strings.get("DirError", ""));

@@ -34,13 +34,11 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 import jakarta.inject.Inject;
 
-
 @Configured
 /**
- * Represents a security Principal, identified using an SSL cert, that is
- * authorized to perform admin operations. Used both to identify the DAS and instances
- * to each other and also for any end-user cert that should be accepted as
- * authorization for admin operations. 
+ * Represents a security Principal, identified using an SSL cert, that is authorized to perform admin operations. Used
+ * both to identify the DAS and instances to each other and also for any end-user cert that should be accepted as
+ * authorization for admin operations.
  *
  */
 public interface SecureAdminPrincipal extends ConfigBeanProxy {
@@ -50,17 +48,16 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
      *
      * @param dn the DN
      */
-    @Param(primary=true)
+    @Param(primary = true)
     public void setDn(String dn);
-    
+
     /**
      * Gets the distinguished name for this SecureAdminPrincipal
      *
      * @return {@link String } containing the DN
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     String getDn();
-    
 
     /**
      * Invoked during creation of a new SecureAdminPrincipal.
@@ -68,18 +65,17 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
     @Service
     @PerLookup
     public static class CrDecorator implements CreationDecorator<SecureAdminPrincipal> {
-        
-        
+
         @Inject
         //@Named(CREATION_DECORATOR_NAME)
         private SecureAdminHelper helper;
-        
-        @Param(optional=false, name="value", primary=true)
+
+        @Param(optional = false, name = "value", primary = true)
         private String value;
-        
-        @Param(optional=true, name="alias", defaultValue="false")
+
+        @Param(optional = true, name = "alias", defaultValue = "false")
         private boolean isAlias = true;
-        
+
         @Override
         public void decorate(AdminCommandContext context, SecureAdminPrincipal instance) throws TransactionFailure, PropertyVetoException {
             try {
@@ -94,22 +90,19 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
             }
         }
     }
-    
+
     /**
-     * Resolves using the type and any name, with no restrictions on the name and
-     * with an optional mapping from a cert alias to the name.
+     * Resolves using the type and any name, with no restrictions on the name and with an optional mapping from a cert alias
+     * to the name.
      * <p>
-     * The similar {@link TypeAndNameResolver} restricts the name to one that excludes 
-     * commas, because TypeAndNameResolver uses habitat.getComponent which 
-     * (ultimately) uses habitat.getInhabitantByContract which splits the name using
-     * a comma to get a list of names to try to match against.
+     * The similar {@link TypeAndNameResolver} restricts the name to one that excludes commas, because TypeAndNameResolver
+     * uses habitat.getComponent which (ultimately) uses habitat.getInhabitantByContract which splits the name using a comma
+     * to get a list of names to try to match against.
      * <p>
-     * In some cases the name might actually contain a comma, so this resolver
-     * supports those cases.
+     * In some cases the name might actually contain a comma, so this resolver supports those cases.
      * <p>
-     * This resolver also allows the caller to specify an alias instead of the 
-     * name (the DN) itself, in which case the resolver maps the alias to the 
-     * corresponding cert's DN and uses that as the name.
+     * This resolver also allows the caller to specify an alias instead of the name (the DN) itself, in which case the
+     * resolver maps the alias to the corresponding cert's DN and uses that as the name.
      * 
      * @author Tim Quinn
      */
@@ -121,7 +114,7 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
         @Param(primary = true)
         private String value;
 
-        @Param(optional=true, name="alias", defaultValue="false")
+        @Param(optional = true, name = "alias", defaultValue = "false")
         private boolean isAlias = true;
 
         @Inject
@@ -143,10 +136,10 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
                 throw new RuntimeException(ex);
             }
 
-            if ( ! SecureAdminPrincipal.class.isAssignableFrom(type)) { 
+            if (!SecureAdminPrincipal.class.isAssignableFrom(type)) {
                 final String msg = localStrings.getLocalString(SecureAdminPrincipal.class,
-                        "SecureAdminPrincipalResolver.configTypeNotNamed",
-                        "Config type {0} must extend {1} but does not", type.getSimpleName(), Named.class.getName());
+                        "SecureAdminPrincipalResolver.configTypeNotNamed", "Config type {0} must extend {1} but does not",
+                        type.getSimpleName(), Named.class.getName());
                 throw new IllegalArgumentException(msg);
             }
 
@@ -159,10 +152,9 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
                     return candidate;
                 }
             }
-            String msg = localStrings.getLocalString(SecureAdminPrincipal.class,
-                        "SecureAdminPrincipalResolver.target_object_not_found",
-                        "Cannot find a {0} with a name {1}", type.getSimpleName(), value);
+            String msg = localStrings.getLocalString(SecureAdminPrincipal.class, "SecureAdminPrincipalResolver.target_object_not_found",
+                    "Cannot find a {0} with a name {1}", type.getSimpleName(), value);
             throw new RuntimeException(msg);
         }
     }
-}    
+}

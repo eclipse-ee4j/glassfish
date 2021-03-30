@@ -27,16 +27,16 @@ import org.glassfish.admin.rest.utils.xml.RestActionReporter;
  * @author Jason Lee
  */
 @Provider
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class ActionReportResultJsonProvider extends BaseProvider<ActionReportResult> {
-    
+
     public ActionReportResultJsonProvider() {
         super(ActionReportResult.class, MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
     public String getContent(ActionReportResult proxy) {
-        RestActionReporter ar = (RestActionReporter)proxy.getActionReport();
+        RestActionReporter ar = (RestActionReporter) proxy.getActionReport();
         ActionReportJsonProvider provider = new ActionReportJsonProvider();
         return provider.getContent(ar);
     }

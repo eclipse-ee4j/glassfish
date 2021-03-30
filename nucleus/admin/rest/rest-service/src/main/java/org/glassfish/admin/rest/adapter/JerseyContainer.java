@@ -20,12 +20,11 @@ import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
 
 /**
- * This class represents our interface to Jersey pluggable container mechanism.
- * This allows us to use our ReST admin resources in more than containers,
- * e.g., jersey-grizzly-container, jersey-servlet-container, etc.
- * Ideally we should have abstracted out Request and Response as well, but that will be done
- * separately. For now, while using our ReST admin resources in any other container,
- * we will have to adapt their Request and Response interfaces to Grizzly Request and Response interfaces.
+ * This class represents our interface to Jersey pluggable container mechanism. This allows us to use our ReST admin
+ * resources in more than containers, e.g., jersey-grizzly-container, jersey-servlet-container, etc. Ideally we should
+ * have abstracted out Request and Response as well, but that will be done separately. For now, while using our ReST
+ * admin resources in any other container, we will have to adapt their Request and Response interfaces to Grizzly
+ * Request and Response interfaces.
  *
  * @author sanjeeb.sahoo@oracle.com
  */

@@ -39,8 +39,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * internal REST wrapper for a log record
- * will be used to emit JSON easily with Jackson framework
+ * internal REST wrapper for a log record will be used to emit JSON easily with Jackson framework
  *
  * @author ludo
  */

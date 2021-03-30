@@ -34,9 +34,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 /**
- * Upgrade service to add the new 3.1 system properties to the config elements
- * (except DAS config, server-config) in existing domain.xml:
- * <system-property name="ASADMIN_LISTENER_PORT" value="24848"></system-property>
+ * Upgrade service to add the new 3.1 system properties to the config elements (except DAS config, server-config) in
+ * existing domain.xml: <system-property name="ASADMIN_LISTENER_PORT" value="24848"></system-property>
  * <system-property name="OSGI_SHELL_TELNET_PORT" value="26666"></system-property>
  * <system-property name="JAVA_DEBUGGER_PORT" value="29009"></system-property>
  *
@@ -71,7 +70,7 @@ public class SystemPropertyUpgrade implements ConfigurationUpgrade, PostConstruc
     private static final String DAS_CONFIG = "server-config";
     private static final String DEFAULT_CONFIG = "default-config";
     private static final String DAS = "server";
-    
+
     public void postConstruct() {
         upgradeConfigElements();
         upgradeServerElements();
@@ -86,9 +85,9 @@ public class SystemPropertyUpgrade implements ConfigurationUpgrade, PostConstruc
                     String httpVal = bag.getSystemProperty(HTTP).getValue();
                     if (httpVal != null) {
                         PREFIX = httpVal.substring(0, httpVal.length() - 4);
-                            final int adminPort;
-                            final int osgiPort;
-                            final int debugPort;
+                        final int adminPort;
+                        final int osgiPort;
+                        final int debugPort;
                         if (!c.getName().equals(DEFAULT_CONFIG)) {
                             adminPort = DEFAULT_ADMIN_PORT + incr;
                             osgiPort = DEFAULT_OSGI_SHELL_TELNET_PORT + incr;
@@ -96,7 +95,7 @@ public class SystemPropertyUpgrade implements ConfigurationUpgrade, PostConstruc
                             incr++;
                         } else {
                             adminPort = DEFAULT_ADMIN_PORT;
-                            osgiPort = DEFAULT_OSGI_SHELL_TELNET_PORT ;
+                            osgiPort = DEFAULT_OSGI_SHELL_TELNET_PORT;
                             debugPort = DEFAULT_JAVA_DEBUGGER_PORT;
                         }
 
@@ -115,8 +114,7 @@ public class SystemPropertyUpgrade implements ConfigurationUpgrade, PostConstruc
 
                 }
             } catch (Exception e) {
-                Logger.getAnonymousLogger().log(Level.SEVERE,
-                        Strings.get("SystemPropertyUpgrade.Failure", c), e);
+                Logger.getAnonymousLogger().log(Level.SEVERE, Strings.get("SystemPropertyUpgrade.Failure", c), e);
                 throw new RuntimeException(e);
             }
         }
@@ -194,13 +192,13 @@ public class SystemPropertyUpgrade implements ConfigurationUpgrade, PostConstruc
             }
             return incr;
         } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE,
-                    Strings.get("SystemPropertyUpgrade.Failure", s), e);
+            Logger.getAnonymousLogger().log(Level.SEVERE, Strings.get("SystemPropertyUpgrade.Failure", s), e);
             throw new RuntimeException(e);
         }
     }
 
-    private void createSystemProperty(SystemPropertyBag spb, String portName, int portVal) throws TransactionFailure, PropertyVetoException {
+    private void createSystemProperty(SystemPropertyBag spb, String portName, int portVal)
+            throws TransactionFailure, PropertyVetoException {
         if (spb.getSystemProperty(portName) == null) {
             SystemProperty newSysProp = spb.createChild(SystemProperty.class);
             newSysProp.setName(portName);

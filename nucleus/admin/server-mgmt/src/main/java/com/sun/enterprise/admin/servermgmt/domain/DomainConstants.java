@@ -39,7 +39,7 @@ public class DomainConstants {
     /** Filename contains the server certificates, including its private key. */
     public static final String KEYSTORE_FILE = "keystore.jks";
 
-    /** Master password file name stores the password for secure key store.  */
+    /** Master password file name stores the password for secure key store. */
     public static final String MASTERPASSWORD_FILE = "master-password";
 
     /** Filename contains the trusted certificates, including public keys. */

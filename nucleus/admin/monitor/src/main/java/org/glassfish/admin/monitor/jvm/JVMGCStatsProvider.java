@@ -29,28 +29,26 @@ import org.glassfish.gmbal.ManagedObject;
 /* jvm.garbage-collectors */
 // v2 mbean: com.sun.appserv:name=Copy,type=garbage-collector,category=monitor,server=server
 // v3 mbean:
-@AMXMetadata(type="garbage-collector-mon", group="monitoring")
+@AMXMetadata(type = "garbage-collector-mon", group = "monitoring")
 @ManagedObject
-@Description( "JVM Garbage Collectors Statistics" )
+@Description("JVM Garbage Collectors Statistics")
 public class JVMGCStatsProvider {
 
     private List<GarbageCollectorMXBean> gcBeanList = ManagementFactory.getGarbageCollectorMXBeans();
     private String gcName = null;
 
-    private CountStatisticImpl collectionCount = new CountStatisticImpl(
-            "CollectionCount", CountStatisticImpl.UNIT_COUNT,
-                "Total number of collections that have occurred" );
+    private CountStatisticImpl collectionCount = new CountStatisticImpl("CollectionCount", CountStatisticImpl.UNIT_COUNT,
+            "Total number of collections that have occurred");
 
-    private CountStatisticImpl collectionTimeCount = new CountStatisticImpl(
-            "CollectionTime", CountStatisticImpl.UNIT_MILLISECOND,
-                "Approximate accumulated collection elapsed time in milliseconds" );
+    private CountStatisticImpl collectionTimeCount = new CountStatisticImpl("CollectionTime", CountStatisticImpl.UNIT_MILLISECOND,
+            "Approximate accumulated collection elapsed time in milliseconds");
 
     public JVMGCStatsProvider(String gcName) {
         this.gcName = gcName;
     }
 
-    @ManagedAttribute(id="collectioncount-count")
-    @Description( "total number of collections that have occurred" )
+    @ManagedAttribute(id = "collectioncount-count")
+    @Description("total number of collections that have occurred")
     public CountStatistic getCollectionCount() {
         long counts = -1;
         for (GarbageCollectorMXBean gcBean : gcBeanList) {
@@ -62,8 +60,8 @@ public class JVMGCStatsProvider {
         return collectionCount;
     }
 
-    @ManagedAttribute(id="collectiontime-count")
-    @Description( "approximate accumulated collection elapsed time in milliseconds" )
+    @ManagedAttribute(id = "collectiontime-count")
+    @Description("approximate accumulated collection elapsed time in milliseconds")
     public CountStatistic getCollectionTime() {
         long times = -1;
         int i = 0;

@@ -49,9 +49,8 @@ public class JsonPropertyListReader implements MessageBodyReader<List<Map<String
     }
 
     @Override
-    public List<Map<String, String>> readFrom(Class<List<Map<String, String>>> type, Type genericType,
-        Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers,
-        InputStream in) throws IOException {
+    public List<Map<String, String>> readFrom(Class<List<Map<String, String>>> type, Type genericType, Annotation[] annotations,
+            MediaType mediaType, MultivaluedMap<String, String> headers, InputStream in) throws IOException {
         try {
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));

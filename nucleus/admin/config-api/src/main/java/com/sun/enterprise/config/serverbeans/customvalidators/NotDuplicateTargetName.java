@@ -25,18 +25,19 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 /**
- * NotDuplicateTargetName class-level constraint to verify that the name
- * attribute is not already in use by another target (cluster, instance,
- * node, config).
+ * NotDuplicateTargetName class-level constraint to verify that the name attribute is not already in use by another
+ * target (cluster, instance, node, config).
  *
  * @author Joe Di Pol
  */
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=NotDuplicateTargetNameValidator.class)
+@Constraint(validatedBy = NotDuplicateTargetNameValidator.class)
 public @interface NotDuplicateTargetName {
 
     String message() default "Name is already used by another instance, cluster, config or node";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

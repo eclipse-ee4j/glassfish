@@ -18,51 +18,51 @@ package com.sun.enterprise.admin.util;
 
 /**
  *
- * @author  kedar
+ * @author kedar
  */
 public final class TokenValue implements Comparable {
-    
+
     public final String token;
     public final String value;
     public final String preDelimiter;
     public final String postDelimiter;
     public final String delimitedToken;
-    
+
     public static final String DEFAULT_DELIMITER = "%%%";
-    
-    /** Creates a new instance of TokenValue  - with default delimiter.
-     *  Also note that if the value contains any '\' characters, then these
-     *  are appended to by another '\' character to work around the Java
-     *  byte code interpretation. Note that none of the arguments can be null.
-     *  The value of delimiter is given by DEFAULT_DELIMITER.
-     *  @param   token a String that is the name of the token in this TokenValue.
-     *  @param   value a String that is the value of the token.
-     *  @throws  IllegalArgumentException in case of null values.
-     *  @see     #TokenValue(java.lang.String, java.lang.String, java.lang.String)
-     *  @see	 #DEFAULT_DELIMITER
-     *  */
-    
+
+    /**
+     * Creates a new instance of TokenValue - with default delimiter. Also note that if the value contains any '\'
+     * characters, then these are appended to by another '\' character to work around the Java byte code interpretation.
+     * Note that none of the arguments can be null. The value of delimiter is given by DEFAULT_DELIMITER.
+     * 
+     * @param token a String that is the name of the token in this TokenValue.
+     * @param value a String that is the value of the token.
+     * @throws IllegalArgumentException in case of null values.
+     * @see #TokenValue(java.lang.String, java.lang.String, java.lang.String)
+     * @see #DEFAULT_DELIMITER
+     */
+
     public TokenValue(String token, String value) {
         this(token, value, DEFAULT_DELIMITER);
     }
-    
+
     public TokenValue(String token, String value, String delimiter) {
         this(token, value, delimiter, delimiter);
     }
-    
+
     public TokenValue(String token, String value, String preDelimiter, String postDelimiter) {
         if (token == null || value == null || preDelimiter == null || postDelimiter == null) {
             throw new IllegalArgumentException("Null Argument");
         }
         this.token = token;
-	/* Because of escaping process of a '\' by Java's bytecode
-	 * interpreter in string literals */
+        /* Because of escaping process of a '\' by Java's bytecode
+         * interpreter in string literals */
         this.value = escapeBackslashes(value);
         this.preDelimiter = preDelimiter;
         this.postDelimiter = postDelimiter;
         this.delimitedToken = preDelimiter + token + postDelimiter;
     }
-    
+
     public TokenValue(TokenValue other) {
         this.token = other.token;
         this.value = other.value;
@@ -70,7 +70,7 @@ public final class TokenValue implements Comparable {
         this.postDelimiter = other.postDelimiter;
         this.delimitedToken = other.delimitedToken;
     }
-    
+
     @Override
     public int compareTo(Object other) {
         final TokenValue otherTokenValue = (TokenValue) other;
@@ -81,12 +81,11 @@ public final class TokenValue implements Comparable {
     public boolean equals(Object other) {
         boolean same = false;
         if (other instanceof TokenValue) {
-            same = delimitedToken.equals(((TokenValue)other).delimitedToken) &&
-                   value.equals(((TokenValue)other).value);
+            same = delimitedToken.equals(((TokenValue) other).delimitedToken) && value.equals(((TokenValue) other).value);
         }
         return same;
     }
-    
+
     @Override
     public int hashCode() {
         int result = 43;
@@ -94,10 +93,10 @@ public final class TokenValue implements Comparable {
         result = 17 * result + preDelimiter.hashCode();
         result = 17 * result + postDelimiter.hashCode();
         result = 17 * result + value.hashCode();
-        
-        return ( result );
+
+        return (result);
     }
-    
+
     @Override
     public String toString() {
         return delimitedToken + "=" + value;

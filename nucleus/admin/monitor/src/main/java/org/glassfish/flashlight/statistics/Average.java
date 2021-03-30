@@ -19,12 +19,13 @@ package org.glassfish.flashlight.statistics;
 import org.glassfish.flashlight.datatree.TreeNode;
 import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.external.statistics.RangeStatistic;
+
 /**
  * @author Harpreet SIngh
  */
 
 @Contract
-public interface Average extends RangeStatistic{
+public interface Average extends RangeStatistic {
 
     public void addDataPoint(long value);
 
@@ -32,11 +33,11 @@ public interface Average extends RangeStatistic{
 
     public long getSize();
 
-    public void setReset ();
-    
-    public long getMin ();
-    
-    public long getMax ();
+    public void setReset();
 
-    public long getTotal ();
+    public long getMin();
+
+    public long getMax();
+
+    public long getTotal();
 }

@@ -24,11 +24,11 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.*;
 
 /**
- * A class that's supposed to capture all the behavior common to operation
- * on a "local" domain.  It's supposed to act as the abstract base class that
- * provides more functionality to the commands that operate on a local domain.
+ * A class that's supposed to capture all the behavior common to operation on a "local" domain. It's supposed to act as
+ * the abstract base class that provides more functionality to the commands that operate on a local domain.
+ * 
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
- * @author Byron Nevins  (bnevins@dev.java.net)
+ * @author Byron Nevins (bnevins@dev.java.net)
  */
 public abstract class LocalDomainCommand extends LocalServerCommand {
     @Param(name = "domaindir", optional = true)
@@ -51,15 +51,13 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
      * ServerDirs is 100% immutable.  A new one will be made later if needed.
      */
     @Override
-    protected void prepare()
-            throws CommandException, CommandValidationException {
+    protected void prepare() throws CommandException, CommandValidationException {
         super.prepare();
         setServerDirs(new ServerDirs()); // do-nothing ServerDirs object...
     }
 
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException {
+    protected void validate() throws CommandException, CommandValidationException {
 
         initDomain();
     }
@@ -78,12 +76,12 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
         if (dd != null && dd.isValid())
             return dd.getDomainName();
         else // too early!
-            return userArgDomainName;  // might be and is ok to be null
+            return userArgDomainName; // might be and is ok to be null
     }
 
     /**
-     * We need this so that @Param values for domainname can be remembered later
-     * when the ServerDirs object is made.
+     * We need this so that @Param values for domainname can be remembered later when the ServerDirs object is made.
+     * 
      * @param name the user-specified domain name.
      */
     protected final void setDomainName(String name) {

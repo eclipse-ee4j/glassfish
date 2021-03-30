@@ -49,9 +49,7 @@ public class ProgressStatusDTOJsonProprietaryReader implements ProprietaryReader
             JsonToken token = jp.nextToken(); //sorounding object
             jp.nextToken(); //Name progress-status
             JsonToken token2 = jp.nextToken();
-            if (token != JsonToken.START_OBJECT ||
-                    token2 != JsonToken.START_OBJECT ||
-                    !"progress-status".equals(jp.getCurrentName())) {
+            if (token != JsonToken.START_OBJECT || token2 != JsonToken.START_OBJECT || !"progress-status".equals(jp.getCurrentName())) {
                 throw new IOException("Not expected type (progress-status) but (" + jp.getCurrentName() + ")");
             }
             return readProgressStatus(jp);

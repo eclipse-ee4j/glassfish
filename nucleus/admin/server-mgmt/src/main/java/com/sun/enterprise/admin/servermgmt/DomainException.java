@@ -19,30 +19,32 @@ package com.sun.enterprise.admin.servermgmt;
 /**
  * Superclass for all domain management exceptions.
  */
-public class DomainException extends RepositoryException
-{
-    /** Constructs a new DomainException object.
+public class DomainException extends RepositoryException {
+    /**
+     * Constructs a new DomainException object.
+     * 
      * @param message
      */
-    public DomainException(String message)
-    {
+    public DomainException(String message) {
         super(message);
     }
 
-    /** Constructs a new DomainException object.
+    /**
+     * Constructs a new DomainException object.
+     * 
      * @param cause
      */
-    public DomainException(Throwable cause)
-    {
+    public DomainException(Throwable cause) {
         super(cause);
     }
 
-    /** Constructs a new DomainException object.
+    /**
+     * Constructs a new DomainException object.
+     * 
      * @param message
      * @param cause
      */
-    public DomainException(String message, Throwable cause)
-    {
+    public DomainException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -33,12 +33,13 @@ import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.api.admin.progress.ProgressStatusBase;
 import org.glassfish.api.admin.progress.ProgressStatusBase.ChildProgressStatus;
 
-/** Marshal ProgressStatus to JSON
+/**
+ * Marshal ProgressStatus to JSON
  *
  * @author mmares
  */
 @Provider
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class ProgressStatusJsonProvider extends BaseProvider<ProgressStatusBase> {
 
     private static final JsonFactory factory = new JsonFactory();

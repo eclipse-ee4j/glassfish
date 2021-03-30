@@ -28,8 +28,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  *
- * Causes execution of an administrative command on one or more remote instances to be
- * triggered from code running inside the DAS.
+ * Causes execution of an administrative command on one or more remote instances to be triggered from code running
+ * inside the DAS.
  * 
  * @author Vijay Ramachandran
  */
@@ -43,13 +43,10 @@ public class InstanceCommandExecutor extends ServerRemoteAdminCommand implements
     private FailurePolicy failPolicy;
     private InstanceCommandResult result;
 
-    private static final LocalStringManagerImpl strings =
-                        new LocalStringManagerImpl(InstanceCommandExecutor.class);
+    private static final LocalStringManagerImpl strings = new LocalStringManagerImpl(InstanceCommandExecutor.class);
 
-    public InstanceCommandExecutor(ServiceLocator habitat,
-                                   String name, FailurePolicy fail, FailurePolicy offline, Server server,
-                                   String host, int port, Logger logger,
-                                   ParameterMap p, ActionReport r, InstanceCommandResult res) throws CommandException {
+    public InstanceCommandExecutor(ServiceLocator habitat, String name, FailurePolicy fail, FailurePolicy offline, Server server,
+            String host, int port, Logger logger, ParameterMap p, ActionReport r, InstanceCommandResult res) throws CommandException {
         super(habitat, name, host, port, false, "admin", "", logger);
         this.server = server;
         this.params = p;
@@ -61,33 +58,38 @@ public class InstanceCommandExecutor extends ServerRemoteAdminCommand implements
     }
 
     @Override
-    public String getCommandOutput() { return this.output; }
+    public String getCommandOutput() {
+        return this.output;
+    }
 
-    public Server getServer() { return server; }
+    public Server getServer() {
+        return server;
+    }
 
-    public ActionReport getReport() { return this.aReport; }
+    public ActionReport getReport() {
+        return this.aReport;
+    }
 
     @Override
     public void run() {
         try {
             executeCommand(params);
             aReport.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-            if(StringUtils.ok(getCommandOutput()))
-                aReport.setMessage(strings.getLocalString("ice.successmessage", 
-                        "{0}:\n{1}\n", getServer().getName(), getCommandOutput()));
+            if (StringUtils.ok(getCommandOutput()))
+                aReport.setMessage(strings.getLocalString("ice.successmessage", "{0}:\n{1}\n", getServer().getName(), getCommandOutput()));
             Map<String, String> attributes = this.getAttributes();
-            for(Map.Entry<String, String> ae : attributes.entrySet()) {
+            for (Map.Entry<String, String> ae : attributes.entrySet()) {
                 String key = ae.getKey();
-                if(key.endsWith("_value"))
+                if (key.endsWith("_value"))
                     continue;
-                if(!key.endsWith("_name")) {
+                if (!key.endsWith("_name")) {
                     if (ae.getValue() != null) {
                         aReport.getTopMessagePart().addProperty(key, ae.getValue());
                     }
                     continue;
                 }
                 String keyWithoutSuffix = key.substring(0, key.lastIndexOf("_name"));
-                aReport.getTopMessagePart().addProperty(keyWithoutSuffix, attributes.get(keyWithoutSuffix+"_value"));
+                aReport.getTopMessagePart().addProperty(keyWithoutSuffix, attributes.get(keyWithoutSuffix + "_value"));
             }
             /*
             else
@@ -96,11 +98,11 @@ public class InstanceCommandExecutor extends ServerRemoteAdminCommand implements
                     */
         } catch (CommandException cmdEx) {
             ActionReport.ExitCode finalResult;
-            if(cmdEx.getCause() instanceof java.net.ConnectException) {
+            if (cmdEx.getCause() instanceof java.net.ConnectException) {
                 finalResult = FailurePolicy.applyFailurePolicy(offlinePolicy, ActionReport.ExitCode.FAILURE);
-                if(!finalResult.equals(ActionReport.ExitCode.FAILURE))
+                if (!finalResult.equals(ActionReport.ExitCode.FAILURE))
                     aReport.setMessage(strings.getLocalString("clusterutil.warnoffline",
-                        "WARNING: Instance {0} seems to be offline; command {1} was not replicated to that instance",
+                            "WARNING: Instance {0} seems to be offline; command {1} was not replicated to that instance",
                             getServer().getName(), commandName));
                 else
                     aReport.setMessage(strings.getLocalString("clusterutil.failoffline",
@@ -108,14 +110,14 @@ public class InstanceCommandExecutor extends ServerRemoteAdminCommand implements
                             getServer().getName(), commandName));
             } else {
                 finalResult = FailurePolicy.applyFailurePolicy(failPolicy, ActionReport.ExitCode.FAILURE);
-                if(finalResult.equals(ActionReport.ExitCode.FAILURE))
-                    aReport.setMessage(strings.getLocalString("clusterutil.commandFailed",
-                        "FAILURE: Command {0} failed on server instance {1}: {2}", commandName, getServer().getName(),
-                            cmdEx.getMessage()));
+                if (finalResult.equals(ActionReport.ExitCode.FAILURE))
+                    aReport.setMessage(
+                            strings.getLocalString("clusterutil.commandFailed", "FAILURE: Command {0} failed on server instance {1}: {2}",
+                                    commandName, getServer().getName(), cmdEx.getMessage()));
                 else
                     aReport.setMessage(strings.getLocalString("clusterutil.commandWarning",
-                        "WARNING: Command {0} did not complete successfully on server instance {1}: {2}",
-                            commandName, getServer().getName(), cmdEx.getMessage()));
+                            "WARNING: Command {0} did not complete successfully on server instance {1}: {2}", commandName,
+                            getServer().getName(), cmdEx.getMessage()));
             }
             aReport.setActionExitCode(finalResult);
         }

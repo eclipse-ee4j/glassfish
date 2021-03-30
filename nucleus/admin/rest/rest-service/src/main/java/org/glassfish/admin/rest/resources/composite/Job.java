@@ -21,6 +21,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * This model holds information for detached jobs
+ * 
  * @author jdlee
  */
 @Service
@@ -29,47 +30,55 @@ public interface Job extends RestModel {
      * The ID of this job
      */
     String getJobId();
+
     void setJobId(String jobid);
 
     /**
-     * Command being executed 
+     * Command being executed
      */
     String getJobName();
+
     void setJobName(String jobName);
 
     /**
-     *  The date and time the job was executed 
+     * The date and time the job was executed
      */
     String getExecutionDate();
+
     void setExecutionDate(String executionDate);
 
     /**
-     *  The date and time the job was completed 
+     * The date and time the job was completed
      */
     String getCompletionDate();
+
     void setCompletionDate(String completionDate);
 
     /**
-     * The message, if any, from the command 
+     * The message, if any, from the command
      */
     String getMessage();
+
     void setMessage(String message);
 
     /**
-     * Completion code for this job, if completed 
+     * Completion code for this job, if completed
      */
     String getExitCode();
+
     void setExitCode(String exitCode);
 
     /**
-     * The user who executed the command 
+     * The user who executed the command
      */
     String getUser();
+
     void setUser(String user);
 
     /**
      * The current state of the command's execution
      */
     String getJobState();
+
     void setJobState(String state);
 }

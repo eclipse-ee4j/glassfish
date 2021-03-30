@@ -96,8 +96,7 @@ public abstract class ServiceAdapter implements Service {
             // Windows doesn't respond well to slashes in the name!!
             getTokenMap().put(SERVICE_NAME_TN, info.serviceName);
             getTokenMap().put(ENTITY_NAME_TN, serverName);
-        }
-        else
+        } else
             getTokenMap().put(SERVICE_NAME_TN, info.smfFullServiceName);
 
         getTokenMap().put(AS_ADMIN_PATH_TN, info.asadminScript.getPath().replace('\\', '/'));
@@ -143,10 +142,8 @@ public abstract class ServiceAdapter implements Service {
     }
 
     /**
-     * If the user has specified a password file than get the info
-     * and convert into a String[] that CLI can use.
-     * e.g. { "--user", "harry", "--passwordfile", "/xyz" }
-     * authentication artifacts. Parameter may not be null.
+     * If the user has specified a password file than get the info and convert into a String[] that CLI can use. e.g. {
+     * "--user", "harry", "--passwordfile", "/xyz" } authentication artifacts. Parameter may not be null.
      */
     private void setAsadminCredentials() {
 
@@ -178,7 +175,7 @@ public abstract class ServiceAdapter implements Service {
         // In summary - before this change if --user was specified then that username was
         // completely ignored.  Now it is used.
         //
-        if(StringUtils.ok(userFromPasswordFile))
+        if (StringUtils.ok(userFromPasswordFile))
             info.setAppServerUser(p.getProperty("AS_ADMIN_USER"));
     }
 
@@ -190,21 +187,19 @@ public abstract class ServiceAdapter implements Service {
             final Properties p = new Properties();
             p.load(bis);
             return p;
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (bis != null) {
                 try {
                     bis.close();
-                }
-                catch (Exception ee) {
+                } catch (Exception ee) {
                     // ignore
                 }
             }
         }
     }
+
     private final Map<String, String> tokenMap = new HashMap<String, String>();
     final PlatformServicesInfo info;
 }

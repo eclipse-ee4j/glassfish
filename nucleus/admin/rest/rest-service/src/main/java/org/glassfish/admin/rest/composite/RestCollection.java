@@ -41,15 +41,15 @@ public class RestCollection<T> {
     }
 
     public T get(String id) {
-        return get (new RestModelMetadata(id));
+        return get(new RestModelMetadata(id));
     }
 
     public T remove(String id) {
-        return remove (new RestModelMetadata(id));
+        return remove(new RestModelMetadata(id));
     }
 
     public boolean containsKey(String id) {
-        return containsKey (new RestModelMetadata(id));
+        return containsKey(new RestModelMetadata(id));
     }
 
     public int size() {
@@ -194,8 +194,7 @@ public class RestCollection<T> {
         @Override
         public int compareTo(Object o) {
             if (!(o instanceof RestCollectionEntry)) {
-                throw new IllegalArgumentException(
-                        "Huh? Not a MapEntry?");
+                throw new IllegalArgumentException("Huh? Not a MapEntry?");
             }
             Object otherKey = ((RestCollectionEntry) o).getKey();
             return ((Comparable) key).compareTo((Comparable) otherKey);
@@ -259,6 +258,6 @@ public class RestCollection<T> {
             }
             return false;
         }
-*/
+        */
     }
 }

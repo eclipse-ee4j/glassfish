@@ -28,11 +28,12 @@ public class JsonScope {
     private String scope;
     private Stack<ScopeElement> scopeStack = new Stack<ScopeElement>();
 
-    public JsonScope() {}
+    public JsonScope() {
+    }
 
     public void beginObjectAttr(String name) {
         if (!scopeStack.isEmpty() && scopeStack.peek() instanceof ArrayAttr) {
-            if (!((ArrayAttr)(scopeStack.peek())).inElement()) {
+            if (!((ArrayAttr) (scopeStack.peek())).inElement()) {
                 throw new IllegalStateException("Not currently in an array element");
             }
         }
@@ -50,7 +51,7 @@ public class JsonScope {
 
     public void beginArrayAttr(String name) {
         if (!scopeStack.isEmpty() && scopeStack.peek() instanceof ArrayAttr) {
-            if (!((ArrayAttr)(scopeStack.peek())).inElement()) {
+            if (!((ArrayAttr) (scopeStack.peek())).inElement()) {
                 throw new IllegalStateException("Not currently in an array element");
             }
         }
@@ -70,7 +71,7 @@ public class JsonScope {
         if (!(scopeStack.peek() instanceof ArrayAttr)) {
             throw new IllegalStateException("Not currently in an array attribute");
         }
-        ((ArrayAttr)(scopeStack.peek())).beginElement();
+        ((ArrayAttr) (scopeStack.peek())).beginElement();
         computeScope();
     }
 
@@ -78,7 +79,7 @@ public class JsonScope {
         if (!(scopeStack.peek() instanceof ArrayAttr)) {
             throw new IllegalStateException("Not currently in an array attribute");
         }
-        ((ArrayAttr)(scopeStack.peek())).endElement();
+        ((ArrayAttr) (scopeStack.peek())).endElement();
         computeScope();
     }
 
@@ -105,13 +106,16 @@ public class JsonScope {
         return this.scope;
     }
 
-    private interface ScopeElement {}
+    private interface ScopeElement {
+    }
 
     private static class ObjectAttr implements ScopeElement {
         private String name;
+
         private ObjectAttr(String name) {
             this.name = name;
         }
+
         @Override
         public String toString() {
             return this.name;
@@ -122,14 +126,17 @@ public class JsonScope {
         private boolean inElement;
         private String name;
         int index;
+
         private ArrayAttr(String name) {
             this.name = name;
             this.inElement = false;
             this.index = -1;
         }
+
         private boolean inElement() {
             return this.inElement;
         }
+
         private void beginElement() {
             if (this.inElement) {
                 throw new IllegalStateException("Already in an array element");
@@ -137,12 +144,14 @@ public class JsonScope {
             this.inElement = true;
             this.index++;
         }
+
         private void endElement() {
             if (!this.inElement) {
                 throw new IllegalStateException("Not in an array element");
             }
             this.inElement = false;
         }
+
         @Override
         public String toString() {
             if (inElement) {
@@ -153,4 +162,3 @@ public class JsonScope {
         }
     }
 }
-

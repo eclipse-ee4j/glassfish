@@ -38,8 +38,7 @@ import jakarta.validation.constraints.NotNull;
 import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 
 /**
- * An audit-module specifies an optional plug-in module which implements audit
- * capabilities.
+ * An audit-module specifies an optional plug-in module which implements audit capabilities.
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -47,38 +46,31 @@ import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 }) */
 
 @Configured
-@RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-audit-module"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-audit-module")
-})
+@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-audit-module"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-audit-module") })
 public interface AuditModule extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the name property.
-     * Defines the name of this realm
+     * Gets the value of the name property. Defines the name of this realm
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_REGEX)
+    @Pattern(regexp = NAME_REGEX)
     String getName();
 
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setName(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the classname property.
-     * Defines the java class which implements this audit module
+     * Gets the value of the classname property. Defines the java class which implements this audit module
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
@@ -88,16 +80,15 @@ public interface AuditModule extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the classname property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setClassname(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 }

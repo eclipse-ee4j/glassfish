@@ -47,16 +47,14 @@ import java.util.logging.Logger;
  */
 
 public class CustomizationTokensProvider {
-    
+
     private static final Logger LOG = ConfigApiLoggerInfo.getLogger();
-    
-    private static final LocalStringManager strings =
-            new LocalStringManagerImpl(CustomizationTokensProvider.class);
+
+    private static final LocalStringManager strings = new LocalStringManagerImpl(CustomizationTokensProvider.class);
     private ServiceLocator locator;
     ConfigModularityUtils mu;
 
-    public List<ConfigCustomizationToken> getPresentConfigCustomizationTokens() throws
-            NoSuchFieldException, IllegalAccessException {
+    public List<ConfigCustomizationToken> getPresentConfigCustomizationTokens() throws NoSuchFieldException, IllegalAccessException {
         String runtimeType = "admin";
         initializeLocator();
         mu = locator.getService(ConfigModularityUtils.class);
@@ -73,16 +71,16 @@ public class CustomizationTokensProvider {
     }
 
     /**
-     * The tokens that are returned by this method will be used directly without consulting the portbase, etc.
-     * e.g if the value is 24848 then that is to be used as the system-property value.
+     * The tokens that are returned by this method will be used directly without consulting the portbase, etc. e.g if the
+     * value is 24848 then that is to be used as the system-property value.
      *
      * @return List of tokens to be used for default-config.
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
     public List<ConfigCustomizationToken> getPresentDefaultConfigCustomizationTokens() throws
-            //TODO it is required to change the file format so that default tokens can be introduced at file level
-            NoSuchFieldException, IllegalAccessException {
+    //TODO it is required to change the file format so that default tokens can be introduced at file level
+    NoSuchFieldException, IllegalAccessException {
         String runtimeType = "admin";
         initializeLocator();
         mu = locator.getService(ConfigModularityUtils.class);
@@ -96,11 +94,10 @@ public class CustomizationTokensProvider {
             }
         }
         Iterator<ConfigCustomizationToken> it = ctk.iterator();
-        while(it.hasNext()){
-            ConfigCustomizationToken c =it.next();
-            if (c.getCustomizationType().equals(ConfigCustomizationToken.CustomizationType.FILE) ||
-                    c.getCustomizationType().equals(ConfigCustomizationToken.CustomizationType.STRING)
-                    ) {
+        while (it.hasNext()) {
+            ConfigCustomizationToken c = it.next();
+            if (c.getCustomizationType().equals(ConfigCustomizationToken.CustomizationType.FILE)
+                    || c.getCustomizationType().equals(ConfigCustomizationToken.CustomizationType.STRING)) {
                 it.remove();
                 continue;
             }
@@ -122,27 +119,25 @@ public class CustomizationTokensProvider {
 
     protected void initializeLocator() {
         final ClassLoader ecl = CustomizationTokensProvider.class.getClassLoader();
-        File inst = new File(System.getProperty(
-                SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+        File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
         final File ext = new File(inst, "modules");
         LOG.log(Level.FINE, "asadmin modules directory: {0}", ext);
         if (ext.isDirectory()) {
-            AccessController.doPrivileged(
-                    new PrivilegedAction() {
-                        @Override
-                        public Object run() {
-                            try {
-                                URLClassLoader pl = new URLClassLoader(getJars(ext));
-                                ModulesRegistry registry = new StaticModulesRegistry(pl);
-                                locator = registry.createServiceLocator("default");
-                                return pl;
-                            } catch (IOException ex) {
-                                // any failure here is fatal
-                                LOG.log(Level.SEVERE, ConfigApiLoggerInfo.MODULES_CL_FAILED, ex);
-                            }
-                            return ecl;
-                        }
-                    });
+            AccessController.doPrivileged(new PrivilegedAction() {
+                @Override
+                public Object run() {
+                    try {
+                        URLClassLoader pl = new URLClassLoader(getJars(ext));
+                        ModulesRegistry registry = new StaticModulesRegistry(pl);
+                        locator = registry.createServiceLocator("default");
+                        return pl;
+                    } catch (IOException ex) {
+                        // any failure here is fatal
+                        LOG.log(Level.SEVERE, ConfigApiLoggerInfo.MODULES_CL_FAILED, ex);
+                    }
+                    return ecl;
+                }
+            });
         } else {
             LOG.log(Level.FINER, "Modules directory does not exist");
         }
@@ -162,4 +157,3 @@ public class CustomizationTokensProvider {
         return jars;
     }
 }
-

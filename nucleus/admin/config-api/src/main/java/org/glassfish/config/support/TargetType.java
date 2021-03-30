@@ -19,9 +19,9 @@ package org.glassfish.config.support;
 import java.lang.annotation.*;
 
 /**
- * Target type annotation defines valid target configuration elements for the annotated
- * command type. Valid configuration target are not expressed in terms of configuration
- * types but as semantic representation like Standalone Instance or Cluster.
+ * Target type annotation defines valid target configuration elements for the annotated command type. Valid
+ * configuration target are not expressed in terms of configuration types but as semantic representation like Standalone
+ * Instance or Cluster.
  *
  * @author Jerome Dochez
  */
@@ -31,11 +31,10 @@ import java.lang.annotation.*;
 public @interface TargetType {
 
     /**
-     * Returns an ordered array of valid command target that will be used to validate
-     * the command invocation target parameter.
+     * Returns an ordered array of valid command target that will be used to validate the command invocation target
+     * parameter.
      *
      * @return the list of valid command target by type
      */
-    CommandTarget[] value() default {CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER,
-                                        CommandTarget.CONFIG};    
+    CommandTarget[] value() default { CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG };
 }

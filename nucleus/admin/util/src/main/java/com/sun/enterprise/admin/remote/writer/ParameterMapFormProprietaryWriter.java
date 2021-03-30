@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Map;
 import org.glassfish.api.admin.ParameterMap;
 
-/** Writes ParameterMap into the POST
+/**
+ * Writes ParameterMap into the POST
  *
  * @author mmares
  * @author Marek Potociar (marek.potociar at oracle.com)

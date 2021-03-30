@@ -23,7 +23,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.bootstrap.PopulatorPostProcessor;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-
 /**
  * Inhabitant decorator to removed unwanted services in embedded mode
  *
@@ -34,28 +33,26 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
         return "Embedded";
     }
 
-//    public void decorate(InhabitantsParser inhabitantsParser) {
-//        inhabitantsParser.drop(RestService.class);
-//        inhabitantsParser.drop(ProxyRestManagementAdapter.class);
-//        inhabitantsParser.drop(ProxyRestMonitoringAdapter.class);
-//        inhabitantsParser.drop(ProxyRestAdminAdapter.class);
-//    }
+    //    public void decorate(InhabitantsParser inhabitantsParser) {
+    //        inhabitantsParser.drop(RestService.class);
+    //        inhabitantsParser.drop(ProxyRestManagementAdapter.class);
+    //        inhabitantsParser.drop(ProxyRestMonitoringAdapter.class);
+    //        inhabitantsParser.drop(ProxyRestAdminAdapter.class);
+    //    }
 
-        @Override
-        public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
-                
-                boolean skip = RestService.class.getCanonicalName().equals(descriptorImpl.getImplementation()) ||
-                                ProxyRestManagementAdapter.class.getCanonicalName().equals(descriptorImpl.getImplementation()) ||
-                                ProxyRestMonitoringAdapter.class.getCanonicalName().equals(descriptorImpl.getImplementation()) ||
-                                ProxyRestCommandAdapter.class.getCanonicalName().equals(descriptorImpl.getImplementation());
-                
-                if (!skip) {
-                        return descriptorImpl;
-            }
-                                
-                return null;
+    @Override
+    public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
 
+        boolean skip = RestService.class.getCanonicalName().equals(descriptorImpl.getImplementation())
+                || ProxyRestManagementAdapter.class.getCanonicalName().equals(descriptorImpl.getImplementation())
+                || ProxyRestMonitoringAdapter.class.getCanonicalName().equals(descriptorImpl.getImplementation())
+                || ProxyRestCommandAdapter.class.getCanonicalName().equals(descriptorImpl.getImplementation());
+
+        if (!skip) {
+            return descriptorImpl;
         }
+
+        return null;
+
+    }
 }
-
-

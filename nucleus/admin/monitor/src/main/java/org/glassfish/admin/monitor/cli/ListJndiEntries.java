@@ -43,22 +43,16 @@ import org.glassfish.api.admin.RestEndpoints;
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.jndi.entries")
-@ExecuteOn(value={RuntimeType.INSTANCE})
-@TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, 
-                   CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER,
-                   CommandTarget.CLUSTERED_INSTANCE})
+@ExecuteOn(value = { RuntimeType.INSTANCE })
+@TargetType(value = { CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER,
+        CommandTarget.CLUSTERED_INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jndi-entries", 
-        description="list-jndi-entries")
-})
+        @RestEndpoint(configBean = Resources.class, opType = RestEndpoint.OpType.GET, path = "list-jndi-entries", description = "list-jndi-entries") })
 public class ListJndiEntries implements AdminCommand {
 
-   final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(ListJndiEntries.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListJndiEntries.class);
 
-    @Param(name="context", optional = true)
+    @Param(name = "context", optional = true)
     String contextName;
 
     @Param(primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
@@ -71,40 +65,33 @@ public class ListJndiEntries implements AdminCommand {
         try {
             names = getNames(contextName);
         } catch (NamingException e) {
-            report.setMessage(localStrings.getLocalString("list.jndi.entries.namingexception", "Naming Exception caught.")
-                    + " " + e.getLocalizedMessage());
+            report.setMessage(localStrings.getLocalString("list.jndi.entries.namingexception", "Naming Exception caught.") + " "
+                    + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
             return;
         }
-                                        
+
         try {
             if (names.isEmpty()) {
-                final ActionReport.MessagePart part =
-                        report.getTopMessagePart().addChild();
-                part.setMessage(localStrings.getLocalString(
-                        "list.jndi.entries.empty",
-                        "Nothing to list."));
+                final ActionReport.MessagePart part = report.getTopMessagePart().addChild();
+                part.setMessage(localStrings.getLocalString("list.jndi.entries.empty", "Nothing to list."));
             } else {
                 for (String jndiName : names) {
-                    final ActionReport.MessagePart part =
-                            report.getTopMessagePart().addChild();
+                    final ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                     part.setMessage(jndiName);
                 }
             }
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         } catch (Exception e) {
-            report.setMessage(localStrings.getLocalString("" +
-                    "list.jndi.entries.fail",
-                    "Unable to list jndi entries.") + " " +
-                    e.getLocalizedMessage());
+            report.setMessage(localStrings.getLocalString("" + "list.jndi.entries.fail", "Unable to list jndi entries.") + " "
+                    + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
         }
     }
 
-    private List<String> getNames(String context)
-            throws NamingException {
+    private List<String> getNames(String context) throws NamingException {
         List<String> names = null;
         JndiNameLookupHelper helper = new JndiNameLookupHelper();
         names = helper.getJndiEntriesByContextPath(context);

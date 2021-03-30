@@ -36,7 +36,7 @@ import org.glassfish.api.ActionReport.MessagePart;
 @Provider
 @Produces(MediaType.APPLICATION_XML)
 public class ActionReportXmlProvider extends BaseProvider<ActionReporter> {
-    
+
     public ActionReportXmlProvider() {
         super(ActionReporter.class, MediaType.APPLICATION_XML_TYPE);
     }
@@ -46,7 +46,7 @@ public class ActionReportXmlProvider extends BaseProvider<ActionReporter> {
         XmlObject result = processReport(ar);
         return result.toString(getFormattingIndentLevel());
     }
-    
+
     @Override
     protected boolean isGivenTypeWritable(Class<?> type, Type genericType) {
         return desiredType.isAssignableFrom(type);
@@ -54,7 +54,7 @@ public class ActionReportXmlProvider extends BaseProvider<ActionReporter> {
 
     protected XmlObject processReport(ActionReporter ar) {
         XmlMap result = new XmlMap("map");
-        result.put("message", (ar instanceof RestActionReporter) ? ((RestActionReporter)ar).getCombinedMessage() : ar.getMessage());
+        result.put("message", (ar instanceof RestActionReporter) ? ((RestActionReporter) ar).getCombinedMessage() : ar.getMessage());
         result.put("command", ar.getActionDescription());
         result.put("exit_code", ar.getActionExitCode().toString());
 
@@ -74,7 +74,7 @@ public class ActionReportXmlProvider extends BaseProvider<ActionReporter> {
         }
 
         List<ActionReporter> subReports = ar.getSubActionsReport();
-       if ((subReports != null) && (!subReports.isEmpty())) {
+        if ((subReports != null) && (!subReports.isEmpty())) {
             result.put("subReports", processSubReports(subReports));
         }
 
@@ -126,11 +126,11 @@ public class ActionReportXmlProvider extends BaseProvider<ActionReporter> {
         if (object == null) {
             result = "";
         } else if (object instanceof Collection) {
-            result = getXml((Collection)object);
+            result = getXml((Collection) object);
         } else if (object instanceof Map) {
-            result = getXml((Map)object);
+            result = getXml((Map) object);
         } else if (object instanceof Number) {
-            result = new XmlObject("number", (Number)object);
+            result = new XmlObject("number", (Number) object);
         } else if (object instanceof String) {
             result = object;
         } else {
@@ -149,7 +149,7 @@ public class ActionReportXmlProvider extends BaseProvider<ActionReporter> {
             if (!(obj instanceof XmlObject)) {
                 obj = new XmlObject(obj.getClass().getSimpleName(), obj);
             }
-            result.put((XmlObject)obj);
+            result.put((XmlObject) obj);
         }
 
         return result;
@@ -158,7 +158,7 @@ public class ActionReportXmlProvider extends BaseProvider<ActionReporter> {
     protected XmlMap getXml(Map map) {
         XmlMap result = new XmlMap("map");
 
-        for (Map.Entry entry : (Set<Map.Entry>)map.entrySet()) {
+        for (Map.Entry entry : (Set<Map.Entry>) map.entrySet()) {
             result.put(entry.getKey().toString(), getXmlObject(entry.getValue()));
         }
 

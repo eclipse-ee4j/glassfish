@@ -23,24 +23,19 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotation that qualifies a configuration element that can only exist
- * as a singleton in the configuration tree.
+ * Annotation that qualifies a configuration element that can only exist as a singleton in the configuration tree.
  *
- * When configuration elements are added to their parents through a
- * subclassing pattern, it can be difficult for the system to determine if this
- * element can exist as a singleton or a collection.
+ * When configuration elements are added to their parents through a subclassing pattern, it can be difficult for the
+ * system to determine if this element can exist as a singleton or a collection.
  *
- * For instance, when the parent contains :
- * <code>
- * @Element("*")
+ * For instance, when the parent contains : <code>
+ * &#64;Element("*")
  * List<Extension> getExtensions();
  * </code>
  *
- * A subclass of Extension can have a single or multiple instances stored
- * in the extensions list. Adding this annotation will qualify that only
- * one instance of the annotated configuration can be found in that
- * collection. Note that the collection can contain other instances of other
- * subclasses of Extension.
+ * A subclass of Extension can have a single or multiple instances stored in the extensions list. Adding this annotation
+ * will qualify that only one instance of the annotated configuration can be found in that collection. Note that the
+ * collection can contain other instances of other subclasses of Extension.
  *
  * @author Jerome Dochez
  */

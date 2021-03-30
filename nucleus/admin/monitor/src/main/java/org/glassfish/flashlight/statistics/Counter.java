@@ -28,10 +28,11 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * TBD Implement Java EE Statistics
+ * 
  * @author Harpreet Singh
  */
-@Contract 
-public interface Counter extends TreeNode, CountStatistic{
+@Contract
+public interface Counter extends TreeNode, CountStatistic {
 
     public void decrement();
 
@@ -42,6 +43,6 @@ public interface Counter extends TreeNode, CountStatistic{
     public void setCount(long count);
 
     public void setReset(boolean reset);
-    
+
     public void increment(long delta);
 }

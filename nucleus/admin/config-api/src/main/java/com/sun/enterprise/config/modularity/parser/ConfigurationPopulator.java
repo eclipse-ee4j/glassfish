@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * populate the a DomDocument from the given configuration snippet file containing a config bean configuration.
  *

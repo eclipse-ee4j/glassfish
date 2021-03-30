@@ -56,17 +56,13 @@ final public class JvmOptionsHelper {
     }
 
     /**
-     * Adds the options to its current set. Omits options that already exist.
-     * Note :- This method depends on the exact String comparision of the
-     * options. Hence an option "a=b c=d" will be added even if individual
-     * options already exist.
+     * Adds the options to its current set. Omits options that already exist. Note :- This method depends on the exact
+     * String comparision of the options. Hence an option "a=b c=d" will be added even if individual options already exist.
      *
      * @param options
-     * @return Returns an array of options that <bold>could not</bold> be added.
-     * The array will be atleast of 0 length. An array of length > 0 indicates
-     * that some options haven't been added successfully.
-     * @throws InvalidJvmOptionException If any option is invalid. For example,
-     * an option that does not start with '-'.
+     * @return Returns an array of options that <bold>could not</bold> be added. The array will be atleast of 0 length. An
+     * array of length > 0 indicates that some options haven't been added successfully.
+     * @throws InvalidJvmOptionException If any option is invalid. For example, an option that does not start with '-'.
      * @throws IllegalArgumentException If options param is null.
      */
     public String[] addJvmOptions(String[] options) throws InvalidJvmOptionException {
@@ -102,16 +98,15 @@ final public class JvmOptionsHelper {
      * Deletes the options from its current set.
      *
      * @param options
-     * @return Returns an array of options that <bold>could not</bold> be
-     * deleted. The array will be atleast of 0 length. An array of length > 0
-     * indicates that some options haven't been deleted successfully.
+     * @return Returns an array of options that <bold>could not</bold> be deleted. The array will be atleast of 0 length. An
+     * array of length > 0 indicates that some options haven't been deleted successfully.
      * @throws IllegalArgumentException If options param is null.
      */
     public String[] deleteJvmOptions(String[] options) {
         if (null == options) {
             throw new IllegalArgumentException();
         }
-        
+
         final Set donotExist = new HashSet();
         for (int i = 0; i < options.length; i++) {
             if (!head.deleteJvmOption(options[i])) {
@@ -166,50 +161,47 @@ final public class JvmOptionsHelper {
 }
 
 /**
- * Represents individual handlers in the chain of responsibility. Executes the
- * methods such as hasNext(), deleteJvmOption(), hasOption() on its options set
- * and then invokes the next in the chain.
+ * Represents individual handlers in the chain of responsibility. Executes the methods such as hasNext(),
+ * deleteJvmOption(), hasOption() on its options set and then invokes the next in the chain.
  */
 class JvmOptionsElement {
 
-    private static final StringManager strMgr =
-            StringManager.getManager(JvmOptionsElement.class);
+    private static final StringManager strMgr = StringManager.getManager(JvmOptionsElement.class);
     /**
      * Used to indicate the last element in the chain.
      */
-    private static final JvmOptionsElement DEFAULT =
-            new JvmOptionsElement() {
+    private static final JvmOptionsElement DEFAULT = new JvmOptionsElement() {
 
-                @Override
-                boolean hasOption(String option) {
-                    return false;
-                }
+        @Override
+        boolean hasOption(String option) {
+            return false;
+        }
 
-                @Override
-                boolean deleteJvmOption(String option) {
-                    return false;
-                }
+        @Override
+        boolean deleteJvmOption(String option) {
+            return false;
+        }
 
-                @Override
-                String getJvmOptionsAsStoredInXml() {
-                    return "";
-                }
+        @Override
+        String getJvmOptionsAsStoredInXml() {
+            return "";
+        }
 
-                @Override
-                ArrayList getJvmOptions() {
-                    return new ArrayList();
-                }
+        @Override
+        ArrayList getJvmOptions() {
+            return new ArrayList();
+        }
 
-                @Override
-                boolean hasNext() {
-                    return false;
-                }
+        @Override
+        boolean hasNext() {
+            return false;
+        }
 
-                @Override
-                void setNext(JvmOptionsElement element) {
-                    throw new UnsupportedOperationException();
-                }
-            };
+        @Override
+        void setNext(JvmOptionsElement element) {
+            throw new UnsupportedOperationException();
+        }
+    };
     private final Set jvmOptions = new LinkedHashSet();
     private JvmOptionsElement next;
 
@@ -226,10 +218,8 @@ class JvmOptionsElement {
     /**
      * Constructs a new JvmOptionsElement object.
      *
-     * @param options Tokenizes the options and stores them as a Set. Spaces are
-     * used as delimiter.
-     * @throws InvalidJvmOptionException If any option is invalid. For example,
-     * an option that does not start with '-'.
+     * @param options Tokenizes the options and stores them as a Set. Spaces are used as delimiter.
+     * @throws InvalidJvmOptionException If any option is invalid. For example, an option that does not start with '-'.
      * @throws IllegalArgumentException If options is null.
      */
     JvmOptionsElement(String options) throws InvalidJvmOptionException {
@@ -284,12 +274,10 @@ class JvmOptionsElement {
     }
 
     /**
-     * Deletes the option from its set of jvm options and then invokes the next
-     * in the chain.
+     * Deletes the option from its set of jvm options and then invokes the next in the chain.
      *
      * @param option
-     * @return Returns true if the option exists in at least one element in the
-     * chain.
+     * @return Returns true if the option exists in at least one element in the chain.
      */
     boolean deleteJvmOption(String option) {
         boolean b1 = jvmOptions.remove(option);
@@ -330,6 +318,7 @@ class JvmOptionsElement {
         }
         return arr;
     }
+
     static final char SEP = ' ';
 
     @Override
@@ -357,16 +346,12 @@ class JvmOptionsElement {
         return isEqual;
     }
 
-    private void checkValidOption(String option)
-            throws InvalidJvmOptionException {
+    private void checkValidOption(String option) throws InvalidJvmOptionException {
         if ((null == option) || option.equals("")) {
-            throw new InvalidJvmOptionException(strMgr.getString(
-                    "jvmOptions.invalid_option", option));
+            throw new InvalidJvmOptionException(strMgr.getString("jvmOptions.invalid_option", option));
         }
-        if (!option.startsWith("-")
-                && !(option.startsWith("\"-") && option.endsWith("\""))) {
-            throw new InvalidJvmOptionException(strMgr.getString(
-                    "jvmOptions.no_dash", option));
+        if (!option.startsWith("-") && !(option.startsWith("\"-") && option.endsWith("\""))) {
+            throw new InvalidJvmOptionException(strMgr.getString("jvmOptions.no_dash", option));
         }
         //4923404
         checkQuotes(option);
@@ -379,14 +364,12 @@ class JvmOptionsElement {
         int numQuotes = 0;
         int index = 0;
 
-        while (index < length
-                && (index = option.indexOf('\"', index)) != -1) {
+        while (index < length && (index = option.indexOf('\"', index)) != -1) {
             numQuotes++;
             index++;
         }
         if ((numQuotes % 2) != 0) {
-            throw new InvalidJvmOptionException(strMgr.getString(
-                    "jvmOptions.incorrect_quotes", option));
+            throw new InvalidJvmOptionException(strMgr.getString("jvmOptions.incorrect_quotes", option));
         }
     }
     //4923404

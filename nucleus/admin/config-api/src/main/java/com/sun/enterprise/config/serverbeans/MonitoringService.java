@@ -37,7 +37,6 @@ import org.glassfish.quality.ToDo;
 import jakarta.validation.constraints.NotNull;
 import org.glassfish.api.admin.config.ConfigExtension;
 
-
 /* @XmlType(name = "", propOrder = {
    "moduleMonitoringLevels",
    "property"
@@ -49,8 +48,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     /**
      * Gets the value of the moduleMonitoringLevels property.
      *
-     * @return possible object is
-     *         {@link ModuleMonitoringLevels }
+     * @return possible object is {@link ModuleMonitoringLevels }
      */
     @Element
     @NotNull
@@ -59,27 +57,25 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     /**
      * Sets the value of the moduleMonitoringLevels property.
      *
-     * @param value allowed object is
-     *              {@link ModuleMonitoringLevels }
+     * @param value allowed object is {@link ModuleMonitoringLevels }
      */
     public void setModuleMonitoringLevels(ModuleMonitoringLevels value) throws PropertyVetoException;
 
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
     /**
-     * Gets the value of the mbean-enabled attribute.
-     * This boolean attribute determines whether monitoring mbeans are enabled
-     * or disabled. When disabled, all montioring activity will be disabled
+     * Gets the value of the mbean-enabled attribute. This boolean attribute determines whether monitoring mbeans are
+     * enabled or disabled. When disabled, all montioring activity will be disabled
      *
      * @return present monitoring activity status
      */
-    @Attribute(defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     public String getMbeanEnabled();
 
     /**
@@ -98,13 +94,12 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     // one type of veneer viz the mbean-layer
 
     /**
-     * Gets the value of the monitoring-enabled attribute.
-     * This boolean attribute determines whether monitoring mebans are enabled
-     * or disabled. When disabled, all montioring activity will be disabled
+     * Gets the value of the monitoring-enabled attribute. This boolean attribute determines whether monitoring mebans are
+     * enabled or disabled. When disabled, all montioring activity will be disabled
      *
      * @return present monitoring activity status
      */
-    @Attribute(defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     public String getMonitoringEnabled();
 
     /**
@@ -119,7 +114,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
      *
      * @return present dtrace status
      */
-    @Attribute(defaultValue="false",dataType=Boolean.class)
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
     public String getDtraceEnabled();
 
     /**
@@ -130,8 +125,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     public void setDtraceEnabled(String value) throws PropertyVetoException;
 
     /**
-     * Get the monitoring configuration for containers that used the default
-     * ContainerMonitoring.
+     * Get the monitoring configuration for containers that used the default ContainerMonitoring.
      *
      * @return list of container monitoring configurations (default)
      */
@@ -139,18 +133,16 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     List<ContainerMonitoring> getContainerMonitoring();
 
     /**
-     * Get the monitoring configuration for other types of containers that used
-     * custom monitoring configuration.
+     * Get the monitoring configuration for other types of containers that used custom monitoring configuration.
      *
-     * @return  list of container monitoring configurations
+     * @return list of container monitoring configurations
      */
     @Element("*")
     List<MonitoringItem> getMonitoringItems();
 
     /**
-     * Return the monitoring configuration for a container by the provided name,
-     * assuming the named container used the default ContainerMonitoring to
-     * express its monitoring configuration.
+     * Return the monitoring configuration for a container by the provided name, assuming the named container used the
+     * default ContainerMonitoring to express its monitoring configuration.
      *
      * @param name name of the container to return the configuration for
      * @return the container configuration or null if not found
@@ -163,7 +155,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
 
     @DuckTyped
     void setMonitoringLevel(String name, String level);
-    
+
     @DuckTyped
     boolean isAnyModuleOn();
 
@@ -178,7 +170,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
         }
 
         private final static List<String> getMethods = new ArrayList<String>();
-        
+
         private static void populateGetMethods() {
             // We need to use reflection to compare the given name with the
             // getters of ModuleMonitoringLevel.
@@ -208,7 +200,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
             // then container-monitoring.
 
             // module-monitoring-levels           
-            populateGetMethods();      
+            populateGetMethods();
 
             // strip - part from name
             String rName = name.replaceAll("-", "");
@@ -218,8 +210,8 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
                 String methodName = itr.next();
                 if (rName.equalsIgnoreCase(methodName.substring(3))) {
                     try {
-                        Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[])null);
-                        level = (String) mthd.invoke(ms.getModuleMonitoringLevels(), (Object[])null);
+                        Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[]) null);
+                        level = (String) mthd.invoke(ms.getModuleMonitoringLevels(), (Object[]) null);
                     } catch (NoSuchMethodException nsme) {
                         Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
                     } catch (IllegalAccessException ile) {
@@ -243,15 +235,15 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
 
             return null;
         }
-        
+
         public static boolean isAnyModuleOn(MonitoringService ms) {
             boolean rv = false;
             populateGetMethods();
             ModuleMonitoringLevels mml = ms.getModuleMonitoringLevels();
             for (String methodName : getMethods) {
                 try {
-                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[])null);
-                    String level = (String) mthd.invoke(mml, (Object[])null);
+                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[]) null);
+                    String level = (String) mthd.invoke(mml, (Object[]) null);
                     rv = rv || !"OFF".equals(level);
                 } catch (NoSuchMethodException nsme) {
                     Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
@@ -259,7 +251,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
                     Logger.getAnonymousLogger().log(Level.WARNING, ile.getMessage(), ile);
                 } catch (java.lang.reflect.InvocationTargetException ite) {
                     Logger.getAnonymousLogger().log(Level.WARNING, ite.getMessage(), ite);
-                }                
+                }
             }
             for (ContainerMonitoring cm : ms.getContainerMonitoring()) {
                 rv = rv || !"OFF".equals(cm.getLevel());
@@ -269,7 +261,8 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
 
         private final static List<String> setMethods = new ArrayList<String>();
 
-        public static boolean setMonitoringLevel(MonitoringService ms, String name, String level) throws PropertyVetoException, TransactionFailure {
+        public static boolean setMonitoringLevel(MonitoringService ms, String name, String level)
+                throws PropertyVetoException, TransactionFailure {
 
             // It is possible that the given module name might exist as
             // attribute of module-monitoring-levels or
@@ -283,19 +276,19 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
             // getters of ModuleMonitoringLevel.
             // For performance, the method names are cached when this is run first time.
 
-          boolean isLevelUpdated = false;
+            boolean isLevelUpdated = false;
 
-          synchronized (setMethods) {
-            if (setMethods.isEmpty()) {
-                for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
-                    // If it is a setter store it in the list
-                    String str = method.getName();
-                    if (str.startsWith("set")) {
-                        setMethods.add(str);
+            synchronized (setMethods) {
+                if (setMethods.isEmpty()) {
+                    for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
+                        // If it is a setter store it in the list
+                        String str = method.getName();
+                        if (str.startsWith("set")) {
+                            setMethods.add(str);
+                        }
                     }
                 }
             }
-          }
 
             // strip - part from name
             String rName = name.replaceAll("-", "");
@@ -306,11 +299,11 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
                 String methodName = itr.next();
                 if (rName.equalsIgnoreCase(methodName.substring(3))) {
                     try {
-                        Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, new Class[] {java.lang.String.class});
+                        Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, new Class[] { java.lang.String.class });
                         Transaction tx = Transaction.getTransaction(ms);
                         if (tx == null) {
-                            throw new TransactionFailure(localStrings.getLocalString(
-                            "noTransaction", "Internal Error - Cannot obtain transaction object"));
+                            throw new TransactionFailure(
+                                    localStrings.getLocalString("noTransaction", "Internal Error - Cannot obtain transaction object"));
                         }
                         ModuleMonitoringLevels mml = tx.enroll(ms.getModuleMonitoringLevels());
                         mthd.invoke(mml, level);
@@ -326,7 +319,6 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
                 }
             }
 
-
             if (!isLevelUpdated) {
                 // container-monitoring
                 for (ContainerMonitoring cm : ms.getContainerMonitoring()) {
@@ -341,6 +333,5 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
         }
     }
 
-    final LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(MonitoringService.class);
+    final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MonitoringService.class);
 }

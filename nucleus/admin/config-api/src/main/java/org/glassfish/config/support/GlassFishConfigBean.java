@@ -29,27 +29,28 @@ import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transformer;
 
 /**
- * Translated view of a configured objects where values can be represented
- * with a @{xx.yy.zz} name to be translated using a property value translator.
+ * Translated view of a configured objects where values can be represented with a @{xx.yy.zz} name to be translated
+ * using a property value translator.
  *
  * @author Jerome Dochez
  */
 public final class GlassFishConfigBean extends ConfigBean {
 
-     transient TranslatedConfigView defaultView;
+    transient TranslatedConfigView defaultView;
 
     /**
      * Returns the translated view of a configuration object
+     * 
      * @param s the config-api interface implementation
      * @return the new interface implementation providing the raw view
      */
-    public static <T  extends ConfigBeanProxy> T getRawView(T s) {
+    public static <T extends ConfigBeanProxy> T getRawView(T s) {
 
         Transformer rawTransformer = new Transformer() {
             @SuppressWarnings("unchecked")
-            public <T  extends ConfigBeanProxy> T transform(T source) {
-                    final ConfigView handler = (ConfigView) Proxy.getInvocationHandler(source);
-                    return (T) handler.getMasterView().getProxy(handler.getMasterView().getProxyType());
+            public <T extends ConfigBeanProxy> T transform(T source) {
+                final ConfigView handler = (ConfigView) Proxy.getInvocationHandler(source);
+                return (T) handler.getMasterView().getProxy(handler.getMasterView().getProxyType());
 
             }
         };
@@ -57,8 +58,9 @@ public final class GlassFishConfigBean extends ConfigBean {
         return rawTransformer.transform(s);
     }
 
-    public GlassFishConfigBean(ServiceLocator habitat, DomDocument document, GlassFishConfigBean parent, ConfigModel model, XMLStreamReader in) {
-        super(habitat, document, parent, model, in);                
+    public GlassFishConfigBean(ServiceLocator habitat, DomDocument document, GlassFishConfigBean parent, ConfigModel model,
+            XMLStreamReader in) {
+        super(habitat, document, parent, model, in);
     }
 
     public GlassFishConfigBean(Dom source, Dom parent) {
@@ -68,7 +70,7 @@ public final class GlassFishConfigBean extends ConfigBean {
     @Override
     public <T extends ConfigBeanProxy> T createProxy(Class<T> proxyType) {
         TranslatedConfigView.setHabitat(getServiceLocator());
-        if (defaultView==null) {
+        if (defaultView == null) {
             defaultView = new TranslatedConfigView(this);
         }
         return defaultView.getProxy(proxyType);
@@ -84,7 +86,6 @@ public final class GlassFishConfigBean extends ConfigBean {
         return (T) new GlassFishConfigBean(this, parent);
     }
 
-
     @Override
     public void initializationCompleted() {
         super.initializationCompleted();
@@ -93,18 +94,9 @@ public final class GlassFishConfigBean extends ConfigBean {
             listener.onEntered(this);
         }
     }
-    
+
     public String toString() {
         //final Set<String> attrNames = getAttributeNames();
         return "GlassFishConfigBean." + getProxyType().getName();
     }
 }
-
-
-
-
-
-
-
-
-

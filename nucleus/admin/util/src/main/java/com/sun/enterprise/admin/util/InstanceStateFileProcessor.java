@@ -32,16 +32,15 @@ import java.util.HashMap;
 import org.xml.sax.SAXException;
 
 /**
- * This parses the instance state file and sets up the InstanceState singleton object for use by
- * various parts of the system
+ * This parses the instance state file and sets up the InstanceState singleton object for use by various parts of the
+ * system
  */
 class InstanceStateFileProcessor {
     private Document xmlDoc = null;
     private File stateFile;
     private HashMap<String, InstanceState> instanceStates;
 
-    public InstanceStateFileProcessor(HashMap<String, InstanceState> st, File xmlFile)
-            throws IOException {
+    public InstanceStateFileProcessor(HashMap<String, InstanceState> st, File xmlFile) throws IOException {
         instanceStates = st;
         stateFile = xmlFile;
         parse();
@@ -61,8 +60,7 @@ class InstanceStateFileProcessor {
         }
     }
 
-    static public InstanceStateFileProcessor createNew(HashMap<String, InstanceState> st, File xmlFileObject)
-            throws IOException {
+    static public InstanceStateFileProcessor createNew(HashMap<String, InstanceState> st, File xmlFileObject) throws IOException {
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(xmlFileObject));
@@ -74,8 +72,7 @@ class InstanceStateFileProcessor {
             writer.write("<gms-enabled>false</gms-enabled>");
             writer.newLine();
             for (String s : st.keySet()) {
-                writer.write("<instance name=\"" + s + "\" state=\""
-                        + InstanceState.StateType.NO_RESPONSE.getDescription() + "\" />");
+                writer.write("<instance name=\"" + s + "\" state=\"" + InstanceState.StateType.NO_RESPONSE.getDescription() + "\" />");
                 writer.newLine();
             }
             writer.write("</instance-state>");
@@ -104,10 +101,10 @@ class InstanceStateFileProcessor {
 
     private void parseInstanceStateFile() {
         NodeList list = xmlDoc.getElementsByTagName("instance");
-        if(list==null) {
+        if (list == null) {
             return;
         }
-        for(int i=0; i<list.getLength(); i++) {
+        for (int i = 0; i < list.getLength(); i++) {
             parseInstanceElement(list.item(i));
         }
     }
@@ -115,24 +112,24 @@ class InstanceStateFileProcessor {
     private void parseInstanceElement(Node n) {
         String name = null, state = null;
         NamedNodeMap attrs = n.getAttributes();
-        if(attrs != null) {
+        if (attrs != null) {
             name = getNodeValue(attrs.getNamedItem("name"));
             state = getNodeValue(attrs.getNamedItem("state"));
         }
-        if(name == null)
+        if (name == null)
             return;
         InstanceState newInstanceState = null;
-        if(state == null)
+        if (state == null)
             newInstanceState = new InstanceState(InstanceState.StateType.NO_RESPONSE);
         else
             newInstanceState = new InstanceState(InstanceState.StateType.makeStateType(state));
         NodeList list = n.getChildNodes();
-        if(list == null)
+        if (list == null)
             return;
-        for(int i=0; i<list.getLength(); i++) {
+        for (int i = 0; i < list.getLength(); i++) {
             //TODO : Why we need this ? check
             String t = list.item(i).getTextContent();
-            if("\n".equals(t))
+            if ("\n".equals(t))
                 continue;
             newInstanceState.addFailedCommands(t);
         }
@@ -140,7 +137,7 @@ class InstanceStateFileProcessor {
     }
 
     private String getNodeValue(Node x) {
-        return (x==null) ? null : x.getNodeValue();
+        return (x == null) ? null : x.getNodeValue();
     }
 
     private void writeDoc() throws Exception {
@@ -156,7 +153,8 @@ class InstanceStateFileProcessor {
             DOMSource domSource = new DOMSource(this.xmlDoc);
             transformer.transform(domSource, new StreamResult(outputStream));
         } finally {
-            if (outputStream != null) outputStream.close();
+            if (outputStream != null)
+                outputStream.close();
         }
     }
 
@@ -172,10 +170,10 @@ class InstanceStateFileProcessor {
 
     private Node findNode(String instanceName) {
         NodeList list = xmlDoc.getElementsByTagName("instance");
-        if (list==null) {
+        if (list == null) {
             return null;
         }
-        for (int i=0; i<list.getLength(); i++) {
+        for (int i = 0; i < list.getLength(); i++) {
             Node instance = list.item(i);
             NamedNodeMap attrs = instance.getAttributes();
             if (attrs == null)
@@ -204,7 +202,7 @@ class InstanceStateFileProcessor {
         if (instance == null)
             return;
         NodeList clist = instance.getChildNodes();
-        for(int j=0; j<clist.getLength(); j++) {
+        for (int j = 0; j < clist.getLength(); j++) {
             instance.removeChild(clist.item(j));
         }
         writeDoc();
@@ -215,7 +213,7 @@ class InstanceStateFileProcessor {
         if (instance == null)
             return;
         NodeList clist = instance.getChildNodes();
-        for(int j=0; j<clist.getLength(); j++) {
+        for (int j = 0; j < clist.getLength(); j++) {
             instance.removeChild(clist.item(j));
         }
         Node parent = instance.getParentNode();

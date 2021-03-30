@@ -23,11 +23,9 @@ import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * This class implements the operation of a radix tree. A radix tree
- * is a specialized set data structure based on the tree/trie that is
- * used to store a set of strings. The key for nodes of a radix tree
- * are labeled with one or more characters rather than only a single
- * characters.
+ * This class implements the operation of a radix tree. A radix tree is a specialized set data structure based on the
+ * tree/trie that is used to store a set of strings. The key for nodes of a radix tree are labeled with one or more
+ * characters rather than only a single characters.
  */
 class RadixTree {
 
@@ -47,21 +45,16 @@ class RadixTree {
     /**
      * Insert a new entry in tree with the given key, value pair.
      * <p>
-     * <b>NOTE:</b> 
-     *   <li>
-     *     If user tries to insert the duplicate key than the
-     *     value of that key will be updated.
-     *   </li>
-     *   <li> 
-     *     Insertion of node having empty or null key is not allowed.
-     *   </li>
+     * <b>NOTE:</b>
+     * <li>If user tries to insert the duplicate key than the value of that key will be updated.</li>
+     * <li>Insertion of node having empty or null key is not allowed.</li>
      * </p>
      * <br/>
+     * 
      * @param key The input key.
-     * @param value The value that need to be stored corresponding
-     *  to the given key.
+     * @param value The value that need to be stored corresponding to the given key.
      * @return <code>true</code> if key inserted successfully.<br/>
-     *         <code>false</code> if insertion failed.
+     * <code>false</code> if insertion failed.
      */
     public void insert(String key, String value) {
         if (key == null || key.isEmpty()) {
@@ -72,12 +65,11 @@ class RadixTree {
         RadixTreeNode node = _rootNode;
         RadixTreeNode newNode = null;
         int keyLength = inputChars.length;
-        OUTER_LOOP : while (noOfMatchedChars < keyLength) {
+        OUTER_LOOP: while (noOfMatchedChars < keyLength) {
             String nodeKey = node.getKey();
             int i = 0;
-            int maxLoop = nodeKey.length() > (keyLength - noOfMatchedChars) ? keyLength - noOfMatchedChars :
-                nodeKey.length();
-            for (; i < maxLoop ; i++) {
+            int maxLoop = nodeKey.length() > (keyLength - noOfMatchedChars) ? keyLength - noOfMatchedChars : nodeKey.length();
+            for (; i < maxLoop; i++) {
                 if (nodeKey.charAt(i) != inputChars[noOfMatchedChars]) {
                     // e.g new key/value : successive/successive
                     // before, 
@@ -121,7 +113,7 @@ class RadixTree {
 
             if (noOfMatchedChars == keyLength) {
                 if (node.getValue() != null && !node.getValue().isEmpty()) {
-                    _logger.log(Level.INFO, SLogger.CHANGE_IN_VALUE, new Object[] {node.getValue(), value});
+                    _logger.log(Level.INFO, SLogger.CHANGE_IN_VALUE, new Object[] { node.getValue(), value });
                 }
                 node.setValue(value);
                 break;
@@ -134,7 +126,7 @@ class RadixTree {
                 break;
             }
             node = matchedNode;
-        } 
+        }
     }
 
     /**

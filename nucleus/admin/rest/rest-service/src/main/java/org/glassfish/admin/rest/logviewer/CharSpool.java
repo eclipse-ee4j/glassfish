@@ -34,9 +34,9 @@ public /*for now, until Hudson migration completes*/ final class CharSpool exten
 
     @Override
     public void write(char cbuf[], int off, int len) {
-        while(len>0) {
-            int sz = Math.min(last.length-pos,len);
-            System.arraycopy(cbuf,off,last,pos,sz);
+        while (len > 0) {
+            int sz = Math.min(last.length - pos, len);
+            System.arraycopy(cbuf, off, last, pos, sz);
             len -= sz;
             off += sz;
             pos += sz;
@@ -45,10 +45,10 @@ public /*for now, until Hudson migration completes*/ final class CharSpool exten
     }
 
     private void renew() {
-        if(pos<last.length)
+        if (pos < last.length)
             return;
 
-        if(buf==null)
+        if (buf == null)
             buf = new LinkedList<char[]>();
         buf.add(last);
         last = new char[1024];
@@ -58,7 +58,7 @@ public /*for now, until Hudson migration completes*/ final class CharSpool exten
     @Override
     public void write(int c) {
         renew();
-        last[pos++] = (char)c;
+        last[pos++] = (char) c;
     }
 
     @Override
@@ -72,11 +72,11 @@ public /*for now, until Hudson migration completes*/ final class CharSpool exten
     }
 
     public void writeTo(Writer w) throws IOException {
-        if(buf!=null) {
+        if (buf != null) {
             for (char[] cb : buf) {
                 w.write(cb);
             }
         }
-        w.write(last,0,pos);
+        w.write(last, 0, pos);
     }
 }

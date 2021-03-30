@@ -18,41 +18,44 @@ package com.sun.enterprise.admin.util.cache;
 
 import java.util.Date;
 
-/** Simple cache for administration framework.
+/**
+ * Simple cache for administration framework.
  * 
  * @author mmares
  */
 public interface AdminCache {
-    
-    /** Retrieve data from cache.
+
+    /**
+     * Retrieve data from cache.
      * 
      * @param key in the cache
-     * @param clazz Cache data will be converted to requested type using 
-     *              appropriate {@code AdminCacheObjectProvider}
+     * @param clazz Cache data will be converted to requested type using appropriate {@code AdminCacheObjectProvider}
      * @return Cached data converted to requested type or {@code null} if not cached
      */
     public <A> A get(String key, Class<A> clazz);
-    
-    /** Puts data to cache.
+
+    /**
+     * Puts data to cache.
      * 
      * @param key in the cache
-     * @param data Cached data will be converted to raw bytes using 
-     *             appropriate {@code AdminCacheObjectProvider}
+     * @param data Cached data will be converted to raw bytes using appropriate {@code AdminCacheObjectProvider}
      * @return Cached data converted to requested type or {@code null} if not cached
      */
     public void put(String key, Object data);
-    
-    /** Checked if content is in the cache.
+
+    /**
+     * Checked if content is in the cache.
      * 
      * @param key in the cache
      */
     public boolean contains(String key);
-    
-    /** Date when was cached data last updated.
+
+    /**
+     * Date when was cached data last updated.
      * 
      * @param key in the cache
      * @return {@code Date} of last update or null if does not exist in cache
      */
     public Date lastUpdated(String key);
-    
+
 }

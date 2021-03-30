@@ -29,12 +29,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * List command annotation.
  *
- * Follow the same pattern as {@link Create} or {@link Delete} annotations
- * to generate a command implementation to list elements.
+ * Follow the same pattern as {@link Create} or {@link Delete} annotations to generate a command implementation to list
+ * elements.
  *
- * Types of elements are listed are infered from the annotated method and
- * parent instance to get the list of elements from must be returned by
- * the resolver.
+ * Types of elements are listed are infered from the annotated method and parent instance to get the list of elements
+ * from must be returned by the resolver.
  *
  * See {@link Create} for initialization information
  *
@@ -42,8 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Retention(RUNTIME)
 @Target(ElementType.METHOD)
-@GenerateServiceFromMethod(implementation="org.glassfish.config.support.GenericListCommand",
-                           advertisedContracts="org.glassfish.api.admin.AdminCommand")
+@GenerateServiceFromMethod(implementation = "org.glassfish.config.support.GenericListCommand", advertisedContracts = "org.glassfish.api.admin.AdminCommand")
 public @interface Listing {
 
     /**
@@ -62,10 +60,9 @@ public @interface Listing {
     Class<? extends CrudResolver> resolver() default CrudResolver.DefaultResolver.class;
 
     /**
-     * Returns the i18n key that will be used to look up a localized string in the annotated
-     * type module.
+     * Returns the i18n key that will be used to look up a localized string in the annotated type module.
      *
      * @return the key to look up localized description for the command.
      */
-    I18n i18n();    
+    I18n i18n();
 }

@@ -21,18 +21,17 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Contract for handling the SSL related configuration.
+ * 
  * @author Jerome Dochez
  */
 @Contract
 public interface SslConfigHandler {
 
     /**
-     * creates the SSL configuration for a particular create-ssl command
-     * invocation.
+     * creates the SSL configuration for a particular create-ssl command invocation.
      *
      * @param command the create-ssl command instance
-     * @param report where to place the result of the configuration
-     * population.
+     * @param report where to place the result of the configuration population.
      */
     void create(CreateSsl command, ActionReport report);
 

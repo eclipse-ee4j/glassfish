@@ -36,8 +36,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is the abstract class which will be used by the config beans
- * {@link Cluster} and {@link Server} classes to copy the default-configs
+ * This is the abstract class which will be used by the config beans {@link Cluster} and {@link Server} classes to copy
+ * the default-configs
  * 
  */
 public abstract class CopyConfig implements AdminCommand {
@@ -53,11 +53,10 @@ public abstract class CopyConfig implements AdminCommand {
     ServerEnvironment env;
     @Inject
     ServerEnvironmentImpl envImpl;
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(CopyConfig.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CopyConfig.class);
 
-    public Config copyConfig(Configs configs, Config config, String destConfigName, Logger logger) throws PropertyVetoException,
-            TransactionFailure {
+    public Config copyConfig(Configs configs, Config config, String destConfigName, Logger logger)
+            throws PropertyVetoException, TransactionFailure {
         final Config destCopy = (Config) config.deepCopy(configs);
         if (systemproperties != null) {
             final Properties properties = GenericCrudCommand.convertStringToProperties(systemproperties, ':');
@@ -87,26 +86,21 @@ public abstract class CopyConfig implements AdminCommand {
         String srcConfig = "";
         srcConfig = config.getName();
 
-        File configConfigDir = new File(env.getConfigDirPath(),
-                configName);
+        File configConfigDir = new File(env.getConfigDirPath(), configName);
         for (Config c : configs.getConfig()) {
             File existingConfigConfigDir = new File(env.getConfigDirPath(), c.getName());
             if (!c.getName().equals(configName) && configConfigDir.equals(existingConfigConfigDir)) {
-                throw new TransactionFailure(localStrings.getLocalString(
-                        "config.duplicate.dir",
-                        "Config {0} is trying to use the same directory as config {1}",
-                        configName, c.getName()));
+                throw new TransactionFailure(localStrings.getLocalString("config.duplicate.dir",
+                        "Config {0} is trying to use the same directory as config {1}", configName, c.getName()));
             }
         }
         try {
-            if (!(new File(configConfigDir, "docroot").mkdirs() &&
-                  new File(configConfigDir, "lib/ext").mkdirs())) {
-                throw new IOException(localStrings.getLocalString("config.mkdirs",
-                        "error creating config specific directories"));
+            if (!(new File(configConfigDir, "docroot").mkdirs() && new File(configConfigDir, "lib/ext").mkdirs())) {
+                throw new IOException(localStrings.getLocalString("config.mkdirs", "error creating config specific directories"));
             }
 
-            String srcConfigLoggingFile = env.getInstanceRoot().getAbsolutePath() + File.separator + "config" + File.separator
-                    + srcConfig + File.separator + ServerEnvironmentImpl.kLoggingPropertiesFileName;
+            String srcConfigLoggingFile = env.getInstanceRoot().getAbsolutePath() + File.separator + "config" + File.separator + srcConfig
+                    + File.separator + ServerEnvironmentImpl.kLoggingPropertiesFileName;
             File src = new File(srcConfigLoggingFile);
 
             if (!src.exists()) {

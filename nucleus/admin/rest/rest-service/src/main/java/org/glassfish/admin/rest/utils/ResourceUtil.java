@@ -86,8 +86,7 @@ import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 
 /**
- * Resource utilities class. Used by resource templates,
- * <code>TemplateListOfResource</code> and
+ * Resource utilities class. Used by resource templates, <code>TemplateListOfResource</code> and
  * <code>TemplateRestResource</code>
  *
  * @author Rajeshwar Patil
@@ -102,12 +101,11 @@ public class ResourceUtil {
     static final Pattern TOKENIZER;
 
     static {
-        String pattern = or(
-                split("x", "X"), // AbcDef -> Abc|Def
+        String pattern = or(split("x", "X"), // AbcDef -> Abc|Def
                 split("X", "Xx"), // USArmy -> US|Army
                 //split("\\D","\\d"), // SSL2 -> SSL|2
                 split("\\d", "\\D") // SSL2Connector -> SSL|2|Connector
-                );
+        );
         pattern = pattern.replace("x", "\\p{Lower}").replace("X", "\\p{Upper}");
         TOKENIZER = Pattern.compile(pattern);
     }
@@ -135,10 +133,9 @@ public class ResourceUtil {
     }
 
     /**
-     * Adjust the input parameters. In case of POST and DELETE methods, user can
-     * provide name, id or DEFAULT parameter for primary parameter(i.e the
-     * object to create or delete). This method is used to rename primary
-     * parameter name to DEFAULT irrespective of what user provides.
+     * Adjust the input parameters. In case of POST and DELETE methods, user can provide name, id or DEFAULT parameter for
+     * primary parameter(i.e the object to create or delete). This method is used to rename primary parameter name to
+     * DEFAULT irrespective of what user provides.
      */
     public static void adjustParameters(Map<String, String> data) {
         if (data != null) {
@@ -152,10 +149,9 @@ public class ResourceUtil {
     }
 
     /**
-     * Adjust the input parameters. In case of POST and DELETE methods, user can
-     * provide id or DEFAULT parameter for primary parameter(i.e the object to
-     * create or delete). This method is used to rename primary parameter name
-     * to DEFAULT irrespective of what user provides.
+     * Adjust the input parameters. In case of POST and DELETE methods, user can provide id or DEFAULT parameter for primary
+     * parameter(i.e the object to create or delete). This method is used to rename primary parameter name to DEFAULT
+     * irrespective of what user provides.
      */
     public static void defineDefaultParameters(Map<String, String> data) {
         if (data != null) {
@@ -166,8 +162,7 @@ public class ResourceUtil {
     }
 
     /**
-     * Returns the name of the command associated with this resource,if any, for
-     * the given operation.
+     * Returns the name of the command associated with this resource,if any, for the given operation.
      *
      * @param type the given resource operation
      * @return String the associated command name for the given operation.
@@ -197,33 +192,29 @@ public class ResourceUtil {
 
     /**
      * Executes the specified __asadmin command.
+     * 
      * @param commandName
      * @param parameters
      * @param subject
      * @return
      */
-    public static RestActionReporter runCommand(String commandName,
-                                                ParameterMap parameters,
-                                                Subject subject) {
+    public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject) {
         return runCommand(commandName, parameters, subject, false);
     }
 
     /**
      * Executes the specified __asadmin command.
+     * 
      * @param commandName
      * @param parameters
      * @param subject
      * @param managedJob
      * @return
      */
-    public static RestActionReporter runCommand(String commandName,
-                                                ParameterMap parameters,
-                                                Subject subject,
-                                                boolean managedJob) {
+    public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject, boolean managedJob) {
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();
-        final CommandInvocation commandInvocation =
-                cr.getCommandInvocation(commandName, ar, subject);
+        final CommandInvocation commandInvocation = cr.getCommandInvocation(commandName, ar, subject);
         if (managedJob) {
             commandInvocation.managedJob();
         }
@@ -241,9 +232,7 @@ public class ResourceUtil {
      * @param subject Subject
      * @return ActionReport object with command execute status details.
      */
-    public static RestActionReporter runCommand(String commandName,
-                                                Map<String, String> parameters,
-                                                Subject subject) {
+    public static RestActionReporter runCommand(String commandName, Map<String, String> parameters, Subject subject) {
         ParameterMap p = new ParameterMap();
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             p.set(entry.getKey(), entry.getValue());
@@ -252,28 +241,22 @@ public class ResourceUtil {
         return runCommand(commandName, p, subject);
     }
 
-    public static EventOutput runCommandWithSse(final String commandName,
-                                                final ParameterMap parameters,
-                                                final Subject subject,
-                                                final SseCommandHelper.ActionReportProcessor processor) {
+    public static EventOutput runCommandWithSse(final String commandName, final ParameterMap parameters, final Subject subject,
+            final SseCommandHelper.ActionReportProcessor processor) {
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         final RestActionReporter ar = new RestActionReporter();
-        final CommandInvocation commandInvocation =
-            cr.getCommandInvocation(commandName, ar, subject).
-            parameters(parameters);
-        return SseCommandHelper.invokeAsync(commandInvocation,
-                    new SseCommandHelper.ActionReportProcessor() {
-                            @Override
-                            public ActionReport process(ActionReport report, EventOutput ec) {
-                                addCommandLog(ar, commandName, parameters);
-                                if (processor != null) {
-                                    return processor.process(report, ec);
-                                }
-                                return ar;
-                            }
-                        });
+        final CommandInvocation commandInvocation = cr.getCommandInvocation(commandName, ar, subject).parameters(parameters);
+        return SseCommandHelper.invokeAsync(commandInvocation, new SseCommandHelper.ActionReportProcessor() {
+            @Override
+            public ActionReport process(ActionReport report, EventOutput ec) {
+                addCommandLog(ar, commandName, parameters);
+                if (processor != null) {
+                    return processor.process(report, ec);
+                }
+                return ar;
+            }
+        });
     }
-
 
     public static void addCommandLog(RestActionReporter ar, String commandName, ParameterMap parameters) {
         List<String> logs = (List<String>) ar.getExtraProperties().get("commandLog");
@@ -326,14 +309,12 @@ public class ResourceUtil {
      * Constructs and returns the resource method meta-data.
      *
      * @param command the command associated with the resource method
-     * @param commandParamsToSkip the command parameters for which not to
-     * include the meta-data.
+     * @param commandParamsToSkip the command parameters for which not to include the meta-data.
      * @param habitat the habitat
      * @param logger the logger to use
      * @return MethodMetaData the meta-data store for the resource method.
      */
-    public static MethodMetaData getMethodMetaData(String command, HashMap<String, String> commandParamsToSkip,
-            ServiceLocator habitat) {
+    public static MethodMetaData getMethodMetaData(String command, HashMap<String, String> commandParamsToSkip, ServiceLocator habitat) {
         MethodMetaData methodMetaData = new MethodMetaData();
 
         if (command != null) {
@@ -360,7 +341,6 @@ public class ResourceUtil {
                         parameterName = alias;
                     }
 
-
                     methodMetaData.putParameterMetaData(parameterName, parameterMetaData);
                 }
             }
@@ -379,9 +359,7 @@ public class ResourceUtil {
             if (value.equals(Constants.VAR_PARENT)) {
                 processParams.put(entry.getKey(), pathSegments.get(pathSegments.size() - 2).getPath());
             } else if (value.startsWith(Constants.VAR_GRANDPARENT)) {
-                int number =
-                        (value.equals(Constants.VAR_GRANDPARENT))
-                        ? 1 : // no number given
+                int number = (value.equals(Constants.VAR_GRANDPARENT)) ? 1 : // no number given
                         Integer.parseInt(value.substring(Constants.VAR_GRANDPARENT.length()));
 
                 processParams.put(entry.getKey(), pathSegments.get(pathSegments.size() - (number + 2)).getPath());
@@ -393,8 +371,8 @@ public class ResourceUtil {
     }
 
     /**
-     * Constructs and returns the resource method meta-data. This method is
-     * called to get meta-data in case of update method (POST).
+     * Constructs and returns the resource method meta-data. This method is called to get meta-data in case of update method
+     * (POST).
      *
      * @param configBeanModel the config bean associated with the resource.
      * @return MethodMetaData the meta-data store for the resource method.
@@ -452,8 +430,8 @@ public class ResourceUtil {
         Map<String, ParameterMetaData> params = new HashMap<String, ParameterMetaData>();
 
         try {
-            Class<? extends ConfigBeanProxy> configBeanProxy =
-                    (Class<? extends ConfigBeanProxy>) childModel.classLoaderHolder.loadClass(childModel.targetTypeName);
+            Class<? extends ConfigBeanProxy> configBeanProxy = (Class<? extends ConfigBeanProxy>) childModel.classLoaderHolder
+                    .loadClass(childModel.targetTypeName);
             getInterfaces(configBeanProxy, interfaces);
 
             Set<String> attributeNames = childModel.getAttributeNames();
@@ -499,7 +477,6 @@ public class ResourceUtil {
                 } catch (NoSuchMethodException e) {
                 }
 
-
                 methodMetaData.putParameterMetaData(attributeName, parameterMetaData);
 
             }
@@ -542,11 +519,9 @@ public class ResourceUtil {
      * @param commandName the command associated with the resource method
      * @param habitat the habitat
      * @param logger the logger to use
-     * @return Collection the meta-data for the parameter of the resource
-     * method.
+     * @return Collection the meta-data for the parameter of the resource method.
      */
-    public static Collection<CommandModel.ParamModel> getParamMetaData(
-            String commandName, ServiceLocator habitat) {
+    public static Collection<CommandModel.ParamModel> getParamMetaData(String commandName, ServiceLocator habitat) {
         final CommandModel model = habitat.<CommandRunner>getService(CommandRunner.class).getModel(commandName, RestLogging.restLogger);
         if (model == null) {
             return null;
@@ -559,15 +534,12 @@ public class ResourceUtil {
      * Constructs and returns the parameter meta-data.
      *
      * @param commandName the command associated with the resource method
-     * @param commandParamsToSkip the command parameters for which not to
-     * include the meta-data.
+     * @param commandParamsToSkip the command parameters for which not to include the meta-data.
      * @param habitat the habitat
      * @param logger the logger to use
-     * @return Collection the meta-data for the parameter of the resource
-     * method.
+     * @return Collection the meta-data for the parameter of the resource method.
      */
-    public static Collection<CommandModel.ParamModel> getParamMetaData(
-            String commandName, Collection<String> commandParamsToSkip,
+    public static Collection<CommandModel.ParamModel> getParamMetaData(String commandName, Collection<String> commandParamsToSkip,
             ServiceLocator habitat) {
         CommandModel cm = habitat.<CommandRunner>getService(CommandRunner.class).getModel(commandName, RestLogging.restLogger);
         Collection<String> parameterNames = cm.getParametersNames();
@@ -605,8 +577,7 @@ public class ResourceUtil {
     }
 
     /**
-     * Constructs and returns the appropriate response object based on the
-     * client.
+     * Constructs and returns the appropriate response object based on the client.
      *
      * @param status the http status code for the response
      * @param message message for the response
@@ -620,13 +591,15 @@ public class ResourceUtil {
         return Response.status(status).entity(message).build();
     }
 
-    public static ActionReportResult getActionReportResult(ActionReport.ExitCode status, String message, HttpHeaders requestHeaders, UriInfo uriInfo) {
+    public static ActionReportResult getActionReportResult(ActionReport.ExitCode status, String message, HttpHeaders requestHeaders,
+            UriInfo uriInfo) {
         RestActionReporter ar = new RestActionReporter();
         ar.setActionExitCode(status);
         return getActionReportResult(ar, message, requestHeaders, uriInfo);
     }
 
-    public static ActionReportResult getActionReportResult(RestActionReporter ar, String message, HttpHeaders requestHeaders, UriInfo uriInfo) {
+    public static ActionReportResult getActionReportResult(RestActionReporter ar, String message, HttpHeaders requestHeaders,
+            UriInfo uriInfo) {
         if (isBrowser(requestHeaders)) {
             message = getHtml(message, uriInfo, false);
         }
@@ -644,8 +617,8 @@ public class ResourceUtil {
     }
 
     /**
-     * special case for the delete operation: we need to give back the URI of
-     * the parent since the resource we are on is deleted
+     * special case for the delete operation: we need to give back the URI of the parent since the resource we are on is
+     * deleted
      *
      * @param status
      * @param message
@@ -654,8 +627,7 @@ public class ResourceUtil {
      * @return
      */
     // FIXME: This doesn't do what the javadoc says it should
-    public static Response getDeleteResponse(int status, String message,
-            HttpHeaders requestHeaders, UriInfo uriInfo) {
+    public static Response getDeleteResponse(int status, String message, HttpHeaders requestHeaders, UriInfo uriInfo) {
         if (isBrowser(requestHeaders)) {
             message = getHtml(message, uriInfo, true);
         }
@@ -663,11 +635,14 @@ public class ResourceUtil {
     }
 
     /**
-     * <p>This method takes any query string parameters and adds them to the
-     * specified map. This is used, for example, with the delete operation when
-     * cascading deletes are required:</p> <code style="margin-left: 3em">DELETE http://localhost:4848/.../foo?cascade=true</code>
-     * <p>The reason we need to use query parameters versus "body" variables is
-     * the limitation that HttpURLConnection has in this regard.
+     * <p>
+     * This method takes any query string parameters and adds them to the specified map. This is used, for example, with the
+     * delete operation when cascading deletes are required:
+     * </p>
+     * <code style="margin-left: 3em">DELETE http://localhost:4848/.../foo?cascade=true</code>
+     * <p>
+     * The reason we need to use query parameters versus "body" variables is the limitation that HttpURLConnection has in
+     * this regard.
      *
      * @param data
      */
@@ -726,8 +701,7 @@ public class ResourceUtil {
     }
 
     //rename the given input parameter
-    private static boolean renameParameter(Map<String, String> data,
-            String parameterToRename, String newName) {
+    private static boolean renameParameter(Map<String, String> data, String parameterToRename, String newName) {
         if ((data.containsKey(parameterToRename))) {
             String value = data.get(parameterToRename);
             data.remove(parameterToRename);
@@ -741,8 +715,7 @@ public class ResourceUtil {
     private static boolean isBrowser(HttpHeaders requestHeaders) {
         boolean isClientAcceptsHtml = false;
         MediaType media = requestHeaders.getMediaType();
-        java.util.List<String> acceptHeaders =
-                requestHeaders.getRequestHeader(HttpHeaders.ACCEPT);
+        java.util.List<String> acceptHeaders = requestHeaders.getRequestHeader(HttpHeaders.ACCEPT);
 
         for (String header : acceptHeaders) {
             if (header.contains(MediaType.TEXT_HTML)) {
@@ -752,8 +725,7 @@ public class ResourceUtil {
         }
 
         if (media != null) {
-            if ((media.equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE))
-                    && (isClientAcceptsHtml)) {
+            if ((media.equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE)) && (isClientAcceptsHtml)) {
                 return true;
             }
         }
@@ -781,9 +753,9 @@ public class ResourceUtil {
         return methodNameFromDtdName(attributeName, "get");
     }
 
-   public static String getAttributeBooleanMethodName(String attributeName) {
-       return methodNameFromDtdName(attributeName, "is");
-   }
+    public static String getAttributeBooleanMethodName(String attributeName) {
+        return methodNameFromDtdName(attributeName, "is");
+    }
 
     private static String split(String lookback, String lookahead) {
         return "((?<=" + lookback + ")(?=" + lookahead + "))";
@@ -813,9 +785,7 @@ public class ResourceUtil {
     }
 
     /**
-     * @return A copy of given
-     * <code>sourceData</code> where key of each entry from it is converted to
-     * xml name
+     * @return A copy of given <code>sourceData</code> where key of each entry from it is converted to xml name
      */
     public static HashMap<String, String> translateCamelCasedNamesToXMLNames(Map<String, String> sourceData) {
         HashMap<String, String> convertedData = new HashMap<String, String>(sourceData.size());
@@ -889,7 +859,8 @@ public class ResourceUtil {
      */
     static public boolean isDeprecated(ConfigModel model) {
         try {
-            Class<? extends ConfigBeanProxy> cbp = (Class<? extends ConfigBeanProxy>) model.classLoaderHolder.loadClass(model.targetTypeName);
+            Class<? extends ConfigBeanProxy> cbp = (Class<? extends ConfigBeanProxy>) model.classLoaderHolder
+                    .loadClass(model.targetTypeName);
             Deprecated dep = cbp.getAnnotation(Deprecated.class);
             return dep != null;
         } catch (MultiException e) {
@@ -946,8 +917,7 @@ public class ResourceUtil {
 
     /**
      * @param qualifiedTypeName
-     * @return unqualified type name for given qualified type name. This is a
-     * substring of qualifiedTypeName after last "."
+     * @return unqualified type name for given qualified type name. This is a substring of qualifiedTypeName after last "."
      */
     public static String getUnqualifiedTypeName(String qualifiedTypeName) {
         return qualifiedTypeName.substring(qualifiedTypeName.lastIndexOf(".") + 1, qualifiedTypeName.length());
@@ -1016,9 +986,7 @@ public class ResourceUtil {
         Collections.sort(proxyList, new DomConfigurator());
         for (Dom proxy : proxyList) { //for each element
             try {
-                links.put(
-                        getKey(proxy),
-                        getElementLink(uriInfo, getKey(proxy)));
+                links.put(getKey(proxy), getElementLink(uriInfo, getKey(proxy)));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -1062,9 +1030,9 @@ public class ResourceUtil {
         Map<String, Object> postMetaDataMap = new HashMap<String, Object>();
         if (postMetaData != null) {
             postMetaDataMap.put("name", "POST");
-//            if (postMetaData.sizeQueryParamMetaData() > 0) {
-//                postMetaDataMap.put(QUERY_PARAMETERS, buildMethodMetadataMap(postMetaData, true));
-//            }
+            //            if (postMetaData.sizeQueryParamMetaData() > 0) {
+            //                postMetaDataMap.put(QUERY_PARAMETERS, buildMethodMetadataMap(postMetaData, true));
+            //            }
             if (postMetaData.sizeParameterMetaData() > 0) {
                 postMetaDataMap.put(MESSAGE_PARAMETERS, buildMethodMetadataMap(postMetaData));
             }
@@ -1083,7 +1051,7 @@ public class ResourceUtil {
         ar.getExtraProperties().put("methods", methodMetaData);
     }
 
-    public static synchronized RestConfig   getRestConfig(ServiceLocator habitat) {
+    public static synchronized RestConfig getRestConfig(ServiceLocator habitat) {
         if (restConfig == null) {
             if (habitat == null) {
                 return null;
@@ -1115,12 +1083,12 @@ public class ResourceUtil {
     }
 
     /**
-     * Authenticate the given req as originated from given remoteHost against
-     * admin realm.
+     * Authenticate the given req as originated from given remoteHost against admin realm.
      *
      * @return subject identifying the user/client
      */
-    public static Subject authenticateViaAdminRealm(ServiceLocator habitat, Request req, String remoteHost) throws LoginException, IOException {
+    public static Subject authenticateViaAdminRealm(ServiceLocator habitat, Request req, String remoteHost)
+            throws LoginException, IOException {
         Subject subject = null;
         final AdminAccessController authenticator = habitat.getService(AdminAccessController.class);
         if (authenticator != null) {
@@ -1144,10 +1112,10 @@ public class ResourceUtil {
      * @return true if the subject is allowed to perform the action, false otherwise
      * @throws URISyntaxException
      */
-    public static boolean isAuthorized(final ServiceLocator habitat, final Subject subject, final String resource, final String action) throws URISyntaxException {
-        final AuthorizationService authorizationSvc =
-            AccessController.doPrivileged(
-                    new PrivilegedLookup<AuthorizationService>(habitat, AuthorizationService.class));
+    public static boolean isAuthorized(final ServiceLocator habitat, final Subject subject, final String resource, final String action)
+            throws URISyntaxException {
+        final AuthorizationService authorizationSvc = AccessController
+                .doPrivileged(new PrivilegedLookup<AuthorizationService>(habitat, AuthorizationService.class));
         return authorizationSvc.isAuthorized(subject, new URI("admin", resource, null), action);
     }
 }

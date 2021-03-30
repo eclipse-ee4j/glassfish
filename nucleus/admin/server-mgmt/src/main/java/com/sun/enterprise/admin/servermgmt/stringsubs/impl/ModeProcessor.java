@@ -26,10 +26,8 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Group;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ModeType;
 
 /**
- * This class provides method to process {@link ModeType}.
- * The ModeType is predefined set of values use to alter the
- * substitution containing forward or backward slash in the
- * after value. This attribute can be applied to {@link Group}
+ * This class provides method to process {@link ModeType}. The ModeType is predefined set of values use to alter the
+ * substitution containing forward or backward slash in the after value. This attribute can be applied to {@link Group}
  * or {@link ChangePairRef}.
  *
  * @see ModeType
@@ -38,21 +36,15 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ModeType;
 public class ModeProcessor {
 
     private static final Logger _logger = SLogger.getLogger();
+
     /**
      * Process the {@link ModeType} for a given string.
-     * <li>
-     * {@link ModeType#FORWARD} : Replaces all backward slashes to forward slash.
+     * <li>{@link ModeType#FORWARD} : Replaces all backward slashes to forward slash.</li>
+     * <li>{@link ModeType#DOUBLE} : Append a slash to all backward slash and also add a backward slash before each colon.
      * </li>
-     * <li>
-     * {@link ModeType#DOUBLE} : Append a slash to all backward slash and also add
-     *    a backward slash before each colon.
-     * </li>
-     * <li>
-     * {@link ModeType#POLICY} : Replaces {@link File#separator} by ${/} for java
-     *   policy files.
-     * </li>
+     * <li>{@link ModeType#POLICY} : Replaces {@link File#separator} by ${/} for java policy files.</li>
      *
-     * @param modeType The mode type to be applied on the given input string. 
+     * @param modeType The mode type to be applied on the given input string.
      * @param input Input string for mode processing.
      * @return Processed string
      */
@@ -61,23 +53,23 @@ public class ModeProcessor {
             return input;
         }
         switch (modeType) {
-            case FORWARD:
-                // Change all backward slashes to forward slash.
-                input = input.replace("\\", "/");
-                break;
-            case DOUBLE:
-                // Add a slash to all back slashes.
-                input = input.replace("\\", "\\\\");
-                // Add a backslash before each colon.
-                input = input.replace(":", "\\:");
-                break;
-            case POLICY:
-                // Replace File.separator by ${/} for java.policy files
-                input = input.replace(File.separator, "${/}");
-                break;
-            default:
-                _logger.log(Level.WARNING, SLogger.NO_PROCESSOR_DEFINED, modeType.toString());
-                break;
+        case FORWARD:
+            // Change all backward slashes to forward slash.
+            input = input.replace("\\", "/");
+            break;
+        case DOUBLE:
+            // Add a slash to all back slashes.
+            input = input.replace("\\", "\\\\");
+            // Add a backslash before each colon.
+            input = input.replace(":", "\\:");
+            break;
+        case POLICY:
+            // Replace File.separator by ${/} for java.policy files
+            input = input.replace(File.separator, "${/}");
+            break;
+        default:
+            _logger.log(Level.WARNING, SLogger.NO_PROCESSOR_DEFINED, modeType.toString());
+            break;
         }
         return input;
     }

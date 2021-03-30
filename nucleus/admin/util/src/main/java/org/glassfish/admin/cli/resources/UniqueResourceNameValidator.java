@@ -26,11 +26,8 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 2/8/12
- * Time: 4:11 PM
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: naman Date: 2/8/12 Time: 4:11 PM To change this template use File | Settings | File
+ * Templates.
  */
 public class UniqueResourceNameValidator implements ConstraintValidator<UniqueResourceNameConstraint, Resource> {
 
@@ -40,22 +37,22 @@ public class UniqueResourceNameValidator implements ConstraintValidator<UniqueRe
 
         /*ServiceLocator locator = ServiceLocatorFactory.getInstance().find("default");
         if (locator == null) return;
-
+        
         ConfigBeansUtilities cbu = locator.getService(ConfigBeansUtilities.class);
         if (cbu == null) return;
-
+        
         domain = cbu.getDomain();*/
 
         ServiceLocator habitat = Globals.getDefaultHabitat();
-        if (habitat == null) return; // due to: http://java.net/jira/browse/GLASSFISH-19043
+        if (habitat == null)
+            return; // due to: http://java.net/jira/browse/GLASSFISH-19043
 
         domain = habitat.getService(Domain.class);
 
     }
 
     @Override
-    public boolean isValid(final Resource resource,
-                           final ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(final Resource resource, final ConstraintValidatorContext constraintValidatorContext) {
         if (domain != null) {
             if (resource.getParent().getParent() instanceof Domain) {
                 for (Resource res : domain.getResources().getResources()) {
@@ -78,4 +75,3 @@ public class UniqueResourceNameValidator implements ConstraintValidator<UniqueRe
         return true;
     }
 }
-

@@ -21,28 +21,26 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import org.jvnet.hk2.annotations.Service;
 
-/** Tooling for AdminCache {@link DataProvider} implementation.
+/**
+ * Tooling for AdminCache {@link DataProvider} implementation.
  *
  * @author mmares
  */
 @Service
 public class AdminCacheUtils {
-    
+
     private static final AdminCacheUtils instance = new AdminCacheUtils();
-    
+
     private final Map<Class, DataProvider> providers = new HashMap<Class, DataProvider>();
     private final Pattern keyPattern = Pattern.compile("([-_.a-zA-Z0-9]+/?)+");
     //private final ServiceLoader<DataProvider> dataProviderLoader = ServiceLoader.<DataProvider>load(DataProvider.class);
-    
-    private static final DataProvider[] allProviders = new DataProvider[]{
-        new StringDataProvider(), 
-        new ByteArrayDataProvider(),
-        new CommandModelDataProvider()
-    };
-    
+
+    private static final DataProvider[] allProviders = new DataProvider[] { new StringDataProvider(), new ByteArrayDataProvider(),
+            new CommandModelDataProvider() };
+
     private AdminCacheUtils() {
     }
-    
+
     public DataProvider getProvider(final Class clazz) {
         DataProvider result = providers.get(clazz);
         if (result == null) {
@@ -53,41 +51,42 @@ public class AdminCacheUtils {
                     return provider;
                 }
             }
-//            ServiceLocator habitat = Globals.getDefaultHabitat();
-//            if (habitat != null) {
-//                List<DataProvider> allServices = habitat.getAllServices(DataProvider.class);
-//                for (DataProvider provider : allServices) {
-//                    if (provider.accept(clazz)) {
-//                        providers.put(clazz, provider);
-//                        return provider;
-//                    }
-//                }
-//            }
-//            for (DataProvider provider : dataProviderLoader) {
-//                if (provider.accept(clazz)) {
-//                    providers.put(clazz, provider);
-//                    return provider;
-//                }
-//            }
-            
+            //            ServiceLocator habitat = Globals.getDefaultHabitat();
+            //            if (habitat != null) {
+            //                List<DataProvider> allServices = habitat.getAllServices(DataProvider.class);
+            //                for (DataProvider provider : allServices) {
+            //                    if (provider.accept(clazz)) {
+            //                        providers.put(clazz, provider);
+            //                        return provider;
+            //                    }
+            //                }
+            //            }
+            //            for (DataProvider provider : dataProviderLoader) {
+            //                if (provider.accept(clazz)) {
+            //                    providers.put(clazz, provider);
+            //                    return provider;
+            //                }
+            //            }
+
             return null;
         } else {
             return result;
         }
     }
-    
+
     public final boolean validateKey(final String key) {
         return keyPattern.matcher(key).matches();
     }
-    
-    /** Return preferred {@link AdminCache}
+
+    /**
+     * Return preferred {@link AdminCache}
      */
     public static AdminCache getCache() {
         return AdminCacheMemStore.getInstance();
     }
-    
+
     public static AdminCacheUtils getInstance() {
         return instance;
     }
-    
+
 }

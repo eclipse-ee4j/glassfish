@@ -30,8 +30,7 @@ import java.util.Vector;
 import jakarta.ws.rs.QueryParam;
 
 /**
- * REST resource to get Log Names
- * simple wrapper around internal  LogFilter  class
+ * REST resource to get Log Names simple wrapper around internal LogFilter class
  *
  * @author ludovic Champenois
  */
@@ -40,13 +39,13 @@ public class LogNamesResource {
     protected ServiceLocator habitat = Globals.getDefaultBaseServiceLocator();
 
     @GET
-    @Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
+    @Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
     public String getLogNamesJSON(@QueryParam("instanceName") String instanceName) throws IOException {
         return getLogNames(instanceName, "json");
     }
 
     @GET
-    @Produces({ MediaType.APPLICATION_XML})
+    @Produces({ MediaType.APPLICATION_XML })
     public String getLogNamesJXML(@QueryParam("instanceName") String instanceName) throws IOException {
         return getLogNames(instanceName, "xml");
     }
@@ -61,7 +60,7 @@ public class LogNamesResource {
 
         LogFilter logFilter = habitat.getService(LogFilter.class);
 
-        return convertQueryResult(logFilter.getInstanceLogFileNames(instanceName),type);
+        return convertQueryResult(logFilter.getInstanceLogFileNames(instanceName), type);
 
     }
 

@@ -27,11 +27,11 @@ import jakarta.inject.Named;
 import java.lang.annotation.Annotation;
 
 /**
- * A config resolver is responsible for finding the target object of a specified
- * type on which a creation command invocation will be processed.
+ * A config resolver is responsible for finding the target object of a specified type on which a creation command
+ * invocation will be processed.
  *
- * Implementation of these interfaces can be injected with the command invocation
- * parameters in order to determine which object should be returned
+ * Implementation of these interfaces can be injected with the command invocation parameters in order to determine which
+ * object should be returned
  *
  * @author Jerome Dochez
  */
@@ -43,21 +43,21 @@ public interface CrudResolver {
      *
      * @param context the command invocation context
      * @param type the type of the expected instance
-     * @return the instance or null if not found 
+     * @return the instance or null if not found
      */
     <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, Class<T> type);
 
     @Service
     public static final class DefaultResolver implements CrudResolver {
-        
+
         @Inject
         @Named("type")
         @Optional
-        CrudResolver defaultResolver=null;
+        CrudResolver defaultResolver = null;
 
         @Override
         public <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, Class<T> type) {
-            if (defaultResolver!=null) {
+            if (defaultResolver != null) {
                 return defaultResolver.resolve(context, type);
             }
             return null;

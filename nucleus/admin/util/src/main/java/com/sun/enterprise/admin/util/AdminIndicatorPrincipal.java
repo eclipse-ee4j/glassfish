@@ -20,25 +20,25 @@ import java.security.Principal;
 import org.glassfish.security.services.api.authorization.AuthorizationAdminConstants;
 
 /**
- * A simple Principal that indicates that the Subject has been authenticated
- * as another server in the domain.
+ * A simple Principal that indicates that the Subject has been authenticated as another server in the domain.
  * 
  * @author tjquinn
  */
 public class AdminIndicatorPrincipal implements Principal {
 
     private final String adminIndicator;
-    
+
     public AdminIndicatorPrincipal(final String adminIndicator) {
         this.adminIndicator = adminIndicator;
     }
+
     @Override
     public String getName() {
         return AuthorizationAdminConstants.SERVER;
     }
-    
+
     public String getIndicator() {
         return adminIndicator;
     }
-    
+
 }

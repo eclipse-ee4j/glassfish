@@ -27,8 +27,7 @@ import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * Perform's string substitution by constructing the {@link RadixTree} of change-value
- * pair.
+ * Perform's string substitution by constructing the {@link RadixTree} of change-value pair.
  * 
  * @see RadixTreeSubstitution
  */
@@ -38,8 +37,8 @@ public class RadixTreeSubstitutionAlgo implements SubstitutionAlgorithm {
     private static final LocalStringsImpl _strings = new LocalStringsImpl(RadixTreeSubstitutionAlgo.class);
 
     /**
-     * Construct {@link RadixTreeSubstitutionAlgo} for the given substitutable key/value
-     * pair by constructing the radix tree for the same.
+     * Construct {@link RadixTreeSubstitutionAlgo} for the given substitutable key/value pair by constructing the radix tree
+     * for the same.
      *
      * @param substitutionMap Map of substitutable key/value pairs.
      */
@@ -54,8 +53,7 @@ public class RadixTreeSubstitutionAlgo implements SubstitutionAlgorithm {
     }
 
     @Override
-    public void substitute(Substitutable substitutable)
-            throws StringSubstitutionException {
+    public void substitute(Substitutable substitutable) throws StringSubstitutionException {
         Reader reader = substitutable.getReader();
         Writer writer = substitutable.getWriter();
         RadixTreeSubstitution sub = new RadixTreeSubstitution(_tree);

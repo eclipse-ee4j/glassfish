@@ -45,7 +45,6 @@ class GFLauncherNativeHelper {
     private final File libDir;
     private final JavaConfig javaConfig;
 
-
     GFLauncherNativeHelper(GFLauncherInfo info_, JavaConfig javaConfig_, JvmOptions jvmOptions_, Profiler profiler_) {
         info = info_;
         javaConfig = javaConfig_;
@@ -139,6 +138,5 @@ class GFLauncherNativeHelper {
 
         return "";
     }
-
 
 }

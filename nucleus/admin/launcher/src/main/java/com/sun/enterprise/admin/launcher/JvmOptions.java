@@ -83,7 +83,7 @@ class JvmOptions {
 
     List<String> toList() {
         List<String> options = new ArrayList<>();
-        
+
         for (Map.Entry<String, String> entry : xxProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
@@ -92,7 +92,7 @@ class JvmOptions {
                 options.add("-XX" + entry.getKey());
             }
         }
-        
+
         for (Map.Entry<String, String> entry : xProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
@@ -101,7 +101,7 @@ class JvmOptions {
                 options.add("-X" + entry.getKey());
             }
         }
-        
+
         for (Map.Entry<String, String> entry : longProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
@@ -110,7 +110,7 @@ class JvmOptions {
                 options.add("--" + entry.getKey());
             }
         }
-        
+
         for (Map.Entry<String, String> entry : plainProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
@@ -119,7 +119,7 @@ class JvmOptions {
                 options.add("-" + entry.getKey());
             }
         }
-        
+
         for (Map.Entry<String, String> entry : sysProps.entrySet()) {
             String value = entry.getValue();
             if (value != null) {
@@ -128,7 +128,7 @@ class JvmOptions {
                 options.add("-D" + entry.getKey());
             }
         }
-        
+
         return postProcessOrdering(options);
     }
 
@@ -316,18 +316,17 @@ class JvmOptions {
     private static class CompoundNameValue {
 
         CompoundNameValue(String s) {
-            int index = Math.min(s.indexOf("="),s.indexOf(" "));
+            int index = Math.min(s.indexOf("="), s.indexOf(" "));
             if (index < 0) {
                 name = s;
-            }
-            else {
-                int index2 = s.indexOf("=",index+1);
+            } else {
+                int index2 = s.indexOf("=", index + 1);
                 if (index2 >= 0) {
                     // There is a later equals sign, which implies <option>=<module>=<value>
                     // If the original match was a space, change it to an equals character instead
                     // so that this is treated as a single argument in the output string.
                     if (s.charAt(index) == ' ') {
-                        s = s.replaceFirst(" ","=");
+                        s = s.replaceFirst(" ", "=");
                     }
                     index = index2;
                 }
@@ -337,6 +336,7 @@ class JvmOptions {
                 }
             }
         }
+
         private String name;
         private String value;
     }

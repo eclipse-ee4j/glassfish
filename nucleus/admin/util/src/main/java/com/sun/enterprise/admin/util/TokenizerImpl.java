@@ -47,25 +47,15 @@ public final class TokenizerImpl implements Tokenizer {
 
     final String[] mTokens;
 
-    public TokenizerImpl(
-            String input,
-            String delimiters,
-            char escapeChar,
-            String escapableChars)
-            throws TokenizerException {
+    public TokenizerImpl(String input, String delimiters, char escapeChar, String escapableChars) throws TokenizerException {
         this(input, delimiters, true, escapeChar, escapableChars);
     }
+
     private static final char QUOTE_CHAR = '\"';
 
-    public TokenizerImpl(
-            String input,
-            String delimiters,
-            boolean multipleDelimsCountAsOne,
-            char escapeChar,
-            String escapableChars)
+    public TokenizerImpl(String input, String delimiters, boolean multipleDelimsCountAsOne, char escapeChar, String escapableChars)
             throws TokenizerException {
-        final TokenizerInternal worker =
-                new TokenizerInternal(input, delimiters, escapeChar, escapableChars);
+        final TokenizerInternal worker = new TokenizerInternal(input, delimiters, escapeChar, escapableChars);
 
         ArrayList allTokens = worker.parseTokens();
 
@@ -98,12 +88,10 @@ public final class TokenizerImpl implements Tokenizer {
     }
 
     /**
-     * Interpret the parsed token list, which consists of a series of strings
-     * and tokens. We need to handle the special cases where the list starts
-     * with a delimiter and/or ends with a delimiter. Examples:
+     * Interpret the parsed token list, which consists of a series of strings and tokens. We need to handle the special
+     * cases where the list starts with a delimiter and/or ends with a delimiter. Examples:
      *
-     * ""	=> {} "."	=> { "", "" } "..."	=> { "", "", "", "" } "x."	=> { "x", ""
-     * } ".x"	=> { "", "x" } "y.x"	=> { "y", "x" }
+     * "" => {} "." => { "", "" } "..." => { "", "", "", "" } "x." => { "x", "" } ".x" => { "", "x" } "y.x" => { "y", "x" }
      */
     static String[] interpretTokenList(ArrayList list) {
         final ArrayList resultList = new ArrayList();
@@ -163,13 +151,10 @@ final class TokenizerInternal {
             return ("<DELIM>");
         }
     }
+
     final static Delim DELIM = Delim.getInstance();
 
-    public TokenizerInternal(
-            String input,
-            String delimiters,
-            char escapeChar,
-            String escapableChars) {
+    public TokenizerInternal(String input, String delimiters, char escapeChar, String escapableChars) {
         mDelimiters = delimiters;
         mEscapeChar = escapeChar;
         mEscapableChars = escapableChars;
@@ -215,11 +200,11 @@ final class TokenizerInternal {
 
         return (theChar);
     }
+
     private static final char QUOTE_CHAR = '\"';
     private static final char TAB_CHAR = '\t';
 
-    char decodeUnicodeSequence()
-            throws MalformedUnicodeSequenceException {
+    char decodeUnicodeSequence() throws MalformedUnicodeSequenceException {
         int value = 0;
 
         try {
@@ -250,48 +235,44 @@ final class TokenizerInternal {
         return value;
     }
 
-    char getEscapedChar(final char inputChar)
-            throws MalformedUnicodeSequenceException, IllegalEscapeSequenceException {
+    char getEscapedChar(final char inputChar) throws MalformedUnicodeSequenceException, IllegalEscapeSequenceException {
         char outChar;
 
         if (isCallerProvidedEscapableChar(inputChar)) {
             outChar = inputChar;
         } else {
             switch (inputChar) {
-                default:
-                    throw new IllegalEscapeSequenceException("" + inputChar);
-                case 'n':
-                    outChar = '\n';
-                    break;
-                case 'r':
-                    outChar = '\r';
-                    break;
-                case 't':
-                    outChar = '\t';
-                    break;
-                case QUOTE_CHAR:
-                    outChar = QUOTE_CHAR;
-                    break;
-                case 'u':
-                    outChar = decodeUnicodeSequence();
-                    break;
+            default:
+                throw new IllegalEscapeSequenceException("" + inputChar);
+            case 'n':
+                outChar = '\n';
+                break;
+            case 'r':
+                outChar = '\r';
+                break;
+            case 't':
+                outChar = '\t';
+                break;
+            case QUOTE_CHAR:
+                outChar = QUOTE_CHAR;
+                break;
+            case 'u':
+                outChar = decodeUnicodeSequence();
+                break;
             }
         }
 
         return (outChar);
     }
 
-    ArrayList parseTokens()
-            throws UnterminatedLiteralStringException,
-            MalformedUnicodeSequenceException, IllegalEscapeSequenceException {
+    ArrayList parseTokens() throws UnterminatedLiteralStringException, MalformedUnicodeSequenceException, IllegalEscapeSequenceException {
         final StringBuffer tok = new StringBuffer();
         final ArrayList tokens = new ArrayList();
         boolean insideStringLiteral = false;
 
         /**
-         * Escape sequences are always processed regardless of whether we're
-         * inside a quoted string or not. A quote string really only alters
-         * whether delimiters are treated as literal characters, or not.
+         * Escape sequences are always processed regardless of whether we're inside a quoted string or not. A quote string
+         * really only alters whether delimiters are treated as literal characters, or not.
          */
         while (hasMoreChars()) {
             final char theChar = nextChar();

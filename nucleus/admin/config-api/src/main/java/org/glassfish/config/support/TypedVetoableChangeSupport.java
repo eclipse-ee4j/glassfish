@@ -35,8 +35,7 @@ public class TypedVetoableChangeSupport extends VetoableChangeSupport {
         source = sourceBean;
     }
 
-    public void fireVetoableChange(String propertyName, Object oldValue, Object newValue)
-        throws PropertyVetoException {
+    public void fireVetoableChange(String propertyName, Object oldValue, Object newValue) throws PropertyVetoException {
 
         super.fireVetoableChange(new TypedChangeEvent(source, propertyName, oldValue, newValue));
     }

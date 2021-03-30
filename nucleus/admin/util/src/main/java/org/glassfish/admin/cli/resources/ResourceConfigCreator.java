@@ -19,11 +19,8 @@ package org.glassfish.admin.cli.resources;
 import java.lang.annotation.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: naman
- * Date: 30/7/12
- * Time: 3:31 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: naman Date: 30/7/12 Time: 3:31 PM To change this template use File | Settings | File
+ * Templates.
  */
 
 /*

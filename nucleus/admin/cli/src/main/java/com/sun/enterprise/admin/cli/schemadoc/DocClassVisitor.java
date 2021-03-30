@@ -77,15 +77,14 @@ public class DocClassVisitor extends ClassVisitor {
     }
 
     @Override
-    public MethodVisitor visitMethod(int access, String name, String desc, String signature,
-        String[] exceptions) {
+    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         String type = null;
         try {
             if (showDeprecated || ((access & Opcodes.ACC_DEPRECATED) != Opcodes.ACC_DEPRECATED)) {
                 if (hasConfiguredAnnotation) {
                     if (signature != null) {
-                        type = GenerateDomainSchema.toClassName(
-                            signature.substring(signature.indexOf("<") + 1, signature.lastIndexOf(">") - 1));
+                        type = GenerateDomainSchema
+                                .toClassName(signature.substring(signature.indexOf("<") + 1, signature.lastIndexOf(">") - 1));
                     } else {
                         type = GenerateDomainSchema.toClassName(desc);
                     }
@@ -94,13 +93,12 @@ public class DocClassVisitor extends ClassVisitor {
         } catch (StringIndexOutOfBoundsException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return name.startsWith("get") && type != null ? new AttributeMethodVisitor(classDef, name, type)
-            : null;
+        return name.startsWith("get") && type != null ? new AttributeMethodVisitor(classDef, name, type) : null;
     }
 
     /**
-     * Visits the end of the class. This method, which is the last one to be called, is used to inform the visitor that
-     * all the fields and methods of the class have been visited.
+     * Visits the end of the class. This method, which is the last one to be called, is used to inform the visitor that all
+     * the fields and methods of the class have been visited.
      */
     @Override
     public void visitEnd() {
@@ -120,9 +118,6 @@ public class DocClassVisitor extends ClassVisitor {
 
     @Override
     public String toString() {
-        return "DocClassVisitor{" +
-            "className='" + className + '\'' +
-            ", hasConfiguredAnnotation=" + hasConfiguredAnnotation +
-            '}';
+        return "DocClassVisitor{" + "className='" + className + '\'' + ", hasConfiguredAnnotation=" + hasConfiguredAnnotation + '}';
     }
 }

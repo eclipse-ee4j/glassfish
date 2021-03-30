@@ -30,5 +30,6 @@ public interface RestModel<T> {
 
     // TBD - remove once the conversion to the new REST style guide is completed
     void trimmed();
+
     boolean isTrimmed();
 }

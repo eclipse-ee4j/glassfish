@@ -16,50 +16,45 @@
 
 package com.sun.enterprise.management.support;
 
-
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
 
 /**
-    See also com.sun.enterprise.management.support.SystemInfoImpl
-    
-    @see com.sun.appserv.management.base.SystemInfo
-    @see com.sun.enterprise.management.support.SystemInfoImpl
+ * See also com.sun.enterprise.management.support.SystemInfoImpl
+ * 
+ * @see com.sun.appserv.management.base.SystemInfo
+ * @see com.sun.enterprise.management.support.SystemInfoImpl
  */
 public final class SystemInfoData {
     private static final SystemInfoData INSTANCE = new SystemInfoData();
-    
-    private final Map<String,Long>      mPerformanceMillis;
-    private final Map<String,Long>      mUnmodifiablePerformanceMillis;
-    
+
+    private final Map<String, Long> mPerformanceMillis;
+    private final Map<String, Long> mUnmodifiablePerformanceMillis;
+
     private SystemInfoData() {
-        mPerformanceMillis  = Collections.synchronizedMap( new HashMap<String,Long>() );
-        mUnmodifiablePerformanceMillis  = Collections.unmodifiableMap( mPerformanceMillis );
+        mPerformanceMillis = Collections.synchronizedMap(new HashMap<String, Long>());
+        mUnmodifiablePerformanceMillis = Collections.unmodifiableMap(mPerformanceMillis);
     }
-    
-        public static SystemInfoData
-    getInstance() {
+
+    public static SystemInfoData getInstance() {
         return INSTANCE;
     }
-    
+
     /**
-        Add a performance metric.
+     * Add a performance metric.
      */
-        public synchronized void
-    addPerformanceMillis( final String name, final long millis ) {
-        if ( mPerformanceMillis.containsKey( name ) ) {
+    public synchronized void addPerformanceMillis(final String name, final long millis) {
+        if (mPerformanceMillis.containsKey(name)) {
             throw new IllegalStateException();
         }
-        mPerformanceMillis.put( name, millis );
+        mPerformanceMillis.put(name, millis);
     }
-    
+
     /**
-       @return unmodifiable Map of performance data
+     * @return unmodifiable Map of performance data
      */
-        public Map<String,Long>
-    getPerformanceMillis() {
+    public Map<String, Long> getPerformanceMillis() {
         return mUnmodifiablePerformanceMillis;
     }
 }
-

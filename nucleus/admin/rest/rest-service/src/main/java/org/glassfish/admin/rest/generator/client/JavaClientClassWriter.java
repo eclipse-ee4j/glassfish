@@ -40,71 +40,36 @@ public class JavaClientClassWriter implements ClientClassWriter {
     private String className;
     private BufferedWriter source;
 
-    private static final String TMPL_CLASS_HEADER =
-            "package " + Constants.CLIENT_JAVA_PACKAGE +";\n" +
-            "import java.util.HashMap;\n" +
-            "import java.util.Map;\n" +
-            "import jakarta.ws.rs.client.Client;\n\n" +
-            "public class CLASSNAME extends RestClientBase {\n";
-    private static final String TMPL_CTOR_DOMAIN =
-            "    private RestClient parent;\n" +
-            "    public CLASSNAME (RestClient parent) {\n" +
-            "        super(parent.client, null);\n" +
-            "        this.parent = parent;\n" +
-            "    }\n\n";
-    private static final String TMPL_CTOR_OTHER_WITH_KEY = 
-            "    private String name;\n" +
-            "    protected CLASSNAME (Client c, RestClientBase p, String name) {\n" +
-            "        super(c, p);\n" +
-            "        this.name = name;\n" +
-            "    }\n\n";
-    private static final String TMPL_CTOR_OTHER_NO_KEY =
-            "    protected  CLASSNAME (Client c, RestClientBase p) {\n" +
-            "        super(c,p);\n" +
-            "    }\n\n";
+    private static final String TMPL_CLASS_HEADER = "package " + Constants.CLIENT_JAVA_PACKAGE + ";\n" + "import java.util.HashMap;\n"
+            + "import java.util.Map;\n" + "import jakarta.ws.rs.client.Client;\n\n" + "public class CLASSNAME extends RestClientBase {\n";
+    private static final String TMPL_CTOR_DOMAIN = "    private RestClient parent;\n" + "    public CLASSNAME (RestClient parent) {\n"
+            + "        super(parent.client, null);\n" + "        this.parent = parent;\n" + "    }\n\n";
+    private static final String TMPL_CTOR_OTHER_WITH_KEY = "    private String name;\n"
+            + "    protected CLASSNAME (Client c, RestClientBase p, String name) {\n" + "        super(c, p);\n"
+            + "        this.name = name;\n" + "    }\n\n";
+    private static final String TMPL_CTOR_OTHER_NO_KEY = "    protected  CLASSNAME (Client c, RestClientBase p) {\n"
+            + "        super(c,p);\n" + "    }\n\n";
     private static final String TMPL_GET_REST_URL = // TODO: Test this code heavily
-            "    @Override\n" +
-            "    protected String getRestUrl() {\n" +
-            "        return super.getRestUrl()HASKEY;\n" +
-            "    }\n\n";
-    private static final String TMPL_CTOR_SIMPLE =
-            "package " + Constants.CLIENT_JAVA_PACKAGE +";\n" +
-            "import jakarta.ws.rs.client.Client;\n\n" +
-            "public class CLASSNAME extends PARENTCLASS {\n" +
-            "    protected  CLASSNAME (Client c, RestClientBase p) {\n" +
-            "        super(c,p);\n"+
-            "    }\n\n";
-    private static final String TMPL_GET_SEGMENT =
-            "    @Override protected String getSegment() {\n" +
-            "        return \"/TAGNAME\";\n" +
-            "    }\n\n";
-    private static final String TMPL_GETTERS_AND_SETTERS = 
-            "    public TYPE getMETHOD() {\n" +
-            "        return getValue(\"FIELDNAME\", TYPE.class);\n" +
-            "    }\n\n" +
-            "    public void setMETHOD(TYPE value) {\n" +
-            "        setValue(\"FIELDNAME\", value);\n" +
-            "    }\n\n";
-    private static final String TMPL_COLLECTION_LEAF_RESOURCE =
-            "    public CLASSNAME getCLASSNAME() {\n" +
-            "        return new CLASSNAME (client, this);\n" +
-            "    }\n\n";
-    private static final String TMPL_COMMAND =
-            "    public RestResponse METHODNAME(SIG1) {\n" +
-            "        return METHODNAME(PARAMS new HashMap<String, Object>());\n" +
-            "    }\n\n" +
-            "    public RestResponse METHODNAME(SIG2 Map<String, Object> additional) {\n" +
-            "METHODBODY" +
-            "    }\n\n";
-    private static final String TMPL_METHOD_BODY =
-            "        Map<String, Object> payload = new HashMap<String, Object>();\n" +
-            "PUTS" +
-            "        payload.putAll(additional);\n" +
-            "        return execute(Method.HTTPMETHOD, \"/RESOURCEPATH\", payload, NEEDSMULTIPART);\n";
+            "    @Override\n" + "    protected String getRestUrl() {\n" + "        return super.getRestUrl()HASKEY;\n" + "    }\n\n";
+    private static final String TMPL_CTOR_SIMPLE = "package " + Constants.CLIENT_JAVA_PACKAGE + ";\n"
+            + "import jakarta.ws.rs.client.Client;\n\n" + "public class CLASSNAME extends PARENTCLASS {\n"
+            + "    protected  CLASSNAME (Client c, RestClientBase p) {\n" + "        super(c,p);\n" + "    }\n\n";
+    private static final String TMPL_GET_SEGMENT = "    @Override protected String getSegment() {\n" + "        return \"/TAGNAME\";\n"
+            + "    }\n\n";
+    private static final String TMPL_GETTERS_AND_SETTERS = "    public TYPE getMETHOD() {\n"
+            + "        return getValue(\"FIELDNAME\", TYPE.class);\n" + "    }\n\n" + "    public void setMETHOD(TYPE value) {\n"
+            + "        setValue(\"FIELDNAME\", value);\n" + "    }\n\n";
+    private static final String TMPL_COLLECTION_LEAF_RESOURCE = "    public CLASSNAME getCLASSNAME() {\n"
+            + "        return new CLASSNAME (client, this);\n" + "    }\n\n";
+    private static final String TMPL_COMMAND = "    public RestResponse METHODNAME(SIG1) {\n"
+            + "        return METHODNAME(PARAMS new HashMap<String, Object>());\n" + "    }\n\n"
+            + "    public RestResponse METHODNAME(SIG2 Map<String, Object> additional) {\n" + "METHODBODY" + "    }\n\n";
+    private static final String TMPL_METHOD_BODY = "        Map<String, Object> payload = new HashMap<String, Object>();\n" + "PUTS"
+            + "        payload.putAll(additional);\n"
+            + "        return execute(Method.HTTPMETHOD, \"/RESOURCEPATH\", payload, NEEDSMULTIPART);\n";
 
     public JavaClientClassWriter(final ConfigModel model, final String className, Class parent, File baseDirectory) {
         this.className = className;
-
 
         File packageDir = new File(baseDirectory, Constants.CLIENT_JAVA_PACKAGE_DIR);
         packageDir.deleteOnExit();
@@ -115,8 +80,8 @@ public class JavaClientClassWriter implements ClientClassWriter {
         File classFile = new File(packageDir, className + ".java");
         try {
             boolean createSuccess = classFile.createNewFile();
-            if (!createSuccess){
-               RestLogging.restLogger.log(Level.SEVERE, RestLogging.FILE_CREATION_FAILED, classFile.getName());
+            if (!createSuccess) {
+                RestLogging.restLogger.log(Level.SEVERE, RestLogging.FILE_CREATION_FAILED, classFile.getName());
             }
             classFile.deleteOnExit();
             source = new BufferedWriter(new FileWriter(classFile));
@@ -130,7 +95,7 @@ public class JavaClientClassWriter implements ClientClassWriter {
             generateSimpleCtor(parent.getName());
         }
     }
-    
+
     protected final void generateRestClientBaseChild(ConfigModel model) {
         try {
             boolean hasKey = (Util.getKeyAttributeName(model) != null);
@@ -165,7 +130,7 @@ public class JavaClientClassWriter implements ClientClassWriter {
         try {
             source.append(TMPL_CTOR_SIMPLE.replace("CLASSNAME", className).replace("PARENTCLASS", parentClassName));
         } catch (IOException ex) {
-           RestLogging.restLogger.log(Level.SEVERE, null, ex);
+            RestLogging.restLogger.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -183,11 +148,9 @@ public class JavaClientClassWriter implements ClientClassWriter {
         try {
             String parametersSignature = Util.getMethodParameterList(cm, true, false);
             boolean needsMultiPart = parametersSignature.contains("java.io.File");
-            
+
             String parameters = Util.getMethodParameterList(cm, false, false);
-            String method = TMPL_COMMAND
-                    .replace("METHODNAME", methodName)
-                    .replace("SIG1", parametersSignature)
+            String method = TMPL_COMMAND.replace("METHODNAME", methodName).replace("SIG1", parametersSignature)
                     .replace("PARAMS", !parameters.isEmpty() ? (parameters + ",") : "")
                     .replace("SIG2", !parametersSignature.isEmpty() ? (parametersSignature + ",") : "")
                     .replace("METHODBODY", generateMethodBody(cm, httpMethod, resourcePath, false, needsMultiPart));
@@ -197,9 +160,10 @@ public class JavaClientClassWriter implements ClientClassWriter {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
-    public String generateMethodBody(CommandModel cm, String httpMethod, String resourcePath, boolean includeOptional, boolean needsMultiPart) {
+    public String generateMethodBody(CommandModel cm, String httpMethod, String resourcePath, boolean includeOptional,
+            boolean needsMultiPart) {
         StringBuilder sb = new StringBuilder();
         Collection<ParamModel> params = cm.getParameters();
         if ((params != null) && (!params.isEmpty())) {
@@ -211,23 +175,18 @@ public class JavaClientClassWriter implements ClientClassWriter {
                 }
                 String key = (!param.alias().isEmpty()) ? param.alias() : model.getName();
                 String paramName = Util.eleminateHypen(model.getName());
-                String put = "        payload.put(\"" + key + "\", _" + paramName +");\n";
+                String put = "        payload.put(\"" + key + "\", _" + paramName + ");\n";
                 sb.append(put);
             }
         }
-        return TMPL_METHOD_BODY.replace("PUTS", sb.toString())
-                .replace("HTTPMETHOD", httpMethod.toUpperCase(Locale.US))
-                .replace("RESOURCEPATH", resourcePath)
-                .replace("NEEDSMULTIPART", Boolean.toString(needsMultiPart));
+        return TMPL_METHOD_BODY.replace("PUTS", sb.toString()).replace("HTTPMETHOD", httpMethod.toUpperCase(Locale.US))
+                .replace("RESOURCEPATH", resourcePath).replace("NEEDSMULTIPART", Boolean.toString(needsMultiPart));
     }
 
     @Override
     public void generateGettersAndSetters(String type, String methodName, String fieldName) {
         try {
-            source.append(TMPL_GETTERS_AND_SETTERS
-                .replace("METHOD", methodName)
-                .replace("TYPE", type)
-                .replace("FIELDNAME", fieldName));
+            source.append(TMPL_GETTERS_AND_SETTERS.replace("METHOD", methodName).replace("TYPE", type).replace("FIELDNAME", fieldName));
         } catch (IOException ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
         }
@@ -236,18 +195,13 @@ public class JavaClientClassWriter implements ClientClassWriter {
     @Override
     public void createGetChildResource(ConfigModel model, String elementName, String childResourceClassName) {
         try {
-            final String TMPL_GET_CHILD_RESOURCE =
-                    "    public CHILDRESOURCE getELEMENTNAME(HASKEY1) {\n" +
-                    "        CHILDRESOURCE child = new CHILDRESOURCE(client, this HASKEY2);\n" +
-                    "        child.initialize();\n" +
-                    "        return (child.status == 200) ? child : null;\n" +
-                    "    }\n";
+            final String TMPL_GET_CHILD_RESOURCE = "    public CHILDRESOURCE getELEMENTNAME(HASKEY1) {\n"
+                    + "        CHILDRESOURCE child = new CHILDRESOURCE(client, this HASKEY2);\n" + "        child.initialize();\n"
+                    + "        return (child.status == 200) ? child : null;\n" + "    }\n";
             final boolean hasKey = Util.getKeyAttributeName(model) != null;
-            source.append(TMPL_GET_CHILD_RESOURCE
-                .replace("CHILDRESOURCE", childResourceClassName)
-                .replace("HASKEY1", hasKey ? "String name" : "")
-                .replace("HASKEY2", hasKey ? ", name" : "")
-                .replace("ELEMENTNAME", elementName));
+            source.append(
+                    TMPL_GET_CHILD_RESOURCE.replace("CHILDRESOURCE", childResourceClassName).replace("HASKEY1", hasKey ? "String name" : "")
+                            .replace("HASKEY2", hasKey ? ", name" : "").replace("ELEMENTNAME", elementName));
         } catch (IOException ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
         }

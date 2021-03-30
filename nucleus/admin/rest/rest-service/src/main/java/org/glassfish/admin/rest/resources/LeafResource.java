@@ -49,7 +49,6 @@ import org.jvnet.hk2.config.Dom;
 
 import static org.glassfish.admin.rest.utils.Util.decode;
 
-
 /**
  * @author Ludovic Champenois
  */
@@ -80,11 +79,11 @@ public abstract class LeafResource extends AbstractResource {
         entity.name = tagName;//parent.leafElements(tagName);
         entity.value = parent.leafElement(tagName);
 
-
     }
 
     @GET
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+            MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
     public ActionReportResult get(@QueryParam("expandLevel") @DefaultValue("1") int expandLevel) {
         if (getEntity() == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -94,41 +93,41 @@ public abstract class LeafResource extends AbstractResource {
     }
 
     @POST //create
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+            MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public ActionReportResult create(HashMap<String, String> data) {
         //hack-1 : support delete method for html
         //Currently, browsers do not support delete method. For html media,
         //delete operations can be supported through POST. Redirect html
         //client POST request for delete operation to DELETE method.
-        if ((data.containsKey("operation")) &&
-                (data.get("operation").equals("__deleteoperation"))) {
+        if ((data.containsKey("operation")) && (data.get("operation").equals("__deleteoperation"))) {
             data.remove("operation");
             return delete(data);
         }
         return null;
         //TODO
 
-////        String postCommand = getPostCommand();
-////        final Map<String, String> payload = processData(data, postCommand);
-////
-////        return runCommand(postCommand, payload, "rest.resource.create.message",
-////            "\"{0}\" created successfully.", "rest.resource.post.forbidden","POST on \"{0}\" is forbidden.");
+        ////        String postCommand = getPostCommand();
+        ////        final Map<String, String> payload = processData(data, postCommand);
+        ////
+        ////        return runCommand(postCommand, payload, "rest.resource.create.message",
+        ////            "\"{0}\" created successfully.", "rest.resource.post.forbidden","POST on \"{0}\" is forbidden.");
     }
 
     @DELETE //delete
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+            MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public ActionReportResult delete(HashMap<String, String> data) {
         ResourceUtil.addQueryString(uriInfo.getQueryParameters(), data);
 
         return null;//TODOTODO
 
-
     }
 
     @OPTIONS
-    @Produces({MediaType.APPLICATION_JSON+";qs=0.5", "text/html", MediaType.APPLICATION_XML+";qs=0.5"})
+    @Produces({ MediaType.APPLICATION_JSON + ";qs=0.5", "text/html", MediaType.APPLICATION_XML + ";qs=0.5" })
     public ActionReportResult options() {
         return buildActionReportResult();
     }
@@ -145,7 +144,7 @@ public abstract class LeafResource extends AbstractResource {
         optionsResult.putMethodMetaData("POST", mmd.get("POST"));
 
         ResourceUtil.addMethodMetaData(ar, mmd);
-        ActionReportResult r= new ActionReportResult(ar, optionsResult);
+        ActionReportResult r = new ActionReportResult(ar, optionsResult);
         r.setLeafContent(entity);
         return r;
     }
@@ -158,18 +157,14 @@ public abstract class LeafResource extends AbstractResource {
         return mmd;
     }
 
-
-
     protected String getName() {
         return Util.getResourceName(uriInfo);
     }
-
 
     public static class LeafContent {
 
         public String name;
         public String value;
     }
-
 
 }

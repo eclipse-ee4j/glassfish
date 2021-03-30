@@ -36,23 +36,21 @@ import java.util.Iterator;
  *
  * @author Prashanth Abbagani
  */
-@Service(name="monitor")
+@Service(name = "monitor")
 @PerLookup
 @I18n("monitor.command")
 public class Monitor implements AdminCommand {
 
-    @Param(optional=true)
+    @Param(optional = true)
     private String type;
 
-    @Param(optional=true)
+    @Param(optional = true)
     private String filter;
 
     @Inject
     private ServiceLocator habitat;
 
-    final private LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(Monitor.class);
-
+    final private LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Monitor.class);
 
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
@@ -69,8 +67,7 @@ public class Monitor implements AdminCommand {
         }
         if (habitat.getAllServices(MonitorContract.class).size() != 0) {
             StringBuffer buf = new StringBuffer();
-            Iterator<MonitorContract> contractsIterator = habitat.
-                    <MonitorContract>getAllServices(MonitorContract.class).iterator();
+            Iterator<MonitorContract> contractsIterator = habitat.<MonitorContract>getAllServices(MonitorContract.class).iterator();
             while (contractsIterator.hasNext()) {
                 buf.append(contractsIterator.next().getName());
                 if (contractsIterator.hasNext()) {
@@ -79,11 +76,10 @@ public class Monitor implements AdminCommand {
             }
             String validTypes = buf.toString();
             report.setMessage(localStrings.getLocalString("monitor.type.error",
-                "No type exists in habitat for the given monitor type {0}. " +
-                "Valid types are: {1}", type, validTypes));
+                    "No type exists in habitat for the given monitor type {0}. " + "Valid types are: {1}", type, validTypes));
         } else {
-            report.setMessage(localStrings.getLocalString("monitor.type.invalid",
-                 "No type exists in habitat for the given monitor type {0}", type));
+            report.setMessage(
+                    localStrings.getLocalString("monitor.type.invalid", "No type exists in habitat for the given monitor type {0}", type));
         }
 
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);

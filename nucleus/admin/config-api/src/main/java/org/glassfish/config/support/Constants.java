@@ -18,6 +18,7 @@ package org.glassfish.config.support;
 
 /**
  * Shared constants for config-beans packages
+ * 
  * @author Byron Nevins
  */
 
@@ -32,9 +33,9 @@ public class Constants {
     static final String CONFIGS = "configs";
     static final String CONFIG_REF = "config-ref";
     static final String NAME = "name";
-    public static final String NAME_REGEX =        "[A-Za-z0-9_][A-Za-z0-9\\-_\\./;#]*";
+    public static final String NAME_REGEX = "[A-Za-z0-9_][A-Za-z0-9\\-_\\./;#]*";
     public static final String NAME_SERVER_REGEX = "[A-Za-z0-9_][A-Za-z0-9\\-_\\.;]*";
-    public static final String NAME_APP_REGEX =    "[A-Za-z0-9_][A-Za-z0-9\\-_\\./;:#]*";
+    public static final String NAME_APP_REGEX = "[A-Za-z0-9_][A-Za-z0-9\\-_\\./;:#]*";
     public static final String DEFAULT_MAX_POOL_SIZE = "32";
     public static final String DEFAULT_STEADY_POOL_SIZE = "8";
 }

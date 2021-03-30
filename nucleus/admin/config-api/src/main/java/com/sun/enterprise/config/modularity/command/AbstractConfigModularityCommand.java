@@ -63,8 +63,8 @@ public class AbstractConfigModularityCommand {
         if (CommandTarget.CONFIG.isValid(serviceLocator, targetName)) {
             return domain.getConfigNamed(targetName);
         }
-        if (CommandTarget.DAS.isValid(serviceLocator, targetName) ||
-                CommandTarget.STANDALONE_INSTANCE.isValid(serviceLocator, targetName)) {
+        if (CommandTarget.DAS.isValid(serviceLocator, targetName)
+                || CommandTarget.STANDALONE_INSTANCE.isValid(serviceLocator, targetName)) {
             Server s = domain.getServerNamed(targetName);
             return s == null ? null : domain.getConfigNamed(s.getConfigRef());
         }
@@ -77,8 +77,8 @@ public class AbstractConfigModularityCommand {
         return null;
     }
 
-
-    protected Collection<AccessRequired.AccessCheck> getAccessChecksForDefaultValue(List<ConfigBeanDefaultValue> values, String target, List<String> actions) {
+    protected Collection<AccessRequired.AccessCheck> getAccessChecksForDefaultValue(List<ConfigBeanDefaultValue> values, String target,
+            List<String> actions) {
         Collection<AccessRequired.AccessCheck> checks = new ArrayList<AccessRequired.AccessCheck>();
         for (ConfigBeanDefaultValue val : values) {
             String location = val.getLocation();
@@ -90,7 +90,8 @@ public class AbstractConfigModularityCommand {
         return checks;
     }
 
-    protected Collection<AccessRequired.AccessCheck> getAccessChecksForConfigBean(ConfigBeanProxy cbProxy, String target, List<String> actions) {
+    protected Collection<AccessRequired.AccessCheck> getAccessChecksForConfigBean(ConfigBeanProxy cbProxy, String target,
+            List<String> actions) {
         Collection<AccessRequired.AccessCheck> checks = new ArrayList<AccessRequired.AccessCheck>();
         for (String s : actions) {
             AccessRequired.AccessCheck check = new AccessRequired.AccessCheck(cbProxy, s, true);

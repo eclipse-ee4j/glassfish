@@ -30,9 +30,8 @@ import java.io.Writer;
 import java.util.logging.Level;
 
 /**
- * Creates {@link Reader} and {@link Writer} for the String substitution file.
- * Its handles the small files which can be processed differently for faster
- * and better performance comparative to larger files.
+ * Creates {@link Reader} and {@link Writer} for the String substitution file. Its handles the small files which can be
+ * processed differently for faster and better performance comparative to larger files.
  */
 public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
     /**
@@ -41,7 +40,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
      * @param file Input file.
      * @throws FileNotFoundException If file is not found.
      */
-    public SmallFileSubstitutionHandler(File file)throws FileNotFoundException {
+    public SmallFileSubstitutionHandler(File file) throws FileNotFoundException {
         super(file);
     }
 
@@ -49,7 +48,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
     public Reader getReader() {
         try {
             if (_reader == null) {
-                char[] buffer = new char[(int)_inputFile.length()];
+                char[] buffer = new char[(int) _inputFile.length()];
                 int count = 0;
                 try {
                     _reader = new InputStreamReader(new FileInputStream(_inputFile));

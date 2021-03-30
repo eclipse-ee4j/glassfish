@@ -36,7 +36,7 @@ public abstract class RemoteException extends Exception {
     }
 
     RemoteException(Throwable t) {
-            super(t.getMessage(), t);
+        super(t.getMessage(), t);
     }
 
     public String getRemoteCause() {

@@ -28,12 +28,12 @@ import jakarta.inject.Inject;
 import java.beans.PropertyVetoException;
 
 /**
- * Resolver for an un-named type. If the type instance is not found, it will
- * create an instance of it under the domain instance.
+ * Resolver for an un-named type. If the type instance is not found, it will create an instance of it under the domain
+ * instance.
  *
  * @author Jerome Dochez
  */
-@Service(name="type")
+@Service(name = "type")
 public class TypeResolver implements CrudResolver {
 
     @Inject
@@ -47,7 +47,7 @@ public class TypeResolver implements CrudResolver {
     @Override
     public <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, final Class<T> type) {
         T proxy = habitat.getService(type);
-        if (proxy==null) {
+        if (proxy == null) {
             try {
                 proxy = type.cast(ConfigSupport.apply(new SingleConfigCode<Domain>() {
                     @Override
@@ -60,9 +60,8 @@ public class TypeResolver implements CrudResolver {
                         } catch (ClassNotFoundException e) {
                             throw new TransactionFailure(e.toString());
                         }
-                        if (elementName==null) {
-                            String msg = localStrings.getLocalString(TypeResolver.class,
-                                    "TypeResolver.no_element_of_that_type",
+                        if (elementName == null) {
+                            String msg = localStrings.getLocalString(TypeResolver.class, "TypeResolver.no_element_of_that_type",
                                     "The Domain configuration does not have a sub-element of the type {0}", type.getSimpleName());
                             throw new TransactionFailure(msg);
                         }
@@ -74,12 +73,11 @@ public class TypeResolver implements CrudResolver {
                         return child;
                     }
                 }, domain));
-            } catch(TransactionFailure e) {
+            } catch (TransactionFailure e) {
                 throw new RuntimeException(e);
             }
-            if (proxy==null) {
-                String msg = localStrings.getLocalString(TypeResolver.class,
-                        "TypeResolver.target_object_not_found",
+            if (proxy == null) {
+                String msg = localStrings.getLocalString(TypeResolver.class, "TypeResolver.target_object_not_found",
                         "Cannot find a single component instance of type {0}", type.getSimpleName());
                 throw new RuntimeException(msg);
             }

@@ -53,8 +53,8 @@ import java.util.Map;
 import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
 /**
- * The configuration defines the configuration of a server instance that can be
- * shared by other server instances. The availability-service and are SE/EE only
+ * The configuration defines the configuration of a server instance that can be shared by other server instances. The
+ * availability-service and are SE/EE only
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -78,8 +78,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Name of the configured object
      *
-     * @return name of the configured object
-     FIXME: should set 'key=true'.  See bugs 6039, 6040
+     * @return name of the configured object FIXME: should set 'key=true'. See bugs 6039, 6040
      */
     @NotNull
     @NotTargetKeyword(message = "{config.reserved.name}", payload = Config.class)
@@ -93,14 +92,11 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Gets the value of the dynamicReconfigurationEnabled property.
      *
-     * When set to "true" then any changes to the system (e.g. applications
-     * deployed, resources created) will be automatically applied to the
-     * affected servers without a restart being required. When set to
-     * "false" such changes will only be picked up by the affected servers
-     * when each server restarts.
+     * When set to "true" then any changes to the system (e.g. applications deployed, resources created) will be
+     * automatically applied to the affected servers without a restart being required. When set to "false" such changes will
+     * only be picked up by the affected servers when each server restarts.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getDynamicReconfigurationEnabled();
@@ -108,8 +104,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the dynamicReconfigurationEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setDynamicReconfigurationEnabled(String value) throws PropertyVetoException;
 
@@ -131,8 +126,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Gets the value of the httpService property.
      *
-     * @return possible object is
-     *         {@link HttpService }
+     * @return possible object is {@link HttpService }
      */
     @Element(required = true)
     HttpService getHttpService();
@@ -140,16 +134,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the httpService property.
      *
-     * @param value allowed object is
-     *              {@link HttpService }
+     * @param value allowed object is {@link HttpService }
      */
     void setHttpService(HttpService value) throws PropertyVetoException;
 
     /**
      * Gets the value of the adminService property.
      *
-     * @return possible object is
-     *         {@link AdminService }
+     * @return possible object is {@link AdminService }
      */
     @Element(required = true)
     AdminService getAdminService();
@@ -157,16 +149,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the adminService property.
      *
-     * @param value allowed object is
-     *              {@link AdminService }
+     * @param value allowed object is {@link AdminService }
      */
     void setAdminService(AdminService value) throws PropertyVetoException;
 
     /**
      * Gets the value of the logService property.
      *
-     * @return possible object is
-     *         {@link LogService }
+     * @return possible object is {@link LogService }
      */
     @Element(required = true)
     LogService getLogService();
@@ -174,16 +164,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the logService property.
      *
-     * @param value allowed object is
-     *              {@link LogService }
+     * @param value allowed object is {@link LogService }
      */
     void setLogService(LogService value) throws PropertyVetoException;
 
     /**
      * Gets the value of the securityService property.
      *
-     * @return possible object is
-     *         {@link SecurityService }
+     * @return possible object is {@link SecurityService }
      */
     @Element(required = true)
     SecurityService getSecurityService();
@@ -191,16 +179,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the securityService property.
      *
-     * @param value allowed object is
-     *              {@link SecurityService }
+     * @param value allowed object is {@link SecurityService }
      */
     void setSecurityService(SecurityService value) throws PropertyVetoException;
 
     /**
      * Gets the value of the monitoringService property.
      *
-     * @return possible object is
-     *         {@link MonitoringService }
+     * @return possible object is {@link MonitoringService }
      */
     @Element()
     @NotNull
@@ -209,16 +195,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the monitoringService property.
      *
-     * @param value allowed object is
-     *              {@link MonitoringService }
+     * @param value allowed object is {@link MonitoringService }
      */
     void setMonitoringService(MonitoringService value) throws PropertyVetoException;
 
     /**
      * Gets the value of the diagnosticService property.
      *
-     * @return possible object is
-     *         {@link DiagnosticService }
+     * @return possible object is {@link DiagnosticService }
      */
     @Element
     DiagnosticService getDiagnosticService();
@@ -226,16 +210,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the diagnosticService property.
      *
-     * @param value allowed object is
-     *              {@link DiagnosticService }
+     * @param value allowed object is {@link DiagnosticService }
      */
     void setDiagnosticService(DiagnosticService value) throws PropertyVetoException;
 
     /**
      * Gets the value of the javaConfig property.
      *
-     * @return possible object is
-     *         {@link JavaConfig }
+     * @return possible object is {@link JavaConfig }
      */
     @Element(required = true)
     JavaConfig getJavaConfig();
@@ -243,16 +225,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the javaConfig property.
      *
-     * @param value allowed object is
-     *              {@link JavaConfig }
+     * @param value allowed object is {@link JavaConfig }
      */
     void setJavaConfig(JavaConfig value) throws PropertyVetoException;
 
     /**
      * Gets the value of the availabilityService property.
      *
-     * @return possible object is
-     *         {@link AvailabilityService }
+     * @return possible object is {@link AvailabilityService }
      */
     @Element
     @NotNull
@@ -261,16 +241,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the availabilityService property.
      *
-     * @param value allowed object is
-     *              {@link AvailabilityService }
+     * @param value allowed object is {@link AvailabilityService }
      */
     void setAvailabilityService(AvailabilityService value) throws PropertyVetoException;
 
     /**
      * Gets the value of the threadPools property.
      *
-     * @return possible object is
-     *         {@link ThreadPools }
+     * @return possible object is {@link ThreadPools }
      */
     @Element(required = true)
     ThreadPools getThreadPools();
@@ -278,16 +256,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the threadPools property.
      *
-     * @param value allowed object is
-     *              {@link ThreadPools }
+     * @param value allowed object is {@link ThreadPools }
      */
     void setThreadPools(ThreadPools value) throws PropertyVetoException;
 
     /**
      * Gets the value of the groupManagementService property.
      *
-     * @return possible object is
-     *         {@link GroupManagementService }
+     * @return possible object is {@link GroupManagementService }
      */
     @Element
     @NotNull
@@ -296,8 +272,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     /**
      * Sets the value of the groupManagementService property.
      *
-     * @param value allowed object is
-     *              {@link GroupManagementService }
+     * @param value allowed object is {@link GroupManagementService }
      */
     void setGroupManagementService(GroupManagementService value) throws PropertyVetoException;
 
@@ -305,39 +280,33 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
      * Gets the value of the systemProperty property.
      * <p/>
      * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the systemProperty property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * systemProperty property.
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSystemProperty().add(newItem);
+     * getSystemProperty().add(newItem);
      * </pre>
      * <p/>
      * <p/>
      * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link SystemProperty }
+     * Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Any more legal system properties?")
-    @PropertiesDesc(
-            systemProperties = true,
-            props = {
-                    @PropertyDesc(name = "HTTP_LISTENER_PORT", defaultValue = "8080", dataType = Port.class),
-                    @PropertyDesc(name = "HTTP_SSL_LISTENER_PORT", defaultValue = "1043", dataType = Port.class),
-                    @PropertyDesc(name = "HTTP_ADMIN_LISTENER_PORT", defaultValue = "4848", dataType = Port.class),
-                    @PropertyDesc(name = "IIOP_LISTENER_PORT", defaultValue = "3700", dataType = Port.class),
-                    @PropertyDesc(name = "IIOP_SSL_LISTENER_PORT", defaultValue = "1060", dataType = Port.class),
-                    @PropertyDesc(name = "IIOP_SSL_MUTUALAUTH_PORT", defaultValue = "1061", dataType = Port.class),
-                    @PropertyDesc(name = "JMX_SYSTEM_CONNECTOR_PORT", defaultValue = "8686", dataType = Port.class)
-            }
-    )
+    @PropertiesDesc(systemProperties = true, props = {
+            @PropertyDesc(name = "HTTP_LISTENER_PORT", defaultValue = "8080", dataType = Port.class),
+            @PropertyDesc(name = "HTTP_SSL_LISTENER_PORT", defaultValue = "1043", dataType = Port.class),
+            @PropertyDesc(name = "HTTP_ADMIN_LISTENER_PORT", defaultValue = "4848", dataType = Port.class),
+            @PropertyDesc(name = "IIOP_LISTENER_PORT", defaultValue = "3700", dataType = Port.class),
+            @PropertyDesc(name = "IIOP_SSL_LISTENER_PORT", defaultValue = "1060", dataType = Port.class),
+            @PropertyDesc(name = "IIOP_SSL_MUTUALAUTH_PORT", defaultValue = "1061", dataType = Port.class),
+            @PropertyDesc(name = "JMX_SYSTEM_CONNECTOR_PORT", defaultValue = "8686", dataType = Port.class) })
     @Element
     @Override
     List<SystemProperty> getSystemProperty();
-
 
     //DuckTyped for accessing the logging.properties file
 
@@ -360,33 +329,29 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
      * Return an extension configuration given the extension type.
      *
      * @param type type of the requested extension configuration
-     * @param <T>  interface subclassing the ConfigExtension type
-     * @return a configuration proxy of type T or null if there is no such
-     *         configuration with that type.
+     * @param <T> interface subclassing the ConfigExtension type
+     * @return a configuration proxy of type T or null if there is no such configuration with that type.
      */
     @ConfigExtensionMethod
     <T extends ConfigExtension> T getExtensionByType(Class<T> type);
 
     /**
-     * Add name as an index key for this Config and for the objects that are
-     * directly referenced by this Config.  This includes all of the Config
-     * extensions.
+     * Add name as an index key for this Config and for the objects that are directly referenced by this Config. This
+     * includes all of the Config extensions.
      *
      * @param habitat ServiceLocator that contains this Config
-     * @param name    name to use to identify the objects
+     * @param name name to use to identify the objects
      */
     @DuckTyped
     void addIndex(ServiceLocator habitat, String name);
 
-
     /**
      * @param configBeanType The config bean type we want to check whether the configuration exists for it or not.
-     * @param <P>            Type that extends the   ConfigBeanProxy which is the type of class we accept as parameter
+     * @param <P> Type that extends the ConfigBeanProxy which is the type of class we accept as parameter
      * @return true if configuration for the type exists in the target area of domain.xml and false if not.
      */
     @DuckTyped
     <P extends ConfigExtension> boolean checkIfExtensionExists(Class<P> configBeanType);
-
 
     @DuckTyped
     ResourceRef getResourceRef(String refName);
@@ -409,10 +374,9 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             try {
                 String type = c.getAdminService().getType();
 
-                if (type != null && ( type.equals("das") || type.equals("das-and-server")))
+                if (type != null && (type.equals("das") || type.equals("das-and-server")))
                     return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // fall through
             }
             return false;
@@ -460,41 +424,28 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             return map;
         }
 
-
         public static NetworkListener getAdminListener(Config c) {
             return ServerHelper.getAdminListener(c);
         }
 
         public static void addIndex(Config c, ServiceLocator habitat, String name) {
-            ServiceLocatorUtilities.addOneDescriptor(habitat,
-                    BuilderHelper.createConstantDescriptor(c, name, Config.class));
+            ServiceLocatorUtilities.addOneDescriptor(habitat, BuilderHelper.createConstantDescriptor(c, name, Config.class));
 
             // directly referenced objects
-            ConfigBeanProxy dirref[] = {
-                    c.getAdminService(),
-                    c.getAvailabilityService(),
-                    c.getDiagnosticService(),
-                    c.getHttpService(),
-                    c.getJavaConfig(),
-                    c.getLogService(),
-                    c.getNetworkConfig(),
-                    c.getSecurityService(),
-                    c.getThreadPools(),
-                    c.getMonitoringService(),
-            };
+            ConfigBeanProxy dirref[] = { c.getAdminService(), c.getAvailabilityService(), c.getDiagnosticService(), c.getHttpService(),
+                    c.getJavaConfig(), c.getLogService(), c.getNetworkConfig(), c.getSecurityService(), c.getThreadPools(),
+                    c.getMonitoringService(), };
             for (ConfigBeanProxy cbp : dirref) {
                 if (cbp != null) {
                     ServiceLocatorUtilities.addOneDescriptor(habitat,
-                            BuilderHelper.createConstantDescriptor(cbp, name,
-                                    ConfigSupport.getImpl(cbp).getProxyType()));
+                            BuilderHelper.createConstantDescriptor(cbp, name, ConfigSupport.getImpl(cbp).getProxyType()));
                 }
             }
 
             // containers
             for (Container extension : c.getContainers()) {
                 ServiceLocatorUtilities.addOneDescriptor(habitat,
-                        BuilderHelper.createConstantDescriptor(extension, name,
-                                ConfigSupport.getImpl(extension).getProxyType()));
+                        BuilderHelper.createConstantDescriptor(extension, name, ConfigSupport.getImpl(extension).getProxyType()));
             }
         }
 
@@ -550,8 +501,9 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
         }
 
     }
+
     /**
-    	Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})

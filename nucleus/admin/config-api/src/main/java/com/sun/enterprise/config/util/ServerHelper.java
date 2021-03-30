@@ -35,8 +35,7 @@ import org.glassfish.config.support.PropertyResolver;
 import org.jvnet.hk2.config.Dom;
 
 /**
- * The Server.java file is getting pretty bloated.
- * Offload some utilities here.
+ * The Server.java file is getting pretty bloated. Offload some utilities here.
  *
  * @author Byron Nevins
  */
@@ -64,15 +63,14 @@ public class ServerHelper {
                 return -1; // get out quick.  it is kosher to call with a null Server
 
             return Integer.parseInt(portString);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // drop through...
         }
         return -1;
     }
 
     public final String getAdminHost() {
-         if (server == null || config == null) {
+        if (server == null || config == null) {
             return null;
         }
         // Look at the address for the admin-listener first
@@ -84,16 +82,14 @@ public class ServerHelper {
         Dom serverDom = Dom.unwrap(server);
         Domain domain = serverDom.getHabitat().getService(Domain.class);
         Nodes nodes = serverDom.getHabitat().getService(Nodes.class);
-        ServerEnvironment env =
-                serverDom.getHabitat().getService(ServerEnvironment.class);
+        ServerEnvironment env = serverDom.getHabitat().getService(ServerEnvironment.class);
 
         if (server.isDas()) {
             if (env.isDas()) {
                 // We are the DAS. Return our hostname
-                return System.getProperty(
-                        SystemPropertyConstants.HOST_NAME_PROPERTY);
+                return System.getProperty(SystemPropertyConstants.HOST_NAME_PROPERTY);
             } else {
-                return null;    // IT 12778 -- it is impossible to know
+                return null; // IT 12778 -- it is impossible to know
             }
         }
 
@@ -123,8 +119,7 @@ public class ServerHelper {
     public final boolean isRunning() {
         try {
             return NetUtils.isRunning(getAdminHost(), getAdminPort());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // fall through
         }
         return false;
@@ -166,8 +161,8 @@ public class ServerHelper {
     private static String[] translateAddressAndPort(NetworkListener adminListener, Server server, Config config) {
         NetworkListener adminListenerRaw = null;
         String[] ret = new String[2];
-            String portString = null;
-            String addressString = null;
+        String portString = null;
+        String addressString = null;
 
         try {
             Dom serverDom = Dom.unwrap(server);
@@ -187,8 +182,7 @@ public class ServerHelper {
                 ret[0] = resolver.getPropertyValue(addressString);
             else
                 ret[0] = addressString;
-        }
-        catch (ClassCastException e) {
+        } catch (ClassCastException e) {
             //jc: workaround for issue 12354
             // TODO severe error
             ret[0] = translatePortOld(addressString, server, config);
@@ -222,11 +216,9 @@ public class ServerHelper {
     }
 
     private static boolean isToken(String s) {
-        return s != null
-                && s.startsWith("${")
-                && s.endsWith("}")
-                && s.length() > 3;
+        return s != null && s.startsWith("${") && s.endsWith("}") && s.length() > 3;
     }
+
     private final Server server;
     private final Config config;
 }

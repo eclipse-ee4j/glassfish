@@ -38,13 +38,13 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
-
 /**
  * This singleton service creates and holds the command pool used to execute commands
+ * 
  * @author Vijay Ramachandran
  */
 @Service
-@RunLevel(mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING,value=StartupRunLevel.VAL)
+@RunLevel(mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING, value = StartupRunLevel.VAL)
 public class CommandThreadPool implements PostConstruct {
 
     @Inject
@@ -61,7 +61,8 @@ public class CommandThreadPool implements PostConstruct {
 
     private ExecutorService svc = null;
 
-    public CommandThreadPool() {}
+    public CommandThreadPool() {
+    }
 
     /**
      * Process the instance file if this is DAS and there are instances configured already in this domain
@@ -69,21 +70,21 @@ public class CommandThreadPool implements PostConstruct {
     @Override
     public void postConstruct() {
         // If this is not the DAS, no need for this pool
-        if(serverEnv.isInstance()) {
+        if (serverEnv.isInstance()) {
             return;
         }
         int poolSize = 5;
         Config svrConfig = domain.getConfigNamed("server-config");
         // I am doing this code instead of a simple svrConfig.getAdminListener() here because embedded tests are failing
         // during build; got to check the reason why later.
-        if(svrConfig != null) {
+        if (svrConfig != null) {
             NetworkConfig nwc = svrConfig.getNetworkConfig();
             if (nwc != null) {
                 List<NetworkListener> lss = nwc.getNetworkListeners().getNetworkListener();
-                if ( (lss != null) && (!lss.isEmpty()) ) {
+                if ((lss != null) && (!lss.isEmpty())) {
                     for (NetworkListener ls : lss) {
                         if (ServerTags.ADMIN_LISTENER_ID.equals(ls.getName())) {
-                            if(ls.findThreadPool() != null) {
+                            if (ls.findThreadPool() != null) {
                                 poolSize = Integer.parseInt(ls.findThreadPool().getMaxThreadPoolSize());
                             }
                         }
@@ -95,7 +96,7 @@ public class CommandThreadPool implements PostConstruct {
     }
 
     public Future<InstanceCommandResult> submitJob(InstanceCommand ice, InstanceCommandResult r) {
-        FutureTask<InstanceCommandResult> t = new FutureTask<InstanceCommandResult>((Runnable)ice, r);
+        FutureTask<InstanceCommandResult> t = new FutureTask<InstanceCommandResult>((Runnable) ice, r);
         return svc.submit(t, r);
     }
 

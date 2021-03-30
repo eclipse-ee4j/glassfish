@@ -23,11 +23,10 @@ import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.MemberEntry;
 
 /**
- * Creates {@link Reader} and {@link Writer} for the {@link MemberEntry} of an archive,
- * that has to undergo string substitution.
+ * Creates {@link Reader} and {@link Writer} for the {@link MemberEntry} of an archive, that has to undergo string
+ * substitution.
  */
-public interface ArchiveMember extends Substitutable
-{
+public interface ArchiveMember extends Substitutable {
     /**
      * Gets the {@link ArchiveEntryWrapper} of the member entry.
      *

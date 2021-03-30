@@ -21,37 +21,32 @@ import com.sun.enterprise.util.i18n.StringManager;
 /**
  * Validator class for domain config entries whose type is java.lang.String.
  */
-public class StringValidator extends Validator
-{
+public class StringValidator extends Validator {
     /**
      * i18n strings manager object
      */
-    private static final StringManager strMgr = 
-        StringManager.getManager(StringValidator.class);
+    private static final StringManager strMgr = StringManager.getManager(StringValidator.class);
 
     /**
      * Constructs new StringValidator object.
+     * 
      * @param name
      */
-    public StringValidator(String name)
-    {
+    public StringValidator(String name) {
         super(name, java.lang.String.class);
     }
 
     /**
-     * Validates the given value for the given entry. This method first invokes
-     * its superclass's validate method and then checks additional string 
-     * validations such as 0 length.
+     * Validates the given value for the given entry. This method first invokes its superclass's validate method and then
+     * checks additional string validations such as 0 length.
+     * 
      * @throws InvalidConfigException
      */
-    public void validate(Object str) throws InvalidConfigException
-    {
+    public void validate(Object str) throws InvalidConfigException {
         super.validate(str);
-        int length = ((String)str).length();
-        if (length == 0)
-        {
-            throw new InvalidConfigException(
-                strMgr.getString("validator.invalid_value", getName(), str));
+        int length = ((String) str).length();
+        if (length == 0) {
+            throw new InvalidConfigException(strMgr.getString("validator.invalid_value", getName(), str));
         }
     }
 }

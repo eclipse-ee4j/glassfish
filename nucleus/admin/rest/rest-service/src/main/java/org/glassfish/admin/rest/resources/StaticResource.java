@@ -20,7 +20,6 @@ import java.io.InputStream;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
@@ -32,32 +31,12 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 public class StaticResource {
 
     private final String PATH_INSIDE_JAR = "org/glassfish/admin/rest/static/";
-    private final String mimes[] = {
-        ".bmp", "image/bmp",
-        ".bz", "application/x-bzip",
-        ".bz2", "application/x-bzip2",
-        ".css", "text/css",
-        ".gz", "application/x-gzip",
-        ".gzip", "application/x-gzip",
-        ".htm", "text/html",
-        ".html", "text/html",
-        ".htmls", "text/html",
-        ".htx", "text/html",
-        ".ico", "image/x-icon",
-        ".jpe", "image/jpeg",
-        ".jpe", "image/pjpeg",
-        ".jpeg", "image/jpeg",
-        ".jpg", "image/jpeg",
-        ".js", "application/x-javascript",
-        ".javascript", "application/x-javascript",
-        ".json", "application/json",
-        ".png", "image/png",
-        ".text", "text/plain",
-        ".tif", "image/tiff",
-        ".tiff", "image/tiff",
-        ".xml", "text/xml",
-        ".zip", "application/zip"
-    };
+    private final String mimes[] = { ".bmp", "image/bmp", ".bz", "application/x-bzip", ".bz2", "application/x-bzip2", ".css", "text/css",
+            ".gz", "application/x-gzip", ".gzip", "application/x-gzip", ".htm", "text/html", ".html", "text/html", ".htmls", "text/html",
+            ".htx", "text/html", ".ico", "image/x-icon", ".jpe", "image/jpeg", ".jpe", "image/pjpeg", ".jpeg", "image/jpeg", ".jpg",
+            "image/jpeg", ".js", "application/x-javascript", ".javascript", "application/x-javascript", ".json", "application/json", ".png",
+            "image/png", ".text", "text/plain", ".tif", "image/tiff", ".tiff", "image/tiff", ".xml", "text/xml", ".zip",
+            "application/zip" };
 
     @GET
     @Path("{resource: .+}")

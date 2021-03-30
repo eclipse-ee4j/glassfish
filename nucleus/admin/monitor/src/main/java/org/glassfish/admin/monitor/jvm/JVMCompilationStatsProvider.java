@@ -30,28 +30,26 @@ import org.glassfish.gmbal.ManagedObject;
 /* jvm.compilation-system */
 // v2 mbean: com.sun.appserv:name=compilation-system,type=compilation-system,category=monitor,server=server
 // v3 mbean:
-@AMXMetadata(type="compilation-system-mon", group="monitoring")
+@AMXMetadata(type = "compilation-system-mon", group = "monitoring")
 @ManagedObject
-@Description( "JVM Compilation Statistics" )
+@Description("JVM Compilation Statistics")
 public class JVMCompilationStatsProvider {
 
     private CompilationMXBean compBean = ManagementFactory.getCompilationMXBean();
 
-    private StringStatisticImpl compilerName = new StringStatisticImpl("Name", "String",
-                "Name of the Just-in-time (JIT) compiler" );
-    private CountStatisticImpl totalCompilationTime = new CountStatisticImpl(
-            "TotalCompilationTime", CountStatisticImpl.UNIT_MILLISECOND,
-                "Approximate accumlated elapsed time (in milliseconds) spent in compilation" );
+    private StringStatisticImpl compilerName = new StringStatisticImpl("Name", "String", "Name of the Just-in-time (JIT) compiler");
+    private CountStatisticImpl totalCompilationTime = new CountStatisticImpl("TotalCompilationTime", CountStatisticImpl.UNIT_MILLISECOND,
+            "Approximate accumlated elapsed time (in milliseconds) spent in compilation");
 
-    @ManagedAttribute(id="name-current")
-    @Description( "name of the Just-in-time (JIT) compiler" )
+    @ManagedAttribute(id = "name-current")
+    @Description("name of the Just-in-time (JIT) compiler")
     public StringStatistic getCompilerName() {
         compilerName.setCurrent(compBean.getName());
         return compilerName;
     }
 
-    @ManagedAttribute(id="totalcompilationtime-current")
-    @Description( "approximate accumlated elapsed time (in milliseconds) spent in compilation" )
+    @ManagedAttribute(id = "totalcompilationtime-current")
+    @Description("approximate accumlated elapsed time (in milliseconds) spent in compilation")
     public CountStatistic getTotalCompilationTime() {
         totalCompilationTime.setCount(compBean.getTotalCompilationTime());
         return totalCompilationTime;

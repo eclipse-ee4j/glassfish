@@ -15,6 +15,7 @@
  */
 
 package com.sun.enterprise.admin.cli.remote;
+
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.admin.remote.sse.GfSseInboundEvent;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
@@ -26,18 +27,15 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.AdminCommandState;
 
-
 /**
- * Whenever a command is executed with --detach
- * this class will close the Server Sent Events for
- * detached commands and give a job id.
+ * Whenever a command is executed with --detach this class will close the Server Sent Events for detached commands and
+ * give a job id.
  *
  * @author Bhakti Mehta
  */
 public class DetachListener implements AdminCommandEventBroker.AdminCommandListener<GfSseInboundEvent> {
-    
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(DetachListener.class);
+
+    private static final LocalStringsImpl strings = new LocalStringsImpl(DetachListener.class);
 
     private final Logger logger;
     private final RemoteRestAdminCommand rac;

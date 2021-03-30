@@ -46,7 +46,7 @@ import org.glassfish.internal.api.EmbeddedSystemAdministrator;
  */
 @Service()
 @PerLookup // this is a PerLookup service
-@ContractsProvided({org.glassfish.embeddable.CommandRunner.class, CommandExecutorImpl.class})
+@ContractsProvided({ org.glassfish.embeddable.CommandRunner.class, CommandExecutorImpl.class })
 // bcos CommandRunner interface can't depend on HK2, we need ContractProvided here.
 
 public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunner {
@@ -56,7 +56,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
 
     @Inject
     ServiceLocator habitat;
-    
+
     @Inject
     private EmbeddedSystemAdministrator embeddedSystemAdministrator;
 
@@ -64,7 +64,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
 
     private Logger logger = Logger.getAnonymousLogger();
 
-    public CommandResult run(String command, String... args){
+    public CommandResult run(String command, String... args) {
         try {
             ActionReport actionReport = executeCommand(command, args);
             return convert(actionReport);
@@ -110,7 +110,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
                 }
             }
         }
-        
+
         return options;
     }
 
@@ -119,27 +119,24 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
     }
 
     /**
-     * Runs a command from somewhere OTHER THAN an already-running, 
-     * previously-authorized command.
+     * Runs a command from somewhere OTHER THAN an already-running, previously-authorized command.
      * <p>
-     * If a command is already running then it should have a valid Subject and
-     * that Subject must be used in running a nested command.  This
-     * method uses the internal system admin identity to authorize the command to be run and
-     * this should never be done if a user has authenticated to the system
-     * and is running a separate, already-authorized command.  This method
+     * If a command is already running then it should have a valid Subject and that Subject must be used in running a nested
+     * command. This method uses the internal system admin identity to authorize the command to be run and this should never
+     * be done if a user has authenticated to the system and is running a separate, already-authorized command. This method
      * is, therefore, used from some embedded functionality.
      * 
      * @param command
      * @param args
      * @return
-     * @throws CommandException 
+     * @throws CommandException
      */
     /* package */ ActionReport executeCommand(String command, String... args) throws CommandException {
         ParameterMap commandParams = getParameters(command, args);
         final ActionReport actionReport = createActionReport();
 
-        org.glassfish.api.admin.CommandRunner.CommandInvocation inv =
-                commandRunner.getCommandInvocation(command, actionReport, embeddedSystemAdministrator.getSubject(),false);
+        org.glassfish.api.admin.CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation(command, actionReport,
+                embeddedSystemAdministrator.getSubject(), false);
 
         inv.parameters(commandParams).execute();
 
@@ -147,18 +144,18 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
     }
 
     private CommandResult convert(final ActionReport actionReport) {
-        return new CommandResult(){
+        return new CommandResult() {
             public ExitStatus getExitStatus() {
                 final ActionReport.ExitCode actionExitCode = actionReport.getActionExitCode();
                 switch (actionExitCode) {
-                    case SUCCESS:
-                        return ExitStatus.SUCCESS;
-                    case WARNING:
-                        return ExitStatus.WARNING;
-                    case FAILURE:
-                        return ExitStatus.FAILURE;
-                    default:
-                        throw new RuntimeException("Unknown exit code: " + actionExitCode);
+                case SUCCESS:
+                    return ExitStatus.SUCCESS;
+                case WARNING:
+                    return ExitStatus.WARNING;
+                case FAILURE:
+                    return ExitStatus.FAILURE;
+                default:
+                    throw new RuntimeException("Unknown exit code: " + actionExitCode);
                 }
             }
 

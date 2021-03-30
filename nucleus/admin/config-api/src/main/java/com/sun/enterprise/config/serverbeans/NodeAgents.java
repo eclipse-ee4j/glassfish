@@ -22,7 +22,6 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 
 import java.util.List;
 
-
 /**
  *
  */
@@ -39,25 +38,22 @@ public interface NodeAgents extends ConfigBeanProxy {
      * Gets the value of the nodeAgent property.
      * <p/>
      * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the nodeAgent property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * nodeAgent property.
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getNodeAgent().add(newItem);
+     * getNodeAgent().add(newItem);
      * </pre>
      * <p/>
      * <p/>
      * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link NodeAgent }
+     * Objects of the following type(s) are allowed in the list {@link NodeAgent }
      */
     @Element
     public List<NodeAgent> getNodeAgent();
-
-
 
 }

@@ -87,8 +87,8 @@ public class RestCommandResourceProvider extends AbstractRestResourceProvider {
         //ProgressStatus
         r.add(ProgressStatusJsonProvider.class);
         r.add(ProgressStatusEventJsonProvider.class);
-//        //Debuging filters
-//        r.add(LoggingFilter.class);
+        //        //Debuging filters
+        //        r.add(LoggingFilter.class);
         return r;
     }
 
@@ -101,13 +101,10 @@ public class RestCommandResourceProvider extends AbstractRestResourceProvider {
     public String getContextRoot() {
         return org.glassfish.admin.restconnector.Constants.REST_COMMAND_CONTEXT_ROOT;
     }
-    
+
     @Override
-    public ResourceConfig getResourceConfig(Set<Class<?>> classes,
-                                            final ServerContext sc,
-                                            final ServiceLocator habitat,
-                                            final Set<? extends Binder> additionalBinders)
-            throws EndpointRegistrationException {
+    public ResourceConfig getResourceConfig(Set<Class<?>> classes, final ServerContext sc, final ServiceLocator habitat,
+            final Set<? extends Binder> additionalBinders) throws EndpointRegistrationException {
         ResourceConfig rc = new ResourceConfig(classes);
         rc.property(ServerProperties.MEDIA_TYPE_MAPPINGS, getMimeMappings());
         rc.register(CsrfProtectionFilter.class);
@@ -123,5 +120,5 @@ public class RestCommandResourceProvider extends AbstractRestResourceProvider {
         rc.property(ServerProperties.RESOURCE_VALIDATION_DISABLE, true);
         return rc;
     }
-    
+
 }

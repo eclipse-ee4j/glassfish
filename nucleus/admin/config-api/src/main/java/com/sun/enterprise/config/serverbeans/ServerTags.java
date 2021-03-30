@@ -18,7 +18,7 @@ package com.sun.enterprise.config.serverbeans;
 
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
-public class ServerTags  {
+public class ServerTags {
     // Tags for Element domain
     static public final String DOMAIN = "domain";
     static public final String APPLICATION_ROOT = "application-root";
@@ -140,8 +140,8 @@ public class ServerTags  {
     static public final String RESOURCE_ADAPTER = "resource-adapter";
     static public final String SYNCHRONIZATION = "synchronization";
     //static public final String NODE_AGENT = "node-agent";
-    static public final String NODES ="nodes";
-    
+    static public final String NODES = "nodes";
+
     static public final String SELF_MANAGEMENT = "self-management";
     static public final String GROUP_MANAGEMENT_SERVICE = "group-management-service";
     static public final String MANAGEMENT_EVENT = "management-event";
@@ -195,8 +195,8 @@ public class ServerTags  {
     // Tags for Element connector-service
     static public final String CONNECTOR_SERVICE = "connector-service";
     static public final String SHUTDOWN_TIMEOUT_IN_SECONDS = "shutdown-timeout-in-seconds";
-// Tags for Element web-container
-//static public final String WEB_CONTAINER = "web-container";
+    // Tags for Element web-container
+    //static public final String WEB_CONTAINER = "web-container";
     // Tags for Element ejb-container
     //static public final String EJB_CONTAINER = "ejb-container";
     static public final String STEADY_POOL_SIZE = "steady-pool-size";
@@ -677,8 +677,7 @@ public class ServerTags  {
     //static public final String OBJECT_TYPE = "object-type";
     //static public final String ENABLED = "enabled";
     public static final String IS_LIFECYCLE = "isLifecycle";
-    public static final String LOAD_SYSTEM_APP_ON_STARTUP = 
-        "load-system-app-on-startup";
+    public static final String LOAD_SYSTEM_APP_ON_STARTUP = "load-system-app-on-startup";
     // Tags for Element j2ee-application
     public static final String DEFAULT_APP_NAME = "defaultAppName";
     public static final String IS_COMPOSITE = "isComposite";
@@ -766,11 +765,11 @@ public class ServerTags  {
     //static public final String DESCRIPTION = "description";
     //static public final String NODE_AGENT_REF = "node-agent-ref";
     //static public final String CONFIG_REF = "config-ref";
-    
-    public static final String ADMIN_CONSOLE_CONTEXT_ROOT	= "adminConsoleContextRoot";
-    public static final String ADMIN_CONSOLE_DOWNLOAD_LOCATION	= "adminConsoleDownloadLocation";
-    public static final String IPS_ROOT				= "ipsRoot";
-    public static final String ADMIN_CONSOLE_VERSION		= "adminConsoleVersion";
+
+    public static final String ADMIN_CONSOLE_CONTEXT_ROOT = "adminConsoleContextRoot";
+    public static final String ADMIN_CONSOLE_DOWNLOAD_LOCATION = "adminConsoleDownloadLocation";
+    public static final String IPS_ROOT = "ipsRoot";
+    public static final String ADMIN_CONSOLE_VERSION = "adminConsoleVersion";
     public static final String ADMIN_LISTENER_ID = "admin-listener";
     public final static String SEC_ADMIN_LISTENER_PROTOCOL_NAME = "sec-admin-listener";
     public final static String REDIRECT_PROTOCOL_NAME = "admin-http-redirect";

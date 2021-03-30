@@ -17,7 +17,8 @@
 package com.sun.enterprise.admin.servermgmt.services;
 
 /**
- * A place for everything.  Everything in its place
+ * A place for everything. Everything in its place
+ * 
  * @author bnevins
  */
 class Constants {
@@ -68,7 +69,6 @@ class Constants {
     static final boolean LINUX_HACK;
 
     static {
-        LINUX_HACK = System.getProperty("user.name").indexOf("nevins") >= 0 &&
-                Boolean.parseBoolean(System.getenv("LINUX_HACK"));
+        LINUX_HACK = System.getProperty("user.name").indexOf("nevins") >= 0 && Boolean.parseBoolean(System.getenv("LINUX_HACK"));
     }
 }

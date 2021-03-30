@@ -86,9 +86,9 @@ public class ModuleXMLConfigurationFileParser {
                         } else if (attribute.getName().toString().equals(REPLACE_IF_EXISTS)) {
                             configValue.setReplaceCurrentIfExists(Boolean.parseBoolean(attribute.getValue()));
                         }
-                    }//attributes
+                    } //attributes
                     continue;
-                }//config bundle
+                } //config bundle
 
                 if (startElement.getName().getLocalPart().equalsIgnoreCase(CUSTOMIZATION_TOKEN)) {
                     ConfigCustomizationToken token;
@@ -115,7 +115,7 @@ public class ModuleXMLConfigurationFileParser {
                             validationExpression = getLocalizedValue(attribute.getValue());
                         }
 
-                    }//attributes
+                    } //attributes
                     event = eventReader.nextEvent();
                     while (!event.isStartElement() && !event.isEndElement()) {
                         event = eventReader.nextEvent();
@@ -151,7 +151,7 @@ public class ModuleXMLConfigurationFileParser {
                         if (attribute.getName().toString().equals(CONFIG_BEAN_CLASS_NAME)) {
                             configValue.setConfigBeanClassName(attribute.getValue());
                         }
-                    }//attributes
+                    } //attributes
                     event = eventReader.nextEvent();
                     if (event.isCharacters()) {
                         String str = event.asCharacters().getData();
@@ -159,14 +159,14 @@ public class ModuleXMLConfigurationFileParser {
                     }
                     continue;
                 }
-            }//isStartElement
+            } //isStartElement
             if (event.isEndElement()) {
                 EndElement endElement = event.asEndElement();
                 if (endElement.getName().getLocalPart().equalsIgnoreCase(CONFIG_BUNDLE)) {
                     configBeans.add(configValue);
                 }
             }
-        }//eventReader
+        } //eventReader
         return configBeans;
     }
 

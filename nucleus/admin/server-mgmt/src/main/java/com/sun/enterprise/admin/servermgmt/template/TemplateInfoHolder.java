@@ -42,8 +42,7 @@ public class TemplateInfoHolder {
     private TemplateInfo _templateInfo;
     private String _location;
 
-    public TemplateInfoHolder(InputStream inputSteam, String location)
-            throws DomainException {
+    public TemplateInfoHolder(InputStream inputSteam, String location) throws DomainException {
         try {
             _templateInfo = parse(inputSteam);
         } catch (Exception e) {
@@ -68,8 +67,7 @@ public class TemplateInfoHolder {
      * @throws Exception If any error occurs in parsing.
      */
     @SuppressWarnings("rawtypes")
-    private TemplateInfo parse(InputStream configStream)
-            throws Exception {
+    private TemplateInfo parse(InputStream configStream) throws Exception {
         if (configStream == null) {
             throw new DomainException("Invalid stream");
         }
@@ -83,14 +81,14 @@ public class TemplateInfoHolder {
             InputSource is = new InputSource(configStream);
             SAXSource source = new SAXSource(is);
             Object obj = unmarshaller.unmarshal(source);
-            return obj instanceof JAXBElement ? (TemplateInfo)(((JAXBElement) obj).getValue()) : (TemplateInfo) obj;
-        }
-        finally {
+            return obj instanceof JAXBElement ? (TemplateInfo) (((JAXBElement) obj).getValue()) : (TemplateInfo) obj;
+        } finally {
             try {
                 configStream.close();
                 configStream = null;
-            } catch(IOException e)
-            { /** Ignore */ }
+            } catch (IOException e) {
+                /** Ignore */
+            }
         }
     }
 }

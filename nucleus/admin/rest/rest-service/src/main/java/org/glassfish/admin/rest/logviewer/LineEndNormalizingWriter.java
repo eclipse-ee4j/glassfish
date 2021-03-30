@@ -24,10 +24,9 @@ import java.io.IOException;
  * Finds the lone LF and converts that to CR+LF.
  *
  * <p>
- * Internet Explorer's <tt>XmlHttpRequest.responseText</tt> seems to
- * normalize the line end, and if we only send LF without CR, it will
- * not recognize that as a new line. To work around this problem,
- * we use this filter to always convert LF to CR+LF.
+ * Internet Explorer's <tt>XmlHttpRequest.responseText</tt> seems to normalize the line end, and if we only send LF
+ * without CR, it will not recognize that as a new line. To work around this problem, we use this filter to always
+ * convert LF to CR+LF.
  *
  * @author Kohsuke Kawaguchi
  */
@@ -46,54 +45,54 @@ public /*for now, until Hudson migration completes*/ class LineEndNormalizingWri
 
     @Override
     public void write(String str) throws IOException {
-        write(str,0,str.length());
+        write(str, 0, str.length());
     }
 
     @Override
     public void write(int c) throws IOException {
-        if(!seenCR && c==LF)
+        if (!seenCR && c == LF)
             super.write("\r\n");
         else
             super.write(c);
-        seenCR = (c==CR);
+        seenCR = (c == CR);
     }
 
     @Override
     public void write(char cbuf[], int off, int len) throws IOException {
-        int end = off+len;
+        int end = off + len;
         int writeBegin = off;
 
-        for( int i=off; i<end; i++ ) {
+        for (int i = off; i < end; i++) {
             char ch = cbuf[i];
-            if(!seenCR && ch==LF) {
+            if (!seenCR && ch == LF) {
                 // write up to the char before LF
-                super.write(cbuf,writeBegin,i-writeBegin);
+                super.write(cbuf, writeBegin, i - writeBegin);
                 super.write("\r\n");
-                writeBegin=i+1;
+                writeBegin = i + 1;
             }
-            seenCR = (ch==CR);
+            seenCR = (ch == CR);
         }
 
-        super.write(cbuf,writeBegin,end-writeBegin);
+        super.write(cbuf, writeBegin, end - writeBegin);
     }
 
     @Override
     public void write(String str, int off, int len) throws IOException {
-        int end = off+len;
+        int end = off + len;
         int writeBegin = off;
 
-        for( int i=off; i<end; i++ ) {
+        for (int i = off; i < end; i++) {
             char ch = str.charAt(i);
-            if(!seenCR && ch==LF) {
+            if (!seenCR && ch == LF) {
                 // write up to the char before LF
-                super.write(str,writeBegin,i-writeBegin);
+                super.write(str, writeBegin, i - writeBegin);
                 super.write("\r\n");
-                writeBegin=i+1;
+                writeBegin = i + 1;
             }
-            seenCR = (ch==CR);
+            seenCR = (ch == CR);
         }
 
-        super.write(str,writeBegin,end-writeBegin);
+        super.write(str, writeBegin, end - writeBegin);
     }
 
     private static final int CR = 0x0D;

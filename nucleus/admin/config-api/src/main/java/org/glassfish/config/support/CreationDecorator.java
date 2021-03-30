@@ -26,8 +26,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 import java.beans.PropertyVetoException;
 
 /**
- * An element decorator decorates a newly added configuration element, usually added
- * through the generic create command implementation.
+ * An element decorator decorates a newly added configuration element, usually added through the generic create command
+ * implementation.
  *
  * @author Jerome Dochez
  */
@@ -35,9 +35,8 @@ import java.beans.PropertyVetoException;
 public interface CreationDecorator<T extends ConfigBeanProxy> {
 
     /**
-     * The element instance has been created and added to the parent, it can be
-     * customized. This method is called within a {@link org.jvnet.hk2.config.Transaction}
-     * and instance is therefore a writeable view on the configuration component.
+     * The element instance has been created and added to the parent, it can be customized. This method is called within a
+     * {@link org.jvnet.hk2.config.Transaction} and instance is therefore a writeable view on the configuration component.
      *
      * @param context administration command context
      * @param instance newly created configuration element

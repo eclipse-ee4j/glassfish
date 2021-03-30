@@ -29,11 +29,11 @@ import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
 
 /* server.runtime */
-@AMXMetadata(type="server-runtime-mon", group="monitoring", isSingleton=true)
+@AMXMetadata(type = "server-runtime-mon", group = "monitoring", isSingleton = true)
 @ManagedObject
-@Description( "Server Runtime Statistics" )
+@Description("Server Runtime Statistics")
 public class ServerRuntimeStatsProvider {
-    
+
     private final RuntimeMXBean rtBean = ManagementFactory.getRuntimeMXBean();
 
     public static final int STARTING_STATE = 0;
@@ -43,20 +43,20 @@ public class ServerRuntimeStatsProvider {
     public static final int FAILED_STATE = 4;
     private int state = STOPPED_STATE;
 
-    @ManagedAttribute(id="uptime")
-    @Description( "uptime of the Java virtual machine in milliseconds" )
+    @ManagedAttribute(id = "uptime")
+    @Description("uptime of the Java virtual machine in milliseconds")
     public long getUptime() {
         return rtBean.getUptime();
     }
 
-    @ManagedAttribute(id="starttime")
-    @Description( "start time of the Java virtual machine" )
+    @ManagedAttribute(id = "starttime")
+    @Description("start time of the Java virtual machine")
     public long getStartTime() {
         return rtBean.getStartTime();
     }
 
-    @ManagedAttribute(id="state")
-    @Description( "state of the server such as Running, Stopped, Failed" )
+    @ManagedAttribute(id = "state")
+    @Description("state of the server such as Running, Stopped, Failed")
     public synchronized long getState() {
         if (rtBean != null) {
             return RUNNING_STATE;

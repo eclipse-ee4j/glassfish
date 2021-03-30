@@ -26,14 +26,12 @@ import java.io.FileNotFoundException;
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
 
-
 /**
  * More.java
  *
  * @author <a href="mailto:toby.h.ferguson@sun.com">Toby H Ferguson</a>
  *
- * This class provides a primitive more(1) functionality, paging
- * through the given file, with an optional pagelength.
+ * This class provides a primitive more(1) functionality, paging through the given file, with an optional pagelength.
  */
 
 public class More {
@@ -42,8 +40,7 @@ public class More {
     private String quit;
     private String prompt;
 
-    public More(int linesPerPage, Reader src, Writer dest,
-            Reader fromUser, Writer toUser, String quitPrefix, String prompt)
+    public More(int linesPerPage, Reader src, Writer dest, Reader fromUser, Writer toUser, String quitPrefix, String prompt)
             throws IOException {
         in = new BufferedReader(fromUser);
         out = new BufferedWriter(toUser);
@@ -51,15 +48,14 @@ public class More {
         this.prompt = prompt;
 
         Pager pager = new Pager(linesPerPage, src, dest);
-	do {
+        do {
             pager.nextPage();
-	} while (pager.hasNext() && wantsToContinue());
+        } while (pager.hasNext() && wantsToContinue());
     }
 
     /**
-     * Return false iff the line read from the user starts with the
-     * quit character. This is a blocking call, waiting on input
-     * from the user
+     * Return false iff the line read from the user starts with the quit character. This is a blocking call, waiting on
+     * input from the user
      */
     boolean wantsToContinue() throws IOException {
         out.write(prompt);

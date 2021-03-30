@@ -32,7 +32,7 @@ import org.glassfish.api.logging.LogHelper;
  * @author jdlee
  */
 public class Util {
-    
+
     public static Map<String, Object> processJsonMap(String json) {
         Map<String, Object> map;
         try {

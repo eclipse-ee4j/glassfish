@@ -44,7 +44,7 @@ public class HttpServicePropertiesUpgrade extends BaseLegacyConfigurationUpgrade
     public void execute(AdminCommandContext context) {
         for (Config config : configs.getConfig()) {
             HttpService service = config.getHttpService();
-            if(service == null)
+            if (service == null)
                 continue;
             boolean done = false;
             try {
@@ -53,24 +53,20 @@ public class HttpServicePropertiesUpgrade extends BaseLegacyConfigurationUpgrade
                 while (!done && iterator.hasNext()) {
                     final Property property = iterator.next();
                     String name = property.getName();
-                    if ("accessLoggingEnabled".equals(name)
-                        || "accessLogBufferSize".equals(name)
-                        || "accessLogWriteInterval".equals(name)
-                        || "sso-enabled".equals(name)) {
+                    if ("accessLoggingEnabled".equals(name) || "accessLogBufferSize".equals(name) || "accessLogWriteInterval".equals(name)
+                            || "sso-enabled".equals(name)) {
                         done = true;
                         upgrade(context, property, service);
                     }
                 }
             } catch (TransactionFailure tf) {
-                ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, 
-                        ConfigApiLoggerInfo.ERR_UPGRADE_HTTP_SVC_PROPS, tf);
+                ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, ConfigApiLoggerInfo.ERR_UPGRADE_HTTP_SVC_PROPS, tf);
                 throw new RuntimeException(tf);
             }
         }
     }
 
-    private void upgrade(final AdminCommandContext context, final Property property, final HttpService service)
-            throws TransactionFailure {
+    private void upgrade(final AdminCommandContext context, final Property property, final HttpService service) throws TransactionFailure {
         if ("accessLoggingEnabled".equals(property.getName())) {
             updatePropertyToAttribute(context, service, "accessLoggingEnabled", "accessLoggingEnabled");
         } else if ("accessLogBufferSize".equals(property.getName())) {
@@ -82,8 +78,7 @@ public class HttpServicePropertiesUpgrade extends BaseLegacyConfigurationUpgrade
                 }
             }, service.getAccessLog());
             removeProperty(service, "accessLogBufferSize");
-            report(context,
-                "Moved http-service.property.accessLogBufferSize to http-service.access-log.buffer-size-bytes");
+            report(context, "Moved http-service.property.accessLogBufferSize to http-service.access-log.buffer-size-bytes");
         } else if ("accessLogWriteInterval".equals(property.getName())) {
             ConfigSupport.apply(new SingleConfigCode<AccessLog>() {
                 @Override
@@ -93,8 +88,7 @@ public class HttpServicePropertiesUpgrade extends BaseLegacyConfigurationUpgrade
                 }
             }, service.getAccessLog());
             removeProperty(service, "accessLogWriteInterval");
-            report(context,
-                "Moved http-service.property.accessLogWriteInterval to http-service.access-log.write-interval-seconds");
+            report(context, "Moved http-service.property.accessLogWriteInterval to http-service.access-log.write-interval-seconds");
         } else if ("sso-enabled".equals(property.getName())) {
             updatePropertyToAttribute(context, service, "sso-enabled", "ssoEnabled");
         }

@@ -22,8 +22,7 @@ public class IndentingStringBuffer {
     private Indenter indenter = new Indenter();
 
     public void println(String val) {
-        sb.append(indenter.getIndent())
-                .append(val).append("\n");
+        sb.append(indenter.getIndent()).append(val).append("\n");
     }
 
     public void indent() {

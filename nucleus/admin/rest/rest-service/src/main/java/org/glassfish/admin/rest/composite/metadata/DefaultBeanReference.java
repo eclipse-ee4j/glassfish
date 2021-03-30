@@ -24,13 +24,12 @@ import java.lang.annotation.Target;
 import jakarta.inject.Qualifier;
 
 /**
- * Often a REST model mirrors/wraps an mbean, descriptor bean or config bean.
- * These beans have annotations and javadoc tags that contain information
- * (like descriptions and legal values) that should apply to the corresponding
- * REST model properties.
+ * Often a REST model mirrors/wraps an mbean, descriptor bean or config bean. These beans have annotations and javadoc
+ * tags that contain information (like descriptions and legal values) that should apply to the corresponding REST model
+ * properties.
  *
- * Add this annotation to a model class to indicate the default
- * mbean / descriptor bean / config bean that its properties mirror.
+ * Add this annotation to a model class to indicate the default mbean / descriptor bean / config bean that its
+ * properties mirror.
  *
  * @author tmoreau
  */
@@ -39,5 +38,5 @@ import jakarta.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface DefaultBeanReference {
-  String bean();
+    String bean();
 }

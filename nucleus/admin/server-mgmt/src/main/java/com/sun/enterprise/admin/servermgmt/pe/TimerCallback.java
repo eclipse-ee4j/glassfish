@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.admin.servermgmt.pe;
 
-public interface TimerCallback
-{
+public interface TimerCallback {
     boolean check() throws Exception;
 }

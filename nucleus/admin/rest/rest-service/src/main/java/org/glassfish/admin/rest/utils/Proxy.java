@@ -26,12 +26,14 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * Implements 
+ * Implements
+ * 
  * @author Mitesh Meswani
  */
 public interface Proxy {
     /**
      * Execute request in given <code> sourceUriInfo</code> by acting as a proxy to the target instance
+     * 
      * @return Result of execution as Properties object
      */
     Properties proxyRequest(UriInfo sourceUriInfo, Client client, ServiceLocator habitat);

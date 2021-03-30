@@ -22,97 +22,76 @@ import com.sun.enterprise.admin.servermgmt.InvalidConfigException;
 import java.util.HashMap;
 
 /**
- * This class validates the domain config Map object. It does this by invoking 
- * the validator of each required entry. Subclasses must specify the required 
- * set of DomainConfigEntryInfo objects.
+ * This class validates the domain config Map object. It does this by invoking the validator of each required entry.
+ * Subclasses must specify the required set of DomainConfigEntryInfo objects.
  */
-public abstract class DomainConfigValidator extends Validator
-{
+public abstract class DomainConfigValidator extends Validator {
     /**
      * i18n strings manager object
      */
-    private static final StringManager strMgr = 
-        StringManager.getManager(DomainConfigValidator.class);
+    private static final StringManager strMgr = StringManager.getManager(DomainConfigValidator.class);
 
     /**
-     * Holder class for domain config entry meta info. The meta info of a 
-     * domainConfig entry is the key, dataType, displayText and an optional 
-     * validator object. The key must be defined in the DomainConfig class.
+     * Holder class for domain config entry meta info. The meta info of a domainConfig entry is the key, dataType,
+     * displayText and an optional validator object. The key must be defined in the DomainConfig class.
      */
-    protected static class DomainConfigEntryInfo
-    {
+    protected static class DomainConfigEntryInfo {
         final String key;
         final String dataType;
         final Validator validator;
 
         /** Creates a new DomainConfigEntryInfo object */
-        public DomainConfigEntryInfo(String key, 
-                                     String dataType, 
-                                     Validator validator)
-        {
-            this.key            = key;
-            this.dataType       = dataType;
-            this.validator      = validator;
+        public DomainConfigEntryInfo(String key, String dataType, Validator validator) {
+            this.key = key;
+            this.dataType = dataType;
+            this.validator = validator;
         }
 
         /**
-         * Returns true if a non-null Validator object was specified during 
-         * construction.
+         * Returns true if a non-null Validator object was specified during construction.
          */
-        public boolean hasValidator()
-        {
+        public boolean hasValidator() {
             return (validator != null);
         }
     }
 
     /**
-     * An array of DomainConfigEntryInfo objects that must be initialized by 
-     * subclasses.
+     * An array of DomainConfigEntryInfo objects that must be initialized by subclasses.
      */
     private DomainConfigEntryInfo[] entries;
 
     /**
      * Constructs a new DomainConfigValidator object.
-     * @param entries An array of required DomainConfigEntryInfo objects. 
-     * Must be supplied by subclasses.
+     * 
+     * @param entries An array of required DomainConfigEntryInfo objects. Must be supplied by subclasses.
      */
-    protected DomainConfigValidator(DomainConfigEntryInfo[] entries)
-    {
+    protected DomainConfigValidator(DomainConfigEntryInfo[] entries) {
         super(strMgr.getString("domainConfig"), DomainConfig.class);
         this.entries = entries;
     }
-    
-    protected DomainConfigValidator(String name, Class type, DomainConfigEntryInfo[] entries)
-    {
+
+    protected DomainConfigValidator(String name, Class type, DomainConfigEntryInfo[] entries) {
         super(name, type);
         this.entries = entries;
     }
 
     /**
-     * Validates the domainConfig. For each required domain config entry in the
-     * entries, gets the value from the domainConfig object and invokes the 
-     * validator of that entry. Skips the validation of an entry if no validator
-     * is specified for that entry.
-     * @param domainConfig The domainConfig object that needs to be validated. 
-     * A domainConfig object is valid if it
+     * Validates the domainConfig. For each required domain config entry in the entries, gets the value from the
+     * domainConfig object and invokes the validator of that entry. Skips the validation of an entry if no validator is
+     * specified for that entry.
+     * 
+     * @param domainConfig The domainConfig object that needs to be validated. A domainConfig object is valid if it
      * <ul>
-     * is of type DomainConfig
-     * contains the required set of DomainConfig keys
-     * the value for each required key is valid.
+     * is of type DomainConfig contains the required set of DomainConfig keys the value for each required key is valid.
      * </ul>
      * @throws InvalidConfigException If invalid domainConfig is supplied.
      */
-    public void validate(Object domainConfig) 
-        throws InvalidConfigException
-    {
+    public void validate(Object domainConfig) throws InvalidConfigException {
         super.validate(domainConfig);
-        for (int i = 0; i < entries.length; i++)
-        {
-            if (isValidate(entries[i].key, domainConfig))
-            {
-                final Object value = ((HashMap)domainConfig).get(entries[i].key);
-                if (entries[i].hasValidator())
-                {
+        for (int i = 0; i < entries.length; i++) {
+            if (isValidate(entries[i].key, domainConfig)) {
+                final Object value = ((HashMap) domainConfig).get(entries[i].key);
+                if (entries[i].hasValidator()) {
                     entries[i].validator.validate(value);
                 }
             }
@@ -123,36 +102,26 @@ public abstract class DomainConfigValidator extends Validator
      * @param key
      * @return Returns true if the key is valid and required.
      */
-    public boolean isKeyAllowed(Object key)
-    {
+    public boolean isKeyAllowed(Object key) {
         return (get(key) != null);
     }
 
     /**
      * @param key
      * @param value
-     * @return Returns true if the key is valid and required and the value for
-     * that key is valid.
+     * @return Returns true if the key is valid and required and the value for that key is valid.
      */
-    public boolean isValueValid(Object key, Object value)
-    {
+    public boolean isValueValid(Object key, Object value) {
         boolean isValid = false;
         final DomainConfigEntryInfo info = get(key);
-        if (info != null)
-        {
-            if (info.hasValidator())
-            {
-                try
-                {
+        if (info != null) {
+            if (info.hasValidator()) {
+                try {
                     info.validator.validate(value);
-                }
-                catch (InvalidConfigException idce)
-                {
+                } catch (InvalidConfigException idce) {
                     isValid = false;
                 }
-            }
-            else
-            {
+            } else {
                 isValid = true;
             }
         }
@@ -160,38 +129,32 @@ public abstract class DomainConfigValidator extends Validator
     }
 
     /**
-     * @return Returns the accepted datatype for the key. The returned value is
-     * the fully qualified class name of the datatype. If the key is invalid or 
-     * doesnot belong to the valid domain config key set, "" is returned.
+     * @return Returns the accepted datatype for the key. The returned value is the fully qualified class name of the
+     * datatype. If the key is invalid or doesnot belong to the valid domain config key set, "" is returned.
      */
-    public String getDataType(Object key)
-    {
+    public String getDataType(Object key) {
         final DomainConfigEntryInfo info = get(key);
-        if (info != null)
-        {
+        if (info != null) {
             return info.dataType;
         }
         return "";
     }
 
     /**
-     * This method allows subclasses to say if an entry should be validated at
-     * all. This is an attempt to add some flexibility to the otherwise static
-     * validation. (Eg:- If we donot want to validate the ports during domain
-     * creation)
+     * This method allows subclasses to say if an entry should be validated at all. This is an attempt to add some
+     * flexibility to the otherwise static validation. (Eg:- If we donot want to validate the ports during domain creation)
      */
     protected abstract boolean isValidate(String name, Object domainConfig);
 
     /**
-     * @return Returns the DomainConfigEntryInfo corresponding to the key. 
-     * Returns null if no DomainConfigEntryInfo exists in the entries 
-     * for the given key.
+     * @return Returns the DomainConfigEntryInfo corresponding to the key. Returns null if no DomainConfigEntryInfo exists
+     * in the entries for the given key.
      */
-    private DomainConfigEntryInfo get(Object key)
-    {
-        for (int i = 0; i < entries.length; i++)
-        {
-            if (entries[i].key.equals(key)) { return entries[i]; }
+    private DomainConfigEntryInfo get(Object key) {
+        for (int i = 0; i < entries.length; i++) {
+            if (entries[i].key.equals(key)) {
+                return entries[i];
+            }
         }
         return null;
     }

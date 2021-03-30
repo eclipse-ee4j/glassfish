@@ -26,13 +26,13 @@ import com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm.RadixTreeSu
  */
 public class SubstitutionAlgorithmFactory {
 
-  /**
-   * Get's the algorithm use to perform string substitution.
-   *
-   * @param substitutionMap {@link Map} of substitutable key/value pairs.
-   * @return String substitution algorithm.
-   */
-  public SubstitutionAlgorithm getAlgorithm(Map<String, String> substitutionMap) {
-    return new RadixTreeSubstitutionAlgo(substitutionMap);
-  }
+    /**
+     * Get's the algorithm use to perform string substitution.
+     *
+     * @param substitutionMap {@link Map} of substitutable key/value pairs.
+     * @return String substitution algorithm.
+     */
+    public SubstitutionAlgorithm getAlgorithm(Map<String, String> substitutionMap) {
+        return new RadixTreeSubstitutionAlgo(substitutionMap);
+    }
 }

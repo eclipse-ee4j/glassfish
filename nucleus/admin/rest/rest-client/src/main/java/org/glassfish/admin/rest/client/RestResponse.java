@@ -30,15 +30,15 @@ import java.util.Map;
 public class RestResponse {
     private String message;
     private int status;
-    private Map <String, Object> extraProperties;
+    private Map<String, Object> extraProperties;
     private List children;
     private Map<String, String> properties;
-    
+
     public RestResponse(Response response) {
         Map<String, Object> responseMap = Util.processJsonMap(response.readEntity(String.class));
-        
+
         status = response.getStatus();
-        message = (String)responseMap.get("message");
+        message = (String) responseMap.get("message");
         extraProperties = (Map) responseMap.get("extraProperties");
         children = (List) responseMap.get("children");
         Map respProps = (Map) responseMap.get("properties");

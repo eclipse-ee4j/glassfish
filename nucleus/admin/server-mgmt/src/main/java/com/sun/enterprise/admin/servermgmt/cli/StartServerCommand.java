@@ -28,13 +28,14 @@ import org.glassfish.api.admin.RuntimeType;
 public interface StartServerCommand {
 
     /**
-  * @return the type of "this" server
-  */
+     * @return the type of "this" server
+     */
     RuntimeType getType();
 
     /**
      * Create a launcher for the whatever type of server "we" are.
      */
     void createLauncher() throws GFLauncherException, MiniXmlParserException;
+
     List<String> getLauncherArgs();
 }

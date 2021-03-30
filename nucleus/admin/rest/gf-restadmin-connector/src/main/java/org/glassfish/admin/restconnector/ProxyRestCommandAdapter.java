@@ -24,22 +24,22 @@ import org.glassfish.api.container.Adapter;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
 
-/** Implementation of {@link Adapter} for rest based command executor.
- * It extends from {@link AbstractProxyRestAdapter} that uses a handle-body idiom. The handle
- * implements methods that are metadata/configuration based. The body implements methods that require REST subsystem.
+/**
+ * Implementation of {@link Adapter} for rest based command executor. It extends from {@link AbstractProxyRestAdapter}
+ * that uses a handle-body idiom. The handle implements methods that are metadata/configuration based. The body
+ * implements methods that require REST subsystem.
  *
  * @author mmares
  */
 @Service
 public class ProxyRestCommandAdapter extends AbstractProxyRestAdapter {
-    
+
     @Inject
     ServiceLocator services;
 
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
-
 
     @Override
     protected ServiceLocator getServices() {
@@ -60,5 +60,5 @@ public class ProxyRestCommandAdapter extends AbstractProxyRestAdapter {
     public String getContextRoot() {
         return Constants.REST_COMMAND_CONTEXT_ROOT;
     }
-    
+
 }

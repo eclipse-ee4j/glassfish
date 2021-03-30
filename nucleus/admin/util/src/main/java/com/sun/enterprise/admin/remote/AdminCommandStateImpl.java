@@ -20,22 +20,21 @@ import java.io.Serializable;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandState;
 
-/** Basic implementation. Good for unmarshaling. 
+/**
+ * Basic implementation. Good for unmarshaling.
  *
  * @author mmares
  */
 public class AdminCommandStateImpl implements AdminCommandState, Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     protected State state = State.PREPARED;
     protected ActionReport actionReport;
     private boolean payloadIsEmpty;
     protected String id;
 
-
-    public AdminCommandStateImpl(final State state, final ActionReport actionReport, 
-            final boolean payloadIsEmpty, final String id) {
+    public AdminCommandStateImpl(final State state, final ActionReport actionReport, final boolean payloadIsEmpty, final String id) {
         this.state = state;
         this.actionReport = actionReport;
         this.payloadIsEmpty = payloadIsEmpty;
@@ -45,7 +44,7 @@ public class AdminCommandStateImpl implements AdminCommandState, Serializable {
     public AdminCommandStateImpl(String id) {
         this(State.PREPARED, null, true, id);
     }
-    
+
     @Override
     public State getState() {
         return this.state;
@@ -70,14 +69,14 @@ public class AdminCommandStateImpl implements AdminCommandState, Serializable {
     public boolean isOutboundPayloadEmpty() {
         return this.payloadIsEmpty;
     }
-    
+
     @Override
     public String getId() {
         return this.id;
     }
-    
+
     protected void setState(State state) {
         this.state = state;
     }
-    
+
 }

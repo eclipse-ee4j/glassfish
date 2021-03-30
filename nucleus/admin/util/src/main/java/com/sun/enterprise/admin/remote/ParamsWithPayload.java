@@ -24,7 +24,7 @@ import org.glassfish.api.admin.ParameterMap;
  * @author martinmares
  */
 public class ParamsWithPayload {
-    
+
     private final RestPayloadImpl.Outbound payloadOutbound;
     private final RestPayloadImpl.Inbound payloadInbound;
     private final ActionReport actionReport;
@@ -43,7 +43,7 @@ public class ParamsWithPayload {
         this.parameters = parameters;
         this.actionReport = null;
     }
-    
+
     public ParamsWithPayload(RestPayloadImpl.Outbound payloadOutbound, ActionReport actionReport) {
         this.payloadOutbound = payloadOutbound;
         this.payloadInbound = null;
@@ -67,5 +67,4 @@ public class ParamsWithPayload {
         return actionReport;
     }
 
-    
 }

@@ -31,8 +31,7 @@ import org.glassfish.hk2.api.PerLookup;
  */
 @Service(name = "timeStatsNanos")
 @PerLookup
-public class TimeStatsNanosImpl extends TimeStatsAbstractImpl
-        implements TimeStatsNanos {
+public class TimeStatsNanosImpl extends TimeStatsAbstractImpl implements TimeStatsNanos {
 
     private String NAME = "timeStatsNanos";
     private String DESCRIPTION = "TimeStatistic Nano";
@@ -45,7 +44,7 @@ public class TimeStatsNanosImpl extends TimeStatsAbstractImpl
 
     @Override
     public void entry() {
-        super.postEntry(System.nanoTime ());
+        super.postEntry(System.nanoTime());
     }
 
     @Override
@@ -67,11 +66,7 @@ public class TimeStatsNanosImpl extends TimeStatsAbstractImpl
     }
 
     public String toString() {
-        return "Statistic " + getClass().getName() + NEWLINE +
-                "Name: " + getName() + NEWLINE +
-                "Description: " + getDescription() + NEWLINE +
-                "Unit: " + getUnit() + NEWLINE +
-                "LastSampleTime: " + getLastSampleTime() + NEWLINE +
-                "StartTime: " + getStartTime();
+        return "Statistic " + getClass().getName() + NEWLINE + "Name: " + getName() + NEWLINE + "Description: " + getDescription() + NEWLINE
+                + "Unit: " + getUnit() + NEWLINE + "LastSampleTime: " + getLastSampleTime() + NEWLINE + "StartTime: " + getStartTime();
     }
 }

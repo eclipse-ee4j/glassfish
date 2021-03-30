@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.config.serverbeans.customvalidators;
 
-
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
@@ -25,23 +24,20 @@ import com.sun.enterprise.config.serverbeans.ResourcePool;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-
-public class ResourceNameValidator
-    implements ConstraintValidator<ResourceNameConstraint, Resource> {
+public class ResourceNameValidator implements ConstraintValidator<ResourceNameConstraint, Resource> {
 
     public void initialize(final ResourceNameConstraint constraint) {
     }
 
     @Override
-    public boolean isValid(final Resource resource,
-        final ConstraintValidatorContext constraintValidatorContext) {
-        if(resource.getParent().getParent() instanceof Domain){
-            if(resource instanceof BindableResource){
-                if(((BindableResource)resource).getJndiName().contains(":")){
+    public boolean isValid(final Resource resource, final ConstraintValidatorContext constraintValidatorContext) {
+        if (resource.getParent().getParent() instanceof Domain) {
+            if (resource instanceof BindableResource) {
+                if (((BindableResource) resource).getJndiName().contains(":")) {
                     return false;
                 }
-            }else if(resource instanceof ResourcePool){
-                if(((ResourcePool)resource).getName().contains(":")){
+            } else if (resource instanceof ResourcePool) {
+                if (((ResourcePool) resource).getName().contains(":")) {
                     return false;
                 }
             }
@@ -49,4 +45,3 @@ public class ResourceNameValidator
         return true;
     }
 }
-

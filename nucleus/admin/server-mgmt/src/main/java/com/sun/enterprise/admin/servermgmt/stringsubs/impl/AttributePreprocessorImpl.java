@@ -23,12 +23,12 @@ import com.sun.enterprise.admin.servermgmt.stringsubs.AttributePreprocessor;
 /**
  * Implementation of {@link AttributePreprocessor}
  */
-public class AttributePreprocessorImpl implements AttributePreprocessor
-{
+public class AttributePreprocessorImpl implements AttributePreprocessor {
     private Map<String, String> _lookUpMap = null;
     private static final String DELIMITER = "$";
 
-    AttributePreprocessorImpl() {}
+    AttributePreprocessorImpl() {
+    }
 
     public AttributePreprocessorImpl(Map<String, String> lookUpMap) {
         _lookUpMap = lookUpMap;
@@ -49,8 +49,7 @@ public class AttributePreprocessorImpl implements AttributePreprocessor
         return substitute(path, DELIMITER, DELIMITER);
     }
 
-    private String substitute(final String var, final String startDelim, final String endDelim)
-    {
+    private String substitute(final String var, final String startDelim, final String endDelim) {
         if (var == null || startDelim == null || endDelim == null) {
             return var;
         }
@@ -63,7 +62,7 @@ public class AttributePreprocessorImpl implements AttributePreprocessor
         String sub = _lookUpMap.get(var.substring(firstIndex + startDelim.length(), secondIndex));
         String stringEnd = var.substring(secondIndex + endDelim.length(), var.length());
         if (sub != null) {
-          stringStart.append(sub);
+            stringStart.append(sub);
         }
         stringStart.append((stringEnd.indexOf(startDelim) == -1) ? stringEnd : substitute(stringEnd, startDelim, endDelim));
         return stringStart.toString();

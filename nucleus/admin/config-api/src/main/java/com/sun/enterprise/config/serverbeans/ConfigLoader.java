@@ -17,12 +17,11 @@
 package com.sun.enterprise.config.serverbeans;
 
 /**
- * This is a marker interface to mark the interfaces which are involved in managing parts of the domain.xml.
- * For example Each one of the Domain, Config and Application interfaces manages one part of the domain.xml.
+ * This is a marker interface to mark the interfaces which are involved in managing parts of the domain.xml. For example
+ * Each one of the Domain, Config and Application interfaces manages one part of the domain.xml.
  *
  * @author Masoud Kalali
  */
 public interface ConfigLoader {
-
 
 }

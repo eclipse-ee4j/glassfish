@@ -27,8 +27,8 @@ import java.io.*;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
 
 /**
- * Warning: there is lots of file twiddling going on in this class.  It is the nature
- * of the beast.
+ * Warning: there is lots of file twiddling going on in this class. It is the nature of the beast.
+ * 
  * @author Byron Nevins
  */
 public class WindowsService extends NonSMFServiceAdapter {
@@ -40,8 +40,7 @@ public class WindowsService extends NonSMFServiceAdapter {
         super(dirs, type);
         if (!apropos()) {
             // programmer error
-            throw new IllegalArgumentException(Strings.get("internal.error",
-                    "Constructor called but Windows Services are not available."));
+            throw new IllegalArgumentException(Strings.get("internal.error", "Constructor called but Windows Services are not available."));
         }
     }
 
@@ -56,8 +55,7 @@ public class WindowsService extends NonSMFServiceAdapter {
             trace("Copied from " + sourceWin32Exe + " to " + targetWin32Exe);
             getTokenMap().put(CREDENTIALS_START_TN, getAsadminCredentials("startargument"));
             getTokenMap().put(CREDENTIALS_STOP_TN, getAsadminCredentials("stopargument"));
-            ServicesUtils.tokenReplaceTemplateAtDestination(getFinalTokenMap(),
-                    getTemplateFile().getPath(), targetXml.getPath());
+            ServicesUtils.tokenReplaceTemplateAtDestination(getFinalTokenMap(), getTemplateFile().getPath(), targetXml.getPath());
             trace("Target XML file written: " + targetXml);
             trace("**********   Object Dump  **********\n" + this.toString());
 
@@ -67,11 +65,9 @@ public class WindowsService extends NonSMFServiceAdapter {
                 trace("No preexisting Service with that id and/or name was found");
 
             install();
-        }
-        catch (RuntimeException re) {
+        } catch (RuntimeException re) {
             throw re;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -103,8 +99,7 @@ public class WindowsService extends NonSMFServiceAdapter {
 
             trace("deleted " + targetWin32Exe + targetXml);
             trace(toString());
-        }
-        catch (ProcessManagerException ex) {
+        } catch (ProcessManagerException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -114,8 +109,7 @@ public class WindowsService extends NonSMFServiceAdapter {
         if (info.dryRun)
             return Strings.get("dryrun");
 
-        return Strings.get("WindowsServiceCreated", info.serviceName,
-                getTokenMap().get(Constants.DISPLAY_NAME_TN),
+        return Strings.get("WindowsServiceCreated", info.serviceName, getTokenMap().get(Constants.DISPLAY_NAME_TN),
                 getServerDirs().getServerDir(), targetXml, targetWin32Exe);
     }
 
@@ -136,41 +130,30 @@ public class WindowsService extends NonSMFServiceAdapter {
     }
 
     /**
-     * Byron Nevins March 2012
-     * There is a bug in the older version of winsw.  We MUST double-quote paths.
-     * winsw does this automatically for "executable" since it knows that it has
-     * to be a path.  But not for start/stop arg paths
-     * If we upgrade to a 'fixed' later version of winsw I checked and it
-     * is looking for already-quoted strings because of the bug.  So it won't
-     * be necessary to change it here.
+     * Byron Nevins March 2012 There is a bug in the older version of winsw. We MUST double-quote paths. winsw does this
+     * automatically for "executable" since it knows that it has to be a path. But not for start/stop arg paths If we
+     * upgrade to a 'fixed' later version of winsw I checked and it is looking for already-quoted strings because of the
+     * bug. So it won't be necessary to change it here.
      *
      * @return all start arguments as a String
      */
     @Override
     public final String getLocationArgsStart() {
         if (isDomain()) {
-            return makeStartArg("--domaindir")
-                    + makeStartArg(quote(getServerDirs().getServerParentDir().getPath()));
-        }
-        else {
-            return makeStartArg("--nodedir")
-                    + makeStartArg(quote(getServerDirs().getServerGrandParentDir().getPath().replace('\\', '/')))
-                    + makeStartArg("--node")
-                    + makeStartArg(quote(getServerDirs().getServerParentDir().getName()));
+            return makeStartArg("--domaindir") + makeStartArg(quote(getServerDirs().getServerParentDir().getPath()));
+        } else {
+            return makeStartArg("--nodedir") + makeStartArg(quote(getServerDirs().getServerGrandParentDir().getPath().replace('\\', '/')))
+                    + makeStartArg("--node") + makeStartArg(quote(getServerDirs().getServerParentDir().getName()));
         }
     }
 
     @Override
     public final String getLocationArgsStop() {
         if (isDomain()) {
-            return makeStopArg("--domaindir")
-                    + makeStopArg(quote(getServerDirs().getServerParentDir().getPath()));
-        }
-        else {
-            return makeStopArg("--nodedir")
-                    + makeStopArg(quote( getServerDirs().getServerGrandParentDir().getPath().replace('\\', '/')))
-                    + makeStopArg("--node")
-                    + makeStopArg(quote(getServerDirs().getServerParentDir().getName()));
+            return makeStopArg("--domaindir") + makeStopArg(quote(getServerDirs().getServerParentDir().getPath()));
+        } else {
+            return makeStopArg("--nodedir") + makeStopArg(quote(getServerDirs().getServerGrandParentDir().getPath().replace('\\', '/')))
+                    + makeStopArg("--node") + makeStopArg(quote(getServerDirs().getServerParentDir().getName()));
         }
     }
 
@@ -191,8 +174,7 @@ public class WindowsService extends NonSMFServiceAdapter {
             }
             targetWin32Exe = new File(targetDir, info.serviceName + "Service.exe");
             targetXml = new File(targetDir, info.serviceName + "Service.xml");
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -219,11 +201,10 @@ public class WindowsService extends NonSMFServiceAdapter {
                 out = new FileOutputStream(sourceWin32Exe);
                 copyStream(in, out);
                 trace("Copied from inside the jar to " + sourceWin32Exe);
-            }
-            finally {
+            } finally {
                 if (in != null)
                     in.close();
-                
+
                 if (out != null)
                     out.close();
             }
@@ -240,11 +221,10 @@ public class WindowsService extends NonSMFServiceAdapter {
     }
 
     /**
-     * If we had a crude "Template Language" we could do some if/else stuff
-     * right in the template.  We don't have that and it is not worth the development
-     * cost to add it.  So what we do is just drop %%%CREDENTIALS%%% into the xml
-     * template at the right place.  We replace with one space character for default
-     * credentials.  If there ARE credentials we replace with XML elements
+     * If we had a crude "Template Language" we could do some if/else stuff right in the template. We don't have that and it
+     * is not worth the development cost to add it. So what we do is just drop %%%CREDENTIALS%%% into the xml template at
+     * the right place. We replace with one space character for default credentials. If there ARE credentials we replace
+     * with XML elements
      *
      * @return the hunk of XML
      */
@@ -294,26 +274,23 @@ public class WindowsService extends NonSMFServiceAdapter {
             try {
                 // dry-run not so useful on Windows.  Very useful on UNIX...
                 xmlFileCopy = Strings.get("xmlfiledump") + FileUtils.readSmallFile(targetXml);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 // oh well....
             }
-            
+
             if (!targetWin32Exe.delete())
                 dryRun("Dry Run error: delete failed for targetWin32Exe " + targetWin32Exe);
 
             if (!targetXml.delete())
                 dryRun("Dry Run error: delete failed for targetXml " + targetXml);
-        }
-        else {
+        } else {
             ProcessManager mgr = new ProcessManager(targetWin32Exe.getPath(), "install");
             mgr.setEcho(false);
             mgr.execute();
             int ret = mgr.getExitValue();
 
             if (ret != 0)
-                throw new RuntimeException(Strings.get("windows.services.install.bad",
-                        "" + ret, mgr.getStdout(), mgr.getStderr()));
+                throw new RuntimeException(Strings.get("windows.services.install.bad", "" + ret, mgr.getStdout(), mgr.getStderr()));
 
             trace("Install STDERR: " + mgr.getStderr());
             trace("Install STDOUT: " + mgr.getStdout());
@@ -325,14 +302,13 @@ public class WindowsService extends NonSMFServiceAdapter {
             if (force) {
                 if (!targetWin32Exe.delete())
                     trace("HandlePreExisting error: could not delete targetWin32Exe.");
-                
+
                 if (!targetXml.delete())
                     trace("HandlePreExisting error: could not delete targetXml.");
-                
+
                 if (targetWin32Exe.exists() || targetXml.exists())
                     throw new RuntimeException(Strings.get("services.alreadyCreated",
-                        new File(targetDir, getServerDirs().getServerName() + "Service").toString() + ".*",
-                        "del"));
+                            new File(targetDir, getServerDirs().getServerName() + "Service").toString() + ".*", "del"));
             }
         }
     }

@@ -76,7 +76,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
      */
     @Param(optional = true, shortName = "d", defaultValue = "false")
     private boolean debug;
-    
+
     /**
      * Starts the server in debug mode with suspend on
      */
@@ -98,7 +98,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     private GFLauncherInfo launchParameters;
     private GFLauncher glassFishLauncher;
     private StartServerHelper startServerHelper;
-    
+
     // the name of the master password option
     private String newpwName = Environment.getPrefix() + "NEWPASSWORD";
 
@@ -135,7 +135,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
                 logger.info(strings.get("manualUpgradeNeeded"));
                 return ERROR;
             }
-            
+
             doAutoUpgrade(masterPassword);
 
             if (dry_run) {
@@ -196,8 +196,9 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     }
 
     /**
-     * Create a glassFishLauncher for the domain specified by arguments to this command. The glassFishLauncher is for a server of the
-     * specified type. Sets the glassFishLauncher and launchParameters fields. It has to be public because it is part of an interface
+     * Create a glassFishLauncher for the domain specified by arguments to this command. The glassFishLauncher is for a
+     * server of the specified type. Sets the glassFishLauncher and launchParameters fields. It has to be public because it
+     * is part of an interface
      */
     @Override
     public void createLauncher() throws GFLauncherException, MiniXmlParserException {
@@ -232,8 +233,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         args.add("--debug=" + String.valueOf(debug));
         args.add("--domaindir");
         args.add(getDomainsDir().toString());
-        if (ok(getDomainName()))
-         {
+        if (ok(getDomainName())) {
             args.add(getDomainName()); // the operand
         }
 
@@ -265,7 +265,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         } catch (InterruptedException ex) {
             // should never happen
         }
-        
+
         if (exitCode != SUCCESS) {
             ProcessStreamDrainer psd = glassFishLauncher.getProcessStreamDrainer();
             String output = psd.getOutErrString();
@@ -294,26 +294,26 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             try {
                 FileRealmHelper fileRealmHelper = new FileRealmHelper(adminRealmKeyFile);
                 if (!fileRealmHelper.hasAuthenticatableUser()) {
-                    
+
                     // Prompt for the password for the first user and set it
                     Set<String> adminUsers = fileRealmHelper.getUserNames();
                     if (adminUsers == null || adminUsers.isEmpty()) {
                         throw new CommandException("no admin users");
                     }
-                    
+
                     String firstAdminUser = adminUsers.iterator().next();
                     ParamModelData npwo = new ParamModelData(newpwName, String.class, false, null);
                     npwo.prompt = strings.get("new.adminpw", firstAdminUser);
                     npwo.promptAgain = strings.get("new.adminpw.again", firstAdminUser);
                     npwo.param._password = true;
-                    
+
                     logger.info(strings.get("new.adminpw.prompt"));
                     char[] newPasswordArray = super.getPassword(npwo, null, true);
                     String newPassword = newPasswordArray != null ? new String(newPasswordArray) : null;
                     if (newPassword == null) {
                         throw new CommandException(strings.get("no.console"));
                     }
-                    
+
                     fileRealmHelper.updateUser(firstAdminUser, firstAdminUser, newPassword.toCharArray(), null);
                     fileRealmHelper.persist();
                 }

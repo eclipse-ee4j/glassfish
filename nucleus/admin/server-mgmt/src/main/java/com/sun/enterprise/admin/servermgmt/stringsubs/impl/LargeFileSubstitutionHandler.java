@@ -30,13 +30,12 @@ import java.io.Writer;
 import java.util.logging.Level;
 
 /**
- * Creates {@link Reader} and {@link Writer} for the String substitution file.
- * Implementation is useful for large files which cann't be read entirely in a
- *  memory or need a substantial amount of memory.
+ * Creates {@link Reader} and {@link Writer} for the String substitution file. Implementation is useful for large files
+ * which cann't be read entirely in a memory or need a substantial amount of memory.
  * <p>
- * To perform substitution it take helps of temporary file to write output, after
- * substitution, temporary file renamed to input file.
- * <p> 
+ * To perform substitution it take helps of temporary file to write output, after substitution, temporary file renamed
+ * to input file.
+ * <p>
  */
 public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
     private static final String BACKUP_FILE_PREFIX = ".bkp";
@@ -52,8 +51,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
         try {
             _reader = new BufferedReader(new InputStreamReader(new FileInputStream(_inputFile)));
         } catch (FileNotFoundException e) {
-            _logger.log(Level.INFO, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()) 
-                    , e);
+            _logger.log(Level.INFO, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
         return _reader;
     }
@@ -69,8 +67,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
             }
             _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_outputFile)));
         } catch (IOException e) {
-            _logger.log(Level.INFO, _strings.get("failureTempFileCreation",
-                    _outputFile.getAbsolutePath(), e));
+            _logger.log(Level.INFO, _strings.get("failureTempFileCreation", _outputFile.getAbsolutePath(), e));
         }
         return _writer;
     }
@@ -83,16 +80,13 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
         if (_inputFile.renameTo(inputBackUpfile)) {
             if (_outputFile.renameTo(new File(_inputFile.getAbsolutePath()))) {
                 if (!inputBackUpfile.delete()) {
-                    _logger.log(Level.INFO, _strings.get("failureInBackUpFileDeletion", 
-                            inputBackUpfile.getAbsolutePath()));
+                    _logger.log(Level.INFO, _strings.get("failureInBackUpFileDeletion", inputBackUpfile.getAbsolutePath()));
                 }
             } else {
-                _logger.log(Level.INFO, _strings.get("failureInFileRename", _outputFile.getAbsolutePath(),
-                        inputFileName));
+                _logger.log(Level.INFO, _strings.get("failureInFileRename", _outputFile.getAbsolutePath(), inputFileName));
             }
         } else {
-            _logger.log(Level.WARNING,  _strings.get("failureInFileRename", _inputFile.getAbsolutePath(),
-                   inputBackUpfile.getName()));
+            _logger.log(Level.WARNING, _strings.get("failureInFileRename", _inputFile.getAbsolutePath(), inputBackUpfile.getName()));
         }
     }
 }

@@ -27,7 +27,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * A local unset command to unset environment variables.
- *  
+ * 
  * @author Bill Shannon
  */
 @Service(name = "unset")
@@ -37,13 +37,11 @@ public class UnsetCommand extends CLICommand {
     @Param(name = "environment-variable", primary = true, multiple = true)
     private List<String> vars;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(UnsetCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(UnsetCommand.class);
 
     @Override
-    public int executeCommand()
-            throws CommandException, CommandValidationException {
-        int ret = 0;    // by default, success
+    public int executeCommand() throws CommandException, CommandValidationException {
+        int ret = 0; // by default, success
 
         // process each operand
         for (String name : vars) {

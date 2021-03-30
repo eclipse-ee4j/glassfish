@@ -20,10 +20,8 @@
 
 package com.sun.enterprise.admin.util;
 
-public class InvalidJvmOptionException extends java.lang.Exception
-{
-    public InvalidJvmOptionException(String msg)
-    {
+public class InvalidJvmOptionException extends java.lang.Exception {
+    public InvalidJvmOptionException(String msg) {
         super(msg);
     }
 }

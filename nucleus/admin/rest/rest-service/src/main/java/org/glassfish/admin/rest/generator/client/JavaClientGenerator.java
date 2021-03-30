@@ -48,10 +48,8 @@ import org.jvnet.hk2.config.ConfigModel;
 public class JavaClientGenerator extends ClientGenerator {
     private File baseDirectory;
     private Map<String, URI> artifacts;
-    private static String MSG_INSTALL =
-            "To install the artifacts to maven: " +
-            "mvn install:install-file -DpomFile=pom.xml -Dfile=" + ARTIFACT_NAME + "-VERSION.jar -Dsources=" +
-                    ARTIFACT_NAME + "-VERSION-sources.jar";
+    private static String MSG_INSTALL = "To install the artifacts to maven: " + "mvn install:install-file -DpomFile=pom.xml -Dfile="
+            + ARTIFACT_NAME + "-VERSION.jar -Dsources=" + ARTIFACT_NAME + "-VERSION-sources.jar";
 
     public JavaClientGenerator(ServiceLocator habitat) {
         super(habitat);
@@ -96,12 +94,12 @@ public class JavaClientGenerator extends ClientGenerator {
             StringBuilder sb = new StringBuilder();
             sb.append(ASClassLoaderUtil.getModuleClassPath(habitat, "", null));
             options.add(sb.toString());
-            
+
             Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(files);
             if (!compiler.getTask(null, fileManager, null, options, null, compilationUnits).call()) {
                 RestLogging.restLogger.log(Level.INFO, RestLogging.COMPILATION_FAILED);
             }
-            
+
             fileManager.close();
         } catch (IOException ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
@@ -121,10 +119,10 @@ public class JavaClientGenerator extends ClientGenerator {
 
             addFiles(baseDirectory, target, ext);
             target.close();
-            
+
             artifacts.put(jarFile.getName(), jarFile.toURI());
         } catch (Exception ex) {
-           RestLogging.restLogger.log(Level.SEVERE, null, ex);
+            RestLogging.restLogger.log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (target != null) {
@@ -135,7 +133,7 @@ public class JavaClientGenerator extends ClientGenerator {
             }
         }
     }
-    
+
     private void gatherFiles(File file, List<File> list) throws IOException {
         if (file == null || !file.exists()) {
             return;
@@ -152,18 +150,19 @@ public class JavaClientGenerator extends ClientGenerator {
             list.add(file);
         }
     }
-    
-    private void addPom(String versionString)  {
+
+    private void addPom(String versionString) {
         FileWriter writer = null;
         try {
-            String pom = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("/client/pom.template.xml")).useDelimiter("\\Z").next();
+            String pom = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("/client/pom.template.xml"))
+                    .useDelimiter("\\Z").next();
             pom = pom.replace("{{glassfish.version}}", versionString);
             File out = File.createTempFile("pom", "xml");
             out.deleteOnExit();
             writer = new FileWriter(out);
             writer.write(pom);
             writer.close();
-            
+
             artifacts.put("pom.xml", out.toURI());
         } catch (IOException ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
@@ -218,9 +217,7 @@ public class JavaClientGenerator extends ClientGenerator {
             }
             */
 
-            String sourcePath = source.getPath()
-                    .replace("\\\\", "/")
-                    .substring(baseDirectory.getPath().length()+1);
+            String sourcePath = source.getPath().replace("\\\\", "/").substring(baseDirectory.getPath().length() + 1);
 
             JarEntry entry = new JarEntry(sourcePath);
             entry.setTime(source.lastModified());

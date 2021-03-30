@@ -62,22 +62,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * A remote command to delete a module's configuration.
  *
  * @author Masoud Kalali
  */
-@TargetType(value = {CommandTarget.DAS, CommandTarget.CLUSTER,
-        CommandTarget.CONFIG, CommandTarget.STANDALONE_INSTANCE, CommandTarget.DOMAIN})
+@TargetType(value = { CommandTarget.DAS, CommandTarget.CLUSTER, CommandTarget.CONFIG, CommandTarget.STANDALONE_INSTANCE,
+        CommandTarget.DOMAIN })
 @ExecuteOn(RuntimeType.ALL)
 @Service(name = "delete-module-config")
 @PerLookup
 @I18n("delete.module.config")
-public final class DeleteModuleConfigCommand extends AbstractConfigModularityCommand implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
+public final class DeleteModuleConfigCommand extends AbstractConfigModularityCommand
+        implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
     private final Logger LOG = getLogger();
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(DeleteModuleConfigCommand.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteModuleConfigCommand.class);
     private static final String DEFAULT_FORMAT = "";
     private ActionReport report;
 
@@ -85,8 +84,7 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
     private Domain domain;
 
     @Inject
-    private
-    ServiceLocator serviceLocator;
+    private ServiceLocator serviceLocator;
 
     @Inject
     private ConfigModularityUtils configModularityUtils;
@@ -100,7 +98,6 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
 
     @Param(name = "serviceName", primary = true)
     private String serviceName;
-
 
     @Inject
     ServerEnvironment serverenv;
@@ -139,7 +136,8 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
         }
 
         if (configModularityUtils.hasCustomConfig(configBeanType)) {
-            List<ConfigBeanDefaultValue> defaults = configModularityUtils.getDefaultConfigurations(configBeanType, configModularityUtils.getRuntimeTypePrefix(serverenv.getStartupContext()));
+            List<ConfigBeanDefaultValue> defaults = configModularityUtils.getDefaultConfigurations(configBeanType,
+                    configModularityUtils.getRuntimeTypePrefix(serverenv.getStartupContext()));
             deleteDependentConfigElements(defaults);
         } else {
             deleteTopLevelExtensionByType(config, className, configBeanType);
@@ -161,8 +159,7 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
                 final ConfigBeanProxy parent = configModularityUtils.getOwningObject(defaultValue.getLocation());
                 ConfigSupport.apply(new SingleConfigCode<ConfigBeanProxy>() {
                     @Override
-                    public Object run(ConfigBeanProxy param) throws PropertyVetoException,
-                            TransactionFailure {
+                    public Object run(ConfigBeanProxy param) throws PropertyVetoException, TransactionFailure {
                         List col = null;
                         ConfigBeanProxy configBean = null;
                         try {
@@ -215,8 +212,7 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
                 try {
                     ConfigSupport.apply(new SingleConfigCode<Config>() {
                         @Override
-                        public Object run(Config param) throws PropertyVetoException,
-                                TransactionFailure {
+                        public Object run(Config param) throws PropertyVetoException, TransactionFailure {
                             List<ConfigExtension> configExtensions;
                             configExtensions = param.getExtensions();
                             for (ConfigExtension ext : configExtensions) {
@@ -232,8 +228,8 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
                     report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
                 } catch (TransactionFailure e) {
                     String actual = e.getMessage();
-                    String msg = localStrings.getLocalString("delete.module.config.failed.to.delete.config",
-                            DEFAULT_FORMAT, serviceName, actual);
+                    String msg = localStrings.getLocalString("delete.module.config.failed.to.delete.config", DEFAULT_FORMAT, serviceName,
+                            actual);
                     report.setMessage(msg);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setFailureCause(e);
@@ -249,8 +245,7 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
                 try {
                     ConfigSupport.apply(new SingleConfigCode<Domain>() {
                         @Override
-                        public Object run(Domain param) throws PropertyVetoException,
-                                TransactionFailure {
+                        public Object run(Domain param) throws PropertyVetoException, TransactionFailure {
                             List<DomainExtension> domainExtensions;
                             domainExtensions = param.getExtensions();
                             for (DomainExtension ext : domainExtensions) {
@@ -266,8 +261,8 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
                     report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
                 } catch (TransactionFailure e) {
                     String actual = e.getMessage();
-                    String msg = localStrings.getLocalString("delete.module.config.failed.to.delete.config",
-                            DEFAULT_FORMAT, serviceName, actual);
+                    String msg = localStrings.getLocalString("delete.module.config.failed.to.delete.config", DEFAULT_FORMAT, serviceName,
+                            actual);
                     report.setMessage(msg);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setFailureCause(e);
@@ -281,7 +276,8 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
         }
     }
 
-    private static <T extends ConfigBeanProxy> boolean removeCustomTokens(final ConfigBeanDefaultValue configBeanDefaultValue, T finalConfigBean, ConfigBeanProxy parent) throws TransactionFailure, PropertyVetoException {
+    private static <T extends ConfigBeanProxy> boolean removeCustomTokens(final ConfigBeanDefaultValue configBeanDefaultValue,
+            T finalConfigBean, ConfigBeanProxy parent) throws TransactionFailure, PropertyVetoException {
         if (parent instanceof SystemPropertyBag) {
             removeSystemPropertyForTokens(configBeanDefaultValue.getCustomizationTokens(), (SystemPropertyBag) parent);
             return true;
@@ -300,7 +296,8 @@ public final class DeleteModuleConfigCommand extends AbstractConfigModularityCom
         }
     }
 
-    private static void removeSystemPropertyForTokens(List<ConfigCustomizationToken> tokens, SystemPropertyBag bag) throws TransactionFailure {
+    private static void removeSystemPropertyForTokens(List<ConfigCustomizationToken> tokens, SystemPropertyBag bag)
+            throws TransactionFailure {
         for (ConfigCustomizationToken token : tokens) {
             if (bag.containsProperty(token.getName())) {
                 bag.getSystemProperty().remove(bag.getSystemProperty(token.getName()));

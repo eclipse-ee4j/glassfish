@@ -46,37 +46,23 @@ public class GetResultListXmlProvider extends BaseProvider<GetResultList> {
         StringBuilder result = new StringBuilder();
         String indent = Constants.INDENT;
 
-         result.append(getStartXmlElement(KEY_ENTITY))
-                 .append("\n\n")
-                 .append(indent)
-                 .append(getStartXmlElement(KEY_METHODS))
-                 .append(getXmlForMethodMetaData(proxy.getMetaData(), indent + Constants.INDENT))
-                 .append("\n")
-                 .append(indent)
-                 .append(getEndXmlElement(KEY_METHODS));
+        result.append(getStartXmlElement(KEY_ENTITY)).append("\n\n").append(indent).append(getStartXmlElement(KEY_METHODS))
+                .append(getXmlForMethodMetaData(proxy.getMetaData(), indent + Constants.INDENT)).append("\n").append(indent)
+                .append(getEndXmlElement(KEY_METHODS));
 
         //do not display empty child resources array
         if (proxy.getDomList().size() > 0) {
-            result.append("\n\n")
-                    .append(indent)
-                    .append(getStartXmlElement(KEY_CHILD_RESOURCES))
-                    .append(getResourcesLinks(proxy.getDomList(), indent + Constants.INDENT))
-                    .append("\n")
-                    .append(indent)
+            result.append("\n\n").append(indent).append(getStartXmlElement(KEY_CHILD_RESOURCES))
+                    .append(getResourcesLinks(proxy.getDomList(), indent + Constants.INDENT)).append("\n").append(indent)
                     .append(getEndXmlElement(KEY_CHILD_RESOURCES));
         }
         if (proxy.getCommandResourcesPaths().length > 0) {
-            result.append("\n\n")
-                    .append(indent)
-                    .append(getStartXmlElement(KEY_COMMANDS))
-                    .append(getXmlCommandLinks(proxy.getCommandResourcesPaths(), indent + Constants.INDENT))
-                    .append("\n")
-                    .append(indent)
+            result.append("\n\n").append(indent).append(getStartXmlElement(KEY_COMMANDS))
+                    .append(getXmlCommandLinks(proxy.getCommandResourcesPaths(), indent + Constants.INDENT)).append("\n").append(indent)
                     .append(getEndXmlElement(KEY_COMMANDS));
         }
 
-        result.append("\n\n")
-                .append(getEndXmlElement(KEY_ENTITY));
+        result.append("\n\n").append(getEndXmlElement(KEY_ENTITY));
         return result.toString();
     }
 
@@ -88,11 +74,8 @@ public class GetResultListXmlProvider extends BaseProvider<GetResultList> {
         StringBuilder result = new StringBuilder();
         for (Map.Entry<String, String> link : getResourceLinks(proxyList).entrySet()) {
             try {
-                    result.append("\n")
-                            .append(indent)
-                            .append(getStartXmlElement(KEY_CHILD_RESOURCE))
-                            .append(link.getValue())
-                            .append(getEndXmlElement(KEY_CHILD_RESOURCE));
+                result.append("\n").append(indent).append(getStartXmlElement(KEY_CHILD_RESOURCE)).append(link.getValue())
+                        .append(getEndXmlElement(KEY_CHILD_RESOURCE));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

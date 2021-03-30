@@ -111,23 +111,21 @@ public class CommandResourceMetaData {
 
                 processConfigBeans(habitat);
 
-                List<ActiveDescriptor<?>> iter = habitat.getDescriptors(
-                        BuilderHelper.createContractFilter(AdminCommand.class.getName()));
+                List<ActiveDescriptor<?>> iter = habitat.getDescriptors(BuilderHelper.createContractFilter(AdminCommand.class.getName()));
                 for (ActiveDescriptor<?> ad : iter) {
                     if (!(ad.getQualifiers().contains(RestEndpoints.class.getName()))) {
                         continue;
                     }
-                    
+
                     if (!ad.isReified()) {
                         try {
                             habitat.reifyDescriptor(ad);
-                        }
-                        catch (MultiException me) {
+                        } catch (MultiException me) {
                             // If we can't see the command, forget it
                             continue;
                         }
                     }
-                    
+
                     final Class<? extends AdminCommand> clazz = (Class<? extends AdminCommand>) ad.getImplementationClass();
                     RestEndpoints endpoints = clazz.getAnnotation(RestEndpoints.class);
                     if (endpoints != null) {
@@ -165,19 +163,21 @@ public class CommandResourceMetaData {
 
     private static void processConfigBeans(ServiceLocator serviceLocator) {
 
-		List<ActiveDescriptor<?>> allDescriptors = serviceLocator.getDescriptors(
-		        BuilderHelper.createContractFilter(ConfigInjector.class.getName()));
-		
-		HashSet<String> alreadyChecked = new HashSet<String>();
+        List<ActiveDescriptor<?>> allDescriptors = serviceLocator
+                .getDescriptors(BuilderHelper.createContractFilter(ConfigInjector.class.getName()));
 
-        for (ActiveDescriptor<?> ad : allDescriptors){
+        HashSet<String> alreadyChecked = new HashSet<String>();
+
+        for (ActiveDescriptor<?> ad : allDescriptors) {
             List<String> targets = ad.getMetadata().get("target");
-            if (targets == null) continue;
-            
+            if (targets == null)
+                continue;
+
             for (String t : targets) {
-                if (alreadyChecked.contains(t)) continue;
+                if (alreadyChecked.contains(t))
+                    continue;
                 alreadyChecked.add(t);
-                
+
                 try {
                     Class<?> tclass = Class.forName(t);
                     if (ConfigBeanProxy.class.isAssignableFrom(tclass)) {
@@ -227,24 +227,21 @@ public class CommandResourceMetaData {
     // This data structure is for exceptional cases only. The preferred mapping approach is to
     // use @RestEndpoints/@RestEndpoint
     private static String configBeansToCommandResourcesMap[][] = {
-        //{config-bean, command, method, resource-path, command-action, command-params...}
-        {"Domain", "change-admin-password", "POST", "change-admin-password", "change-admin-password"},
-        {"Domain", "stop-domain", "POST", "stop", "Stop"},
-        {"IiopListener", "create-ssl", "POST", "create-ssl", "Create", "id=$parent", "type=iiop-listener"}, // Not used? IiopListener not in nucleus
-        {"IiopService", "create-ssl", "POST", "create-ssl", "Create", "type=iiop-service"}, // Not used? IiopListener not in nucleus
-        {"LbConfig", "create-http-listener", "POST", "create-http-listener", "create-http-listener"},
-        {"LbConfig", "delete-http-listener", "POST", "delete-http-listener", "delete-http-listener"},
-        {"ListApplication", "create-lifecycle-module", "POST", "create-lifecycle-module", "Create Lifecycle Module"}, // TODO: ListApplication not found
-        {"ListApplication", "delete-lifecycle-module", "DELETE", "delete-lifecycle-module", "Delete Lifecycle Module"},};
+            //{config-bean, command, method, resource-path, command-action, command-params...}
+            { "Domain", "change-admin-password", "POST", "change-admin-password", "change-admin-password" },
+            { "Domain", "stop-domain", "POST", "stop", "Stop" },
+            { "IiopListener", "create-ssl", "POST", "create-ssl", "Create", "id=$parent", "type=iiop-listener" }, // Not used? IiopListener not in nucleus
+            { "IiopService", "create-ssl", "POST", "create-ssl", "Create", "type=iiop-service" }, // Not used? IiopListener not in nucleus
+            { "LbConfig", "create-http-listener", "POST", "create-http-listener", "create-http-listener" },
+            { "LbConfig", "delete-http-listener", "POST", "delete-http-listener", "delete-http-listener" },
+            { "ListApplication", "create-lifecycle-module", "POST", "create-lifecycle-module", "Create Lifecycle Module" }, // TODO: ListApplication not found
+            { "ListApplication", "delete-lifecycle-module", "DELETE", "delete-lifecycle-module", "Delete Lifecycle Module" }, };
     private static final String[][] configBeanCustomResources = {
-        // ConfigBean, Custom Resource Class, path
-        {"Cluster", "SystemPropertiesCliResource", "system-properties"},
-        {"Config", "SystemPropertiesCliResource", "system-properties"},
-        {"Domain", "JmxServiceUrlsResource", "jmx-urls"},
-        {"Domain", "LogViewerResource", "view-log"},
-        {"Domain", "SetDomainConfigResource", "set"},
-        {"Domain", "SystemPropertiesCliResource", "system-properties"},
-        {"NetworkListener", "FindHttpProtocolResource", "find-http-protocol"},
-        {"Server", "SystemPropertiesCliResource", "system-properties"}
-    };
+            // ConfigBean, Custom Resource Class, path
+            { "Cluster", "SystemPropertiesCliResource", "system-properties" },
+            { "Config", "SystemPropertiesCliResource", "system-properties" }, { "Domain", "JmxServiceUrlsResource", "jmx-urls" },
+            { "Domain", "LogViewerResource", "view-log" }, { "Domain", "SetDomainConfigResource", "set" },
+            { "Domain", "SystemPropertiesCliResource", "system-properties" },
+            { "NetworkListener", "FindHttpProtocolResource", "find-http-protocol" },
+            { "Server", "SystemPropertiesCliResource", "system-properties" } };
 }

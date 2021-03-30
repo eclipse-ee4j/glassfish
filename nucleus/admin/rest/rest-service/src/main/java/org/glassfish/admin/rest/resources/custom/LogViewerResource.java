@@ -26,7 +26,6 @@ import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
-
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;
@@ -97,17 +96,14 @@ public class LogViewerResource {
 
     @GET
     @Produces("text/plain;charset=UTF-8")
-    public Response get(@QueryParam("start")
-                        @DefaultValue("0") long start,
-                        @QueryParam("instanceName") @DefaultValue("server") String instanceName,
-                        @Context HttpHeaders hh) throws IOException {
+    public Response get(@QueryParam("start") @DefaultValue("0") long start,
+            @QueryParam("instanceName") @DefaultValue("server") String instanceName, @Context HttpHeaders hh) throws IOException {
         boolean gzipOK = true;
         MultivaluedMap<String, String> headerParams = hh.getRequestHeaders();
         String acceptEncoding = headerParams.getFirst("Accept-Encoding");
         if (acceptEncoding == null || acceptEncoding.indexOf("gzip") == -1) {
             gzipOK = false;
         }
-
 
         // getting logFilter object from habitat
         LogFilter logFilter = habitat.getRemoteLocator().getService(LogFilter.class);
@@ -117,26 +113,22 @@ public class LogViewerResource {
         logLocation = logFilter.getLogFileForGivenTarget(instanceName);
         initLargeText(new File(logLocation), false);
 
-
         if (!source.exists()) {
             // file doesn't exist yet
             UriBuilder uriBuilder = ui.getAbsolutePathBuilder();
             uriBuilder.queryParam("start", 0);
             uriBuilder.queryParam("instanceName", instanceName);
 
-            return Response.ok(
-                    new StreamingOutput() {
+            return Response.ok(new StreamingOutput() {
 
-                        @Override
-                        public void write(OutputStream out) throws IOException, WebApplicationException {
-                        }
-                    }).
-                    header("X-Text-Append-Next", uriBuilder.build()).build();
+                @Override
+                public void write(OutputStream out) throws IOException, WebApplicationException {
+                }
+            }).header("X-Text-Append-Next", uriBuilder.build()).build();
         }
 
-
         if (source.length() < start) {
-            start = 0;  // text rolled over
+            start = 0; // text rolled over
         }
         final CharSpool spool = new CharSpool();
         long size = writeLogTo(start, spool);
@@ -149,17 +141,16 @@ public class LogViewerResource {
             gzipOK = false;
         }
         final boolean gz = gzipOK;
-        ResponseBuilder rp = Response.ok(
-                new StreamingOutput() {
+        ResponseBuilder rp = Response.ok(new StreamingOutput() {
 
-                    @Override
-                    public void write(OutputStream out) throws IOException, WebApplicationException {
-                        Writer w = getWriter(out, gz);
-                        spool.writeTo(new LineEndNormalizingWriter(w));
-                        w.flush();
-                        w.close();
-                    }
-                });
+            @Override
+            public void write(OutputStream out) throws IOException, WebApplicationException {
+                Writer w = getWriter(out, gz);
+                spool.writeTo(new LineEndNormalizingWriter(w));
+                w.flush();
+                w.close();
+            }
+        });
         UriBuilder uriBuilder = ui.getAbsolutePathBuilder();
         uriBuilder.queryParam("start", size);
         uriBuilder.queryParam("instanceName", instanceName);
@@ -222,9 +213,8 @@ public class LogViewerResource {
      * Writes the tail portion of the file to the {@link OutputStream}.
      *
      * @param start The byte offset in the input file where the write operation starts.
-     * @return if the file is still being written, this method writes the file
-     *         until the last newline character and returns the offset to start
-     *         the next write operation.
+     * @return if the file is still being written, this method writes the file until the last newline character and returns
+     * the offset to start the next write operation.
      */
     private long writeLogTo(long start, OutputStream os) throws IOException {
         /// CountingOutputStream os = new CountingOutputStream(out);
@@ -271,8 +261,7 @@ public class LogViewerResource {
     }
 
     /**
-     * Points to the start of the region that's not committed
-     * to the output yet.
+     * Points to the start of the region that's not committed to the output yet.
      */
     private static final class HeadMark extends Mark {
 
@@ -281,8 +270,7 @@ public class LogViewerResource {
         }
 
         /**
-         * Moves this mark to 'that' mark, and writes the data
-         * to {@link OutputStream} if necessary.
+         * Moves this mark to 'that' mark, and writes the data to {@link OutputStream} if necessary.
          */
         long moveTo(Mark that, OutputStream os) throws IOException {
             long count = 0;
@@ -362,8 +350,7 @@ public class LogViewerResource {
     }
 
     /**
-     * Represents the read session of the {@link Source}.
-     * Methods generally follow the contracts of {@link InputStream}.
+     * Represents the read session of the {@link Source}. Methods generally follow the contracts of {@link InputStream}.
      */
     private interface Session {
 

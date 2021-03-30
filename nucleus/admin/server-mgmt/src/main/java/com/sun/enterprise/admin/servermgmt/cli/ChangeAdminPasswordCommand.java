@@ -38,19 +38,15 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.security.common.FileRealmHelper;
 
 /**
- * The change-admin-password command.
- * The remote command implementation presents a different
- * interface (set of options) than the local command.
- * This special local implementation adapts the local
- * interface to the requirements of the remote command.
+ * The change-admin-password command. The remote command implementation presents a different interface (set of options)
+ * than the local command. This special local implementation adapts the local interface to the requirements of the
+ * remote command.
  * 
- * The remote command is different in that it accepts the user name as 
- * an operand.  This command accepts it via the --user parameter. If the --user
- * option isn't specified, this command prompts for the user name.
+ * The remote command is different in that it accepts the user name as an operand. This command accepts it via the
+ * --user parameter. If the --user option isn't specified, this command prompts for the user name.
  * 
- * Another difference is that the local command will prompt for the old 
- * password only once.  The default behavior for @Param for passwords is to 
- * prompt for the password twice.  *
+ * Another difference is that the local command will prompt for the old password only once. The default behavior
+ * for @Param for passwords is to prompt for the password twice. *
  *
  * @author Bill Shannon
  */
@@ -60,29 +56,24 @@ import org.glassfish.security.common.FileRealmHelper;
 public class ChangeAdminPasswordCommand extends LocalDomainCommand {
     private ParameterMap params;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ChangeAdminPasswordCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ChangeAdminPasswordCommand.class);
 
-    @Param(name="domain_name", optional=true)
+    @Param(name = "domain_name", optional = true)
     private String userArgDomainName;
-    
-    @Param(password=true, optional=true)
+
+    @Param(password = true, optional = true)
     private String password;
-    
-    @Param(password=true, optional=true)
+
+    @Param(password = true, optional = true)
     private String newpassword;
-    
+
     private SecureAdmin secureAdmin = null;
 
-    
-    
     /**
-     * Require the user to actually type the passwords unless they are in
-     * the file specified by the --passwordfile option.
+     * Require the user to actually type the passwords unless they are in the file specified by the --passwordfile option.
      */
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException {
+    protected void validate() throws CommandException, CommandValidationException {
         setDomainName(userArgDomainName);
         super.validate();
         /*
@@ -94,21 +85,18 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             // prompt for it (if interactive)
             Console cons = System.console();
             if (cons != null && programOpts.isInteractive()) {
-                cons.printf("%s", strings.get("AdminUserDefaultPrompt",
-                    SystemPropertyConstants.DEFAULT_ADMIN_USER));
+                cons.printf("%s", strings.get("AdminUserDefaultPrompt", SystemPropertyConstants.DEFAULT_ADMIN_USER));
                 String val = cons.readLine();
                 if (ok(val))
                     programOpts.setUser(val);
                 else
-                    programOpts.setUser(
-                                    SystemPropertyConstants.DEFAULT_ADMIN_USER);
+                    programOpts.setUser(SystemPropertyConstants.DEFAULT_ADMIN_USER);
             } else {
                 //logger.info(strings.get("AdminUserRequired"));
-                throw new CommandValidationException(
-                    strings.get("AdminUserRequired"));
+                throw new CommandValidationException(strings.get("AdminUserRequired"));
             }
         }
-        
+
         if (password == null) {
             // prompt for it (if interactive)
             char[] pwdChar = getPassword("password", strings.get("AdminPassword"), null, false);
@@ -144,48 +132,43 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
      */
     @Override
     protected int executeCommand() throws CommandException {
-        
-         if(ok(domainDirParam) || ok(userArgDomainName)) {
-          //If domaindir or domain arguments are provided,
-           // do not attempt remote connection. Change password locally
-           String domainDir = (ok(domainDirParam))?domainDirParam:getDomainsDir().getPath();
-           String domainName = (ok(userArgDomainName))?userArgDomainName:getDomainName();
-           return changeAdminPasswordLocally(domainDir,domainName);         
-        
-       } else {
-           try {
-                RemoteRestAdminCommand rac = new RemoteRestAdminCommand(name,
-                    programOpts.getHost(), programOpts.getPort(),
-                    programOpts.isSecure(), programOpts.getUser(),
-                    programOpts.getPassword(), logger,false);
+
+        if (ok(domainDirParam) || ok(userArgDomainName)) {
+            //If domaindir or domain arguments are provided,
+            // do not attempt remote connection. Change password locally
+            String domainDir = (ok(domainDirParam)) ? domainDirParam : getDomainsDir().getPath();
+            String domainName = (ok(userArgDomainName)) ? userArgDomainName : getDomainName();
+            return changeAdminPasswordLocally(domainDir, domainName);
+
+        } else {
+            try {
+                RemoteRestAdminCommand rac = new RemoteRestAdminCommand(name, programOpts.getHost(), programOpts.getPort(),
+                        programOpts.isSecure(), programOpts.getUser(), programOpts.getPassword(), logger, false);
                 rac.executeCommand(params);
                 return SUCCESS;
-           } catch(CommandException ce) {
-               if ( ce.getCause() instanceof ConnectException) {
-                   //Remote change failure - change password with default values of
-                   // domaindir and domain name,if the --host option is not provided.
-                   if(!isLocalHost(programOpts.getHost())) {
-                       throw ce;
-                   }
-                   return changeAdminPasswordLocally(getDomainsDir().getPath(),
-                           getDomainName());
-                   
-                   
-               } else {
-                   throw ce;
-               }
-           }
+            } catch (CommandException ce) {
+                if (ce.getCause() instanceof ConnectException) {
+                    //Remote change failure - change password with default values of
+                    // domaindir and domain name,if the --host option is not provided.
+                    if (!isLocalHost(programOpts.getHost())) {
+                        throw ce;
+                    }
+                    return changeAdminPasswordLocally(getDomainsDir().getPath(), getDomainName());
+
+                } else {
+                    throw ce;
+                }
+            }
         }
-       
-        
+
     }
 
     private int changeAdminPasswordLocally(String domainDir, String domainName) throws CommandException {
-        
-        if(!isLocalHost(programOpts.getHost())) {
+
+        if (!isLocalHost(programOpts.getHost())) {
             throw new CommandException(strings.get("CannotExecuteLocally"));
-        }  
-        
+        }
+
         GFLauncher launcher = null;
         try {
             launcher = GFLauncherFactory.getInstance(RuntimeType.DAS);
@@ -193,10 +176,10 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             info.setDomainName(domainName);
             info.setDomainParentDir(domainDir);
             launcher.setup();
-            
+
             //If secure admin is enabled and if new password is null
             //throw new exception
-            if(launcher.isSecureAdminEnabled()) {
+            if (launcher.isSecureAdminEnabled()) {
                 if ((newpassword == null) || (newpassword.isEmpty())) {
                     throw new CommandException(strings.get("NullNewPassword"));
                 }
@@ -231,10 +214,10 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             throw new CommandException(ex);
         }
     }
-    
-    private static boolean isLocalHost(String host) {        
-        if(host != null && (NetUtils.isThisHostLocal(host) || NetUtils.isLocal(host))) {
-            return true;          
+
+    private static boolean isLocalHost(String host) {
+        if (host != null && (NetUtils.isThisHostLocal(host) || NetUtils.isLocal(host))) {
+            return true;
         }
         return false;
     }

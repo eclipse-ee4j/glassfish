@@ -26,41 +26,37 @@ import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-@ResourceNameConstraint(message="{resourcename.invalid.character}", payload=BindableResource.class)
+@ResourceNameConstraint(message = "{resourcename.invalid.character}", payload = BindableResource.class)
 public interface BindableResource extends Resource, Payload {
     /**
      * Gets the value of the jndiName property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp="[^',][^',\\\\]*")
+    @Pattern(regexp = "[^',][^',\\\\]*")
     public String getJndiName();
 
     /**
      * Sets the value of the jndiName property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setJndiName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setEnabled(String value) throws PropertyVetoException;
 
@@ -68,7 +64,7 @@ public interface BindableResource extends Resource, Payload {
     String getIdentity();
 
     class Duck {
-        public static String getIdentity(BindableResource resource){
+        public static String getIdentity(BindableResource resource) {
             return resource.getJndiName();
         }
     }

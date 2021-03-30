@@ -27,9 +27,8 @@ import org.glassfish.hk2.api.PerLookup;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * A local Monitor Command (this will call the remote 'monitor' command).
- * The reason for having to implement this as local is to interpret the options
- * --interval and --filename(TBD) options.
+ * A local Monitor Command (this will call the remote 'monitor' command). The reason for having to implement this as
+ * local is to interpret the options --interval and --filename(TBD) options.
  *
  * @author Prashanth
  * @author Bill Shannon
@@ -38,7 +37,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 @PerLookup
 public class MonitorCommand extends CLICommand {
     @Param(optional = true, defaultValue = "30")
-    private int interval = 30;	// default 30 seconds
+    private int interval = 30; // default 30 seconds
     @Param
     private String type;
     @Param(optional = true)
@@ -46,18 +45,15 @@ public class MonitorCommand extends CLICommand {
     @Param(optional = true)
     private File fileName;
     @Param(primary = true, optional = true)
-    private String target;	// XXX - not currently used
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(MonitorCommand.class);
+    private String target; // XXX - not currently used
+    private static final LocalStringsImpl strings = new LocalStringsImpl(MonitorCommand.class);
 
     @Override
-    protected int executeCommand()
-            throws CommandException, CommandValidationException {
+    protected int executeCommand() throws CommandException, CommandValidationException {
         // Based on interval, loop the subject to print the output
         Timer timer = new Timer();
         try {
-            MonitorTask monitorTask = new MonitorTask(timer, getRemoteArgs(),
-                    programOpts, env, type, filter, fileName);
+            MonitorTask monitorTask = new MonitorTask(timer, getRemoteArgs(), programOpts, env, type, filter, fileName);
             timer.scheduleAtFixedRate(monitorTask, 0, (long) interval * 1000);
             boolean done = false;
             final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -79,22 +75,18 @@ public class MonitorCommand extends CLICommand {
                     if (exceptionMessage != null) {
                         throw new CommandException(exceptionMessage);
                     }
-                }
-                else if (str.equals("h") || str.equals("H")) {
+                } else if (str.equals("h") || str.equals("H")) {
                     monitorTask.displayDetails();
                 }
             }
             try {
                 Thread.sleep(500);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 // ignore
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             timer.cancel();
-            throw new CommandException(
-                    strings.get("monitorCommand.errorRemote", e.getMessage()));
+            throw new CommandException(strings.get("monitorCommand.errorRemote", e.getMessage()));
         }
         return 0;
     }

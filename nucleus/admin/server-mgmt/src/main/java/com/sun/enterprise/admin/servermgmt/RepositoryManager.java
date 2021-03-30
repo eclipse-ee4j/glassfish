@@ -38,7 +38,6 @@ import java.io.*;
 import java.util.*;
 import com.sun.enterprise.util.zip.ZipFile;
 
-
 //import javax.management.remote.JMXAuthenticator;
 //import com.sun.enterprise.admin.server.core.jmx.auth.ASJMXAuthenticator;
 //import com.sun.enterprise.admin.server.core.jmx.auth.ASLoginDriverImpl;
@@ -52,19 +51,17 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 //import com.sun.enterprise.util.ExecException;
 
 /**
- * The RepositoryManager serves as a common base class for the following
- * PEDomainsManager, PEInstancesManager, AgentManager (the SE Node Agent). Its
- * purpose is to abstract out any shared functionality related to lifecycle
- * management of domains, instances and node agents. This includes creation,
- * deletion, listing, and starting and stopping.
+ * The RepositoryManager serves as a common base class for the following PEDomainsManager, PEInstancesManager,
+ * AgentManager (the SE Node Agent). Its purpose is to abstract out any shared functionality related to lifecycle
+ * management of domains, instances and node agents. This includes creation, deletion, listing, and starting and
+ * stopping.
  *
  * @author kebbs
  */
 public class RepositoryManager extends MasterPasswordFileManager {
     /**
-     * The RepositoryManagerMessages class is used to abstract out
-     * ResourceBundle messages that are specific to a domain, node-agent, or
-     * server instance.
+     * The RepositoryManagerMessages class is used to abstract out ResourceBundle messages that are specific to a domain,
+     * node-agent, or server instance.
      */
     protected static class RepositoryManagerMessages {
         private StringManager _strMgr;
@@ -88,25 +85,12 @@ public class RepositoryManager extends MasterPasswordFileManager {
         private String _timeoutStartingMessage;
         private String _cannotDeleteJmsProviderInstance;
 
-        public RepositoryManagerMessages(
-                StringManager strMgr,
-                String badNameMessage,
-                String repositoryNameMessage,
-                String repositoryRootMessage,
-                String existsMessage,
-                String noExistsMessage,
-                String repositoryNotValidMessage,
-                String cannotDeleteMessage,
-                String invalidPathMessage,
-                String listRepositoryElementMessage,
-                String cannotDeleteInstance_invalidState,
-                String instanceStartupExceptionMessage,
-                String cannotStartInstance_invalidStateMessage,
-                String startInstanceTimeOutMessage,
-                String portConflictMessage,
-                String startupFailedMessage,
-                String cannotStopInstance_invalidStateMessage,
-                String cannotStopInstanceMessage,
+        public RepositoryManagerMessages(StringManager strMgr, String badNameMessage, String repositoryNameMessage,
+                String repositoryRootMessage, String existsMessage, String noExistsMessage, String repositoryNotValidMessage,
+                String cannotDeleteMessage, String invalidPathMessage, String listRepositoryElementMessage,
+                String cannotDeleteInstance_invalidState, String instanceStartupExceptionMessage,
+                String cannotStartInstance_invalidStateMessage, String startInstanceTimeOutMessage, String portConflictMessage,
+                String startupFailedMessage, String cannotStopInstance_invalidStateMessage, String cannotStopInstanceMessage,
                 String timeoutStartingMessage) {
             _strMgr = strMgr;
             _badNameMessage = badNameMessage;
@@ -120,13 +104,11 @@ public class RepositoryManager extends MasterPasswordFileManager {
             _listRepositoryElementMessage = listRepositoryElementMessage;
             _cannotDeleteInstance_invalidState = cannotDeleteInstance_invalidState;
             _instanceStartupExceptionMessage = instanceStartupExceptionMessage;
-            _cannotStartInstance_invalidStateMessage =
-                    cannotStartInstance_invalidStateMessage;
+            _cannotStartInstance_invalidStateMessage = cannotStartInstance_invalidStateMessage;
             _startInstanceTimeOutMessage = startInstanceTimeOutMessage;
             _portConflictMessage = portConflictMessage;
             _startupFailedMessage = startupFailedMessage;
-            _cannotStopInstance_invalidStateMessage =
-                    cannotStopInstance_invalidStateMessage;
+            _cannotStopInstance_invalidStateMessage = cannotStopInstance_invalidStateMessage;
             _cannotStopInstanceMessage = cannotStopInstanceMessage;
             _timeoutStartingMessage = timeoutStartingMessage;
         }
@@ -163,26 +145,20 @@ public class RepositoryManager extends MasterPasswordFileManager {
             return _strMgr.getString(_invalidPathMessage, path);
         }
 
-        public String getListRepositoryElementMessage(String repositoryName,
-                String repositoryStatus) {
-            return _strMgr.getString(_listRepositoryElementMessage, repositoryName,
-                    repositoryStatus);
+        public String getListRepositoryElementMessage(String repositoryName, String repositoryStatus) {
+            return _strMgr.getString(_listRepositoryElementMessage, repositoryName, repositoryStatus);
         }
 
-        public String getCannotDeleteInstanceInvalidState(String name,
-                String state) {
-            return _strMgr.getString(_cannotDeleteInstance_invalidState,
-                    name, state);
+        public String getCannotDeleteInstanceInvalidState(String name, String state) {
+            return _strMgr.getString(_cannotDeleteInstance_invalidState, name, state);
         }
 
         public String getInstanceStartupExceptionMessage(String name) {
             return _strMgr.getString(_instanceStartupExceptionMessage, name);
         }
 
-        public String getCannotStartInstanceInvalidStateMessage(String name,
-                String state) {
-            return _strMgr.getString(_cannotStartInstance_invalidStateMessage,
-                    name, state);
+        public String getCannotStartInstanceInvalidStateMessage(String name, String state) {
+            return _strMgr.getString(_cannotStartInstance_invalidStateMessage, name, state);
         }
 
         public String getStartInstanceTimeOutMessage(String name) {
@@ -195,17 +171,14 @@ public class RepositoryManager extends MasterPasswordFileManager {
 
         public String getStartupFailedMessage(String name, int port) {
             if (port != 0) {
-                return _strMgr.getString(_portConflictMessage, new Object[]{name, String.valueOf(port)});
-            }
-            else {
+                return _strMgr.getString(_portConflictMessage, new Object[] { name, String.valueOf(port) });
+            } else {
                 return _strMgr.getString(_startupFailedMessage, name);
             }
         }
 
-        public String getCannotStopInstanceInvalidStateMessage(String name,
-                String state) {
-            return _strMgr.getString(_cannotStopInstance_invalidStateMessage,
-                    name, state);
+        public String getCannotStopInstanceInvalidStateMessage(String name, String state) {
+            return _strMgr.getString(_cannotStopInstance_invalidStateMessage, name, state);
         }
 
         public String getCannotStopInstanceMessage(String name) {
@@ -216,11 +189,10 @@ public class RepositoryManager extends MasterPasswordFileManager {
             return _strMgr.getString(_timeoutStartingMessage, name);
         }
     }
+
     protected static final String CERTUTIL_CMD = System.getProperty(SystemPropertyConstants.NSS_BIN_PROPERTY) + "/certutil";
-    protected static final String NEW_LINE =
-            System.getProperty("line.separator");
-    private static final StringManager _strMgr =
-            StringManager.getManager(RepositoryManager.class);
+    protected static final String NEW_LINE = System.getProperty("line.separator");
+    private static final StringManager _strMgr = StringManager.getManager(RepositoryManager.class);
     protected RepositoryManagerMessages _messages = null;
     public static final String DEBUG = "Debug";
 
@@ -229,17 +201,11 @@ public class RepositoryManager extends MasterPasswordFileManager {
      */
     public RepositoryManager() {
         super();
-        setMessages(new RepositoryManagerMessages(
-                StringManager.getManager(PEDomainsManager.class),
-                "illegalDomainName",
-                "domainName", "domainsRoot", "domainExists",
-                "domainDoesntExist", "domainDirNotValid",
-                "cannotDeleteDomainDir", "invalidDomainDir",
-                "listDomainElement", "cannotDeleteInstance_invalidState",
-                "instanceStartupException", "cannotStartInstance_invalidState",
-                "startInstanceTimeOut", "portConflict", "startupFailed",
-                "cannotStopInstance_invalidState",
-                "cannotStopInstance", "timeoutStarting"));
+        setMessages(new RepositoryManagerMessages(StringManager.getManager(PEDomainsManager.class), "illegalDomainName", "domainName",
+                "domainsRoot", "domainExists", "domainDoesntExist", "domainDirNotValid", "cannotDeleteDomainDir", "invalidDomainDir",
+                "listDomainElement", "cannotDeleteInstance_invalidState", "instanceStartupException", "cannotStartInstance_invalidState",
+                "startInstanceTimeOut", "portConflict", "startupFailed", "cannotStopInstance_invalidState", "cannotStopInstance",
+                "timeoutStarting"));
     }
 
     protected void setMessages(RepositoryManagerMessages messages) {
@@ -250,8 +216,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         return _messages;
     }
 
-    protected void generateFromTemplate(TokenValueSet tokens,
-            File template, File destinationFile) throws IOException {
+    protected void generateFromTemplate(TokenValueSet tokens, File template, File destinationFile) throws IOException {
         LineTokenReplacer replacer = new LineTokenReplacer(tokens, "UTF-8");
         replacer.replace(template, destinationFile);
     }
@@ -261,8 +226,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
     }
 
     protected boolean isValidRepository(File f) {
-        return new File(new File(f, PEFileLayout.CONFIG_DIR),
-                PEFileLayout.DOMAIN_XML_FILE).exists();
+        return new File(new File(f, PEFileLayout.CONFIG_DIR), PEFileLayout.DOMAIN_XML_FILE).exists();
     }
 
     protected boolean isValidRepository(RepositoryConfig config) {
@@ -277,25 +241,18 @@ public class RepositoryManager extends MasterPasswordFileManager {
         return getFileLayout(config).getRepositoryRootDir();
     }
 
-    protected void checkRepository(RepositoryConfig config)
-            throws RepositoryException {
+    protected void checkRepository(RepositoryConfig config) throws RepositoryException {
         checkRepository(config, true, true);
     }
 
-    public void checkRepository(RepositoryConfig config,
-            boolean existingRepository)
-            throws RepositoryException {
+    public void checkRepository(RepositoryConfig config, boolean existingRepository) throws RepositoryException {
         checkRepository(config, existingRepository, true);
     }
 
     /**
-     * Sanity check on the repository. This is executed prior to
-     * create/delete/start/stop.
+     * Sanity check on the repository. This is executed prior to create/delete/start/stop.
      */
-    public void checkRepository(RepositoryConfig config,
-            boolean existingRepository,
-            boolean checkRootDir)
-            throws RepositoryException {
+    public void checkRepository(RepositoryConfig config, boolean existingRepository, boolean checkRootDir) throws RepositoryException {
         String repositoryName = config.getDisplayName();
 
         //check domain name for validity
@@ -303,39 +260,28 @@ public class RepositoryManager extends MasterPasswordFileManager {
 
         if (checkRootDir || existingRepository) {
             //check domain root directory is read/writable
-            new FileValidator(getMessages().getRepositoryRootMessage(), "drw").validate(
-                    config.getRepositoryRoot());
+            new FileValidator(getMessages().getRepositoryRootMessage(), "drw").validate(config.getRepositoryRoot());
         }
 
         //check installation root directory is readable
-        new FileValidator(_strMgr.getString("installRoot"), "dr").validate(
-                config.getInstallRoot());
+        new FileValidator(_strMgr.getString("installRoot"), "dr").validate(config.getInstallRoot());
 
         //Ensure that the domain exists or does not exist
         if (existingRepository) {
             if (!repositoryExists(config)) {
                 if (Boolean.getBoolean(DEBUG)) {
+                    throw new RepositoryException(getMessages().getNoExistsMessage(repositoryName, getBigNoExistsMessage(config)));
+                } else {
                     throw new RepositoryException(
-                            getMessages().getNoExistsMessage(repositoryName,
-                            getBigNoExistsMessage(config)));
+                            getMessages().getNoExistsMessage(repositoryName, getRepositoryDir(config).getAbsolutePath()));
                 }
-                else {
-                    throw new RepositoryException(
-                            getMessages().getNoExistsMessage(repositoryName,
-                            getRepositoryDir(config).getAbsolutePath()));
-                }
+            } else if (!isValidRepository(config)) {
+                throw new RepositoryException(getMessages().getRepositoryNotValidMessage(getRepositoryDir(config).getAbsolutePath()));
             }
-            else if (!isValidRepository(config)) {
-                throw new RepositoryException(
-                        getMessages().getRepositoryNotValidMessage(
-                        getRepositoryDir(config).getAbsolutePath()));
-            }
-        }
-        else {
+        } else {
             if (repositoryExists(config)) {
                 throw new RepositoryException(
-                        getMessages().getExistsMessage(repositoryName,
-                        getRepositoryRootDir(config).getAbsolutePath()));
+                        getMessages().getExistsMessage(repositoryName, getRepositoryRootDir(config).getAbsolutePath()));
             }
         }
     }
@@ -351,7 +297,6 @@ public class RepositoryManager extends MasterPasswordFileManager {
         s += "\nCanonical File: " + canrepdir;
         s += "\nParent File: " + canrepdirparent;
 
-
         boolean regex = repdir.exists();
         boolean canex = canrepdir.exists();
         boolean parentex = canrepdirparent.exists();
@@ -359,9 +304,8 @@ public class RepositoryManager extends MasterPasswordFileManager {
         boolean candir = canrepdir.isDirectory();
         boolean parentdir = canrepdirparent.isDirectory();
 
-        s += "\nrepdir exists: " + regex + ", canon exists: " + canex + ", parent exists: " + parentex
-                + ", reg is dir: " + regdir + ", canon isdir: " + candir
-                + ", parent is dir: " + parentdir;
+        s += "\nrepdir exists: " + regex + ", canon exists: " + canex + ", parent exists: " + parentex + ", reg is dir: " + regdir
+                + ", canon isdir: " + candir + ", parent is dir: " + parentdir;
         s += "\nInstance root sys property (";
         s += SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
         s += "): ";
@@ -371,39 +315,31 @@ public class RepositoryManager extends MasterPasswordFileManager {
     }
 
     /**
-     * Sets the permissions for the domain directory, its config directory,
-     * startserv/stopserv scripts etc.
+     * Sets the permissions for the domain directory, its config directory, startserv/stopserv scripts etc.
      */
     protected void setPermissions(RepositoryConfig repositoryConfig) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(repositoryConfig);
         final File domainDir = layout.getRepositoryDir();
         try {
             chmod("-R 755", domainDir);
-        }
-        catch (Exception e) {
-            throw new RepositoryException(
-                    _strMgr.getString("setPermissionError"), e);
+        } catch (Exception e) {
+            throw new RepositoryException(_strMgr.getString("setPermissionError"), e);
         }
     }
 
     /**
      * Deletes the repository (domain, node agent, server instance).
      */
-    protected void deleteRepository(
-            RepositoryConfig config)
-            throws RepositoryException {
+    protected void deleteRepository(RepositoryConfig config) throws RepositoryException {
         deleteRepository(config, true);
     }
 
     /**
-     * Deletes the repository (domain, node agent, server instance). If the
-     * deleteJMSProvider flag is set, we delete the jms instance. The jms
-     * instance is present in the domain only and not when the repository
-     * corresponds to a server instance or node agent.
+     * Deletes the repository (domain, node agent, server instance). If the deleteJMSProvider flag is set, we delete the jms
+     * instance. The jms instance is present in the domain only and not when the repository corresponds to a server instance
+     * or node agent.
      */
-    protected void deleteRepository(
-            RepositoryConfig config, boolean deleteJMSProvider)
-            throws RepositoryException {
+    protected void deleteRepository(RepositoryConfig config, boolean deleteJMSProvider) throws RepositoryException {
         checkRepository(config, true);
 
         //Ensure that the entity to be deleted is stopped
@@ -429,16 +365,13 @@ public class RepositoryManager extends MasterPasswordFileManager {
         File repository = getRepositoryDir(config);
         try {
             FileUtils.liquidate(repository);
-        }
-        catch (Exception e) {
-            throw new RepositoryException(getMessages().getCannotDeleteMessage(
-                    repository.getAbsolutePath()), e);
+        } catch (Exception e) {
+            throw new RepositoryException(getMessages().getCannotDeleteMessage(repository.getAbsolutePath()), e);
         }
 
         //Double check to ensure that it was really deleted
         if (repositoryExists(config)) {
-            throw new RepositoryException(
-                    getMessages().getCannotDeleteMessage(repository.getAbsolutePath()));
+            throw new RepositoryException(getMessages().getCannotDeleteMessage(repository.getAbsolutePath()));
         }
     }
 
@@ -451,8 +384,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         try {
             File f = repository.getCanonicalFile();
             if (!f.isDirectory()) {
-                throw new RepositoryException(getMessages().getInvalidPathMessage(
-                        f.getAbsolutePath()));
+                throw new RepositoryException(getMessages().getInvalidPathMessage(f.getAbsolutePath()));
             }
             dirs = f.list(new FilenameFilter() {
                 //Only accept directories that are valid (contain the property startserv script)
@@ -461,8 +393,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
                     File f = new File(dir, name);
                     if (!f.isDirectory()) {
                         return false;
-                    }
-                    else {
+                    } else {
                         return isValidRepository(f);
                     }
                 }
@@ -470,8 +401,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
             if (dirs == null) {
                 dirs = new String[0];
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RepositoryException(e);
         }
         return dirs;
@@ -482,8 +412,8 @@ public class RepositoryManager extends MasterPasswordFileManager {
      */
 
     /**
-     * Return all repositories (domains, node agents, server instances) and
-     * their corresponding status (e.g. running or stopped) in string form.
+     * Return all repositories (domains, node agents, server instances) and their corresponding status (e.g. running or
+     * stopped) in string form.
      */
     /*
      * protected String[] listDomainsAndStatusAsString( RepositoryConfig config)
@@ -495,37 +425,31 @@ public class RepositoryManager extends MasterPasswordFileManager {
      * status.toShortString()); } return result; } catch (Exception e) { throw
      * new RepositoryException(e); } }
      */
-    protected RepositoryConfig getConfigForRepositoryStatus(RepositoryConfig config,
-            String repository) {
+    protected RepositoryConfig getConfigForRepositoryStatus(RepositoryConfig config, String repository) {
         //The repository here corresponds to either the domain or node agent name
         return new RepositoryConfig(repository, config.getRepositoryRoot());
     }
 
     /**
-     * We validate the master password by trying to open the password alias
-     * keystore. This means that the keystore must already exist.
+     * We validate the master password by trying to open the password alias keystore. This means that the keystore must
+     * already exist.
      *
      * @param config
      * @param password
      * @throws RepositoryException
      */
-    public void validateMasterPassword(RepositoryConfig config,
-            String password) throws RepositoryException {
+    public void validateMasterPassword(RepositoryConfig config, String password) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         final File passwordAliases = layout.getPasswordAliasKeystore();
         try {
             // WBN July 2007
             // we are constructing this object ONLY to see if it throws
             // an Exception.  We do not use the object.
-            new PasswordAdapter(passwordAliases.getAbsolutePath(),
-                    password.toCharArray());
-        }
-        catch (IOException ex) {
+            new PasswordAdapter(passwordAliases.getAbsolutePath(), password.toCharArray());
+        } catch (IOException ex) {
             throw new RepositoryException(_strMgr.getString("masterPasswordInvalid"));
-        }
-        catch (Exception ex) {
-            throw new RepositoryException(
-                    _strMgr.getString("couldNotValidateMasterPassword", passwordAliases), ex);
+        } catch (Exception ex) {
+            throw new RepositoryException(_strMgr.getString("couldNotValidateMasterPassword", passwordAliases), ex);
         }
     }
 
@@ -537,17 +461,14 @@ public class RepositoryManager extends MasterPasswordFileManager {
      * @param alias for which the clear text password would returns
      * @throws RepositoryException
      */
-    public String getClearPasswordForAlias(RepositoryConfig config,
-            String password, String alias) throws RepositoryException {
+    public String getClearPasswordForAlias(RepositoryConfig config, String password, String alias) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         final File passwordAliases = layout.getPasswordAliasKeystore();
         try {
-            PasswordAdapter p = new PasswordAdapter(passwordAliases.getAbsolutePath(),
-                    password.toCharArray());
+            PasswordAdapter p = new PasswordAdapter(passwordAliases.getAbsolutePath(), password.toCharArray());
             String clearPwd = p.getPasswordForAlias(alias);
             return clearPwd;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return null;
         }
     }
@@ -594,21 +515,18 @@ public class RepositoryManager extends MasterPasswordFileManager {
      * @param newPassword new password
      * @throws RepositoryException
      */
-    protected void changePasswordAliasKeystorePassword(RepositoryConfig config,
-            String oldPassword, String newPassword) throws RepositoryException {
+    protected void changePasswordAliasKeystorePassword(RepositoryConfig config, String oldPassword, String newPassword)
+            throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         final File passwordAliases = layout.getPasswordAliasKeystore();
 
         //Change the password of the keystore alias file
         if (passwordAliases.exists()) {
             try {
-                PasswordAdapter p = new PasswordAdapter(passwordAliases.getAbsolutePath(),
-                        oldPassword.toCharArray());
+                PasswordAdapter p = new PasswordAdapter(passwordAliases.getAbsolutePath(), oldPassword.toCharArray());
                 p.changePassword(newPassword.toCharArray());
-            }
-            catch (Exception ex) {
-                throw new RepositoryException(
-                        _strMgr.getString("passwordAliasPasswordNotChanged", passwordAliases), ex);
+            } catch (Exception ex) {
+                throw new RepositoryException(_strMgr.getString("passwordAliasPasswordNotChanged", passwordAliases), ex);
             }
         }
     }
@@ -616,8 +534,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
     /**
      * Create JBI instance.
      */
-    protected void createJBIInstance(String instanceName,
-            RepositoryConfig config) throws RepositoryException {
+    protected void createJBIInstance(String instanceName, RepositoryConfig config) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         layout.createJBIDirectories();
         final TokenValueSet tvSet = new TokenValueSet();
@@ -626,10 +543,9 @@ public class RepositoryManager extends MasterPasswordFileManager {
         final String tJbiInstanceRoot = "JBI_INSTANCE_ROOT";
         try {
 
-            final TokenValue tvJbiInstanceName = new TokenValue(tJbiInstanceName,
-                    instanceName, tvDelimiter);
-            final TokenValue tvJbiInstanceRoot = new TokenValue(tJbiInstanceRoot,
-                    layout.getRepositoryDir().getCanonicalPath(), tvDelimiter);
+            final TokenValue tvJbiInstanceName = new TokenValue(tJbiInstanceName, instanceName, tvDelimiter);
+            final TokenValue tvJbiInstanceRoot = new TokenValue(tJbiInstanceRoot, layout.getRepositoryDir().getCanonicalPath(),
+                    tvDelimiter);
             tvSet.add(tvJbiInstanceName);
             tvSet.add(tvJbiInstanceRoot);
             final File src = layout.getJbiTemplateFile();
@@ -647,10 +563,8 @@ public class RepositoryManager extends MasterPasswordFileManager {
             createJavaEESEInstallRoot(layout);
             createWSDLSLInstallRoot(layout);
 
-        }
-        catch (Exception ioe) {
-            throw new RepositoryException(
-                    _strMgr.getString("jbiRegistryFileNotCreated"), ioe);
+        } catch (Exception ioe) {
+            throw new RepositoryException(_strMgr.getString("jbiRegistryFileNotCreated"), ioe);
         }
     }
 
@@ -659,12 +573,9 @@ public class RepositoryManager extends MasterPasswordFileManager {
      *
      * @param layout PEFileLayout
      */
-    public void createHttpBCInstallRoot(PEFileLayout layout)
-            throws Exception {
+    public void createHttpBCInstallRoot(PEFileLayout layout) throws Exception {
 
-        FileUtils.copy(
-                layout.getHttpBcArchiveSource(),
-                layout.getHttpBcArchiveDestination());
+        FileUtils.copy(layout.getHttpBcArchiveSource(), layout.getHttpBcArchiveDestination());
 
         ZipFile zf = new ZipFile(layout.getHttpBcArchiveSource(), layout.getHttpBcInstallRoot());
         zf.explode();
@@ -675,11 +586,8 @@ public class RepositoryManager extends MasterPasswordFileManager {
      *
      * @param layout PEFileLayout
      */
-    public void createJavaEESEInstallRoot(PEFileLayout layout)
-            throws Exception {
-        FileUtils.copy(
-                layout.getJavaEESEArchiveSource(),
-                layout.getJavaEESEArchiveDestination());
+    public void createJavaEESEInstallRoot(PEFileLayout layout) throws Exception {
+        FileUtils.copy(layout.getJavaEESEArchiveSource(), layout.getJavaEESEArchiveDestination());
 
         ZipFile zf = new ZipFile(layout.getJavaEESEArchiveSource(), layout.getJavaEESEInstallRoot());
         zf.explode();
@@ -690,11 +598,8 @@ public class RepositoryManager extends MasterPasswordFileManager {
      *
      * @param layout PEFileLayout
      */
-    public void createWSDLSLInstallRoot(PEFileLayout layout)
-            throws Exception {
-        FileUtils.copy(
-                layout.getWSDLSLArchiveSource(),
-                layout.getWSDLSLArchiveDestination());
+    public void createWSDLSLInstallRoot(PEFileLayout layout) throws Exception {
+        FileUtils.copy(layout.getWSDLSLArchiveSource(), layout.getWSDLSLArchiveDestination());
 
         ZipFile zf = new ZipFile(layout.getWSDLSLArchiveSource(), layout.getWSDLSLInstallRoot());
         zf.explode();
@@ -704,8 +609,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
     /**
      * Create MQ instance.
      */
-    protected void createMQInstance(
-            RepositoryConfig config) throws RepositoryException {
+    protected void createMQInstance(RepositoryConfig config) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         final File broker = layout.getImqBrokerExecutable();
         final File mqVarHome = layout.getImqVarHome();
@@ -718,8 +622,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
             cmdInput.add(mqVarHome.getAbsolutePath());
             ProcessExecutor pe = new ProcessExecutor(cmdInput.toArray(new String[cmdInput.size()]));
             pe.execute(false, false);
-        }
-        catch (Exception ioe) {
+        } catch (Exception ioe) {
             /*
              * Dont do anything. * IMQ instance is created just to make sure
              * that Off line IMQ commands can be executed, even before starting
@@ -736,41 +639,34 @@ public class RepositoryManager extends MasterPasswordFileManager {
     /**
      * Create the timer database wal file.
      */
-    protected void createTimerWal(
-            RepositoryConfig config) throws RepositoryException {
+    protected void createTimerWal(RepositoryConfig config) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         final File src = layout.getTimerWalTemplate();
         final File dest = layout.getTimerWal();
         try {
             FileUtils.copy(src, dest);
-        }
-        catch (IOException ioe) {
-            throw new RepositoryException(
-                    _strMgr.getString("timerWalNotCreated"), ioe);
+        } catch (IOException ioe) {
+            throw new RepositoryException(_strMgr.getString("timerWalNotCreated"), ioe);
         }
     }
 
     /**
      * Create the timer database dbn file.
      */
-    protected void createTimerDbn(
-            RepositoryConfig config) throws RepositoryException {
+    protected void createTimerDbn(RepositoryConfig config) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         final File src = layout.getTimerDbnTemplate();
         final File dest = layout.getTimerDbn();
         try {
             FileUtils.copy(src, dest);
-        }
-        catch (IOException ioe) {
-            throw new RepositoryException(
-                    _strMgr.getString("timerDbnNotCreated"), ioe);
+        } catch (IOException ioe) {
+            throw new RepositoryException(_strMgr.getString("timerDbnNotCreated"), ioe);
         }
     }
 
     /**
-     * A ConfigContext is maintained. The resetConfigContext method can be
-     * called to reset the ConfigContext, causing getConfigContext() to reread
-     * the config contex from disk.
+     * A ConfigContext is maintained. The resetConfigContext method can be called to reset the ConfigContext, causing
+     * getConfigContext() to reread the config contex from disk.
      */
     /*
      * protected synchronized void resetConfigContext() { _configContext = null;
@@ -791,11 +687,9 @@ public class RepositoryManager extends MasterPasswordFileManager {
      * }
      */
     /**
-     * Cleans the mq broker instances created for all the server instances that
-     * are managed by this domain. This method is added to this class for the
-     * following reasons 1) Depends on the preConditions of the
-     * deleteRespository method - like instance not running. 2) Requires the
-     * repository to exist.
+     * Cleans the mq broker instances created for all the server instances that are managed by this domain. This method is
+     * added to this class for the following reasons 1) Depends on the preConditions of the deleteRespository method - like
+     * instance not running. 2) Requires the repository to exist.
      *
      * @param config
      * @throws RepositoryException
@@ -828,8 +722,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
      * RepositoryException(
      * _strMgr.getString("cannotDeleteJmsProviderInstance"), e); } }
      */
-    protected String[] getInteractiveOptions(String user, String password,
-            String masterPassword, HashMap<Object, Object> extraPasswords) {
+    protected String[] getInteractiveOptions(String user, String password, String masterPassword, HashMap<Object, Object> extraPasswords) {
         int numKeys = extraPasswords == null ? 0 : extraPasswords.size();
         String[] options = new String[3 + numKeys];
         // set interativeOptions for security to hand to starting process from ProcessExecutor
@@ -861,8 +754,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
      */
 
     /**
-     * Determines if the NSS support is available in this installation. The
-     * check involves availability of the
+     * Determines if the NSS support is available in this installation. The check involves availability of the
      * <code> certutil </code> executable.
      *
      * @return true if certutil exists false otherwise
@@ -871,8 +763,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         File certUtilFile = null;
         if (OS.isWindows()) {
             certUtilFile = new File(CERTUTIL_CMD + ".exe");
-        }
-        else {
+        } else {
             certUtilFile = new File(CERTUTIL_CMD);
         }
         if (certUtilFile.exists()) {

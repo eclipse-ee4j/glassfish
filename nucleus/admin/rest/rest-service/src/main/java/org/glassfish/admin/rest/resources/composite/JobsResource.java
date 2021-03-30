@@ -37,27 +37,14 @@ import org.jvnet.hk2.annotations.Service;
  * <h2>Example Interactions</h2>
  * <h4>View the detached jobs</h4>
  *
- * <div class="codeblock">
- * $ curl --user admin:admin123 -v \
- *   -H Accept:application/vnd.oracle.glassfish+json \
- *   -H Content-Type:application/vnd.oracle.glassfish+json \
- *   -H X-Requested-By:MyClient \
- *   http://localhost:4848/management/jobs
+ * <div class="codeblock"> $ curl --user admin:admin123 -v \ -H Accept:application/vnd.oracle.glassfish+json \ -H
+ * Content-Type:application/vnd.oracle.glassfish+json \ -H X-Requested-By:MyClient \
+ * http://localhost:4848/management/jobs
  *
- * HTTP/1.1 200 OK
- * {
- *     "items": [{
- *             "exitCode": "COMPLETED",
- *             "jobId": "1",
- *             "jobName": "load-sdp",
- *             "jobState": "COMPLETED",
- *             "executionDate": "Wed Jan 02 11:36:38 CST 2013",
- *             "message": "SDP loaded with name nucleusSDP.",
- *             "user": "admin"
- *         }],
- *     "metadata": [{"id": "http:\/\/localhost:4848\/management\/jobs\/id\/1"}]
- * }
- * </div>
+ * HTTP/1.1 200 OK { "items": [{ "exitCode": "COMPLETED", "jobId": "1", "jobName": "load-sdp", "jobState": "COMPLETED",
+ * "executionDate": "Wed Jan 02 11:36:38 CST 2013", "message": "SDP loaded with name nucleusSDP.", "user": "admin" }],
+ * "metadata": [{"id": "http:\/\/localhost:4848\/management\/jobs\/id\/1"}] } </div>
+ * 
  * @author jdlee
  */
 @Service
@@ -65,32 +52,27 @@ import org.jvnet.hk2.annotations.Service;
 public class JobsResource extends CompositeResource {
 
     /**
-     * The GET method on this resource returns a list of Job entities that represent
-     * each recent or current job known to this GlassFish instance.
+     * The GET method on this resource returns a list of Job entities that represent each recent or current job known to
+     * this GlassFish instance.
      * <p>
      * Roles: PaasAdmin, TenantAdmin
      * <p>
      *
-     * @param currentUser Optional query parameter to restrict the set of returns {@link Job} objects
-     * to those for the current user
-     * @return A collection of Job entities which contains information for each job resource.
-     *  For each job returned, the <code>jobId</code> field can be used to format the URI to
-     *  interact with a specific job.
+     * @param currentUser Optional query parameter to restrict the set of returns {@link Job} objects to those for the
+     * current user
+     * @return A collection of Job entities which contains information for each job resource. For each job returned, the
+     * <code>jobId</code> field can be used to format the URI to interact with a specific job.
      * @throws Exception
      */
     @GET
-    public RestCollectionResponseBody<Job> getItems(
-        @QueryParam("currentUser") @DefaultValue("false") final boolean currentUser,
-            @QueryParam(INCLUDE) final String include,
-            @QueryParam(EXCLUDE) final String exclude) throws Exception {
-        RestCollectionResponseBody<Job> rb =
-            restCollectionResponseBody(Job.class, "job", null); // there is no parent resource
+    public RestCollectionResponseBody<Job> getItems(@QueryParam("currentUser") @DefaultValue("false") final boolean currentUser,
+            @QueryParam(INCLUDE) final String include, @QueryParam(EXCLUDE) final String exclude) throws Exception {
+        RestCollectionResponseBody<Job> rb = restCollectionResponseBody(Job.class, "job", null); // there is no parent resource
         ActionReport ar = executeReadCommand(getCommandName(), getParameters());
         Collection<Map<String, Object>> jobMaps = (List<Map<String, Object>>) ar.getExtraProperties().get("jobs");
         if (jobMaps != null) {
             for (Map<String, Object> jobMap : jobMaps) {
-                if (currentUser
-                        && !StringUtil.compareStrings((String) jobMap.get(ListJobsCommand.USER), this.getAuthenticatedUser())) {
+                if (currentUser && !StringUtil.compareStrings((String) jobMap.get(ListJobsCommand.USER), this.getAuthenticatedUser())) {
                     continue;
                 }
                 if (jobMap == null) {

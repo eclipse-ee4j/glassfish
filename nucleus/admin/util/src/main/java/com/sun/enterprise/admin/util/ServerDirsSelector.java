@@ -41,15 +41,15 @@ public class ServerDirsSelector {
 
     private File userSpecifiedDomainDirParent;
     private String userSpecifiedServerName;
-    private String userSpecifiedNodeDir;           // nodeDirRoot
+    private String userSpecifiedNodeDir; // nodeDirRoot
     private String userSpecifiedNode;
 
     private DomainDirs domainDirs = null;
     private InstanceDirs instanceDirs = null;
 
-
     /**
      * Creates a selector for choosing the correct set of directories.
+     * 
      * @param domainDirParent parent of the domain directory file(s)
      * @param serverName name of the requested instance or domain
      * @param nodeDir path to the node directory
@@ -58,17 +58,10 @@ public class ServerDirsSelector {
      * @throws CommandException
      * @throws IOException
      */
-    public static ServerDirsSelector getInstance(
-            final File domainDirParent,
-            final String serverName,
-            final String nodeDir,
+    public static ServerDirsSelector getInstance(final File domainDirParent, final String serverName, final String nodeDir,
             final String node) throws CommandException, IOException {
 
-        final ServerDirsSelector helper = new ServerDirsSelector(
-                domainDirParent,
-                serverName,
-                nodeDir,
-                node);
+        final ServerDirsSelector helper = new ServerDirsSelector(domainDirParent, serverName, nodeDir, node);
 
         helper.validateDomainOrInstance();
         return helper;
@@ -78,24 +71,18 @@ public class ServerDirsSelector {
         return selectDirs();
     }
 
-    private ServerDirsSelector(
-            final File domainDirParent,
-            final String serverName,
-            final String nodeDir,
-            final String node) {
+    private ServerDirsSelector(final File domainDirParent, final String serverName, final String nodeDir, final String node) {
         userSpecifiedDomainDirParent = domainDirParent;
         userSpecifiedServerName = serverName;
         userSpecifiedNodeDir = nodeDir;
         userSpecifiedNode = node;
     }
 
-
     /**
      * make sure the parameters make sense for either an instance or a domain.
      */
     private void validateDomainOrInstance() throws CommandException, IOException {
 
-        
         // case 1: since ddp is specified - it MUST be a domain
         if (userSpecifiedDomainDirParent != null) {
             domainDirs = new DomainDirs(userSpecifiedDomainDirParent, userSpecifiedServerName);
@@ -114,8 +101,7 @@ public class ServerDirsSelector {
             try {
                 domainDirs = new DomainDirs(userSpecifiedDomainDirParent, userSpecifiedServerName);
                 return;
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 // handled below
             }
 
@@ -129,8 +115,8 @@ public class ServerDirsSelector {
 
     private ServerDirs selectDirs() {
         if (isInstance())
-                return instanceDirs.getServerDirs();
-            else
-                return domainDirs.getServerDirs();
+            return instanceDirs.getServerDirs();
+        else
+            return domainDirs.getServerDirs();
     }
 }

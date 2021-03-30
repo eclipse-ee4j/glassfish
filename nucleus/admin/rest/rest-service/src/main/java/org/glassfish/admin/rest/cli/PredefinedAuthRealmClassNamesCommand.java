@@ -38,15 +38,12 @@ import jakarta.inject.Inject;
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        path="list-predefined-authrealm-classnames", 
-        description="List Auth Realm Class Names")
-})
+        @RestEndpoint(configBean = Domain.class, path = "list-predefined-authrealm-classnames", description = "List Auth Realm Class Names") })
 public class PredefinedAuthRealmClassNamesCommand implements AdminCommand {
 
     @Inject
     Domain domain;
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         SecurityUtil su = new SecurityUtil(domain);

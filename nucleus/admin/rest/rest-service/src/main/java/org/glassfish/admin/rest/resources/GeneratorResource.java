@@ -26,7 +26,6 @@ import jakarta.ws.rs.core.Context;
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.adapter.LocatorBridge;
 
-
 import org.glassfish.admin.rest.generator.ResourcesGenerator;
 import org.glassfish.admin.rest.generator.TextResourcesGenerator;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -41,15 +40,14 @@ import org.jvnet.hk2.config.DomDocument;
 @Path("/generator/")
 public class GeneratorResource {
 
-    private static final String DEFAULT_OUTPUT_DIR = System.getProperty("user.home") +
-            "/tmp/glassfish";
+    private static final String DEFAULT_OUTPUT_DIR = System.getProperty("user.home") + "/tmp/glassfish";
     @Context
     protected ServiceLocator habitat;
 
     @GET
-    @Produces({"text/plain"})
-    public String get(@QueryParam("outputDir")String outputDir) {
-        if(outputDir == null) {
+    @Produces({ "text/plain" })
+    public String get(@QueryParam("outputDir") String outputDir) {
+        if (outputDir == null) {
             outputDir = DEFAULT_OUTPUT_DIR;
         }
         String retVal = "Code Generation done at : " + outputDir;
@@ -65,7 +63,8 @@ public class GeneratorResource {
             resourcesGenerator.endGeneration();
         } catch (Exception ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
-            retVal = "Exception encountered during generation process: " + ex.toString() + "\nPlease look at server.log for more information.";
+            retVal = "Exception encountered during generation process: " + ex.toString()
+                    + "\nPlease look at server.log for more information.";
         }
         return retVal;
     }

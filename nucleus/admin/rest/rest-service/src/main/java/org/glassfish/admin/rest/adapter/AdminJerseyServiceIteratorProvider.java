@@ -26,49 +26,49 @@ import org.glassfish.jersey.internal.ServiceFinder.ServiceIteratorProvider;
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 
-/** Goal of this finder is to be fast and efficient.
- * It is hardcoded implementation.
+/**
+ * Goal of this finder is to be fast and efficient. It is hardcoded implementation.
  *
  * @author martinmares
  */
 public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider {
-    
+
     private static final Map<String, String[]> services = new HashMap<String, String[]>();
     static {
-//        services.put(ContainerProvider.class.getName(), new String[] { 
-//            "org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainerProvider" 
-//        });
-        services.put(AutoDiscoverable.class.getName(), new String[] { 
-//            "org.glassfish.jersey.server.validation.internal.ValidationAutoDiscoverable",
-//                "org.glassfish.jersey.jsonp.internal.JsonProcessingAutoDiscoverable",
+        //        services.put(ContainerProvider.class.getName(), new String[] { 
+        //            "org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainerProvider" 
+        //        });
+        services.put(AutoDiscoverable.class.getName(), new String[] {
+                //            "org.glassfish.jersey.server.validation.internal.ValidationAutoDiscoverable",
+                //                "org.glassfish.jersey.jsonp.internal.JsonProcessingAutoDiscoverable",
                 "org.glassfish.jersey.server.filter.internal.ServerFiltersAutoDiscoverable",
-//                "org.glassfish.jersey.server.wadl.internal.WadlAutoDiscoverable"
+                //                "org.glassfish.jersey.server.wadl.internal.WadlAutoDiscoverable"
         });
-        services.put(ComponentProvider.class.getName(), new String[] { 
-//            "org.glassfish.jersey.gf.cdi.CdiComponentProvider", 
-//                "org.glassfish.jersey.gf.ejb.EjbComponentProvider"
+        services.put(ComponentProvider.class.getName(), new String[] {
+                //            "org.glassfish.jersey.gf.cdi.CdiComponentProvider", 
+                //                "org.glassfish.jersey.gf.ejb.EjbComponentProvider"
         });
     }
-    
+
     private static final ThreadLocal<Boolean> applyDefinedValues = new ThreadLocal<Boolean>() {
-        
+
         @Override
         protected Boolean initialValue() {
             return Boolean.FALSE;
         }
-        
+
     };
-    
+
     private static final ServiceIteratorProvider defaultProvider = new ServiceFinder.DefaultServiceIteratorProvider();
 
     public AdminJerseyServiceIteratorProvider() {
         applyDefinedValues.set(Boolean.TRUE);
     }
-    
+
     public void disable() {
         applyDefinedValues.remove();
     }
-    
+
     private String[] getServiceNames(Class service, String serviceName) {
         if (serviceName == null) {
             return services.get(service.getName());
@@ -76,9 +76,10 @@ public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider 
             return services.get(serviceName);
         }
     }
-    
+
     @Override
-    public <T> Iterator<Class<T>> createClassIterator(Class<T> service, String serviceName, ClassLoader loader, boolean ignoreOnClassNotFound) {
+    public <T> Iterator<Class<T>> createClassIterator(Class<T> service, String serviceName, ClassLoader loader,
+            boolean ignoreOnClassNotFound) {
         final String[] values = getServiceNames(service, serviceName);
         if (!applyDefinedValues.get() || values == null) {
             return defaultProvider.createClassIterator(service, serviceName, loader, ignoreOnClassNotFound);
@@ -88,7 +89,8 @@ public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider 
     }
 
     @Override
-    public <T> Iterator<T> createIterator(final Class<T> service, final String serviceName, final ClassLoader loader, final boolean ignoreOnClassNotFound) {
+    public <T> Iterator<T> createIterator(final Class<T> service, final String serviceName, final ClassLoader loader,
+            final boolean ignoreOnClassNotFound) {
         final String[] values = getServiceNames(service, serviceName);
         if (!applyDefinedValues.get() || values == null) {
             return defaultProvider.createIterator(service, serviceName, loader, ignoreOnClassNotFound);
@@ -118,13 +120,13 @@ public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider 
             };
         }
     }
-    
+
     public static class ClassIterator<T extends Class> implements Iterator<T> {
-        
+
         private final String[] names;
         private final ClassLoader classLoader;
         private final boolean ignoreOnClassNotFound;
-        
+
         private int index = -1;
         private String clazzName;
         private T clazz;
@@ -134,7 +136,7 @@ public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider 
             this.classLoader = classLoader;
             this.ignoreOnClassNotFound = ignoreOnClassNotFound;
         }
-        
+
         @Override
         public boolean hasNext() {
             if (clazzName != null) {
@@ -185,7 +187,7 @@ public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider 
         public void remove() {
             throw new UnsupportedOperationException();
         }
-        
+
     }
-    
+
 }

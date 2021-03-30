@@ -26,48 +26,45 @@ import org.jvnet.hk2.config.Element;
 import java.beans.PropertyVetoException;
 
 /**
- * A cluster defines a homogeneous set of server instances that share the same
- * applications, resources, and configuration.
+ * A cluster defines a homogeneous set of server instances that share the same applications, resources, and
+ * configuration.
  */
 @Configured
 public interface SshConnector extends ConfigBeanProxy {
 
     /**
-      * Gets the value of the sshport property.
-      *
-      * @return possible object is
-      *         {@link String }
-      */
-     @Attribute(defaultValue="22")
-      String getSshPort();
+     * Gets the value of the sshport property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "22")
+    String getSshPort();
 
-     /**
-      * Sets the value of the sshport property.
-      *
-      * @param value allowed object is
-      *              {@link String }
-      */
-     @Param(name="sshport", optional=true, defaultValue="22")
-      void setSshPort(String value) throws PropertyVetoException;
-       /**
-      * Gets the value of the sshhost property.
-      *
-      * @return possible object is
-      *         {@link String }
-      */
-     @Attribute
-      String getSshHost();
+    /**
+     * Sets the value of the sshport property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    @Param(name = "sshport", optional = true, defaultValue = "22")
+    void setSshPort(String value) throws PropertyVetoException;
 
-     /**
-      * Sets the value of the sshhost property.
-      *
-      * @param value allowed object is
-      *              {@link String }
-      */
-     @Param(name="sshnodehost", optional=true)
-      void setSshHost(String value) throws PropertyVetoException;
+    /**
+     * Gets the value of the sshhost property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute
+    String getSshHost();
 
-     @Element
+    /**
+     * Sets the value of the sshhost property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    @Param(name = "sshnodehost", optional = true)
+    void setSshHost(String value) throws PropertyVetoException;
+
+    @Element
     SshAuth getSshAuth();
 
     void setSshAuth(SshAuth auth);

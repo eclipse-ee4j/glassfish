@@ -16,8 +16,6 @@
 
 package org.glassfish.admin.rest.resources;
 
-
-
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.api.ActionReport;
 
@@ -29,6 +27,7 @@ import org.glassfish.common.util.admin.RestSessionManager;
 
 /**
  * Represents a session with GlassFish Rest service
+ * 
  * @author Mitesh Meswani
  */
 public class SessionResource {
@@ -51,7 +50,7 @@ public class SessionResource {
         Response.Status status;
         ActionReport.ExitCode exitCode;
         String message;
-        if(!sessionManager.deleteSession(sessionId)) {
+        if (!sessionManager.deleteSession(sessionId)) {
             status = Response.Status.BAD_REQUEST;
             exitCode = ActionReport.ExitCode.FAILURE;
             message = "Session with id " + sessionId + " does not exist";
@@ -61,7 +60,7 @@ public class SessionResource {
             message = "Session with id " + sessionId + " deleted";
         }
 
-        return Response.status(status).entity(ResourceUtil.getActionReportResult(exitCode, message, requestHeaders, uriInfo) ).build();
+        return Response.status(status).entity(ResourceUtil.getActionReportResult(exitCode, message, requestHeaders, uriInfo)).build();
 
     }
 

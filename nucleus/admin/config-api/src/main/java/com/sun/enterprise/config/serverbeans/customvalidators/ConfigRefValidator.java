@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.config.serverbeans.customvalidators;
 
-
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -34,41 +33,40 @@ import jakarta.validation.Payload;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import org.glassfish.api.admin.config.Named;
 
-public class ConfigRefValidator
-    implements ConstraintValidator<ConfigRefConstraint, Named>, Payload {
+public class ConfigRefValidator implements ConstraintValidator<ConfigRefConstraint, Named>, Payload {
 
     static final Logger logger = ConfigApiLoggerInfo.getLogger();
     static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ConfigRefValidator.class);
 
-    public void initialize(final ConfigRefConstraint constraint) {       
+    public void initialize(final ConfigRefConstraint constraint) {
     }
 
     @Override
-    public boolean isValid(final Named bean,
-        final ConstraintValidatorContext constraintValidatorContext) {
-        if (bean == null) return true;
+    public boolean isValid(final Named bean, final ConstraintValidatorContext constraintValidatorContext) {
+        if (bean == null)
+            return true;
 
-        Server server = null ;
+        Server server = null;
         Cluster mycluster = null;
         String configRef = null;
         String serverName = null;
-        if (bean instanceof Server)  {
-            server = (Server)bean;
+        if (bean instanceof Server) {
+            server = (Server) bean;
             configRef = server.getConfigRef();
             serverName = server.getName();
-        } else if (bean instanceof Cluster){
-            mycluster = (Cluster)bean  ;
+        } else if (bean instanceof Cluster) {
+            mycluster = (Cluster) bean;
             configRef = mycluster.getConfigRef();
             serverName = mycluster.getName();
         }
 
+        if (configRef == null)
+            return true; // skip validation @NotNull is already on getConfigRef
 
-        if (configRef == null) return true; // skip validation @NotNull is already on getConfigRef
-        
         // cannot use default-config
         if (configRef.equals(SystemPropertyConstants.TEMPLATE_CONFIG_NAME)) {
             logger.warning(ConfigApiLoggerInfo.configRefDefaultconfig);
-           return false;
+            return false;
         }
         // cannot change config-ref of DAS
         if (server != null) {
@@ -81,8 +79,6 @@ public class ConfigRefValidator
                 logger.warning(ConfigApiLoggerInfo.configRefServerconfig);
                 return false;
             }
-
-
 
             final Servers servers = server.getParent(Servers.class);
             final Domain domain = servers.getParent(Domain.class);
@@ -112,4 +108,3 @@ public class ConfigRefValidator
     }
 
 }
-

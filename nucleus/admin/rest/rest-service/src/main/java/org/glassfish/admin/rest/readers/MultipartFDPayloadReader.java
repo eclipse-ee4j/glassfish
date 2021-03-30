@@ -36,7 +36,7 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 public class MultipartFDPayloadReader implements MessageBodyReader<ParamsWithPayload> {
-    
+
     private static MultipartProprietaryReader delegate = new MultipartProprietaryReader();
 
     @Override
@@ -45,8 +45,9 @@ public class MultipartFDPayloadReader implements MessageBodyReader<ParamsWithPay
     }
 
     @Override
-    public ParamsWithPayload readFrom(Class<ParamsWithPayload> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
+    public ParamsWithPayload readFrom(Class<ParamsWithPayload> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+            MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
         return delegate.readFrom(entityStream, mediaType.toString());
     }
-    
+
 }

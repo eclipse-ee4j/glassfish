@@ -16,30 +16,32 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-public class InstanceException extends RepositoryException
-{
-    /** Constructs a new InstanceException object.
+public class InstanceException extends RepositoryException {
+    /**
+     * Constructs a new InstanceException object.
+     * 
      * @param message
      */
-    public InstanceException(String message)
-    {
+    public InstanceException(String message) {
         super(message);
     }
 
-    /** Constructs a new InstanceException object.
+    /**
+     * Constructs a new InstanceException object.
+     * 
      * @param cause
      */
-    public InstanceException(Throwable cause)
-    {
+    public InstanceException(Throwable cause) {
         super(cause);
     }
 
-    /** Constructs a new InstanceException object.
+    /**
+     * Constructs a new InstanceException object.
+     * 
      * @param message
      * @param cause
      */
-    public InstanceException(String message, Throwable cause)
-    {
+    public InstanceException(String message, Throwable cause) {
         super(message, cause);
     }
 }

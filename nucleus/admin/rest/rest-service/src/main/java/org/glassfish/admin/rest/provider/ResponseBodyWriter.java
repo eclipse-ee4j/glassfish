@@ -29,7 +29,7 @@ import org.glassfish.admin.rest.model.ResponseBody;
  * @author jdlee
  */
 @Provider
-@Produces({Constants.MEDIA_TYPE_JSON})
+@Produces({ Constants.MEDIA_TYPE_JSON })
 public class ResponseBodyWriter extends BaseProvider<ResponseBody> {
     public ResponseBodyWriter() {
         super(ResponseBody.class, Constants.MEDIA_TYPE_JSON_TYPE);

@@ -42,7 +42,7 @@ public class HtmlFormat implements SchemaOutputFormat {
     private File dir;
     private Map<String, ClassDef> defs;
 
-    @SuppressWarnings({"IOResourceOpenedButNotSafelyClosed"})
+    @SuppressWarnings({ "IOResourceOpenedButNotSafelyClosed" })
     @Override
     public void output(Context context) {
         dir = context.getDocDir();
@@ -56,9 +56,8 @@ public class HtmlFormat implements SchemaOutputFormat {
                 throw new RuntimeException(e.getMessage());
             }
             println(tocWriter,
-                "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"><style>body{margin-left:-1em;}</style></head><body>");
-            println(detail,
-                "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"></head><body>");
+                    "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"><style>body{margin-left:-1em;}</style></head><body>");
+            println(detail, "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"></head><body>");
             copyResources();
             buildToc(defs.get(context.getRootClassName()));
         } catch (Exception e) {
@@ -81,8 +80,7 @@ public class HtmlFormat implements SchemaOutputFormat {
         println(detail, "<p><table><tr>");
         println(detail, "<a name=\"" + def.getXmlName() + "\">");
         println(detail, String.format("<th colspan=\"4\" class=\"TableHeadingColor entity %s\">%s%s",
-            def.isDeprecated() ? "deprecated" : "",
-            def.getXmlName(), def.isDeprecated() ? " - DEPRECATED" : ""));
+                def.isDeprecated() ? "deprecated" : "", def.getXmlName(), def.isDeprecated() ? " - DEPRECATED" : ""));
         println(detail, "</th></tr>");
         println(detail, "<colgroup><col width=\"35%\"></colgroup>");
         printHeaderRow(detail, "attribute", "type", "default", "required");
@@ -126,8 +124,7 @@ public class HtmlFormat implements SchemaOutputFormat {
                 println(detail, "<tr>");
                 println(detail, String.format("<td class=\"TableSubHeadingColor\">%s</td>", property.name()));
                 println(detail, String.format("<td class=\"nobreak\">%s</td>", property.defaultValue()));
-                println(detail, String.format("<td>%s</td>",
-                    property.values().length == 0 ? "" : Arrays.toString(property.values())));
+                println(detail, String.format("<td>%s</td>", property.values().length == 0 ? "" : Arrays.toString(property.values())));
                 println(detail, String.format("<td>%s</td>", property.description()));
                 println(detail, "</tr>");
             }
@@ -136,8 +133,7 @@ public class HtmlFormat implements SchemaOutputFormat {
         }
     }
 
-    private void buildToc(final ClassDef def)
-        throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private void buildToc(final ClassDef def) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         if (def != null/* && !"Named".equals(def.getSimpleName())*/) {
             if (!toc.contains(def)) {
                 buildDetail(def);
@@ -146,8 +142,7 @@ public class HtmlFormat implements SchemaOutputFormat {
             println(tocWriter, "<ul>");
             println(tocWriter, "<li>" + link(def));
             for (Entry<String, String> aggType : def.getAggregatedTypes().entrySet()) {
-                if (!Property.class.getName().equals(aggType.getValue()) &&
-                        defs != null) {
+                if (!Property.class.getName().equals(aggType.getValue()) && defs != null) {
                     buildToc(defs.get(aggType.getValue()));
                 }
             }
@@ -159,8 +154,8 @@ public class HtmlFormat implements SchemaOutputFormat {
     }
 
     private String link(final ClassDef def) {
-        return String.format("<a %s target=\"detail\" href=\"detail.html#%s\">%s</a>",
-            def.isDeprecated() ? "class=\"deprecated\"" : "", def.getXmlName(), def.getXmlName());
+        return String.format("<a %s target=\"detail\" href=\"detail.html#%s\">%s</a>", def.isDeprecated() ? "class=\"deprecated\"" : "",
+                def.getXmlName(), def.getXmlName());
     }
 
     private void footer(final PrintWriter writer) {

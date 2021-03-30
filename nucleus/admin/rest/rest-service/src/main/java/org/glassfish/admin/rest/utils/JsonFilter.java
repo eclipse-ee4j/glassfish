@@ -55,9 +55,7 @@ public class JsonFilter {
     public JsonFilter(Locale locale, String include, String exclude, String identityAttr) throws Exception {
         if (include != null) {
             if (exclude != null) {
-                String msg =
-                    localStrings.getLocalString(
-                        "filter.includeAndExcludeFieldsSpecified",
+                String msg = localStrings.getLocalString("filter.includeAndExcludeFieldsSpecified",
                         "__excludeFields cannot be specified when __includeFields is specified.");
                 throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(msg).build());
             } else {
@@ -79,7 +77,9 @@ public class JsonFilter {
         return this;
     }
 
-    protected static enum Result { Exclude, Include, Deferr }
+    protected static enum Result {
+        Exclude, Include, Deferr
+    }
 
     public static interface Filter {
         Result filter(String attr);
@@ -87,9 +87,11 @@ public class JsonFilter {
 
     public static class IdentityFilter implements Filter {
         private String identityAttr;
+
         public IdentityFilter(String identityAttr) {
             this.identityAttr = identityAttr;
         }
+
         public Result filter(String attr) {
             if (identityAttr.equals(attr)) {
                 return Result.Include;
@@ -126,7 +128,8 @@ public class JsonFilter {
             }
         }
 
-        private String processParentComponent(Locale locale, String attrsString, String attrString, String parent, String comp, boolean first) throws Exception {
+        private String processParentComponent(Locale locale, String attrsString, String attrString, String parent, String comp,
+                boolean first) throws Exception {
             StringBuilder sb = new StringBuilder();
             sb.append(parent);
             if (!first) {
@@ -144,11 +147,8 @@ public class JsonFilter {
         }
 
         private void throwOverlappingFieldsException(Locale locale, String attrs) throws Exception {
-            String msg =
-                localStrings.getLocalString(
-                    "filter.overLappingFieldsSpecified",
-                    "The field names must not overlap or be specified more than once: {0}",
-                    new Object[] { attrs });
+            String msg = localStrings.getLocalString("filter.overLappingFieldsSpecified",
+                    "The field names must not overlap or be specified more than once: {0}", new Object[] { attrs });
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(msg).build());
         }
 
@@ -168,31 +168,64 @@ public class JsonFilter {
         }
 
         protected abstract Result foundResult();
+
         protected abstract Result notFoundResult();
     }
 
     public static class IncludeFilter extends AttrsFilter {
-        public IncludeFilter(Locale locale, String attrsString) throws Exception { super(locale, attrsString, true); }
-        protected Result foundResult() { return Result.Include; }
-        protected Result notFoundResult() { return Result.Deferr; }
+        public IncludeFilter(Locale locale, String attrsString) throws Exception {
+            super(locale, attrsString, true);
+        }
+
+        protected Result foundResult() {
+            return Result.Include;
+        }
+
+        protected Result notFoundResult() {
+            return Result.Deferr;
+        }
     }
 
     public static class ExcludeFilter extends AttrsFilter {
-        public ExcludeFilter(Locale locale, String attrsString) throws Exception { super(locale, attrsString, false); }
-        protected Result foundResult() { return Result.Exclude; }
-        protected Result notFoundResult() { return Result.Deferr; }
+        public ExcludeFilter(Locale locale, String attrsString) throws Exception {
+            super(locale, attrsString, false);
+        }
+
+        protected Result foundResult() {
+            return Result.Exclude;
+        }
+
+        protected Result notFoundResult() {
+            return Result.Deferr;
+        }
     }
 
     public static class IncludeExceptFilter extends AttrsFilter {
-        public IncludeExceptFilter(Locale locale, String attrsString) throws Exception { super(locale, attrsString, false); }
-        protected Result foundResult() { return Result.Deferr; }
-        protected Result notFoundResult() { return Result.Include; }
+        public IncludeExceptFilter(Locale locale, String attrsString) throws Exception {
+            super(locale, attrsString, false);
+        }
+
+        protected Result foundResult() {
+            return Result.Deferr;
+        }
+
+        protected Result notFoundResult() {
+            return Result.Include;
+        }
     }
 
     public static class ExcludeExceptFilter extends AttrsFilter {
-        public ExcludeExceptFilter(Locale locale, String attrsString) throws Exception { super(locale, attrsString, true); }
-        protected Result foundResult() { return Result.Deferr; }
-        protected Result notFoundResult() { return Result.Exclude; }
+        public ExcludeExceptFilter(Locale locale, String attrsString) throws Exception {
+            super(locale, attrsString, true);
+        }
+
+        protected Result foundResult() {
+            return Result.Deferr;
+        }
+
+        protected Result notFoundResult() {
+            return Result.Exclude;
+        }
     }
 
     public JSONObject trim(JSONObject j) {
@@ -204,8 +237,7 @@ public class JsonFilter {
         return new Scope();
     }
 
-    public class Scope
-    {
+    public class Scope {
         private Stack<String> scopeStack = null;
 
         private Scope() {
@@ -227,7 +259,7 @@ public class JsonFilter {
                     try {
                         Object o = j.get(property);
                         if (o instanceof JSONObject) {
-                            JSONObject next = (JSONObject)o;
+                            JSONObject next = (JSONObject) o;
                             beginObjectAttr(property);
                             try {
                                 trimJsonObject(next);
@@ -235,7 +267,7 @@ public class JsonFilter {
                                 endObjectAttr();
                             }
                         } else if (o instanceof JSONArray) {
-                            JSONArray ar = (JSONArray)o;
+                            JSONArray ar = (JSONArray) o;
                             beginArrayAttr(property);
                             try {
                                 trimJsonArray(ar);
@@ -245,7 +277,8 @@ public class JsonFilter {
                         } else {
                             // scalar - we're done recursing
                         }
-                    } catch (JSONException e) { /* impossible since we're iterating over the known keys */ }
+                    } catch (JSONException e) {
+                        /* impossible since we're iterating over the known keys */ }
                 }
             }
         }
@@ -254,7 +287,7 @@ public class JsonFilter {
         private List<String> getPropertyNames(JSONObject j) {
             List<String> rtn = new ArrayList<String>();
             for (Iterator it = j.keys(); it.hasNext();) {
-                String property = (String)(it.next());
+                String property = (String) (it.next());
                 rtn.add(property);
             }
             return rtn;
@@ -265,13 +298,14 @@ public class JsonFilter {
                 try {
                     Object o = ar.get(i);
                     if (o instanceof JSONObject) {
-                        trimJsonObject((JSONObject)o);
+                        trimJsonObject((JSONObject) o);
                     } else if (o instanceof JSONArray) { // I don't think our models support arrays of arrays, but I might be wrong
-                        trimJsonArray((JSONArray)o);
+                        trimJsonArray((JSONArray) o);
                     } else {
                         // scalar - we're done recursing
                     }
-                } catch (JSONException e) { /* impossible since we're iterating over the known elements */ }
+                } catch (JSONException e) {
+                    /* impossible since we're iterating over the known elements */ }
             }
         }
 
@@ -330,5 +364,3 @@ public class JsonFilter {
         }
     }
 }
-
-

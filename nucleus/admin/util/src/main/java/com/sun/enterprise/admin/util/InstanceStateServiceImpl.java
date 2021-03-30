@@ -38,7 +38,7 @@ import org.jvnet.hk2.annotations.Service;
  * @author Vijay Ramachandran
  */
 @Service
-@RunLevel(value=StartupRunLevel.VAL, mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
+@RunLevel(value = StartupRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
 public class InstanceStateServiceImpl implements InstanceStateService {
 
     @Inject
@@ -54,10 +54,9 @@ public class InstanceStateServiceImpl implements InstanceStateService {
     private HashMap<String, InstanceState> instanceStates;
     private final static int MAX_RECORDED_FAILED_COMMANDS = 10;
     private final static Logger logger = AdminLoggerInfo.getLogger();
-    
-    
 
-    public InstanceStateServiceImpl() {}
+    public InstanceStateServiceImpl() {
+    }
 
     /*
      * Perform lazy-initialization for the object, since this InstanceStateService
@@ -68,11 +67,9 @@ public class InstanceStateServiceImpl implements InstanceStateService {
             return;
         }
         instanceStates = new HashMap<String, InstanceState>();
-        File stateFile = new File(serverEnv.getConfigDirPath().getAbsolutePath(),
-                            ".instancestate");
+        File stateFile = new File(serverEnv.getConfigDirPath().getAbsolutePath(), ".instancestate");
         try {
-            stateProcessor = new InstanceStateFileProcessor(instanceStates,
-                        stateFile);
+            stateProcessor = new InstanceStateFileProcessor(instanceStates, stateFile);
         } catch (IOException ioe) {
             logger.log(Level.FINE, AdminLoggerInfo.mISScannotread, stateFile);
             instanceStates = new HashMap<String, InstanceState>();
@@ -83,8 +80,7 @@ public class InstanceStateServiceImpl implements InstanceStateService {
             try {
                 stateProcessor = InstanceStateFileProcessor.createNew(instanceStates, stateFile);
             } catch (IOException ex) {
-                logger.log(Level.SEVERE, AdminLoggerInfo.mISScannotcreate, 
-                        new Object[] { stateFile, ex.getLocalizedMessage()} );
+                logger.log(Level.SEVERE, AdminLoggerInfo.mISScannotcreate, new Object[] { stateFile, ex.getLocalizedMessage() });
                 stateProcessor = null;
             }
         }
@@ -112,8 +108,8 @@ public class InstanceStateServiceImpl implements InstanceStateService {
 
         try {
             InstanceState i = instanceStates.get(instance);
-            if (i != null && i.getState() != InstanceState.StateType.NEVER_STARTED &&
-                    i.getFailedCommands().size() < MAX_RECORDED_FAILED_COMMANDS) {
+            if (i != null && i.getState() != InstanceState.StateType.NEVER_STARTED
+                    && i.getFailedCommands().size() < MAX_RECORDED_FAILED_COMMANDS) {
                 i.addFailedCommands(cmdDetails);
                 stateProcessor.addFailedCommand(instance, cmdDetails);
             }
@@ -127,7 +123,7 @@ public class InstanceStateServiceImpl implements InstanceStateService {
         init();
         try {
             InstanceState i = instanceStates.get(instance);
-            if(i != null) {
+            if (i != null) {
                 i.removeFailedCommands();
                 stateProcessor.removeFailedCommands(instance);
             }
@@ -150,7 +146,7 @@ public class InstanceStateServiceImpl implements InstanceStateService {
     public synchronized List<String> getFailedCommands(String instanceName) {
         init();
         InstanceState s = instanceStates.get(instanceName);
-        if(s == null) {
+        if (s == null) {
             return new ArrayList<String>();
         }
         return s.getFailedCommands();
@@ -172,10 +168,8 @@ public class InstanceStateServiceImpl implements InstanceStateService {
             // only an instance restart can move this instance out of RESTART_REQD state
             updateXML = false;
             ret = currState;
-        } else if (!force && currState == InstanceState.StateType.NEVER_STARTED &&
-                    (newState == InstanceState.StateType.NOT_RUNNING ||
-                     newState == InstanceState.StateType.RESTART_REQUIRED ||
-                     newState == InstanceState.StateType.NO_RESPONSE)) {
+        } else if (!force && currState == InstanceState.StateType.NEVER_STARTED && (newState == InstanceState.StateType.NOT_RUNNING
+                || newState == InstanceState.StateType.RESTART_REQUIRED || newState == InstanceState.StateType.NO_RESPONSE)) {
             // invalid state change
             updateXML = false;
             ret = currState;

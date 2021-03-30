@@ -84,8 +84,10 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
                     ConfigModel childModel = node.getModel();
                     List<ConfigModel> subChildConfigModels = ResourceUtil.getRealChildConfigModels(childModel, domDocument);
                     for (ConfigModel subChildConfigModel : subChildConfigModels) {
-                        if (ResourceUtil.isOnlyATag(childModel) || ResourceUtil.isOnlyATag(subChildConfigModel) || subChildConfigModel.getAttributeNames().isEmpty() || hasSingletonAnnotation(subChildConfigModel)) {
-                            String childResourceClassName = getClassName(ResourceUtil.getUnqualifiedTypeName(subChildConfigModel.targetTypeName));
+                        if (ResourceUtil.isOnlyATag(childModel) || ResourceUtil.isOnlyATag(subChildConfigModel)
+                                || subChildConfigModel.getAttributeNames().isEmpty() || hasSingletonAnnotation(subChildConfigModel)) {
+                            String childResourceClassName = getClassName(
+                                    ResourceUtil.getUnqualifiedTypeName(subChildConfigModel.targetTypeName));
                             String childPath = subChildConfigModel.getTagName();
                             classWriter.createGetChildResource(childPath, childResourceClassName);
                             generateSingle(subChildConfigModel, domDocument);
@@ -112,7 +114,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
                         //create resource class
                         generateLeafResource(childResourceBeanName);
                     }
-                } else {  // => !childElement.isLeaf()
+                } else { // => !childElement.isLeaf()
                     processNonLeafChildElement(elementName, childElement, domDocument, classWriter);
                 }
             }
@@ -201,7 +203,8 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         }
     }
 
-    private void processNonLeafChildElement(String elementName, ConfigModel.Property childElement, DomDocument domDocument, ClassWriter classWriter) {
+    private void processNonLeafChildElement(String elementName, ConfigModel.Property childElement, DomDocument domDocument,
+            ClassWriter classWriter) {
         ConfigModel.Node node = (ConfigModel.Node) childElement;
         ConfigModel childModel = node.getModel();
         String beanName = ResourceUtil.getUnqualifiedTypeName(childModel.targetTypeName);
@@ -214,8 +217,8 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
                 childResourceClassName = "List" + childResourceClassName;
             }
             classWriter.createGetChildResource(/*
-                     * childModel.getTagName()
-                     */elementName, childResourceClassName);
+                                               * childModel.getTagName()
+                                               */elementName, childResourceClassName);
         }
 
         if (childElement.isCollection()) {
@@ -233,7 +236,8 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
      * @param domDocument
      * @param classWriter
      */
-    private void processNonLeafChildConfigModel(ConfigModel childConfigModel, ConfigModel.Property childElement, DomDocument domDocument, ClassWriter classWriter) {
+    private void processNonLeafChildConfigModel(ConfigModel childConfigModel, ConfigModel.Property childElement, DomDocument domDocument,
+            ClassWriter classWriter) {
         String childResourceClassName = getClassName("List" + ResourceUtil.getUnqualifiedTypeName(childConfigModel.targetTypeName));
         String childPath = childConfigModel.getTagName();
         classWriter.createGetChildResource(childPath, childResourceClassName);
@@ -338,8 +342,8 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
                 }
             }
 
-            classWriter.createCommandResourceConstructor(commandResourceClassName, commandName, httpMethod,
-                    isLinkedToParent, metaData.commandParams, commandDisplayName, commandAction);
+            classWriter.createCommandResourceConstructor(commandResourceClassName, commandName, httpMethod, isLinkedToParent,
+                    metaData.commandParams, commandDisplayName, commandAction);
             classWriter.done();
         }
     }
@@ -367,8 +371,8 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
 
     /**
      * @param elementName
-     * @return bean name for the given element name. The name is derived by uppercasing first letter of elementName, eliminating
-     * hyphens from elementName and uppercasing letter followed by hyphen
+     * @return bean name for the given element name. The name is derived by uppercasing first letter of elementName,
+     * eliminating hyphens from elementName and uppercasing letter followed by hyphen
      */
     public static String getBeanName(String elementName) {
         StringBuilder ret = new StringBuilder();
@@ -380,7 +384,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
             } else {
                 if (elementName.charAt(i) == '-') {
                     nextisUpper = true;
-                } else  if (elementName.charAt(i) == '/') {
+                } else if (elementName.charAt(i) == '/') {
                     nextisUpper = true;
                 } else {
                     nextisUpper = false;
@@ -416,8 +420,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
             }
         } else {
             final int keyLength = model.key.length();
-            String key = model.key.substring(1,
-                    model.key.endsWith(">") ? keyLength -1 : keyLength );
+            String key = model.key.substring(1, model.key.endsWith(">") ? keyLength - 1 : keyLength);
             keyAttributeName = getBeanName(key);
         }
         return keyAttributeName;
@@ -437,6 +440,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         }
         return false;
     }
+
     //TODO - fetch command name from config bean(RestRedirect annotation).
     //RESTREdirect currently only support automatically these deletes:
     /*
@@ -467,7 +471,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
             put("IiopListener", "delete-iiop-listener");
             put("JdbcResource", "delete-jdbc-resource");
             put("JaccProvider", "delete-jacc-provider");
-//            put("JmsHost", "delete-jms-host");
+            //            put("JmsHost", "delete-jms-host");
             put("LbConfig", "delete-http-lb-config");
             put("LoadBalancer", "delete-http-lb");
             put("NetworkListener", "delete-network-listener");
@@ -484,9 +488,9 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
             put("VirtualServer", "delete-virtual-server");
             put("WorkSecurityMap", "delete-connector-work-security-map");
         }
-    }) ;
+    });
     //TODO - fetch command name from config bean(RestRedirect annotation).
-    public static final Map<String, String> configBeanToPOSTCommand =Collections.unmodifiableMap( new HashMap<String, String>() {
+    public static final Map<String, String> configBeanToPOSTCommand = Collections.unmodifiableMap(new HashMap<String, String>() {
 
         {
             put("Application", "redeploy"); //TODO check : This row is not used
@@ -529,13 +533,12 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
     //This map is used to generate CollectionLeaf resources.
     //Example: JVM Options. This information will eventually move to config bean-
     //JavaConfig or JvmOptionBag
-    public static final Map<String, CollectionLeafMetaData> configBeanToCollectionLeafMetaData =
-            new HashMap<String, CollectionLeafMetaData>() {
+    public static final Map<String, CollectionLeafMetaData> configBeanToCollectionLeafMetaData = new HashMap<String, CollectionLeafMetaData>() {
 
-                {
-                    put("JvmOptions", new CollectionLeafMetaData("create-jvm-options", "delete-jvm-options", "JvmOption"));
-                    //          put("Principal", new CollectionLeafMetaData("__create-principal", "__delete-principal", "Principal"));
-                    //          put("UserGroup", new CollectionLeafMetaData("__create-user-group", "__delete-user-group", "User Group"));
-                }
-            };
+        {
+            put("JvmOptions", new CollectionLeafMetaData("create-jvm-options", "delete-jvm-options", "JvmOption"));
+            //          put("Principal", new CollectionLeafMetaData("__create-principal", "__delete-principal", "Principal"));
+            //          put("UserGroup", new CollectionLeafMetaData("__create-user-group", "__delete-user-group", "User Group"));
+        }
+    };
 }

@@ -36,7 +36,7 @@ import org.glassfish.admin.rest.utils.JsonUtil;
  * @author: jdlee
  */
 @Provider
-@Produces({Constants.MEDIA_TYPE_JSON})
+@Produces({ Constants.MEDIA_TYPE_JSON })
 public class RestCollectionProvider extends BaseProvider<RestCollection> {
     public RestCollectionProvider() {
         super(RestCollection.class, Constants.MEDIA_TYPE_JSON_TYPE);
@@ -52,7 +52,7 @@ public class RestCollectionProvider extends BaseProvider<RestCollection> {
 
         JSONArray models = new JSONArray();
         JSONArray metadata = new JSONArray();
-        for (Map.Entry<RestModelMetadata, RestModel> entry : (Set<Map.Entry<RestModelMetadata, RestModel>>)proxy.entrySet()) {
+        for (Map.Entry<RestModelMetadata, RestModel> entry : (Set<Map.Entry<RestModelMetadata, RestModel>>) proxy.entrySet()) {
             try {
                 models.put(JsonUtil.getJsonObject(entry.getValue()));
 
@@ -61,7 +61,7 @@ public class RestCollectionProvider extends BaseProvider<RestCollection> {
                 mdo.put("id", md.getId());
                 metadata.put(mdo);
             } catch (JSONException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
             }
         }
         JSONObject response = new JSONObject();
@@ -72,7 +72,7 @@ public class RestCollectionProvider extends BaseProvider<RestCollection> {
             }
             sb.append(response.toString(getFormattingIndentLevel()));
         } catch (JSONException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
         }
 
         return (wrapObject ? " { items : " : "") + sb.toString() + (wrapObject ? "}" : "");

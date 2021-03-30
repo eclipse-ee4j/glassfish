@@ -17,9 +17,8 @@
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
 /**
- * Perform's string substitution for the given input.  Substitution process look 
- * for the matching input in the given {@link RadixTree} and replaced the string
- * with the corresponding matching value.
+ * Perform's string substitution for the given input. Substitution process look for the matching input in the given
+ * {@link RadixTree} and replaced the string with the corresponding matching value.
  *
  * @see {@link RadixTree}
  */
@@ -27,11 +26,12 @@ class RadixTreeSubstitution {
     /** {@link RadixTree} used sub. */
     private RadixTree _tree;
 
-    /** Buffer to store the current processing characters, reset when match found
-     *  for the processed character. */
+    /**
+     * Buffer to store the current processing characters, reset when match found for the processed character.
+     */
     private StringBuffer _processedChars;
 
-    /** Reference to the currently processing node.*/
+    /** Reference to the currently processing node. */
     private RadixTreeNode _currentNode;
 
     /** No of matched character in currently processing node. */
@@ -45,6 +45,7 @@ class RadixTreeSubstitution {
 
     /**
      * Construct {@link RadixTreeSubstitution} for the given {@link RadixTree}.
+     * 
      * @param tree
      */
     RadixTreeSubstitution(RadixTree tree) {
@@ -57,23 +58,21 @@ class RadixTreeSubstitution {
     }
 
     /**
-     * Perform substitution by allowing continuous character feeding. Once
-     * the character sequence matched completely to {@link RadixTree} node
-     * and no further/extended match is available then the output is returned
-     * and the values reset to re-look the new input from root node.
+     * Perform substitution by allowing continuous character feeding. Once the character sequence matched completely to
+     * {@link RadixTree} node and no further/extended match is available then the output is returned and the values reset to
+     * re-look the new input from root node.
      * <p>
-     * Method maintains the processed characters, currently processing
-     * node and other parameters require in substitution.
+     * Method maintains the processed characters, currently processing node and other parameters require in substitution.
      * </p>
      * <p>
      * <b>NOTE:</b> A <code>null</code> input signify the end of the processing.
      * </p>
+     * 
      * @param c Input character to match with the node key.
      * @return
      * <li>Value of the matching node, if no further match available.</li>
-     * <li>Return the string of processed characters if no matching node found
-     *   or the node value is null.</li>
-     * <li><code>null</code> if waiting for more input char.</li> 
+     * <li>Return the string of processed characters if no matching node found or the node value is null.</li>
+     * <li><code>null</code> if waiting for more input char.</li>
      */
     String substitute(Character c) {
         StringBuffer outputBuffer = null;
@@ -96,7 +95,7 @@ class RadixTreeSubstitution {
                         _lastMatchedValue = _currentNode.getValue();
                         _processedChars.delete(0, _processedChars.length());
                     }
-                    RadixTreeNode childNode =  _currentNode.getChildNode(c);
+                    RadixTreeNode childNode = _currentNode.getChildNode(c);
                     if (childNode != null) {
                         _processedChars.append(c);
                         _currentNode = childNode;
@@ -104,9 +103,7 @@ class RadixTreeSubstitution {
                         continue;
                     }
                 }
-            }
-            else if(_currentNode.getValue() != null &&
-                    _nodeMatchedChars == _currentNode.getKey().length()) {
+            } else if (_currentNode.getValue() != null && _nodeMatchedChars == _currentNode.getKey().length()) {
                 _lastMatchedValue = _currentNode.getValue();
                 _processedChars.delete(0, _processedChars.length());
             }
@@ -153,8 +150,7 @@ class RadixTreeSubstitution {
 
         //Append the last process character sequence.
         if (finalCall) {
-            if (_nodeMatchedChars == _currentNode.getKey().length()
-                    && _currentNode.getValue() != null) {
+            if (_nodeMatchedChars == _currentNode.getKey().length() && _currentNode.getValue() != null) {
                 outputBuffer.append(_currentNode.getValue());
             } else {
                 outputBuffer.append(_currentNode.getKey().substring(0, _nodeMatchedChars));

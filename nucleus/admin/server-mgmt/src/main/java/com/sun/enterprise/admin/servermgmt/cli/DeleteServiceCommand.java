@@ -40,6 +40,7 @@ import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
  * Delete a "service" in the operating system.
+ * 
  * @author Byron Nevins
  * @since November 18, 2010
  */
@@ -59,11 +60,10 @@ public final class DeleteServiceCommand extends CLICommand {
     @Param(name = "domain_or_instance_name", primary = true, optional = true, alias = "domain_name")
     private String userSpecifiedServerName;
     @Param(name = "nodedir", optional = true, alias = "agentdir")
-    private String userSpecifiedNodeDir;           // nodeDirRoot
+    private String userSpecifiedNodeDir; // nodeDirRoot
     @Param(name = "node", optional = true, alias = "nodeagent")
     private String userSpecifiedNode;
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(DeleteServiceCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(DeleteServiceCommand.class);
     private ServerDirs dirs;
     private ServerDirsSelector selector = null;
 
@@ -74,22 +74,16 @@ public final class DeleteServiceCommand extends CLICommand {
         try {
             super.validate(); // pointless empty method but who knows what the future holds?
 
-
             // The order that you make these calls matters!!
 
-            selector = ServerDirsSelector.getInstance(
-                    userSpecifiedDomainDirParent,
-                    userSpecifiedServerName,
-                    userSpecifiedNodeDir,
+            selector = ServerDirsSelector.getInstance(userSpecifiedDomainDirParent, userSpecifiedServerName, userSpecifiedNodeDir,
                     userSpecifiedNode);
             dirs = selector.dirs();
 
             validateServiceName();
-        }
-        catch (CommandException e) {
+        } catch (CommandException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // plenty of RuntimeException possibilities!
             throw new CommandException(e.getMessage(), e);
         }
@@ -106,12 +100,10 @@ public final class DeleteServiceCommand extends CLICommand {
                 info.setServiceName(serviceName);
 
             if (programOpts.getPasswordFile() != null)
-                info.setPasswordFile(SmartFile.sanitize(
-                        new File(programOpts.getPasswordFile())));
+                info.setPasswordFile(SmartFile.sanitize(new File(programOpts.getPasswordFile())));
 
             service.deleteService();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // We only want to wrap the string -- not the Exception.
             // Otherwise the message that is printed out to the user will be like this:
             // java.lang.IllegalArgumentException: The passwordfile blah blah blah
@@ -134,7 +126,7 @@ public final class DeleteServiceCommand extends CLICommand {
             serviceName = dirs.getServerDir().getName();
 
         // On Windows we need a legal filename for the service name.
-        if(OS.isWindowsForSure() && !FileUtils.isFriendlyFilename(serviceName)) {
+        if (OS.isWindowsForSure() && !FileUtils.isFriendlyFilename(serviceName)) {
             throw new CommandException(strings.get("create.service.badServiceName", serviceName));
         }
 

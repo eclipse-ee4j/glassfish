@@ -28,10 +28,7 @@ import com.sun.enterprise.config.serverbeans.Server;
  * @author tjquinn
  */
 public class CLIUtil {
-    static RefContainer chooseRefContainer(
-            final Domain domain,
-            final String target,
-            final ConfigBeansUtilities configBeansUtilities) {
+    static RefContainer chooseRefContainer(final Domain domain, final String target, final ConfigBeansUtilities configBeansUtilities) {
         Config config = domain.getConfigs().getConfigByName(target);
         if (config != null) {
             return config;

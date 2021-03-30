@@ -70,18 +70,15 @@ public abstract class TemplateListOfResource extends AbstractResource {
     public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateListOfResource.class);
 
     @GET
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5"})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
     public Response get(@QueryParam("expandLevel") @DefaultValue("1") int expandLevel) {
         return Response.ok().entity(buildActionReportResult()).build();
     }
 
     @POST
     //create
-    @Produces({"text/html",
-        MediaType.APPLICATION_JSON+";qs=0.5",
-        MediaType.APPLICATION_XML+";qs=0.5"})
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-        MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response createResource(HashMap<String, String> data) {
         if (data == null) {
             data = new HashMap<String, String>();
@@ -90,7 +87,8 @@ public abstract class TemplateListOfResource extends AbstractResource {
             if (data.containsKey("error")) {
                 String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
                         "Unable to parse the input entity. Please check the syntax.");
-                ActionReportResult arr = ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo);
+                ActionReportResult arr = ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders,
+                        uriInfo);
                 return Response.status(400).entity(arr).build();
             }
 
@@ -111,9 +109,8 @@ public abstract class TemplateListOfResource extends AbstractResource {
 
                 ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
                 if (exitCode != ActionReport.ExitCode.FAILURE) {
-                    String successMessage =
-                        localStrings.getLocalString("rest.resource.create.message",
-                        "\"{0}\" created successfully.", resourceToCreate);
+                    String successMessage = localStrings.getLocalString("rest.resource.create.message", "\"{0}\" created successfully.",
+                            resourceToCreate);
                     ActionReportResult arr = ResourceUtil.getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo);
                     return Response.ok(arr).build();
                 }
@@ -122,7 +119,8 @@ public abstract class TemplateListOfResource extends AbstractResource {
                 ActionReportResult arr = ResourceUtil.getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(arr).build();
             } else {
-                ActionReportResult arr = ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, "No CRUD Create possible.", requestHeaders, uriInfo);
+                ActionReportResult arr = ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, "No CRUD Create possible.",
+                        requestHeaders, uriInfo);
                 return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(arr).build();
             }
         } catch (Exception e) {
@@ -142,7 +140,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
     }
 
     @OPTIONS
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.APPLICATION_XML})
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.APPLICATION_XML })
     public Response options() {
         return Response.ok().entity(buildActionReportResult()).build();
     }
@@ -165,12 +163,11 @@ public abstract class TemplateListOfResource extends AbstractResource {
     }
 
     /**
-     * allows for remote files to be put in a tmp area and we pass the
-     * local location of this file to the corresponding command instead of the content of the file
-     * * Yu need to add  enctype="multipart/form-data" in the form
-     * for ex:  <form action="http://localhost:4848/management/domain/applications/application" method="post" enctype="multipart/form-data">
-     * then any param of type="file" will be uploaded, stored locally and the param will use the local location
-     * on the server side (ie. just the path)
+     * allows for remote files to be put in a tmp area and we pass the local location of this file to the corresponding
+     * command instead of the content of the file * Yu need to add enctype="multipart/form-data" in the form for ex:
+     * <form action="http://localhost:4848/management/domain/applications/application" method="post" enctype=
+     * "multipart/form-data"> then any param of type="file" will be uploaded, stored locally and the param will use the
+     * local location on the server side (ie. just the path)
      */
     public String getPostCommand() {
         ConfigModel.Property p = parent.model.getElement(tagName);
@@ -190,9 +187,8 @@ public abstract class TemplateListOfResource extends AbstractResource {
             }
         } else {
             ConfigModel.Node n = (ConfigModel.Node) p;
-            String command =
-             ResourceUtil.getCommand(RestRedirect.OpType.POST, n.getModel());
-            if (command!=null){
+            String command = ResourceUtil.getCommand(RestRedirect.OpType.POST, n.getModel());
+            if (command != null) {
                 return command;
             }
             //last  possible case...the @Create annotation on a parent method
@@ -219,11 +215,10 @@ public abstract class TemplateListOfResource extends AbstractResource {
     }
 
     public String[][] getCommandResourcesPaths() {
-        return new String[][]{};
+        return new String[][] {};
     }
 
-    public static Class<? extends ConfigBeanProxy> getElementTypeByName(Dom parentDom, String elementName)
-            throws ClassNotFoundException {
+    public static Class<? extends ConfigBeanProxy> getElementTypeByName(Dom parentDom, String elementName) throws ClassNotFoundException {
 
         DomDocument document = parentDom.document;
         ConfigModel.Property a = parentDom.model.getElement(elementName);
@@ -247,8 +242,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
 
     protected ActionReportResult buildActionReportResult() {
         if (entity == null) {//wrong resource
-            String errorMessage = localStrings.getLocalString("rest.resource.erromessage.noentity",
-                    "Resource not found.");
+            String errorMessage = localStrings.getLocalString("rest.resource.erromessage.noentity", "Resource not found.");
             return ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo);
         }
         RestActionReporter ar = new RestActionReporter();
@@ -276,7 +270,9 @@ public abstract class TemplateListOfResource extends AbstractResource {
             if (data.containsKey("error")) {
                 String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
                         "Unable to parse the input entity. Please check the syntax.");
-                return Response.status(400).entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo)).build();
+                return Response.status(400)
+                        .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo))
+                        .build();
             }
 
             ResourceUtil.purgeEmptyEntries(data);
@@ -306,17 +302,20 @@ public abstract class TemplateListOfResource extends AbstractResource {
 
                 ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
                 if (exitCode != ActionReport.ExitCode.FAILURE) {
-                    String successMessage = localStrings.getLocalString("rest.resource.create.message",
-                            "\"{0}\" created successfully.", new Object[]{resourceToCreate});
-                    return Response.ok().entity(ResourceUtil.getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo)).build();
+                    String successMessage = localStrings.getLocalString("rest.resource.create.message", "\"{0}\" created successfully.",
+                            new Object[] { resourceToCreate });
+                    return Response.ok().entity(ResourceUtil.getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo))
+                            .build();
                 }
 
                 String errorMessage = getErrorMessage(data, actionReport);
-                return Response.status(400).entity(ResourceUtil.getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo)).build();
+                return Response.status(400).entity(ResourceUtil.getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo))
+                        .build();
             }
-            String message = localStrings.getLocalString("rest.resource.post.forbidden",
-                    "POST on \"{0}\" is forbidden.", new Object[]{resourceToCreate});
-            return Response.status(403).entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
+            String message = localStrings.getLocalString("rest.resource.post.forbidden", "POST on \"{0}\" is forbidden.",
+                    new Object[] { resourceToCreate });
+            return Response.status(403)
+                    .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
 
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);

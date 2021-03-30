@@ -41,12 +41,12 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Represents the SMF Service.
- * Holds the tokens and their values that are consumed by the SMF templates. The recommended
- * way to use this class (or its instances) is to initialize it with default constructor
- * and then apply various mutators to configure the service. Finally, callers should
- * make sure that the configuration is valid, before attempting to create the service in
- * the Solaris platform.
+/**
+ * Represents the SMF Service. Holds the tokens and their values that are consumed by the SMF templates. The recommended
+ * way to use this class (or its instances) is to initialize it with default constructor and then apply various mutators
+ * to configure the service. Finally, callers should make sure that the configuration is valid, before attempting to
+ * create the service in the Solaris platform.
+ * 
  * @since SJSAS 9.0
  * @see #isConfigValid
  * @see SMFServiceHandler
@@ -73,9 +73,8 @@ public final class SMFService extends ServiceAdapter {
     private static final String REL_PATH_TEMPLATES = "lib/install/templates";
 
     /**
-     * Creates SMFService instance. All the tokens are initialized to default values. 
-     * Callers must verify that the tokens are properly token-replaced before
-     * using this instance.
+     * Creates SMFService instance. All the tokens are initialized to default values. Callers must verify that the tokens
+     * are properly token-replaced before using this instance.
      */
     SMFService(ServerDirs dirs, AppserverServiceType type) {
         super(dirs, type);
@@ -90,7 +89,8 @@ public final class SMFService extends ServiceAdapter {
         return OS.isSun() && new File(SVCADM).isFile();
     }
 
-    /** Creates the service on the given platform.
+    /**
+     * Creates the service on the given platform.
      */
     @Override
     public void createServiceInternal() {
@@ -101,14 +101,10 @@ public final class SMFService extends ServiceAdapter {
                 printOut(toString());
             validateManifest(getManifestFilePath());
             previousManifestExists = false;
-            ServicesUtils.tokenReplaceTemplateAtDestination(
-                    tokensAndValues(),
-                    getManifestFileTemplatePath(),
-                    getManifestFilePath());
+            ServicesUtils.tokenReplaceTemplateAtDestination(tokensAndValues(), getManifestFileTemplatePath(), getManifestFilePath());
             validateService();
             importService();
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             if (!previousManifestExists) {
                 cleanupManifest();
             }
@@ -132,11 +128,9 @@ public final class SMFService extends ServiceAdapter {
             pm = new ProcessManager(SVCCFG, "delete", info.serviceName);
             pm.setEcho(false);
             pm.execute();
-        }
-        catch (RuntimeException re) {
+        } catch (RuntimeException re) {
             throw re;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -148,16 +142,17 @@ public final class SMFService extends ServiceAdapter {
         }
     }
 
-    /** Returns timeout in seconds before the master boot restarter should
-     * give up starting this service.
+    /**
+     * Returns timeout in seconds before the master boot restarter should give up starting this service.
      */
     public int getTimeoutSeconds() {
         final int to = Integer.parseInt(getTokenMap().get(TIMEOUT_SECONDS_TN));
         return (to);
     }
 
-    /** Sets timeout in seconds before the master boot restarter should
-     * give up starting this service.
+    /**
+     * Sets timeout in seconds before the master boot restarter should give up starting this service.
+     * 
      * @param number a non-negative integer representing timeout. A value of zero implies infinite timeout.
      */
     public void setTimeoutSeconds(final int number) {
@@ -169,12 +164,14 @@ public final class SMFService extends ServiceAdapter {
         getTokenMap().put(TIMEOUT_SECONDS_TN, to.toString());
     }
 
-    /** Sets the OS-level user-id who should start and own the processes started
-     * by this service. This user is the same as the value returned by
-     * System.getProperty("user.name"). The idea is that the method is
-     * called by the user who actually wants to own the service. 
+    /**
+     * Sets the OS-level user-id who should start and own the processes started by this service. This user is the same as
+     * the value returned by System.getProperty("user.name"). The idea is that the method is called by the user who actually
+     * wants to own the service.
+     * 
      * @throws IllegalArgumentException if the user can not modify MANIFEST_HOME
-     * @throws IllegalArgumentException if solaris.smf.modify Authorization is not implied by the authorizations available for the user.
+     * @throws IllegalArgumentException if solaris.smf.modify Authorization is not implied by the authorizations available
+     * for the user.
      */
     private void checkOSUser() {
         String msg;
@@ -189,14 +186,18 @@ public final class SMFService extends ServiceAdapter {
         }
     }
 
-    /** Returns the additional properties of the Service.
+    /**
+     * Returns the additional properties of the Service.
+     * 
      * @return String representing addtional properties of the service. May return default properties as well.
      */
     public String getServiceProperties() {
         return (getTokenMap().get(PRIVILEGES_TN));
     }
 
-    /** Sets the additional service properties that are specific to it.
+    /**
+     * Sets the additional service properties that are specific to it.
+     * 
      * @param must be a colon separated String, if not null. No effect, if null is passed.
      */
     public void setServiceProperties(final String cds) {
@@ -215,13 +216,13 @@ public final class SMFService extends ServiceAdapter {
         }
     }
 
-    /** Determines if the configuration of the method is valid. When this class
-     * is constructed, appropriate defaults are used. But before attempting to create
-     * the service in the Solaris platform, it is important that the necessary
-     * configuration is done by the users via various mutator methods of this class.
-     * This method must be called to guard against some abnormal failures before
-     * creating the service. It makes sure that the caller has set all the necessary
+    /**
+     * Determines if the configuration of the method is valid. When this class is constructed, appropriate defaults are
+     * used. But before attempting to create the service in the Solaris platform, it is important that the necessary
+     * configuration is done by the users via various mutator methods of this class. This method must be called to guard
+     * against some abnormal failures before creating the service. It makes sure that the caller has set all the necessary
      * parameters reasonably. Note that it does not validate the actual values.
+     * 
      * @throws RuntimeException if the configuration is not valid
      * @return true if the configuration is valid, an exception is thrown otherwise
      */
@@ -245,39 +246,37 @@ public final class SMFService extends ServiceAdapter {
         // BEFORE:  --user %%%AS_ADMIN_USER%%% --passwordfile %%%PASSWORD_FILE_PATH%%%
         // AFTER:   %%%CREDENTIALS%%%
 
-
         return (true);
     }
 
-    /** Returns the tokens and values of the service as a map.
-     * Note that a copy is returned.
+    /**
+     * Returns the tokens and values of the service as a map. Note that a copy is returned.
+     * 
      * @return a copy of tokens and values
      */
     public Map<String, String> tokensAndValues() {
         return (new HashMap<String, String>(getTokenMap())); //send only copy
     }
 
-    /** Returns the absolute location of the manifest file as SMF understands it.
-     * It takes into account the name, type and configuration location of the 
-     * service. It is expected that these are set before calling this method.
-     * If the <b> Fully Qualified Service Name </b> is invalid, a RuntimeException results.
+    /**
+     * Returns the absolute location of the manifest file as SMF understands it. It takes into account the name, type and
+     * configuration location of the service. It is expected that these are set before calling this method. If the <b> Fully
+     * Qualified Service Name </b> is invalid, a RuntimeException results.
      */
     public String getManifestFilePath() {
         final String fn = new StringBuilder().append(MANIFEST_HOME).append(info.fqsn).append("/").append(MANIFEST_FILE_SUFFIX).toString();
         return (fn);
     }
 
-    /** Returns the absolute location of the template for the given service.
-     * If the file can not be found at its required location then the file will be
-     * copied from inside this jar file to the file system.
-     * The type of the service must be set before calling this method, otherwise
-     * a runtime exception results.
+    /**
+     * Returns the absolute location of the template for the given service. If the file can not be found at its required
+     * location then the file will be copied from inside this jar file to the file system. The type of the service must be
+     * set before calling this method, otherwise a runtime exception results.
      */
     public String getManifestFileTemplatePath() {
         String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
         if (!ok(ir))
-            throw new RuntimeException("Internal Error - System Property not set: "
-                    + SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+            throw new RuntimeException("Internal Error - System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
 
         File rootDir = SmartFile.sanitize(new File(ir));
         if (!rootDir.isDirectory())
@@ -294,10 +293,11 @@ public final class SMFService extends ServiceAdapter {
         return s != null && s.length() > 0;
     }
 
-    /** Returns a String representation of the SMFService. It contains a new-line
-    separated "name=value" String that contains the name and value of each of
-    of the tokens that were set in the service.
-    @return a String according to above description, never returns null
+    /**
+     * Returns a String representation of the SMFService. It contains a new-line separated "name=value" String that contains
+     * the name and value of each of of the tokens that were set in the service.
+     * 
+     * @return a String according to above description, never returns null
      */
     public String toString() {
         /* toString method useful for debugging */
@@ -310,12 +310,12 @@ public final class SMFService extends ServiceAdapter {
         return (sb.toString());
     }
 
-    /** For safety -- this is similar to the subversion dry-run command.
-     * It does everything except create the service.
+    /**
+     * For safety -- this is similar to the subversion dry-run command. It does everything except create the service.
      */
     public String getSuccessMessage() {
-        String msg = Strings.get("SMFServiceCreated", info.smfFullServiceName, info.type.toString(),
-                info.serverDirs.getServerParentDir(), getManifestFilePath(), info.serviceName);
+        String msg = Strings.get("SMFServiceCreated", info.smfFullServiceName, info.type.toString(), info.serverDirs.getServerParentDir(),
+                getManifestFilePath(), info.serviceName);
 
         if (info.dryRun) {
             msg += Strings.get("dryrun");
@@ -383,7 +383,7 @@ public final class SMFService extends ServiceAdapter {
         if (System.getProperty("AUTH_TOKEN") != null)
             at = System.getProperty("AUTH_TOKEN");
         try {
-            final String[] cmd = new String[]{path2Auths, user};
+            final String[] cmd = new String[] { path2Auths, user };
             ProcessExecutor pe = new ProcessExecutor(cmd);
             pe.setExecutionRetentionFlag(true);
             pe.execute();
@@ -398,8 +398,7 @@ public final class SMFService extends ServiceAdapter {
                 }
             }
             return (authorized);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -407,13 +406,12 @@ public final class SMFService extends ServiceAdapter {
     private boolean serviceNameExists(final String sn) {
         boolean exists = false;
         try {
-            final String[] cmd = new String[]{"/usr/bin/svcs", sn};
+            final String[] cmd = new String[] { "/usr/bin/svcs", sn };
             ProcessExecutor pe = new ProcessExecutor(cmd);
             pe.setExecutionRetentionFlag(true);
             pe.execute();
             exists = true;
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             //returns a non-zero status -- the service does not exist, status is already set
         }
         return (exists);
@@ -432,8 +430,7 @@ public final class SMFService extends ServiceAdapter {
                 if (manifestParent.isDirectory()) {
                     throw new IllegalArgumentException(msg);
                 }
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException(msg);
             }
         }
@@ -446,7 +443,7 @@ public final class SMFService extends ServiceAdapter {
     }
 
     private void validateService() throws Exception {
-        final String[] cmda = new String[]{SMFService.SVCCFG, "validate", getManifestFilePath()};
+        final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFilePath() };
         final ProcessExecutor pe = new ProcessExecutor(cmda);
         pe.execute();
         if (info.trace)
@@ -454,7 +451,7 @@ public final class SMFService extends ServiceAdapter {
     }
 
     private boolean importService() throws Exception {
-        final String[] cmda = new String[]{SMFService.SVCCFG, "import", getManifestFilePath()};
+        final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFilePath() };
         final ProcessExecutor pe = new ProcessExecutor(cmda);
 
         if (info.dryRun)
@@ -502,12 +499,12 @@ public final class SMFService extends ServiceAdapter {
         if (isDomain())
             return " --domaindir " + getServerDirs().getServerParentDir().getPath() + " ";
         else
-            return " --nodedir " + getServerDirs().getServerGrandParentDir().getPath()
-                    + " --node " + getServerDirs().getServerParentDir().getName() + " ";
+            return " --nodedir " + getServerDirs().getServerGrandParentDir().getPath() + " --node "
+                    + getServerDirs().getServerParentDir().getName() + " ";
     }
 
     @Override
     public final String getLocationArgsStop() {
-        return getLocationArgsStart();  // same with SMF
+        return getLocationArgsStart(); // same with SMF
     }
 }

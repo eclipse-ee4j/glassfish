@@ -23,7 +23,6 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import java.beans.PropertyVetoException;
 import java.io.Serializable;
 
-
 /**
  *
  */
@@ -36,32 +35,27 @@ public interface HttpAccessLog extends ConfigBeanProxy {
     /**
      * Gets the value of the logDirectory property.
      *
-     * location of the access logs specified as a directory.This defaults to the
-     * domain.log-root, which by default is ${INSTANCE_ROOT}/logs. Hence the
-     * default value for this attribute is ${INSTANCE_ROOT}/logs/access
+     * location of the access logs specified as a directory.This defaults to the domain.log-root, which by default is
+     * ${INSTANCE_ROOT}/logs. Hence the default value for this attribute is ${INSTANCE_ROOT}/logs/access
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(defaultValue="access")
+    @Attribute(defaultValue = "access")
     public String getLogDirectory();
 
     /**
      * Sets the value of the logDirectory property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setLogDirectory(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the iponly property.
      *
-     * If the IP address of the user agent should be specified or a  DNS lookup
-     * should be done
+     * If the IP address of the user agent should be specified or a DNS lookup should be done
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     public String getIponly();
@@ -69,11 +63,8 @@ public interface HttpAccessLog extends ConfigBeanProxy {
     /**
      * Sets the value of the iponly property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setIponly(String value) throws PropertyVetoException;
-
-
 
 }

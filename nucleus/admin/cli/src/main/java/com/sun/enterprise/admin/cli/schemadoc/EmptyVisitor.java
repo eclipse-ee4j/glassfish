@@ -114,8 +114,7 @@ public class EmptyVisitor extends MethodVisitor {
     }
 
     @Override
-    public void visitLocalVariable(String s, String s1, String s2, Label label,
-        Label label1, int i) {
+    public void visitLocalVariable(String s, String s1, String s2, Label label, Label label1, int i) {
     }
 
     @Override

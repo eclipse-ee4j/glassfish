@@ -27,15 +27,9 @@ import java.util.*;
 import static com.sun.enterprise.config.util.PortConstants.PORTSLIST;
 
 /**
- * Simple pkg-priv class for keeping the system-properties of a Server handy.
- * We add the Port Props in the correct order
- * Order of precedence from LOW to HIGH ==
- * (0) domain
- * (1) cluster
- * (2) config
- * (3) server
- * Just add the props in that same order and we're good to go!
- * Note that I'm VERY paranoid about NPE's
+ * Simple pkg-priv class for keeping the system-properties of a Server handy. We add the Port Props in the correct order
+ * Order of precedence from LOW to HIGH == (0) domain (1) cluster (2) config (3) server Just add the props in that same
+ * order and we're good to go! Note that I'm VERY paranoid about NPE's
  *
  * @author Byron Nevins
  */
@@ -115,8 +109,7 @@ class ServerPorts {
 
                     if (NetUtils.isPortValid(port))
                         props.put(name, port);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // we're all done here!
                 }
             }
@@ -130,6 +123,7 @@ class ServerPorts {
         sb.append("Properties: ").append(props).append('\n');
         return sb.toString();
     }
+
     private Server server;
     private final Map<String, Integer> props = new HashMap<String, Integer>();
 }

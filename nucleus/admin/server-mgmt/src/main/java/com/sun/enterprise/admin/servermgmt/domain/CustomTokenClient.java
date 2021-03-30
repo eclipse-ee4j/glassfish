@@ -57,10 +57,8 @@ public class CustomTokenClient {
     /**
      * Get's the substitutable custom tokens.
      *
-     * @return {@link Map} of substitutable tokens, or empty Map
-     *   if no custom token found.
-     * @throws DomainException If error occurred in retrieving the
-     *   custom tokens.
+     * @return {@link Map} of substitutable tokens, or empty Map if no custom token found.
+     * @throws DomainException If error occurred in retrieving the custom tokens.
      */
     public Map<String, String> getSubstitutableTokens() throws DomainException {
         CustomizationTokensProvider provider = CustomizationTokensProviderFactory.createCustomizationTokensProvider();
@@ -75,78 +73,81 @@ public class CustomTokenClient {
                 // Check presence of token place-holder
                 Set<Integer> usedPorts = new HashSet<Integer>();
                 Properties domainProps = _domainConfig.getDomainProperties();
-                String portBase = (String)_domainConfig.get(DomainConfig.K_PORTBASE);
+                String portBase = (String) _domainConfig.get(DomainConfig.K_PORTBASE);
 
                 Map<String, String> filePaths = new HashMap<String, String>(3, 1);
-                filePaths.put(SystemPropertyConstants.INSTALL_ROOT_PROPERTY, System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-                filePaths.put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
+                filePaths.put(SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
+                        System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+                filePaths.put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY,
+                        System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
                 filePaths.put(SystemPropertyConstants.JAVA_ROOT_PROPERTY, System.getProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY));
                 noOfTokens = customTokens.size();
                 for (ConfigCustomizationToken token : customTokens) {
                     String name = token.getName();
                     // Check for valid custom token parameters.
                     if (isNullOrEmpty(name) || isNullOrEmpty(token.getValue()) || isNullOrEmpty(token.getDescription())) {
-                        throw new IllegalArgumentException(_strings.get("invalidTokenParameters", name, token.getValue(), token.getDescription()));
+                        throw new IllegalArgumentException(
+                                _strings.get("invalidTokenParameters", name, token.getValue(), token.getDescription()));
                     }
                     switch (token.getCustomizationType()) {
-                        case PORT :
-                            Integer port = null;
-                            if (domainProps.containsKey(name)) {
-                                port = Integer.valueOf(domainProps.getProperty(token.getName()));
-                                if (!NetUtils.isPortFree(port)) {
-                                    throw new DomainException(_strings.get("unavailablePort", port));
+                    case PORT:
+                        Integer port = null;
+                        if (domainProps.containsKey(name)) {
+                            port = Integer.valueOf(domainProps.getProperty(token.getName()));
+                            if (!NetUtils.isPortFree(port)) {
+                                throw new DomainException(_strings.get("unavailablePort", port));
+                            }
+                        } else {
+                            if (portBase != null && token.getTokenTypeDetails() instanceof PortTypeDetails) {
+                                PortTypeDetails portTypeDetails = (PortTypeDetails) token.getTokenTypeDetails();
+                                port = Integer.parseInt(portBase) + Integer.parseInt(portTypeDetails.getBaseOffset());
+                                if (!generatedTokens.containsKey(PORTBASE_PLACE_HOLDER)) {
+                                    // Adding a token to persist port base value as a system tag
+                                    generatedTokens.put(PORTBASE_PLACE_HOLDER,
+                                            SystemPropertyTagBuilder.buildSystemTag(PORTBASE_PLACE_HOLDER, portBase));
                                 }
                             } else {
-                                if (portBase != null && token.getTokenTypeDetails() instanceof PortTypeDetails) {
-                                    PortTypeDetails portTypeDetails = (PortTypeDetails)token.getTokenTypeDetails();
-                                    port = Integer.parseInt(portBase) + Integer.parseInt(portTypeDetails.getBaseOffset());
-                                    if (!generatedTokens.containsKey(PORTBASE_PLACE_HOLDER)) {
-                                        // Adding a token to persist port base value as a system tag
-                                        generatedTokens.put(PORTBASE_PLACE_HOLDER, SystemPropertyTagBuilder.buildSystemTag(
-                                                PORTBASE_PLACE_HOLDER, portBase));
-                                    }
-                                } else {
-                                    port = Integer.valueOf(token.getValue());
-                                }
-                                // Find next available unused port by incrementing the port value by 1
-                                while (!NetUtils.isPortFree(port) && !usedPorts.contains(port)) {
-                                    port++;
-                                }
+                                port = Integer.valueOf(token.getValue());
                             }
-                            usedPorts.add(port);
-                            generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, port.toString()));
-                            break;
-                        case FILE:
-                            String path = token.getValue();
-                            for (Map.Entry<String, String> entry : filePaths.entrySet()) {
-                                if (path.contains(entry.getKey())) {
-                                    path = path.replace(entry.getKey(), entry.getValue());
-                                    break;
-                                }
+                            // Find next available unused port by incrementing the port value by 1
+                            while (!NetUtils.isPortFree(port) && !usedPorts.contains(port)) {
+                                port++;
                             }
-                            if (token.getTokenTypeDetails() instanceof FileTypeDetails) {
-                                FileTypeDetails details = (FileTypeDetails) token.getTokenTypeDetails();
-                                File file = new File(path);
-                                switch (details.getExistCondition()) {
-                                    case MUST_EXIST:
-                                        if (!file.exists()) {
-                                            throw new DomainException(_strings.get("missingFile", file.getAbsolutePath()));
-                                        }
-                                        break;
-                                    case MUST_NOT_EXIST:
-                                        if (file.exists()) {
-                                            throw new DomainException(_strings.get("filePresenceNotDesired", file.getAbsolutePath()));
-                                        }
-                                        break;
-                                    case NO_OP:
-                                        break;
-                                }
+                        }
+                        usedPorts.add(port);
+                        generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, port.toString()));
+                        break;
+                    case FILE:
+                        String path = token.getValue();
+                        for (Map.Entry<String, String> entry : filePaths.entrySet()) {
+                            if (path.contains(entry.getKey())) {
+                                path = path.replace(entry.getKey(), entry.getValue());
+                                break;
                             }
-                            generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, path));
-                            break;
-                        case STRING:
-                            generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token));
-                            break;
+                        }
+                        if (token.getTokenTypeDetails() instanceof FileTypeDetails) {
+                            FileTypeDetails details = (FileTypeDetails) token.getTokenTypeDetails();
+                            File file = new File(path);
+                            switch (details.getExistCondition()) {
+                            case MUST_EXIST:
+                                if (!file.exists()) {
+                                    throw new DomainException(_strings.get("missingFile", file.getAbsolutePath()));
+                                }
+                                break;
+                            case MUST_NOT_EXIST:
+                                if (file.exists()) {
+                                    throw new DomainException(_strings.get("filePresenceNotDesired", file.getAbsolutePath()));
+                                }
+                                break;
+                            case NO_OP:
+                                break;
+                            }
+                        }
+                        generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, path));
+                        break;
+                    case STRING:
+                        generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token));
+                        break;
                     }
                     if (--noOfTokens > 0) {
                         generatedSysTags.append(lineSeparator);
@@ -179,6 +180,7 @@ public class CustomTokenClient {
 
     /**
      * Check for empty or null input string.
+     * 
      * @return true Only if given string string is null or empty.
      */
     private boolean isNullOrEmpty(String input) {
@@ -218,5 +220,5 @@ public class CustomTokenClient {
             builtTag = builtTag.replace(namePlaceHolder, name);
             return builtTag;
         }
-    } 
+    }
 }

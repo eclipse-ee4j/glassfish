@@ -16,60 +16,45 @@
 
 package com.sun.enterprise.admin.servermgmt.pe;
 
-public final class InstanceTimer implements Runnable
-{
-    private final   int             timeOutSeconds;
-    private final   TimerCallback   callBack;
-    private final   int             startAfterSeconds;
-    private boolean                 timeOutReached;
-    private long                    startTime;
+public final class InstanceTimer implements Runnable {
+    private final int timeOutSeconds;
+    private final TimerCallback callBack;
+    private final int startAfterSeconds;
+    private boolean timeOutReached;
+    private long startTime;
 
-    public InstanceTimer(int timeOutSeconds,
-                  int startAfterSeconds,
-                  TimerCallback callBack)
-    {
-        this.timeOutSeconds     = timeOutSeconds;
-        this.startAfterSeconds  = startAfterSeconds;
-        this.callBack           = callBack;
-        this.timeOutReached     = false;
+    public InstanceTimer(int timeOutSeconds, int startAfterSeconds, TimerCallback callBack) {
+        this.timeOutSeconds = timeOutSeconds;
+        this.startAfterSeconds = startAfterSeconds;
+        this.callBack = callBack;
+        this.timeOutReached = false;
     }
 
-    public void run()
-    {
+    public void run() {
         startTime = System.currentTimeMillis();
-        try
-        {
+        try {
             Thread.sleep(startAfterSeconds * 1000L);
-            while (!timeOutReached() && !callBack.check())
-            {
-                try
-                {
+            while (!timeOutReached() && !callBack.check()) {
+                try {
                     Thread.sleep(1000);
                     computeTimeOut();
-                }
-                catch (InterruptedException ie)
-                {
+                } catch (InterruptedException ie) {
                     //sLogger.warning(ie.toString());
                     timeOutReached = true;
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             //sLogger.warning(e.toString());
             timeOutReached = true;
         }
     }
 
-    private boolean timeOutReached()
-    {
+    private boolean timeOutReached() {
         return timeOutReached;
     }
 
-    private void computeTimeOut()
-    {
+    private void computeTimeOut() {
         long currentTime = System.currentTimeMillis();
-        timeOutReached =
-            ((currentTime - startTime) >= (timeOutSeconds * 1000L));
+        timeOutReached = ((currentTime - startTime) >= (timeOutSeconds * 1000L));
     }
 }

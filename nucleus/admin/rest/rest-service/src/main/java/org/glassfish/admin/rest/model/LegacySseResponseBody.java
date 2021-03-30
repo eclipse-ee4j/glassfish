@@ -71,5 +71,4 @@ public class LegacySseResponseBody<T extends RestModel> extends RestModelRespons
         return json;
     }
 
-
 }

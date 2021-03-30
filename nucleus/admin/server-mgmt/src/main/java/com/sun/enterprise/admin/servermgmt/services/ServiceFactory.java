@@ -19,25 +19,23 @@ package com.sun.enterprise.admin.servermgmt.services;
 import com.sun.enterprise.util.io.ServerDirs;
 
 public final class ServiceFactory {
-    
+
     public static final Service getService(ServerDirs dirs, AppserverServiceType type) {
 
-        if(Constants.LINUX_HACK)
+        if (Constants.LINUX_HACK)
             return new LinuxService(dirs, type);
         // the order matters!
         //if(UbuntuService.apropos())
-            //return new UbuntuService(dirs, type);
-        if(LinuxService.apropos())
+        //return new UbuntuService(dirs, type);
+        if (LinuxService.apropos())
             return new LinuxService(dirs, type);
-        if(SMFService.apropos())
+        if (SMFService.apropos())
             return new SMFService(dirs, type);
-        if(WindowsService.apropos())
+        if (WindowsService.apropos())
             return new WindowsService(dirs, type);
-        if(LinuxService.apropos())
+        if (LinuxService.apropos())
             return new LinuxService(dirs, type);
         throw new RuntimeException(Strings.get("noSuitableServiceImplementation"));
     }
-
-
 
 }

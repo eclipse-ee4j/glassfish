@@ -32,7 +32,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
  */
 class RadixTreeNode {
     private static final Logger _logger = SLogger.getLogger();
-    
+
     private static final LocalStringsImpl _strings = new LocalStringsImpl(RadixTreeNode.class);
 
     // Node key.
@@ -47,7 +47,7 @@ class RadixTreeNode {
     /**
      * Construct {@link RadixTreeNode} for the give key, value pair.
      */
-    RadixTreeNode (String key, String value) {
+    RadixTreeNode(String key, String value) {
         _key = key;
         _value = value;
     }
@@ -98,8 +98,7 @@ class RadixTreeNode {
     }
 
     /**
-     * Get's the {@link Collection} of child nodes.
-     * Returns empty {@link Collection} object if no child data found.
+     * Get's the {@link Collection} of child nodes. Returns empty {@link Collection} object if no child data found.
      *
      * @return associated child nodes.
      */
@@ -107,8 +106,8 @@ class RadixTreeNode {
         if (_childNodes != null) {
             return _childNodes.values();
         } else {
-            List<RadixTreeNode> list  = Collections.emptyList();
-            return  list;
+            List<RadixTreeNode> list = Collections.emptyList();
+            return list;
         }
     }
 
@@ -130,8 +129,7 @@ class RadixTreeNode {
         }
         RadixTreeNode oldNode = _childNodes.put(c, node);
         if (oldNode != null) {
-            _logger.log(Level.WARNING, SLogger.CHILD_NODE_EXISTS, 
-            		new Object[] {this.toString(), oldNode.toString(), node.toString()});
+            _logger.log(Level.WARNING, SLogger.CHILD_NODE_EXISTS, new Object[] { this.toString(), oldNode.toString(), node.toString() });
             oldNode._parentNode = null;
         }
         node._parentNode = this;

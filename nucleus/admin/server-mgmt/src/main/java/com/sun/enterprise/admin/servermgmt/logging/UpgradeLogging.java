@@ -38,8 +38,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 import static com.sun.enterprise.admin.servermgmt.SLogger.*;
 
 /**
- * Startup service to update existing domain.xml to move log-service entries to
- * logging.properties file.
+ * Startup service to update existing domain.xml to move log-service entries to logging.properties file.
  *
  * @author Carla Mott
  */
@@ -69,16 +68,15 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
 
         try {
             RepositoryConfig rc = new RepositoryConfig();
-            String configDir = rc.getRepositoryRoot() + File.separator + rc.getRepositoryName()
-                    + File.separator + rc.getInstanceName() + File.separator + "config";
+            String configDir = rc.getRepositoryRoot() + File.separator + rc.getRepositoryName() + File.separator + rc.getInstanceName()
+                    + File.separator + "config";
             PEFileLayout layout = new PEFileLayout(rc);
             File src = new File(layout.getTemplatesDir(), PEFileLayout.LOGGING_PROPERTIES_FILE);
             File dest = new File(configDir, PEFileLayout.LOGGING_PROPERTIES_FILE);
             if (!dest.exists())
                 FileUtils.copy(src, dest);
 
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             getLogger().log(Level.SEVERE, FAIL_CREATE_LOG_PROPS, ioe);
         }
 
@@ -113,15 +111,13 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
 
                         c.setLogService(null);
 
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         getLogger().log(Level.SEVERE, FAIL_UPDATE_LOG_PROPS, e);
                     }
                     return null;
                 }
             }, config);
-        }
-        catch (TransactionFailure tf) {
+        } catch (TransactionFailure tf) {
             getLogger().log(Level.SEVERE, FAIL_UPGRADE_LOG_SERVICE, tf);
             throw new RuntimeException(tf);
         }

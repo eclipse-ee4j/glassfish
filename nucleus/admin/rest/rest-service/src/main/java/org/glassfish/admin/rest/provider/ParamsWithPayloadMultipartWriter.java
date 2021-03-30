@@ -40,11 +40,11 @@ import org.glassfish.api.ActionReport;
 @Provider
 @Produces("multipart/mixed")
 public class ParamsWithPayloadMultipartWriter extends MultipartProprietaryWriter implements MessageBodyWriter<ParamsWithPayload> {
-    
+
     private static final MediaType MULTIPART_MIXED = new MediaType("multipart", "mixed");
-    
+
     private static final ActionReportJson2Provider arWriter = new ActionReportJson2Provider();
-    
+
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return ParamsWithPayload.class.isAssignableFrom(type) && mediaType.isCompatible(MULTIPART_MIXED);
@@ -57,30 +57,29 @@ public class ParamsWithPayloadMultipartWriter extends MultipartProprietaryWriter
         if (value == null) {
             httpHeaders.putSingle("MIME-Version", "1.0");
         }
-        super.writeTo(proxy.getPayloadOutbound(), proxy.getParameters(), proxy.getActionReport(), entityStream, new MultipartProprietaryWriter.ContentTypeWriter() {
-                        @Override
-                        public void writeContentType(String firstPart, String secondPart, String boundary) {
-                            StringBuilder ct = new StringBuilder();
-                            ct.append(firstPart).append('/').append(secondPart);
-                            if (boundary != null) {
-                                ct.append("; boundary=").append(boundary);
-                            }
-                            httpHeaders.putSingle(HttpHeaders.CONTENT_TYPE, ct.toString());
+        super.writeTo(proxy.getPayloadOutbound(), proxy.getParameters(), proxy.getActionReport(), entityStream,
+                new MultipartProprietaryWriter.ContentTypeWriter() {
+                    @Override
+                    public void writeContentType(String firstPart, String secondPart, String boundary) {
+                        StringBuilder ct = new StringBuilder();
+                        ct.append(firstPart).append('/').append(secondPart);
+                        if (boundary != null) {
+                            ct.append("; boundary=").append(boundary);
                         }
-                    });
+                        httpHeaders.putSingle(HttpHeaders.CONTENT_TYPE, ct.toString());
+                    }
+                });
     }
-    
+
     @Override
-    protected void writeActionReport(final Writer writer,
-                                        final OutputStream underOS,
-                                        final String boundary, 
-                                        final ActionReport ar) throws IOException {
+    protected void writeActionReport(final Writer writer, final OutputStream underOS, final String boundary, final ActionReport ar)
+            throws IOException {
         //        //Inrtroducing boundery
-//        if (isFirst) {
-//            isFirst = false;
-//        } else {
-//            writer.write(EOL);
-//        }
+        //        if (isFirst) {
+        //            isFirst = false;
+        //        } else {
+        //            writer.write(EOL);
+        //        }
         multiWrite(writer, BOUNDERY_DELIMIT, boundary, EOL);
         //Headers
         multiWrite(writer, "Content-Disposition: file; name=\"ActionReport\"", EOL);
@@ -98,5 +97,5 @@ public class ParamsWithPayloadMultipartWriter extends MultipartProprietaryWriter
     public long getSize(ParamsWithPayload t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

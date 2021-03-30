@@ -32,9 +32,12 @@ import javax.management.Attribute;
 import javax.management.AttributeList;
 
 /**
- * A class that has some useful utility methods to deal with <ul> <li> Jmx
- * Attributes </li> <li> Jmx AttributeLists. </li> </ul> It is expected to
- * enhance this class with more utility methods.
+ * A class that has some useful utility methods to deal with
+ * <ul>
+ * <li>Jmx Attributes</li>
+ * <li>Jmx AttributeLists.</li>
+ * </ul>
+ * It is expected to enhance this class with more utility methods.
  *
  * @author Kedar.Mhaswade@Sun.Com
  * @since Sun Java System Application Server 8
@@ -46,19 +49,15 @@ public class AttributeListUtils {
     }
 
     /**
-     * Checks whether this list contains a JMX {@link Attribute} with given
-     * name. Note that this method will return true if there is at least one
-     * attribute with given name.
+     * Checks whether this list contains a JMX {@link Attribute} with given name. Note that this method will return true if
+     * there is at least one attribute with given name.
      *
      * @param al an instance of {@link AttributeList}
-     * @param name a String representing the name of the attribute. The name may
-     * not be null.
-     * @return true if there is at least one attribute in the list with given
-     * name, false otherwise
+     * @param name a String representing the name of the attribute. The name may not be null.
+     * @return true if there is at least one attribute in the list with given name, false otherwise
      * @throws IllegalArgumentException if the attribute list or name is null
      */
-    public static boolean containsNamedAttribute(final AttributeList al,
-            final String name) {
+    public static boolean containsNamedAttribute(final AttributeList al, final String name) {
         if (al == null || name == null) {
             throw new IllegalArgumentException("null arg");
         }
@@ -75,17 +74,15 @@ public class AttributeListUtils {
     }
 
     /**
-     * Checks whether an attribute with the name same as that of the given
-     * attribute exists in this list. The given name may not be null.
+     * Checks whether an attribute with the name same as that of the given attribute exists in this list. The given name may
+     * not be null.
      *
      * @param al an instance of {@link AttributeList}
      * @param a an Attribute with a name and a value
-     * @return true if there exists at least one attribute with same name, false
-     * otherwise
+     * @return true if there exists at least one attribute with same name, false otherwise
      * @throws IllegalArgumentException if the attribute list or name is null
      */
-    public static boolean containsNamedAttribute(final AttributeList al,
-            final Attribute a) {
+    public static boolean containsNamedAttribute(final AttributeList al, final Attribute a) {
         if (al == null || a == null) {
             throw new IllegalArgumentException("null arg");
         }
@@ -93,9 +90,8 @@ public class AttributeListUtils {
     }
 
     /**
-     * Returns the given list as a map of attributes, keyed on the names of the
-     * attribute in the list. The passed argument may not be null. The mappings
-     * are between the names of attributes and attributes themselves.
+     * Returns the given list as a map of attributes, keyed on the names of the attribute in the list. The passed argument
+     * may not be null. The mappings are between the names of attributes and attributes themselves.
      *
      * @param al the list of attributes that need to be mapped
      * @return an instance of {@link Map}
@@ -115,17 +111,14 @@ public class AttributeListUtils {
     }
 
     /**
-     * JMX 1.2 specification had a weird limitation that a Dynamic MBean may not
-     * have an attribute whose name is <b> not a valid Java identifier <b>. This
-     * method is a utility method to convert the any arbitrary name into a
-     * String that can be a valid JMX 1.2 attribute. Every character in the
-     * string passed that is neither a Character.isJavaIdentifierStart nor a
-     * Character.isJavaIdentifierPart is replace with a valid character '_'.
+     * JMX 1.2 specification had a weird limitation that a Dynamic MBean may not have an attribute whose name is <b> not a
+     * valid Java identifier <b>. This method is a utility method to convert the any arbitrary name into a String that can
+     * be a valid JMX 1.2 attribute. Every character in the string passed that is neither a Character.isJavaIdentifierStart
+     * nor a Character.isJavaIdentifierPart is replace with a valid character '_'.
      *
      * @param name a String that represents any non null name
      * @return a String that represents a name valid for a JMX 1.2 MBean.
-     * @throws IllegalArgumentException if the parameter is null or is of zero
-     * length
+     * @throws IllegalArgumentException if the parameter is null or is of zero length
      */
     public static String toJmx12Attribute(final String name) {
         if (name == null || name.length() == 0) {
@@ -147,13 +140,13 @@ public class AttributeListUtils {
     }
 
     /**
-     * Returns a String representation of an attribute list such that: <ul> <li>
-     * Each attribute is a name and value separated by a ','. toString() on the
-     * value is called. </li> <li> Each pair is separated by a new line
-     * character '\n'. </li> </ul>
+     * Returns a String representation of an attribute list such that:
+     * <ul>
+     * <li>Each attribute is a name and value separated by a ','. toString() on the value is called.</li>
+     * <li>Each pair is separated by a new line character '\n'.</li>
+     * </ul>
      *
-     * @param al the list of attributes - may be null, in which case an empty
-     * String is returned.
+     * @param al the list of attributes - may be null, in which case an empty String is returned.
      * @return a String representing the parameter passed
      */
     public static String toString(final AttributeList al) {

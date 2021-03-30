@@ -25,51 +25,46 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 public class DomainXmlSAXParser extends DefaultHandler {
-  private static final String PROPERTY = "property";
-  private int level = 0;
-  private String domainXmlEventListenerClass= null;
-  
-  public String getDomainXmlEventListenerClass() {
-	return domainXmlEventListenerClass;
-  }
+    private static final String PROPERTY = "property";
+    private int level = 0;
+    private String domainXmlEventListenerClass = null;
 
-  public void parse(java.io.File domainXml) throws javax.xml.parsers.ParserConfigurationException,org.xml.sax.SAXException,java.io.IOException {
-            SAXParser saxParser; 
-	    SAXParserFactory factory = SAXParserFactory.newInstance();
-	    saxParser = factory.newSAXParser();
-            saxParser.getXMLReader().setEntityResolver((EntityResolver)this);
-	    saxParser.parse(domainXml,this);
-  }
+    public String getDomainXmlEventListenerClass() {
+        return domainXmlEventListenerClass;
+    }
 
-
-    @Override
-  public void startElement(String namespaceURI, String localName, String qName, Attributes attrs)
-  throws SAXException {
-      level++;
-      if ( level==2 && PROPERTY.equals(qName)){
-          if (attrs != null) {
-              for (int i = 0; i < attrs.getLength(); i++) {
-                  String aName = attrs.getQName(i); // Attr name
-                  String aValue = attrs.getValue(aName);
-                  if ("DomainXmlEventListenerClass".equals(aValue)) {
-                      domainXmlEventListenerClass=attrs.getValue("value");
-                  }
-              }
-          }
-      }
-  }
-
+    public void parse(java.io.File domainXml)
+            throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
+        SAXParser saxParser;
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        saxParser = factory.newSAXParser();
+        saxParser.getXMLReader().setEntityResolver((EntityResolver) this);
+        saxParser.parse(domainXml, this);
+    }
 
     @Override
-  public void endElement(String namespaceURI, String localName, String qName)
-      throws SAXException {
-      level--;
-  }
+    public void startElement(String namespaceURI, String localName, String qName, Attributes attrs) throws SAXException {
+        level++;
+        if (level == 2 && PROPERTY.equals(qName)) {
+            if (attrs != null) {
+                for (int i = 0; i < attrs.getLength(); i++) {
+                    String aName = attrs.getQName(i); // Attr name
+                    String aValue = attrs.getValue(aName);
+                    if ("DomainXmlEventListenerClass".equals(aValue)) {
+                        domainXmlEventListenerClass = attrs.getValue("value");
+                    }
+                }
+            }
+        }
+    }
 
     @Override
-  public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
-      return null;
-  }
+    public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+        level--;
+    }
+
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
+        return null;
+    }
 }
-
-

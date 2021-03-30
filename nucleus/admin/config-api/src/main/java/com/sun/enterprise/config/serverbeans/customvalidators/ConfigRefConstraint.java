@@ -28,13 +28,15 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, TYPE})
+@Target({ METHOD, FIELD, TYPE })
 @Documented
 @Constraint(validatedBy = ConfigRefValidator.class)
 public @interface ConfigRefConstraint {
     String message() default "The config-ref cannot reference server-config, default-config, "
             + "a non-existent config, or be changed when the instance is part of a cluster,"
-                    + " or be changed for the Domain Administration Server.";
+            + " or be changed for the Domain Administration Server.";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

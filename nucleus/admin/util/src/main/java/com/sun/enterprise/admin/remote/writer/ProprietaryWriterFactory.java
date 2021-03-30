@@ -24,14 +24,14 @@ import java.util.List;
  * @author martinmares
  */
 public class ProprietaryWriterFactory {
-    
+
     private static final List<ProprietaryWriter> proprietaryWriters;
     static {
         proprietaryWriters = new ArrayList<ProprietaryWriter>(2);
         proprietaryWriters.add(new ParameterMapFormProprietaryWriter());
         proprietaryWriters.add(new MultipartProprietaryWriter());
     }
-    
+
     public static ProprietaryWriter getWriter(final Object entity) {
         for (ProprietaryWriter pw : proprietaryWriters) {
             if (pw.isWriteable(entity)) {
@@ -40,5 +40,5 @@ public class ProprietaryWriterFactory {
         }
         return null;
     }
-    
+
 }

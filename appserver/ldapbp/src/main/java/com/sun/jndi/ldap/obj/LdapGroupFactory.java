@@ -16,7 +16,6 @@
 
 package com.sun.jndi.ldap.obj;
 
-import com.sun.enterprise.security.GroupPrincipal;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.naming.*;

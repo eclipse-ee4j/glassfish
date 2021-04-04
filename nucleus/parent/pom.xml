@@ -100,7 +100,7 @@
               
         <!-- Jakarta XML Binding -->
         <jakarta.jaxb-api.version>3.0.1</jakarta.jaxb-api.version>
-        <jakarta.jaxb-impl.version>3.0.1-b02</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-impl.version>3.0.1</jakarta.jaxb-impl.version>
         
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>

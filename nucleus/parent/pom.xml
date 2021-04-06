@@ -127,7 +127,7 @@
 
         <gmbal.version>4.0.2</gmbal.version>   
         <shoal.version>2.0.0</shoal.version>
-        <ha-api.version>3.1.12</ha-api.version>
+        <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.12</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>

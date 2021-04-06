@@ -77,7 +77,8 @@ public class PackageAppClient {
 
     /* DIRS_TO_COPY entries are all relative to the installation directory */
     private final static String[] DIRS_TO_COPY = new String[] { 
-        GLASSFISH_LIB + "/dtds", GLASSFISH_LIB + "/schemas",
+        GLASSFISH_LIB + "/dtds", 
+        GLASSFISH_LIB + "/schemas",
         GLASSFISH_LIB + "/appclient" };
 
     /*
@@ -109,8 +110,16 @@ public class PackageAppClient {
     private final static String ASENV_BAT = GLASSFISH_CONFIG + "/asenv.bat";
 
     private final static String[] SINGLE_FILES_TO_COPY = { 
-        IMQJMSRA_APP, IMQ_JAR, IMQADMIN_JAR, IMQUTIL_JAR, FSCONTEXT_JAR, WIN_SCRIPT,
-        WIN_JS, NONWIN_SCRIPT, ASENV_CONF, ASENV_BAT };
+        IMQJMSRA_APP, 
+        IMQ_JAR, 
+        IMQADMIN_JAR, 
+        IMQUTIL_JAR, 
+        FSCONTEXT_JAR, 
+        WIN_SCRIPT,
+        WIN_JS, 
+        NONWIN_SCRIPT, 
+        ASENV_CONF, 
+        ASENV_BAT };
 
     /* default output file */
     private final static String DEFAULT_OUTPUT_PATH = GLASSFISH_LIB + "/appclient.jar";
@@ -136,6 +145,7 @@ public class PackageAppClient {
         File thisJarFile = findCurrentJarFile();
         File installDir = findInstallDir(thisJarFile);
         File modulesDir = new File(installDir.toURI().resolve("glassfish/modules/"));
+        
         /*
          * Write the new JAR to a temp file in the install directory. Then we can simply rename the file to the correct name.
          * (Rename does not work on Windows systems across volumes.)
@@ -384,7 +394,7 @@ public class PackageAppClient {
      * @return
      */
     private File[] chooseConfigFiles(final File installDir, final String[] args) {
-        final String xmlArg = argValue("-xml", args);
+        String xmlArg = argValue("-xml", args);
         File[] files;
         if (xmlArg == null) {
             files = new File[DEFAULT_ACC_CONFIG_FILES.length];
@@ -393,7 +403,7 @@ public class PackageAppClient {
                 files[slot++] = new File(installDir.toURI().resolve(s));
             }
         } else {
-            final File userSpecifiedFile = new File(xmlArg);
+            File userSpecifiedFile = new File(xmlArg);
             files = new File[] { userSpecifiedFile };
             if (!userSpecifiedFile.exists()) {
                 System.err.println(strings.get("xmlNotFound", userSpecifiedFile.getAbsolutePath()));
@@ -404,16 +414,17 @@ public class PackageAppClient {
 
     }
 
-    private File findInstallDir(final File currentJarFile) throws URISyntaxException {
+    private File findInstallDir(File currentJarFile) throws URISyntaxException {
         return currentJarFile.getParentFile().getParentFile().getParentFile();
     }
 
-    private boolean isVerboseOutputLevel(final String[] args) {
+    private boolean isVerboseOutputLevel(String[] args) {
         for (String arg : args) {
             if (arg.equals("-verbose")) {
                 return true;
             }
         }
+        
         return false;
     }
 
@@ -430,9 +441,9 @@ public class PackageAppClient {
             if (args[i].equals(option)) {
                 if (i + 1 < args.length) {
                     return args[i + 1];
-                } else {
-                    throw new IllegalArgumentException(option);
-                }
+                } 
+                
+                throw new IllegalArgumentException(option);
             }
         }
         
@@ -446,9 +457,14 @@ public class PackageAppClient {
      * @throws java.net.URISyntaxException
      */
     private File findCurrentJarFile() throws URISyntaxException {
-        URI thisJarURI = getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-        URI thisJarFileBasedURI = (thisJarURI.getScheme().startsWith("jar")) ? URI.create("file:" + thisJarURI.getRawSchemeSpecificPart())
-                : thisJarURI;
+        URI thisJarURI = getClass().getProtectionDomain()
+                                   .getCodeSource()
+                                   .getLocation()
+                                   .toURI();
+        
+        URI thisJarFileBasedURI = (thisJarURI.getScheme().startsWith("jar")) ? 
+            URI.create("file:" + thisJarURI.getRawSchemeSpecificPart()) : 
+            thisJarURI;
         
         /*
          * One getParent gives the modules directory; the second gives the installation directory.

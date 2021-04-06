@@ -16,6 +16,7 @@
 
 package org.glassfish.appclient.client.acc.agent;
 
+import static java.util.logging.Level.FINE;
 import static org.glassfish.appclient.client.CLIBootstrap.FILE_OPTIONS_INTRODUCER;
 
 import java.io.File;
@@ -24,7 +25,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.lang.instrument.Instrumentation;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.appclient.client.AppClientFacade;
@@ -88,10 +88,8 @@ public class AppClientContainerAgent {
         
         if (Boolean.getBoolean("keep.argsfile")) {
             System.err.println("Agent arguments file retained: " + argsFile.getAbsolutePath());
-        } else {
-            if (!argsFile.delete()) {
-                logger.log(Level.FINE, "Unable to delete temporary args file {0}; continuing", argsFile.getAbsolutePath());
-            }
+        } else if (!argsFile.delete()) {
+            logger.log(FINE, "Unable to delete temporary args file {0}; continuing", argsFile.getAbsolutePath());
         }
         
         return result;

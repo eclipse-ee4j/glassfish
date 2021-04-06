@@ -322,33 +322,35 @@
 </target>
 
 <target name="runtest-impl-class" depends="setOSConditions,asenv-unix,asenv-windows,checkTestNGXML" unless="testng.xml.present">
-    <echo message="=============Starting TestNG test at ${test.class.output}  ============"/>    
+	<echo message="=============Starting TestNG test at ${test.class.output}  ============"/>    
+    
     <mkdir dir="${result.output}"/>
     <testng outputdir="${result.output}" verbose="2"
-    suitename="${testsuite.name}"
-    testname="${testng.test.name}"
-            classpathref="run.testng.classpath">
-	<sysproperty key="glassfish.home" value="${glassfish.home}"/>
-	<sysproperty key="BASEDIR" value="${ws.root}"/>
+    	suitename="${testsuite.name}" testname="${testng.test.name}" classpathref="run.testng.classpath">
+	    <sysproperty key="glassfish.home" value="${glassfish.home}"/>
+	    <sysproperty key="BASEDIR" value="${ws.root}"/>
         <classfileset dir="${test.class.output}" includes="**/${testng.testclient}.class"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-	<jvmarg value="-DASADMIN=${ASADMIN}" />
+        <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+		<jvmarg value="-DASADMIN=${ASADMIN}" />
     </testng>
 </target>
 
 <target name="runtest-impl-xml" depends="setOSConditions,asenv-unix,asenv-windows,checkTestNGXML" if="testng.xml.present">
     <echo message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============"/>    
+    
     <mkdir dir="${result.output}"/>
     <testng outputdir="${result.output}"
-    suitename="${testsuite.name}"
-    testname="${testng.test.name}"
-            classpathref="run.testng.classpath">
+        suitename="${testsuite.name}"
+        testname="${testng.test.name}"
+        classpathref="run.testng.classpath">
         <xmlfileset dir="." includes="testng.xml"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-	<jvmarg value="-DASADMIN=${ASADMIN}" />
-	<jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
+	    <jvmarg value="-DASADMIN=${ASADMIN}" />
+	    <jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
+        <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
     </testng>
 </target>
 

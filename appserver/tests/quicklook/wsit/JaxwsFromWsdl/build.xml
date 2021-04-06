@@ -113,15 +113,14 @@
         </javac>
     </target>
 
-
-    <target  name="runtest">
-	<record name="${basedir}/wsit1run.output" action="start"/>
-        <antcall target="runtest-impl">
-          <param name="testng.test.name" value="${testng.test.name}"/>
-          <param name="testng.testclient" value="JaxwsFromWsdl"/>
-        </antcall>
-	<record name="${basedir}/wsit1run.output" action="stop"/>
-    </target>  
+    <target name="runtest">
+        <record name="${basedir}/wsit1run.output" action="start"/>
+            <antcall target="runtest-impl">
+              <param name="testng.test.name" value="${testng.test.name}"/>
+              <param name="testng.testclient" value="JaxwsFromWsdl"/>
+            </antcall>
+        <record name="${basedir}/wsit1run.output" action="stop"/>
+    </target>
 
     <target name="deploy">
         <antcall target="deploy-${deploy.platform}-impl"/>

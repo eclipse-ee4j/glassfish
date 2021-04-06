@@ -39,6 +39,9 @@ run_test_id(){
 		
 		cd ${WORKSPACE}/appserver/tests/quicklook/
 		
+		
+		export MAVEN_OPTS="--add-opens=java.base/java.net=ALL-UNNAMED"
+		
 		mvn -Dglassfish.home=${S1AS_HOME} -Ptest_gd_security,report test | tee ${TEST_RUN_LOG}
 	elif [[ ${1} = "ql_gf_nucleus_all" || ${1} = "nucleus_admin_all" ]]; then
 	    

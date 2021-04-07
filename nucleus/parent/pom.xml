@@ -93,7 +93,7 @@
         <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        <webservices.version>3.0.1-b02</webservices.version>
+        <webservices.version>3.0.1</webservices.version>
         
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.0</jakarta.inject-api.version> 
@@ -125,7 +125,7 @@
         <hk2.plugin.version>3.0.2</hk2.plugin.version>
         <pfl.version>4.1.2</pfl.version>
 
-        <gmbal.version>4.0.2</gmbal.version>   
+        <gmbal.version>4.0.3</gmbal.version>   
         <shoal.version>2.0.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>

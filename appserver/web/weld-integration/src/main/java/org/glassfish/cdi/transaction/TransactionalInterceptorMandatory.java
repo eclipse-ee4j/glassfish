@@ -16,7 +16,6 @@
 
 package org.glassfish.cdi.transaction;
 
-
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
@@ -25,11 +24,10 @@ import jakarta.transaction.TransactionalException;
 import java.util.logging.Logger;
 
 /**
- * Transactional annotation Interceptor class for Mandatory transaction type,
- * ie jakarta.transaction.Transactional.TxType.MANDATORY
- * If called outside a transaction context, TransactionRequiredException will be thrown
- * If called inside a transaction context, managed bean method execution will then
- * continue under that context.
+ * Transactional annotation Interceptor class for Mandatory transaction type, ie
+ * jakarta.transaction.Transactional.TxType.MANDATORY If called outside a transaction context,
+ * TransactionRequiredException will be thrown If called inside a transaction context, managed bean method execution
+ * will then continue under that context.
  *
  * @author Paul Parkinson
  */
@@ -43,14 +41,14 @@ public class TransactionalInterceptorMandatory extends TransactionalInterceptorB
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_MANDATORY);
-        if (isLifeCycleMethod(ctx)) return proceed(ctx);
+        if (isLifeCycleMethod(ctx))
+            return proceed(ctx);
         setTransactionalTransactionOperationsManger(false);
         try {
             if (getTransactionManager().getTransaction() == null)
-                throw new TransactionalException(
-                        "TransactionRequiredException thrown from TxType.MANDATORY transactional interceptor.",
-                        new TransactionRequiredException("Managed bean with Transactional annotation and TxType of " +
-                                "MANDATORY called outside of a transaction context"));
+                throw new TransactionalException("TransactionRequiredException thrown from TxType.MANDATORY transactional interceptor.",
+                        new TransactionRequiredException("Managed bean with Transactional annotation and TxType of "
+                                + "MANDATORY called outside of a transaction context"));
             return proceed(ctx);
         } finally {
             resetTransactionOperationsManager();

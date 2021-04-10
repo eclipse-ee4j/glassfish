@@ -45,10 +45,9 @@ import org.glassfish.hk2.utilities.NamedImpl;
  */
 public class HK2IntegrationUtilities {
     private final static String APP_SL_NAME = "java:app/hk2/ServiceLocator";
-    
+
     /**
-     * This method returns the proper ApplicationServiceLocator
-     * to use for CDI integration
+     * This method returns the proper ApplicationServiceLocator to use for CDI integration
      * 
      * @return The application service loctor (will not return null)
      * @throws AssertionError if no ServiceLocator can be found
@@ -56,58 +55,57 @@ public class HK2IntegrationUtilities {
     public static ServiceLocator getApplicationServiceLocator() {
         try {
             Context ic = new InitialContext();
-            
+
             return (ServiceLocator) ic.lookup(APP_SL_NAME);
-        }
-        catch (NamingException ne) {
+        } catch (NamingException ne) {
             return null;
         }
     }
-    
+
     private static Set<Annotation> getHK2Qualifiers(InjectionPoint injectionPoint) {
         Set<Annotation> setQualifiers = injectionPoint.getQualifiers();
-        
+
         Set<Annotation> retVal = new HashSet<Annotation>();
-        
+
         for (Annotation anno : setQualifiers) {
-            if (anno.annotationType().equals(Default.class)) continue;
-            
+            if (anno.annotationType().equals(Default.class))
+                continue;
+
             if (anno.annotationType().equals(Named.class)) {
                 Named named = (Named) anno;
                 if ("".equals(named.value())) {
                     Annotated annotated = injectionPoint.getAnnotated();
                     if (annotated instanceof AnnotatedField) {
                         AnnotatedField<?> annotatedField = (AnnotatedField<?>) annotated;
-                        
+
                         Field field = annotatedField.getJavaMember();
                         anno = new NamedImpl(field.getName());
                     }
-                    
+
                 }
-                
+
             }
-            
+
             retVal.add(anno);
         }
-        
+
         return retVal;
     }
-    
+
     public static Injectee convertInjectionPointToInjectee(InjectionPoint injectionPoint) {
         InjecteeImpl retVal = new InjecteeImpl(injectionPoint.getType());
-        
+
         retVal.setRequiredQualifiers(getHK2Qualifiers(injectionPoint));
-        retVal.setParent((AnnotatedElement) injectionPoint.getMember());  // Also sets InjecteeClass
-        
+        retVal.setParent((AnnotatedElement) injectionPoint.getMember()); // Also sets InjecteeClass
+
         Annotated annotated = injectionPoint.getAnnotated();
         if (annotated instanceof AnnotatedField) {
             retVal.setPosition(-1);
-        }
-        else {
+        } else {
             AnnotatedParameter<?> annotatedParameter = (AnnotatedParameter<?>) annotated;
             retVal.setPosition(annotatedParameter.getPosition());
         }
-        
+
         return retVal;
     }
 

@@ -27,7 +27,7 @@ public class WeldApplicationContainer implements ApplicationContainer {
     public Object getDescriptor() {
         return null;
     }
-   
+
     public boolean start(ApplicationContext startupContxt) {
 
         return true;
@@ -50,4 +50,3 @@ public class WeldApplicationContainer implements ApplicationContainer {
         return null;
     }
 }
-

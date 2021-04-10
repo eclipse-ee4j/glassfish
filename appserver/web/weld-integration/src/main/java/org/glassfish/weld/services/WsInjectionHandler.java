@@ -43,6 +43,8 @@ interface WsInjectionHandler {
     };
 
     boolean handles(AnnotatedField annotatedField);
-    void validateWebServiceRef( AnnotatedField annotatedField );
-    String getJndiName( AnnotatedField annotatedField );
+
+    void validateWebServiceRef(AnnotatedField annotatedField);
+
+    String getJndiName(AnnotatedField annotatedField);
 }

@@ -18,19 +18,18 @@ package org.glassfish.cdi.transaction;
 
 import jakarta.transaction.*;
 
-
-
 public class TransactionManager implements jakarta.transaction.TransactionManager {
     ThreadLocal transactionThreadLocal = new ThreadLocal();
 
     public void begin() throws NotSupportedException, SystemException {
-        if (getTransaction()!=null) throw new NotSupportedException("attempt to start tx when one already exists");
+        if (getTransaction() != null)
+            throw new NotSupportedException("attempt to start tx when one already exists");
         transactionThreadLocal.set(new Transaction());
     }
 
-    public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
-            SecurityException, IllegalStateException, SystemException {
-        if(((Transaction)getTransaction()).isMarkedRollback) {
+    public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException,
+            IllegalStateException, SystemException {
+        if (((Transaction) getTransaction()).isMarkedRollback) {
             suspend();
             throw new RollbackException("test tx was marked for rollback");
         }
@@ -38,14 +37,15 @@ public class TransactionManager implements jakarta.transaction.TransactionManage
     }
 
     public int getStatus() throws SystemException {
-        return 0;  
+        return 0;
     }
 
     public jakarta.transaction.Transaction getTransaction() throws SystemException {
         return (jakarta.transaction.Transaction) transactionThreadLocal.get();
     }
 
-    public void resume(jakarta.transaction.Transaction transaction) throws InvalidTransactionException, IllegalStateException, SystemException {
+    public void resume(jakarta.transaction.Transaction transaction)
+            throws InvalidTransactionException, IllegalStateException, SystemException {
         transactionThreadLocal.set(transaction);
     }
 
@@ -55,15 +55,16 @@ public class TransactionManager implements jakarta.transaction.TransactionManage
 
     public void setRollbackOnly() throws IllegalStateException, SystemException {
         Transaction transaction = (Transaction) getTransaction();
-        if(transaction!=null) transaction.isMarkedRollback = true;
+        if (transaction != null)
+            transaction.isMarkedRollback = true;
     }
 
     public void setTransactionTimeout(int seconds) throws SystemException {
-        
+
     }
 
     public jakarta.transaction.Transaction suspend() throws SystemException {
-        jakarta.transaction.Transaction transaction = (jakarta.transaction.Transaction)transactionThreadLocal.get();
+        jakarta.transaction.Transaction transaction = (jakarta.transaction.Transaction) transactionThreadLocal.get();
         transactionThreadLocal.set(null);
         return transaction;
     }

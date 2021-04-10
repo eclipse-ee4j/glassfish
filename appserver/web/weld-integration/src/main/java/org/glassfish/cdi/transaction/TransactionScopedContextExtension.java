@@ -28,7 +28,7 @@ import jakarta.enterprise.inject.spi.Extension;
 public class TransactionScopedContextExtension implements Extension {
     public void afterBeanDiscovery(@Observes AfterBeanDiscovery event, BeanManager manager) {
         event.addContext(new TransactionScopedContextImpl());
-        event.addBean(TransactionScopedCDIUtil.createHelperBean(manager,TransactionScopedCDIEventHelperImpl.class));
+        event.addBean(TransactionScopedCDIUtil.createHelperBean(manager, TransactionScopedCDIEventHelperImpl.class));
     }
 
 }

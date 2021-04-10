@@ -89,7 +89,7 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
         BeanManager beanManager = obtainBeanManager();
 
         if (beanManager == null) {
-          return null; // There is no bean manager available, return and let BeanValidatorNamingProxy handle lookup..
+            return null; // There is no bean manager available, return and let BeanValidatorNamingProxy handle lookup..
         }
 
         if (VALIDATOR_FACTORY_CONTEXT.equals(name)) {
@@ -143,27 +143,26 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
         // Use invocation context to find applicable BeanDeploymentArchive.
         ComponentInvocation inv = invocationManager.getCurrentInvocation();
 
-        if( inv != null ) {
+        if (inv != null) {
 
             JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(inv.getComponentId());
 
-            if( componentEnv != null ) {
+            if (componentEnv != null) {
 
                 BundleDescriptor bundle = null;
 
-                if( componentEnv instanceof EjbDescriptor) {
-                    bundle = (BundleDescriptor)
-                            ((EjbDescriptor) componentEnv).getEjbBundleDescriptor().
-                                    getModuleDescriptor().getDescriptor();
+                if (componentEnv instanceof EjbDescriptor) {
+                    bundle = (BundleDescriptor) ((EjbDescriptor) componentEnv).getEjbBundleDescriptor().getModuleDescriptor()
+                            .getDescriptor();
 
-                } else if( componentEnv instanceof WebBundleDescriptor) {
+                } else if (componentEnv instanceof WebBundleDescriptor) {
                     bundle = (BundleDescriptor) componentEnv;
 
                 }
 
-                if( bundle != null ) {
+                if (bundle != null) {
                     BeanDeploymentArchive bda = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
-                    if( bda != null ) {
+                    if (bda != null) {
                         WeldBootstrap bootstrap = weldDeployer.getBootstrapForApp(bundle.getApplication());
 
                         beanManager = bootstrap.getManager(bda);

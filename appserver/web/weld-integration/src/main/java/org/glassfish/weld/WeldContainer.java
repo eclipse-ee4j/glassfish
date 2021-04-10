@@ -31,4 +31,3 @@ public class WeldContainer implements org.glassfish.api.container.Container {
     }
 
 }
-

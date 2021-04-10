@@ -42,13 +42,9 @@ public class TransactionServicesImpl implements TransactionServices {
     public boolean isTransactionActive() {
         try {
             int curStatus = transactionManager.getStatus();
-            if ( curStatus == STATUS_ACTIVE ||
-                  curStatus == STATUS_MARKED_ROLLBACK ||
-                  curStatus == STATUS_PREPARED ||
-                  curStatus == STATUS_UNKNOWN ||
-                  curStatus == STATUS_PREPARING ||
-                  curStatus == STATUS_COMMITTING ||
-                  curStatus == STATUS_ROLLING_BACK ) {
+            if (curStatus == STATUS_ACTIVE || curStatus == STATUS_MARKED_ROLLBACK || curStatus == STATUS_PREPARED
+                    || curStatus == STATUS_UNKNOWN || curStatus == STATUS_PREPARING || curStatus == STATUS_COMMITTING
+                    || curStatus == STATUS_ROLLING_BACK) {
                 return true;
             } else {
                 return false;
@@ -62,21 +58,20 @@ public class TransactionServicesImpl implements TransactionServices {
         try {
             transactionManager.registerSynchronization(observer);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to register synchronization " + observer + 
-            " for current transaction", e);
+            throw new RuntimeException("Unable to register synchronization " + observer + " for current transaction", e);
         }
     }
 
     public UserTransaction getUserTransaction() {
         try {
             InitialContext c = new InitialContext();
-            UserTransaction ut = (UserTransaction)c.lookup("java:comp/UserTransaction");
+            UserTransaction ut = (UserTransaction) c.lookup("java:comp/UserTransaction");
             return ut;
         } catch (NamingException e) {
             return null;
         }
     }
 
-    public void cleanup() {}
+    public void cleanup() {
+    }
 }
-

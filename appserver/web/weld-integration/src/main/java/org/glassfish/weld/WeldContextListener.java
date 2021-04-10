@@ -30,9 +30,9 @@ import org.glassfish.cdi.CDILoggerInfo;
 import org.jboss.weld.module.web.el.WeldELContextListener;
 
 /**
- * ServletContextListener implementation that ensures (for Weld applications)
- * the correct Weld EL Resolver and Weld EL Context Listener is used for JSP(s).
- */  
+ * ServletContextListener implementation that ensures (for Weld applications) the correct Weld EL Resolver and Weld EL
+ * Context Listener is used for JSP(s).
+ */
 public class WeldContextListener implements ServletContextListener {
 
     private Logger logger = Logger.getLogger(WeldContextListener.class.getName());
@@ -46,21 +46,19 @@ public class WeldContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
         if (null != beanManager) {
-             JspApplicationContext jspAppContext = getJspApplicationContext(servletContextEvent);
-             jspAppContext.addELResolver(beanManager.getELResolver());
+            JspApplicationContext jspAppContext = getJspApplicationContext(servletContextEvent);
+            jspAppContext.addELResolver(beanManager.getELResolver());
 
-             try {
-                 Class weldClass = Class.forName("org.jboss.weld.module.web.el.WeldELContextListener");
-                 WeldELContextListener welcl = ( WeldELContextListener ) weldClass.newInstance();
-                 jspAppContext.addELContextListener(welcl);
-             } catch (Exception e) {
-                 logger.log(Level.WARNING,
-                            CDILoggerInfo.CDI_COULD_NOT_CREATE_WELDELCONTEXTlISTENER,
-                            new Object [] {e});
-             }
+            try {
+                Class weldClass = Class.forName("org.jboss.weld.module.web.el.WeldELContextListener");
+                WeldELContextListener welcl = (WeldELContextListener) weldClass.newInstance();
+                jspAppContext.addELContextListener(welcl);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, CDILoggerInfo.CDI_COULD_NOT_CREATE_WELDELCONTEXTlISTENER, new Object[] { e });
+            }
 
-            ( ( JspApplicationContextImpl ) jspAppContext ).setExpressionFactory(
-                beanManager.wrapExpressionFactory(jspAppContext.getExpressionFactory()));
+            ((JspApplicationContextImpl) jspAppContext)
+                    .setExpressionFactory(beanManager.wrapExpressionFactory(jspAppContext.getExpressionFactory()));
         }
     }
 

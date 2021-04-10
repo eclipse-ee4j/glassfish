@@ -27,11 +27,10 @@ import jakarta.xml.ws.WebServiceRef;
  */
 public final class WsInjectionHandlerImpl implements WsInjectionHandler {
 
-
     @Override
     public boolean handles(AnnotatedField annotatedField) {
         try {
-            return annotatedField.isAnnotationPresent( WebServiceRef.class );
+            return annotatedField.isAnnotationPresent(WebServiceRef.class);
         } catch (NoClassDefFoundError error) { // in web profile class WebServiceRef is not available 
             return false;
         }
@@ -49,20 +48,13 @@ public final class WsInjectionHandlerImpl implements WsInjectionHandler {
                 Class serviceClass = webServiceRef.value();
                 if (serviceClass != null) {
                     if (!Service.class.isAssignableFrom(serviceClass)) {
-                        throw new DefinitionException("The type of the injection point "
-                                + annotatedField.getJavaMember().getName()
-                                + " is an interface: "
-                                + annotatedField.getJavaMember().getType().getName()
-                                + ".  The @WebSreviceRef value of "
-                                + serviceClass
-                                + " is not assignable from "
-                                + Service.class.getName());
+                        throw new DefinitionException("The type of the injection point " + annotatedField.getJavaMember().getName()
+                                + " is an interface: " + annotatedField.getJavaMember().getType().getName()
+                                + ".  The @WebSreviceRef value of " + serviceClass + " is not assignable from " + Service.class.getName());
                     }
                 }
             } else {
-                throw new DefinitionException("The type of the injection point "
-                        + annotatedField.getJavaMember().getName()
-                        + " is "
+                throw new DefinitionException("The type of the injection point " + annotatedField.getJavaMember().getName() + " is "
                         + annotatedField.getJavaMember().getType().getName()
                         + ".  This type is invalid for a field annotated with @WebSreviceRef");
             }
@@ -71,7 +63,7 @@ public final class WsInjectionHandlerImpl implements WsInjectionHandler {
 
     @Override
     public String getJndiName(AnnotatedField annotatedField) {
-        WebServiceRef webServiceRef = annotatedField.getAnnotation( WebServiceRef.class );
+        WebServiceRef webServiceRef = annotatedField.getAnnotation(WebServiceRef.class);
         return InjectionServicesImpl.getJndiName(webServiceRef.lookup(), webServiceRef.mappedName(), webServiceRef.name());
     }
 }

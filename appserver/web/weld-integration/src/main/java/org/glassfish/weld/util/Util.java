@@ -27,9 +27,9 @@ public class Util {
             return Util.<T>classForName(className).newInstance();
         } catch (InstantiationException e) {
             throw new IllegalArgumentException("Cannot instantiate instance of " + className + " with no-argument constructor", e);
-       } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new IllegalArgumentException("Cannot instantiate instance of " + className + " with no-argument constructor", e);
-       }
+        }
     }
 
     public static <T> Class<T> classForName(String name) {
@@ -37,12 +37,12 @@ public class Util {
             if (Thread.currentThread().getContextClassLoader() != null) {
                 Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(name);
                 @SuppressWarnings("unchecked")
-                Class<T> clazz = (Class<T>)  c;
+                Class<T> clazz = (Class<T>) c;
                 return clazz;
             } else {
                 Class<?> c = Class.forName(name);
                 @SuppressWarnings("unchecked")
-                Class<T> clazz = (Class<T>)  c;
+                Class<T> clazz = (Class<T>) c;
                 return clazz;
             }
         } catch (ClassNotFoundException e) {
@@ -50,16 +50,16 @@ public class Util {
         } catch (NoClassDefFoundError e) {
             throw new IllegalArgumentException("Cannot load class for " + name, e);
         }
-   }
+    }
 
     public static void initializeWeldSingletonProvider() {
-      boolean earSupport = false;
-      try {
-          Class.forName("org.glassfish.javaee.full.deployment.EarClassLoader");
-          earSupport = true;
-      } catch (ClassNotFoundException ignore) {
-      }
-      SingletonProvider.initialize(earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider());
+        boolean earSupport = false;
+        try {
+            Class.forName("org.glassfish.javaee.full.deployment.EarClassLoader");
+            earSupport = true;
+        } catch (ClassNotFoundException ignore) {
+        }
+        SingletonProvider.initialize(earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider());
     }
 
 }

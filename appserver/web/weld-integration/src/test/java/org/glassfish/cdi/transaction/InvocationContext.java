@@ -21,9 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * User: paulparkinson
- * Date: 12/12/12
- * Time: 1:12 PM
+ * User: paulparkinson Date: 12/12/12 Time: 1:12 PM
  */
 public class InvocationContext implements jakarta.interceptor.InvocationContext {
     Method method;
@@ -68,7 +66,8 @@ public class InvocationContext implements jakarta.interceptor.InvocationContext 
     }
 
     public Object proceed() throws Exception {
-        if (exceptionFromProceed != null) throw exceptionFromProceed;
+        if (exceptionFromProceed != null)
+            throw exceptionFromProceed;
         return null;
     }
 }

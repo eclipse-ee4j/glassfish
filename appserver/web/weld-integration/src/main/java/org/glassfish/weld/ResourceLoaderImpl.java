@@ -26,16 +26,15 @@ import org.jboss.weld.resources.spi.ResourceLoadingException;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This is implementation of ResourceLoader interface. One instance of this class
- * is created for each bean deployment archive. This class ensures that resource
- * is loaded using class loader for that bean deployment archive.
+ * This is implementation of ResourceLoader interface. One instance of this class is created for each bean deployment
+ * archive. This class ensures that resource is loaded using class loader for that bean deployment archive.
  * 
  * This was needed to fix issue : http://java.net/jira/browse/GLASSFISH-17396
  *
  * @author kshitiz
  */
 @Service
-public class ResourceLoaderImpl implements ResourceLoader{
+public class ResourceLoaderImpl implements ResourceLoader {
 
     private ClassLoader classLoader;
 
@@ -89,8 +88,8 @@ public class ResourceLoaderImpl implements ResourceLoader{
     public void cleanup() {
     }
 
-    private ClassLoader getClassLoader(){
-        if(classLoader != null){
+    private ClassLoader getClassLoader() {
+        if (classLoader != null) {
             return classLoader;
         }
         return Thread.currentThread().getContextClassLoader();
@@ -98,7 +97,7 @@ public class ResourceLoaderImpl implements ResourceLoader{
 
     private Collection<URL> getCollection(Enumeration<URL> resources) {
         ArrayList<URL> urls = new ArrayList<URL>();
-        while(resources.hasMoreElements()){
+        while (resources.hasMoreElements()) {
             urls.add(resources.nextElement());
         }
         return urls;

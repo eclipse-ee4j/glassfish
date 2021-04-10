@@ -52,9 +52,7 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
     @Inject
     private WeldDeployer weldDeployer;
 
-    static final String BEAN_MANAGER_CONTEXT
-            = "java:comp/BeanManager";
- 
+    static final String BEAN_MANAGER_CONTEXT = "java:comp/BeanManager";
 
     public Object handle(String name) throws NamingException {
 
@@ -66,44 +64,42 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
                 // Use invocation context to find applicable BeanDeploymentArchive.
                 ComponentInvocation inv = invocationManager.getCurrentInvocation();
 
-                if( inv != null ) {
+                if (inv != null) {
 
                     JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(inv.getComponentId());
 
-                    if( componentEnv != null ) {
+                    if (componentEnv != null) {
 
                         BundleDescriptor bundle = null;
 
-                        if( componentEnv instanceof EjbDescriptor ) {
-                            bundle = (BundleDescriptor)
-                                    ((EjbDescriptor) componentEnv).getEjbBundleDescriptor().
-                                            getModuleDescriptor().getDescriptor();
+                        if (componentEnv instanceof EjbDescriptor) {
+                            bundle = (BundleDescriptor) ((EjbDescriptor) componentEnv).getEjbBundleDescriptor().getModuleDescriptor()
+                                    .getDescriptor();
 
-                        } else if( componentEnv instanceof WebBundleDescriptor ) {
+                        } else if (componentEnv instanceof WebBundleDescriptor) {
                             bundle = (BundleDescriptor) componentEnv;
 
                         }
 
-                        if( bundle != null ) {
+                        if (bundle != null) {
                             BeanDeploymentArchive bda = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
-                            if( bda != null ) {
+                            if (bda != null) {
                                 WeldBootstrap bootstrap = weldDeployer.getBootstrapForApp(bundle.getApplication());
                                 //System.out.println("BeanManagerNamingProxy:: getting BeanManagerImpl for" + bda);
                                 beanManager = bootstrap.getManager(bda);
                             }
                         }
 
-                        if( beanManager == null) {
+                        if (beanManager == null) {
                             throw new IllegalStateException("Cannot resolve bean manager");
                         }
-
 
                     } else {
                         throw new IllegalStateException("No invocation context found");
                     }
                 }
 
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 NamingException ne = new NamingException("Error retrieving java:comp/BeanManager");
                 ne.initCause(t);
                 throw ne;
@@ -112,6 +108,5 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
 
         return beanManager;
     }
-
 
 }

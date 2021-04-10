@@ -18,4 +18,4 @@ package org.glassfish.cdi.transaction;
 
 @jakarta.transaction.Transactional(value = jakarta.transaction.Transactional.TxType.MANDATORY)
 public class BeanMandatory extends BeanBase {
-}      
+}

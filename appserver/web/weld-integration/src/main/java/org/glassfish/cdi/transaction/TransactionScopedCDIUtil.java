@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 
 /**
  * This class contains utility methods used for TransactionScoped related CDI event processing.
+ * 
  * @author <a href="mailto:arjav.desai@oracle.com">Arjav Desai</a>
  */
 public class TransactionScopedCDIUtil {
@@ -47,11 +48,10 @@ public class TransactionScopedCDIUtil {
 
     @LoggerInfo(subsystem = "AS-CDI-JTA", description = "CDI-JTA", publish = true)
     public static final String CDI_JTA_LOGGER_SUBSYSTEM_NAME = "jakarta.enterprise.resource.jta";
-    private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME,
-            SHARED_LOGMESSAGE_RESOURCE);
+    private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
-    public static void log(String message){
-        _logger.log(Level.WARNING,message);
+    public static void log(String message) {
+        _logger.log(Level.WARNING, message);
     }
 
     /* Copied from JSF */
@@ -72,7 +72,7 @@ public class TransactionScopedCDIUtil {
         BeanManager beanManager = null;
         try {
             beanManager = CDI.current().getBeanManager();
-        } catch (Exception e){
+        } catch (Exception e) {
             TransactionScopedCDIUtil.log("Can't get instance of BeanManager to process TransactionScoped CDI Event!");
         }
         if (beanManager != null) {
@@ -80,9 +80,8 @@ public class TransactionScopedCDIUtil {
             Set<Bean<?>> availableBeans = beanManager.getBeans(TransactionScopedCDIEventHelperImpl.class);
             if (null != availableBeans && !availableBeans.isEmpty()) {
                 Bean<?> bean = beanManager.resolve(availableBeans);
-                TransactionScopedCDIEventHelper eventHelper =
-                        (TransactionScopedCDIEventHelper) beanManager.getReference(bean, bean.getBeanClass(),
-                                beanManager.createCreationalContext(null));
+                TransactionScopedCDIEventHelper eventHelper = (TransactionScopedCDIEventHelper) beanManager.getReference(bean,
+                        bean.getBeanClass(), beanManager.createCreationalContext(null));
                 if (eventType.equalsIgnoreCase(INITIALIZED_EVENT))
                     eventHelper.fireInitializedEvent(new TransactionScopedCDIEventPayload());
                 else
@@ -92,6 +91,7 @@ public class TransactionScopedCDIUtil {
             TransactionScopedCDIUtil.log("Can't get instance of BeanManager to process TransactionScoped CDI Event!");
         }
     }
+
     /* Copied from JSF */
     private static class BeanWrapper implements Bean {
         private Class beanClass;

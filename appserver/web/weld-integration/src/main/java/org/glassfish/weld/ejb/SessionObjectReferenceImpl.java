@@ -16,15 +16,13 @@
 
 package org.glassfish.weld.ejb;
 
-
 import org.jboss.weld.ejb.api.SessionObjectReference;
 
 import org.glassfish.ejb.api.EjbContainerServices;
 
 /**
  */
-public class  SessionObjectReferenceImpl implements SessionObjectReference
-{
+public class SessionObjectReferenceImpl implements SessionObjectReference {
     private EjbContainerServices ejbContainerServices;
     private Object ejbRef;
 
@@ -35,9 +33,8 @@ public class  SessionObjectReferenceImpl implements SessionObjectReference
 
     public <S> S getBusinessObject(java.lang.Class<S> sClass) {
 
-
         return ejbContainerServices.getBusinessObject(ejbRef, sClass);
-        
+
     }
 
     public void remove() {

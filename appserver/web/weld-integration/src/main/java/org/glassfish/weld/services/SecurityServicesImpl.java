@@ -30,7 +30,8 @@ public class SecurityServicesImpl implements SecurityServices {
     }
 
     @Override
-    public void cleanup() {}
+    public void cleanup() {
+    }
 
     @Override
     public org.jboss.weld.security.spi.SecurityContext getSecurityContext() {

@@ -16,19 +16,16 @@
 
 package org.glassfish.cdi.transaction;
 
-
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import java.util.logging.Logger;
 
 /**
- * Transactional annotation Interceptor class for Supports transaction type,
- *  ie jakarta.transaction.Transactional.TxType.SUPPORT
- * If called outside a transaction context, managed bean method execution will then
- *  continue outside a transaction context.
- * If called inside a transaction context, the managed bean method execution will then continue
- *  inside this transaction context.
+ * Transactional annotation Interceptor class for Supports transaction type, ie
+ * jakarta.transaction.Transactional.TxType.SUPPORT If called outside a transaction context, managed bean method
+ * execution will then continue outside a transaction context. If called inside a transaction context, the managed bean
+ * method execution will then continue inside this transaction context.
  *
  * @author Paul Parkinson
  */
@@ -42,7 +39,8 @@ public class TransactionalInterceptorSupports extends TransactionalInterceptorBa
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_SUPPORTS);
-        if (isLifeCycleMethod(ctx)) return proceed(ctx);
+        if (isLifeCycleMethod(ctx))
+            return proceed(ctx);
         setTransactionalTransactionOperationsManger(false);
         try {
             return proceed(ctx);

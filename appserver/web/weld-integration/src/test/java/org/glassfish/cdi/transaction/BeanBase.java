@@ -16,15 +16,15 @@
 
 package org.glassfish.cdi.transaction;
 
-
 /**
  *
  */
 public class BeanBase {
-  public String foo() {
-    return "In " + this + ".foo()";
-  }
-  public String foo(String s) {
-    return "In " + this + ".foo() s:"+s;
-  }
+    public String foo() {
+        return "In " + this + ".foo()";
+    }
+
+    public String foo(String s) {
+        return "In " + this + ".foo() s:" + s;
+    }
 }

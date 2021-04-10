@@ -41,7 +41,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 public class HK2CDIBean<T> implements Bean<T> {
     private final ServiceLocator locator;
     private final ActiveDescriptor<T> descriptor;
-    
+
     /* package */
     HK2CDIBean(ServiceLocator serviceLocator, ActiveDescriptor<T> descriptor) {
         this.locator = serviceLocator;
@@ -78,12 +78,12 @@ public class HK2CDIBean<T> implements Bean<T> {
     public Set<Annotation> getQualifiers() {
         if (descriptor.getQualifierAnnotations().isEmpty()) {
             HashSet<Annotation> retVal = new HashSet<Annotation>();
-            
+
             retVal.add(new DefaultImpl());
-            
+
             return retVal;
         }
-        
+
         return descriptor.getQualifierAnnotations();
     }
 
@@ -93,7 +93,7 @@ public class HK2CDIBean<T> implements Bean<T> {
         if (scope == null || scope.equals(PerLookup.class)) {
             scope = Dependent.class;
         }
-        
+
         return scope;
     }
 
@@ -117,11 +117,11 @@ public class HK2CDIBean<T> implements Bean<T> {
         // TODO, some scoped DO support a null return
         return false;
     }
-    
+
     public ActiveDescriptor<T> getHK2Descriptor() {
         return descriptor;
     }
-    
+
     @Override
     public String toString() {
         return "HK2CDIBean(" + descriptor + "," + System.identityHashCode(this) + ")";

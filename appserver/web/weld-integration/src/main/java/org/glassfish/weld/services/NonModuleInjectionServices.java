@@ -28,9 +28,9 @@ import org.jboss.weld.injection.spi.InjectionServices;
 import jakarta.enterprise.inject.spi.*;
 
 /**
- * The InjectionServices for a non-module bda (library or rar).  A non-module bda has no associated bundle so we
- * cannot reuse the InjectionServicesImpl for injecting into a bean that's resides in an application library
- * (not WEB-INF/lib) or rar
+ * The InjectionServices for a non-module bda (library or rar). A non-module bda has no associated bundle so we cannot
+ * reuse the InjectionServicesImpl for injecting into a bean that's resides in an application library (not WEB-INF/lib)
+ * or rar
  *
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
  */
@@ -52,7 +52,7 @@ public class NonModuleInjectionServices implements InjectionServices {
             Object target = injectionContext.getTarget();
             String targetClass = target.getClass().getName();
 
-            if( componentEnv == null ) {
+            if (componentEnv == null) {
                 //throw new IllegalStateException("No valid EE environment for injection of " + targetClass);
                 System.err.println("No valid EE environment for injection of " + targetClass);
                 injectionContext.proceed();
@@ -62,12 +62,13 @@ public class NonModuleInjectionServices implements InjectionServices {
             injectionManager.injectInstance(target, componentEnv, false);
             injectionContext.proceed();
 
-        } catch(InjectionException ie) {
+        } catch (InjectionException ie) {
             throw new IllegalStateException(ie.getMessage(), ie);
         }
     }
 
-    public <T> void registerInjectionTarget(jakarta.enterprise.inject.spi.InjectionTarget<T> injectionTarget, AnnotatedType<T> annotatedType) {
+    public <T> void registerInjectionTarget(jakarta.enterprise.inject.spi.InjectionTarget<T> injectionTarget,
+            AnnotatedType<T> annotatedType) {
     }
 
     public void cleanup() {

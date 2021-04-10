@@ -16,7 +16,6 @@
 
 package org.glassfish.cdi.transaction;
 
-
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
@@ -25,11 +24,10 @@ import jakarta.transaction.TransactionalException;
 import java.util.logging.Logger;
 
 /**
- * Transactional annotation Interceptor class for Never transaction type,
- * ie jakarta.transaction.Transactional.TxType.NEVER
- * If called outside a transaction context, managed bean method execution will then
- * continue outside a transaction context.
- * If called inside a transaction context, InvalidTransactionException will be thrown
+ * Transactional annotation Interceptor class for Never transaction type, ie
+ * jakarta.transaction.Transactional.TxType.NEVER If called outside a transaction context, managed bean method execution
+ * will then continue outside a transaction context. If called inside a transaction context, InvalidTransactionException
+ * will be thrown
  *
  * @author Paul Parkinson
  */
@@ -43,14 +41,14 @@ public class TransactionalInterceptorNever extends TransactionalInterceptorBase 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_NEVER);
-        if (isLifeCycleMethod(ctx)) return proceed(ctx);
+        if (isLifeCycleMethod(ctx))
+            return proceed(ctx);
         setTransactionalTransactionOperationsManger(true);
         try {
             if (getTransactionManager().getTransaction() != null)
-                throw new TransactionalException(
-                        "InvalidTransactionException thrown from TxType.NEVER transactional interceptor.",
-                        new InvalidTransactionException("Managed bean with Transactional annotation and TxType of NEVER " +
-                                "called inside a transaction context"));
+                throw new TransactionalException("InvalidTransactionException thrown from TxType.NEVER transactional interceptor.",
+                        new InvalidTransactionException(
+                                "Managed bean with Transactional annotation and TxType of NEVER " + "called inside a transaction context"));
             return proceed(ctx);
         } finally {
             resetTransactionOperationsManager();

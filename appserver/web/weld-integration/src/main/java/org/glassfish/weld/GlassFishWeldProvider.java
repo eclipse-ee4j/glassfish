@@ -46,20 +46,20 @@ public class GlassFishWeldProvider implements CDIProvider {
             // unfortunately we only have the class name so we need to find the root bda that has a class loader
             // that can successfully load the class.  This should give us the correct BDA which then can be used
             // to get the correct bean manager
-            Map<BeanDeploymentArchive, BeanManagerImpl> beanDeploymentArchives =
-                Container.instance().beanDeploymentArchives();
-            Set<java.util.Map.Entry<BeanDeploymentArchive,BeanManagerImpl>> entries = beanDeploymentArchives.entrySet();
+            Map<BeanDeploymentArchive, BeanManagerImpl> beanDeploymentArchives = Container.instance().beanDeploymentArchives();
+            Set<java.util.Map.Entry<BeanDeploymentArchive, BeanManagerImpl>> entries = beanDeploymentArchives.entrySet();
             for (Map.Entry<BeanDeploymentArchive, BeanManagerImpl> entry : entries) {
-              BeanDeploymentArchive beanDeploymentArchive = entry.getKey();
-              if ( beanDeploymentArchive instanceof RootBeanDeploymentArchive ) {
-                RootBeanDeploymentArchive rootBeanDeploymentArchive = ( RootBeanDeploymentArchive ) beanDeploymentArchive;
-                ClassLoader moduleClassLoaderForBDA = rootBeanDeploymentArchive.getModuleClassLoaderForBDA();
-                try {
-                  Class.forName( callerClassName, false, moduleClassLoaderForBDA );
-                  // successful so this is the bda we want.
-                  return entry.getValue();
-                } catch ( Exception ignore ) {}
-              }
+                BeanDeploymentArchive beanDeploymentArchive = entry.getKey();
+                if (beanDeploymentArchive instanceof RootBeanDeploymentArchive) {
+                    RootBeanDeploymentArchive rootBeanDeploymentArchive = (RootBeanDeploymentArchive) beanDeploymentArchive;
+                    ClassLoader moduleClassLoaderForBDA = rootBeanDeploymentArchive.getModuleClassLoaderForBDA();
+                    try {
+                        Class.forName(callerClassName, false, moduleClassLoaderForBDA);
+                        // successful so this is the bda we want.
+                        return entry.getValue();
+                    } catch (Exception ignore) {
+                    }
+                }
             }
 
             return super.unsatisfiedBeanManager(callerClassName);
@@ -68,15 +68,15 @@ public class GlassFishWeldProvider implements CDIProvider {
 
     @Override
     public CDI<Object> getCDI() {
-      try {
-        return new GlassFishEnhancedWeld();
-      } catch ( Throwable throwable ) {
-        Throwable cause = throwable.getCause();
-        if ( cause instanceof IllegalStateException ) {
-          return null;
+        try {
+            return new GlassFishEnhancedWeld();
+        } catch (Throwable throwable) {
+            Throwable cause = throwable.getCause();
+            if (cause instanceof IllegalStateException) {
+                return null;
+            }
+            throw throwable;
         }
-        throw throwable;
-      }
     }
 
 }

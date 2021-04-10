@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.*;
 
 /**
- * This calls back into the ejb container to perform the around construct interception.  When that's finished the
- * ejb itself is then created.
+ * This calls back into the ejb container to perform the around construct interception. When that's finished the ejb
+ * itself is then created.
  */
 public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T> {
     private BaseContainer container;
@@ -49,17 +49,18 @@ public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T
     }
 
     @Override
-    public T aroundConstruct(final ConstructionHandle<T> handle, AnnotatedConstructor<T> constructor, Object[] parameters, Map<String, Object> data) {
+    public T aroundConstruct(final ConstructionHandle<T> handle, AnnotatedConstructor<T> constructor, Object[] parameters,
+            Map<String, Object> data) {
         this.handle = handle;
         this.parameters = parameters;
         T ejb;
         try {
-            container.intercept( LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT, ejbContext );
+            container.intercept(LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT, ejbContext);
 
             // all the interceptors were invoked, call the constructor now
-            if ( target.get() == null ) {
-                ejb = handle.proceed( parameters, new HashMap<String, Object>() );
-                target.set( ejb );
+            if (target.get() == null) {
+                ejb = handle.proceed(parameters, new HashMap<String, Object>());
+                target.set(ejb);
             }
         } catch (RuntimeException e) {
             throw e;
@@ -70,11 +71,11 @@ public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T
     }
 
     public T createEjb() {
-	T instance =null;
-	if( null != handle ) {
-            instance = handle.proceed(parameters, new HashMap<String, Object>() );
-	}        
-	target.set(instance);
+        T instance = null;
+        if (null != handle) {
+            instance = handle.proceed(parameters, new HashMap<String, Object>());
+        }
+        target.set(instance);
         return instance;
     }
 }

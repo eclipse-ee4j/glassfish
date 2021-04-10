@@ -77,8 +77,7 @@ import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
 import org.jboss.weld.resources.spi.ResourceLoader;
 
 @Service
-public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer>
-    implements PostConstruct, EventListener {
+public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer> implements PostConstruct, EventListener {
 
     private Logger logger = Logger.getLogger(WeldDeployer.class.getName());
 
@@ -119,31 +118,25 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     @Inject
     ArchiveFactory archiveFactory;
 
-    private Map<Application, WeldBootstrap> appToBootstrap =
-            new HashMap<Application, WeldBootstrap>();
+    private Map<Application, WeldBootstrap> appToBootstrap = new HashMap<Application, WeldBootstrap>();
 
-    private Map<BundleDescriptor, BeanDeploymentArchive> bundleToBeanDeploymentArchive =
-            new HashMap<BundleDescriptor, BeanDeploymentArchive>();
+    private Map<BundleDescriptor, BeanDeploymentArchive> bundleToBeanDeploymentArchive = new HashMap<BundleDescriptor, BeanDeploymentArchive>();
 
-    private static final Class<?>[] NON_CONTEXT_CLASSES = {
-          Servlet.class,
-          ServletContextListener.class,
-          Filter.class,
-          HttpSessionListener.class,
-          ServletRequestListener.class,
-          JspTag.class
+    private static final Class<?>[] NON_CONTEXT_CLASSES = { Servlet.class, ServletContextListener.class, Filter.class,
+            HttpSessionListener.class, ServletRequestListener.class, JspTag.class
             // TODO need to add more classes
     };
 
     static {
-      try {
-        Util.initializeWeldSingletonProvider();
-      } catch ( Throwable ignore ) {}
+        try {
+            Util.initializeWeldSingletonProvider();
+        } catch (Throwable ignore) {
+        }
     }
 
     @Override
     public MetaData getMetaData() {
-        return new MetaData(true, null, new Class[] {Application.class});
+        return new MetaData(true, null, new Class[] { Application.class });
     }
 
     public void postConstruct() {
@@ -151,34 +144,28 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     }
 
     /**
-     * Specific stages of the Weld bootstrapping process will execute across different stages
-     * of the deployment process.  Weld deployment will happen when the load phase of the
-     * deployment process is complete.  When all modules have been loaded, a deployment
-     * graph is produced defining the accessibility relationships between
+     * Specific stages of the Weld bootstrapping process will execute across different stages of the deployment process.
+     * Weld deployment will happen when the load phase of the deployment process is complete. When all modules have been
+     * loaded, a deployment graph is produced defining the accessibility relationships between
      * <code>BeanDeploymentArchive</code>s.
      */
     public void event(Event event) {
-        if ( event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED) ) {
-            ApplicationInfo appInfo = (ApplicationInfo)event.hook();
-            WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP,
-                WeldBootstrap.class);
-            if( bootstrap != null ) {
-                DeploymentImpl deploymentImpl = appInfo.getTransientAppMetaData(
-                        WELD_DEPLOYMENT, DeploymentImpl.class);
+        if (event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED)) {
+            ApplicationInfo appInfo = (ApplicationInfo) event.hook();
+            WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
+            if (bootstrap != null) {
+                DeploymentImpl deploymentImpl = appInfo.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class);
 
                 deploymentImpl.buildDeploymentGraph();
 
                 List<BeanDeploymentArchive> archives = deploymentImpl.getBeanDeploymentArchives();
                 for (BeanDeploymentArchive archive : archives) {
-                    ResourceLoaderImpl loader = new ResourceLoaderImpl(
-                      ((BeanDeploymentArchiveImpl) archive).getModuleClassLoaderForBDA());
+                    ResourceLoaderImpl loader = new ResourceLoaderImpl(((BeanDeploymentArchiveImpl) archive).getModuleClassLoaderForBDA());
                     archive.getServices().add(ResourceLoader.class, loader);
                 }
 
-                addCdiServicesToNonModuleBdas(deploymentImpl.getLibJarRootBdas(),
-                                              services.getService(InjectionManager.class));
-                addCdiServicesToNonModuleBdas(deploymentImpl.getRarRootBdas(),
-                                              services.getService(InjectionManager.class));
+                addCdiServicesToNonModuleBdas(deploymentImpl.getLibJarRootBdas(), services.getService(InjectionManager.class));
+                addCdiServicesToNonModuleBdas(deploymentImpl.getRarRootBdas(), services.getService(InjectionManager.class));
 
                 //get Current TCL
                 ClassLoader oldTCL = Thread.currentThread().getContextClassLoader();
@@ -199,7 +186,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     fireProcessInjectionTargetEvents(bootstrap, deploymentImpl);
                     bootstrap.deployBeans();
 
-
                     bootstrap.validateBeans();
                     bootstrap.endInitialization();
                 } catch (Throwable t) {
@@ -208,10 +194,10 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     } finally {
                         // ignore.
                     }
-                    String msgPrefix = getDeploymentErrorMsgPrefix( t );
+                    String msgPrefix = getDeploymentErrorMsgPrefix(t);
                     DeploymentException de = new DeploymentException(msgPrefix + t.getMessage());
                     de.initCause(t);
-                    throw(de);
+                    throw (de);
                 } finally {
                     invocationManager.popAppEnvironment();
 
@@ -221,20 +207,20 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     //for Bean classloading to succeed. The TCL is reset
                     //to its old value here.
                     Thread.currentThread().setContextClassLoader(oldTCL);
-                    deploymentComplete( deploymentImpl );
+                    deploymentComplete(deploymentImpl);
                 }
             }
-        } else if ( event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_STOPPED) ||
-                    event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED) ||
-                    event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_DISABLED)) {
-                ApplicationInfo appInfo = (ApplicationInfo)event.hook();
+        } else if (event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_STOPPED)
+                || event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED)
+                || event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_DISABLED)) {
+            ApplicationInfo appInfo = (ApplicationInfo) event.hook();
 
             Application app = appInfo.getMetaData(Application.class);
 
-            if( app != null ) {
+            if (app != null) {
 
-                for(BundleDescriptor next : app.getBundleDescriptors()) {
-                    if( next instanceof EjbBundleDescriptor || next instanceof WebBundleDescriptor ) {
+                for (BundleDescriptor next : app.getBundleDescriptors()) {
+                    if (next instanceof EjbBundleDescriptor || next instanceof WebBundleDescriptor) {
                         bundleToBeanDeploymentArchive.remove(next);
                     }
                 }
@@ -261,12 +247,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     });
                     try {
                         doBootstrapShutdown(appInfo);
-                    } catch(Exception e) {
-                        logger.log(Level.WARNING,
-                                   CDILoggerInfo.WELD_BOOTSTRAP_SHUTDOWN_EXCEPTION,
-                                   new Object [] {e});
-                    }
-                    finally {
+                    } catch (Exception e) {
+                        logger.log(Level.WARNING, CDILoggerInfo.WELD_BOOTSTRAP_SHUTDOWN_EXCEPTION, new Object[] { e });
+                    } finally {
                         invocationManager.popAppEnvironment();
                     }
                     appInfo.addTransientAppMetaData(WELD_SHUTDOWN, "true");
@@ -274,7 +257,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             } finally {
                 Thread.currentThread().setContextClassLoader(currentContextClassLoader);
             }
-            DeploymentImpl deploymentImpl = appInfo.getTransientAppMetaData( WELD_DEPLOYMENT, DeploymentImpl.class);
+            DeploymentImpl deploymentImpl = appInfo.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class);
             if (deploymentImpl != null) {
                 deploymentImpl.cleanup();
             }
@@ -282,32 +265,31 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     }
 
     private void deploymentComplete(DeploymentImpl deploymentImpl) {
-        for ( BeanDeploymentArchive oneBda : deploymentImpl.getBeanDeploymentArchives()) {
-            (( BeanDeploymentArchiveImpl) oneBda ).setDeploymentComplete( true );
+        for (BeanDeploymentArchive oneBda : deploymentImpl.getBeanDeploymentArchives()) {
+            ((BeanDeploymentArchiveImpl) oneBda).setDeploymentComplete(true);
         }
     }
 
-    private void doBootstrapShutdown(ApplicationInfo appInfo){
-        WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP,
-                WeldBootstrap.class);
-       String bootstrapShutdown = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP_SHUTDOWN,
-               String.class);
-       if (bootstrapShutdown == null || Boolean.valueOf(bootstrapShutdown).equals(Boolean.FALSE)) {
+    private void doBootstrapShutdown(ApplicationInfo appInfo) {
+        WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
+        String bootstrapShutdown = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP_SHUTDOWN, String.class);
+        if (bootstrapShutdown == null || Boolean.valueOf(bootstrapShutdown).equals(Boolean.FALSE)) {
             bootstrap.shutdown();
             appInfo.addTransientAppMetaData(WELD_BOOTSTRAP_SHUTDOWN, "true");
-       }
+        }
     }
-    private String getDeploymentErrorMsgPrefix( Throwable t ) {
-        if ( t instanceof jakarta.enterprise.inject.spi.DefinitionException ) {
+
+    private String getDeploymentErrorMsgPrefix(Throwable t) {
+        if (t instanceof jakarta.enterprise.inject.spi.DefinitionException) {
             return "CDI definition failure:";
-        } else if ( t instanceof jakarta.enterprise.inject.spi.DeploymentException ) {
+        } else if (t instanceof jakarta.enterprise.inject.spi.DeploymentException) {
             return "CDI deployment failure:";
         } else {
             Throwable cause = t.getCause();
-            if ( cause == t || cause == null ) {
+            if (cause == t || cause == null) {
                 return "CDI deployment failure:";
             } else {
-                return getDeploymentErrorMsgPrefix( cause );
+                return getDeploymentErrorMsgPrefix(cause);
             }
         }
     }
@@ -328,21 +310,20 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         //API and implementations. So, the weld-integration layer cannot
         //have a direct dependency on the JMS API
         try {
-            messageListenerClass = Thread.currentThread().getContextClassLoader().
-                                            loadClass("jakarta.jms.MessageListener");
+            messageListenerClass = Thread.currentThread().getContextClassLoader().loadClass("jakarta.jms.MessageListener");
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, CDILoggerInfo.JMS_MESSAGElISTENER_AVAILABLE);
             }
             isFullProfile = true;
-        } catch (ClassNotFoundException cnfe){
+        } catch (ClassNotFoundException cnfe) {
             //ignore cnfe
             isFullProfile = false;
         }
 
-        for(BeanDeploymentArchive bda : bdaList) {
-            Collection<Class<?>> bdaClasses = ((BeanDeploymentArchiveImpl)bda).getBeanClassObjects();
-            for(Class<?> bdaClazz: bdaClasses) {
-                for(Class<?> nonClazz : NON_CONTEXT_CLASSES) {
+        for (BeanDeploymentArchive bda : bdaList) {
+            Collection<Class<?>> bdaClasses = ((BeanDeploymentArchiveImpl) bda).getBeanClassObjects();
+            for (Class<?> bdaClazz : bdaClasses) {
+                for (Class<?> nonClazz : NON_CONTEXT_CLASSES) {
                     if (nonClazz.isAssignableFrom(bdaClazz)) {
                         firePITEvent(bootstrap, bda, bdaClazz);
                     }
@@ -355,9 +336,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 if (isFullProfile) {
                     if (messageListenerClass.isAssignableFrom(bdaClazz)) {
                         if (logger.isLoggable(Level.FINE)) {
-                            logger.log(Level.FINE,
-                                       CDILoggerInfo.MDB_PIT_EVENT,
-                                       new Object[]{ bdaClazz });
+                            logger.log(Level.FINE, CDILoggerInfo.MDB_PIT_EVENT, new Object[] { bdaClazz });
                         }
                         firePITEvent(bootstrap, bda, bdaClazz);
                     }
@@ -366,16 +345,15 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         }
     }
 
-    private void firePITEvent(WeldBootstrap bootstrap,
-            BeanDeploymentArchive bda, Class<?> bdaClazz) {
+    private void firePITEvent(WeldBootstrap bootstrap, BeanDeploymentArchive bda, Class<?> bdaClazz) {
         //Fix for issue GLASSFISH-17464
         //The PIT event should not be fired for interfaces
-        if(bdaClazz.isInterface()){
+        if (bdaClazz.isInterface()) {
             return;
         }
         AnnotatedType<?> at = bootstrap.getManager(bda).createAnnotatedType(bdaClazz);
         InjectionTarget<?> it = bootstrap.getManager(bda).fireProcessInjectionTarget(at);
-        ((BeanDeploymentArchiveImpl)bda).putInjectionTarget(at, it);
+        ((BeanDeploymentArchiveImpl) bda).putInjectionTarget(at, it);
     }
 
     public BeanDeploymentArchive getBeanDeploymentArchiveForBundle(BundleDescriptor bundle) {
@@ -403,14 +381,12 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     }
 
     /**
-     * Processing in this method is performed for each module that is in the process of being
-     * loaded by the container.  This method will collect information from each archive (module)
-     * and produce  <code>BeanDeploymentArchive</code> information for each module.
-     * The <code>BeanDeploymentArchive</code>s are stored in the <code>Deployment</code>
-     * (that will eventually be handed off to <code>Weld</code>.  Once this method is called
-     * for all modules (and <code>BeanDeploymentArchive</code> information has been collected
-     * for all <code>Weld</code> modules), a relationship structure is produced defining the
-     * accessiblity rules for the <code>BeanDeploymentArchive</code>s.
+     * Processing in this method is performed for each module that is in the process of being loaded by the container. This
+     * method will collect information from each archive (module) and produce <code>BeanDeploymentArchive</code> information
+     * for each module. The <code>BeanDeploymentArchive</code>s are stored in the <code>Deployment</code> (that will
+     * eventually be handed off to <code>Weld</code>. Once this method is called for all modules (and
+     * <code>BeanDeploymentArchive</code> information has been collected for all <code>Weld</code> modules), a relationship
+     * structure is produced defining the accessiblity rules for the <code>BeanDeploymentArchive</code>s.
      */
     @Override
     public WeldApplicationContainer load(WeldContainer container, DeploymentContext context) {
@@ -422,9 +398,8 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
         // See if a WeldBootsrap has already been created - only want one per app.
 
-        WeldBootstrap bootstrap = context.getTransientAppMetaData(WELD_BOOTSTRAP,
-                WeldBootstrap.class);
-        if ( bootstrap == null) {
+        WeldBootstrap bootstrap = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
+        if (bootstrap == null) {
             bootstrap = new WeldBootstrap();
             Application app = context.getModuleMetaData(Application.class);
             appToBootstrap.put(app, bootstrap);
@@ -440,7 +415,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         EjbServices ejbServices = null;
 
         Set<EjbDescriptor> ejbs = new HashSet<EjbDescriptor>();
-        if( ejbBundle != null ) {
+        if (ejbBundle != null) {
             ejbs.addAll(ejbBundle.getEjbs());
             ejbServices = new EjbServicesImpl(services);
         }
@@ -460,24 +435,22 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             ProxyServices proxyServices = new ProxyServicesImpl(services);
             deploymentImpl.getServices().add(ProxyServices.class, proxyServices);
 
-        
             addWeldListenerToAllWars(context);
         } else {
             deploymentImpl.scanArchive(archive, ejbs, context);
         }
         deploymentImpl.addDeployedEjbs(ejbs);
 
-        if( ejbBundle != null && (!deploymentImpl.getServices().contains(EjbServices.class))) {
+        if (ejbBundle != null && (!deploymentImpl.getServices().contains(EjbServices.class))) {
             // EJB Services is registered as a top-level service
             deploymentImpl.getServices().add(EjbServices.class, ejbServices);
         }
-
 
         BeanDeploymentArchive bda = deploymentImpl.getBeanDeploymentArchiveForArchive(archive.getName());
         if (bda != null && !bda.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
 
             WebBundleDescriptor wDesc = context.getModuleMetaData(WebBundleDescriptor.class);
-            if( wDesc != null) {
+            if (wDesc != null) {
                 wDesc.setExtensionProperty(WELD_EXTENSION, "true");
 
                 // Add the Weld Listener.  We have to do it here too in case addWeldListenerToAllWars wasn't
@@ -495,21 +468,21 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 // However, it will be applied only if web.xml has mapping for it.
                 // Doing this here to make sure that its done only for CDI enabled web application
                 for (ServletFilterMapping sfMapping : wDesc.getServletFilterMappings()) {
-                      String displayName = ((ServletFilterMappingDescriptor)sfMapping).getDisplayName();
-                      if (WELD_CONVERSATION_FILTER_NAME.equals(displayName)) {
-                            ServletFilterDescriptor ref = new ServletFilterDescriptor();
-                            ref.setClassName(WELD_CONVERSATION_FILTER_CLASS);
-                            ref.setName(WELD_CONVERSATION_FILTER_NAME);
-                            wDesc.addServletFilter(ref);
-                            break;
-                      }
+                    String displayName = ((ServletFilterMappingDescriptor) sfMapping).getDisplayName();
+                    if (WELD_CONVERSATION_FILTER_NAME.equals(displayName)) {
+                        ServletFilterDescriptor ref = new ServletFilterDescriptor();
+                        ref.setClassName(WELD_CONVERSATION_FILTER_CLASS);
+                        ref.setName(WELD_CONVERSATION_FILTER_NAME);
+                        wDesc.addServletFilter(ref);
+                        break;
+                    }
                 }
             }
 
             BundleDescriptor bundle = (wDesc != null) ? wDesc : ejbBundle;
-            if( bundle != null) {
+            if (bundle != null) {
 
-//                if (bda.getBeanDeploymentArchives().size() > 0 && !bda.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
+                //                if (bda.getBeanDeploymentArchives().size() > 0 && !bda.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
                 if (!bda.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
                     // Register EE injection manager at the bean deployment archive level.
                     // We use the generic InjectionService service to handle all EE-style
@@ -519,28 +492,24 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     InjectionManager injectionMgr = services.getService(InjectionManager.class);
                     InjectionServices injectionServices = new InjectionServicesImpl(injectionMgr, bundle, deploymentImpl);
 
-
-                     if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE,
-                                   CDILoggerInfo.ADDING_INJECTION_SERVICES,
-                                   new Object [] {injectionServices, bda.getId()});
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.log(Level.FINE, CDILoggerInfo.ADDING_INJECTION_SERVICES, new Object[] { injectionServices, bda.getId() });
                     }
                     bda.getServices().add(InjectionServices.class, injectionServices);
-                    EEModuleDescriptor eeModuleDescriptor = getEEModuleDescriptor( bda );
-                    if ( eeModuleDescriptor != null ) {
+                    EEModuleDescriptor eeModuleDescriptor = getEEModuleDescriptor(bda);
+                    if (eeModuleDescriptor != null) {
                         bda.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
                     }
 
                     //Relevant in WAR BDA - WEB-INF/lib BDA scenarios
-                    for(BeanDeploymentArchive subBda: bda.getBeanDeploymentArchives()){
+                    for (BeanDeploymentArchive subBda : bda.getBeanDeploymentArchives()) {
                         if (logger.isLoggable(Level.FINE)) {
-                            logger.log(Level.FINE,
-                                       CDILoggerInfo.ADDING_INJECTION_SERVICES,
-                                       new Object [] {injectionServices, subBda.getId()});
+                            logger.log(Level.FINE, CDILoggerInfo.ADDING_INJECTION_SERVICES,
+                                    new Object[] { injectionServices, subBda.getId() });
                         }
                         subBda.getServices().add(InjectionServices.class, injectionServices);
-                        eeModuleDescriptor = getEEModuleDescriptor( bda );
-                        if ( eeModuleDescriptor != null ) {
+                        eeModuleDescriptor = getEEModuleDescriptor(bda);
+                        if (eeModuleDescriptor != null) {
                             bda.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
                         }
                     }
@@ -561,16 +530,16 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         return wbApp;
     }
 
-    private EEModuleDescriptor getEEModuleDescriptor( BeanDeploymentArchive beanDeploymentArchive ) {
+    private EEModuleDescriptor getEEModuleDescriptor(BeanDeploymentArchive beanDeploymentArchive) {
         EEModuleDescriptor eeModuleDescriptor = null;
-        if ( beanDeploymentArchive instanceof BeanDeploymentArchiveImpl ) {
-            WeldUtils.BDAType bdaType = ( ( BeanDeploymentArchiveImpl ) beanDeploymentArchive ).getBDAType();
-            if ( bdaType.equals ( WeldUtils.BDAType.JAR ) ) {
-                eeModuleDescriptor = new EEModuleDescriptorImpl( beanDeploymentArchive.getId(), EEModuleDescriptor.ModuleType.EJB_JAR );
-            } else if ( bdaType.equals ( WeldUtils.BDAType.WAR ) ) {
-                eeModuleDescriptor = new EEModuleDescriptorImpl( beanDeploymentArchive.getId(), EEModuleDescriptor.ModuleType.WEB );
-            } else if ( bdaType.equals ( WeldUtils.BDAType.RAR ) ) {
-                eeModuleDescriptor = new EEModuleDescriptorImpl( beanDeploymentArchive.getId(), EEModuleDescriptor.ModuleType.CONNECTOR );
+        if (beanDeploymentArchive instanceof BeanDeploymentArchiveImpl) {
+            WeldUtils.BDAType bdaType = ((BeanDeploymentArchiveImpl) beanDeploymentArchive).getBDAType();
+            if (bdaType.equals(WeldUtils.BDAType.JAR)) {
+                eeModuleDescriptor = new EEModuleDescriptorImpl(beanDeploymentArchive.getId(), EEModuleDescriptor.ModuleType.EJB_JAR);
+            } else if (bdaType.equals(WeldUtils.BDAType.WAR)) {
+                eeModuleDescriptor = new EEModuleDescriptorImpl(beanDeploymentArchive.getId(), EEModuleDescriptor.ModuleType.WEB);
+            } else if (bdaType.equals(WeldUtils.BDAType.RAR)) {
+                eeModuleDescriptor = new EEModuleDescriptorImpl(beanDeploymentArchive.getId(), EEModuleDescriptor.ModuleType.CONNECTOR);
             }
         }
 
@@ -580,10 +549,10 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     private void addWeldListenerToAllWars(DeploymentContext context) {
         // if there's at least 1 ejb jar then add the listener to all wars
         ApplicationHolder applicationHolder = context.getModuleMetaData(ApplicationHolder.class);
-        if ( applicationHolder != null ) {
-            if ( applicationHolder.app.getBundleDescriptors(EjbBundleDescriptor.class).size() > 0 ) {
+        if (applicationHolder != null) {
+            if (applicationHolder.app.getBundleDescriptors(EjbBundleDescriptor.class).size() > 0) {
                 Set<WebBundleDescriptor> webBundleDescriptors = applicationHolder.app.getBundleDescriptors(WebBundleDescriptor.class);
-                for ( WebBundleDescriptor oneWebBundleDescriptor : webBundleDescriptors ) {
+                for (WebBundleDescriptor oneWebBundleDescriptor : webBundleDescriptors) {
                     // Add the Weld Listener if it does not already exist..
                     // we have to do this regardless because the war may not be cdi-enabled but an ejb is.
                     oneWebBundleDescriptor.addAppListenerDescriptorToFirst(new AppListenerDescriptorImpl(WELD_LISTENER));
@@ -597,10 +566,10 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
         EjbBundleDescriptor ejbBundle = context.getModuleMetaData(EjbBundleDescriptor.class);
 
-        if( ejbBundle == null ) {
+        if (ejbBundle == null) {
 
             WebBundleDescriptor wDesc = context.getModuleMetaData(WebBundleDescriptor.class);
-            if( wDesc != null ) {
+            if (wDesc != null) {
                 Collection<EjbBundleDescriptor> ejbBundles = wDesc.getExtensionsDescriptors(EjbBundleDescriptor.class);
                 if (ejbBundles.iterator().hasNext()) {
                     ejbBundle = ejbBundles.iterator().next();
@@ -614,16 +583,16 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
      * Add the cdi services to a non-module bda (library or rar)
      */
     private void addCdiServicesToNonModuleBdas(Iterator<RootBeanDeploymentArchive> rootBdas, InjectionManager injectionMgr) {
-        if ( injectionMgr != null && rootBdas != null ) {
-            while( rootBdas.hasNext() ) {
+        if (injectionMgr != null && rootBdas != null) {
+            while (rootBdas.hasNext()) {
                 RootBeanDeploymentArchive oneRootBda = rootBdas.next();
-                addCdiServicesToBda( injectionMgr, oneRootBda );
+                addCdiServicesToBda(injectionMgr, oneRootBda);
                 addCdiServicesToBda(injectionMgr, oneRootBda.getModuleBda());
             }
         }
     }
 
-    private void addCdiServicesToBda( InjectionManager injectionMgr, BeanDeploymentArchive bda ) {
+    private void addCdiServicesToBda(InjectionManager injectionMgr, BeanDeploymentArchive bda) {
         InjectionServices injectionServices = new NonModuleInjectionServices(injectionMgr);
         bda.getServices().add(InjectionServices.class, injectionServices);
     }

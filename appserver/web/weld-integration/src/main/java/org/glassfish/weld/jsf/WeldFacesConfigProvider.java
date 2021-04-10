@@ -37,13 +37,12 @@ import org.glassfish.weld.WeldDeployer;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**
- * This provider returns the Web Beans faces-config.xml to the JSF runtime.
- * It will only return the configuraion file for Web Beans deployments.
- */  
+ * This provider returns the Web Beans faces-config.xml to the JSF runtime. It will only return the configuraion file
+ * for Web Beans deployments.
+ */
 public class WeldFacesConfigProvider implements FacesConfigResourceProvider {
 
-    private static final String HABITAT_ATTRIBUTE =
-            "org.glassfish.servlet.habitat";
+    private static final String HABITAT_ATTRIBUTE = "org.glassfish.servlet.habitat";
     private InvocationManager invokeMgr;
 
     private Logger logger = Logger.getLogger(WeldFacesConfigProvider.class.getName());
@@ -52,11 +51,10 @@ public class WeldFacesConfigProvider implements FacesConfigResourceProvider {
 
     public Collection<URI> getResources(ServletContext context) {
 
-        ServiceLocator defaultServices = (ServiceLocator)context.getAttribute(
-                HABITAT_ATTRIBUTE);
+        ServiceLocator defaultServices = (ServiceLocator) context.getAttribute(HABITAT_ATTRIBUTE);
         invokeMgr = defaultServices.getService(InvocationManager.class);
         ComponentInvocation inv = invokeMgr.getCurrentInvocation();
-        WebModule webModule = (WebModule)inv.getContainer();
+        WebModule webModule = (WebModule) inv.getContainer();
         WebBundleDescriptor wdesc = webModule.getWebBundleDescriptor();
 
         List<URI> list = new ArrayList<URI>(1);
@@ -75,9 +73,8 @@ public class WeldFacesConfigProvider implements FacesConfigResourceProvider {
                 list.add(resource.toURI());
             } catch (URISyntaxException ex) {
                 if (logger.isLoggable(Level.SEVERE)) {
-                    logger.log(Level.SEVERE,
-                               CDILoggerInfo.SEVERE_ERROR_CREATING_URI_FOR_FACES_CONFIG_XML,
-                               new Object [] {resource.toExternalForm(), ex});
+                    logger.log(Level.SEVERE, CDILoggerInfo.SEVERE_ERROR_CREATING_URI_FOR_FACES_CONFIG_XML,
+                            new Object[] { resource.toExternalForm(), ex });
                 }
             }
         }

@@ -25,28 +25,29 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import org.glassfish.hk2.api.ActiveDescriptor;
 
 /**
- * This is an implementation of a CDI context that is put into CDI which will
- * handle all of the hk2 scope/context pairs
+ * This is an implementation of a CDI context that is put into CDI which will handle all of the hk2 scope/context pairs
  * 
  * @author jwells
  *
  */
 public class HK2ContextBridge implements Context {
     private final org.glassfish.hk2.api.Context<?> hk2Context;
-    
+
     /* package */ HK2ContextBridge(org.glassfish.hk2.api.Context<?> hk2Context) {
         this.hk2Context = hk2Context;
     }
 
     @Override
     public <T> T get(Contextual<T> arg0) {
-        if (!(arg0 instanceof HK2CDIBean)) return null;
+        if (!(arg0 instanceof HK2CDIBean))
+            return null;
         HK2CDIBean<T> hk2CdiBean = (HK2CDIBean<T>) arg0;
-        
+
         ActiveDescriptor<T> descriptor = hk2CdiBean.getHK2Descriptor();
-        
-        if (!hk2Context.containsKey(descriptor)) return null;
-        
+
+        if (!hk2Context.containsKey(descriptor))
+            return null;
+
         return hk2CdiBean.create(null);
     }
 

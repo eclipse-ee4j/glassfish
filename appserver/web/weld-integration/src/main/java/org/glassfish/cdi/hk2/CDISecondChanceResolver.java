@@ -41,22 +41,22 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 @Singleton
 public class CDISecondChanceResolver implements JustInTimeInjectionResolver {
     private final ServiceLocator locator;
-    
+
     @Inject
     private CDISecondChanceResolver(ServiceLocator locator) {
         this.locator = locator;
     }
-    
+
     /**
      * Gets the currently scoped BeanManager
+     * 
      * @return The currently scoped BeanManager, or null if a bean manager cannot be found
      */
     private BeanManager getCurrentBeanManager() {
         try {
             Context jndiContext = new InitialContext();
             return (BeanManager) jndiContext.lookup("java:comp/BeanManager");
-        }
-        catch (NamingException ne) {
+        } catch (NamingException ne) {
             return null;
         }
     }
@@ -68,28 +68,29 @@ public class CDISecondChanceResolver implements JustInTimeInjectionResolver {
     @Override
     public boolean justInTimeResolution(Injectee failedInjectionPoint) {
         Type requiredType = failedInjectionPoint.getRequiredType();
-        
+
         Set<Annotation> setQualifiers = failedInjectionPoint.getRequiredQualifiers();
-        
+
         Annotation qualifiers[] = setQualifiers.toArray(new Annotation[setQualifiers.size()]);
-        
+
         BeanManager manager = getCurrentBeanManager();
-        if (manager == null) return false;
-        
+        if (manager == null)
+            return false;
+
         Set<Bean<?>> beans = manager.getBeans(requiredType, qualifiers);
         if (beans == null || beans.isEmpty()) {
             return false;
         }
-        
+
         DynamicConfiguration config = ServiceLocatorUtilities.createDynamicConfiguration(locator);
         for (Bean<?> bean : beans) {
             // Add a bean to the service locator
             CDIHK2Descriptor<Object> descriptor = new CDIHK2Descriptor<Object>(manager, (Bean<Object>) bean, requiredType);
             config.addActiveDescriptor(descriptor);
         }
-        
+
         config.commit();
-        
+
         return true;
     }
 

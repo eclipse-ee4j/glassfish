@@ -23,5 +23,6 @@ package org.glassfish.cdi.transaction;
 public interface TransactionScopedCDIEventHelper {
 
     void fireInitializedEvent(TransactionScopedCDIEventPayload payload);
+
     void fireDestroyedEvent(TransactionScopedCDIEventPayload payload);
 }

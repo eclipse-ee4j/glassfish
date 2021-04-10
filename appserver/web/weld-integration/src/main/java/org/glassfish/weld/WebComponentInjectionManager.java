@@ -32,10 +32,8 @@ import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This is a decorator which calls Weld implemetation to
- * do necessary injection of a web component. It is called by
- * {@link com.sun.web.server.J2EEInstanceListener}
- * before a web component is put into service.
+ * This is a decorator which calls Weld implemetation to do necessary injection of a web component. It is called by
+ * {@link com.sun.web.server.J2EEInstanceListener} before a web component is put into service.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  * @author Roger.Kitain@Sun.COM
@@ -46,11 +44,10 @@ public class WebComponentInjectionManager<T> implements WebComponentDecorator<T>
     public void decorate(T webComponent, WebModule wm) {
         if (wm.getWebBundleDescriptor().hasExtensionProperty(WeldDeployer.WELD_EXTENSION)) {
             DeploymentContext deploymentContext = wm.getWebModuleConfig().getDeploymentContext();
-            WeldBootstrap weldBootstrap = deploymentContext.getTransientAppMetaData(
-                WeldDeployer.WELD_BOOTSTRAP, org.jboss.weld.bootstrap.WeldBootstrap.class);
+            WeldBootstrap weldBootstrap = deploymentContext.getTransientAppMetaData(WeldDeployer.WELD_BOOTSTRAP,
+                    org.jboss.weld.bootstrap.WeldBootstrap.class);
 
-            DeploymentImpl deploymentImpl = deploymentContext.getTransientAppMetaData(
-                WeldDeployer.WELD_DEPLOYMENT, DeploymentImpl.class); 
+            DeploymentImpl deploymentImpl = deploymentContext.getTransientAppMetaData(WeldDeployer.WELD_DEPLOYMENT, DeploymentImpl.class);
             Collection<BeanDeploymentArchive> deployments = deploymentImpl.getBeanDeploymentArchives();
             BeanDeploymentArchive beanDeploymentArchive = deployments.iterator().next();
             BeanManager beanManager = weldBootstrap.getManager(beanDeploymentArchive);

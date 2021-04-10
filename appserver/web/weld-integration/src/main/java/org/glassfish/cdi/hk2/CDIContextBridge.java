@@ -25,10 +25,9 @@ import org.glassfish.hk2.api.Context;
 import org.glassfish.hk2.api.ServiceHandle;
 
 /**
- * This is an HK2 context for use with descriptors that are backed by
- * CDI services (which are not Dependent or Singleton).  This scope
- * is most like PerLookup, as it always asks for a new instance.  Whether
- * or not CDI truly gives a new instance or not is up to CDI
+ * This is an HK2 context for use with descriptors that are backed by CDI services (which are not Dependent or
+ * Singleton). This scope is most like PerLookup, as it always asks for a new instance. Whether or not CDI truly gives a
+ * new instance or not is up to CDI
  * 
  * @author jwells
  *
@@ -48,8 +47,7 @@ public class CDIContextBridge implements Context<CDIScope> {
      * @see org.glassfish.hk2.api.Context#findOrCreate(org.glassfish.hk2.api.ActiveDescriptor, org.glassfish.hk2.api.ServiceHandle)
      */
     @Override
-    public <U> U findOrCreate(ActiveDescriptor<U> activeDescriptor,
-            ServiceHandle<?> root) {
+    public <U> U findOrCreate(ActiveDescriptor<U> activeDescriptor, ServiceHandle<?> root) {
         return activeDescriptor.create(root);
     }
 

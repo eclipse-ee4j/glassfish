@@ -16,6 +16,7 @@
 
 package org.glassfish.weld.jsf;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,17 +25,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.servlet.ServletContext;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.cdi.CDILoggerInfo;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.weld.WeldDeployer;
 
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.web.WebModule;
 import com.sun.faces.spi.FacesConfigResourceProvider;
-import java.net.URI;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.cdi.CDILoggerInfo;
-import org.glassfish.weld.WeldDeployer;
-import org.glassfish.hk2.api.ServiceLocator;
+
+import jakarta.servlet.ServletContext;
 
 /**
  * This provider returns the Web Beans faces-config.xml to the JSF runtime. It will only return the configuraion file
@@ -49,6 +50,7 @@ public class WeldFacesConfigProvider implements FacesConfigResourceProvider {
 
     private static final String SERVICES_FACES_CONFIG = "META-INF/services/faces-config.xml";
 
+    @Override
     public Collection<URI> getResources(ServletContext context) {
 
         ServiceLocator defaultServices = (ServiceLocator) context.getAttribute(HABITAT_ATTRIBUTE);
@@ -57,7 +59,7 @@ public class WeldFacesConfigProvider implements FacesConfigResourceProvider {
         WebModule webModule = (WebModule) inv.getContainer();
         WebBundleDescriptor wdesc = webModule.getWebBundleDescriptor();
 
-        List<URI> list = new ArrayList<URI>(1);
+        List<URI> list = new ArrayList<>(1);
 
         if (!wdesc.hasExtensionProperty(WeldDeployer.WELD_EXTENSION)) {
             return list;

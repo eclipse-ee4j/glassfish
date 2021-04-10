@@ -16,27 +16,29 @@
 
 package org.glassfish.cdi.transaction;
 
-import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+
+import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.interceptor.InvocationContext;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
-import java.io.Serializable;
-import java.util.logging.Logger;
 
 /**
  * Base class for all interceptors providing common logic for exception handling, etc.
@@ -44,6 +46,11 @@ import java.util.logging.Logger;
  * @author Paul Parkinson
  */
 public class TransactionalInterceptorBase implements Serializable {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 706603825748958619L;
 
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.cdi.LogMessages";
@@ -129,13 +136,15 @@ public class TransactionalInterceptorBase implements Serializable {
      * @return TransactionManager
      */
     public TransactionManager getTransactionManager() {
-        if (testTransactionManager != null)
+        if (testTransactionManager != null) {
             return testTransactionManager;
+        }
         if (transactionManager == null) {
             try {
                 synchronized (TransactionalInterceptorBase.class) {
-                    if (transactionManager == null)
+                    if (transactionManager == null) {
                         transactionManager = (TransactionManager) new InitialContext().lookup("java:appserver/TransactionManager");
+                    }
                 }
             } catch (NamingException e) {
                 _logger.log(java.util.logging.Level.SEVERE, CDI_JTA_NAME_EXCEPTION, e);
@@ -150,7 +159,7 @@ public class TransactionalInterceptorBase implements Serializable {
     }
 
     boolean isLifeCycleMethod(InvocationContext ctx) {
-        return (ctx.getMethod().getAnnotation(PostConstruct.class) != null) || (ctx.getMethod().getAnnotation(PreDestroy.class) != null);
+        return ctx.getMethod().getAnnotation(PostConstruct.class) != null || ctx.getMethod().getAnnotation(PreDestroy.class) != null;
     }
 
     public Object proceed(InvocationContext ctx) throws Exception {
@@ -189,9 +198,8 @@ public class TransactionalInterceptorBase implements Serializable {
                 //check if one isAssignableFrom the other, dontRollbackOn takes precedence if not
                 if (rollbackOnClass.isAssignableFrom(dontRollbackOnClass)) {
                     throw runtimeException;
-                } else if (dontRollbackOnClass.isAssignableFrom(rollbackOnClass)) {
-                    markRollbackIfActiveTransaction();
-                    throw runtimeException;
+                }
+                if (dontRollbackOnClass.isAssignableFrom(rollbackOnClass)) {
                 }
             }
             //This means dontRollbackOnClass is "not null" and rollbackOnClass is "null"
@@ -212,7 +220,8 @@ public class TransactionalInterceptorBase implements Serializable {
                 //check if one isAssignableFrom the other, dontRollbackOn takes precedence if not
                 if (rollbackOnClass.isAssignableFrom(dontRollbackOnClass)) {
                     throw checkedException;
-                } else if (dontRollbackOnClass.isAssignableFrom(rollbackOnClass)) {
+                }
+                if (dontRollbackOnClass.isAssignableFrom(rollbackOnClass)) {
                     markRollbackIfActiveTransaction();
                     throw checkedException;
                 }
@@ -220,7 +229,6 @@ public class TransactionalInterceptorBase implements Serializable {
 
             if (rollbackOnClass.equals(checkedException.getClass()) || rollbackOnClass.isAssignableFrom(checkedException.getClass())) {
                 markRollbackIfActiveTransaction();
-                throw checkedException;
             }
             //This means dontRollbackOnClass is null but rollbackOnClass is "not null"
             //Default for checked exception is to "not" mark transaction for rollback
@@ -238,15 +246,18 @@ public class TransactionalInterceptorBase implements Serializable {
      * @return exception in the array that is closest/lowest in hierarchy to the exception or null if non exists
      */
     private Class getClassInArrayClosestToClassOrNull(Class[] exceptionArray, Class exception) {
-        if (exceptionArray == null || exception == null)
+        if (exceptionArray == null || exception == null) {
             return null;
+        }
         Class closestMatch = null;
         for (Class exceptionArrayElement : exceptionArray) {
             if (exceptionArrayElement.equals(exception)) {
                 return exceptionArrayElement;
-            } else if (exceptionArrayElement.isAssignableFrom(exception)) {
-                if (closestMatch == null || closestMatch.isAssignableFrom(exceptionArrayElement))
+            }
+            if (exceptionArrayElement.isAssignableFrom(exception)) {
+                if (closestMatch == null || closestMatch.isAssignableFrom(exceptionArrayElement)) {
                     closestMatch = exceptionArrayElement;
+                }
             }
         }
         return closestMatch;
@@ -261,8 +272,9 @@ public class TransactionalInterceptorBase implements Serializable {
     }
 
     void setTransactionalTransactionOperationsManger(boolean userTransactionMethodsAllowed) {
-        if (testTransactionManager != null)
+        if (testTransactionManager != null) {
             return; //test
+        }
         ComponentInvocation currentInvocation = getCurrentInvocation();
         if (currentInvocation == null) {
             _logger.log(java.util.logging.Level.WARNING, CDI_JTA_NOCOMPONENT);
@@ -275,8 +287,9 @@ public class TransactionalInterceptorBase implements Serializable {
     }
 
     void resetTransactionOperationsManager() {
-        if (testTransactionManager != null)
+        if (testTransactionManager != null) {
             return; //test
+        }
         ComponentInvocation currentInvocation = getCurrentInvocation();
         if (currentInvocation == null) {
             //there should always be a currentInvocation and so this would seem a bug
@@ -295,13 +308,16 @@ public class TransactionalInterceptorBase implements Serializable {
 
     private static final class TransactionalTransactionOperationsManagerTransactionMethodsAllowed implements TransactionOperationsManager {
 
+        @Override
         public boolean userTransactionMethodsAllowed() {
             return true;
         }
 
+        @Override
         public void userTransactionLookupAllowed() throws NameNotFoundException {
         }
 
+        @Override
         public void doAfterUtxBegin() {
         }
     }
@@ -309,13 +325,16 @@ public class TransactionalInterceptorBase implements Serializable {
     private static final class TransactionalTransactionOperationsManagerTransactionMethodsNotAllowed
             implements TransactionOperationsManager {
 
+        @Override
         public boolean userTransactionMethodsAllowed() {
             return false;
         }
 
+        @Override
         public void userTransactionLookupAllowed() throws NameNotFoundException {
         }
 
+        @Override
         public void doAfterUtxBegin() {
         }
     }

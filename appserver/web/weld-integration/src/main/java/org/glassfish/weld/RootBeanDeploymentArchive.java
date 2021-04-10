@@ -16,16 +16,17 @@
 
 package org.glassfish.weld;
 
-import com.sun.enterprise.deployment.EjbDescriptor;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.weld.connector.WeldUtils;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeansXml;
 
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
+import com.sun.enterprise.deployment.EjbDescriptor;
 
 /**
  * A root BDA represents the root of a module where a module is a war, ejb, rar, ear lib A root BDA of each module

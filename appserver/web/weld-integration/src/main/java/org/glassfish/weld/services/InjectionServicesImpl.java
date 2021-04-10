@@ -16,31 +16,41 @@
 
 package org.glassfish.weld.services;
 
-import com.sun.enterprise.deployment.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
 import org.glassfish.ejb.api.EjbContainerServices;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.weld.DeploymentImpl;
 import org.glassfish.weld.connector.WeldUtils;
 import org.jboss.weld.injection.spi.InjectionContext;
 import org.jboss.weld.injection.spi.InjectionServices;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.InjectionCapable;
+import com.sun.enterprise.deployment.InjectionInfo;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.inject.Produces;
-import jakarta.enterprise.inject.spi.*;
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.DefinitionException;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 public class InjectionServicesImpl implements InjectionServices {
 
@@ -70,6 +80,7 @@ public class InjectionServicesImpl implements InjectionServices {
         return res;
     }
 
+    @Override
     public <T> void aroundInject(InjectionContext<T> injectionContext) {
         try {
             ServiceLocator serviceLocator = Globals.getDefaultHabitat();
@@ -87,7 +98,7 @@ public class InjectionServicesImpl implements InjectionServices {
             String targetClassName = targetClass.getName();
             Object target = injectionContext.getTarget();
 
-            if (isInterceptor(targetClass) && (!componentEnv.equals(injectionEnv))) {
+            if (isInterceptor(targetClass) && !componentEnv.equals(injectionEnv)) {
                 // Resources injected into interceptors must come from the environment in which the interceptor is
                 // intercepting, not the environment in which the interceptor resides (for everything else!)
                 // Must use the injectionEnv to get the injection info to determine where in jndi to look for the objects to inject.
@@ -110,36 +121,31 @@ public class InjectionServicesImpl implements InjectionServices {
 
                     if (containerServices.isEjbManagedObject(ejbDesc, targetClass)) {
                         injectionEnv = componentEnv;
-                    } else {
+                    } else if (bundleContext instanceof EjbBundleDescriptor) {
 
-                        if (bundleContext instanceof EjbBundleDescriptor) {
-
-                            // Check if it's a @ManagedBean class within an ejb-jar.  In that case,
-                            // special handling is needed to locate the EE env dependencies
-                            mbDesc = bundleContext.getManagedBeanByBeanClass(targetClassName);
-                        }
+                        // Check if it's a @ManagedBean class within an ejb-jar.  In that case,
+                        // special handling is needed to locate the EE env dependencies
+                        mbDesc = bundleContext.getManagedBeanByBeanClass(targetClassName);
                     }
                 }
 
                 if (mbDesc != null) {
                     injectionManager.injectInstance(target, mbDesc.getGlobalJndiName(), false);
-                } else {
-                    if (injectionEnv instanceof EjbBundleDescriptor) {
+                } else if (injectionEnv instanceof EjbBundleDescriptor) {
 
-                        // CDI-style managed bean that doesn't have @ManagedBean annotation but
-                        // is injected within the context of an ejb.  Need to explicitly
-                        // set the environment of the ejb bundle.
-                        if (target == null) {
-                            injectionManager.injectClass(targetClass, compEnvManager.getComponentEnvId(injectionEnv), false);
-                        } else {
-                            injectionManager.injectInstance(target, compEnvManager.getComponentEnvId(injectionEnv), false);
-                        }
+                    // CDI-style managed bean that doesn't have @ManagedBean annotation but
+                    // is injected within the context of an ejb.  Need to explicitly
+                    // set the environment of the ejb bundle.
+                    if (target == null) {
+                        injectionManager.injectClass(targetClass, compEnvManager.getComponentEnvId(injectionEnv), false);
                     } else {
-                        if (target == null) {
-                            injectionManager.injectClass(targetClass, injectionEnv, false);
-                        } else {
-                            injectionManager.injectInstance(target, injectionEnv, false);
-                        }
+                        injectionManager.injectInstance(target, compEnvManager.getComponentEnvId(injectionEnv), false);
+                    }
+                } else {
+                    if (target == null) {
+                        injectionManager.injectClass(targetClass, injectionEnv, false);
+                    } else {
+                        injectionManager.injectInstance(target, injectionEnv, false);
                     }
                 }
 
@@ -152,6 +158,7 @@ public class InjectionServicesImpl implements InjectionServices {
         }
     }
 
+    @Override
     public <T> void registerInjectionTarget(InjectionTarget<T> injectionTarget, AnnotatedType<T> annotatedType) {
         if (bundleContext instanceof EjbBundleDescriptor) {
             // we can't handle validting producer fields for ejb bundles because the JNDI environment is not setup
@@ -325,6 +332,7 @@ public class InjectionServicesImpl implements InjectionServices {
         return wsHandler;
     }
 
+    @Override
     public void cleanup() {
 
     }

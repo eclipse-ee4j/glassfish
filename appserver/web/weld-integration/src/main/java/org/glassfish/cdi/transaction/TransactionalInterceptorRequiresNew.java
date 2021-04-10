@@ -16,13 +16,14 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.util.logging.Logger;
+
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionalException;
-import java.util.logging.Logger;
 
 /**
  * Transactional annotation Interceptor class for RequiresNew transaction type, ie
@@ -39,13 +40,18 @@ import java.util.logging.Logger;
 @jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.REQUIRES_NEW)
 public class TransactionalInterceptorRequiresNew extends TransactionalInterceptorBase {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3843074402046047130L;
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_REQNEW);
-        if (isLifeCycleMethod(ctx))
+        if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
+        }
         setTransactionalTransactionOperationsManger(false);
         try {
             Transaction suspendedTransaction = null;

@@ -16,21 +16,21 @@
 
 package org.glassfish.weld.jsf;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.apache.jasper.runtime.JspApplicationContextImpl;
+import org.glassfish.weld.util.Util;
+
 import jakarta.el.ELContextListener;
 import jakarta.el.ExpressionFactory;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
 import jakarta.faces.context.FacesContext;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspApplicationContext;
 import jakarta.servlet.jsp.JspFactory;
-
-import org.glassfish.weld.util.Util;
-
-import org.apache.jasper.runtime.JspApplicationContextImpl;
 
 public class WeldApplication extends ApplicationWrapper {
 
@@ -50,6 +50,7 @@ public class WeldApplication extends ApplicationWrapper {
         }
     }
 
+    @Override
     public Application getWrapped() {
         return this.application;
     }

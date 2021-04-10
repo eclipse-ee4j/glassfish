@@ -16,10 +16,11 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.util.logging.Logger;
+
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
-import java.util.logging.Logger;
 
 /**
  * Transactional annotation Interceptor class for Supports transaction type, ie
@@ -34,13 +35,18 @@ import java.util.logging.Logger;
 @jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.SUPPORTS)
 public class TransactionalInterceptorSupports extends TransactionalInterceptorBase {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1752774873298754596L;
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_SUPPORTS);
-        if (isLifeCycleMethod(ctx))
+        if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
+        }
         setTransactionalTransactionOperationsManger(false);
         try {
             return proceed(ctx);

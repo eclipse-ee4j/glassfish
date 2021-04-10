@@ -23,6 +23,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.glassfish.hk2.api.DescriptorType;
+import org.glassfish.hk2.api.DescriptorVisibility;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceHandle;
+import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.Any;
@@ -31,15 +37,9 @@ import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Singleton;
 
-import org.glassfish.hk2.api.DescriptorType;
-import org.glassfish.hk2.api.DescriptorVisibility;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceHandle;
-import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
-
 /**
  * This is an HK2 Descriptor that is backed by a CDI bean
- * 
+ *
  * @author jwells
  *
  */
@@ -50,19 +50,20 @@ public class CDIHK2Descriptor<T> extends AbstractActiveDescriptor<T> {
     private transient Type requiredType = null;
 
     public CDIHK2Descriptor() {
-        super();
     }
 
     private static Set<Annotation> fixQualifiers(Bean<?> bean) {
         Set<Annotation> fromBean = bean.getQualifiers();
-        Set<Annotation> retVal = new HashSet<Annotation>();
+        Set<Annotation> retVal = new HashSet<>();
 
         for (Annotation beanQ : fromBean) {
-            if (Any.class.equals(beanQ.annotationType()))
+            if (Any.class.equals(beanQ.annotationType())) {
                 continue;
+            }
 
-            if (Default.class.equals(beanQ.annotationType()))
+            if (Default.class.equals(beanQ.annotationType())) {
                 continue;
+            }
 
             retVal.add(beanQ);
         }

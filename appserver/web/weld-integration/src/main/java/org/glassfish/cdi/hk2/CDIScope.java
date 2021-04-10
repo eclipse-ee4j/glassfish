@@ -28,7 +28,7 @@ import jakarta.inject.Scope;
 
 /**
  * This scope is given from HK2 beans that are representing CDI services that are NOT in Dependent or Singleton scopes
- * 
+ *
  * @author jwells
  *
  */

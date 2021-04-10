@@ -16,12 +16,13 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.util.logging.Logger;
+
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.InvalidTransactionException;
 import jakarta.transaction.TransactionalException;
-import java.util.logging.Logger;
 
 /**
  * Transactional annotation Interceptor class for Never transaction type, ie
@@ -36,19 +37,25 @@ import java.util.logging.Logger;
 @jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.NEVER)
 public class TransactionalInterceptorNever extends TransactionalInterceptorBase {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7206478787594554608L;
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_NEVER);
-        if (isLifeCycleMethod(ctx))
+        if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
+        }
         setTransactionalTransactionOperationsManger(true);
         try {
-            if (getTransactionManager().getTransaction() != null)
+            if (getTransactionManager().getTransaction() != null) {
                 throw new TransactionalException("InvalidTransactionException thrown from TxType.NEVER transactional interceptor.",
                         new InvalidTransactionException(
                                 "Managed bean with Transactional annotation and TxType of NEVER " + "called inside a transaction context"));
+            }
             return proceed(ctx);
         } finally {
             resetTransactionOperationsManager();

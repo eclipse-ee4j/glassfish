@@ -18,15 +18,15 @@ package org.glassfish.cdi.hk2;
 
 import java.lang.annotation.Annotation;
 
+import org.glassfish.hk2.api.ActiveDescriptor;
+
 import jakarta.enterprise.context.spi.Context;
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
 
-import org.glassfish.hk2.api.ActiveDescriptor;
-
 /**
  * This is an implementation of a CDI context that is put into CDI which will handle all of the hk2 scope/context pairs
- * 
+ *
  * @author jwells
  *
  */
@@ -39,14 +39,16 @@ public class HK2ContextBridge implements Context {
 
     @Override
     public <T> T get(Contextual<T> arg0) {
-        if (!(arg0 instanceof HK2CDIBean))
+        if (!(arg0 instanceof HK2CDIBean)) {
             return null;
+        }
         HK2CDIBean<T> hk2CdiBean = (HK2CDIBean<T>) arg0;
 
         ActiveDescriptor<T> descriptor = hk2CdiBean.getHK2Descriptor();
 
-        if (!hk2Context.containsKey(descriptor))
+        if (!hk2Context.containsKey(descriptor)) {
             return null;
+        }
 
         return hk2CdiBean.create(null);
     }

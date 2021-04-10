@@ -16,6 +16,36 @@
 
 package org.glassfish.weld.services;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.cdi.CDILoggerInfo;
+import org.glassfish.hk2.api.Rank;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.weld.BeanDeploymentArchiveImpl;
+import org.glassfish.weld.WeldDeployer;
+import org.glassfish.weld.connector.WeldUtils;
+import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
+import org.jboss.weld.contexts.WeldCreationalContext;
+import org.jboss.weld.manager.api.WeldInjectionTarget;
+import org.jboss.weld.manager.api.WeldManager;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.enterprise.container.common.spi.JCDIService;
@@ -24,18 +54,6 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.cdi.CDILoggerInfo;
-import org.glassfish.hk2.api.Rank;
-import org.glassfish.weld.BeanDeploymentArchiveImpl;
-import org.glassfish.weld.WeldDeployer;
-import org.glassfish.weld.connector.WeldUtils;
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
-import org.jboss.weld.contexts.WeldCreationalContext;
-import org.jboss.weld.manager.api.WeldManager;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -56,22 +74,7 @@ import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.Interceptor;
 import jakarta.inject.Inject;
 import jakarta.inject.Scope;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import jakarta.servlet.ServletContext;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.jboss.weld.manager.api.WeldInjectionTarget;
 
 @Service
 @Rank(10)
@@ -80,7 +83,7 @@ public class JCDIServiceImpl implements JCDIService {
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.cdi.LogMessages";
 
-    private static final HashSet<String> validScopes = new HashSet<String>();
+    private static final HashSet<String> validScopes = new HashSet<>();
     static {
         validScopes.add(Scope.class.getName());
         validScopes.add(NormalScope.class.getName());
@@ -90,7 +93,7 @@ public class JCDIServiceImpl implements JCDIService {
         validScopes.add(ConversationScoped.class.getName());
     }
 
-    private static final HashSet<String> excludedScopes = new HashSet<String>();
+    private static final HashSet<String> excludedScopes = new HashSet<>();
     static {
         excludedScopes.add(Dependent.class.getName());
     }
@@ -109,6 +112,7 @@ public class JCDIServiceImpl implements JCDIService {
 
     private static final Logger logger = Logger.getLogger(WELD_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
+    @Override
     public boolean isCurrentModuleJCDIEnabled() {
 
         BundleDescriptor bundle = null;
@@ -130,10 +134,11 @@ public class JCDIServiceImpl implements JCDIService {
             }
         }
 
-        return (bundle != null) ? isJCDIEnabled(bundle) : false;
+        return bundle != null ? isJCDIEnabled(bundle) : false;
 
     }
 
+    @Override
     public boolean isJCDIEnabled(BundleDescriptor bundle) {
 
         // Get the top-level bundle descriptor from the given bundle.
@@ -144,12 +149,14 @@ public class JCDIServiceImpl implements JCDIService {
 
     }
 
+    @Override
     public boolean isCDIScoped(Class<?> clazz) {
         // Check all the annotations on the specified Class to determine if the class is annotated
         // with a supported CDI scope
         return WeldUtils.hasValidAnnotation(clazz, validScopes, excludedScopes);
     }
 
+    @Override
     public void setELResolver(ServletContext servletContext) throws NamingException {
         InitialContext context = new InitialContext();
         BeanManager beanManager = (BeanManager) context.lookup("java:comp/BeanManager");
@@ -158,10 +165,12 @@ public class JCDIServiceImpl implements JCDIService {
         }
     }
 
+    @Override
     public <T> JCDIInjectionContext<T> createJCDIInjectionContext(EjbDescriptor ejbDesc, T instance, Map<Class, Object> ejbInfo) {
         return _createJCDIInjectionContext(ejbDesc, instance, ejbInfo);
     }
 
+    @Override
     public <T> JCDIInjectionContext<T> createJCDIInjectionContext(EjbDescriptor ejbDesc, Map<Class, Object> ejbInfo) {
         return _createJCDIInjectionContext(ejbDesc, null, ejbInfo);
     }
@@ -276,6 +285,7 @@ public class JCDIServiceImpl implements JCDIService {
         return topLevelBDA;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> void injectEJBInstance(JCDIInjectionContext<T> injectionCtx) {
         JCDIInjectionContextImpl<T> injectionCtxImpl = (JCDIInjectionContextImpl<T>) injectionCtx;
@@ -286,16 +296,18 @@ public class JCDIServiceImpl implements JCDIService {
         // NOTE : PostConstruct is handled by ejb container
     }
 
+    @Override
     public <T> JCDIInjectionContext<T> createManagedObject(Class<T> managedClass, BundleDescriptor bundle) {
         return createManagedObject(managedClass, bundle, true);
     }
 
     /**
      * Perform 299 style injection on the <code>managedObject</code> argument.
-     * 
+     *
      * @param managedObject the managed object
      * @param bundle the bundle descriptor
      */
+    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void injectManagedObject(Object managedObject, BundleDescriptor bundle) {
 
@@ -334,6 +346,7 @@ public class JCDIServiceImpl implements JCDIService {
      *
      * @return The interceptor instance.
      */
+    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public <T> T createInterceptorInstance(Class<T> interceptorClass, EjbDescriptor ejb, JCDIService.JCDIInjectionContext ejbContext,
             Set<EjbInterceptor> ejbInterceptors) {
@@ -396,6 +409,7 @@ public class JCDIServiceImpl implements JCDIService {
         return interceptorInstance;
     }
 
+    @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public <T> JCDIInjectionContext<T> createManagedObject(Class<T> managedClass, BundleDescriptor bundle, boolean invokePostConstruct) {
 
@@ -487,7 +501,7 @@ public class JCDIServiceImpl implements JCDIService {
 
         @Override
         public Set<AnnotatedMethod<? super X>> getMethods() {
-            HashSet<AnnotatedMethod<? super X>> retVal = new HashSet<AnnotatedMethod<? super X>>();
+            HashSet<AnnotatedMethod<? super X>> retVal = new HashSet<>();
             for (AnnotatedMethod<? super X> m : delegate.getMethods()) {
                 if (m.isAnnotationPresent(PostConstruct.class) || m.isAnnotationPresent(PreDestroy.class)) {
                     // Do not include the post-construct or pre-destroy
@@ -506,6 +520,7 @@ public class JCDIServiceImpl implements JCDIService {
 
     }
 
+    @Override
     public JCDIInjectionContext createEmptyJCDIInjectionContext() {
         return new JCDIInjectionContextImpl();
     }
@@ -516,7 +531,7 @@ public class JCDIServiceImpl implements JCDIService {
         CreationalContext cc;
         T instance;
 
-        private List<JCDIInjectionContext> dependentContexts = new ArrayList<JCDIInjectionContext>();
+        private List<JCDIInjectionContext> dependentContexts = new ArrayList<>();
         private JCDIAroundConstructCallback jcdiAroundConstructCallback;
 
         public JCDIInjectionContextImpl() {
@@ -528,14 +543,17 @@ public class JCDIServiceImpl implements JCDIService {
             this.instance = i;
         }
 
+        @Override
         public T getInstance() {
             return instance;
         }
 
+        @Override
         public void setInstance(T instance) {
             this.instance = instance;
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public void cleanup(boolean callPreDestroy) {
             for (JCDIInjectionContext context : dependentContexts) {
@@ -557,6 +575,7 @@ public class JCDIServiceImpl implements JCDIService {
             }
         }
 
+        @Override
         public InjectionTarget<T> getInjectionTarget() {
             return it;
         }
@@ -566,6 +585,7 @@ public class JCDIServiceImpl implements JCDIService {
             this.it = injectionTarget;
         }
 
+        @Override
         public CreationalContext<T> getCreationalContext() {
             return cc;
         }
@@ -575,10 +595,12 @@ public class JCDIServiceImpl implements JCDIService {
             this.cc = creationalContext;
         }
 
+        @Override
         public void addDependentContext(JCDIInjectionContext dependentContext) {
             dependentContexts.add(dependentContext);
         }
 
+        @Override
         public Collection<JCDIInjectionContext> getDependentContexts() {
             return dependentContexts;
         }

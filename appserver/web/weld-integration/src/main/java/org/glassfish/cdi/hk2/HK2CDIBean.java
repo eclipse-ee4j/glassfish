@@ -22,19 +22,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.InjectionPoint;
-
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+
 /**
  * This is a CDI bean that is backed by an HK2 service
- * 
+ *
  * @author jwells
  *
  */
@@ -77,7 +77,7 @@ public class HK2CDIBean<T> implements Bean<T> {
     @Override
     public Set<Annotation> getQualifiers() {
         if (descriptor.getQualifierAnnotations().isEmpty()) {
-            HashSet<Annotation> retVal = new HashSet<Annotation>();
+            HashSet<Annotation> retVal = new HashSet<>();
 
             retVal.add(new DefaultImpl());
 

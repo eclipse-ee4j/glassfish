@@ -16,21 +16,23 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.lang.annotation.Annotation;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.enterprise.context.spi.Context;
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.PassivationCapable;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import jakarta.transaction.Status;
 import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.TransactionSynchronizationRegistry;
-import java.lang.annotation.Annotation;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Context implementation for obtaining contextual instances of {@link TransactionScoped} beans.
@@ -106,14 +108,13 @@ public class TransactionScopedContextImpl implements Context {
         if (contextual instanceof PassivationCapable) {
             PassivationCapable passivationCapable = (PassivationCapable) contextual;
             return passivationCapable.getId();
-        } else {
-            return contextual;
         }
+        return contextual;
     }
 
     private <T> T createContextualInstance(Contextual<T> contextual, Object contextualId, CreationalContext<T> creationalContext,
             TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
-        TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<T>(contextual, creationalContext, this);
+        TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<>(contextual, creationalContext, this);
         transactionSynchronizationRegistry.putResource(contextualId, transactionScopedBean);
         transactionSynchronizationRegistry.registerInterposedSynchronization(transactionScopedBean);
         //Adding TransactionScopedBean as Set, per transactionSynchronizationRegistry, which is unique per transaction

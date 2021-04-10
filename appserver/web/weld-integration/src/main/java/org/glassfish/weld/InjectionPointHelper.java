@@ -16,15 +16,21 @@
 
 package org.glassfish.weld;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import org.glassfish.api.naming.GlassfishNamingManager;
-
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
 import java.util.Locale;
+
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.hk2.api.ServiceLocator;
+
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.InjectionCapable;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
 
 public class InjectionPointHelper {
 
@@ -83,7 +89,7 @@ public class InjectionPointHelper {
         String envDependencyName = envAnnotationName;
         Class declaringClass = member.getDeclaringClass();
 
-        if ((envAnnotationName == null) || envAnnotationName.equals("")) {
+        if (envAnnotationName == null || envAnnotationName.equals("")) {
             if (field != null) {
                 envDependencyName = declaringClass.getName() + "/" + field.getName();
             } else {
@@ -99,7 +105,7 @@ public class InjectionPointHelper {
 
             for (BundleDescriptor bundle : app.getBundleDescriptors()) {
 
-                if ((bundle instanceof EjbBundleDescriptor) || (bundle instanceof WebBundleDescriptor)) {
+                if (bundle instanceof EjbBundleDescriptor || bundle instanceof WebBundleDescriptor) {
 
                     JndiNameEnvironment jndiEnv = (JndiNameEnvironment) bundle;
 
@@ -135,12 +141,11 @@ public class InjectionPointHelper {
         String methodName = method.getName();
         String propertyName;
 
-        if ((methodName.length() > 3) && methodName.startsWith("set")) {
-            // Derive javabean property name.
-            propertyName = methodName.substring(3, 4).toLowerCase(Locale.ENGLISH) + methodName.substring(4);
-        } else {
+        if (methodName.length() <= 3 || !methodName.startsWith("set")) {
             throw new IllegalArgumentException("Illegal env dependency setter name" + method.getName());
         }
+        // Derive javabean property name.
+        propertyName = methodName.substring(3, 4).toLowerCase(Locale.ENGLISH) + methodName.substring(4);
 
         return propertyName;
     }

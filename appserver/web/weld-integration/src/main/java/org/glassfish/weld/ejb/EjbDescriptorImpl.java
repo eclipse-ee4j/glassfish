@@ -21,10 +21,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.interceptor.InvocationContext;
-
-import org.jboss.weld.module.ejb.SessionBeanInterceptor;
 import org.jboss.weld.ejb.spi.BusinessInterfaceDescriptor;
+import org.jboss.weld.module.ejb.SessionBeanInterceptor;
 
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
@@ -32,6 +30,8 @@ import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
+
+import jakarta.interceptor.InvocationContext;
 
 /**
  */
@@ -54,6 +54,7 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
         }
     }
 
+    @Override
     public String getEjbName() {
         return ejbDesc.getName();
     }
@@ -62,6 +63,7 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
         return ejbDesc;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Class<T> getBeanClass() {
         @SuppressWarnings("rawtypes")
@@ -79,12 +81,13 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
 
     /**
      * Gets the local business interfaces of the EJB
-     * 
+     *
      * @return An iterator over the local business interfaces
      */
+    @Override
     public Collection<BusinessInterfaceDescriptor<?>> getLocalBusinessInterfaces() {
 
-        Set<BusinessInterfaceDescriptor<?>> localBusIntfs = new HashSet<BusinessInterfaceDescriptor<?>>();
+        Set<BusinessInterfaceDescriptor<?>> localBusIntfs = new HashSet<>();
 
         if (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE)) {
 
@@ -130,11 +133,12 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
 
     /**
      * Get the remove methods of the EJB
-     * 
+     *
      * @return An iterator over the remove methods
      */
+    @Override
     public Collection<Method> getRemoveMethods() {
-        Set<Method> removeMethods = new HashSet<Method>();
+        Set<Method> removeMethods = new HashSet<>();
 
         if (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE)) {
             EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejbDesc;
@@ -158,40 +162,45 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
 
     /**
      * Indicates if the bean is stateless
-     * 
+     *
      * @return True if stateless, false otherwise
      */
+    @Override
     public boolean isStateless() {
-        return (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) && ((EjbSessionDescriptor) ejbDesc).isStateless());
+        return ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) && ((EjbSessionDescriptor) ejbDesc).isStateless();
     }
 
     /**
      * Indicates if the bean is a EJB 3.1 Singleton
-     * 
+     *
      * @return True if the bean is a singleton, false otherwise
      */
+    @Override
     public boolean isSingleton() {
-        return (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) && ((EjbSessionDescriptor) ejbDesc).isSingleton());
+        return ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) && ((EjbSessionDescriptor) ejbDesc).isSingleton();
     }
 
     /**
      * Indicates if the EJB is stateful
-     * 
+     *
      * @return True if the bean is stateful, false otherwise
      */
+    @Override
     public boolean isStateful() {
-        return (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) && ((EjbSessionDescriptor) ejbDesc).isStateful());
+        return ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) && ((EjbSessionDescriptor) ejbDesc).isStateful();
     }
 
     /**
      * Indicates if the EJB is and MDB
-     * 
+     *
      * @return True if the bean is an MDB, false otherwise
      */
+    @Override
     public boolean isMessageDriven() {
-        return (ejbDesc.getType().equals(EjbMessageBeanDescriptor.TYPE));
+        return ejbDesc.getType().equals(EjbMessageBeanDescriptor.TYPE);
     }
 
+    @Override
     public boolean isPassivationCapable() {
         if (ejbDesc instanceof EjbSessionDescriptor) {
             EjbSessionDescriptor ejbSessionDescriptor = (EjbSessionDescriptor) ejbDesc;
@@ -203,23 +212,23 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
         return false;
     }
 
-    /*  enabled for debugging 
+    /*  enabled for debugging
     public int hashCode() {
         return getEjbName().hashCode();
     }
-    
+
     public boolean equals(Object o) {
-    
+
         boolean equal = false;
-    
+
         if( (o != null) && (o instanceof EjbDescriptorImpl) ) {
-    
+
             equal = getEjbName().equals( ((EjbDescriptorImpl)o).getEjbName() );
-    
+
         }
-    
+
         return equal;
-    
+
     }
     */
 
@@ -288,7 +297,7 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
 
     @Override
     public Collection<BusinessInterfaceDescriptor<?>> getRemoteBusinessInterfaces() {
-        Set<BusinessInterfaceDescriptor<?>> remoteBusIntfs = new HashSet<BusinessInterfaceDescriptor<?>>();
+        Set<BusinessInterfaceDescriptor<?>> remoteBusIntfs = new HashSet<>();
 
         if (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE)) {
 

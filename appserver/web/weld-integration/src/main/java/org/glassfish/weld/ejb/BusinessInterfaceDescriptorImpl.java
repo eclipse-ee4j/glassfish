@@ -31,6 +31,7 @@ public class BusinessInterfaceDescriptorImpl<T> implements BusinessInterfaceDesc
     /**
      * Gets the business interface class
      */
+    @Override
     public Class<T> getInterface() {
         return clientViewType;
     }

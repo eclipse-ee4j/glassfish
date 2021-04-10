@@ -16,19 +16,17 @@
 
 package org.glassfish.weld;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.enterprise.inject.spi.AnnotatedType;
-import jakarta.enterprise.inject.spi.InjectionTarget;
-import jakarta.servlet.Filter;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.ServletRequestListener;
-import jakarta.servlet.http.HttpSessionListener;
-
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -36,16 +34,24 @@ import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.invocation.ApplicationEnvironment;
 import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.cdi.CDILoggerInfo;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.SimpleDeployer;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
+import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
 import org.glassfish.weld.connector.WeldUtils;
-import org.glassfish.weld.services.*;
+import org.glassfish.weld.services.EjbServicesImpl;
+import org.glassfish.weld.services.InjectionServicesImpl;
+import org.glassfish.weld.services.NonModuleInjectionServices;
+import org.glassfish.weld.services.ProxyServicesImpl;
+import org.glassfish.weld.services.SecurityServicesImpl;
+import org.glassfish.weld.services.TransactionServicesImpl;
 import org.glassfish.weld.util.Util;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Environments;
@@ -55,26 +61,30 @@ import org.jboss.weld.bootstrap.spi.EEModuleDescriptor;
 import org.jboss.weld.bootstrap.spi.helpers.EEModuleDescriptorImpl;
 import org.jboss.weld.ejb.spi.EjbServices;
 import org.jboss.weld.injection.spi.InjectionServices;
+import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.security.spi.SecurityServices;
 import org.jboss.weld.serialization.spi.ProxyServices;
 import org.jboss.weld.transaction.spi.TransactionServices;
-import jakarta.inject.Inject;
-import jakarta.servlet.jsp.tagext.JspTag;
-
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.api.PostConstruct;
 
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
-import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
-import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
-import org.jboss.weld.resources.spi.ResourceLoader;
+
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.inject.Inject;
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.http.HttpSessionListener;
+import jakarta.servlet.jsp.tagext.JspTag;
 
 @Service
 public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer> implements PostConstruct, EventListener {
@@ -118,9 +128,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     @Inject
     ArchiveFactory archiveFactory;
 
-    private Map<Application, WeldBootstrap> appToBootstrap = new HashMap<Application, WeldBootstrap>();
+    private Map<Application, WeldBootstrap> appToBootstrap = new HashMap<>();
 
-    private Map<BundleDescriptor, BeanDeploymentArchive> bundleToBeanDeploymentArchive = new HashMap<BundleDescriptor, BeanDeploymentArchive>();
+    private Map<BundleDescriptor, BeanDeploymentArchive> bundleToBeanDeploymentArchive = new HashMap<>();
 
     private static final Class<?>[] NON_CONTEXT_CLASSES = { Servlet.class, ServletContextListener.class, Filter.class,
             HttpSessionListener.class, ServletRequestListener.class, JspTag.class
@@ -139,6 +149,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         return new MetaData(true, null, new Class[] { Application.class });
     }
 
+    @Override
     public void postConstruct() {
         events.register(this);
     }
@@ -149,6 +160,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
      * loaded, a deployment graph is produced defining the accessibility relationships between
      * <code>BeanDeploymentArchive</code>s.
      */
+    @Override
     public void event(Event event) {
         if (event.is(org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED)) {
             ApplicationInfo appInfo = (ApplicationInfo) event.hook();
@@ -197,7 +209,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     String msgPrefix = getDeploymentErrorMsgPrefix(t);
                     DeploymentException de = new DeploymentException(msgPrefix + t.getMessage());
                     de.initCause(t);
-                    throw (de);
+                    throw de;
                 } finally {
                     invocationManager.popAppEnvironment();
 
@@ -282,7 +294,8 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     private String getDeploymentErrorMsgPrefix(Throwable t) {
         if (t instanceof jakarta.enterprise.inject.spi.DefinitionException) {
             return "CDI definition failure:";
-        } else if (t instanceof jakarta.enterprise.inject.spi.DeploymentException) {
+        }
+        if (t instanceof jakarta.enterprise.inject.spi.DeploymentException) {
             return "CDI deployment failure:";
         } else {
             Throwable cause = t.getCause();
@@ -368,14 +381,17 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         return appToBootstrap.get(app);
     }
 
+    @Override
     protected void generateArtifacts(DeploymentContext dc) throws DeploymentException {
 
     }
 
+    @Override
     protected void cleanArtifacts(DeploymentContext dc) throws DeploymentException {
 
     }
 
+    @Override
     public <V> V loadMetaData(Class<V> type, DeploymentContext context) {
         return null;
     }
@@ -414,7 +430,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
         EjbServices ejbServices = null;
 
-        Set<EjbDescriptor> ejbs = new HashSet<EjbDescriptor>();
+        Set<EjbDescriptor> ejbs = new HashSet<>();
         if (ejbBundle != null) {
             ejbs.addAll(ejbBundle.getEjbs());
             ejbServices = new EjbServicesImpl(services);
@@ -441,7 +457,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         }
         deploymentImpl.addDeployedEjbs(ejbs);
 
-        if (ejbBundle != null && (!deploymentImpl.getServices().contains(EjbServices.class))) {
+        if (ejbBundle != null && !deploymentImpl.getServices().contains(EjbServices.class)) {
             // EJB Services is registered as a top-level service
             deploymentImpl.getServices().add(EjbServices.class, ejbServices);
         }
@@ -479,7 +495,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 }
             }
 
-            BundleDescriptor bundle = (wDesc != null) ? wDesc : ejbBundle;
+            BundleDescriptor bundle = wDesc != null ? wDesc : ejbBundle;
             if (bundle != null) {
 
                 //                if (bda.getBeanDeploymentArchives().size() > 0 && !bda.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {

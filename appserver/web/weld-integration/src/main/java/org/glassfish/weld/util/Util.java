@@ -25,9 +25,7 @@ public class Util {
     public static <T> T newInstance(String className) {
         try {
             return Util.<T>classForName(className).newInstance();
-        } catch (InstantiationException e) {
-            throw new IllegalArgumentException("Cannot instantiate instance of " + className + " with no-argument constructor", e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalArgumentException("Cannot instantiate instance of " + className + " with no-argument constructor", e);
         }
     }
@@ -39,15 +37,12 @@ public class Util {
                 @SuppressWarnings("unchecked")
                 Class<T> clazz = (Class<T>) c;
                 return clazz;
-            } else {
-                Class<?> c = Class.forName(name);
-                @SuppressWarnings("unchecked")
-                Class<T> clazz = (Class<T>) c;
-                return clazz;
             }
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Cannot load class for " + name, e);
-        } catch (NoClassDefFoundError e) {
+            Class<?> c = Class.forName(name);
+            @SuppressWarnings("unchecked")
+            Class<T> clazz = (Class<T>) c;
+            return clazz;
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
             throw new IllegalArgumentException("Cannot load class for " + name, e);
         }
     }

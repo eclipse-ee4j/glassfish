@@ -78,24 +78,23 @@ public class EjbServicesImpl implements EjbServices {
         // client views, so just choose one and get its corresponding portable
         // JNDI name.
         String globalJndiName = getDefaultGlobalJndiName(ejbDescriptor);
-        if (globalJndiName != null) {
-            try {
-
-                InitialContext ic = new InitialContext();
-
-                Object ejbRef = ic.lookup(globalJndiName);
-
-                EjbContainerServices containerServices = services.getService(EjbContainerServices.class);
-
-                sessionObj = new SessionObjectReferenceImpl(containerServices, ejbRef);
-
-            } catch (NamingException ne) {
-                throw new IllegalStateException("Error resolving session object reference for ejb name " + ejbDescriptor.getBeanClass()
-                        + " and jndi name " + globalJndiName, ne);
-            }
-        } else {
+        if (globalJndiName == null) {
             throw new IllegalArgumentException(
                     "Not enough type information to resolve ejb for " + " ejb name " + ejbDescriptor.getBeanClass());
+        }
+        try {
+
+            InitialContext ic = new InitialContext();
+
+            Object ejbRef = ic.lookup(globalJndiName);
+
+            EjbContainerServices containerServices = services.getService(EjbContainerServices.class);
+
+            sessionObj = new SessionObjectReferenceImpl(containerServices, ejbRef);
+
+        } catch (NamingException ne) {
+            throw new IllegalStateException("Error resolving session object reference for ejb name " + ejbDescriptor.getBeanClass()
+                    + " and jndi name " + globalJndiName, ne);
         }
 
         return sessionObj;
@@ -116,7 +115,7 @@ public class EjbServicesImpl implements EjbServices {
             clientView = sessionDesc.getRemoteBusinessClassNames().iterator().next();
         }
 
-        return (clientView != null) ? sessionDesc.getPortableJndiName(clientView) : null;
+        return clientView != null ? sessionDesc.getPortableJndiName(clientView) : null;
 
     }
 
@@ -138,7 +137,7 @@ public class EjbServicesImpl implements EjbServices {
                 logger.log(Level.FINE, CDILoggerInfo.TRYING_TO_REGISTER_INTERCEPTOR, new Object[] { next });
             }
             // Add interceptor to list all interceptors in ejb descriptor
-            if (!(glassfishEjbDesc.hasInterceptorClass(next.getBeanClass().getName()))) {
+            if (!glassfishEjbDesc.hasInterceptorClass(next.getBeanClass().getName())) {
                 if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, CDILoggerInfo.ADDING_INTERCEPTOR_FOR_EJB,
                             new Object[] { next.getBeanClass().getName(), glassfishEjbDesc.getEjbClassName() });
@@ -199,8 +198,6 @@ public class EjbServicesImpl implements EjbServices {
             ejbBeanSuperClass = ejbBeanSuperClass.getSuperclass();
         }
 
-        return;
-
     }
 
     // Section 4.2. Inheritance of member-level metadata of CDI spec states:
@@ -227,7 +224,7 @@ public class EjbServicesImpl implements EjbServices {
     private List<EjbInterceptor> makeInterceptorChain(InterceptionType interceptionType, List<Interceptor<?>> lifecycleList,
             com.sun.enterprise.deployment.EjbDescriptor ejbDesc) {
 
-        List<EjbInterceptor> ejbInterceptorList = new LinkedList<EjbInterceptor>();
+        List<EjbInterceptor> ejbInterceptorList = new LinkedList<>();
 
         if (lifecycleList == null) {
             return ejbInterceptorList;

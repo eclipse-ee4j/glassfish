@@ -16,15 +16,6 @@
 
 package org.glassfish.cdi.transaction;
 
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-import org.glassfish.logging.annotation.LoggerInfo;
-
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.Any;
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.*;
-import jakarta.enterprise.util.AnnotationLiteral;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -33,9 +24,25 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
+import jakarta.enterprise.util.AnnotationLiteral;
+
 /**
  * This class contains utility methods used for TransactionScoped related CDI event processing.
- * 
+ *
  * @author <a href="mailto:arjav.desai@oracle.com">Arjav Desai</a>
  */
 public class TransactionScopedCDIUtil {
@@ -82,10 +89,11 @@ public class TransactionScopedCDIUtil {
                 Bean<?> bean = beanManager.resolve(availableBeans);
                 TransactionScopedCDIEventHelper eventHelper = (TransactionScopedCDIEventHelper) beanManager.getReference(bean,
                         bean.getBeanClass(), beanManager.createCreationalContext(null));
-                if (eventType.equalsIgnoreCase(INITIALIZED_EVENT))
+                if (eventType.equalsIgnoreCase(INITIALIZED_EVENT)) {
                     eventHelper.fireInitializedEvent(new TransactionScopedCDIEventPayload());
-                else
+                } else {
                     eventHelper.fireDestroyedEvent(new TransactionScopedCDIEventPayload());
+                }
             }
         } else {
             TransactionScopedCDIUtil.log("Can't get instance of BeanManager to process TransactionScoped CDI Event!");
@@ -123,7 +131,7 @@ public class TransactionScopedCDIUtil {
 
         @Override
         public Set<Annotation> getQualifiers() {
-            Set<Annotation> qualifiers = new HashSet<Annotation>();
+            Set<Annotation> qualifiers = new HashSet<>();
             qualifiers.add(new DefaultAnnotationLiteral());
             qualifiers.add(new AnyAnnotationLiteral());
             return qualifiers;
@@ -150,7 +158,7 @@ public class TransactionScopedCDIUtil {
 
         @Override
         public Set<Type> getTypes() {
-            Set<Type> types = new HashSet<Type>();
+            Set<Type> types = new HashSet<>();
             types.add(beanClass);
             types.add(Object.class);
             return types;

@@ -16,17 +16,17 @@
 
 package org.glassfish.weld;
 
-import org.glassfish.web.loader.WebappClassLoader;
-import org.jboss.weld.bootstrap.api.SingletonProvider;
-import org.jboss.weld.bootstrap.api.Singleton;
-import org.glassfish.javaee.full.deployment.EarLibClassLoader;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-
-import java.util.Map;
-import java.util.Hashtable;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Hashtable;
+import java.util.Map;
+
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.javaee.full.deployment.EarLibClassLoader;
+import org.glassfish.web.loader.WebappClassLoader;
+import org.jboss.weld.bootstrap.api.Singleton;
+import org.jboss.weld.bootstrap.api.SingletonProvider;
 
 /**
  * Singleton provider that uses Application ClassLoader to differentiate between applications. It is different from
@@ -49,14 +49,15 @@ public class ACLSingletonProvider extends SingletonProvider {
      * and change it if application class loader hierarchy changes.
      */
 
+    @Override
     public <T> ACLSingleton<T> create(Class<? extends T> expectedType) {
-        return new ACLSingleton<T>();
+        return new ACLSingleton<>();
     }
 
     private static class ACLSingleton<T> implements Singleton<T> {
 
         // use Hashtable for concurrent access
-        private final Map<ClassLoader, T> store = new Hashtable<ClassLoader, T>();
+        private final Map<ClassLoader, T> store = new Hashtable<>();
         private ClassLoader ccl = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
 
         // Can't assume bootstrap loader as null. That's more of a convention.
@@ -65,7 +66,8 @@ public class ACLSingletonProvider extends SingletonProvider {
 
         static {
             SecurityManager sm = System.getSecurityManager();
-            bootstrapCL = (sm != null) ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            bootstrapCL = sm != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                @Override
                 public ClassLoader run() {
                     return Object.class.getClassLoader();
                 }
@@ -97,7 +99,8 @@ public class ACLSingletonProvider extends SingletonProvider {
          */
         private ClassLoader getClassLoader() {
             SecurityManager sm = System.getSecurityManager();
-            final ClassLoader tccl = (sm != null) ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            final ClassLoader tccl = sm != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                @Override
                 public ClassLoader run() {
                     return Thread.currentThread().getContextClassLoader();
                 }
@@ -120,11 +123,10 @@ public class ACLSingletonProvider extends SingletonProvider {
                     //                            "Application Class Loader = [ " + cl + "],\n" +
                     //                            "Thread Context Class Loader = [" + tccl + "]");
                     return cl;
-                } else {
-                    if (cl instanceof WebappClassLoader) {
-                        // we do this because it's possible for an app to change the thread's context class loader
-                        appClassLoader = cl;
-                    }
+                }
+                if (cl instanceof WebappClassLoader) {
+                    // we do this because it's possible for an app to change the thread's context class loader
+                    appClassLoader = cl;
                 }
                 cl = getParent(cl);
             }
@@ -134,6 +136,7 @@ public class ACLSingletonProvider extends SingletonProvider {
         private ClassLoader getParent(final ClassLoader cl) {
             SecurityManager sm = System.getSecurityManager();
             return sm != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                @Override
                 public ClassLoader run() {
                     return cl.getParent();
                 }

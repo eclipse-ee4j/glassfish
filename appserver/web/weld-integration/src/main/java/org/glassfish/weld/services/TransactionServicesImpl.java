@@ -16,17 +16,25 @@
 
 package org.glassfish.weld.services;
 
-import static jakarta.transaction.Status.*;
+import static jakarta.transaction.Status.STATUS_ACTIVE;
+import static jakarta.transaction.Status.STATUS_COMMITTING;
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static jakarta.transaction.Status.STATUS_PREPARED;
+import static jakarta.transaction.Status.STATUS_PREPARING;
+import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
+import static jakarta.transaction.Status.STATUS_UNKNOWN;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jboss.weld.transaction.spi.TransactionServices;
+
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
-
-import org.glassfish.hk2.api.ServiceLocator;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import org.jboss.weld.transaction.spi.TransactionServices;
 
 public class TransactionServicesImpl implements TransactionServices {
 
@@ -39,6 +47,7 @@ public class TransactionServicesImpl implements TransactionServices {
         }
     }
 
+    @Override
     public boolean isTransactionActive() {
         try {
             int curStatus = transactionManager.getStatus();
@@ -46,14 +55,14 @@ public class TransactionServicesImpl implements TransactionServices {
                     || curStatus == STATUS_UNKNOWN || curStatus == STATUS_PREPARING || curStatus == STATUS_COMMITTING
                     || curStatus == STATUS_ROLLING_BACK) {
                 return true;
-            } else {
-                return false;
             }
+            return false;
         } catch (SystemException e) {
             throw new RuntimeException("Unable to determine transaction status", e);
         }
     }
 
+    @Override
     public void registerSynchronization(Synchronization observer) {
         try {
             transactionManager.registerSynchronization(observer);
@@ -62,6 +71,7 @@ public class TransactionServicesImpl implements TransactionServices {
         }
     }
 
+    @Override
     public UserTransaction getUserTransaction() {
         try {
             InitialContext c = new InitialContext();
@@ -72,6 +82,7 @@ public class TransactionServicesImpl implements TransactionServices {
         }
     }
 
+    @Override
     public void cleanup() {
     }
 }

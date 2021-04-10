@@ -16,11 +16,11 @@
 
 package org.glassfish.weld.services;
 
-import com.sun.enterprise.security.SecurityContext;
 import java.security.Principal;
-import java.util.function.Consumer;
 
 import org.jboss.weld.security.spi.SecurityServices;
+
+import com.sun.enterprise.security.SecurityContext;
 
 public class SecurityServicesImpl implements SecurityServices {
 
@@ -49,11 +49,10 @@ public class SecurityServicesImpl implements SecurityServices {
 
         @Override
         public void associate() {
-            if (oldContext == null) {
-                oldContext = SecurityContext.getCurrent();
-            } else {
+            if (oldContext != null) {
                 throw new IllegalStateException("Security context is already associated");
             }
+            oldContext = SecurityContext.getCurrent();
             SecurityContext.setCurrent(myContext);
         }
 

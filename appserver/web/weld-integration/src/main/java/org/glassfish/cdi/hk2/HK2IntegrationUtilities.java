@@ -22,12 +22,6 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.Annotated;
-import jakarta.enterprise.inject.spi.AnnotatedField;
-import jakarta.enterprise.inject.spi.AnnotatedParameter;
-import jakarta.enterprise.inject.spi.InjectionPoint;
-import jakarta.inject.Named;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -37,9 +31,16 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.InjecteeImpl;
 import org.glassfish.hk2.utilities.NamedImpl;
 
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.Annotated;
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedParameter;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Named;
+
 /**
  * Integration utilities
- * 
+ *
  * @author jwells
  *
  */
@@ -48,7 +49,7 @@ public class HK2IntegrationUtilities {
 
     /**
      * This method returns the proper ApplicationServiceLocator to use for CDI integration
-     * 
+     *
      * @return The application service loctor (will not return null)
      * @throws AssertionError if no ServiceLocator can be found
      */
@@ -65,11 +66,12 @@ public class HK2IntegrationUtilities {
     private static Set<Annotation> getHK2Qualifiers(InjectionPoint injectionPoint) {
         Set<Annotation> setQualifiers = injectionPoint.getQualifiers();
 
-        Set<Annotation> retVal = new HashSet<Annotation>();
+        Set<Annotation> retVal = new HashSet<>();
 
         for (Annotation anno : setQualifiers) {
-            if (anno.annotationType().equals(Default.class))
+            if (anno.annotationType().equals(Default.class)) {
                 continue;
+            }
 
             if (anno.annotationType().equals(Named.class)) {
                 Named named = (Named) anno;

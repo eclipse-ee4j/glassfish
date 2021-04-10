@@ -20,10 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -33,6 +29,11 @@ import org.glassfish.hk2.api.Injectee;
 import org.glassfish.hk2.api.JustInTimeInjectionResolver;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author jwells
@@ -49,7 +50,7 @@ public class CDISecondChanceResolver implements JustInTimeInjectionResolver {
 
     /**
      * Gets the currently scoped BeanManager
-     * 
+     *
      * @return The currently scoped BeanManager, or null if a bean manager cannot be found
      */
     private BeanManager getCurrentBeanManager() {
@@ -74,8 +75,9 @@ public class CDISecondChanceResolver implements JustInTimeInjectionResolver {
         Annotation qualifiers[] = setQualifiers.toArray(new Annotation[setQualifiers.size()]);
 
         BeanManager manager = getCurrentBeanManager();
-        if (manager == null)
+        if (manager == null) {
             return false;
+        }
 
         Set<Bean<?>> beans = manager.getBeans(requiredType, qualifiers);
         if (beans == null || beans.isEmpty()) {
@@ -85,7 +87,7 @@ public class CDISecondChanceResolver implements JustInTimeInjectionResolver {
         DynamicConfiguration config = ServiceLocatorUtilities.createDynamicConfiguration(locator);
         for (Bean<?> bean : beans) {
             // Add a bean to the service locator
-            CDIHK2Descriptor<Object> descriptor = new CDIHK2Descriptor<Object>(manager, (Bean<Object>) bean, requiredType);
+            CDIHK2Descriptor<Object> descriptor = new CDIHK2Descriptor<>(manager, (Bean<Object>) bean, requiredType);
             config.addActiveDescriptor(descriptor);
         }
 

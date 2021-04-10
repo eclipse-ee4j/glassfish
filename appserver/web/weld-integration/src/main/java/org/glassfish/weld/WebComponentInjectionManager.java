@@ -16,20 +16,20 @@
 
 package org.glassfish.weld;
 
-import com.sun.enterprise.web.WebComponentDecorator;
-import com.sun.enterprise.web.WebModule;
-
 import java.util.Collection;
-
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.AnnotatedType;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.web.WebComponentDecorator;
+import com.sun.enterprise.web.WebModule;
+
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 
 /**
  * This is a decorator which calls Weld implemetation to do necessary injection of a web component. It is called by
@@ -40,6 +40,7 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 public class WebComponentInjectionManager<T> implements WebComponentDecorator<T> {
+    @Override
     @SuppressWarnings("unchecked")
     public void decorate(T webComponent, WebModule wm) {
         if (wm.getWebBundleDescriptor().hasExtensionProperty(WeldDeployer.WELD_EXTENSION)) {

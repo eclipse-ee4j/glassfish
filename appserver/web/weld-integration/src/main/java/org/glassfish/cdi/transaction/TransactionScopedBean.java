@@ -16,16 +16,15 @@
 
 package org.glassfish.cdi.transaction;
 
-import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
+import java.util.Set;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import jakarta.transaction.Status;
+
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.TransactionSynchronizationRegistry;
-import java.util.Set;
 
 /**
  * A wrapper for contextual instances of {@link jakarta.transaction.TransactionScoped} beans. We need this wrapper so

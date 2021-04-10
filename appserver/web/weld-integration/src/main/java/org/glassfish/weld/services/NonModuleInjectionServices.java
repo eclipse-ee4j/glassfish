@@ -16,16 +16,17 @@
 
 package org.glassfish.weld.services;
 
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.container.common.spi.util.InjectionException;
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.deployment.*;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.jboss.weld.injection.spi.InjectionContext;
 import org.jboss.weld.injection.spi.InjectionServices;
 
-import jakarta.enterprise.inject.spi.*;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.container.common.spi.util.InjectionException;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+
+import jakarta.enterprise.inject.spi.AnnotatedType;
 
 /**
  * The InjectionServices for a non-module bda (library or rar). A non-module bda has no associated bundle so we cannot
@@ -42,6 +43,7 @@ public class NonModuleInjectionServices implements InjectionServices {
         injectionManager = injectionMgr;
     }
 
+    @Override
     public <T> void aroundInject(InjectionContext<T> injectionContext) {
         try {
             ServiceLocator serviceLocator = Globals.getDefaultHabitat();
@@ -67,10 +69,12 @@ public class NonModuleInjectionServices implements InjectionServices {
         }
     }
 
+    @Override
     public <T> void registerInjectionTarget(jakarta.enterprise.inject.spi.InjectionTarget<T> injectionTarget,
             AnnotatedType<T> annotatedType) {
     }
 
+    @Override
     public void cleanup() {
     }
 

@@ -16,11 +16,10 @@
 
 package org.glassfish.weld;
 
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
+import java.util.Set;
+
+import javax.naming.NamingException;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
@@ -29,16 +28,18 @@ import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import javax.naming.NamingException;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorContext;
 import jakarta.validation.ValidatorFactory;
-import java.util.Set;
 
 /**
  * Proxy for jakarta.validation based lookups (java:comp/Validator, java:comp/ValidatorFactory) when CDI enabled
@@ -109,7 +110,8 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
                 ne.initCause(t);
                 throw ne;
             }
-        } else if (VALIDATOR_CONTEXT.equals(name)) {
+        }
+        if (VALIDATOR_CONTEXT.equals(name)) {
 
             try {
 

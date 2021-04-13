@@ -39,7 +39,7 @@
         <profile>
             <id>embedded</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
                 <property>
                     <name>release-phase-all</name>
                     <value>true</value>

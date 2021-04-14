@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>test-utils</artifactId>
-        <version>6.1.0-RC1</version>
+        <version>6.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.tests</groupId>
     <artifactId>utils</artifactId>
-    <version>6.1.0-RC1</version>
+    <version>6.1.0-SNAPSHOT</version>
 
     <name>Test utilities</name>
 

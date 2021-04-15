@@ -9,6 +9,12 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## April 14, 2021 -- Eclipse GlassFish 6.1 Release Candidate
+
+GlassFish 6.1 release candidate is now available for download and trials. 
+Further details and download links are available from the [GlassFish Download page](https://eclipse-ee4j.github.io/glassfish/download).
+
+
 ## December 31, 2020 -- Eclipse GlassFish 6 Stable Release
 
 We are pleased to announce the stable release of Eclipse GlassFish 6.0. This release provides implementations

@@ -26,6 +26,8 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface RestExtension {
     String getParent();
+
     void get(Object data);
+
     ParameterMap post(Object data);
 }

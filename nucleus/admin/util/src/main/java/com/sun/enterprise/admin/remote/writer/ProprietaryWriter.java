@@ -28,5 +28,5 @@ public interface ProprietaryWriter {
     boolean isWriteable(final Object entity);
 
     void writeTo(final Object entity, final HttpURLConnection urlConnection) throws IOException;
-    
+
 }

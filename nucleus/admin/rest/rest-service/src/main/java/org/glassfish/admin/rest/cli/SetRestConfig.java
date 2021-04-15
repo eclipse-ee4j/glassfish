@@ -54,9 +54,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 @PerLookup
 @ExecuteOn(RuntimeType.DAS)
 @CommandLock(CommandLock.LockType.NONE)
-@RestEndpoints({
-    @RestEndpoint(configBean=Domain.class, opType=RestEndpoint.OpType.POST)
-})
+@RestEndpoints({ @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.POST) })
 public class SetRestConfig implements AdminCommand {
 
     @AccessRequired.To("update")
@@ -90,8 +88,7 @@ public class SetRestConfig implements AdminCommand {
         RestConfig restConfig = config.getExtensionByType(RestConfig.class);
 
         /**
-         * The schedules does not exist in this Config.  We will need to
-         * add it plus the default schedules.
+         * The schedules does not exist in this Config. We will need to add it plus the default schedules.
          */
         if (restConfig == null) {
             try {
@@ -119,17 +116,11 @@ public class SetRestConfig implements AdminCommand {
             }
         }
 
-
-
-
-
         try {
             ConfigSupport.apply(new SingleConfigCode<RestConfig>() {
 
                 @Override
-                public Object run(RestConfig param) throws
-                        TransactionFailure,
-                        PropertyVetoException {
+                public Object run(RestConfig param) throws TransactionFailure, PropertyVetoException {
                     if (debug != null) {
                         param.setDebug(debug);
                     }
@@ -154,8 +145,6 @@ public class SetRestConfig implements AdminCommand {
                     if (sessionTokenTimeout != null) {
                         param.setSessionTokenTimeout(sessionTokenTimeout);
                     }
-
-
 
                     return param;
                 }

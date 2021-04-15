@@ -23,11 +23,10 @@ import com.sun.enterprise.universal.collections.ManifestUtils;
  *
  * @author bnevins
  */
-class PlainTextManager implements ResponseManager{
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(PlainTextManager.class);
+class PlainTextManager implements ResponseManager {
+    private static final LocalStringsImpl strings = new LocalStringsImpl(PlainTextManager.class);
 
-    PlainTextManager(String response) throws RemoteException{
+    PlainTextManager(String response) throws RemoteException {
         this.response = response;
     }
 
@@ -37,7 +36,7 @@ class PlainTextManager implements ResponseManager{
         // or
         // "PlainTextActionReporterFAILURE..."
         String good = MAGIC + SUCCESS;
-        String bad  = MAGIC + FAILURE;
+        String bad = MAGIC + FAILURE;
 
         response = ManifestUtils.decode(response);
 
@@ -46,8 +45,7 @@ class PlainTextManager implements ResponseManager{
         } else if (response.startsWith(bad)) {
             throw new RemoteSuccessException(response.substring(bad.length()));
         } else {
-            throw new RemoteFailureException(
-		    strings.get("unknownFormat", response));
+            throw new RemoteFailureException(strings.get("unknownFormat", response));
         }
     }
 

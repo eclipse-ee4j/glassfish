@@ -26,11 +26,10 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
-/** Annotated {@code ConfigBeanProxy} class contains at least one {@code String} 
- * field, which value must point to key attribute of some other existing 
- * {@code ConfigBeanProxy} instance.<br/>
- * Use {@link ReferenceConstraint.RemoteKey} annotation on appropriate getters 
- * to define such fields.<br/>
+/**
+ * Annotated {@code ConfigBeanProxy} class contains at least one {@code String} field, which value must point to key
+ * attribute of some other existing {@code ConfigBeanProxy} instance.<br/>
+ * Use {@link ReferenceConstraint.RemoteKey} annotation on appropriate getters to define such fields.<br/>
  * This constraint is supported for {@code ConfigBeanProxy} only.
  *
  * @author Martin Mares
@@ -41,24 +40,30 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 @Constraint(validatedBy = ReferenceValidator.class)
 public @interface ReferenceConstraint {
     String message() default "Invalid reference in provided configuration.";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
-    
-    /** In GlassFish a lot of configurations are made in batch and its references
-     * could not be fulfilled during creation process.
+
+    /**
+     * In GlassFish a lot of configurations are made in batch and its references could not be fulfilled during creation
+     * process.
      */
     boolean skipDuringCreation();
-    
-    /** This annotation gets set only on getter method and in combination with 
-     * {@link ReferenceConstraint} annotation on the class.
+
+    /**
+     * This annotation gets set only on getter method and in combination with {@link ReferenceConstraint} annotation on the
+     * class.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @Documented
     public @interface RemoteKey {
         String message() default "";
-        /** Type of {@code ConfigBeanProxy} where this remote key points to. 
+
+        /**
+         * Type of {@code ConfigBeanProxy} where this remote key points to.
          */
-        Class<? extends ConfigBeanProxy> type(); 
+        Class<? extends ConfigBeanProxy> type();
     }
 }

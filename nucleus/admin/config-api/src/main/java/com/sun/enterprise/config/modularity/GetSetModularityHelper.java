@@ -42,7 +42,7 @@ public class GetSetModularityHelper {
     private Domain domain;
 
     /**
-     * @param prefix   the entire . separated string
+     * @param prefix the entire . separated string
      * @param position starts with one
      * @return the configbean class matching the element in the given position or null
      */
@@ -64,7 +64,7 @@ public class GetSetModularityHelper {
     }
 
     /**
-     * @param string   the entire . separated string
+     * @param string the entire . separated string
      * @param position starts with one
      * @return String in that position
      */
@@ -83,16 +83,12 @@ public class GetSetModularityHelper {
     }
 
     public void getLocationForDottedName(String dottedName) {
-//        TODO temporary hard coded service names till all elements are supported, being tracked as part of FPP-121
-        if (dottedName.contains("monitor")) return;
-        if (
-                dottedName.contains("mdb-container")
-                || dottedName.contains("ejb-container.")
-                || dottedName.contains("web-container.")
-                || dottedName.contains("cdi-service")
-                || dottedName.contains("batch-runtime-configuration")
-                || dottedName.contains("managed-job-config")
-                ) {
+        //        TODO temporary hard coded service names till all elements are supported, being tracked as part of FPP-121
+        if (dottedName.contains("monitor"))
+            return;
+        if (dottedName.contains("mdb-container") || dottedName.contains("ejb-container.") || dottedName.contains("web-container.")
+                || dottedName.contains("cdi-service") || dottedName.contains("batch-runtime-configuration")
+                || dottedName.contains("managed-job-config")) {
             //TODO improve performance to improve command execution time
             checkForDependentElements(dottedName);
             if (dottedName.startsWith("configs.config.")) {
@@ -124,8 +120,10 @@ public class GetSetModularityHelper {
     }
 
     private Config getConfigForName(String name) {
-        if (domain.getConfigNamed(name) != null) return domain.getConfigNamed(name);
-        if (domain.getServerNamed(name) != null) return domain.getServerNamed(name).getConfig();
+        if (domain.getConfigNamed(name) != null)
+            return domain.getConfigNamed(name);
+        if (domain.getServerNamed(name) != null)
+            return domain.getServerNamed(name).getConfig();
         return null;
     }
 }

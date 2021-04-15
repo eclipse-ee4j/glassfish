@@ -35,22 +35,18 @@ import jakarta.inject.Singleton;
 
 @Service
 @Singleton
-public class MonitoringRuntimeDataRegistryImpl 
-        implements MonitoringRuntimeDataRegistry {
-    
-    
-    protected Map<String, TreeNode> children =
-            new ConcurrentHashMap<String, TreeNode>();
+public class MonitoringRuntimeDataRegistryImpl implements MonitoringRuntimeDataRegistry {
 
+    protected Map<String, TreeNode> children = new ConcurrentHashMap<String, TreeNode>();
 
-    public MonitoringRuntimeDataRegistryImpl (){      
+    public MonitoringRuntimeDataRegistryImpl() {
     }
-    
+
     public void add(String name, TreeNode node) {
-        if (name != null )
-             children.put(name, node);
+        if (name != null)
+            children.put(name, node);
         else {
-            throw new RuntimeException ("MonitoringRuntimeDataRegistry does not take null keys");
+            throw new RuntimeException("MonitoringRuntimeDataRegistry does not take null keys");
         }
     }
 
@@ -59,8 +55,8 @@ public class MonitoringRuntimeDataRegistryImpl
             children.remove(name);
     }
 
-    public TreeNode get (String name) {
-        TreeNode node = (name != null)? children.get(name): null;
+    public TreeNode get(String name) {
+        TreeNode node = (name != null) ? children.get(name) : null;
         return node;
     }
 }

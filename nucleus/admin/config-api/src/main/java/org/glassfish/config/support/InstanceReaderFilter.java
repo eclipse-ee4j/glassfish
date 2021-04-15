@@ -33,15 +33,15 @@ import org.glassfish.config.support.DomainXmlPreParser.DomainXmlPreParserExcepti
 import static org.glassfish.config.support.Constants.*;
 
 /**
- * The "pre-parser" goes through the domain.xml and finds all the 'special'
- * elements that should be retained.  This filter class just checks the elements
- * against those lists...
+ * The "pre-parser" goes through the domain.xml and finds all the 'special' elements that should be retained. This
+ * filter class just checks the elements against those lists...
+ * 
  * @author Byron Nevins
  */
 class InstanceReaderFilter extends ServerReaderFilter {
 
-    InstanceReaderFilter(String theServerName, URL theDomainXml,
-            XMLInputFactory theXif) throws XMLStreamException, DomainXmlPreParserException {
+    InstanceReaderFilter(String theServerName, URL theDomainXml, XMLInputFactory theXif)
+            throws XMLStreamException, DomainXmlPreParserException {
 
         super(theDomainXml, theXif);
         instanceName = theServerName;
@@ -49,11 +49,9 @@ class InstanceReaderFilter extends ServerReaderFilter {
     }
 
     /**
-     * This method is called for every element.  We are very interested
-     * in server, config and cluster.
-     * We will only filter out config and server and cluster elements never other elements
-     * We use this as a handy hook to get info about other elements -- which really
-     * is a side-effect.
+     * This method is called for every element. We are very interested in server, config and cluster. We will only filter
+     * out config and server and cluster elements never other elements We use this as a handy hook to get info about other
+     * elements -- which really is a side-effect.
      *
      * @return true to NOT parse this sub-tree
      * @throws XMLStreamException
@@ -79,13 +77,10 @@ class InstanceReaderFilter extends ServerReaderFilter {
 
             // keep everything else
             return false;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // I don't trust the XML parser code in the JDK -- it likes to throw
             // unchecked exceptions!!
-            throw new XMLStreamException(
-                    Strings.get("InstanceReaderFilter.UnknownException",
-                    e.toString()), e);
+            throw new XMLStreamException(Strings.get("InstanceReaderFilter.UnknownException", e.toString()), e);
         }
     }
 
@@ -120,8 +115,7 @@ class InstanceReaderFilter extends ServerReaderFilter {
     }
 
     /**
-     * Note that dxpp.getClusterName() will definitely return null
-     * for stand-alone instances.  This is normal.
+     * Note that dxpp.getClusterName() will definitely return null for stand-alone instances. This is normal.
      *
      * @return true if we want to filter out this cluster element
      */

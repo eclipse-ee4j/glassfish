@@ -44,21 +44,20 @@ public class SetDomainConfigResource extends TemplateCommandPostResource {
     }
 
     @POST
-    @Produces({"text/html",MediaType.APPLICATION_JSON+";qs=0.5",MediaType.APPLICATION_XML+";qs=0.5"})
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response setDomainConfig(HashMap<String, String> data) {
 
         final Iterator<Entry<String, String>> iterator = data.entrySet().iterator();
         if (iterator.hasNext()) {
             ParameterMap fixed = new ParameterMap();
             Map.Entry entry = iterator.next();
-            fixed.add("DEFAULT", entry.getKey()+"="+entry.getValue());
+            fixed.add("DEFAULT", entry.getKey() + "=" + entry.getValue());
 
             return super.executeCommandLegacyFormat(fixed);
         }
 
         throw new RuntimeException("You must supply exactly one configuration option."); //i18n
     }
-
 
 }

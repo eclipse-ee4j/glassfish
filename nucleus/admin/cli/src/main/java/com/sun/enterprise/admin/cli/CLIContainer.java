@@ -47,19 +47,17 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 
-/** This exists mainly due performance reason.
- * After construct it starts hk2 descriptors parsing because is is significantly
- * more effective then HK2 initialization. <br/>
- * It retrieve list of CLICommands and use it to determine if requested command
- * is local or remote. <br/>
- * For local CLICommand which injects just ProgramOptions or Environment it can 
- * also create requested instance. For other command uses lazy loaded HK2 
- * ServiceLocator.
+/**
+ * This exists mainly due performance reason. After construct it starts hk2 descriptors parsing because is is
+ * significantly more effective then HK2 initialization. <br/>
+ * It retrieve list of CLICommands and use it to determine if requested command is local or remote. <br/>
+ * For local CLICommand which injects just ProgramOptions or Environment it can also create requested instance. For
+ * other command uses lazy loaded HK2 ServiceLocator.
  *
  * @author martinmares
  */
 public final class CLIContainer {
-    
+
     class SimpleInjectionResolver extends InjectionResolver<Inject> {
 
         public SimpleInjectionResolver(Class<Inject> type) {
@@ -79,20 +77,19 @@ public final class CLIContainer {
             }
             throw new IllegalStateException();
         }
-        
+
     }
-    
+
     private static final InjectionManager injectionMgr = new InjectionManager();
-    
+
     private final Set<File> extensions;
     private final ClassLoader classLoader;
     private final Logger logger;
-    
+
     private ServiceLocator serviceLocator;
     private ProgramOptions programOptions;
     private Environment environment;
-    
-    
+
     private Map<String, String> cliCommandsNames;
 
     public CLIContainer(final ClassLoader classLoader, final Set<File> extensions, final Logger logger) {
@@ -104,9 +101,9 @@ public final class CLIContainer {
         } catch (IOException ex) {
             logger.log(Level.FINER, "Can't fast parse hk2 locators! HK2 ServiceLocator must be used");
         }
-     }
-    
-    private Object createInstance(String name) 
+    }
+
+    private Object createInstance(String name)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalStateException {
         if (name == null) {
             return null;
@@ -121,7 +118,7 @@ public final class CLIContainer {
         injectionMgr.inject(result, injector);
         return result;
     }
-    
+
     private void parseInHk2LocatorOrig(BufferedReader reader, Map<String, String> cliCommandNames) throws IOException {
         DescriptorImpl desc = new DescriptorImpl();
         while (desc.readObject(reader)) {
@@ -130,17 +127,17 @@ public final class CLIContainer {
             }
         }
     }
-    
+
     private Set<File> expandExtensions() throws IOException {
         Set<File> result = new HashSet<File>();
         for (File file : extensions) {
             if (file.isDirectory()) {
                 File[] lf = file.listFiles(new FilenameFilter() {
-                                @Override
-                                public boolean accept(File dir, String name) {
-                                    return name.toLowerCase(Locale.ENGLISH).endsWith(".jar");
-                                }
-                            });
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return name.toLowerCase(Locale.ENGLISH).endsWith(".jar");
+                    }
+                });
                 result.addAll(Arrays.asList(lf));
             } else {
                 result.add(file);
@@ -154,7 +151,7 @@ public final class CLIContainer {
         result.add(adminCliJar);
         return result;
     }
-    
+
     private Map<String, String> parseHk2Locators() throws IOException {
         Map<String, String> result = new HashMap<String, String>();
         Set<File> extFiles = expandExtensions();
@@ -169,15 +166,19 @@ public final class CLIContainer {
                     parseInHk2LocatorOrig(reader, result);
                 }
             } finally {
-                try { reader.close(); } catch (Exception ex) {
+                try {
+                    reader.close();
+                } catch (Exception ex) {
                 }
-                try { jar.close(); } catch (Exception ex) {
+                try {
+                    jar.close();
+                } catch (Exception ex) {
                 }
             }
         }
         return result;
     }
-    
+
     private String getCommandClassName(String name) throws InterruptedException, IllegalStateException {
         if (cliCommandsNames == null) {
             throw new IllegalStateException();
@@ -185,7 +186,7 @@ public final class CLIContainer {
             return cliCommandsNames.get(name);
         }
     }
-    
+
     public ServiceLocator getServiceLocator() {
         if (serviceLocator == null) {
             Metrix.event("Init hk2 - start");
@@ -202,7 +203,7 @@ public final class CLIContainer {
         }
         return serviceLocator;
     }
-    
+
     public CLICommand getLocalCommand(String name) {
         if (serviceLocator == null) {
             //First hard chack if it is local command
@@ -230,11 +231,11 @@ public final class CLIContainer {
         }
         return getServiceLocator().getService(CLICommand.class, name);
     }
-    
+
     public Set<String> getLocalCommandsNames() {
         return cliCommandsNames.keySet();
     }
-    
+
     public void setProgramOptions(ProgramOptions programOptions) {
         this.programOptions = programOptions;
     }
@@ -250,5 +251,5 @@ public final class CLIContainer {
     public Environment getEnvironment() {
         return environment;
     }
-    
+
 }

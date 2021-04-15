@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-
 /**
  * @author rajeshwar patil
  */
@@ -30,25 +29,22 @@ public class InputReader {
     /**
      * Construct a InputReader from a string.
      *
-     * @param reader     A reader.
+     * @param reader A reader.
      */
     public InputReader(Reader reader) {
-        this.reader = reader.markSupported() ? 
-        		reader : new BufferedReader(reader);
+        this.reader = reader.markSupported() ? reader : new BufferedReader(reader);
         this.useLastChar = false;
         this.index = 0;
     }
 
-
     /**
      * Construct a InputReader from a string.
      *
-     * @param s     A source string.
+     * @param s A source string.
      */
     public InputReader(String s) {
         this(new StringReader(s));
     }
-
 
     /**
      * Back up one character.
@@ -61,20 +57,19 @@ public class InputReader {
         useLastChar = true;
     }
 
-
     /**
-    * Get the next character in the source string.
+     * Get the next character in the source string.
      *
      * @return The next character, or 0 if past the end of the source string.
      */
     public char next() throws InputException {
         if (this.useLastChar) {
-        	this.useLastChar = false;
+            this.useLastChar = false;
             if (this.lastChar != 0) {
-            	this.index += 1;
+                this.index += 1;
             }
             return this.lastChar;
-        } 
+        }
         int c;
         try {
             c = this.reader.read();
@@ -83,30 +78,29 @@ public class InputReader {
         }
 
         if (c <= 0) { // End of stream
-        	this.lastChar = 0;
+            this.lastChar = 0;
             return 0;
-        } 
-    	this.index += 1;
-    	this.lastChar = (char) c;
+        }
+        this.index += 1;
+        this.lastChar = (char) c;
         return this.lastChar;
     }
-
 
     /**
      * Resturns InputException to signal a syntax error.
      *
      * @param message The error message.
-     * @return  A InputException object, suitable for throwing
+     * @return A InputException object, suitable for throwing
      */
     public InputException error(String message) {
         return new InputException(message + toString());
     }
 
-
     /**
      * Get the next char in the string, skipping whitespace.
+     * 
      * @throws InputException
-     * @return  A character, or 0 if there are no more characters.
+     * @return A character, or 0 if there are no more characters.
      */
     public char nextNonSpace() throws InputException {
         for (;;) {
@@ -117,15 +111,12 @@ public class InputReader {
         }
     }
 
-
     /**
      * Get the next n characters.
      *
-     * @param n     The number of characters to take.
-     * @return      A string of n characters.
-     * @throws InputException
-     *   Substring bounds error if there are not
-     *   n characters remaining in the source string.
+     * @param n The number of characters to take.
+     * @return A string of n characters.
+     * @throws InputException Substring bounds error if there are not n characters remaining in the source string.
      */
     public String next(int n) throws InputException {
         if (n == 0) {
@@ -139,7 +130,7 @@ public class InputReader {
             this.useLastChar = false;
             buffer[0] = this.lastChar;
             pos = 1;
-        } 
+        }
 
         try {
             int len;
@@ -159,21 +150,19 @@ public class InputReader {
         return new String(buffer);
     }
 
-
     /**
-     * Determine if the source string still contains characters that next()
-     * can consume.
+     * Determine if the source string still contains characters that next() can consume.
+     * 
      * @return true if not yet at the end of the source.
      */
     public boolean more() throws InputException {
         char nextChar = next();
         if (nextChar == 0) {
             return false;
-        } 
+        }
         back();
         return true;
     }
-
 
     private int index;
     private Reader reader;

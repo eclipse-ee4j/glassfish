@@ -23,11 +23,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Contract annotation to mark any config bean which accepts customization values during domain creation.
- * For example the com.sun.enterprise.connectors.jms.config.JmsService need a port number for the default JmsHost.
- * Although the JmsService or any other config bean of that sort will carry some default values for the port numbers
- * but this contract makes it easy to locate and query all config beans that has the accept customization during domain
- * creation to be located and later on queried for the SystemProperties they need.
+ * Contract annotation to mark any config bean which accepts customization values during domain creation. For example
+ * the com.sun.enterprise.connectors.jms.config.JmsService need a port number for the default JmsHost. Although the
+ * JmsService or any other config bean of that sort will carry some default values for the port numbers but this
+ * contract makes it easy to locate and query all config beans that has the accept customization during domain creation
+ * to be located and later on queried for the SystemProperties they need.
  *
  * @author Masoud Kalali
  */

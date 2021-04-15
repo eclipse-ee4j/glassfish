@@ -29,14 +29,14 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service(name = Constants.REST_COMMAND_ADAPTER)
 public class RestCommandAdapter extends RestAdapter {
-    
+
     @Inject
     protected JerseyContainerCommandService jerseyContainerService;
 
     public RestCommandAdapter() {
         setRestResourceProvider(new RestCommandResourceProvider());
     }
-    
+
     @Override
     protected JerseyContainer exposeContext() throws EndpointRegistrationException {
         return jerseyContainerService.getJerseyContainer();

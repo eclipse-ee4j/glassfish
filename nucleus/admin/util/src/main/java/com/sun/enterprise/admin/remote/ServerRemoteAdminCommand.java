@@ -33,8 +33,7 @@ import org.glassfish.security.services.impl.JCEKSDomainPasswordAliasStore;
 /**
  * RemoteAdminCommand which is sent from a server (DAS or instance).
  * <p>
- * This class identifies the origin as a server (as opposed to a true
- * admin client) for server-to-server authentication.
+ * This class identifies the origin as a server (as opposed to a true admin client) for server-to-server authentication.
  *
  * @author Tim Quinn
  */
@@ -50,12 +49,11 @@ public class ServerRemoteAdminCommand extends RemoteAdminCommand {
     private ServerEnvironment serverEnv;
 
     private SSLUtils _sslUtils = null;
-    
+
     private DomainScopedPasswordAliasStore domainPasswordAliasStore = null;
 
-    public ServerRemoteAdminCommand(ServiceLocator habitat, String name, String host, int port,
-            boolean secure, String user, String password, Logger logger)
-            throws CommandException {
+    public ServerRemoteAdminCommand(ServiceLocator habitat, String name, String host, int port, boolean secure, String user,
+            String password, Logger logger) throws CommandException {
         super(name, host, port, secure, "admin", "".toCharArray(), logger);
         super.setOmitCache(true); //todo: [mmar] Remove after implementation CLI->ReST done
         completeInit(habitat);
@@ -80,12 +78,9 @@ public class ServerRemoteAdminCommand extends RemoteAdminCommand {
          * and password, is used for process-to-process authentication.
          */
         try {
-            final String certAlias = SecureAdmin.Util.isUsingUsernamePasswordAuth(secureAdmin) ?
-                    null : getCertAlias();
+            final String certAlias = SecureAdmin.Util.isUsingUsernamePasswordAuth(secureAdmin) ? null : getCertAlias();
             return new HttpConnectorAddress(host, port,
-                    certAlias == null 
-                        ? null 
-                        : sslUtils().getAdminSocketFactory(certAlias, SSL_SOCKET_PROTOCOL));
+                    certAlias == null ? null : sslUtils().getAdminSocketFactory(certAlias, SSL_SOCKET_PROTOCOL));
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -98,7 +93,7 @@ public class ServerRemoteAdminCommand extends RemoteAdminCommand {
             final SecureAdminInternalUser secureAdminInternalUser = SecureAdmin.Util.secureAdminInternalUser(secureAdmin);
             if (secureAdminInternalUser != null) {
                 try {
-                    result = new AuthenticationInfo(secureAdminInternalUser.getUsername(), 
+                    result = new AuthenticationInfo(secureAdminInternalUser.getUsername(),
                             domainPasswordAliasStore.get(secureAdminInternalUser.getPasswordAlias()));
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
@@ -107,12 +102,10 @@ public class ServerRemoteAdminCommand extends RemoteAdminCommand {
         }
         return result;
     }
-    
+
     /**
-     * Adds the admin indicator header to the request so. Do this whether 
-     * secure admin is enabled or not, because the indicator is unique among
-     * domains to help make sure only processes in the same domain talk to 
-     * each other.
+     * Adds the admin indicator header to the request so. Do this whether secure admin is enabled or not, because the
+     * indicator is unique among domains to help make sure only processes in the same domain talk to each other.
      *
      * @param urlConnection
      */
@@ -120,15 +113,12 @@ public class ServerRemoteAdminCommand extends RemoteAdminCommand {
     protected synchronized void addAdditionalHeaders(final URLConnection urlConnection) {
         final String indicatorValue = SecureAdmin.Util.configuredAdminIndicator(secureAdmin);
         if (indicatorValue != null) {
-            urlConnection.setRequestProperty(
-                    SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME,
-                    indicatorValue);
+            urlConnection.setRequestProperty(SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME, indicatorValue);
         }
     }
 
     private synchronized String getCertAlias() {
-        return (serverEnv.isDas() ? SecureAdmin.Util.DASAlias(secureAdmin) :
-            SecureAdmin.Util.instanceAlias(secureAdmin));
+        return (serverEnv.isDas() ? SecureAdmin.Util.DASAlias(secureAdmin) : SecureAdmin.Util.instanceAlias(secureAdmin));
     }
 
     private synchronized SSLUtils sslUtils() {

@@ -58,8 +58,9 @@ import static org.glassfish.admin.rest.provider.ProviderUtil.*;
  * @author Mitesh Meswani
  */
 @Path("/")
-@Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", MediaType.APPLICATION_FORM_URLENCODED+";qs=0.5"})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
+@Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5",
+        MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
+@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
 public class MonitoringResource {
 
     @Context
@@ -70,8 +71,8 @@ public class MonitoringResource {
 
     @GET
     @Path("domain{path:.*}")
-    @Produces({MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5", "text/html"})
-    public Response getChildNodes(@PathParam("path")List<PathSegment> pathSegments) {
+    @Produces({ MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5", "text/html" })
+    public Response getChildNodes(@PathParam("path") List<PathSegment> pathSegments) {
         Response.ResponseBuilder responseBuilder = Response.status(OK);
         RestActionReporter ar = new RestActionReporter();
         ar.setActionDescription("Monitoring Data");
@@ -80,32 +81,33 @@ public class MonitoringResource {
 
         String currentInstanceName = System.getProperty("com.sun.aas.instanceName");
         boolean isRunningOnDAS = "server".equals(currentInstanceName); //TODO this needs to come from an API. Check with admin team
-        MonitoringRuntimeDataRegistry monitoringRegistry =habitat.getRemoteLocator().getService(MonitoringRuntimeDataRegistry.class);
+        MonitoringRuntimeDataRegistry monitoringRegistry = habitat.getRemoteLocator().getService(MonitoringRuntimeDataRegistry.class);
         TreeNode rootNode = monitoringRegistry.get(currentInstanceName);
 
         //The pathSegments will always contain "domain". Discard it
         pathSegments = pathSegments.subList(1, pathSegments.size());
-        if(!pathSegments.isEmpty()) {
+        if (!pathSegments.isEmpty()) {
             PathSegment lastSegment = pathSegments.get(pathSegments.size() - 1);
-            if(lastSegment.getPath().isEmpty()) { // if there is a trailing '/' (like monitoring/domain/), a spurious pathSegment is added. Discard it.
-                pathSegments = pathSegments.subList(0,pathSegments.size() - 1);
+            if (lastSegment.getPath().isEmpty()) { // if there is a trailing '/' (like monitoring/domain/), a spurious pathSegment is added. Discard it.
+                pathSegments = pathSegments.subList(0, pathSegments.size() - 1);
             }
         }
 
-        if(!pathSegments.isEmpty() ) {
+        if (!pathSegments.isEmpty()) {
             String firstPathElement = pathSegments.get(0).getPath();
-            if(firstPathElement.equals(currentInstanceName)) { // Query for current instance. Execute it
+            if (firstPathElement.equals(currentInstanceName)) { // Query for current instance. Execute it
                 //iterate over pathsegments and build a dotted name to look up in monitoring registry
                 StringBuilder pathInMonitoringRegistry = new StringBuilder();
-                for(PathSegment pathSegment : pathSegments.subList(1,pathSegments.size()) ) {
-                        if(pathInMonitoringRegistry.length() > 0 ) {
-                            pathInMonitoringRegistry.append('.');
-                        }
-                        pathInMonitoringRegistry.append(pathSegment.getPath().replaceAll("\\.", "\\\\.")); // Need to escape '.' before passing it to monitoring code
+                for (PathSegment pathSegment : pathSegments.subList(1, pathSegments.size())) {
+                    if (pathInMonitoringRegistry.length() > 0) {
+                        pathInMonitoringRegistry.append('.');
+                    }
+                    pathInMonitoringRegistry.append(pathSegment.getPath().replaceAll("\\.", "\\\\.")); // Need to escape '.' before passing it to monitoring code
                 }
 
-                TreeNode resultNode = pathInMonitoringRegistry.length() > 0 && rootNode != null ?
-                        rootNode.getNode(pathInMonitoringRegistry.toString()) : rootNode;
+                TreeNode resultNode = pathInMonitoringRegistry.length() > 0 && rootNode != null
+                        ? rootNode.getNode(pathInMonitoringRegistry.toString())
+                        : rootNode;
                 if (resultNode != null) {
                     List<TreeNode> list = new ArrayList<TreeNode>();
                     if (resultNode.hasChildNodes()) {
@@ -123,7 +125,7 @@ public class MonitoringResource {
                 }
 
             } else { //firstPathElement != currentInstanceName => A proxy request
-                if(isRunningOnDAS) { //Attempt to forward to instance if running on Das
+                if (isRunningOnDAS) { //Attempt to forward to instance if running on Das
                     //TODO validate that firstPathElement corresponds to a valid server name
                     Properties proxiedResponse = new MonitoringProxyImpl().proxyRequest(uriInfo, Util.getJerseyClient(),
                             habitat.getRemoteLocator());
@@ -138,9 +140,9 @@ public class MonitoringResource {
             if (rootNode != null) {
                 list.add(rootNode); //Add currentInstance to response
             }
-            constructEntity(list,  ar);
+            constructEntity(list, ar);
 
-            if(isRunningOnDAS) { // Add links to instances from the cluster
+            if (isRunningOnDAS) { // Add links to instances from the cluster
                 Domain domain = habitat.getRemoteLocator().getService(Domain.class);
                 Map<String, String> links = (Map<String, String>) ar.getExtraProperties().get("childResources");
                 for (Server s : domain.getServers().getServer()) {

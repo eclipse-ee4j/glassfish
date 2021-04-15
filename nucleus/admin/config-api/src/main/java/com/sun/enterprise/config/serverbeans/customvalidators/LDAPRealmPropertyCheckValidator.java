@@ -25,17 +25,14 @@ import org.jvnet.hk2.config.types.Property;
  *
  * @author Nandini Ektare
  */
-public class LDAPRealmPropertyCheckValidator
-    implements ConstraintValidator<LDAPRealmPropertyCheck, AuthRealm> {
+public class LDAPRealmPropertyCheckValidator implements ConstraintValidator<LDAPRealmPropertyCheck, AuthRealm> {
 
-    private static final String LDAP_REALM =
-        "com.sun.enterprise.security.auth.realm.ldap.LDAPRealm";
+    private static final String LDAP_REALM = "com.sun.enterprise.security.auth.realm.ldap.LDAPRealm";
 
     public void initialize(final LDAPRealmPropertyCheck fqcn) {
     }
 
-    public boolean isValid(final AuthRealm realm,
-        final ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(final AuthRealm realm, final ConstraintValidatorContext constraintValidatorContext) {
 
         if (realm.getClassname().equals(LDAP_REALM)) {
             Property jaas_context = realm.getProperty("jaas-context");
@@ -51,12 +48,7 @@ public class LDAPRealmPropertyCheckValidator
             if (dn == null || dn.getName().equals(""))
                 return false;
         }
-        
+
         return true;
     }
 }
-
-
-
-
-

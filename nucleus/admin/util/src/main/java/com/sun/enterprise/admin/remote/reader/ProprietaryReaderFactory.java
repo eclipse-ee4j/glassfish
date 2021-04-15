@@ -24,7 +24,7 @@ import java.util.List;
  * @author martinmares
  */
 public class ProprietaryReaderFactory {
-    
+
     private static final List<ProprietaryReader> proprietaryReaders;
     static {
         proprietaryReaders = new ArrayList<ProprietaryReader>(7);
@@ -37,7 +37,7 @@ public class ProprietaryReaderFactory {
         proprietaryReaders.add(new ProgressStatusDTOJsonProprietaryReader());
         proprietaryReaders.add(new ProgressStatusEventJsonProprietaryReader());
     }
-    
+
     public static <T> ProprietaryReader<T> getReader(final Class<T> type, final String mediaType) {
         for (ProprietaryReader pr : proprietaryReaders) {
             if (pr.isReadable(type, mediaType)) {
@@ -46,5 +46,5 @@ public class ProprietaryReaderFactory {
         }
         return null;
     }
-    
+
 }

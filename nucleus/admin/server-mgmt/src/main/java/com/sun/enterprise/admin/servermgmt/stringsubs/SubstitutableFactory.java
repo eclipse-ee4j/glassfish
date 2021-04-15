@@ -22,28 +22,25 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
 
 /**
- * Factory to retrieve all the {@link Substitutable} entries from a {@link FileEntry}
- * or an {@link Archive}.
+ * Factory to retrieve all the {@link Substitutable} entries from a {@link FileEntry} or an {@link Archive}.
  * <p>
- * NOTE: Client can provide the their own implementation to customize the retrieval
- * of substitutable entries from a file entry or an archive.
+ * NOTE: Client can provide the their own implementation to customize the retrieval of substitutable entries from a file
+ * entry or an archive.
  * </p>
  */
 public interface SubstitutableFactory {
     /**
-     * Get's all the {@link Substitutable} entries from a {@link FileEntry}.
-     * A file entry can point to a file/directory  or can contain pattern or
-     * wild card characters.
+     * Get's all the {@link Substitutable} entries from a {@link FileEntry}. A file entry can point to a file/directory or
+     * can contain pattern or wild card characters.
      *
-     * @param fileEntry A file entry. 
+     * @param fileEntry A file entry.
      * @return All the eligible {@link Substitutable} entries from a file entry.
      */
     List<? extends Substitutable> getFileEntrySubstituables(FileEntry fileEntry);
 
     /**
-     * Get's all the {@link Substitutable} entries from an {@link Archive}.
-     * An archive entry can contain one or multiple member entries or can point the
-     * entries from nested archives.
+     * Get's all the {@link Substitutable} entries from an {@link Archive}. An archive entry can contain one or multiple
+     * member entries or can point the entries from nested archives.
      *
      * @param archive An archive.
      * @return All the eligible {@link Substitutable} entries from an archive.

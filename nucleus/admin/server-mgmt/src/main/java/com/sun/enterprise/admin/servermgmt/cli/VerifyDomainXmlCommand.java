@@ -47,8 +47,7 @@ import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 
 /**
- * Implementation for the CLI command verify-domain-xml
- * Verifies the content of the domain.xml file
+ * Implementation for the CLI command verify-domain-xml Verifies the content of the domain.xml file
  *
  * verify-domain-xml [--domaindir install_dir/domains] [domain_name]
  * 
@@ -61,12 +60,10 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
     @Param(name = "domain_name", primary = true, optional = true)
     private String domainName0;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(VerifyDomainXmlCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(VerifyDomainXmlCommand.class);
 
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException  {
+    protected void validate() throws CommandException, CommandValidationException {
         setDomainName(domainName0);
         super.validate();
     }
@@ -74,8 +71,7 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
     /**
      */
     @Override
-    protected int executeCommand()
-            throws CommandException, CommandValidationException {
+    protected int executeCommand() throws CommandException, CommandValidationException {
 
         File domainXMLFile = getDomainXml();
         logger.log(Level.FINER, "Domain XML file = {0}", domainXMLFile);
@@ -92,18 +88,16 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
                     }
                 }
             }
-                       
-            final URL[] urlsA = urls.toArray(new URL[urls.size()]);   
-            
-            ClassLoader cl = (ClassLoader)AccessController.doPrivileged(
-                    new PrivilegedAction() {
-                        @Override
-                        public Object run() {
-                            return new URLClassLoader(urlsA, Globals.class.getClassLoader());
-                        }
-                    }
-                );
-            
+
+            final URL[] urlsA = urls.toArray(new URL[urls.size()]);
+
+            ClassLoader cl = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                @Override
+                public Object run() {
+                    return new URLClassLoader(urlsA, Globals.class.getClassLoader());
+                }
+            });
+
             ModulesRegistry registry = new StaticModulesRegistry(cl);
             ServiceLocator serviceLocator = registry.createServiceLocator("default");
 
@@ -111,10 +105,11 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
             URL domainURL = domainXMLFile.toURI().toURL();
             DomDocument doc = parser.parse(domainURL);
             Dom domDomain = doc.getRoot();
-            Domain domain = domDomain.createProxy(Domain.class);            
+            Domain domain = domDomain.createProxy(Domain.class);
             DomainXmlVerifier validator = new DomainXmlVerifier(domain);
 
-            if (validator.invokeConfigValidator()) return 1;
+            if (validator.invokeConfigValidator())
+                return 1;
         } catch (Exception e) {
             throw new CommandException(e);
         }

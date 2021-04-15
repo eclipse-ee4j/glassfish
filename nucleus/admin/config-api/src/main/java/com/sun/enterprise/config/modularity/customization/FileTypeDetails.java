@@ -21,7 +21,10 @@ package com.sun.enterprise.config.modularity.customization;
  */
 public class FileTypeDetails implements TokenTypeDetails {
     private FileExistCondition mustExist;
-    public static enum FileExistCondition {MUST_EXIST, MUST_NOT_EXIST, NO_OP}
+
+    public static enum FileExistCondition {
+        MUST_EXIST, MUST_NOT_EXIST, NO_OP
+    }
 
     public FileTypeDetails(FileExistCondition mustExist) {
         this.mustExist = mustExist;

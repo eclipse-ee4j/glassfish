@@ -26,39 +26,32 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-@Service(name="protocol")
+@Service(name = "protocol")
 public class ProtocolSslConfigHandler implements SslConfigHandler {
 
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(ProtocolSslConfigHandler.class);
-
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ProtocolSslConfigHandler.class);
 
     // ------------------------------------------- Methods from SslConfigHandler
-
 
     @Override
     public void create(final CreateSsl command, final ActionReport report) {
         try {
-            final Protocol protocol =
-                    command.findOrCreateProtocol(command.listenerId, false);
+            final Protocol protocol = command.findOrCreateProtocol(command.listenerId, false);
             if (protocol == null) {
-                report.setMessage(
-                        localStrings.getLocalString(
-                                "create.ssl.protocol.notfound.fail",
-                                "Unable to find protocol {0}.",
-                                command.listenerId));
+                report.setMessage(localStrings.getLocalString("create.ssl.protocol.notfound.fail", "Unable to find protocol {0}.",
+                        command.listenerId));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             } else {
                 ConfigSupport.apply(new SingleConfigCode<Protocol>() {
-                                    public Object run(Protocol param) throws TransactionFailure {
-                                        Ssl newSsl = param.createChild(Ssl.class);
-                                        param.setSecurityEnabled("true");
-                                        command.populateSslElement(newSsl);
-                                        param.setSsl(newSsl);
-                                        return newSsl;
-                                    }
-                                }, protocol);
+                    public Object run(Protocol param) throws TransactionFailure {
+                        Ssl newSsl = param.createChild(Ssl.class);
+                        param.setSecurityEnabled("true");
+                        command.populateSslElement(newSsl);
+                        param.setSsl(newSsl);
+                        return newSsl;
+                    }
+                }, protocol);
             }
         } catch (TransactionFailure transactionFailure) {
             command.reportError(report, transactionFailure);

@@ -51,8 +51,7 @@ public interface AppTenant extends ConfigBeanProxy {
         public static Properties getDeployProperties(AppTenant instance) {
             Properties deploymentProps = new Properties();
             if (instance.getContextRoot() != null) {
-                deploymentProps.setProperty(ServerTags.CONTEXT_ROOT,
-                    instance.getContextRoot());
+                deploymentProps.setProperty(ServerTags.CONTEXT_ROOT, instance.getContextRoot());
             }
             return deploymentProps;
         }

@@ -40,8 +40,8 @@ import org.glassfish.admin.rest.RestLogging;
 
 public class PythonClientGenerator extends ClientGenerator {
     private File baseDirectory;
-    private static String MSG_INSTALL =
-            "To install the egg into your Python environment:  sudo easy_install " + ARTIFACT_NAME + "-VERSION-egg.zip";
+    private static String MSG_INSTALL = "To install the egg into your Python environment:  sudo easy_install " + ARTIFACT_NAME
+            + "-VERSION-egg.zip";
 
     public PythonClientGenerator(ServiceLocator habitat) {
         super(habitat);
@@ -65,7 +65,7 @@ public class PythonClientGenerator extends ClientGenerator {
             }
             zipFile.deleteOnExit();
             zip = new ZipOutputStream(new FileOutputStream(zipFile));
-            
+
             add(ZIP_GF_PACKAGE_DIR, "__init__.py", new ByteArrayInputStream("".getBytes()), zip);
             //add(ZIP_BASE_DIR, "PKG-INFO", new ByteArrayInputStream(getFileContents("PKG-INFO").getBytes()), zip);
             add(ZIP_BASE_DIR, "setup.py", new ByteArrayInputStream(getFileContents("setup.py").getBytes()), zip);
@@ -75,12 +75,12 @@ public class PythonClientGenerator extends ClientGenerator {
             addFileFromClasspath(ZIP_REST_PACKAGE_DIR, "restresponse.py", zip);
             addFileFromClasspath(ZIP_REST_PACKAGE_DIR, "restclientbase.py", zip);
             File[] files = baseDirectory.listFiles();
-            if(files != null) {
+            if (files != null) {
                 for (File file : files) {
                     add(ZIP_REST_PACKAGE_DIR, file, zip);
                 }
             }
-        
+
             artifacts.put(zipFile.getName(), zipFile.toURI());
             Util.deleteDirectory(baseDirectory);
         } catch (Exception ex) {
@@ -94,25 +94,26 @@ public class PythonClientGenerator extends ClientGenerator {
                 }
             }
         }
-        
+
         return artifacts;
     }
 
     @Override
     public ClientClassWriter getClassWriter(ConfigModel model, String className, Class parent) {
-         return new PythonClientClassWriter(model, className, parent, baseDirectory);
+        return new PythonClientClassWriter(model, className, parent, baseDirectory);
     }
 
     private String getFileContents(String fileName) {
-        String contents = new Scanner(getClass().getClassLoader().getResourceAsStream("/client/python/" + fileName)).useDelimiter("\\Z").next();
+        String contents = new Scanner(getClass().getClassLoader().getResourceAsStream("/client/python/" + fileName)).useDelimiter("\\Z")
+                .next();
 
         return contents.replace("VERSION", Version.getVersionNumber());
     }
-    
+
     private void addFileFromClasspath(String targetDir, String fileName, ZipOutputStream zip) throws IOException {
         add(targetDir, fileName, getClass().getClassLoader().getResourceAsStream("/client/python/" + fileName), zip);
     }
-    
+
     private void add(String dirInZip, String nameInZip, InputStream source, ZipOutputStream target) throws IOException {
         try {
             String sourcePath = dirInZip + "/" + nameInZip;

@@ -142,44 +142,42 @@ Variables Used:
     <mkdir dir="${build.classes.dir}/tmp/WEB-INF/lib" />
     <mkdir dir="lib" />
     
-    <copy file="${glassfish-web.xml}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/glassfish-web.xml" failonerror="false" />
+    <copy file="${glassfish-web.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/glassfish-web.xml" 
+        failonerror="false" quiet="true" />
     <copy file="${sun-web.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/sun-web.xml"
-        failonerror="false" />
-    <copy file="${glassfish-ejb-jar.xml}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/glassfish-ejb-jar.xml" failonerror="false" />
+        failonerror="false" quiet="true"/>
+    <copy file="${glassfish-ejb-jar.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/glassfish-ejb-jar.xml" 
+        failonerror="false" quiet="true" />
     <copy file="${sun-ejb-jar.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/sun-ejb-jar.xml"
-        failonerror="false" />
+        failonerror="false" quiet="true" />
     <copy file="${weblogic.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/weblogic.xml"
-        failonerror="false" />
-    <copy file="${glassfish-resources.xml}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/glassfish-resources.xml" failonerror="false" />
-    <copy todir="${build.classes.dir}/tmp/WEB-INF/lib" failonerror="false">
+        failonerror="false" quiet="true"/>
+    <copy file="${glassfish-resources.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/glassfish-resources.xml" 
+        failonerror="false" quiet="true"/>
+    <copy todir="${build.classes.dir}/tmp/WEB-INF/lib" failonerror="false" quiet="true">
         <fileset dir="lib">
             <include name="**/*.jar" />
             <include name="**/*.zip" />
         </fileset>
     </copy>
     <copy file="${webservices.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/webservices.xml"
-        failonerror="false" />
-    <copy file="${mappingfile.location}/${mappingfile.name}"
-        tofile="${build.classes.dir}/tmp/${mappingfile.name}" failonerror="false" />
-    <copy file="${wsdlfile.location}/${wsdlfile.name}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/wsdl/${wsdlfile.name}" failonerror="false" />
+        failonerror="false" quiet="true" />
+    <copy file="${mappingfile.location}/${mappingfile.name}" tofile="${build.classes.dir}/tmp/${mappingfile.name}" 
+        failonerror="false" quiet="true" />
+    <copy file="${wsdlfile.location}/${wsdlfile.name}" tofile="${build.classes.dir}/tmp/WEB-INF/wsdl/${wsdlfile.name}" 
+        failonerror="false" quiet="true" />
     <copy file="${tagPlugins.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/tagPlugins.xml"
-        failonerror="false" />
+        failonerror="false" quiet="true" />
     <copy file="${web.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/web.xml"
-        failonerror="false" />
-    <copy file="${persistence.xml}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/classes/META-INF/persistence.xml"
-        failonerror="false" />
+        failonerror="false" quiet="true" />
+    <copy file="${persistence.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/classes/META-INF/persistence.xml"
+        failonerror="false" quiet="true" />
     <copy file="${beans.xml}" tofile="${build.classes.dir}/tmp/WEB-INF/beans.xml"
-        failonerror="false" />
+        failonerror="false" quiet="true" />
     <copy file="${context.xml}" tofile="${build.classes.dir}/tmp/META-INF/context.xml"
-        failonerror="false" />
-    <copy file="${cdi-extension.service}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/classes/META-INF/services/jakarta.enterprise.inject.spi.Extension"
-        failonerror="false" />
+        failonerror="false" quiet="true" />
+    <copy file="${cdi-extension.service}" tofile="${build.classes.dir}/tmp/WEB-INF/classes/META-INF/services/jakarta.enterprise.inject.spi.Extension"
+        failonerror="false" quiet="true" />
 
     <copy todir="${build.classes.dir}/tmp/WEB-INF/classes">
         <fileset dir="${war.classes}">
@@ -266,30 +264,32 @@ Variables Used:
     <delete file="${ejb.jar}" />
     <echo message="common.xml: Generating ejb-jar inside build directory" level="verbose" />
     <mkdir dir="${build.classes.dir}/META-INF" />
+    
     <copy file="${ejb-jar.xml}" tofile="${build.classes.dir}/META-INF/ejb-jar.xml"
-        failonerror="false" />
+        failonerror="false" quiet="true"/>
     <copy file="${persistence.xml}" tofile="${build.classes.dir}/META-INF/persistence.xml"
-        failonerror="false" />
-    <copy file="${persistence-orm.xml}"
-        tofile="${build.classes.dir}/META-INF/persistence-orm.xml" failonerror="false" />
+        failonerror="false" quiet="true"/>
+    <copy file="${persistence-orm.xml}" tofile="${build.classes.dir}/META-INF/persistence-orm.xml" 
+        failonerror="false" quiet="true"/>
     <copy file="${webservices.xml}" tofile="${build.classes.dir}/META-INF/webservices.xml"
-        failonerror="false" />
+        failonerror="false" quiet="true"/>
     <copy file="${sun-ejb-jar.xml}" tofile="${build.classes.dir}/META-INF/sun-ejb-jar.xml"
-        failonerror="false" />
-    <copy file="${glassfish-ejb-jar.xml}"
-        tofile="${build.classes.dir}/META-INF/glassfish-ejb-jar.xml" failonerror="false" />
-    <copy file="${glassfish-resources.xml}"
-        tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false" />
-    <copy file="${sun-cmp-mappings.xml}"
-        tofile="${build.classes.dir}/META-INF/sun-cmp-mappings.xml" failonerror="false" />
+        failonerror="false" quiet="true"/>
+    <copy file="${glassfish-ejb-jar.xml}" tofile="${build.classes.dir}/META-INF/glassfish-ejb-jar.xml" 
+        failonerror="false" quiet="true"/>
+    <copy file="${glassfish-resources.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" 
+        failonerror="false" quiet="true"/>
+    <copy file="${sun-cmp-mappings.xml}" tofile="${build.classes.dir}/META-INF/sun-cmp-mappings.xml" 
+        failonerror="false" quiet="true"/>
     <copy file="${beans.xml}" tofile="${build.classes.dir}/META-INF/beans.xml"
-        failonerror="false" />
+        failonerror="false" quiet="true"/>
     <copy file="${batch.xml}" tofile="${build.classes.dir}/META-INF/batch.xml"
-        failonerror="false" />
-    <copy todir="${build.classes.dir}/META-INF/batch-jobs" failonerror="false">
+        failonerror="false" quiet="true"/>
+    <copy todir="${build.classes.dir}/META-INF/batch-jobs" failonerror="false" quiet="true">
         <fileset dir="${batch.jobs.dir}" />
     </copy>
-    <copy file="${dbschema}" todir="${build.classes.dir}" failonerror="false" />
+    <copy file="${dbschema}" todir="${build.classes.dir}" failonerror="false" quiet="true"/>
+    
     <jar jarfile="${ejb.jar}" basedir="${ejbjar.files}" update="true"
         includes="${ejbjar.classes}">
         <metainf dir="${build.classes.dir}/META-INF">
@@ -327,12 +327,14 @@ Variables Used:
     <delete file="${appclient.jar}" />
     <echo message="common.xml: Generating appclient-jar inside build directory" level="verbose" />
     <mkdir dir="${build.classes.dir}/META-INF" />
+    
     <copy file="${application-client.xml}"
-        tofile="${build.classes.dir}/META-INF/application-client.xml" failonerror="false" />
+        tofile="${build.classes.dir}/META-INF/application-client.xml" failonerror="false" quiet="true"/>
     <copy file="${glassfish-application-client.xml}"
-        tofile="${build.classes.dir}/META-INF/glassfish-application-client.xml" failonerror="false" />
+        tofile="${build.classes.dir}/META-INF/glassfish-application-client.xml" failonerror="false" quiet="true"/>
     <copy file="${sun-application-client.xml}"
-        tofile="${build.classes.dir}/META-INF/sun-application-client.xml" failonerror="false" />
+        tofile="${build.classes.dir}/META-INF/sun-application-client.xml" failonerror="false" quiet="true"/>
+    
     <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}" update="true"
         includes="${appclientjar.classes}" manifest="./client/MANIFEST.MF">
         <metainf dir="${build.classes.dir}/META-INF">
@@ -372,8 +374,12 @@ Variables Used:
     <delete file="${assemble.dir}/${appname}-persistence.jar" failonerror="false" />
     <echo message="common.xml: Generating PAR inside build directory" />
     <mkdir dir="${build.classes.dir}/META-INF" />
-    <copy file="${persistence.xml}" tofile="${build.classes.dir}/META-INF/persistence.xml" failonerror="false" />
-    <copy file="${mapping.xml}" tofile="${build.classes.dir}/META-INF/entity-mapping.xml" failonerror="false" />
+    
+    <copy file="${persistence.xml}" tofile="${build.classes.dir}/META-INF/persistence.xml" 
+        failonerror="false" quiet="true"/>
+    <copy file="${mapping.xml}" tofile="${build.classes.dir}/META-INF/entity-mapping.xml" 
+        failonerror="false" quiet="true"/>
+    
     <!-- make a jar -->
     <jar jarfile="${assemble.dir}/${appname}-persistence.jar" basedir="${build.classes.dir}" update="true"
         includes="**/*.class"
@@ -388,15 +394,17 @@ Variables Used:
 <!-- ================================================================ -->
 <!-- Target to assemble the ejb application to ear file -->
 <!-- ================================================================ -->
-<target name="build-ear-common"
-    depends="fixFiles,package-persistence-common,ejb-jar-common,appclient-jar-common,webclient-war-common">
+<target name="build-ear-common" depends="fixFiles,package-persistence-common,ejb-jar-common,appclient-jar-common,webclient-war-common">
     <delete file="${assemble.dir}/${appname}.ear" />
     <mkdir dir="${assemble.dir}" />
     <mkdir dir="${build.classes.dir}/META-INF" />
-    <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false" />
-    <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false" />
+    
+    <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" 
+        failonerror="false" quiet="true"/>
+    <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" 
+        failonerror="false" quiet="true"/>
     <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml"
-        failonerror="false" filtering="true" />
+        failonerror="false" quiet="true" filtering="true" />
     
     <jar jarfile="${assemble.dir}/${appname}App.ear">
         <fileset dir="${assemble.dir}">
@@ -634,7 +642,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         <arg line="--datasourceclassname ${db.class}" />
         <arg line="--restype ${jdbc.resource.type}" />
         <arg line="${extra-params}" />
-        <arg line="--target ${appserver.instance.name}" />
         <arg line="${as.props}" />
         <arg line="${jdbc.conpool.name}" />
     </exec>
@@ -738,12 +745,11 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 <!-- Target to delete JDBC connection-pool  -->
 <!-- ================================================================ -->
 <target name="delete-jdbc-connpool-common" depends="init-common">
-    <echo message="asadmin delete-jdbc-connection-pool ${as.props} --cascade=true --target ${appserver.instance.name} ${jdbc.conpool.name}" />
+    <echo message="asadmin delete-jdbc-connection-pool ${as.props} --cascade=true ${jdbc.conpool.name}" />
     <exec executable="${ASADMIN}" failonerror="false">
         <arg line="delete-jdbc-connection-pool" />
         <arg line="${as.props}" />
         <arg line="--cascade=true" />
-        <arg line="--target ${appserver.instance.name}" />
         <arg line="${jdbc.conpool.name}" />
     </exec>
     <echo message="cmd executed for ${appserver.instance.name}" />

@@ -28,29 +28,28 @@ import com.sun.enterprise.util.net.NetUtils;
 
 /**
  * This validator ensures that the specified port is not in use.
- * @author  kebbs
+ * 
+ * @author kebbs
  */
 public class PortValidator extends Validator {
 
-    private static final StringManager _strMgr = 
-        StringManager.getManager(PortValidator.class);
+    private static final StringManager _strMgr = StringManager.getManager(PortValidator.class);
 
     /** Creates a new instance of PortValidator */
     public PortValidator(String name) {
         super(name, java.lang.Integer.class);
     }
- 
-     /**
+
+    /**
      * Validates the given Port.
+     * 
      * @param str Must be the absolute path of the File that will be validated.
      * @throws InvalidConfigException
      */
-    public void validate(Object obj) throws InvalidConfigException
-    {
+    public void validate(Object obj) throws InvalidConfigException {
         super.validate(obj);
-        if (!NetUtils.isPortFree(((Integer)obj).intValue())) {
-            throw new InvalidConfigException(
-                _strMgr.getString("portValidator.in_use", obj));
+        if (!NetUtils.isPortFree(((Integer) obj).intValue())) {
+            throw new InvalidConfigException(_strMgr.getString("portValidator.in_use", obj));
         }
     }
 }

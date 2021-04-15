@@ -24,19 +24,22 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+
 /**
- * User-defined constraint to check if an attribute is a valid Java class name
- * The class name can be a fully qualified classname inlcuding its package name
+ * User-defined constraint to check if an attribute is a valid Java class name The class name can be a fully qualified
+ * classname inlcuding its package name
  * 
  * @author Nandini Ektare
  */
 
 @Retention(RUNTIME)
-@Target({FIELD, METHOD})
+@Target({ FIELD, METHOD })
 @Documented
 @Constraint(validatedBy = JavaClassNameValidator.class)
 public @interface JavaClassName {
     String message() default "must be a valid Java Class Name";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

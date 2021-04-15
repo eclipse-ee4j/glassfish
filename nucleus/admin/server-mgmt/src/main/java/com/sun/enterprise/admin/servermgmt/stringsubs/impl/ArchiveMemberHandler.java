@@ -24,13 +24,11 @@ import java.io.Writer;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.MemberEntry;
 
 /**
- * Handles the creation of {@link Reader} and {@link Writer} for a
- * {@link MemberEntry} of an archive.
+ * Handles the creation of {@link Reader} and {@link Writer} for a {@link MemberEntry} of an archive.
  *
  * @see FileSubstitutionHandler
  */
-public class ArchiveMemberHandler implements ArchiveMember
-{
+public class ArchiveMemberHandler implements ArchiveMember {
     // Reference to the parent archive wrapper.
     private ArchiveEntryWrapper _archiveWrapper;
     private FileSubstitutionHandler _handler;
@@ -42,10 +40,9 @@ public class ArchiveMemberHandler implements ArchiveMember
      * @param wrapper Parent archive of the input file.
      * @throws FileNotFoundException If file is not found.
      */
-    public ArchiveMemberHandler(File file, ArchiveEntryWrapper wrapper)
-            throws FileNotFoundException {
-        _handler = file.length() > SubstitutionFileUtil.getInMemorySubstitutionFileSizeInBytes() ?
-                new LargeFileSubstitutionHandler(file) : new SmallFileSubstitutionHandler(file);
+    public ArchiveMemberHandler(File file, ArchiveEntryWrapper wrapper) throws FileNotFoundException {
+        _handler = file.length() > SubstitutionFileUtil.getInMemorySubstitutionFileSizeInBytes() ? new LargeFileSubstitutionHandler(file)
+                : new SmallFileSubstitutionHandler(file);
         _archiveWrapper = wrapper;
     }
 

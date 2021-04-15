@@ -28,20 +28,21 @@ import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * Class to retrieve all the matching files for a given input path.
- * It also handles the processing of wild-card in the given path.
+ * Class to retrieve all the matching files for a given input path. It also handles the processing of wild-card in the
+ * given path.
  */
 final class FileLister {
-    private static final Logger _log = SLogger.getLogger(); 
-            
+    private static final Logger _log = SLogger.getLogger();
+
     private static final LocalStringsImpl _strings = new LocalStringsImpl(FileLister.class);
 
     final static String ASTERISK = "*";
 
     /**
-     * Recursively find all files represented by path with wild-card character 
+     * Recursively find all files represented by path with wild-card character
+     * 
      * @param pathPattern path with wild-card character ASTERISK
-     * @return List<File> all files whose paths match the pattern 
+     * @return List<File> all files whose paths match the pattern
      */
     public List<File> getFiles(String pathPattern) {
         int asteriskIndex = pathPattern.indexOf(ASTERISK);
@@ -60,14 +61,13 @@ final class FileLister {
             // path substring before the wild-card character
             String head = pathPattern.substring(0, asteriskIndex);
             // path substring after the wild-card character
-            String tail = (asteriskIndex < pathPattern.length() - 1 ?
-                    pathPattern.substring(asteriskIndex + 1) : "" );
+            String tail = (asteriskIndex < pathPattern.length() - 1 ? pathPattern.substring(asteriskIndex + 1) : "");
             // get parent file of the head, add "temp" to handle input like /path/to/parent/* 
             File parent = (new File(head + "temp")).getParentFile();
             if (parent == null) {
-            	if (_log.isLoggable(Level.FINEST)){
-            		_log.log(Level.FINEST, _strings.get("parentFileNotSpecified"));
-            	}
+                if (_log.isLoggable(Level.FINEST)) {
+                    _log.log(Level.FINEST, _strings.get("parentFileNotSpecified"));
+                }
                 parent = (new File(head + "temp").getAbsoluteFile()).getParentFile();
             }
 
@@ -81,17 +81,17 @@ final class FileLister {
             if (nextSeparator > asteriskIndex) {
                 pattern = pathPattern.substring(0, nextSeparator);
             }
-            WildCardFilenameFilter filter= new WildCardFilenameFilter(pattern);
+            WildCardFilenameFilter filter = new WildCardFilenameFilter(pattern);
 
             // get a filtered list of children 
             String childFileNames[] = parent.list(filter);
-            if (childFileNames != null ) {
+            if (childFileNames != null) {
                 for (String childName : childFileNames) {
                     String path = parent.getAbsolutePath() + File.separator + childName;
                     File file = new File(path);
                     // input ends with wild-card, e.g. /temp/*
                     if (nextSeparator < asteriskIndex) {
-                        if (file.isFile()) {  // case of /path/to/childfile
+                        if (file.isFile()) { // case of /path/to/childfile
                             retrievedFiles.add(file);
                         }
                         //TODO : Currently wild card character search do not allow to look for the
@@ -103,21 +103,19 @@ final class FileLister {
                         // wild card search pattern 'Directory/test*' will retrieve only one file
                         // testFile1.txt to retrieve other file uncomment the below code.
                         /*else
-            {
-              retrievedFiles.addAll(getAllChildFiles(file));
-            }*/
-                    }
-                    else { // input does not end with wild-card, e.g. /temp/*/bar
+                        {
+                        retrievedFiles.addAll(getAllChildFiles(file));
+                        }*/
+                    } else { // input does not end with wild-card, e.g. /temp/*/bar
                         if (file.isDirectory()) { // file has to be a directory here
                             if (nextSeparator == pathPattern.length() - 1) { // case of /path/to/child/
                                 retrievedFiles.addAll(getAllChildFiles(file));
-                            }
-                            else { // case of /path/to/child/blah
-                                String newpattern = path + File.separator + pathPattern.substring(nextSeparator+1);
+                            } else { // case of /path/to/child/blah
+                                String newpattern = path + File.separator + pathPattern.substring(nextSeparator + 1);
                                 // recursively handle /path/to/child/blah
                                 retrievedFiles.addAll(getFiles(newpattern));
                             }
-                        } 
+                        }
                         // do nothing if child is not a directory, which is impossible            
                     }
                 }
@@ -127,11 +125,10 @@ final class FileLister {
             // then replace all '/' with '\' and try parsing the input again
             if (!retrievedFiles.isEmpty()) {
                 break;
-            }
-            else if (File.separator.equals("\\") && pathPattern.contains("/")) {
+            } else if (File.separator.equals("\\") && pathPattern.contains("/")) {
                 pathPattern = pathPattern.replace("/", File.separator);
                 if (_log.isLoggable(Level.FINEST)) {
-                	_log.log(Level.FINEST, "detected \"/\" in pathWithPattern on Windows, replace with \"\\\"");
+                    _log.log(Level.FINEST, "detected \"/\" in pathWithPattern on Windows, replace with \"\\\"");
                 }
                 numTries++;
             } else {
@@ -142,8 +139,9 @@ final class FileLister {
     }
 
     /**
-     * Gets the list of child files. If the given file is a directory then all the
-     * files under directory and sub-directories will be retrieved recursively.
+     * Gets the list of child files. If the given file is a directory then all the files under directory and sub-directories
+     * will be retrieved recursively.
+     * 
      * @param rootfile
      * @return List<File>
      */
@@ -152,13 +150,11 @@ final class FileLister {
         if (!rootfile.exists()) {
             // No operation, return empty list
             _log.log(Level.INFO, SLogger.INVALID_FILE_LOCATION, rootfile.getAbsolutePath());
-        }
-        else if (!rootfile.isDirectory()) {
+        } else if (!rootfile.isDirectory()) {
             retFiles.add(rootfile);
-        }
-        else {
+        } else {
             File files[] = rootfile.listFiles();
-            if(files != null) {
+            if (files != null) {
                 for (File file : files) {
                     retFiles.addAll(getAllChildFiles(file));
                 }
@@ -170,7 +166,7 @@ final class FileLister {
     /**
      * Custom filename filter to deal with wild-card character
      */
-   private static class WildCardFilenameFilter implements FilenameFilter {
+    private static class WildCardFilenameFilter implements FilenameFilter {
         private String _pattern;
         private boolean _endsWithWc;
 
@@ -186,7 +182,7 @@ final class FileLister {
             while (tokenizedPattern.hasMoreTokens()) {
                 String subpattern = tokenizedPattern.nextToken();
                 int start = fullpath.indexOf(subpattern);
-                if ( start < 0 ) {
+                if (start < 0) {
                     return false;
                 }
                 fullpath = fullpath.substring(start + subpattern.length());

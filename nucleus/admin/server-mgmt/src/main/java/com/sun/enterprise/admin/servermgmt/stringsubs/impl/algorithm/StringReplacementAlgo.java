@@ -27,16 +27,15 @@ import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
 
 /**
- * Perform's String substitution by replacing the matching target
- * sequence with the specified literal replacement sequence.
+ * Perform's String substitution by replacing the matching target sequence with the specified literal replacement
+ * sequence.
  */
 public class StringReplacementAlgo implements SubstitutionAlgorithm {
 
     private Map<String, String> _substitutionMap;
 
     /**
-     * Construct {@link StringReplacementAlgo} for the given substitutable key/value
-     * pair.
+     * Construct {@link StringReplacementAlgo} for the given substitutable key/value pair.
      *
      * @param substitutionMap Map of substitutable key/value pairs.
      */
@@ -48,8 +47,7 @@ public class StringReplacementAlgo implements SubstitutionAlgorithm {
     }
 
     @Override
-    public void substitute(Substitutable resolver)
-            throws StringSubstitutionException {
+    public void substitute(Substitutable resolver) throws StringSubstitutionException {
         Reader reader = resolver.getReader();
         Writer writer = resolver.getWriter();
         try {
@@ -61,7 +59,7 @@ public class StringReplacementAlgo implements SubstitutionAlgorithm {
                 Iterator<Map.Entry<String, String>> entryIterator = _substitutionMap.entrySet().iterator();
                 while (entryIterator.hasNext()) {
                     Map.Entry<String, String> entry = entryIterator.next();
-                    inputLine = inputLine.replace(entry.getKey(),entry.getValue());
+                    inputLine = inputLine.replace(entry.getKey(), entry.getValue());
                 }
                 writer.write(inputLine);
             }

@@ -45,6 +45,7 @@ public class ParamMetadata {
     public ParamMetadata() {
 
     }
+
     public ParamMetadata(OptionsCapable context, Type paramType, String name, Annotation[] annotations) {
         this.name = name;
         this.context = context;
@@ -108,7 +109,7 @@ public class ParamMetadata {
 
     public JSONObject toJson() throws JSONException {
         JSONObject o = new JSONObject();
-//        o.put("name", name);
+        //        o.put("name", name);
         o.put("type", getTypeString());
         o.put("help", help);
         Object defVal = (defaultValue != null) ? defaultValue : JSONObject.NULL;
@@ -119,26 +120,27 @@ public class ParamMetadata {
         o.put("createOnly", createOnly);
         return o;
     }
-    
+
     protected String getTypeString() {
         if (type instanceof ParameterizedType) {
-            ParameterizedType pt = (ParameterizedType)type;
-            StringBuilder sb = new StringBuilder(((Class<?>)pt.getRawType()).getSimpleName());
+            ParameterizedType pt = (ParameterizedType) type;
+            StringBuilder sb = new StringBuilder(((Class<?>) pt.getRawType()).getSimpleName());
             sb.append("<");
             String sep = "";
             for (Type t : pt.getActualTypeArguments()) {
-                sb.append(sep)
-                        .append(((Class<?>)t).getSimpleName());
+                sb.append(sep).append(((Class<?>) t).getSimpleName());
                 sep = ";";
             }
             return sb.append(">").toString();
         } else {
-            return ((Class<?>)type).getSimpleName();
+            return ((Class<?>) type).getSimpleName();
         }
     }
 
     /**
-     * This method will process the annotations for a field to try to determine the default value, if one has been specified.
+     * This method will process the annotations for a field to try to determine the default value, if one has been
+     * specified.
+     * 
      * @param annos
      * @return
      */
@@ -146,9 +148,9 @@ public class ParamMetadata {
         Object defval = null;
         if (annos != null) {
             for (Annotation annotation : annos) {
-                 if (Default.class.isAssignableFrom(annotation.getClass())) {
+                if (Default.class.isAssignableFrom(annotation.getClass())) {
                     try {
-                        Default def = (Default)annotation;
+                        Default def = (Default) annotation;
                         Class clazz = def.generator();
                         if (def.useContext()) {
                             defval = ((DefaultsGenerator) context).getDefaultValue(name);
@@ -166,7 +168,7 @@ public class ParamMetadata {
                         RestLogging.restLogger.log(Level.SEVERE, null, ex);
                     }
                 } else if (Attribute.class.isAssignableFrom(annotation.getClass())) {
-                    Attribute attr = (Attribute)annotation;
+                    Attribute attr = (Attribute) annotation;
                     defval = attr.defaultValue();
                     break;
                 }
@@ -176,7 +178,7 @@ public class ParamMetadata {
     }
 
     private Object parseValue(String value) {
-        Class<?> clazz = (Class<?>)type;
+        Class<?> clazz = (Class<?>) type;
         try {
             if (clazz.equals(String.class)) {
                 return value;

@@ -71,7 +71,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- on Hudson and RE, this gets replaced by real build ID -->
-        <build.id>${user.name}-private</build.id>
+        <build.id>${git.branch}-b${git.closest.tag.commit.count}-g${git.commit.id.abbrev} ${git.build.time}</build.id>
         <findbugs.skip>false</findbugs.skip>
         <findbugs.threshold>High</findbugs.threshold>
         <findbugs.common>exclude-common.xml</findbugs.common>
@@ -93,14 +93,14 @@
         <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        <webservices.version>3.0.1-b02</webservices.version>
+        <webservices.version>3.0.1</webservices.version>
         
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.0</jakarta.inject-api.version> 
               
         <!-- Jakarta XML Binding -->
         <jakarta.jaxb-api.version>3.0.1</jakarta.jaxb-api.version>
-        <jakarta.jaxb-impl.version>3.0.1-b02</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-impl.version>3.0.1</jakarta.jaxb-impl.version>
         
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
@@ -125,9 +125,9 @@
         <hk2.plugin.version>3.0.2</hk2.plugin.version>
         <pfl.version>4.1.2</pfl.version>
 
-        <gmbal.version>4.0.2</gmbal.version>   
+        <gmbal.version>4.0.3</gmbal.version>   
         <shoal.version>2.0.0</shoal.version>
-        <ha-api.version>3.1.12</ha-api.version>
+        <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.12</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
@@ -689,6 +689,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M4</version>
                     <configuration>
+                        <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <forkCount>1</forkCount>
                     </configuration>
@@ -788,6 +789,29 @@
                     <groupId>com.google.code.maven-replacer-plugin</groupId>
                     <artifactId>replacer</artifactId>
                     <version>${replacer.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>4.0.4</version>
+                    <executions>
+                        <execution>
+                            <id>get-the-git-infos</id>
+                            <goals>
+                                <goal>revision</goal>
+                            </goals>
+                            <phase>initialize</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <includeOnlyProperties>
+                            <includeOnlyProperty>git.branch</includeOnlyProperty>
+                            <includeOnlyProperty>git.build.time</includeOnlyProperty>
+                            <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
+                            <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
+                            </includeOnlyProperties>
+                        <runOnlyOnce>true</runOnlyOnce>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -1075,6 +1099,19 @@
                 <configuration>
                     <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

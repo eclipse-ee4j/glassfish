@@ -40,7 +40,7 @@ import org.glassfish.api.admin.progress.ProgressStatusEventSet;
  * @author mmares
  */
 @Provider
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class ProgressStatusEventJsonProvider extends BaseProvider<ProgressStatusEvent> {
 
     private static final JsonFactory factory = new JsonFactory();
@@ -79,7 +79,7 @@ public class ProgressStatusEventJsonProvider extends BaseProvider<ProgressStatus
         } else if (event instanceof ProgressStatusEventCreateChild) {
             writePSEventCreateChild((ProgressStatusEventCreateChild) event, out);
         } else
-        out.writeEndObject();
+            out.writeEndObject();
     }
 
     private void writePSEventSet(ProgressStatusEventSet event, JsonGenerator out) throws IOException {

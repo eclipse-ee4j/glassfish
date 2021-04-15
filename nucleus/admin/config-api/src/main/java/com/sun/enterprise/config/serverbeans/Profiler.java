@@ -36,15 +36,12 @@ import jakarta.validation.constraints.Pattern;
 
 /**
  *
- * Profilers could be one of jprobe, optimizeit, hprof, wily and so on
- * jvm-options and property elements are used to record the settings needed to
- * get a particular profiler going. A server instance is tied to a particular
- * profiler, by the profiler element in java-config. Changing the profiler will
- * require a server restart
+ * Profilers could be one of jprobe, optimizeit, hprof, wily and so on jvm-options and property elements are used to
+ * record the settings needed to get a particular profiler going. A server instance is tied to a particular profiler, by
+ * the profiler element in java-config. Changing the profiler will require a server restart
  *
- * The adminstrative graphical interfaces, could list multiple supported
- * profilers (incomplete at this point) and will populate server.xml
- * appropriately.
+ * The adminstrative graphical interfaces, could list multiple supported profilers (incomplete at this point) and will
+ * populate server.xml appropriately.
  * 
  */
 
@@ -58,27 +55,24 @@ public interface Profiler extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
     /**
      * Gets the value of the name property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=false)   // bizarre case of having a name, but it's not a key; it's a singleton
+    @Attribute(key = false) // bizarre case of having a name, but it's not a key; it's a singleton
     @NotNull
-    @Pattern(regexp=NAME_REGEX)
+    @Pattern(regexp = NAME_REGEX)
     public String getName();
 
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the classpath property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     public String getClasspath();
@@ -86,16 +80,14 @@ public interface Profiler extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
     /**
      * Sets the value of the classpath property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setClasspath(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the nativeLibraryPath property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     public String getNativeLibraryPath();
@@ -103,33 +95,30 @@ public interface Profiler extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
     /**
      * Sets the value of the nativeLibraryPath property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setNativeLibraryPath(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     public String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setEnabled(String value) throws PropertyVetoException;
 
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 

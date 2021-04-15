@@ -21,8 +21,8 @@ import org.jvnet.hk2.config.Dom;
 import java.util.List;
 
 /**
- * Response information object. Returned on call to GET method on list
- * resource. Information used by provider to generate the appropriate output.
+ * Response information object. Returned on call to GET method on list resource. Information used by provider to
+ * generate the appropriate output.
  *
  * @author Rajeshwar Patil
  */
@@ -31,7 +31,7 @@ public class GetResultList extends Result {
     /**
      * Constructor
      */
-    public GetResultList(List<Dom> domList, String postCommand, String[][] commandResourcesPaths,  OptionsResult metaData) {
+    public GetResultList(List<Dom> domList, String postCommand, String[][] commandResourcesPaths, OptionsResult metaData) {
         __domList = domList;
         __postCommand = postCommand;
         __commandResourcesPaths = commandResourcesPaths;
@@ -48,9 +48,9 @@ public class GetResultList extends Result {
     /**
      * Returns postCommand associated with the resource.
      */
-//    public String getPostCommand() {
-//        return __postCommand;
-//    }
+    //    public String getPostCommand() {
+    //        return __postCommand;
+    //    }
 
     /**
      * Returns an array of command resources paths and the operation type.

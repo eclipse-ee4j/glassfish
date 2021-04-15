@@ -33,7 +33,7 @@ import org.glassfish.admin.rest.composite.CompositeResource;
  *
  * @author jdlee
  */
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript", CompositeResource.CONSUMES_TYPE})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript", CompositeResource.CONSUMES_TYPE })
 public class MapWriter extends BaseProvider<Map> {
     public MapWriter() {
         super(Map.class, MediaType.APPLICATION_JSON_TYPE, Constants.MEDIA_TYPE_JSON_TYPE);

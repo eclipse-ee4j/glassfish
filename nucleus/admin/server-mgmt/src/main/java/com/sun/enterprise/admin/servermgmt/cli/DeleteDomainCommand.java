@@ -33,7 +33,7 @@ import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- *  This is a local command that deletes a domain.
+ * This is a local command that deletes a domain.
  */
 @Service(name = "delete-domain")
 @PerLookup
@@ -42,32 +42,27 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
     @Param(name = "domain_name", primary = true)
     private String domainName0;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(DeleteDomainCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(DeleteDomainCommand.class);
 
     // this is single threaded code, deliberately avoiding volatile/atomic
     private HostAndPort adminAddress;
 
-
     /**
      */
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException  {
+    protected void validate() throws CommandException, CommandValidationException {
         setDomainName(domainName0);
         super.validate();
         adminAddress = super.getAdminAddress();
     }
- 
+
     /**
      */
     @Override
-    protected int executeCommand()
-            throws CommandException, CommandValidationException {
+    protected int executeCommand() throws CommandException, CommandValidationException {
 
-        try {            
-            DomainConfig domainConfig =
-                new DomainConfig(getDomainName(), getDomainsDir().getPath());
+        try {
+            DomainConfig domainConfig = new DomainConfig(getDomainName(), getDomainsDir().getPath());
             checkRunning();
             checkRename();
             DomainsManager manager = new PEDomainsManager();
@@ -76,26 +71,23 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
             // might need a revisit (Kedar: 09/16/2009)
             //deleteLoginInfo();
         } catch (Exception e) {
-	    throw new CommandException(e.getLocalizedMessage());
+            throw new CommandException(e.getLocalizedMessage());
         }
 
-	logger.fine(strings.get("DomainDeleted", getDomainName()));
+        logger.fine(strings.get("DomainDeleted", getDomainName()));
         return 0;
     }
 
     private void checkRunning() throws CommandException {
-        programOpts.setInteractive(false);      // don't prompt for password
-        if (isRunning(adminAddress.getHost(), adminAddress.getPort()) &&
-                isThisDAS(getDomainRootDir())) {
-            String msg = strings.get("domain.is.running", getDomainName(),
-                                        getDomainRootDir());
+        programOpts.setInteractive(false); // don't prompt for password
+        if (isRunning(adminAddress.getHost(), adminAddress.getPort()) && isThisDAS(getDomainRootDir())) {
+            String msg = strings.get("domain.is.running", getDomainName(), getDomainRootDir());
             throw new IllegalStateException(msg);
         }
     }
 
     /**
-     * Check that the domain directory can be renamed, to increase the likelyhood
-     * that it can be deleted.
+     * Check that the domain directory can be renamed, to increase the likelyhood that it can be deleted.
      */
     private void checkRename() throws CommandException {
         boolean ok = true;
@@ -104,16 +96,14 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
             File domdir = new File(root, getDomainName());
             File tmpdir = File.createTempFile("del-", "", root);
 
-            ok = tmpdir.delete() && domdir.renameTo(tmpdir) &&
-                    tmpdir.renameTo(domdir);
+            ok = tmpdir.delete() && domdir.renameTo(tmpdir) && tmpdir.renameTo(domdir);
         } catch (IOException ioe) {
             ok = false;
         }
-       if (!ok) {
-           String msg = strings.get("domain.fileinuse", getDomainName(),
-                   getDomainRootDir());
-           throw new IllegalStateException(msg);
-       }
+        if (!ok) {
+            String msg = strings.get("domain.fileinuse", getDomainName(), getDomainRootDir());
+            throw new IllegalStateException(msg);
+        }
     }
 
- }
+}

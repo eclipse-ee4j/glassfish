@@ -37,62 +37,50 @@ import org.jvnet.hk2.annotations.*;
 @Service(name = "list-domains")
 @PerLookup
 public final class ListDomainsCommand extends LocalDomainCommand {
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ListDomainsCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ListDomainsCommand.class);
     private String domainsRoot = null;
 
-    @Param(name="long", shortName="l", optional=true)
+    @Param(name = "long", shortName = "l", optional = true)
     boolean longOpt;
-    
-    @Param(shortName="h", optional=true, defaultValue="true")
+
+    @Param(shortName = "h", optional = true, defaultValue = "true")
     boolean header;
-    
+
     /*
      * Override the validate method because super.validate() calls initDomain,
      * and since we don't have a domain name yet, we aren't ready to call that.
      */
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException {
+    protected void validate() throws CommandException, CommandValidationException {
     }
 
     @Override
     protected int executeCommand() throws CommandException, CommandValidationException {
         try {
-            File domainsDirFile = ok(domainDirParam)
-                    ? new File(domainDirParam) : DomainDirs.getDefaultDomainsDir();
+            File domainsDirFile = ok(domainDirParam) ? new File(domainDirParam) : DomainDirs.getDefaultDomainsDir();
 
             DomainConfig domainConfig = new DomainConfig(null, domainsDirFile.getAbsolutePath());
             DomainsManager manager = new PEDomainsManager();
             String[] domainsList = manager.listDomains(domainConfig);
-            programOpts.setInteractive(false);  // no prompting for passwords
+            programOpts.setInteractive(false); // no prompting for passwords
             if (domainsList.length > 0) {
                 if (longOpt) {
-                    String headings[] = {"DOMAIN", "ADMIN_HOST", "ADMIN_PORT", "RUNNING", "RESTART_REQUIRED"};
-                    ColumnFormatter cf = header ? new ColumnFormatter(headings) : 
-                            new ColumnFormatter();
+                    String headings[] = { "DOMAIN", "ADMIN_HOST", "ADMIN_PORT", "RUNNING", "RESTART_REQUIRED" };
+                    ColumnFormatter cf = header ? new ColumnFormatter(headings) : new ColumnFormatter();
                     for (String dn : domainsList) {
                         DomainInfo di = getStatus(dn);
-                        cf.addRow(new Object[] {
-                            dn, 
-                            di.adminAddr.getHost(), 
-                            di.adminAddr.getPort(), 
-                            di.status,
-                            di.restartRequired                              
-                        });
+                        cf.addRow(new Object[] { dn, di.adminAddr.getHost(), di.adminAddr.getPort(), di.status, di.restartRequired });
                     }
                     logger.info(cf.toString());
                 } else {
                     for (String dn : domainsList) {
                         logger.info(getStatus(dn).statusMsg);
                     }
-                }               
-            }
-            else {
+                }
+            } else {
                 logger.fine(strings.get("NoDomainsToList"));
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new CommandException(ex.getLocalizedMessage());
         }
         return 0;
@@ -104,7 +92,7 @@ public final class ListDomainsCommand extends LocalDomainCommand {
         public String statusMsg;
         public boolean restartRequired;
     }
-    
+
     private DomainInfo getStatus(String dn) throws IOException, CommandException {
         setDomainName(dn);
         initDomain();
@@ -112,24 +100,19 @@ public final class ListDomainsCommand extends LocalDomainCommand {
         di.adminAddr = getAdminAddress();
         programOpts.setHostAndPort(di.adminAddr);
         di.status = isThisDAS(getDomainRootDir());
-        
+
         if (di.status) {
             di.statusMsg = strings.get("list.domains.StatusRunning", dn);
             try {
-                RemoteCLICommand cmd =
-                        new RemoteCLICommand("_get-restart-required",
-                        programOpts, env);
-                String restartRequired =
-                        cmd.executeAndReturnOutput("_get-restart-required");
+                RemoteCLICommand cmd = new RemoteCLICommand("_get-restart-required", programOpts, env);
+                String restartRequired = cmd.executeAndReturnOutput("_get-restart-required");
                 di.restartRequired = Boolean.parseBoolean(restartRequired.trim());
                 if (di.restartRequired) {
                     di.statusMsg = strings.get("list.domains.StatusRestartRequired", dn);
                 }
+            } catch (Exception ex) {
             }
-            catch (Exception ex) {
-            }
-        }
-        else {
+        } else {
             di.statusMsg = strings.get("list.domains.StatusNotRunning", dn);
         }
         return di;

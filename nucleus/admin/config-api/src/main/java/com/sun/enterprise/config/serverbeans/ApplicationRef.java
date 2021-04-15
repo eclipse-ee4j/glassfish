@@ -28,37 +28,34 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * References to applications deployed to the server instance    
+ * References to applications deployed to the server instance
  */
 
 /* @XmlType(name = "") */
 
 @Configured
-public interface ApplicationRef extends ConfigBeanProxy, Payload  {
+public interface ApplicationRef extends ConfigBeanProxy, Payload {
 
     /**
      * Gets the value of the enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     public String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
-    @Param(name="enabled", optional=true, defaultValue="true")
+    @Param(name = "enabled", optional = true, defaultValue = "true")
     public void setEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the virtualServers property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     public String getVirtualServers();
@@ -66,68 +63,59 @@ public interface ApplicationRef extends ConfigBeanProxy, Payload  {
     /**
      * Sets the value of the virtualServers property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
-    @Param(name="virtualservers", optional=true)
+    @Param(name = "virtualservers", optional = true)
     public void setVirtualServers(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the lbEnabled property.
-     * A boolean flag that causes any and all load-balancers using this
-     * application to consider this application unavailable to them.     
+     * Gets the value of the lbEnabled property. A boolean flag that causes any and all load-balancers using this
+     * application to consider this application unavailable to them.
      * 
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     public String getLbEnabled();
 
     /**
      * Sets the value of the lbEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setLbEnabled(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the disableTimeoutInMinutes property.
-     * The time, in minutes, that it takes this application to reach a quiescent 
-     * state after having been disabled
+     * Gets the value of the disableTimeoutInMinutes property. The time, in minutes, that it takes this application to reach
+     * a quiescent state after having been disabled
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="30")
+    @Attribute(defaultValue = "30")
     public String getDisableTimeoutInMinutes();
 
     /**
      * Sets the value of the disableTimeoutInMinutes property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setDisableTimeoutInMinutes(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the ref property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_APP_REGEX, message="{appref.invalid.name}", payload=ApplicationRef.class)
+    @Pattern(regexp = NAME_APP_REGEX, message = "{appref.invalid.name}", payload = ApplicationRef.class)
     public String getRef();
 
     /**
      * Sets the value of the ref property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
-    @Param(name="reference-name", primary = true)
+    @Param(name = "reference-name", primary = true)
     public void setRef(String value) throws PropertyVetoException;
 
 }

@@ -34,8 +34,7 @@ public interface ServerResource extends Named, Resource {
     /**
      * Gets the value of the enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
@@ -43,8 +42,7 @@ public interface ServerResource extends Named, Resource {
     /**
      * Sets the value of the enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setEnabled(String value) throws PropertyVetoException;
 

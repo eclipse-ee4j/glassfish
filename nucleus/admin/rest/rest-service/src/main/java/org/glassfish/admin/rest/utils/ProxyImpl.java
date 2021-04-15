@@ -59,7 +59,8 @@ public abstract class ProxyImpl implements Proxy {
             Server forwardInstance = domain.getServerNamed(forwardInstanceName);
             if (forwardInstance != null) {
                 UriBuilder forwardUriBuilder = constructForwardURLPath(sourceUriInfo);
-                URI forwardURI = forwardUriBuilder.scheme("https").host(forwardInstance.getAdminHost()).port(forwardInstance.getAdminPort()).build(); //Host and Port are replaced to that of forwardInstanceName
+                URI forwardURI = forwardUriBuilder.scheme("https").host(forwardInstance.getAdminHost()).port(forwardInstance.getAdminPort())
+                        .build(); //Host and Port are replaced to that of forwardInstanceName
                 client = addAuthenticationInfo(client, forwardInstance, habitat);
                 WebTarget resourceBuilder = client.target(forwardURI);
                 SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);
@@ -67,8 +68,7 @@ public abstract class ProxyImpl implements Proxy {
                 Invocation.Builder builder;
                 Response response;
                 if (indicatorValue != null) {
-                    builder = resourceBuilder.request(MediaType.APPLICATION_JSON).header(
-                            SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME,
+                    builder = resourceBuilder.request(MediaType.APPLICATION_JSON).header(SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME,
                             indicatorValue);
                     response = builder.get(Response.class);
                 } else {
@@ -81,11 +81,12 @@ public abstract class ProxyImpl implements Proxy {
                     Map resultExtraProperties = (Map) responseMap.get("extraProperties");
                     if (resultExtraProperties != null) {
                         Object entity = resultExtraProperties.get("entity");
-                        if(entity != null) {
+                        if (entity != null) {
                             proxiedResponse.put("entity", entity);
                         }
 
-                        @SuppressWarnings({"unchecked"}) Map<String, String> childResources = (Map<String, String>) resultExtraProperties.get("childResources");
+                        @SuppressWarnings({ "unchecked" })
+                        Map<String, String> childResources = (Map<String, String>) resultExtraProperties.get("childResources");
                         for (Map.Entry<String, String> entry : childResources.entrySet()) {
                             String targetURL = null;
                             try {
@@ -100,11 +101,11 @@ public abstract class ProxyImpl implements Proxy {
                         proxiedResponse.put("childResources", childResources);
                     }
                     Object message = responseMap.get("message");
-                    if(message != null) {
+                    if (message != null) {
                         proxiedResponse.put("message", message);
                     }
                     Object properties = responseMap.get("properties");
-                    if(properties != null) {
+                    if (properties != null) {
                         proxiedResponse.put("properties", properties);
                     }
                 } else {
@@ -128,15 +129,12 @@ public abstract class ProxyImpl implements Proxy {
         SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);
 
         // TODO need to get hardcoded "TLS" from corresponding ServerRemoteAdminCommand constant);
-        final SSLContext sslContext = habitat
-                .<SSLUtils>getService(SSLUtils.class)
+        final SSLContext sslContext = habitat.<SSLUtils>getService(SSLUtils.class)
                 .getAdminSSLContext(SecureAdmin.Util.DASAlias(secureAdmin), "TLS");
 
         // Instruct Jersey to use HostNameVerifier and SSLContext provided by us.
-        final ClientBuilder clientBuilder = ClientBuilder.newBuilder()
-                .withConfig(client.getConfiguration())
-                .hostnameVerifier(new BasicHostnameVerifier(server.getAdminHost()))
-                .sslContext(sslContext);
+        final ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(client.getConfiguration())
+                .hostnameVerifier(new BasicHostnameVerifier(server.getAdminHost())).sslContext(sslContext);
 
         return clientBuilder.build();
     }
@@ -146,6 +144,7 @@ public abstract class ProxyImpl implements Proxy {
      */
     private static class BasicHostnameVerifier implements HostnameVerifier {
         private final String host;
+
         public BasicHostnameVerifier(String host) {
             if (host == null)
                 throw new IllegalArgumentException("null host");

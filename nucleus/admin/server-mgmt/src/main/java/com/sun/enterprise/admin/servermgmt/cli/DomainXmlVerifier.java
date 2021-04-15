@@ -33,23 +33,22 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Does basic level verification of domain.xml. This is helpful as there
- * is no DTD to validate the domain's config i.e. domain.xml
+ * Does basic level verification of domain.xml. This is helpful as there is no DTD to validate the domain's config i.e.
+ * domain.xml
  * 
  * @author Nandini Ektare
  */
 public class DomainXmlVerifier {
-    
+
     private Domain domain;
     public boolean error;
     PrintStream _out;
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(DomainXmlVerifier.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(DomainXmlVerifier.class);
 
     public DomainXmlVerifier(Domain domain) throws Exception {
         this(domain, System.out);
     }
-    
+
     public DomainXmlVerifier(Domain domain, PrintStream out) throws Exception {
         this.domain = domain;
         _out = out;
@@ -62,8 +61,8 @@ public class DomainXmlVerifier {
     public boolean invokeConfigValidator() {
         boolean failed = false;
         try {
-            failed =  validate();
-        } catch(Exception e) {
+            failed = validate();
+        } catch (Exception e) {
             failed = true;
             e.printStackTrace();
         }
@@ -74,38 +73,39 @@ public class DomainXmlVerifier {
         try {
             checkUnique(Dom.unwrap(domain));
             if (!error)
-               _out.println(strings.get("VerifySuccess"));
-        } catch(Exception e) {
+                _out.println(strings.get("VerifySuccess"));
+        } catch (Exception e) {
             error = true;
             e.printStackTrace();
         }
         return error;
     }
-    
+
     private void checkUnique(Dom d) {
 
         try {
             Set<String> eltnames = d.getElementNames();
             Set<String> leafeltnames = d.model.getLeafElementNames();
             for (String elt : eltnames) {
-                if (leafeltnames.contains(elt)) continue;
+                if (leafeltnames.contains(elt))
+                    continue;
                 List<Dom> eltlist = d.nodeElements(elt);
                 checkDuplicate(eltlist);
                 for (Dom subelt : eltlist) {
                     checkUnique(subelt);
                 }
             }
-         } catch(Exception e) {
+        } catch (Exception e) {
             error = true;
             e.printStackTrace();
         }
     }
-    
+
     private void output(Result result) {
         _out.println(strings.get("VerifyError", result.result()));
     }
 
-    private void checkDuplicate(Collection <? extends Dom> beans) {
+    private void checkDuplicate(Collection<? extends Dom> beans) {
         if (beans == null || beans.size() <= 1) {
             return;
         }
@@ -117,18 +117,16 @@ public class DomainXmlVerifier {
             keys.add(key);
         }
 
-        WeakHashMap<String, Class<ConfigBeanProxy>> errorKeyBeanMap = 
-                new WeakHashMap<String, Class<ConfigBeanProxy>>();
+        WeakHashMap<String, Class<ConfigBeanProxy>> errorKeyBeanMap = new WeakHashMap<String, Class<ConfigBeanProxy>>();
         String[] strKeys = keys.toArray(new String[beans.size()]);
         for (int i = 0; i < strKeys.length; i++) {
             boolean foundDuplicate = false;
             for (int j = i + 1; j < strKeys.length; j++) {
                 // If the keys are same and if the indexes don't match
                 // we have a duplicate. So output that error
-                if ( (strKeys[i].equals(strKeys[j]))) {
+                if ((strKeys[i].equals(strKeys[j]))) {
                     foundDuplicate = true;
-                    errorKeyBeanMap.put(strKeys[i],
-                        ((Dom)keyBeanMap.get(strKeys[i])).getProxyType());
+                    errorKeyBeanMap.put(strKeys[i], ((Dom) keyBeanMap.get(strKeys[i])).getProxyType());
                     error = true;
                     break;
                 }
@@ -139,5 +137,5 @@ public class DomainXmlVerifier {
             Result result = new Result(strings.get("VerifyDupKey", e.getKey(), e.getValue()));
             output(result);
         }
-    }    
+    }
 }

@@ -29,14 +29,14 @@ import java.util.logging.*;
 import org.jvnet.hk2.config.TransactionFailure;
 
 /**
- * Hiding place for the remarkably complex logic of assigning ports to instances
- * GUARANTEE -- the only thing thrown from here is TransactionFailure
+ * Hiding place for the remarkably complex logic of assigning ports to instances GUARANTEE -- the only thing thrown from
+ * here is TransactionFailure
+ * 
  * @author Byron Nevins
  */
 public final class PortManager {
 
-    public PortManager(Cluster cluster, Config config, Domain theDomain,
-            Server theNewServer) throws TransactionFailure {
+    public PortManager(Cluster cluster, Config config, Domain theDomain, Server theNewServer) throws TransactionFailure {
         try {
             if (theNewServer == null || theDomain == null)
                 throw new TransactionFailure(Strings.get("internal.error", "null argument in PortManager constructor"));
@@ -59,7 +59,6 @@ public final class PortManager {
 
             isLocal = NetUtils.isThisHostLocal(host);
 
-
             allServers = domain.getServers().getServer();
 
             // why all this nonsense?  ConcurrentModificationException!!!
@@ -70,11 +69,9 @@ public final class PortManager {
                 }
             }
             serversOnHost = new ArrayList<ServerPorts>();
-        }
-        catch (TransactionFailure tf) {
+        } catch (TransactionFailure tf) {
             throw tf;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // this Exception will not take just a Throwable.  I MUST give a string
             throw new TransactionFailure(e.toString(), e);
         }
@@ -118,8 +115,7 @@ public final class PortManager {
                 }
             }
             return generateAssignedPortMessage(finalPorts);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new TransactionFailure(e.toString(), e);
         }
     }
@@ -146,8 +142,7 @@ public final class PortManager {
                 sb.append("\n").append(name).append("=").append("" + port);
             }
             return Strings.get("PortManager.port.summary", serverName, sb.toString());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // fall through
         }
         return null;
@@ -211,15 +206,14 @@ public final class PortManager {
             if (isPortFree(num)) {
                 allPorts.add(num);
                 return num;
-            }
-            else
+            } else
                 ++num;
         }
         throw new TransactionFailure(Strings.get("PortManager.noFreePort"));
     }
 
     private Integer getNextUnassignedPort(Integer num) throws TransactionFailure {
-        int max = num + MAX_PORT_TRIES;   // to avoid infinite loop
+        int max = num + MAX_PORT_TRIES; // to avoid infinite loop
 
         for (int inum = num; inum < max; inum++) {
             if (!allPorts.contains(inum))

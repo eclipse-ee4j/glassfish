@@ -27,11 +27,13 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, TYPE})
+@Target({ METHOD, FIELD, TYPE })
 @Documented
 @Constraint(validatedBy = FileRealmPropertyCheckValidator.class)
 public @interface FileRealmPropertyCheck {
     String message() default "file and jaas-context have to be specified for FileRealm";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

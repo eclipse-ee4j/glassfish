@@ -26,9 +26,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 /**
- * Implementation of {@link Adapter} for rest based monitoring.
- * It extends from {@link AbstractProxyRestAdapter} that uses a handle-body idiom. The handle
- * implements methods that are metadata/configuration based. The body implements methods that require REST subsystem.
+ * Implementation of {@link Adapter} for rest based monitoring. It extends from {@link AbstractProxyRestAdapter} that
+ * uses a handle-body idiom. The handle implements methods that are metadata/configuration based. The body implements
+ * methods that require REST subsystem.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
@@ -41,7 +41,6 @@ public class ProxyRestMonitoringAdapter extends AbstractProxyRestAdapter {
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
-
 
     @Override
     protected ServiceLocator getServices() {

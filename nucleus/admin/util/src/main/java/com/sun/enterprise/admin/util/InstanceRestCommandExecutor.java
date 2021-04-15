@@ -31,8 +31,8 @@ import com.sun.enterprise.util.StringUtils;
 
 /**
  *
- * Causes execution of an administrative command on one or more remote instances to be
- * triggered from code running inside the DAS.
+ * Causes execution of an administrative command on one or more remote instances to be triggered from code running
+ * inside the DAS.
  * 
  * @author Vijay Ramachandran
  * @author mmares
@@ -47,13 +47,10 @@ public class InstanceRestCommandExecutor extends ServerRemoteRestAdminCommand im
     private FailurePolicy failPolicy;
     private InstanceCommandResult result;
 
-    private static final LocalStringManagerImpl strings =
-                        new LocalStringManagerImpl(InstanceCommandExecutor.class);
+    private static final LocalStringManagerImpl strings = new LocalStringManagerImpl(InstanceCommandExecutor.class);
 
-    public InstanceRestCommandExecutor(ServiceLocator habitat,
-                                   String name, FailurePolicy fail, FailurePolicy offline, Server server,
-                                   String host, int port, Logger logger,
-                                   ParameterMap p, ActionReport r, InstanceCommandResult res) throws CommandException {
+    public InstanceRestCommandExecutor(ServiceLocator habitat, String name, FailurePolicy fail, FailurePolicy offline, Server server,
+            String host, int port, Logger logger, ParameterMap p, ActionReport r, InstanceCommandResult res) throws CommandException {
         super(habitat, name, host, port, false, "admin", "", logger);
         this.server = server;
         this.params = p;
@@ -65,12 +62,18 @@ public class InstanceRestCommandExecutor extends ServerRemoteRestAdminCommand im
     }
 
     @Override
-    public String getCommandOutput() { return this.output; }
+    public String getCommandOutput() {
+        return this.output;
+    }
 
-    public Server getServer() { return server; }
+    public Server getServer() {
+        return server;
+    }
 
-    public ActionReport getReport() { return this.aReport; }
-    
+    public ActionReport getReport() {
+        return this.aReport;
+    }
+
     private void copyActionReportContent(ActionReport source, ActionReport dest) {
         if (source == null || dest == null) {
             return;
@@ -85,7 +88,7 @@ public class InstanceRestCommandExecutor extends ServerRemoteRestAdminCommand im
             }
         }
     }
-    
+
     private void copyMessagePart(MessagePart source, MessagePart dest) {
         if (source == null || dest == null) {
             return;
@@ -108,16 +111,15 @@ public class InstanceRestCommandExecutor extends ServerRemoteRestAdminCommand im
         try {
             executeCommand(params);
             copyActionReportContent(super.getActionReport(), aReport);
-            if(StringUtils.ok(getCommandOutput()))
-                aReport.setMessage(strings.getLocalString("ice.successmessage", 
-                        "{0}:\n{1}\n", getServer().getName(), getCommandOutput()));
+            if (StringUtils.ok(getCommandOutput()))
+                aReport.setMessage(strings.getLocalString("ice.successmessage", "{0}:\n{1}\n", getServer().getName(), getCommandOutput()));
         } catch (CommandException cmdEx) {
             ActionReport.ExitCode finalResult;
-            if(cmdEx.getCause() instanceof java.net.ConnectException) {
+            if (cmdEx.getCause() instanceof java.net.ConnectException) {
                 finalResult = FailurePolicy.applyFailurePolicy(offlinePolicy, ActionReport.ExitCode.FAILURE);
-                if(!finalResult.equals(ActionReport.ExitCode.FAILURE))
+                if (!finalResult.equals(ActionReport.ExitCode.FAILURE))
                     aReport.setMessage(strings.getLocalString("clusterutil.warnoffline",
-                        "WARNING: Instance {0} seems to be offline; command {1} was not replicated to that instance",
+                            "WARNING: Instance {0} seems to be offline; command {1} was not replicated to that instance",
                             getServer().getName(), commandName));
                 else
                     aReport.setMessage(strings.getLocalString("clusterutil.failoffline",
@@ -125,14 +127,14 @@ public class InstanceRestCommandExecutor extends ServerRemoteRestAdminCommand im
                             getServer().getName(), commandName));
             } else {
                 finalResult = FailurePolicy.applyFailurePolicy(failPolicy, ActionReport.ExitCode.FAILURE);
-                if(finalResult.equals(ActionReport.ExitCode.FAILURE))
-                    aReport.setMessage(strings.getLocalString("clusterutil.commandFailed",
-                        "FAILURE: Command {0} failed on server instance {1}: {2}", commandName, getServer().getName(),
-                            cmdEx.getMessage()));
+                if (finalResult.equals(ActionReport.ExitCode.FAILURE))
+                    aReport.setMessage(
+                            strings.getLocalString("clusterutil.commandFailed", "FAILURE: Command {0} failed on server instance {1}: {2}",
+                                    commandName, getServer().getName(), cmdEx.getMessage()));
                 else
                     aReport.setMessage(strings.getLocalString("clusterutil.commandWarning",
-                        "WARNING: Command {0} did not complete successfully on server instance {1}: {2}",
-                            commandName, getServer().getName(), cmdEx.getMessage()));
+                            "WARNING: Command {0} did not complete successfully on server instance {1}: {2}", commandName,
+                            getServer().getName(), cmdEx.getMessage()));
             }
             aReport.setActionExitCode(finalResult);
         }

@@ -16,10 +16,8 @@
 
 package com.sun.enterprise.admin.util;
 
-
-
-public class TokenizerException extends Exception
-{
-	public	TokenizerException( String msg )	{ super( msg ); }
+public class TokenizerException extends Exception {
+    public TokenizerException(String msg) {
+        super(msg);
+    }
 }
-

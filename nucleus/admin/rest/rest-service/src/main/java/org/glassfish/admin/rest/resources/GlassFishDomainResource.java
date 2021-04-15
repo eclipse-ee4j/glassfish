@@ -23,11 +23,9 @@ import org.glassfish.admin.rest.adapter.LocatorBridge;
 import org.jvnet.hk2.config.Dom;
 
 /**
- * This is the root class for the generated DomainResource
- * that bootstrap the dom tree with the domain object
- * and add a few sub resources like log viewer
- * or log-level setup which are not described as configbeans
- * but more external config or files (server.log or JDK logger setup
+ * This is the root class for the generated DomainResource that bootstrap the dom tree with the domain object and add a
+ * few sub resources like log viewer or log-level setup which are not described as configbeans but more external config
+ * or files (server.log or JDK logger setup
  *
  * @author ludo
  */

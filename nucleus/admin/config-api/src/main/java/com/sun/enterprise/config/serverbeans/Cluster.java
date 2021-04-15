@@ -33,7 +33,6 @@ import org.glassfish.api.admin.*;
 import org.glassfish.config.support.*;
 import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
-
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -64,134 +63,123 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 /**
- * A cluster defines a homogeneous set of server instances that share the same
- * applications, resources, and configuration.
+ * A cluster defines a homogeneous set of server instances that share the same applications, resources, and
+ * configuration.
  */
 @Configured
 @SuppressWarnings("unused")
-@ConfigRefConstraint(message="{configref.invalid}", payload= ConfigRefValidator.class)
-@NotDuplicateTargetName(message="{cluster.duplicate.name}", payload=Cluster.class)
-@ReferenceConstraint(skipDuringCreation=true, payload=Cluster.class)
+@ConfigRefConstraint(message = "{configref.invalid}", payload = ConfigRefValidator.class)
+@NotDuplicateTargetName(message = "{cluster.duplicate.name}", payload = Cluster.class)
+@ReferenceConstraint(skipDuringCreation = true, payload = Cluster.class)
 public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemPropertyBag, ReferenceContainer, RefContainer, Payload {
 
     /**
      * Sets the cluster name
+     * 
      * @param value cluster name
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="name", primary = true)
+    @Param(name = "name", primary = true)
     @Override
     public void setName(String value) throws PropertyVetoException;
 
-    @NotTargetKeyword(message="{cluster.reserved.name}", payload=Cluster.class)
-    @Pattern(regexp=NAME_SERVER_REGEX, message="{cluster.invalid.name}", payload=Cluster.class)
+    @NotTargetKeyword(message = "{cluster.reserved.name}", payload = Cluster.class)
+    @Pattern(regexp = NAME_SERVER_REGEX, message = "{cluster.invalid.name}", payload = Cluster.class)
     @Override
     public String getName();
 
     /**
-     * points to a named config. All server instances in the cluster
-     * will share this config.
+     * points to a named config. All server instances in the cluster will share this config.
      *
      * @return a named config name
      */
     @Attribute
     @NotNull
-    @Pattern(regexp=NAME_SERVER_REGEX)
-    @ReferenceConstraint.RemoteKey(message="{resourceref.invalid.configref}", type=Config.class)
+    @Pattern(regexp = NAME_SERVER_REGEX)
+    @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.configref}", type = Config.class)
     String getConfigRef();
 
     /**
      * Sets the value of the configRef property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="config", optional=true)
+    @Param(name = "config", optional = true)
     @I18n("generic.config")
     void setConfigRef(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the gmsEnabled property.
      *
-     * When "gms-enabled" is set to "true", the GMS services will be
-     * started as a lifecycle module in each the application server in the
-     * cluster.
+     * When "gms-enabled" is set to "true", the GMS services will be started as a lifecycle module in each the application
+     * server in the cluster.
      *
      * @return true | false as a string, null means false
      */
-    @Attribute (defaultValue="true", dataType=Boolean.class, required=true)
+    @Attribute(defaultValue = "true", dataType = Boolean.class, required = true)
     @NotNull
     String getGmsEnabled();
 
     /**
      * Sets the value of the gmsEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="gmsenabled", optional=true)
+    @Param(name = "gmsenabled", optional = true)
     void setGmsEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the broadcast property.
      *
-     * When "broadcast" is set to default of "udpmulticast" and GmsMulticastPort
-     * GMSMulticastAddress are not set, then their values are generated.
-     * When "broadcast" is set to implied unicast using udp or tcp protocol,
-     * then the VIRUTAL_MUTLICAST_URI_LIST is generated
-     * for virtual broadcast over unicast mode.
+     * When "broadcast" is set to default of "udpmulticast" and GmsMulticastPort GMSMulticastAddress are not set, then their
+     * values are generated. When "broadcast" is set to implied unicast using udp or tcp protocol, then the
+     * VIRUTAL_MUTLICAST_URI_LIST is generated for virtual broadcast over unicast mode.
      *
      * @return true | false as a string, null means false
      */
-    @Attribute (defaultValue="udpmulticast", dataType=String.class, required=true)
+    @Attribute(defaultValue = "udpmulticast", dataType = String.class, required = true)
     @NotNull
     String getBroadcast();
 
     /**
      * Sets the value of the broadcast property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="gmsbroadcast", optional=true)
+    @Param(name = "gmsbroadcast", optional = true)
     void setBroadcast(String value) throws PropertyVetoException;
-
 
     /**
      * Gets the value of the gmsMulticastPort property.
      *
-     * This is the communication port GMS uses to listen for group  events.
-     * This should be a valid port number.
+     * This is the communication port GMS uses to listen for group events. This should be a valid port number.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
-    @Min(value=2048)
-    @Max(value=49151)  // fix bug 13475586
+    @Min(value = 2048)
+    @Max(value = 49151) // fix bug 13475586
     String getGmsMulticastPort();
 
     /**
      * Sets the value of the gmsMulticastPort property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="multicastport", optional=true, alias="heartbeatport")
+    @Param(name = "multicastport", optional = true, alias = "heartbeatport")
     void setGmsMulticastPort(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the gmsMulticastAddress property.
      *
-     * This is the address (only multicast supported) at which GMS will
-     * listen for group events. Must be unique for each cluster.
+     * This is the address (only multicast supported) at which GMS will listen for group events. Must be unique for each
+     * cluster.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getGmsMulticastAddress();
@@ -199,18 +187,16 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     /**
      * Sets the value of the gmsMulticastAddress property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="multicastaddress", optional=true, alias="heartbeataddress")
+    @Param(name = "multicastaddress", optional = true, alias = "heartbeataddress")
     void setGmsMulticastAddress(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the gmsBindInterfaceAddress property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     String getGmsBindInterfaceAddress();
@@ -218,21 +204,18 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     /**
      * Sets the value of the gmsBindInterfaceAddress property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    @Param(name="bindaddress", optional=true)
+    @Param(name = "bindaddress", optional = true)
     void setGmsBindInterfaceAddress(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the heartbeatEnabled property.
      *
-     * When "heartbeat-enabled" is set to "true", the GMS services will be
-     * started as a lifecycle module in each the application server in the
-     * cluster.When "heartbeat-enabled" is set to "false", GMS will not be
-     * started and its services will be unavailable. Clusters should function
-     * albeit with reduced functionality.
+     * When "heartbeat-enabled" is set to "true", the GMS services will be started as a lifecycle module in each the
+     * application server in the cluster.When "heartbeat-enabled" is set to "false", GMS will not be started and its
+     * services will be unavailable. Clusters should function albeit with reduced functionality.
      *
      * @return true | false as a string, null means false
      */
@@ -243,8 +226,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     /**
      * Sets the value of the heartbeatEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Deprecated
@@ -253,11 +235,9 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     /**
      * Gets the value of the heartbeatPort property.
      *
-     * This is the communication port GMS uses to listen for group  events.
-     * This should be a valid port number.
+     * This is the communication port GMS uses to listen for group events. This should be a valid port number.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     //@Min(value=2048)
@@ -268,8 +248,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     /**
      * Sets the value of the heartbeatPort property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Deprecated
@@ -278,11 +257,9 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     /**
      * Gets the value of the heartbeatAddress property.
      *
-     * This is the address (only multicast supported) at which GMS will
-     * listen for group events.
+     * This is the address (only multicast supported) at which GMS will listen for group events.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @Deprecated
@@ -291,8 +268,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     /**
      * Sets the value of the heartbeatAddress property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Deprecated
@@ -312,38 +288,34 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
      * Gets the value of the systemProperty property.
      * <p/>
      * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the systemProperty property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+     * systemProperty property.
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSystemProperty().add(newItem);
+     * getSystemProperty().add(newItem);
      * </pre>
      * <p/>
      * <p/>
      * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link SystemProperty }
+     * Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
     @Element
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal system props" )
-    @Param(name="systemproperties",optional=true)
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal system props")
+    @Param(name = "systemproperties", optional = true)
     @Override
     List<SystemProperty> getSystemProperty();
 
     /**
-     *	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Complete PropertyDesc for legal props" )
-    @PropertiesDesc(props={
-        @PropertyDesc(name="GMS_LISTENER_PORT", defaultValue = "9090",
-            description = "GMS listener port")
-    })
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Complete PropertyDesc for legal props")
+    @PropertiesDesc(props = { @PropertyDesc(name = "GMS_LISTENER_PORT", defaultValue = "9090", description = "GMS listener port") })
     @Element
-    @Param(name="properties", optional=true)
+    @Param(name = "properties", optional = true)
     @Override
     List<Property> getProperty();
 
@@ -352,6 +324,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
     /**
      * Returns the cluster configuration reference
+     * 
      * @return the config-ref attribute
      */
     @DuckTyped
@@ -406,10 +379,21 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     <T extends ClusterExtension> T getExtensionsByTypeAndName(Class<T> type, String name);
 
     class Duck {
-        public static boolean isCluster(Cluster me) { return true; }
-        public static boolean isServer(Cluster me)  { return false; }
-        public static boolean isInstance(Cluster me) { return false; }
-        public static boolean isDas(Cluster me) { return false; }
+        public static boolean isCluster(Cluster me) {
+            return true;
+        }
+
+        public static boolean isServer(Cluster me) {
+            return false;
+        }
+
+        public static boolean isInstance(Cluster me) {
+            return false;
+        }
+
+        public static boolean isDas(Cluster me) {
+            return false;
+        }
 
         public static String getReference(Cluster cluster) {
             return cluster.getConfigRef();
@@ -422,12 +406,11 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
         public static List<Server> getInstances(Cluster cluster) {
 
             Dom clusterDom = Dom.unwrap(cluster);
-            Domain domain =
-                    clusterDom.getHabitat().getService(Domain.class);
+            Domain domain = clusterDom.getHabitat().getService(Domain.class);
 
             ArrayList<Server> instances = new ArrayList<Server>();
             for (ServerRef sRef : cluster.getServerRef()) {
-                Server svr =  domain.getServerNamed(sRef.getRef());
+                Server svr = domain.getServerNamed(sRef.getRef());
                 // the instance's domain.xml only has its own server 
                 // element and not other server elements in the cluster 
                 if (svr != null) {
@@ -446,8 +429,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             return null;
         }
 
-        public static ApplicationRef getApplicationRef(Cluster cluster,
-                String appName) {
+        public static ApplicationRef getApplicationRef(Cluster cluster, String appName) {
             for (ApplicationRef appRef : cluster.getApplicationRef()) {
                 if (appRef.getRef().equals(appName)) {
                     return appRef;
@@ -464,7 +446,6 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             }
             return null;
         }
-
 
         public static boolean isResourceRefExists(Cluster cluster, String refName) {
             return getResourceRef(cluster, refName) != null;
@@ -529,32 +510,32 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     @PerLookup
     class Decorator implements CreationDecorator<Cluster> {
 
-        @Param(name="config", optional=true)
-        String configRef=null;
+        @Param(name = "config", optional = true)
+        String configRef = null;
 
-        @Param(optional = true,obsolete=true)
-        String hosts=null;
+        @Param(optional = true, obsolete = true)
+        String hosts = null;
 
-        @Param(optional = true,obsolete=true)
+        @Param(optional = true, obsolete = true)
         String haagentport;
 
-        @Param(optional = true,obsolete=true)
-        String haadminpassword=null;
+        @Param(optional = true, obsolete = true)
+        String haadminpassword = null;
 
-        @Param(optional = true,obsolete=true)
-        String haadminpasswordfile=null;
+        @Param(optional = true, obsolete = true)
+        String haadminpasswordfile = null;
 
-        @Param(optional = true,obsolete=true)
-        String devicesize=null;
+        @Param(optional = true, obsolete = true)
+        String devicesize = null;
 
-        @Param(optional = true,obsolete=true)
-        String haproperty=null;
+        @Param(optional = true, obsolete = true)
+        String haproperty = null;
 
-        @Param(optional = true,obsolete=true)
-        String autohadb=null;
+        @Param(optional = true, obsolete = true)
+        String autohadb = null;
 
-        @Param(optional = true,obsolete=true)
-        String portbase=null;
+        @Param(optional = true, obsolete = true)
+        String portbase = null;
 
         @Inject
         ServiceLocator habitat;
@@ -568,16 +549,13 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
         @Inject
         CommandRunner runner;
 
-//        @Inject
-//        RuntimeContext rtContext;
+        //        @Inject
+        //        RuntimeContext rtContext;
 
         /**
-         * Decorates the newly CRUD created cluster configuration instance.
-         * tasks :
-         *      - ensures that it references an existing configuration
-         *      - creates a new config from the default-config if no config-ref
-         *        was provided.
-         *      - check for deprecated parameters.
+         * Decorates the newly CRUD created cluster configuration instance. tasks : - ensures that it references an existing
+         * configuration - creates a new config from the default-config if no config-ref was provided. - check for deprecated
+         * parameters.
          *
          * @param context administration command context
          * @param instance newly created configuration element
@@ -590,41 +568,36 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Cluster.class);
             Transaction t = Transaction.getTransaction(instance);
             //check if cluster software is installed else fail , see issue 12023
-            final CopyConfig command = (CopyConfig) runner
-                    .getCommand("copy-config", context.getActionReport(), context.getLogger());
-            if (command == null ) {
-                throw new TransactionFailure(localStrings.getLocalString("cannot.execute.command",
-                        "Cluster software is not installed"));
+            final CopyConfig command = (CopyConfig) runner.getCommand("copy-config", context.getActionReport(), context.getLogger());
+            if (command == null) {
+                throw new TransactionFailure(localStrings.getLocalString("cannot.execute.command", "Cluster software is not installed"));
             }
             final String instanceName = instance.getName();
             if (instance.getGmsBindInterfaceAddress() == null) {
-                instance.setGmsBindInterfaceAddress(String.format(
-                    "${GMS-BIND-INTERFACE-ADDRESS-%s}",
-                    instanceName));
+                instance.setGmsBindInterfaceAddress(String.format("${GMS-BIND-INTERFACE-ADDRESS-%s}", instanceName));
             }
 
-            if (configRef==null) {
+            if (configRef == null) {
                 Config config = habitat.getService(Config.class, "default-config");
-                if (config==null) {
+                if (config == null) {
                     config = habitat.<Config>getAllServices(Config.class).iterator().next();
-                    logger.log(Level.WARNING,ConfigApiLoggerInfo.noDefaultConfigFound,
-                            new Object[]{config.getName(), instance.getName()});
+                    logger.log(Level.WARNING, ConfigApiLoggerInfo.noDefaultConfigFound,
+                            new Object[] { config.getName(), instance.getName() });
                 }
 
                 Configs configs = domain.getConfigs();
                 Configs writableConfigs = t.enroll(configs);
                 final String configName = instance.getName() + "-config";
                 instance.setConfigRef(configName);
-                command.copyConfig(writableConfigs,config,configName,logger);
+                command.copyConfig(writableConfigs, config, configName, logger);
 
-
-            }  else {
+            } else {
 
                 // cluster using specified config
                 Config specifiedConfig = domain.getConfigs().getConfigByName(configRef);
                 if (specifiedConfig == null) {
-                    throw new TransactionFailure(localStrings.getLocalString(
-                            "noSuchConfig", "Configuration {0} does not exist.", configRef));
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("noSuchConfig", "Configuration {0} does not exist.", configRef));
                 }
             }
 
@@ -646,16 +619,16 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             String DEFAULT_BROADCAST = "udpmulticast";
             String broadcastProtocol = instance.getBroadcast();
             Property discoveryUriListProp = instance.getProperty("GMS_DISCOVERY_URI_LIST");
-            String  discoveryUriList = discoveryUriListProp != null ? discoveryUriListProp.getValue() : null;
-            if (discoveryUriList != null  && DEFAULT_BROADCAST.equals(broadcastProtocol)) {
+            String discoveryUriList = discoveryUriListProp != null ? discoveryUriListProp.getValue() : null;
+            if (discoveryUriList != null && DEFAULT_BROADCAST.equals(broadcastProtocol)) {
 
                 // override default broadcast protocol of udp multicast when GMS_DISCOVERY_URI_LIST has been set.
                 instance.setBroadcast("tcp");
                 broadcastProtocol = "tcp";
             }
             if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE,ConfigApiLoggerInfo.clusterGSMBroadCast, instance.getBroadcast());
-                logger.log(Level.FINE, ConfigApiLoggerInfo.clusterGSMDeliveryURI , discoveryUriList);
+                logger.log(Level.FINE, ConfigApiLoggerInfo.clusterGSMBroadCast, instance.getBroadcast());
+                logger.log(Level.FINE, ConfigApiLoggerInfo.clusterGSMDeliveryURI, discoveryUriList);
             }
             if (DEFAULT_BROADCAST.equals(broadcastProtocol)) {
 
@@ -707,18 +680,17 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
                         }
                     }
                 } else {
-                     // lookup server-config and set environment property value
+                    // lookup server-config and set environment property value
                     // GMS_LISTENER_PORT-clusterName to fixed value.
                     Config config = habitat.getService(Config.class, "server-config");
                     if (config != null) {
                         String propName = String.format("GMS_LISTENER_PORT-%s", instanceName);
-                        if (config.getProperty(propName) == null ) {
+                        if (config.getProperty(propName) == null) {
                             Config writeableConfig = t.enroll(config);
                             SystemProperty gmsListenerPortSysProp = instance.createChild(SystemProperty.class);
                             gmsListenerPortSysProp.setName(propName);
                             if (TCPPORT == null || TCPPORT.trim().charAt(0) == '$') {
-                                String generateGmsListenerPort = Integer.toString(
-                                        new SecureRandom().nextInt(9200 - 9090) + 9090);
+                                String generateGmsListenerPort = Integer.toString(new SecureRandom().nextInt(9200 - 9090) + 9090);
                                 gmsListenerPortSysProp.setValue(generateGmsListenerPort);
                             } else {
                                 gmsListenerPortSysProp.setValue(TCPPORT);
@@ -735,14 +707,14 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             Resources resources = domain.getResources();
             for (Resource resource : resources.getResources()) {
                 if (Resource.Duck.copyToInstance(resource)) {
-                    String name=null;
+                    String name = null;
                     if (resource instanceof BindableResource) {
                         name = ((BindableResource) resource).getJndiName();
                     }
                     if (resource instanceof Named) {
                         name = ((Named) resource).getName();
                     }
-                    if (name==null) {
+                    if (name == null) {
                         throw new TransactionFailure("Cannot add un-named resources to the new server instance");
                     }
                     ResourceRef newResourceRef = instance.createChild(ResourceRef.class);
@@ -758,37 +730,29 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
                 }
             }
 
-            if (hosts!=null ||
-                    haagentport!=null ||
-                    haadminpassword!=null ||
-                    haadminpasswordfile!=null ||
-                    devicesize!=null ||
-                    haproperty!=null ||
-                    autohadb!=null ||
-                    portbase!=null
-                    ) {
-               context.getActionReport().setActionExitCode(ActionReport.ExitCode.WARNING);
-               context.getActionReport().setMessage("Obsolete options used.");
+            if (hosts != null || haagentport != null || haadminpassword != null || haadminpasswordfile != null || devicesize != null
+                    || haproperty != null || autohadb != null || portbase != null) {
+                context.getActionReport().setActionExitCode(ActionReport.ExitCode.WARNING);
+                context.getActionReport().setMessage("Obsolete options used.");
             }
 
         }
 
-    private String generateHeartbeatPort() {
-        final int MIN_GMS_MULTICAST_PORT = 2048;
-        final int MAX_GMS_MULTICAST_PORT = 32000; // be pessimistic for generation of random port and assume
-                                                  // ephemeral port range between 32k to 64k.
+        private String generateHeartbeatPort() {
+            final int MIN_GMS_MULTICAST_PORT = 2048;
+            final int MAX_GMS_MULTICAST_PORT = 32000; // be pessimistic for generation of random port and assume
+                                                      // ephemeral port range between 32k to 64k.
 
-        int portInterval = MAX_GMS_MULTICAST_PORT - MIN_GMS_MULTICAST_PORT;
-        return Integer.toString(Math.round((float)(Math.random() * portInterval)) + MIN_GMS_MULTICAST_PORT);
-    }
+            int portInterval = MAX_GMS_MULTICAST_PORT - MIN_GMS_MULTICAST_PORT;
+            return Integer.toString(Math.round((float) (Math.random() * portInterval)) + MIN_GMS_MULTICAST_PORT);
+        }
 
-    private String generateHeartbeatAddress () {
+        private String generateHeartbeatAddress() {
             final int MAX_GMS_MULTICAST_ADDRESS_SUBRANGE = 255;
 
-            final StringBuffer heartbeatAddressBfr = new StringBuffer( "228.9.");
-            heartbeatAddressBfr.append(Math.round(Math.random()*MAX_GMS_MULTICAST_ADDRESS_SUBRANGE))
-                            .append('.')
-                            .append(Math.round(Math.random()*MAX_GMS_MULTICAST_ADDRESS_SUBRANGE));
+            final StringBuffer heartbeatAddressBfr = new StringBuffer("228.9.");
+            heartbeatAddressBfr.append(Math.round(Math.random() * MAX_GMS_MULTICAST_ADDRESS_SUBRANGE)).append('.')
+                    .append(Math.round(Math.random() * MAX_GMS_MULTICAST_ADDRESS_SUBRANGE));
             return heartbeatAddressBfr.toString();
         }
     }
@@ -797,11 +761,11 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     @PerLookup
     class DeleteDecorator implements DeletionDecorator<Clusters, Cluster> {
 
-        @Param(name="nodeagent", optional=true,obsolete=true)
+        @Param(name = "nodeagent", optional = true, obsolete = true)
         String nodeagent;
 
         // for backward compatibility, ignored.
-        @Param(name="autohadboverride", optional=true,obsolete=true)
+        @Param(name = "autohadboverride", optional = true, obsolete = true)
         String autohadboverride;
 
         @Inject
@@ -812,26 +776,24 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
         @Inject
         private ServerEnvironment env;
-        
+
         @Inject
         CommandRunner runner;
 
         @Override
-        public void decorate(AdminCommandContext context, Clusters parent, Cluster child) throws
-                PropertyVetoException, TransactionFailure{
-            
+        public void decorate(AdminCommandContext context, Clusters parent, Cluster child) throws PropertyVetoException, TransactionFailure {
+
             Logger logger = ConfigApiLoggerInfo.getLogger();
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Cluster.class);
             final ActionReport report = context.getActionReport();
-            
+
             // check to see if the clustering software is installed
             AdminCommand command = runner.getCommand("copy-config", report, context.getLogger());
             if (command == null) {
-                String msg = localStrings.getLocalString("cannot.execute.command",
-                        "Cluster software is not installed");
+                String msg = localStrings.getLocalString("cannot.execute.command", "Cluster software is not installed");
                 throw new TransactionFailure(msg);
             }
-            
+
             String instanceConfig = child.getConfigRef();
             final Config config = configs.getConfigByName(instanceConfig);
             Transaction t = Transaction.getTransaction(parent);
@@ -842,24 +804,22 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             List<ServerRef> serverRefs = child.getServerRef();
             StringBuffer namesOfServers = new StringBuffer();
             if (serverRefs.size() > 0) {
-                for (ServerRef serverRef: serverRefs){
-                    namesOfServers.append(new StringBuffer( serverRef.getRef()).append( ','));
+                for (ServerRef serverRef : serverRefs) {
+                    namesOfServers.append(new StringBuffer(serverRef.getRef()).append(','));
                 }
 
-                final String msg = localStrings.getLocalString(
-                        "Cluster.hasInstances",
-                        "Cluster {0} contains server instances {1} and must not contain any instances"
-                        ,child.getName() ,namesOfServers.toString()
-                );
+                final String msg = localStrings.getLocalString("Cluster.hasInstances",
+                        "Cluster {0} contains server instances {1} and must not contain any instances", child.getName(),
+                        namesOfServers.toString());
 
-                logger.log(Level.SEVERE, ConfigApiLoggerInfo.clusterMustNotContainInstance,new Object[]{child.getName() ,namesOfServers.toString()});
+                logger.log(Level.SEVERE, ConfigApiLoggerInfo.clusterMustNotContainInstance,
+                        new Object[] { child.getName(), namesOfServers.toString() });
                 throw new TransactionFailure(msg);
             }
 
             // remove GMS_LISTENER_PORT-clusterName prop from server config
             Config serverConfig = configs.getConfigByName("server-config");
-            String propName = String.format(
-                "GMS_LISTENER_PORT-%s", child.getName());
+            String propName = String.format("GMS_LISTENER_PORT-%s", child.getName());
             SystemProperty gmsProp = serverConfig.getSystemProperty(propName);
             if (gmsProp != null && t != null) {
                 Config c = t.enroll(serverConfig);
@@ -869,15 +829,13 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
             // check if the config is null or still in use by some other
             // ReferenceContainer or is not <cluster-name>-config -- if so just return...
-            if(config == null || domain.getReferenceContainersOf(config).size() > 1 || !instanceConfig.equals(child.getName() + "-config"))
+            if (config == null || domain.getReferenceContainersOf(config).size() > 1 || !instanceConfig.equals(child.getName() + "-config"))
                 return;
-
 
             try {
                 File configConfigDir = new File(env.getConfigDirPath(), config.getName());
                 FileUtils.whack(configConfigDir);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 // no big deal - just ignore
             }
 
@@ -888,10 +846,9 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
                     configList.remove(config);
                 }
             } catch (TransactionFailure ex) {
-                logger.log(Level.SEVERE, ConfigApiLoggerInfo.deleteConfigFailed, new Object[]{instanceConfig, ex});
+                logger.log(Level.SEVERE, ConfigApiLoggerInfo.deleteConfigFailed, new Object[] { instanceConfig, ex });
                 String msg = ex.getMessage() != null ? ex.getMessage()
-                        : localStrings.getLocalString("deleteConfigFailed",
-                        "Unable to remove config {0}", instanceConfig);
+                        : localStrings.getLocalString("deleteConfigFailed", "Unable to remove config {0}", instanceConfig);
                 report.setMessage(msg);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setFailureCause(ex);

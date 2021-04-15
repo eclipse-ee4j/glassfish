@@ -16,7 +16,6 @@
 
 package org.glassfish.config.support;
 
-
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Cluster;
@@ -31,40 +30,39 @@ import org.jvnet.hk2.config.Dom;
 import jakarta.inject.Inject;
 import java.util.Collection;
 
-
 /**
- * Resolver based on a supplied target parameter (with a possible default
- * value).
+ * Resolver based on a supplied target parameter (with a possible default value).
  *
  * @author Jerome Dochez
  */
 @Service
 public class TargetBasedResolver implements CrudResolver {
 
-    @Param(defaultValue = "server", optional=true)
-    String target="server";
+    @Param(defaultValue = "server", optional = true)
+    String target = "server";
 
     @Inject
     ServiceLocator habitat;
-    
+
     @Override
     public <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, Class<T> type) {
         try {
             ConfigBeanProxy proxy = getTarget(Config.class, type);
-            if (proxy==null) {
-                proxy=getTarget(Cluster.class, type);
+            if (proxy == null) {
+                proxy = getTarget(Cluster.class, type);
             }
-            if (proxy==null) {
-                proxy=getTarget(Server.class, type);
+            if (proxy == null) {
+                proxy = getTarget(Server.class, type);
             }
             return type.cast(proxy);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
         }
         return null;
     }
 
-    private <T extends ConfigBeanProxy> T getTarget(Class<? extends ConfigBeanProxy> targetType, Class<T> type) throws ClassNotFoundException {
+    private <T extends ConfigBeanProxy> T getTarget(Class<? extends ConfigBeanProxy> targetType, Class<T> type)
+            throws ClassNotFoundException {
 
         // when using the target based parameter, we look first for a configuration of that name,
         // then we look for a cluster of that name and finally we look for a subelement of the right type
@@ -72,7 +70,7 @@ public class TargetBasedResolver implements CrudResolver {
         final String name = getName();
 
         ConfigBeanProxy config = habitat.getService(targetType, target);
-        if (config!=null) {
+        if (config != null) {
             try {
                 return type.cast(config);
             } catch (ClassCastException e) {
@@ -81,13 +79,13 @@ public class TargetBasedResolver implements CrudResolver {
             Dom parentDom = Dom.unwrap(config);
 
             String elementName = GenericCrudCommand.elementName(parentDom.document, targetType, type);
-            if (elementName==null) {
+            if (elementName == null) {
                 return null;
             }
             ConfigModel.Property property = parentDom.model.getElement(elementName);
             if (property.isCollection()) {
                 Collection<Dom> collection = parentDom.nodeElements(elementName);
-                if (collection==null) {
+                if (collection == null) {
                     return null;
                 }
 

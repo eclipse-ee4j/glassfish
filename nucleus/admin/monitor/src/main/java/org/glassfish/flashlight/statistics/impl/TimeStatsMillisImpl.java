@@ -30,31 +30,32 @@ import org.glassfish.hk2.api.PerLookup;
  *
  * @author Harpreet Singh
  */
-@Service (name="timeStatsMillis")
+@Service(name = "timeStatsMillis")
 @PerLookup
-public class TimeStatsMillisImpl extends TimeStatsAbstractImpl
-    implements TimeStatsMillis {
-    
+public class TimeStatsMillisImpl extends TimeStatsAbstractImpl implements TimeStatsMillis {
+
     private String NAME = "timeStatsMillis";
     private String UNIT = "Milli seconds";
     private String DESCRIPTION = "TimeStatistic Milli Seconds";
-    
-    public TimeStatsMillisImpl (){
+
+    public TimeStatsMillisImpl() {
         super.setName(NAME);
         super.setEnabled(true);
     }
+
     @Override
-    public void entry (){
-        super.postEntry (System.currentTimeMillis());
+    public void entry() {
+        super.postEntry(System.currentTimeMillis());
     }
-    
+
     @Override
     public void exit() {
-        super.postExit (System.currentTimeMillis());
-      }
-    @Override 
-    public Object getValue (){
-        return getTime ();
+        super.postExit(System.currentTimeMillis());
+    }
+
+    @Override
+    public Object getValue() {
+        return getTime();
     }
 
     public String getUnit() {
@@ -64,12 +65,9 @@ public class TimeStatsMillisImpl extends TimeStatsAbstractImpl
     public String getDescription() {
         return this.DESCRIPTION;
     }
+
     public String toString() {
-        return "Statistic " + getClass().getName() + NEWLINE +
-                "Name: " + getName() + NEWLINE +
-                "Description: " + getDescription() + NEWLINE +
-                "Unit: " + getUnit() + NEWLINE +
-                "LastSampleTime: " + getLastSampleTime() + NEWLINE +
-                "StartTime: " + getStartTime();
+        return "Statistic " + getClass().getName() + NEWLINE + "Name: " + getName() + NEWLINE + "Description: " + getDescription() + NEWLINE
+                + "Unit: " + getUnit() + NEWLINE + "LastSampleTime: " + getLastSampleTime() + NEWLINE + "StartTime: " + getStartTime();
     }
 }

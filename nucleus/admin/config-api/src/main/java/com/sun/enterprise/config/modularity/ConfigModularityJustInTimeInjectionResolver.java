@@ -54,7 +54,8 @@ public class ConfigModularityJustInTimeInjectionResolver implements JustInTimeIn
 
     @Override
     public boolean justInTimeResolution(Injectee injectee) {
-        if (injectee == null || injectee.isOptional()) return false;
+        if (injectee == null || injectee.isOptional())
+            return false;
         Class configBeanType;
         try {
             configBeanType = (Class) injectee.getRequiredType();
@@ -64,7 +65,8 @@ public class ConfigModularityJustInTimeInjectionResolver implements JustInTimeIn
         if (!ConfigExtension.class.isAssignableFrom(configBeanType) && !DomainExtension.class.isAssignableFrom(configBeanType)) {
             return false;
         }
-        if (!isInjectionSupported(configBeanType)) return false;
+        if (!isInjectionSupported(configBeanType))
+            return false;
 
         if (domain == null) {
             return false;

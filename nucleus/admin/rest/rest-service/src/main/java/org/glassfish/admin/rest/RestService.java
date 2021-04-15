@@ -48,14 +48,13 @@ public class RestService implements PostConstruct, PreDestroy, RestInterfaceUID 
     @Inject
     LocalPassword localPassword;
 
-    public final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(RestService.class);
+    public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RestService.class);
 
     @Override
     public void postConstruct() {
         //events.register(this);
-    //    logger.fine(localStrings.getLocalString("rest.service.initialization",
-    //            "Initializing REST interface support"));
+        //    logger.fine(localStrings.getLocalString("rest.service.initialization",
+        //            "Initializing REST interface support"));
 
     }
 

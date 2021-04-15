@@ -53,7 +53,7 @@ public class MarshallingUtils {
             try {
                 properties = processJsonArray(new JSONArray(json));
             } catch (JSONException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
             throw new RuntimeException("The JSON string must start with { or ["); // i18n
@@ -73,15 +73,15 @@ public class MarshallingUtils {
             while (parser.hasNext()) {
                 int event = parser.next();
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT: {
-                        if ("list".equals(parser.getLocalName())) {
-                            list = processXmlList(parser);
-                        }
-                        break;
+                case XMLStreamConstants.START_ELEMENT: {
+                    if ("list".equals(parser.getLocalName())) {
+                        list = processXmlList(parser);
                     }
-                    default: {
-                        // no-op
-                    }
+                    break;
+                }
+                default: {
+                    // no-op
+                }
                 }
             }
         } catch (UnsupportedEncodingException ex) {
@@ -102,7 +102,11 @@ public class MarshallingUtils {
     }
 
     public static String getXmlForProperties(final Map<String, String> properties) {
-        return getXmlForProperties(new ArrayList<Map<String, String>>() {{ add(properties); }} );
+        return getXmlForProperties(new ArrayList<Map<String, String>>() {
+            {
+                add(properties);
+            }
+        });
     }
 
     public static String getXmlForProperties(List<Map<String, String>> properties) {
@@ -111,15 +115,15 @@ public class MarshallingUtils {
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             StringWriter sw = new StringWriter();
             XMLStreamWriter writer = outputFactory.createXMLStreamWriter(sw);
-            writer.writeStartDocument("UTF-8","1.0");
+            writer.writeStartDocument("UTF-8", "1.0");
             writer.writeStartElement("list");
             for (Map<String, String> property : properties) {
                 writer.writeStartElement("map");
                 for (Map.Entry<String, String> entry : property.entrySet()) {
-                writer.writeStartElement("entry");
+                    writer.writeStartElement("entry");
                     writer.writeAttribute("key", entry.getKey());
                     writer.writeAttribute("value", entry.getValue());
-                writer.writeEndElement();
+                    writer.writeEndElement();
                 }
                 writer.writeEndElement();
             }
@@ -135,7 +139,11 @@ public class MarshallingUtils {
     }
 
     public static String getJsonForProperties(final Map<String, String> properties) {
-        return getJsonForProperties(new ArrayList<Map<String, String>>() {{ add(properties); }} );
+        return getJsonForProperties(new ArrayList<Map<String, String>>() {
+            {
+                add(properties);
+            }
+        });
     }
 
     public static String getJsonForProperties(List<Map<String, String>> properties) {
@@ -168,15 +176,15 @@ public class MarshallingUtils {
                 while (parser.hasNext()) {
                     int event = parser.next();
                     switch (event) {
-                        case XMLStreamConstants.START_ELEMENT: {
-                            if ("map".equals(parser.getLocalName())) {
-                                map = processXmlMap(parser);
-                            }
-                            break;
+                    case XMLStreamConstants.START_ELEMENT: {
+                        if ("map".equals(parser.getLocalName())) {
+                            map = processXmlMap(parser);
                         }
-                        default: {
-                            // No-op
-                        }
+                        break;
+                    }
+                    default: {
+                        // No-op
+                    }
                     }
                 }
             } catch (UnsupportedEncodingException ex) {
@@ -196,7 +204,7 @@ public class MarshallingUtils {
             }
         } else {
             System.out.println(text);
-            throw new RuntimeException ("An unknown document type was provided:  " + text); //.substring(0, 10));
+            throw new RuntimeException("An unknown document type was provided:  " + text); //.substring(0, 10));
         }
 
         return map;
@@ -218,12 +226,12 @@ public class MarshallingUtils {
         try {
             Iterator i = jo.keys();
             while (i.hasNext()) {
-                String key = (String)i.next();
+                String key = (String) i.next();
                 Object value = jo.get(key);
                 if (value instanceof JSONArray) {
-                    map.put(key, processJsonArray((JSONArray)value));
+                    map.put(key, processJsonArray((JSONArray) value));
                 } else if (value instanceof JSONObject) {
-                    map.put(key, processJsonObject((JSONObject)value));
+                    map.put(key, processJsonObject((JSONObject) value));
                 } else if (value.getClass().getSimpleName().equalsIgnoreCase("null")) {
                     // The Map may not store null values, but we shouldn't rely on
                     // that behavior, just to be safe
@@ -246,9 +254,9 @@ public class MarshallingUtils {
             for (int i = 0; i < ja.length(); i++) {
                 Object entry = ja.get(i);
                 if (entry instanceof JSONArray) {
-                    results.add(processJsonArray((JSONArray)entry));
+                    results.add(processJsonArray((JSONArray) entry));
                 } else if (entry instanceof JSONObject) {
-                    results.add(processJsonObject((JSONObject)entry));
+                    results.add(processJsonObject((JSONObject) entry));
                 } else {
                     results.add(entry);
                 }
@@ -268,48 +276,48 @@ public class MarshallingUtils {
         while (!endOfMap) {
             int event = parser.next();
             switch (event) {
-                case XMLStreamConstants.START_ELEMENT: {
-                    if ("entry".equals(parser.getLocalName())) {
-                        key = parser.getAttributeValue(null, "key");
-                        String value = parser.getAttributeValue(null, "value");
-                        if (value != null) {
-                            entry.put(key, value);
-                            key = null;
-                        }
-                    } else if ("map".equals(parser.getLocalName())) {
-                        Map value = processXmlMap(parser);
+            case XMLStreamConstants.START_ELEMENT: {
+                if ("entry".equals(parser.getLocalName())) {
+                    key = parser.getAttributeValue(null, "key");
+                    String value = parser.getAttributeValue(null, "value");
+                    if (value != null) {
                         entry.put(key, value);
-                    } else if ("list".equals(parser.getLocalName())) {
-                        List value = processXmlList(parser);
-                        entry.put(key, value);
-                    } else {
-                        element = parser.getLocalName();
+                        key = null;
                     }
-                    break;
+                } else if ("map".equals(parser.getLocalName())) {
+                    Map value = processXmlMap(parser);
+                    entry.put(key, value);
+                } else if ("list".equals(parser.getLocalName())) {
+                    List value = processXmlList(parser);
+                    entry.put(key, value);
+                } else {
+                    element = parser.getLocalName();
                 }
-                case XMLStreamConstants.END_ELEMENT: {
-                    if ("map".equals(parser.getLocalName())) {
-                        endOfMap = true;
-                    }
-                    element = null;
-                    break;
+                break;
+            }
+            case XMLStreamConstants.END_ELEMENT: {
+                if ("map".equals(parser.getLocalName())) {
+                    endOfMap = true;
                 }
-                default: {
-                    String text=parser.getText();
-                    if (element != null) {
-                        if ("number".equals(element)) {
-                            if (text.contains(".")) {
-                                entry.put(key, Double.parseDouble(text));
-                            } else {
-                                entry.put(key, Long.parseLong(text));
-                            }
-                        } else if ("string".equals(element)) {
-                            entry.put(key, text);
+                element = null;
+                break;
+            }
+            default: {
+                String text = parser.getText();
+                if (element != null) {
+                    if ("number".equals(element)) {
+                        if (text.contains(".")) {
+                            entry.put(key, Double.parseDouble(text));
+                        } else {
+                            entry.put(key, Long.parseLong(text));
                         }
+                    } else if ("string".equals(element)) {
+                        entry.put(key, text);
+                    }
 
-                        element = null;
-                    }
+                    element = null;
                 }
+            }
             }
         }
         return entry;
@@ -322,37 +330,37 @@ public class MarshallingUtils {
         while (!endOfList) {
             int event = parser.next();
             switch (event) {
-                case XMLStreamConstants.START_ELEMENT: {
-                    if ("map".equals(parser.getLocalName())) {
-                        list.add(processXmlMap(parser));
-                    } else {
-                        element = parser.getLocalName();
-                    }
-                    break;
+            case XMLStreamConstants.START_ELEMENT: {
+                if ("map".equals(parser.getLocalName())) {
+                    list.add(processXmlMap(parser));
+                } else {
+                    element = parser.getLocalName();
                 }
-                case XMLStreamConstants.END_ELEMENT: {
-                    if ("list".equals(parser.getLocalName())) {
-                        endOfList = true;
-                    }
-                    element = null;
-                    break;
+                break;
+            }
+            case XMLStreamConstants.END_ELEMENT: {
+                if ("list".equals(parser.getLocalName())) {
+                    endOfList = true;
                 }
-                default: {
-                    String text = parser.getText();
-                    if (element != null) {
-                        if ("number".equals(element)) {
-                            if (text.contains(".")) {
-                                list.add(Double.parseDouble(text));
-                            } else {
-                                list.add(Long.parseLong(text));
-                            }
-                        } else if ("string".equals(element)) {
-                            list.add(text);
+                element = null;
+                break;
+            }
+            default: {
+                String text = parser.getText();
+                if (element != null) {
+                    if ("number".equals(element)) {
+                        if (text.contains(".")) {
+                            list.add(Double.parseDouble(text));
+                        } else {
+                            list.add(Long.parseLong(text));
                         }
-
-                        element = null;
+                    } else if ("string".equals(element)) {
+                        list.add(text);
                     }
+
+                    element = null;
                 }
+            }
             }
         }
         return list;

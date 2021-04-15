@@ -17,8 +17,7 @@
 package org.glassfish.admin.rest.results;
 
 /**
- * Response information object. Information used by provider
- * to generate the appropriate output.
+ * Response information object. Information used by provider to generate the appropriate output.
  *
  * @author Rajeshwar Patil
  */
@@ -37,8 +36,7 @@ public class Result {
     }
 
     /**
-     * Returns true in case of error. Enables provider to generate
-     * error message or otherwise.
+     * Returns true in case of error. Enables provider to generate error message or otherwise.
      */
     public boolean isError() {
         return __isError;
@@ -62,7 +60,7 @@ public class Result {
      * Sets error message of the response
      */
     public void setErrorMessage(String errorMessage) {
-        __errorMessage =  errorMessage;
+        __errorMessage = errorMessage;
     }
 
     boolean __isError;

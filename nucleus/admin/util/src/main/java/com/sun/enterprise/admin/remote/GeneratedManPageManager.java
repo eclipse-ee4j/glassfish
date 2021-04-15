@@ -24,7 +24,7 @@ import java.util.*;
  *
  * @author bnevins
  */
-class GeneratedManPageManager implements ResponseManager{
+class GeneratedManPageManager implements ResponseManager {
     GeneratedManPageManager(AdminCommandResponse response) {
         this.response = response;
     }
@@ -32,10 +32,9 @@ class GeneratedManPageManager implements ResponseManager{
     public void process() throws RemoteException {
         String usageText = response.getValue(AdminCommandResponse.SYNOPSIS);
 
-        if(usageText == null) {
+        if (usageText == null) {
             // this is one way to figure out there was an error!
-            throw new RemoteFailureException("XXXXXXXXXXXXXXXXXXXX", 
-                    response.getMainMessage());
+            throw new RemoteFailureException("XXXXXXXXXXXXXXXXXXXX", response.getMainMessage());
         }
         setName();
         setSynopsis();
@@ -60,13 +59,14 @@ class GeneratedManPageManager implements ResponseManager{
 
     private void setSynopsis() {
         synopsis = response.getValue(AdminCommandResponse.SYNOPSIS);
-        
+
         if (synopsis.startsWith("Usage: ")) {
-            synopsis = synopsis.substring(7);     
+            synopsis = synopsis.substring(7);
         }
         // this looks too horrible - go with one long line...
         //synopsis = displayInProperLen(synopsis);
     }
+
     private void printSynopsis(StringBuilder sb) {
         sb.append("SYNOPSIS :").append(EOL);
         sb.append(TAB).append(synopsis).append(EOL);
@@ -74,13 +74,13 @@ class GeneratedManPageManager implements ResponseManager{
     }
 
     private void setParamsAndOperands() {
-        List<NameValue<String,String>> list = response.getMainKeys();
-        
-        for(NameValue<String,String> nv : list) {
+        List<NameValue<String, String>> list = response.getMainKeys();
+
+        for (NameValue<String, String> nv : list) {
             String name = nv.getName();
-            if(name.equals(AdminCommandResponse.SYNOPSIS))
+            if (name.equals(AdminCommandResponse.SYNOPSIS))
                 continue;
-            if(name.endsWith("operand")) 
+            if (name.endsWith("operand"))
                 operands.add(nv);
             else
                 params.add(nv);
@@ -89,8 +89,8 @@ class GeneratedManPageManager implements ResponseManager{
 
     private void printParams(StringBuilder sb) {
         sb.append("OPTIONS :").append(EOL);
-        
-        for(NameValue<String,String> nv : params) {
+
+        for (NameValue<String, String> nv : params) {
             sb.append(TAB + "--").append(nv.getName()).append(EOL);
             sb.append(displayInProperLen(nv.getValue()));
             sb.append(EOL);
@@ -101,7 +101,7 @@ class GeneratedManPageManager implements ResponseManager{
 
         sb.append("OPERANDS :").append(EOL);
 
-        for(NameValue<String,String> nv : operands) {
+        for (NameValue<String, String> nv : operands) {
             String key = nv.getName();
             // peel off "_operand"
             key = key.substring(0, key.length() - 8);
@@ -110,17 +110,16 @@ class GeneratedManPageManager implements ResponseManager{
             sb.append(EOL);
         }
     }
-       
+
     // bnevins -- original code reused, this looks painful to change...
     private String displayInProperLen(String strToDisplay) {
         int index = 0;
         StringBuilder sb = new StringBuilder();
-        
-        for (int ii=0; ii+70<strToDisplay.length();ii+=70) {
-            index=ii+70;
-            String subStr = strToDisplay.substring(ii, index+1);
-            if (subStr.endsWith(" ") || subStr.endsWith(",") ||
-                subStr.endsWith(".") || subStr.endsWith("-") ) {
+
+        for (int ii = 0; ii + 70 < strToDisplay.length(); ii += 70) {
+            index = ii + 70;
+            String subStr = strToDisplay.substring(ii, index + 1);
+            if (subStr.endsWith(" ") || subStr.endsWith(",") || subStr.endsWith(".") || subStr.endsWith("-")) {
                 sb.append(TAB + subStr + EOL);
                 ii++;
                 index++;
@@ -131,15 +130,15 @@ class GeneratedManPageManager implements ResponseManager{
         if (index < strToDisplay.length()) {
             sb.append(TAB + strToDisplay.substring(index) + EOL);
         }
-        
+
         return sb.toString();
     }
 
     AdminCommandResponse response;
-    private String name; 
-    private String synopsis; 
-    List<NameValue<String,String>> params = new LinkedList<NameValue<String,String>>();
-    List<NameValue<String,String>> operands = new LinkedList<NameValue<String,String>>();
+    private String name;
+    private String synopsis;
+    List<NameValue<String, String>> params = new LinkedList<NameValue<String, String>>();
+    List<NameValue<String, String>> operands = new LinkedList<NameValue<String, String>>();
     private static final String TAB = "    ";
     private static final String EOL = System.getProperty("line.separator");
 }

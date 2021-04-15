@@ -24,16 +24,17 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 /**
- * NotTargetKeyword constraint to verify a name attribute is not a reserved
- * word like 'domain'.
+ * NotTargetKeyword constraint to verify a name attribute is not a reserved word like 'domain'.
  *
  * @author Joe Di Pol
  */
-@Target({ElementType.METHOD, ElementType.FIELD})
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=NotTargetKeywordValidator.class)
+@Constraint(validatedBy = NotTargetKeywordValidator.class)
 public @interface NotTargetKeyword {
     String message() default "Name must not be a reserved word";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

@@ -66,15 +66,10 @@ public class AdminMain {
     private final static int INVALID_COMMAND_ERROR = 3;
     private final static int SUCCESS = 0;
     private final static int WARNING = 4;
-    private final static String ADMIN_CLI_LOGGER =
-            "com.sun.enterprise.admin.cli";
-    private static final String[] copyProps = {
-        SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
-        SystemPropertyConstants.CONFIG_ROOT_PROPERTY,
-        SystemPropertyConstants.PRODUCT_ROOT_PROPERTY
-    };
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(AdminMain.class);
+    private final static String ADMIN_CLI_LOGGER = "com.sun.enterprise.admin.cli";
+    private static final String[] copyProps = { SystemPropertyConstants.INSTALL_ROOT_PROPERTY, SystemPropertyConstants.CONFIG_ROOT_PROPERTY,
+            SystemPropertyConstants.PRODUCT_ROOT_PROPERTY };
+    private static final LocalStringsImpl strings = new LocalStringsImpl(AdminMain.class);
 
     static {
         Map<String, String> systemProps = new ASenvPropertyReader().getProps();
@@ -85,8 +80,8 @@ public class AdminMain {
             }
         }
     }
-    
-        /**
+
+    /**
      * Get the class loader that is used to load local commands.
      *
      * @return a class loader used to load local commands
@@ -94,19 +89,18 @@ public class AdminMain {
     private ClassLoader getExtensionClassLoader(final Set<File> extensions) {
         final ClassLoader ecl = AdminMain.class.getClassLoader();
         if (extensions != null && !extensions.isEmpty()) {
-            return (ClassLoader) AccessController.doPrivileged(
-                    new PrivilegedAction() {
-                        @Override
-                        public Object run() {
-                            try {
-                                return new DirectoryClassLoader(extensions, ecl);
-                            } catch (IOException ex) {
-                                // any failure here is fatal
-                                logger.info(strings.get("ExtDirFailed", ex));
-                            }
-                            return ecl;
-                        }
-                    });
+            return (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                @Override
+                public Object run() {
+                    try {
+                        return new DirectoryClassLoader(extensions, ecl);
+                    } catch (IOException ex) {
+                        // any failure here is fatal
+                        logger.info(strings.get("ExtDirFailed", ex));
+                    }
+                    return ecl;
+                }
+            });
         }
         return ecl;
     }
@@ -118,12 +112,11 @@ public class AdminMain {
      * for different products. Skinning is achieved by extending AdminMain and
      * redefining the methods in this section.
      */
-    
-    /** Get set of JAR files that is used to locate local commands (CLICommand).
-     * Results can contain JAR files or directories where all JAR files are 
-     * used. It must return all JARs or directories
-     * with acceptable CLICommands excluding admin-cli.jar.
-     * Default implementation returns INSTALL_ROOT_PROPERTY/lib/asadmin
+
+    /**
+     * Get set of JAR files that is used to locate local commands (CLICommand). Results can contain JAR files or directories
+     * where all JAR files are used. It must return all JARs or directories with acceptable CLICommands excluding
+     * admin-cli.jar. Default implementation returns INSTALL_ROOT_PROPERTY/lib/asadmin
      * 
      * @return set of JAR files or directories with JAR files
      */
@@ -144,14 +137,13 @@ public class AdminMain {
     protected String getCommandName() {
         return "nadmin";
     }
-    
+
     /*
      * End of skinning methods -------------------------------------------------
      */
 
     /**
-     * A ConsoleHandler that prints all non-SEVERE messages to System.out and
-     * all SEVERE messages to System.err.
+     * A ConsoleHandler that prints all non-SEVERE messages to System.out and all SEVERE messages to System.err.
      */
     private static class CLILoggerHandler extends ConsoleHandler {
 
@@ -192,9 +184,9 @@ public class AdminMain {
         //In case of JDK1 to JDK8 the major version would be 1 always.Starting from
         //JDK9 the major verion would be the real major version e.g in case
         // of JDK9 major version is 9.So in that case checking the major version only.
-        if (major<9) {
+        if (major < 9) {
             if (minor < 8) {
-                System.err.println(strings.get( "OldJdk", "" + minor));
+                System.err.println(strings.get("OldJdk", "" + minor));
                 return ERROR;
             }
         }
@@ -230,12 +222,10 @@ public class AdminMain {
         rlogger.addHandler(h);
 
         if (debug) {
-            System.setProperty(CLIConstants.WALL_CLOCK_START_PROP,
-                    "" + System.currentTimeMillis());
+            System.setProperty(CLIConstants.WALL_CLOCK_START_PROP, "" + System.currentTimeMillis());
             if (logger.isLoggable(Level.FINER))
                 logger.log(Level.FINER, "CLASSPATH= {0}\nCommands: {1}",
-                        new Object[]{System.getProperty("java.class.path"),
-                            Arrays.toString(args)});
+                        new Object[] { System.getProperty("java.class.path"), Arrays.toString(args) });
         }
         /*
          * Set the thread's context class loader so that everyone can load from
@@ -260,51 +250,45 @@ public class AdminMain {
 
         cliContainer = new CLIContainer(ecl, extensions, logger);
 
-        classPath =
-                SmartFile.sanitizePaths(System.getProperty("java.class.path"));
+        classPath = SmartFile.sanitizePaths(System.getProperty("java.class.path"));
         className = AdminMain.class.getName();
 
         /*
          * Special case: no arguments is the same as "multimode".
          */
         if (args.length == 0) {
-            args = new String[]{"multimode"};
+            args = new String[] { "multimode" };
         }
 
         /*
          * Special case: -V argument is the same as "version".
          */
         if (args[0].equals("-V")) {
-            args = new String[]{"version"};
+            args = new String[] { "version" };
         }
 
         command = args[0];
         int exitCode = executeCommand(args);
 
         switch (exitCode) {
-            case SUCCESS:
-                if (!po.isTerse()) {
-                    logger.fine(strings.get((po.isDetachedCommand() ?
-                                                "CommandSuccessfulStarted" :
-                                                "CommandSuccessful"),
-                                            command));
-                }
-                break;
+        case SUCCESS:
+            if (!po.isTerse()) {
+                logger.fine(strings.get((po.isDetachedCommand() ? "CommandSuccessfulStarted" : "CommandSuccessful"), command));
+            }
+            break;
 
-            case WARNING:
-                if (logger.isLoggable(Level.FINE))
-                    logger.fine(
-                        strings.get("CommandSuccessfulWithWarnings", command));
-                exitCode = SUCCESS;
-                break;
+        case WARNING:
+            if (logger.isLoggable(Level.FINE))
+                logger.fine(strings.get("CommandSuccessfulWithWarnings", command));
+            exitCode = SUCCESS;
+            break;
 
-            case ERROR:
-            case INVALID_COMMAND_ERROR:
-            case CONNECTION_ERROR:
-            default:
-                logger.fine(
-                        strings.get("CommandUnSuccessful", command));
-                break;
+        case ERROR:
+        case INVALID_COMMAND_ERROR:
+        case CONNECTION_ERROR:
+        default:
+            logger.fine(strings.get("CommandUnSuccessful", command));
+            break;
         }
         CLIUtil.writeCommandToDebugLog(getCommandName(), env, args, exitCode);
         return exitCode;
@@ -319,8 +303,7 @@ public class AdminMain {
                  * Parse all the admin options, stopping at the first
                  * non-option, which is the command name.
                  */
-                Parser rcp = new Parser(argv, 0,
-                        ProgramOptions.getValidOptions(), false);
+                Parser rcp = new Parser(argv, 0, ProgramOptions.getValidOptions(), false);
                 ParameterMap params = rcp.getOptions();
                 po = new ProgramOptions(params, env);
                 readAndMergeOptionsFromAuxInput(po);
@@ -335,9 +318,9 @@ public class AdminMain {
             po.setCommandName(getCommandName());
             if (argv.length == 0) {
                 if (po.isHelp()) {
-                    argv = new String[]{"help"};
+                    argv = new String[] { "help" };
                 } else {
-                    argv = new String[]{"multimode"};
+                    argv = new String[] { "multimode" };
                 }
             }
             command = argv[0];
@@ -360,9 +343,8 @@ public class AdminMain {
             // find closest match with local or remote commands
             logger.severe(ice.getMessage());
             try {
-                po.setEcho(false); 
-                CLIUtil.displayClosestMatch(command,
-                        CLIUtil.getAllCommands(cliContainer, po, env),
+                po.setEcho(false);
+                CLIUtil.displayClosestMatch(command, CLIUtil.getAllCommands(cliContainer, po, env),
                         strings.get("ClosestMatchedLocalAndRemoteCommands"), logger);
             } catch (InvalidCommandException e) {
                 // not a big deal if we cannot help
@@ -373,12 +355,10 @@ public class AdminMain {
                 // find closest match with local commands
                 logger.severe(ce.getMessage());
                 try {
-                    CLIUtil.displayClosestMatch(command,
-                            CLIUtil.getLocalCommands(cliContainer),
-                            strings.get("ClosestMatchedLocalCommands"), logger);
+                    CLIUtil.displayClosestMatch(command, CLIUtil.getLocalCommands(cliContainer), strings.get("ClosestMatchedLocalCommands"),
+                            logger);
                 } catch (InvalidCommandException e) {
-                    logger.info(
-                            strings.get("InvalidRemoteCommand", command));
+                    logger.info(strings.get("InvalidRemoteCommand", command));
                 }
             } else {
                 logger.severe(ce.getMessage());
@@ -387,8 +367,7 @@ public class AdminMain {
         }
     }
 
-    private static void readAndMergeOptionsFromAuxInput(final ProgramOptions progOpts)
-            throws CommandException {
+    private static void readAndMergeOptionsFromAuxInput(final ProgramOptions progOpts) throws CommandException {
         final String auxInput = progOpts.getAuxInput();
         if (auxInput == null || auxInput.length() == 0) {
             return;
@@ -413,8 +392,7 @@ public class AdminMain {
     }
 
     /**
-     * Print usage message for the admin command. XXX - should be derived from
-     * ProgramOptions.
+     * Print usage message for the admin command. XXX - should be derived from ProgramOptions.
      */
     private void printUsage() {
         logger.severe(strings.get("Usage.full", getCommandName()));
@@ -423,8 +401,9 @@ public class AdminMain {
     private static boolean ok(String s) {
         return s != null && s.length() > 0;
     }
-    
-    /** Returns source JAR file for given class. 
+
+    /**
+     * Returns source JAR file for given class.
      * 
      * @param cls Must be classic class - NOT inner class
      */
@@ -434,5 +413,5 @@ public class AdminMain {
         filename = filename.substring(5, filename.indexOf('!'));
         return new File(filename);
     }
-    
+
 }

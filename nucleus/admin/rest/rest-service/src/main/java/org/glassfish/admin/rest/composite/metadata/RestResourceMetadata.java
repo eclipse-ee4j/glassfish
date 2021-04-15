@@ -69,10 +69,10 @@ public class RestResourceMetadata {
             if (designator != null) {
                 final String httpMethod = designator.annotationType().getSimpleName();
                 RestMethodMetadata rmm = new RestMethodMetadata(context, m, designator);
-//                if (resourceMethods.containsKey(httpMethod)) {
-    //                    throw new RuntimeException("Multiple " + httpMethod + " methods found on resource: " +
-//                            context.getClass().getName());
-//                }
+                //                if (resourceMethods.containsKey(httpMethod)) {
+                //                    throw new RuntimeException("Multiple " + httpMethod + " methods found on resource: " +
+                //                            context.getClass().getName());
+                //                }
                 resourceMethods.add(httpMethod, rmm);
             }
 

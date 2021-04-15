@@ -27,8 +27,7 @@ import java.util.logging.Logger;
  */
 public class ProxyClass implements InvocationHandler {
 
-    private static InheritableThreadLocal
-            callStackHolder = new InheritableThreadLocal() {
+    private static InheritableThreadLocal callStackHolder = new InheritableThreadLocal() {
         protected synchronized Object initialValue() {
             return new CallStack();
         }
@@ -44,19 +43,16 @@ public class ProxyClass implements InvocationHandler {
         delegate = handler;
         this.interceptor = interceptor;
     }
-    
-    public Object invoke(Object proxy, Method method, Object[] args)
-            throws Throwable {
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Call call = new Call(method, args);
-        CallStack callStack = (CallStack)callStackHolder.get();
+        CallStack callStack = (CallStack) callStackHolder.get();
         callStack.beginCall(call);
         try {
             interceptor.preInvoke(callStack);
         } catch (Throwable t) {
-            _logger.log(Level.FINE, "Preinvoke failed for MBeanServer interceptor [{0}].",
-                    t.getMessage());
-            _logger.log(Level.FINEST,
-                    "Preinvoke exception for MBeanServer interceptor.", t);
+            _logger.log(Level.FINE, "Preinvoke failed for MBeanServer interceptor [{0}].", t.getMessage());
+            _logger.log(Level.FINEST, "Preinvoke exception for MBeanServer interceptor.", t);
         }
         Object result = null;
         boolean success = true;
@@ -77,17 +73,15 @@ public class ProxyClass implements InvocationHandler {
                 call.setFailureReason(failReason);
             }
             call.setResult(result);
-            
-            if(!(call.getState().isFailed()))
+
+            if (!(call.getState().isFailed()))
                 call.setState(CallState.SUCCESS);
-            
+
             try {
                 interceptor.postInvoke(callStack);
             } catch (Throwable t) {
-                _logger.log(Level.FINE, "Postinvoke failed for MBeanServer interceptor [{0}].",
-                        t.getMessage());
-                _logger.log(Level.FINEST,
-                        "Postinvoke exception for MBeanServer interceptor.", t);
+                _logger.log(Level.FINE, "Postinvoke failed for MBeanServer interceptor [{0}].", t.getMessage());
+                _logger.log(Level.FINEST, "Postinvoke exception for MBeanServer interceptor.", t);
             }
             callStack.endCall();
         }

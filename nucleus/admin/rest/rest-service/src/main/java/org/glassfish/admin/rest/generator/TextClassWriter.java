@@ -32,8 +32,8 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 public class TextClassWriter implements ClassWriter {
 
-     Writer writer;
-     ServiceLocator habitat;
+    Writer writer;
+    ServiceLocator habitat;
 
     /**
      * @param className Name of class to be generated
@@ -41,13 +41,14 @@ public class TextClassWriter implements ClassWriter {
      * @param baseClassName
      * @param resourcePath
      */
-    public TextClassWriter(ServiceLocator habitat,File generationDir, String className, String baseClassName, String resourcePath) throws IOException {
+    public TextClassWriter(ServiceLocator habitat, File generationDir, String className, String baseClassName, String resourcePath)
+            throws IOException {
         this.habitat = habitat;
         File file = new File(generationDir, className + ".java");
         boolean success = file.createNewFile();
         if (!success) {
-            RestLogging.restLogger.log(Level.FINE, "Error creating file: {0} in {1}", 
-                    new String[] { className+".java", generationDir.getAbsolutePath() });
+            RestLogging.restLogger.log(Level.FINE, "Error creating file: {0} in {1}",
+                    new String[] { className + ".java", generationDir.getAbsolutePath() });
         }
         FileWriter fstream = new FileWriter(file);
         writer = new BufferedWriter(fstream);
@@ -56,7 +57,7 @@ public class TextClassWriter implements ClassWriter {
         writePackageHeader();
         writeImportStatements();
 
-        if(resourcePath != null) {
+        if (resourcePath != null) {
             writer.write("@Path(\"/" + resourcePath + "/\")\n");
         }
 
@@ -70,16 +71,16 @@ public class TextClassWriter implements ClassWriter {
 
     private void writeCopyRightHeader() throws IOException {
         writer.write("/*\n");
-        writer.write(" * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.\n"); 
+        writer.write(" * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.\n");
         writer.write(" *\n");
         writer.write(" * This program and the accompanying materials are made available under the\n");
-        writer.write(" * terms of the Eclipse Public License v. 2.0, which is available at\n"); 
-        writer.write(" * http://www.eclipse.org/legal/epl-2.0.\n");   
+        writer.write(" * terms of the Eclipse Public License v. 2.0, which is available at\n");
+        writer.write(" * http://www.eclipse.org/legal/epl-2.0.\n");
         writer.write(" *\n");
         writer.write(" * This Source Code may also be made available under the following Secondary\n");
         writer.write(" * Licenses when the conditions for such availability set forth in the\n");
         writer.write(" * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,\n");
-        writer.write(" * version 2 with the GNU Classpath Exception, which is available at\n"); 
+        writer.write(" * version 2 with the GNU Classpath Exception, which is available at\n");
         writer.write(" * https://www.gnu.org/software/classpath/license.html.\n");
         writer.write(" *\n");
         writer.write(" * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0\n");
@@ -94,10 +95,10 @@ public class TextClassWriter implements ClassWriter {
         writer.write("import org.glassfish.admin.rest.resources.custom.*;\n");
     }
 
-
     @Override
-    public void createCommandResourceConstructor(String commandResourceClassName, String commandName, String httpMethod, boolean linkedToParent,
-        CommandResourceMetaData.ParameterMetaData[] commandParams, String commandDisplayName, String commandAction) {
+    public void createCommandResourceConstructor(String commandResourceClassName, String commandName, String httpMethod,
+            boolean linkedToParent, CommandResourceMetaData.ParameterMetaData[] commandParams, String commandDisplayName,
+            String commandAction) {
         try {
             writer.write("   public " + commandResourceClassName + "() {\n");
             writer.write("       super(\n");
@@ -130,12 +131,11 @@ public class TextClassWriter implements ClassWriter {
     }
 
     @Override
-     public void createGetCommandResource(String commandResourceClassName, String resourcePath) {
+    public void createGetCommandResource(String commandResourceClassName, String resourcePath) {
         //define method with @Path in resource- resourceName
         try {
             writer.write("@Path(\"" + resourcePath + "/\")\n");
-            writer.write("public " + commandResourceClassName + " get"
-                    + commandResourceClassName + "() {\n");
+            writer.write("public " + commandResourceClassName + " get" + commandResourceClassName + "() {\n");
             writer.write(commandResourceClassName + " resource = injector.inject(" + commandResourceClassName + ".class);\n");
             writer.write("return resource;\n");
             writer.write("}\n\n");
@@ -169,16 +169,14 @@ public class TextClassWriter implements ClassWriter {
 
             StringBuilder commandResourcesPaths = new StringBuilder();
             for (CommandResourceMetaData metaData : commandMetaData) {
-                if (ResourceUtil.commandIsPresent(habitat, metaData.command)){
-                if (commandResourcesPaths.length() > 0) {
-                    commandResourcesPaths = commandResourcesPaths.append(", ");
-                }
+                if (ResourceUtil.commandIsPresent(habitat, metaData.command)) {
+                    if (commandResourcesPaths.length() > 0) {
+                        commandResourcesPaths = commandResourcesPaths.append(", ");
+                    }
 
-                commandResourcesPaths = commandResourcesPaths .append( "{")
-                   .append('"').append(metaData.resourcePath).append("\", ")
-                   .append('"').append(metaData.httpMethod).append("\", ")
-                   .append('"').append(metaData.command).append("\"} ");
-            }
+                    commandResourcesPaths = commandResourcesPaths.append("{").append('"').append(metaData.resourcePath).append("\", ")
+                            .append('"').append(metaData.httpMethod).append("\", ").append('"').append(metaData.command).append("\"} ");
+                }
             }
 
             writer.write("return new String[][] {" + commandResourcesPaths + "};\n");
@@ -233,7 +231,8 @@ public class TextClassWriter implements ClassWriter {
         try {
             writer.write("\n");
             writer.write("\t@Path(\"{" + keyAttributeName + "}/\")\n");
-            writer.write("\tpublic " + childResourceClassName + " get" + childResourceClassName + "(@PathParam(\"" + keyAttributeName + "\") String id) {\n");
+            writer.write("\tpublic " + childResourceClassName + " get" + childResourceClassName + "(@PathParam(\"" + keyAttributeName
+                    + "\") String id) {\n");
             writer.write("\t\t" + childResourceClassName + " resource = injector.inject(" + childResourceClassName + ".class);\n");
             writer.write("\t\tresource.setBeanByKey(entity, id, tagName);\n");
             writer.write("\t\treturn resource;\n");

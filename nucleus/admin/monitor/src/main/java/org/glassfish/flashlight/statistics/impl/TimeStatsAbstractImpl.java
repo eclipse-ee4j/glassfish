@@ -25,11 +25,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author Harpreet Singh
  */
-public abstract class TimeStatsAbstractImpl extends AbstractTreeNode
-        implements TimeStats {
+public abstract class TimeStatsAbstractImpl extends AbstractTreeNode implements TimeStats {
 
     private Average average = AverageFactory.createAverage();
-
 
     private AtomicLong lastSampleTime = new AtomicLong(0);
     protected long startTime = 0;
@@ -40,16 +38,17 @@ public abstract class TimeStatsAbstractImpl extends AbstractTreeNode
 
         private TimeStatData tsd;
 
-        protected TimeStatData initialValue (){
-            tsd = new TimeStatData ();
+        protected TimeStatData initialValue() {
+            tsd = new TimeStatData();
             return tsd;
         }
-        public TimeStatData get (){
+
+        public TimeStatData get() {
             if (tsd == null)
                 tsd = new TimeStatData();
             return tsd;
         }
-        
+
     }
 
     protected static final String NEWLINE = System.getProperty("line.separator");
@@ -99,6 +98,7 @@ public abstract class TimeStatsAbstractImpl extends AbstractTreeNode
     public long getTimesCalled() {
         return average.getSize();
     }
+
     // Implementations for TimeStatistic
     public long getCount() {
         return getTimesCalled();
@@ -133,7 +133,6 @@ public abstract class TimeStatsAbstractImpl extends AbstractTreeNode
         private long exitTime = 0;
         private long totalTime = 0;
 
-
         public long getEntryTime() {
             return entryTime;
         }
@@ -158,7 +157,8 @@ public abstract class TimeStatsAbstractImpl extends AbstractTreeNode
         public void setTotalTime(long totalTime) {
             this.totalTime = totalTime;
         }
-        public void setReset (){
+
+        public void setReset() {
             entryTime = 0;
             exitTime = 0;
             totalTime = 0;

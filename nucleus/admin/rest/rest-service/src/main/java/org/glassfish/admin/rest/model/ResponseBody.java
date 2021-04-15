@@ -24,7 +24,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class ResponseBody {
-    public static final String EVENT_NAME="response/body";
+    public static final String EVENT_NAME = "response/body";
     private List<Message> messages = new ArrayList<Message>();
     private boolean includeResourceLinks = true;
     private List<ResourceLink> links = new ArrayList<ResourceLink>();
@@ -102,7 +102,9 @@ public class ResponseBody {
     }
 
     public ResponseBody addParentResourceLink(URI uri) {
-        if (uri == null) { return this; }
+        if (uri == null) {
+            return this;
+        }
         return addResourceLink("parent", uri);
     }
 

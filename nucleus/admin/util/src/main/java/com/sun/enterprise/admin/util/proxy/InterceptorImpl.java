@@ -17,8 +17,7 @@
 package com.sun.enterprise.admin.util.proxy;
 
 /**
- * A simple call interceptor implementation (does nothing, intended for
- * sub-classing)
+ * A simple call interceptor implementation (does nothing, intended for sub-classing)
  */
 public class InterceptorImpl implements Interceptor {
 

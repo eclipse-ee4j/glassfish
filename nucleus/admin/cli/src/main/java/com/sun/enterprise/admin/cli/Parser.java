@@ -24,15 +24,13 @@ import com.sun.enterprise.admin.util.*;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
-
 /**
- * The <code>Parser</code> object is used to parse the
- * command line and verify that the command line is CLIP compliant.
+ * The <code>Parser</code> object is used to parse the command line and verify that the command line is CLIP compliant.
  */
 public class Parser {
     // MultiMap of options and values from command-line
     private ParameterMap optionsMap = new ParameterMap();
-    
+
     // Array of operands from command-line
     private List<String> operands = new ArrayList<String>();
 
@@ -42,8 +40,7 @@ public class Parser {
     // Ignore unknown options when parsing?
     private boolean ignoreUnknown;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(Parser.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(Parser.class);
 
     /*
      * TODO:
@@ -53,16 +50,13 @@ public class Parser {
     /**
      * Parse the given command line arguments
      *
-     * @param args  command line arguments
+     * @param args command line arguments
      * @param start index in args to start parsing
      * @param options the valid options to consider while parsing
-     * @param ignoreUnknown if true, unknown options are considered operands
-     *        instead of generating an exception
+     * @param ignoreUnknown if true, unknown options are considered operands instead of generating an exception
      * @throws CommandValidationException if command line parsing fails
      */
-    public Parser(String[] args, int start,
-            Collection<ParamModel> options, boolean ignoreUnknown)
-            throws CommandValidationException {
+    public Parser(String[] args, int start, Collection<ParamModel> options, boolean ignoreUnknown) throws CommandValidationException {
         this.options = options;
         this.ignoreUnknown = ignoreUnknown;
         parseCommandLine(args, start);
@@ -71,15 +65,14 @@ public class Parser {
     /**
      * Parse the command line arguments according to CLIP.
      *
-     * @param argv  command line arguments
+     * @param argv command line arguments
      * @throws CommandValidationException if command line is invalid
      */
-    private void parseCommandLine(final String[] argv, final int start)
-        throws CommandValidationException {
+    private void parseCommandLine(final String[] argv, final int start) throws CommandValidationException {
 
         for (int si = start; si < argv.length; si++) {
             String arg = argv[si];
-            if (arg.equals("--")) {             // end of options
+            if (arg.equals("--")) { // end of options
                 // if we're ignoring unknown options, we include this
                 // delimiter as an operand, it will be eliminated later
                 // when we process all remaining options
@@ -111,7 +104,7 @@ public class Parser {
                 if (arg.startsWith("--no-")) {
                     sawno = true;
                     value = "false";
-                    ns = 5;             // skip prefix
+                    ns = 5; // skip prefix
                 }
                 // if of the form "--option=value", extract value
                 int ne = arg.indexOf('=');
@@ -119,16 +112,14 @@ public class Parser {
                     name = arg.substring(ns);
                 else {
                     if (value != null)
-                        throw new CommandValidationException(
-                            strings.get("parser.noValueAllowed", arg));
+                        throw new CommandValidationException(strings.get("parser.noValueAllowed", arg));
                     name = arg.substring(ns, ne);
                     value = arg.substring(ne + 1);
                 }
                 opt = lookupLongOption(name);
                 if (sawno && optionRequiresOperand(opt))
-                    throw new CommandValidationException(
-                        strings.get("parser.illegalNo", opt.getName()));
-            } else {                            // short option
+                    throw new CommandValidationException(strings.get("parser.illegalNo", opt.getName()));
+            } else { // short option
                 /*
                  * possibilities are:
                  *      -f
@@ -140,30 +131,27 @@ public class Parser {
                 if (arg.length() <= 2) { // one of the first two cases
                     opt = lookupShortOption(arg.charAt(1));
                     name = arg.substring(1);
-                } else {                        // one of the last two cases
+                } else { // one of the last two cases
                     if (arg.charAt(2) == '=') { // -f=value case
                         opt = lookupShortOption(arg.charAt(1));
                         value = arg.substring(3);
-                    } else {                            // -fxyz case
+                    } else { // -fxyz case
                         for (int i = 1; i < arg.length(); i++) {
                             opt = lookupShortOption(arg.charAt(i));
                             if (opt == null) {
                                 if (!ignoreUnknown)
                                     throw new CommandValidationException(
-                                        strings.get("parser.invalidOption",
-                                        Character.toString(arg.charAt(i))));
+                                            strings.get("parser.invalidOption", Character.toString(arg.charAt(i))));
                                 // unknown option, skip all the rest
                                 operands.add(arg);
                                 break;
                             }
-                            if (opt.getType() == Boolean.class ||
-                                opt.getType() == boolean.class)
+                            if (opt.getType() == Boolean.class || opt.getType() == boolean.class)
                                 setOption(opt, "true");
                             else {
                                 if (!ignoreUnknown)
                                     throw new CommandValidationException(
-                                      strings.get("parser.nonbooleanNotAllowed",
-                                      Character.toString(arg.charAt(i)), arg));
+                                            strings.get("parser.nonbooleanNotAllowed", Character.toString(arg.charAt(i)), arg));
                                 // unknown option, skip all the rest
                                 operands.add(arg);
                                 break;
@@ -177,8 +165,7 @@ public class Parser {
             // is it a known option?
             if (opt == null) {
                 if (!ignoreUnknown)
-                    throw new CommandValidationException(
-                        strings.get("parser.invalidOption", arg));
+                    throw new CommandValidationException(strings.get("parser.invalidOption", arg));
                 // unknown option, skip it
                 operands.add(arg);
                 continue;
@@ -192,14 +179,12 @@ public class Parser {
                     if (si + 1 < argv.length && !argv[si + 1].startsWith("-"))
                         value = argv[++si];
                     else
-                        ((ParamModelData)opt).type = Boolean.class; // fake it
+                        ((ParamModelData) opt).type = Boolean.class; // fake it
                 } else if (optionRequiresOperand(opt)) {
                     if (++si >= argv.length)
-                        throw new CommandValidationException(
-                            strings.get("parser.missingValue", name));
+                        throw new CommandValidationException(strings.get("parser.missingValue", name));
                     value = argv[si];
-                } else if (opt.getType() == Boolean.class ||
-                            opt.getType() == boolean.class) {
+                } else if (opt.getType() == Boolean.class || opt.getType() == boolean.class) {
                     /*
                      * If it's a boolean option, the following parameter
                      * might be the value for the option; peek ahead to
@@ -207,8 +192,7 @@ public class Parser {
                      */
                     if (si + 1 < argv.length) {
                         String val = argv[si + 1];
-                        if (val.equalsIgnoreCase("true") ||
-                                val.equalsIgnoreCase("false")) {
+                        if (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false")) {
                             // yup, it's a boolean value, consume it
                             si++;
                             value = val;
@@ -221,8 +205,7 @@ public class Parser {
     }
 
     /**
-     * Returns a Map with all the options.
-     * The Map is indexed by the long name of the option.
+     * Returns a Map with all the options. The Map is indexed by the long name of the option.
      *
      * @return options
      */
@@ -240,16 +223,15 @@ public class Parser {
     }
 
     public String toString() {
-        return "CLI parser: Options = " + optionsMap +
-                "; Operands = " + operands;
+        return "CLI parser: Options = " + optionsMap + "; Operands = " + operands;
     }
-    
+
     /**
      * Get ParamModel for long option name.
      */
     private ParamModel lookupLongOption(String s) {
-	if (s == null || s.length() == 0)
-	    return null;
+        if (s == null || s.length() == 0)
+            return null;
         // XXX - for now, fake it if no options
         if (options == null) {
             // no valid options specified so everything is valid
@@ -257,10 +239,10 @@ public class Parser {
         }
         for (ParamModel od : options) {
             if (od.getParam().primary())
-		continue;
+                continue;
             if (s.equalsIgnoreCase(od.getName()))
                 return od;
-	    if (s.equalsIgnoreCase(od.getParam().alias()))
+            if (s.equalsIgnoreCase(od.getParam().alias()))
                 return od;
         }
         return null;
@@ -285,15 +267,13 @@ public class Parser {
      * Does this option require an operand?
      */
     private static boolean optionRequiresOperand(ParamModel opt) {
-        return opt != null && opt.getType() != Boolean.class &&
-                                opt.getType() != boolean.class;
+        return opt != null && opt.getType() != Boolean.class && opt.getType() != boolean.class;
     }
 
     /**
      * Set the value for the option.
      */
-    private void setOption(ParamModel opt, String value)
-            throws CommandValidationException {
+    private void setOption(ParamModel opt, String value) throws CommandValidationException {
         // VERY basic validation
         if (opt == null)
             throw new NullPointerException("null option name");
@@ -310,35 +290,28 @@ public class Parser {
                 try {
                     is = new FileInputStream(f);
                 } catch (IOException ioex) {
-                    throw new CommandValidationException(
-                        strings.get("parser.invalidFileEx",
-                                    name, ioex.toString()));
+                    throw new CommandValidationException(strings.get("parser.invalidFileEx", name, ioex.toString()));
                 } finally {
                     if (is != null)
                         try {
                             is.close();
-                        } catch (IOException cex) { }
+                        } catch (IOException cex) {
+                        }
                 }
-                throw new CommandValidationException(
-                    strings.get("parser.invalidFile", name, value));
+                throw new CommandValidationException(strings.get("parser.invalidFile", name, value));
             }
-        } else if (opt.getType() == Boolean.class ||
-                    opt.getType() == boolean.class) {
+        } else if (opt.getType() == Boolean.class || opt.getType() == boolean.class) {
             if (value == null)
                 value = "true";
-            else if (!(value.toLowerCase(Locale.ENGLISH).equals("true") ||
-                    value.toLowerCase(Locale.ENGLISH).equals("false")))
-                throw new CommandValidationException(
-                    strings.get("parser.invalidBoolean", name, value));
+            else if (!(value.toLowerCase(Locale.ENGLISH).equals("true") || value.toLowerCase(Locale.ENGLISH).equals("false")))
+                throw new CommandValidationException(strings.get("parser.invalidBoolean", name, value));
         } else if (opt.getParam().password())
-            throw new CommandValidationException(
-                strings.get("parser.passwordNotAllowed", opt.getName()));
+            throw new CommandValidationException(strings.get("parser.passwordNotAllowed", opt.getName()));
 
         if (!opt.getParam().multiple()) {
             // repeats not allowed
             if (optionsMap.containsKey(name)) {
-                throw new CommandValidationException(
-                        strings.get("parser.noRepeats", name));
+                throw new CommandValidationException(strings.get("parser.noRepeats", name));
             }
         }
 

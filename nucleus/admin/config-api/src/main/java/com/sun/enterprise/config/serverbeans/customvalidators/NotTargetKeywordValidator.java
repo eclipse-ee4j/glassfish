@@ -20,7 +20,6 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.HashSet;
 
-
 /**
  * Validation logic for NotTargetKeyword constraint
  *
@@ -36,12 +35,13 @@ public class NotTargetKeywordValidator implements ConstraintValidator<NotTargetK
 
     @Override
     public void initialize(NotTargetKeyword constraintAnnotation) {
-            //no initialization needed
+        //no initialization needed
     }
 
     @Override
-    public boolean isValid(String name, ConstraintValidatorContext context ) {
-        if ( name == null) return true;
+    public boolean isValid(String name, ConstraintValidatorContext context) {
+        if (name == null)
+            return true;
         return !keywords.contains(name);
     }
 }

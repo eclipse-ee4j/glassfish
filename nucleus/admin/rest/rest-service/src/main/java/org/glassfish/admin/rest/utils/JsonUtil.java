@@ -45,15 +45,15 @@ public class JsonUtil {
     public static Object getJsonObject(Object object, boolean hideConfidentialProperties) throws JSONException {
         Object result;
         if (object instanceof Collection) {
-            result = processCollection((Collection)object);
+            result = processCollection((Collection) object);
         } else if (object instanceof Map) {
-            result = processMap((Map)object);
+            result = processMap((Map) object);
         } else if (object == null) {
             result = JSONObject.NULL;
         } else if (RestModel.class.isAssignableFrom(object.getClass())) {
-            result = getJsonForRestModel((RestModel)object, hideConfidentialProperties);
+            result = getJsonForRestModel((RestModel) object, hideConfidentialProperties);
         } else if (object instanceof ResponseBody) {
-            result = ((ResponseBody)object).toJson();
+            result = ((ResponseBody) object).toJson();
         } else {
             Class<?> clazz = object.getClass();
             if (clazz.isArray()) {
@@ -76,9 +76,9 @@ public class JsonUtil {
         for (Method m : model.getClass().getDeclaredMethods()) {
             if (m.getName().startsWith("get")) { // && !m.getName().equals("getClass")) {
                 String propName = m.getName().substring(3);
-                propName = propName.substring(0,1).toLowerCase(Locale.getDefault()) + propName.substring(1);
+                propName = propName.substring(0, 1).toLowerCase(Locale.getDefault()) + propName.substring(1);
                 if (!model.isTrimmed() || model.isSet(propName)) { // TBD - remove once the conversion to the new REST style guide is completed
-//              if (model.isSet(propName)) {
+                    //              if (model.isSet(propName)) {
                     // Only include properties whose value has been set in the model
                     try {
                         result.put(propName, getJsonObject(getRestModelProperty(model, m, hideConfidentialProperties)));
@@ -94,7 +94,7 @@ public class JsonUtil {
     private static Object getRestModelProperty(RestModel model, Method method, boolean hideConfidentialProperties) throws Exception {
         Object object = method.invoke(model);
         if (hideConfidentialProperties && isConfidentialString(model, method)) {
-            String str = (String)object;
+            String str = (String) object;
             return (StringUtil.notEmpty(str)) ? CONFIDENTIAL_PROPERTY_SET : CONFIDENTIAL_PROPERTY_UNSET;
         } else {
             return object;
@@ -146,7 +146,7 @@ public class JsonUtil {
     public static JSONObject processMap(Map map) throws JSONException {
         JSONObject result = new JSONObject();
 
-        for (Map.Entry entry : (Set<Map.Entry>)map.entrySet()) {
+        for (Map.Entry entry : (Set<Map.Entry>) map.entrySet()) {
             result.put(entry.getKey().toString(), getJsonObject(entry.getValue()));
         }
 
@@ -174,8 +174,8 @@ public class JsonUtil {
 
     public static void put(JSONObject jsonObject, String key, Object value) {
         try {
-            synchronized(jsonObject) {
-                jsonObject.put(key, value!=null?value:JSONObject.NULL);
+            synchronized (jsonObject) {
+                jsonObject.put(key, value != null ? value : JSONObject.NULL);
             }
         } catch (JSONException e) {
             // ignore. The exception is thrown only if the value is non-finite number
@@ -184,7 +184,7 @@ public class JsonUtil {
     }
 
     public static void put(JSONArray jsonArray, JSONObject item) {
-        synchronized(jsonArray) {
+        synchronized (jsonArray) {
             jsonArray.put(item);
         }
     }

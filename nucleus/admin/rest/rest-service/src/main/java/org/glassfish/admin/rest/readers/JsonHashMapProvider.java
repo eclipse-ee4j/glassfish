@@ -46,23 +46,22 @@ public class JsonHashMapProvider implements MessageBodyReader<HashMap<String, St
     }
 
     @Override
-    public HashMap<String, String> readFrom(Class<HashMap<String, String>> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers,
-            InputStream in) throws IOException {
+    public HashMap<String, String> readFrom(Class<HashMap<String, String>> type, Type genericType, Annotation[] annotations,
+            MediaType mediaType, MultivaluedMap<String, String> headers, InputStream in) throws IOException {
         HashMap map = new HashMap();
         try {
             JSONObject obj = new JSONObject(inputStreamAsString(in));
-            Iterator  iter=obj.keys();
+            Iterator iter = obj.keys();
 
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 String k = (String) iter.next();
-                map.put(k, ""+obj.get(k));
-              
+                map.put(k, "" + obj.get(k));
+
             }
             return map;
 
         } catch (IOException | JSONException ex) {
-//            map.put("error", "Entity Parsing Error: " + ex.getMessage());
+            //            map.put("error", "Entity Parsing Error: " + ex.getMessage());
             return map;
         }
     }

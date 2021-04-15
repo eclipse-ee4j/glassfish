@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Properties;
 
-
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
@@ -40,8 +38,8 @@ import java.util.Enumeration;
 import org.jvnet.hk2.config.types.Property;
 
 /**
- * AMX Realms implementation.
- * Note that realms don't load until {@link #loadRealms} is called.
+ * AMX Realms implementation. Note that realms don't load until {@link #loadRealms} is called.
+ * 
  * @author ludovic champenosi
  */
 public class SecurityUtil {
@@ -56,7 +54,7 @@ public class SecurityUtil {
         _loadRealms();
     }
 
-    public  RealmsManager getRealmsManager() {
+    public RealmsManager getRealmsManager() {
         RealmsManager mgr = Globals.getDefaultHabitat().getService(RealmsManager.class);
         return mgr;
     }
@@ -69,7 +67,6 @@ public class SecurityUtil {
     }
 
     private void _loadRealms() {
-
 
         List<AuthRealm> authRealmConfigs = getSecurityService().getAuthRealm();
 
@@ -111,7 +108,7 @@ public class SecurityUtil {
         while (es.hasMoreElements()) {
             l.add(es.nextElement());
         }
-                return (String[])l.toArray(new String[l.size()]);
+        return (String[]) l.toArray(new String[l.size()]);
 
     }
 
@@ -127,7 +124,7 @@ public class SecurityUtil {
 
     public String[] getPredefinedAuthRealmClassNames() {
         List<String> items = getRealmsManager().getPredefinedAuthRealmClassNames();
-        return (String[])items.toArray(new String[items.size()]);
+        return (String[]) items.toArray(new String[items.size()]);
     }
 
     public String getDefaultRealmName() {
@@ -146,11 +143,7 @@ public class SecurityUtil {
         return realm;
     }
 
-    public void addUser(
-            String realmName,
-            String user,
-            String password,
-            String[] groupList) {
+    public void addUser(String realmName, String user, String password, String[] groupList) {
         checkSupportsUserManagement(realmName);
 
         try {
@@ -162,12 +155,7 @@ public class SecurityUtil {
         }
     }
 
-    public void updateUser(
-            String realmName,
-            String existingUser,
-            String newUser,
-            String password,
-            String[] groupList) {
+    public void updateUser(String realmName, String existingUser, String newUser, String password, String[] groupList) {
         checkSupportsUserManagement(realmName);
 
         try {
@@ -209,8 +197,7 @@ public class SecurityUtil {
             while (es.hasMoreElements()) {
                 l.add(es.nextElement());
             }
-                    return (String[])l.toArray(new String[l.size()]);
-
+            return (String[]) l.toArray(new String[l.size()]);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -225,7 +212,7 @@ public class SecurityUtil {
             while (es.hasMoreElements()) {
                 l.add(es.nextElement());
             }
-        return (String[])l.toArray(new String[l.size()]);
+            return (String[]) l.toArray(new String[l.size()]);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -242,12 +229,11 @@ public class SecurityUtil {
             while (es.hasMoreElements()) {
                 l.add(es.nextElement());
             }
-        return (String[])l.toArray(new String[l.size()]);
+            return (String[]) l.toArray(new String[l.size()]);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
 
     }
 
@@ -258,7 +244,7 @@ public class SecurityUtil {
             Enumeration e = user.getAttributeNames();
             List<String> attrNames = new ArrayList<String>();
             while (e.hasMoreElements()) {
-                attrNames.add((String)e.nextElement());
+                attrNames.add((String) e.nextElement());
             }
             for (String attrName : attrNames) {
                 m.put(attrName, user.getAttribute(attrName));
@@ -296,10 +282,9 @@ public class SecurityUtil {
         }
 
         List<Property> props = adminFileAuthRealm.getProperty();
-        
 
         Property keyfileProp = null;
-        
+
         for (Property prop : props) {
             if ("file".equals(prop.getName())) {
                 keyfileProp = prop;

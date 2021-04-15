@@ -20,8 +20,8 @@ import jakarta.validation.constraints.NotNull;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This model represents an arbitrary name/value pair that can be attached to 
- * a number of different configuration objects.
+ * This model represents an arbitrary name/value pair that can be attached to a number of different configuration
+ * objects.
  */
 @Service
 public interface Property extends RestModel {
@@ -30,11 +30,13 @@ public interface Property extends RestModel {
      */
     @NotNull
     String getName();
+
     void setName(String name);
 
     /**
      * Property value
      */
     String getValue();
+
     void setValue(String value);
 }

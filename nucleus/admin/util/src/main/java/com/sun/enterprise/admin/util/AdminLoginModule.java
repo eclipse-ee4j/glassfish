@@ -42,16 +42,15 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * Handles the non-username/password ways an admin user can authenticate.
  * <p>
- * As specified by the LoginModule contract, the login method creates lists 
- * of principals or credentials to be added to the Subject during commit.  Only
- * if commit is invoked does the module actually add them to the Subject.
+ * As specified by the LoginModule contract, the login method creates lists of principals or credentials to be added to
+ * the Subject during commit. Only if commit is invoked does the module actually add them to the Subject.
  * 
  * @author tjquinn
  */
 @Service
 @PerLookup
 public class AdminLoginModule implements LoginModule {
-    
+
     private static final Logger logger = GenericAdminAuthenticator.ADMSEC_LOGGER;
     private static final Level PROGRESS_LEVEL = Level.FINE;
 
@@ -63,12 +62,12 @@ public class AdminLoginModule implements LoginModule {
 
     @Inject
     private LocalPassword localPassword;
-    
+
     @Inject
     private RestSessionManager restSessionManager;
-    
+
     private SecureAdmin secureAdmin = null;
-    
+
     private boolean isAuthenticated;
 
     private Subject subject;
@@ -85,44 +84,33 @@ public class AdminLoginModule implements LoginModule {
     private final RemoteHostAuthenticator remoteHostAuth = new RemoteHostAuthenticator();
     private final RestAdminAuthenticator restTokenAuthenticator = new RestAdminAuthenticator();
 
-
     private List<Callback> callbacks = new ArrayList<Callback>(Arrays.asList(
-    
-            usernamePasswordAuth.nameCB,
-            usernamePasswordAuth.pwCB,
-            principalAuth.cb,
-            adminIndicatorAuth.cb,
-            adminTokenAuth.cb,
-            remoteHostAuth.cb,
-            restTokenAuthenticator.restTokenCB,
-            restTokenAuthenticator.remoteAddrCB));
 
-    private List<AdminAuthenticator> authenticators = new ArrayList<AdminAuthenticator>(Arrays.asList(
-            usernamePasswordAuth,
-            principalAuth,
-            adminIndicatorAuth,
-            adminTokenAuth,
-            restTokenAuthenticator));
+            usernamePasswordAuth.nameCB, usernamePasswordAuth.pwCB, principalAuth.cb, adminIndicatorAuth.cb, adminTokenAuth.cb,
+            remoteHostAuth.cb, restTokenAuthenticator.restTokenCB, restTokenAuthenticator.remoteAddrCB));
 
-        @Override
-        public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
-            if (callbackHandler instanceof AdminCallbackHandler) {
-                ServiceLocator sl = ((AdminCallbackHandler) callbackHandler).getServiceLocator();
-                findServices(sl);
-            }
-    
-            this.subject = subject;
-            this.callbackHandler = callbackHandler;
+    private List<AdminAuthenticator> authenticators = new ArrayList<AdminAuthenticator>(
+            Arrays.asList(usernamePasswordAuth, principalAuth, adminIndicatorAuth, adminTokenAuth, restTokenAuthenticator));
+
+    @Override
+    public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
+        if (callbackHandler instanceof AdminCallbackHandler) {
+            ServiceLocator sl = ((AdminCallbackHandler) callbackHandler).getServiceLocator();
+            findServices(sl);
         }
 
-        private void findServices(final ServiceLocator sl) {
-            domain = sl.getService(Domain.class);
-            secureAdmin = domain.getSecureAdmin();
-            authTokenManager = sl.getService(AuthTokenManager.class);
-            localPassword = sl.getService(LocalPassword.class);
-            restSessionManager = sl.getService(RestSessionManager.class);
-        }
-        
+        this.subject = subject;
+        this.callbackHandler = callbackHandler;
+    }
+
+    private void findServices(final ServiceLocator sl) {
+        domain = sl.getService(Domain.class);
+        secureAdmin = domain.getSecureAdmin();
+        authTokenManager = sl.getService(AuthTokenManager.class);
+        localPassword = sl.getService(LocalPassword.class);
+        restSessionManager = sl.getService(RestSessionManager.class);
+    }
+
     @Override
     public boolean login() throws LoginException {
         /*
@@ -140,7 +128,6 @@ public class AdminLoginModule implements LoginModule {
             throw lex;
         }
 
-
         /*
         * Make sure this login module has some way of authenticating this user.  
         * Otherwise we don't need it to be invoked during commit or logout.
@@ -151,8 +138,8 @@ public class AdminLoginModule implements LoginModule {
         }
 
         logger.log(PROGRESS_LEVEL, "login returning {0}", isAuthenticated);
-        
-        if ( ! isAuthenticated) {
+
+        if (!isAuthenticated) {
             throw new LoginException();
         }
         return isAuthenticated;
@@ -166,7 +153,7 @@ public class AdminLoginModule implements LoginModule {
 
     @Override
     public boolean commit() throws LoginException {
-        if ( ! isAuthenticated) {
+        if (!isAuthenticated) {
             return false;
         }
         updateFromSubject(subject, subjectToAssemble);
@@ -174,9 +161,8 @@ public class AdminLoginModule implements LoginModule {
         final Level dumpLevel = Level.FINER;
         if (logger.isLoggable(dumpLevel)) {
             logger.log(dumpLevel, "Following identity attached to subject: {0} principals, {1} private credentials, {2} public credentials",
-                    new Object[] {subjectToAssemble.getPrincipals().size(), 
-                        subjectToAssemble.getPrivateCredentials().size(), 
-                        subjectToAssemble.getPublicCredentials().size()});
+                    new Object[] { subjectToAssemble.getPrincipals().size(), subjectToAssemble.getPrivateCredentials().size(),
+                            subjectToAssemble.getPublicCredentials().size() });
             for (Principal p : subjectToAssemble.getPrincipals()) {
                 logger.log(dumpLevel, "  principal: {0}", p.getName());
             }
@@ -193,7 +179,7 @@ public class AdminLoginModule implements LoginModule {
 
     @Override
     public boolean abort() throws LoginException {
-        if ( ! isAuthenticated) {
+        if (!isAuthenticated) {
             return false;
         }
         logger.log(PROGRESS_LEVEL, "aborting");
@@ -241,25 +227,20 @@ public class AdminLoginModule implements LoginModule {
     private static class SpecialAdminIndicatorChecker {
 
         private static enum Result {
-            NOT_IN_REQUEST,
-            MATCHED,
-            MISMATCHED
+            NOT_IN_REQUEST, MATCHED, MISMATCHED
         }
 
         private final SpecialAdminIndicatorChecker.Result _result;
 
-        private SpecialAdminIndicatorChecker(
-                final String actualIndicator,
-                final String expectedIndicator,
-                final String originHost) {
+        private SpecialAdminIndicatorChecker(final String actualIndicator, final String expectedIndicator, final String originHost) {
             final Level dumpLevel = Level.FINER;
             if (actualIndicator != null) {
                 if (actualIndicator.equals(expectedIndicator)) {
                     _result = SpecialAdminIndicatorChecker.Result.MATCHED;
                     logger.log(dumpLevel, "Admin request contains expected domain ID");
                 } else {
-                    logger.log(Level.WARNING, AdminLoggerInfo.mForeignDomainID, 
-                            new Object[] { originHost, actualIndicator, expectedIndicator});
+                    logger.log(Level.WARNING, AdminLoggerInfo.mForeignDomainID,
+                            new Object[] { originHost, actualIndicator, expectedIndicator });
                     _result = SpecialAdminIndicatorChecker.Result.MISMATCHED;
                 }
             } else {
@@ -286,13 +267,12 @@ public class AdminLoginModule implements LoginModule {
         public List<Callback> callbacks() {
             return new ArrayList<Callback>(Arrays.asList(cb));
         }
-        
+
         @Override
         public AuthenticatorType type() {
             return type;
         }
-        
-        
+
     }
 
     abstract class TextAuthenticator extends Authenticator {
@@ -307,6 +287,7 @@ public class AdminLoginModule implements LoginModule {
     class PrincipalAuthenticator extends Authenticator {
 
         final private PrincipalCallback pcb;
+
         PrincipalAuthenticator() {
             super(AuthenticatorType.PRINCIPAL, new PrincipalCallback());
             pcb = (PrincipalCallback) cb;
@@ -326,7 +307,7 @@ public class AdminLoginModule implements LoginModule {
              * and sends ReST requests over the net to the DAS) the request
              * will have both the DAS's cert and the user's username and password.
              */
-            
+
             final Principal p = pcb.getPrincipal();
             if (p != null) {
                 if (isPrincipalFromGlassFish(p) && usernamePasswordAuth.isActive()) {
@@ -343,7 +324,7 @@ public class AdminLoginModule implements LoginModule {
                  */
                 subject.getPrincipals().add(p);
                 logger.log(PROGRESS_LEVEL, "Attaching Principal {0}", p.getName());
-                
+
             }
             return p != null;
         }
@@ -371,10 +352,8 @@ public class AdminLoginModule implements LoginModule {
                 return false;
             }
             final String providedIndicator = textCB.getText();
-            final SpecialAdminIndicatorChecker checker = new SpecialAdminIndicatorChecker(
-                    providedIndicator, 
-                    secureAdmin.getSpecialAdminIndicator(),
-                    remoteHostAuth.textCB.getText());
+            final SpecialAdminIndicatorChecker checker = new SpecialAdminIndicatorChecker(providedIndicator,
+                    secureAdmin.getSpecialAdminIndicator(), remoteHostAuth.textCB.getText());
             if (checker.result() == SpecialAdminIndicatorChecker.Result.MISMATCHED) {
                 throw new LoginException();
             }
@@ -426,7 +405,7 @@ public class AdminLoginModule implements LoginModule {
                      * partly the whole point of tokens.
                      */
                     subject.getPrincipals().add(new AdminTokenPrincipal(token));
-                    
+
                 }
             }
             return s != null;
@@ -444,7 +423,7 @@ public class AdminLoginModule implements LoginModule {
         boolean isActive() {
             return nameCB.getName() != null || pwCB.getPassword() != null;
         }
-        
+
         @Override
         public boolean identify(final Subject subject) throws LoginException {
             /*
@@ -479,7 +458,7 @@ public class AdminLoginModule implements LoginModule {
             return false;
         }
     }
-    
+
     class RestAdminAuthenticator extends Authenticator {
 
         private TextInputCallback restTokenCB = new TextInputCallback(AdminAuthenticator.REST_TOKEN_NAME);
@@ -488,7 +467,7 @@ public class AdminLoginModule implements LoginModule {
         RestAdminAuthenticator() {
             super(AuthenticatorType.REST_TOKEN, null);
         }
-        
+
         @Override
         public List<Callback> callbacks() {
             return new ArrayList<Callback>(Arrays.asList(cb, remoteAddrCB));

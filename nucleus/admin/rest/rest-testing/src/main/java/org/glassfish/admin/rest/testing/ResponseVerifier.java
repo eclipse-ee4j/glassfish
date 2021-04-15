@@ -44,7 +44,7 @@ public class ResponseVerifier {
 
     public ResponseVerifier status(int... statuses) {
         if (statuses == null || statuses.length == 0) {
-            statuses = new int[]{getDefaultStatus()};
+            statuses = new int[] { getDefaultStatus() };
         }
         int have = getResponse().getStatus();
         debug("Statuses want : " + Arrays.toString(statuses));
@@ -55,7 +55,8 @@ public class ResponseVerifier {
                 return this;
             }
         }
-        throw new IllegalArgumentException("Unexpected status code.  want=" + Arrays.toString(statuses) + ", have=" + have + ", body=" + getResponse().getStringBody());
+        throw new IllegalArgumentException("Unexpected status code.  want=" + Arrays.toString(statuses) + ", have=" + have + ", body="
+                + getResponse().getStringBody());
     }
 
     protected int getDefaultStatus() {

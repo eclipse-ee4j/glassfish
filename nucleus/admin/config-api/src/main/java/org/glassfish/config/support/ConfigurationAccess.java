@@ -23,18 +23,15 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
 
 /**
- * Service to lock the configuration elements for a particular domain
- * configuration. All changes to the domain configuration changes
- * being the domain.xml or the security artifacts must go through
- * this service to ensure proper synchronization.
+ * Service to lock the configuration elements for a particular domain configuration. All changes to the domain
+ * configuration changes being the domain.xml or the security artifacts must go through this service to ensure proper
+ * synchronization.
  *
- * The access gate must be implemented using a read-write locking
- * where multiple users can access in read mode the configuration
- * while a write access requires a exclusive lock.
+ * The access gate must be implemented using a read-write locking where multiple users can access in read mode the
+ * configuration while a write access requires a exclusive lock.
  *
- * A try {...} finally {...} block should be used to ensure the
- * Lock returned for access is released when the access to the
- * configuration is not needed any longer.
+ * A try {...} finally {...} block should be used to ensure the Lock returned for access is released when the access to
+ * the configuration is not needed any longer.
  *
  * @author Jerome Dochez
  */
@@ -42,37 +39,26 @@ import java.util.concurrent.locks.Lock;
 public interface ConfigurationAccess {
 
     /**
-     * Wait and return an read access {@link Lock} to the configuration
-     * elements. Once the lock is returned, other threads can access
-     * the configuration is read mode, but no thread can access it in
-     * write mode.
+     * Wait and return an read access {@link Lock} to the configuration elements. Once the lock is returned, other threads
+     * can access the configuration is read mode, but no thread can access it in write mode.
      *
-     * The lock instance must be released in the same thread that
-     * obtained it.
+     * The lock instance must be released in the same thread that obtained it.
      *
-     * @return the read access lock to be released once the
-     * configuration access is not needed any longer.
-     * @throws IOException if the configuration cannot be accessed
-     * due to a file access error.
-     * @throws TimeoutException if the lock cannot be obtained
-     * before the system defined time out runs out.
+     * @return the read access lock to be released once the configuration access is not needed any longer.
+     * @throws IOException if the configuration cannot be accessed due to a file access error.
+     * @throws TimeoutException if the lock cannot be obtained before the system defined time out runs out.
      */
     public Lock accessRead() throws IOException, TimeoutException;
 
     /**
-     * Wait and return an exclusive write access {@link Lock} to the configuration
-     * elements. Once the lock is returned, no other thread can
-     * access the configuration is read or write mode.
+     * Wait and return an exclusive write access {@link Lock} to the configuration elements. Once the lock is returned, no
+     * other thread can access the configuration is read or write mode.
      *
-     * The lock instance must be released in the same thread that
-     * obtained it.
+     * The lock instance must be released in the same thread that obtained it.
      *
-     * @return the read access lock to be released once the
-     * configuration access is not needed any longer.
-     * @throws IOException if the configuration cannot be accessed
-     * due to a file access error.
-     * @throws TimeoutException if the lock cannot be obtained
-     * before the system defined time out runs out.
+     * @return the read access lock to be released once the configuration access is not needed any longer.
+     * @throws IOException if the configuration cannot be accessed due to a file access error.
+     * @throws TimeoutException if the lock cannot be obtained before the system defined time out runs out.
      */
 
     public Lock accessWrite() throws IOException, TimeoutException;

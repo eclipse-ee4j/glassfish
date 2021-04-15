@@ -51,22 +51,19 @@ import org.glassfish.admin.rest.utils.Util;
 @Consumes(Constants.MEDIA_TYPE_JSON)
 public class RestModelListReader implements MessageBodyReader<List<RestModel>> {
     @Override
-    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
-        MediaType mediaType) {
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         String submittedType = mediaType.toString();
         int index = submittedType.indexOf(";");
         if (index > -1) {
             submittedType = submittedType.substring(0, index);
         }
-        return submittedType.equals(Constants.MEDIA_TYPE_JSON) &&
-                List.class.isAssignableFrom(type) &&
-                RestModel.class.isAssignableFrom(Util.getFirstGenericType(genericType));
+        return submittedType.equals(Constants.MEDIA_TYPE_JSON) && List.class.isAssignableFrom(type)
+                && RestModel.class.isAssignableFrom(Util.getFirstGenericType(genericType));
     }
 
     @Override
-    public List<RestModel> readFrom(Class<List<RestModel>> type, Type genericType,
-        Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-        InputStream entityStream) throws IOException, WebApplicationException {
+    public List<RestModel> readFrom(Class<List<RestModel>> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+            MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
         try {
             Locale locale = CompositeUtil.instance().getLocale(httpHeaders);
             List<RestModel> list = new ArrayList<RestModel>();
@@ -87,12 +84,10 @@ public class RestModelListReader implements MessageBodyReader<List<RestModel>> {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject o = array.getJSONObject(i);
                 RestModel model = (RestModel) CompositeUtil.instance().unmarshallClass(locale, modelType, o);
-                Set<ConstraintViolation<RestModel>> cv = CompositeUtil.instance()
-                        .validateRestModel(locale, model);
+                Set<ConstraintViolation<RestModel>> cv = CompositeUtil.instance().validateRestModel(locale, model);
                 if (!cv.isEmpty()) {
                     final Response response = Response.status(Status.BAD_REQUEST)
-                            .entity(CompositeUtil.instance().getValidationFailureMessages(locale, cv, model))
-                            .build();
+                            .entity(CompositeUtil.instance().getValidationFailureMessages(locale, cv, model)).build();
                     throw new WebApplicationException(response);
                 }
                 list.add(model);

@@ -25,7 +25,7 @@ import org.jvnet.hk2.annotations.Service;
  * @author Rajeshwar Patil, Ludovic Champenois
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name=Constants.REST_MONITORING_ADAPTER)
+@Service(name = Constants.REST_MONITORING_ADAPTER)
 public class RestMonitoringAdapter extends RestAdapter {
 
     public RestMonitoringAdapter() {

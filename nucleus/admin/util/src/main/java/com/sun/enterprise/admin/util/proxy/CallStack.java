@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Stack;
 
 /**
- * Represents a call stack. 
+ * Represents a call stack.
  */
 public class CallStack {
 
@@ -45,21 +45,21 @@ public class CallStack {
     }
 
     public void endCall() {
-        Call call = (Call)callStack.pop();
+        Call call = (Call) callStack.pop();
         if (!call.getState().isFinished()) {
             call.setState(CallState.SUCCESS);
         }
     }
 
     public void endCallWithError(Throwable th) {
-        Call call = (Call)callStack.peek();
+        Call call = (Call) callStack.peek();
         call.setState(CallState.FAILED);
         call.setFailureReason(th);
         endCall();
     }
 
     public Call getActiveCall() {
-        return (Call)callStack.peek();
+        return (Call) callStack.peek();
     }
 
     public Iterator getCallStack() {

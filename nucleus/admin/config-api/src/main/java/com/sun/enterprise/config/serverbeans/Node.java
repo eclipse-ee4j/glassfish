@@ -47,8 +47,8 @@ import java.util.logging.Logger;
 import jakarta.validation.constraints.Pattern;
 
 /**
- * A cluster defines a homogeneous set of server instances that share the same
- * applications, resources, and configuration.
+ * A cluster defines a homogeneous set of server instances that share the same applications, resources, and
+ * configuration.
  */
 @Configured
 @SuppressWarnings("unused")
@@ -56,6 +56,7 @@ import jakarta.validation.constraints.Pattern;
 public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefContainer, Payload {
     /**
      * Sets the node name
+     * 
      * @param value node name
      * @throws PropertyVetoException if a listener vetoes the change
      */
@@ -79,8 +80,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     /**
      * Sets the value of the node-dir, top-level parent directory of node(s)
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "nodedir", optional = true)
@@ -98,8 +98,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "nodehost", optional = true)
@@ -116,8 +115,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     /**
      * Sets the value of install-dir, the GlassFish installation root.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "installdir", optional = true)
@@ -129,8 +127,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     /**
      * Sets the value of type of this node.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "type")
@@ -148,20 +145,18 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     /**
      * Sets the value of the windows domain property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "windowsdomain", optional = true)
     void setWindowsDomain(String value) throws PropertyVetoException;
 
     /**
-     * true if node is frozen and we should not allow new instances
-     * to be created on the nod.
+     * true if node is frozen and we should not allow new instances to be created on the nod.
      *
      * @return "true" if node is frozen
      */
-    @Attribute(defaultValue = "false", dataType=Boolean.class)
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getFreeze();
 
     /**
@@ -179,8 +174,8 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     void setSshConnector(SshConnector connector);
 
     /**
-     * Returns the install dir with separators as forward slashes.  This is needed to run commands
-     * over SSH tools on Windows where the backslashes are interpruted as escape chars.
+     * Returns the install dir with separators as forward slashes. This is needed to run commands over SSH tools on Windows
+     * where the backslashes are interpruted as escape chars.
      *
      * @return the install dir with separators as forward slashes
      */
@@ -188,8 +183,8 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     String getInstallDirUnixStyle();
 
     /**
-     * Returns the node dir with separators as forward slashes.  This is needed to run commands
-     * over SSH tools on Windows where the backslashes are interpruted as escape chars.
+     * Returns the node dir with separators as forward slashes. This is needed to run commands over SSH tools on Windows
+     * where the backslashes are interpruted as escape chars.
      *
      * @return the node dir with separators as forward slashes
      */
@@ -197,9 +192,9 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     String getNodeDirUnixStyle();
 
     /**
-     * Returns the node dir as an absolute path. If the node dir path
-     * in the Node element is relative this will make it absolute relative
-     * to the node's installdir.
+     * Returns the node dir as an absolute path. If the node dir path in the Node element is relative this will make it
+     * absolute relative to the node's installdir.
+     * 
      * @return the node's nodedir as an absolute path. Null if no nodedir.
      */
     @DuckTyped
@@ -210,6 +205,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     /**
      * Is a node being used by any server instance?
+     * 
      * @return true if node is referenced by any server instance, else false.
      */
     @DuckTyped
@@ -217,6 +213,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     /**
      * True if this is the default local node. Example: localhost-domain1
+     * 
      * @return
      */
     @DuckTyped
@@ -224,15 +221,17 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     /**
      * True if the node's nodeHost is local to this
+     * 
      * @return
      */
     @DuckTyped
     boolean isLocal();
 
-     /**
-      * Does the node allow instance creation?
-      * @return true if node allows instance creation, else false
-      */
+    /**
+     * Does the node allow instance creation?
+     * 
+     * @return true if node allows instance creation, else false
+     */
     @DuckTyped
     boolean instanceCreationAllowed();
 
@@ -315,7 +314,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         }
 
         public static boolean instanceCreationAllowed(Node node) {
-            return ! Boolean.parseBoolean(node.getFreeze());
+            return !Boolean.parseBoolean(node.getFreeze());
         }
     }
 
@@ -354,12 +353,9 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         Nodes nodes;
 
         /**
-         * Decorates the newly CRUD created cluster configuration instance.
-         * tasks :
-         *      - ensures that it references an existing configuration
-         *      - creates a new config from the default-config if no config-ref
-         *        was provided.
-         *      - check for deprecated parameters.
+         * Decorates the newly CRUD created cluster configuration instance. tasks : - ensures that it references an existing
+         * configuration - creates a new config from the default-config if no config-ref was provided. - check for deprecated
+         * parameters.
          *
          * @param context administration command context
          * @param instance newly created configuration element
@@ -369,14 +365,12 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         @Override
         public void decorate(AdminCommandContext context, final Node instance) throws TransactionFailure, PropertyVetoException {
 
-            LocalStringManagerImpl localStrings =
-                    new LocalStringManagerImpl(Node.class);
-            
+            LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Node.class);
+
             /* 16034: see if instance creation is turned off on node */
-            if (! nodes.nodeCreationAllowed()) {
-                throw new TransactionFailure(localStrings.getLocalString(
-                    "nodeCreationNotAllowed",
-                    "Node creation is disabled. No new nodes may be created."));
+            if (!nodes.nodeCreationAllowed()) {
+                throw new TransactionFailure(
+                        localStrings.getLocalString("nodeCreationNotAllowed", "Node creation is disabled. No new nodes may be created."));
             }
             // If these options were passed a value of the empty string then
             // we want to make sure they are null in the Node. The
@@ -433,21 +427,17 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         private ServerEnvironment env;
 
         @Override
-        public void decorate(AdminCommandContext context, Nodes parent, Node child) throws
-                PropertyVetoException, TransactionFailure {
+        public void decorate(AdminCommandContext context, Nodes parent, Node child) throws PropertyVetoException, TransactionFailure {
             Logger logger = ConfigApiLoggerInfo.getLogger();
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Node.class);
             String nodeName = child.getName();
 
             if (nodeName.equals("localhost-" + domain.getName())) { // can't delete localhost node
-                final String msg = localStrings.getLocalString(
-                        "Node.localhost",
-                        "Cannot remove Node {0}. ", child.getName());
+                final String msg = localStrings.getLocalString("Node.localhost", "Cannot remove Node {0}. ", child.getName());
 
                 logger.log(Level.SEVERE, ConfigApiLoggerInfo.cannotRemoveNode, child.getName());
                 throw new TransactionFailure(msg);
             }
-
 
             List<Node> nodeList = nodes.getNode();
 
@@ -463,10 +453,10 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
                     n++;
                 }
 
-                final String msg = localStrings.getLocalString(
-                        "Node.referencedByInstance",
-                        "Node {0} referenced in server instance(s): {1}.  Remove instances before removing node.", child.getName(), sb.toString());
-                logger.log(Level.SEVERE, ConfigApiLoggerInfo.referencedByInstance, new Object[]{child.getName(), sb.toString()});
+                final String msg = localStrings.getLocalString("Node.referencedByInstance",
+                        "Node {0} referenced in server instance(s): {1}.  Remove instances before removing node.", child.getName(),
+                        sb.toString());
+                logger.log(Level.SEVERE, ConfigApiLoggerInfo.referencedByInstance, new Object[] { child.getName(), sb.toString() });
                 throw new TransactionFailure(msg);
             }
 

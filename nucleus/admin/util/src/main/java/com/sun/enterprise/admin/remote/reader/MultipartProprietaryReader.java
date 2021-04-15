@@ -36,7 +36,7 @@ import org.jvnet.mimepull.MIMEPart;
  * @author martinmares
  */
 public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
-    
+
     private final ActionReportJsonProprietaryReader actionReportReader;
 
     public MultipartProprietaryReader() {
@@ -46,25 +46,24 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
     public MultipartProprietaryReader(ActionReportJsonProprietaryReader actionReportReader) {
         this.actionReportReader = actionReportReader;
     }
-    
+
     @Override
-    public boolean isReadable(final Class<?> type,
-                               final String mimetype) {
+    public boolean isReadable(final Class<?> type, final String mimetype) {
         if (mimetype == null || mimetype.startsWith("*/") || mimetype.startsWith("multipart/")) {
             return ParamsWithPayload.class.isAssignableFrom(type);
         }
         return false;
     }
-    
+
     public ParamsWithPayload readFrom(final HttpURLConnection urlConnection) throws IOException {
         return readFrom(urlConnection.getInputStream(), urlConnection.getContentType());
     }
-    
+
     @Override
     public ParamsWithPayload readFrom(final InputStream is, final String contentType) throws IOException {
         RestPayloadImpl.Inbound payload = null;
-        ActionReport actionReport  = null;
-        ParameterMap parameters  = null;
+        ActionReport actionReport = null;
+        ParameterMap parameters = null;
         Properties mtProps = parseHeaderParams(contentType);
         final String boundary = mtProps.getProperty("boundary");
         if (!StringUtils.ok(boundary)) {
@@ -115,8 +114,9 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
         //Result
         return new ParamsWithPayload(payload, parameters, actionReport);
     }
-    
-    /** It is very simple implementation. Use it just for cli client
+
+    /**
+     * It is very simple implementation. Use it just for cli client
      */
     private static Properties parseHeaderParams(String contentType) {
         Properties result = new Properties();
@@ -134,32 +134,32 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
         StringBuilder tmp = new StringBuilder();
         for (char ch : contentType.toCharArray()) {
             switch (ch) {
-                case '"':
-                    quoted = !quoted;
-                    break;
-                case '=':
-                    if (parsingKey && !quoted) {
-                        key = tmp.toString();
-                        tmp.setLength(0);
-                        parsingKey = false;
-                    } else {
-                        tmp.append(ch);
-                    }
-                    break;
-                case ';':
-                    if (quoted) {
-                        tmp.append(ch);
-                    } else {
-                        if (!parsingKey) {
-                            parsingKey = true;
-                            result.setProperty(key.trim(), tmp.toString().trim());
-                            key = "";
-                            tmp.setLength(0);
-                        }
-                    }
-                    break;
-                default:
+            case '"':
+                quoted = !quoted;
+                break;
+            case '=':
+                if (parsingKey && !quoted) {
+                    key = tmp.toString();
+                    tmp.setLength(0);
+                    parsingKey = false;
+                } else {
                     tmp.append(ch);
+                }
+                break;
+            case ';':
+                if (quoted) {
+                    tmp.append(ch);
+                } else {
+                    if (!parsingKey) {
+                        parsingKey = true;
+                        result.setProperty(key.trim(), tmp.toString().trim());
+                        key = "";
+                        tmp.setLength(0);
+                    }
+                }
+                break;
+            default:
+                tmp.append(ch);
             }
         }
         if (key.length() > 0) {
@@ -167,14 +167,14 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
         }
         return result;
     }
-    
+
     private static String getFirst(List<String> lst) {
         if (lst == null || lst.isEmpty()) {
             return null;
         }
         return lst.get(0);
     }
-    
+
     private static String stream2String(InputStream is) throws IOException {
         if (is == null) {
             return null;
@@ -188,7 +188,10 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
             }
             return baos.toString("UTF-8");
         } finally {
-            try { is.close(); } catch (Exception ex) {}
+            try {
+                is.close();
+            } catch (Exception ex) {
+            }
         }
     }
 

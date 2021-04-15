@@ -28,8 +28,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.*;
 
 /**
- * The asadmin login command.
- * Pretend to be a remote command so that program options are allowed.
+ * The asadmin login command. Pretend to be a remote command so that program options are allowed.
  *
  * @author Nandini Ektare
  * @author Bill Shannon
@@ -41,23 +40,20 @@ public class LoginCommand extends CLICommand {
     private String adminUser = null;
     private char[] adminPassword = null;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(LoginCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(LoginCommand.class);
 
     @Override
-    protected int executeCommand()
-            throws CommandException, CommandValidationException {
+    protected int executeCommand() throws CommandException, CommandValidationException {
 
         // Step 1: Get admin username and password
-        programOpts.setInteractive(true);       // force it
+        programOpts.setInteractive(true); // force it
         adminUser = getAdminUser();
         programOpts.setUser(adminUser);
         adminPassword = SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD.toCharArray();
-        programOpts.setPassword(adminPassword,
-            ProgramOptions.PasswordLocation.DEFAULT);
-        boolean interactive = programOpts.isInteractive();      // save value
-        programOpts.setInteractive(false);      // no more prompting allowed
- 
+        programOpts.setPassword(adminPassword, ProgramOptions.PasswordLocation.DEFAULT);
+        boolean interactive = programOpts.isInteractive(); // save value
+        programOpts.setInteractive(false); // no more prompting allowed
+
         // Step 2: Invoke version command to validate the authentication info
         boolean tryAgain = false;
         do {
@@ -66,37 +62,31 @@ public class LoginCommand extends CLICommand {
                 tryAgain = false;
                 break;
             case AUTHENTICATION:
-                if (tryAgain)   // already tried once
-                    throw new CommandException(strings.get("InvalidCredentials",
-                                                    programOpts.getUser()));
+                if (tryAgain) // already tried once
+                    throw new CommandException(strings.get("InvalidCredentials", programOpts.getUser()));
                 tryAgain = true;
 
                 // maybe we need a password?
                 programOpts.setInteractive(interactive);
                 adminPassword = getAdminPassword();
-                programOpts.setPassword(adminPassword,
-                    ProgramOptions.PasswordLocation.USER);
+                programOpts.setPassword(adminPassword, ProgramOptions.PasswordLocation.USER);
                 programOpts.setInteractive(false);
                 break;
             case CONNECTION:
-                throw new CommandException(strings.get("ConnectException",
-                    programOpts.getHost(), "" + programOpts.getPort()));
+                throw new CommandException(strings.get("ConnectException", programOpts.getHost(), "" + programOpts.getPort()));
             case IO:
-                throw new CommandException(strings.get("IOException",
-                    programOpts.getHost(), "" + programOpts.getPort()));
+                throw new CommandException(strings.get("IOException", programOpts.getHost(), "" + programOpts.getPort()));
             case UNKNOWN:
-                throw new CommandException(strings.get("UnknownException",
-                    programOpts.getHost(), "" + programOpts.getPort()));
+                throw new CommandException(strings.get("UnknownException", programOpts.getHost(), "" + programOpts.getPort()));
             }
         } while (tryAgain);
 
         // Step 3: Save in <userhomedir>/.asadminpass the string 
         // asadmin://<adminuser>@<adminhost>:<adminport><encrypted adminpassword>
-        saveLogin(programOpts.getHost(), programOpts.getPort(),
-                    adminUser, adminPassword);
+        saveLogin(programOpts.getHost(), programOpts.getPort(), adminUser, adminPassword);
         return 0;
     }
- 
+
     /**
      * Prompt for the admin user name.
      */
@@ -118,10 +108,10 @@ public class LoginCommand extends CLICommand {
     }
 
     /**
-     *  This methods prompts for the admin password. 
+     * This methods prompts for the admin password.
      *
-     *  @return admin password
-     *  @throws CommandValidationException if adminpassword can't be fetched 
+     * @return admin password
+     * @throws CommandValidationException if adminpassword can't be fetched
      */
     private char[] getAdminPassword() {
         final String prompt = strings.get("AdminPasswordPrompt");
@@ -133,8 +123,7 @@ public class LoginCommand extends CLICommand {
      * Saves the login information to the login store. Usually this is the file
      * ".asadminpass" in user's home directory.
      */
-    private void saveLogin(String host, final int port, 
-                           final String user, final char[] passwd) {
+    private void saveLogin(String host, final int port, final String user, final char[] passwd) {
         if (!ok(host))
             host = "localhost";
         // to avoid putting commas in the port number (e.g., "4,848")...
@@ -147,15 +136,12 @@ public class LoginCommand extends CLICommand {
             if (store.exists(login.getHost(), login.getPort())) {
                 // Let the user know that the user has chosen to overwrite the 
                 // login information. This is non-interactive, on purpose
-                logger.info(strings.get("OverwriteLoginMsgCreateDomain",
-                                        login.getHost(), "" + login.getPort()));
+                logger.info(strings.get("OverwriteLoginMsgCreateDomain", login.getHost(), "" + login.getPort()));
             }
             store.store(login, true);
-            logger.info(strings.get("LoginInfoStored", 
-                user, login.getHost(), sport, store.getName()));
+            logger.info(strings.get("LoginInfoStored", user, login.getHost(), sport, store.getName()));
         } catch (final Exception e) {
-            logger.warning(
-                strings.get("LoginInfoNotStored", host, sport));
+            logger.warning(strings.get("LoginInfoNotStored", host, sport));
             printExceptionStackTrace(e);
         }
     }

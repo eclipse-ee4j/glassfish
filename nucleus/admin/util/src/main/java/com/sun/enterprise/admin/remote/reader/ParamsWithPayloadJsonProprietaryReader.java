@@ -26,7 +26,7 @@ import java.net.HttpURLConnection;
  * @author martinmares
  */
 public class ParamsWithPayloadJsonProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
-    
+
     private final ActionReportJsonProprietaryReader delegate;
 
     public ParamsWithPayloadJsonProprietaryReader(ActionReportJsonProprietaryReader delegate) {
@@ -36,17 +36,12 @@ public class ParamsWithPayloadJsonProprietaryReader implements ProprietaryReader
     public ParamsWithPayloadJsonProprietaryReader() {
         this(new ActionReportJsonProprietaryReader());
     }
-    
-    
-    
+
     @Override
-    public boolean isReadable(final Class<?> type,
-                               final String mimetype) {
-        return type.isAssignableFrom(ParamsWithPayload.class) 
-                && mimetype != null 
-                && mimetype.startsWith("application/json");
+    public boolean isReadable(final Class<?> type, final String mimetype) {
+        return type.isAssignableFrom(ParamsWithPayload.class) && mimetype != null && mimetype.startsWith("application/json");
     }
-    
+
     public ParamsWithPayload readFrom(HttpURLConnection urlConnection) throws IOException {
         return readFrom(urlConnection.getInputStream(), urlConnection.getContentType());
     }
@@ -55,5 +50,5 @@ public class ParamsWithPayloadJsonProprietaryReader implements ProprietaryReader
     public ParamsWithPayload readFrom(final InputStream is, final String contentType) throws IOException {
         return new ParamsWithPayload(null, delegate.readFrom(is, contentType));
     }
-    
+
 }

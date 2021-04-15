@@ -47,7 +47,7 @@ public class TypeAndNameResolver implements CrudResolver {
         T proxy = (T) habitat.getService(type, name);
         return proxy;
     }
-    
+
     public String name() {
         return name;
     }

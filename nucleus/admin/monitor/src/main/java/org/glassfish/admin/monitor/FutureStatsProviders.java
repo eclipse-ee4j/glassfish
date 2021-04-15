@@ -21,18 +21,18 @@ import java.util.concurrent.*;
 import org.glassfish.external.probe.provider.StatsProviderInfo;
 
 /**
- * Note that this class is not public...
- * THREAD SAFE CLASS!
+ * Note that this class is not public... THREAD SAFE CLASS!
+ * 
  * @author bnevins
  */
 class FutureStatsProviders {
-    static void add(StatsProviderInfo spInfo){
-        if(spInfo != null)
+    static void add(StatsProviderInfo spInfo) {
+        if (spInfo != null)
             data.add(spInfo);
     }
-    
-    static void remove(StatsProviderInfo spInfo){
-        if(spInfo != null)
+
+    static void remove(StatsProviderInfo spInfo) {
+        if (spInfo != null)
             data.remove(spInfo);
     }
 
@@ -44,9 +44,9 @@ class FutureStatsProviders {
     static boolean isEmpty() {
         return data.isEmpty();
     }
+
     private FutureStatsProviders() {
     }
-
 
     private final static Set data = new CopyOnWriteArraySet<StatsProviderInfo>();
 }

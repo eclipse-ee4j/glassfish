@@ -36,17 +36,17 @@ public class TextResourcesGenerator extends ResourcesGeneratorBase {
 
     public TextResourcesGenerator(String outputDir, ServiceLocator habitat) {
         super(habitat);
-        generationDir= new File(outputDir);
+        generationDir = new File(outputDir);
         if (!generationDir.mkdirs()) {
             throw new RuntimeException("Unable to create output directory: " + outputDir);
         }
     }
-    
+
     @Override
     public ClassWriter getClassWriter(String className, String baseClassName, String resourcePath) {
         ClassWriter writer = null;
         try {
-            writer = new TextClassWriter( habitat ,generationDir, className, baseClassName, resourcePath);
+            writer = new TextClassWriter(habitat, generationDir, className, baseClassName, resourcePath);
         } catch (IOException e) {
             // Log the root cause. The generation is going to fail with NPE.
             RestLogging.restLogger.log(Level.SEVERE, e.getMessage());
@@ -58,7 +58,7 @@ public class TextResourcesGenerator extends ResourcesGeneratorBase {
     @Override
     public String endGeneration() {
         //generate date info in 1 single file
-        File file = new File(generationDir+ "/codegeneration.properties");
+        File file = new File(generationDir + "/codegeneration.properties");
         BufferedWriter out = null;
         try {
             if (file.createNewFile()) {
@@ -80,7 +80,7 @@ public class TextResourcesGenerator extends ResourcesGeneratorBase {
             }
         }
 
-        return  "Code Generation done at : " + generationDir;
+        return "Code Generation done at : " + generationDir;
     }
 
     @Override

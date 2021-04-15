@@ -69,13 +69,13 @@ public class StartServerHelper {
     private final String serverOrDomainName;
     private final int debugPort;
     private final boolean isDebugSuspend;
-    
+
     public StartServerHelper(Logger logger, boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword) {
         this(logger, terse, serverDirs, launcher, masterPassword, false);
     }
 
-
-    public StartServerHelper(Logger logger, boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword, boolean debug) {
+    public StartServerHelper(Logger logger, boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword,
+            boolean debug) {
         this.logger = logger;
         this.terse = terse;
         this.launcher = launcher;
@@ -91,7 +91,7 @@ public class StartServerHelper {
         this.serverDirs = serverDirs;
         pidFile = serverDirs.getPidFile();
         this.masterPassword = masterPassword;
-        
+
         // it will be < 0 if both --debug is false and debug-enabled=false in jvm-config
         debugPort = launcher.getDebugPort();
         isDebugSuspend = launcher.isDebugSuspend();
@@ -154,7 +154,7 @@ public class StartServerHelper {
                 }
             } catch (GFLauncherException | IllegalThreadStateException ex) {
                 // should never happen or process is still alive
-            } 
+            }
 
             // Wait before checking again
             try {
@@ -226,8 +226,8 @@ public class StartServerHelper {
             // ignore
         }
 
-        logger.info(strings.get("ServerStart.SuccessMessage", info.isDomain() ? "domain " : "instance", serverDirs.getServerName(), serverDirs.getServerDir(),
-                logfile, adminPortString));
+        logger.info(strings.get("ServerStart.SuccessMessage", info.isDomain() ? "domain " : "instance", serverDirs.getServerName(),
+                serverDirs.getServerDir(), logfile, adminPortString));
 
         if (debugPort >= 0) {
             logger.info(strings.get("ServerStart.DebuggerMessage", "" + debugPort));
@@ -314,7 +314,8 @@ public class StartServerHelper {
                 if (b == null) {
                     // this means we were unable to find out from the OS if the process
                     // is running or not
-                    debugMessage("ProcessUtils.isProcessRunning(" + pid + ") " + "returned null which means we can't get process " + "info on this platform.");
+                    debugMessage("ProcessUtils.isProcessRunning(" + pid + ") " + "returned null which means we can't get process "
+                            + "info on this platform.");
 
                     new ParentDeathWaiterPureJava();
                     return;

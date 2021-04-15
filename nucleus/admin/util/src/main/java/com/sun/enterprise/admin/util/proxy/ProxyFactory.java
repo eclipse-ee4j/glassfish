@@ -22,24 +22,19 @@ import java.lang.reflect.Proxy;
  *
  */
 public class ProxyFactory {
-    
+
     /** Creates a new instance of ProxyFactory */
     private ProxyFactory() {
     }
 
-    public static Object createProxy(Class intfc, Object handler,
-            Interceptor interceptor) {
+    public static Object createProxy(Class intfc, Object handler, Interceptor interceptor) {
         if (!intfc.isInterface()) {
-            throw new IllegalArgumentException(intfc.getClass()
-                    + " is not an interface");
+            throw new IllegalArgumentException(intfc.getClass() + " is not an interface");
         }
         if (!isImplementing(intfc, handler)) {
-            throw new IllegalArgumentException("Handler object " + handler
-                    + " is not an instance of " + intfc.getName());
+            throw new IllegalArgumentException("Handler object " + handler + " is not an instance of " + intfc.getName());
         }
-        Object obj = Proxy.newProxyInstance(
-                handler.getClass().getClassLoader(),
-                new Class[] {intfc},
+        Object obj = Proxy.newProxyInstance(handler.getClass().getClassLoader(), new Class[] { intfc },
                 new ProxyClass(handler, interceptor));
         return obj;
     }

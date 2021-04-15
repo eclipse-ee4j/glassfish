@@ -24,11 +24,11 @@ public interface AttributePreprocessor {
     /**
      * Process the before value of the change-pair element and retrieve its value.
      * <p>
-     * Note: A change-pair element is a macro definition that specifies the
-     *  string to be substituted ("before") and the replacement ("after") value.
-     *  <br/>
-     *  E.g. &lt;change-pair id="pair1" before="@JAVA_HOME" after="$JAVA_HOME$"/&gt;
+     * Note: A change-pair element is a macro definition that specifies the string to be substituted ("before") and the
+     * replacement ("after") value. <br/>
+     * E.g. &lt;change-pair id="pair1" before="@JAVA_HOME" after="$JAVA_HOME$"/&gt;
      * </p>
+     * 
      * @param beforeValue The before value of change-pair.
      * @return Substituted String.
      * @see ChangePair#getBefore()
@@ -38,11 +38,11 @@ public interface AttributePreprocessor {
     /**
      * Process the after value of the change-pair element and retrieve its value.
      * <p>
-     * Note: A change-pair element is a macro definition that specifies the
-     *  string to be substituted ("before") and the replacement ("after") value.
-     *  <br/>
-     *  E.g. &lt;change-pair id="pair1" before="@JAVA_HOME" after="$JAVA_HOME$"/&gt;
+     * Note: A change-pair element is a macro definition that specifies the string to be substituted ("before") and the
+     * replacement ("after") value. <br/>
+     * E.g. &lt;change-pair id="pair1" before="@JAVA_HOME" after="$JAVA_HOME$"/&gt;
      * </p>
+     * 
      * @param afterValue The after value of change-pair.
      * @return Substituted String.
      * @see ChangePair#getAfter()
@@ -50,17 +50,15 @@ public interface AttributePreprocessor {
     String substituteAfter(String afterValue);
 
     /**
-     * Process the file name/member entry path. The name value of file-entry
-     * can contain the substitutable variable for e.g.
+     * Process the file name/member entry path. The name value of file-entry can contain the substitutable variable for e.g.
      * <p>
      * &lt;file-entry name="$DOMAIN_DIRECTORY$/start.cmd"/&gt;
      * </p>
-     * Path pointing to the domain directory. The value of these variable will be
-     * retrieved.
+     * Path pointing to the domain directory. The value of these variable will be retrieved.
      * <p>
-     * Note: A file-entry defines a text file or set of files where
-     * substitution has to be performed.<br/>
+     * Note: A file-entry defines a text file or set of files where substitution has to be performed.<br/>
      * </p>
+     * 
      * @param path The file path.
      * @return Substituted String.
      * @see FileEntry#getName()

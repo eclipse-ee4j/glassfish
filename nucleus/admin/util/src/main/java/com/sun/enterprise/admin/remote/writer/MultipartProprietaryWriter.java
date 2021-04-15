@@ -39,16 +39,16 @@ import org.glassfish.api.admin.Payload.Part;
  * @author martinmares
  */
 public class MultipartProprietaryWriter implements ProprietaryWriter {
-    
+
     public static interface ContentTypeWriter {
         void writeContentType(String firstPart, String secondPart, String boundary);
     }
-    
+
     protected static final String BOUNDARY_BASE = "admfrmwrk_payload_";
     protected static final AtomicInteger boundary_int = new AtomicInteger();
     protected static final String EOL = "\r\n";
     protected static final String BOUNDERY_DELIMIT = "--";
-    
+
     @Override
     public boolean isWriteable(final Object entity) {
         if (entity instanceof ParamsWithPayload) {
@@ -59,10 +59,9 @@ public class MultipartProprietaryWriter implements ProprietaryWriter {
         }
         return false;
     }
-    
+
     @Override
-    public void writeTo(final Object entity,
-                        final HttpURLConnection urlConnection) throws IOException {
+    public void writeTo(final Object entity, final HttpURLConnection urlConnection) throws IOException {
         Payload.Outbound payload = null;
         ParameterMap parameters = null;
         ActionReport ar = null;
@@ -74,61 +73,62 @@ public class MultipartProprietaryWriter implements ProprietaryWriter {
         } else if (entity instanceof Payload.Outbound) {
             payload = (Payload.Outbound) entity;
         }
-        writeTo(payload, parameters, ar,
-                new OutputStream() {
-                    private OutputStream delegate;
-                    private OutputStream getDelegate() throws IOException {
-                        if (delegate == null) {
-                            delegate = urlConnection.getOutputStream();
-                        }
-                        return delegate;
-                    }
-                    @Override
-                    public void write(int b) throws IOException {
-                        getDelegate().write(b);
-                    }
-                    @Override
-                    public void write(byte b[]) throws IOException {
-                        getDelegate().write(b);
-                    }
-                    @Override
-                    public void write(byte b[], int off, int len) throws IOException {
-                        getDelegate().write(b, off, len);
-                    }
-                    @Override
-                    public void flush() throws IOException {
-                        getDelegate().flush();
-                    }
-                    @Override
-                    public void close() throws IOException {
-                        getDelegate().close();
-                    }
-                }, 
-                new ContentTypeWriter() {
-                        @Override
-                        public void writeContentType(String firstPart, String secondPart, String boundary) {
-                            StringBuilder ct = new StringBuilder();
-                            ct.append(firstPart).append('/').append(secondPart);
-                            if (boundary != null) {
-                                ct.append("; boundary=").append(boundary);
-                            }
-                            urlConnection.addRequestProperty("Content-type", ct.toString());
-                            urlConnection.setRequestProperty("MIME-Version", "1.0");
-                        }
-                    });
+        writeTo(payload, parameters, ar, new OutputStream() {
+            private OutputStream delegate;
+
+            private OutputStream getDelegate() throws IOException {
+                if (delegate == null) {
+                    delegate = urlConnection.getOutputStream();
+                }
+                return delegate;
+            }
+
+            @Override
+            public void write(int b) throws IOException {
+                getDelegate().write(b);
+            }
+
+            @Override
+            public void write(byte b[]) throws IOException {
+                getDelegate().write(b);
+            }
+
+            @Override
+            public void write(byte b[], int off, int len) throws IOException {
+                getDelegate().write(b, off, len);
+            }
+
+            @Override
+            public void flush() throws IOException {
+                getDelegate().flush();
+            }
+
+            @Override
+            public void close() throws IOException {
+                getDelegate().close();
+            }
+        }, new ContentTypeWriter() {
+            @Override
+            public void writeContentType(String firstPart, String secondPart, String boundary) {
+                StringBuilder ct = new StringBuilder();
+                ct.append(firstPart).append('/').append(secondPart);
+                if (boundary != null) {
+                    ct.append("; boundary=").append(boundary);
+                }
+                urlConnection.addRequestProperty("Content-type", ct.toString());
+                urlConnection.setRequestProperty("MIME-Version", "1.0");
+            }
+        });
     }
-    
-    protected void writeParam(final Writer writer, 
-                                 final OutputStream underOS,
-                                 final String boundary, 
-                                 final String key, 
-                                 final String value) throws IOException {
-//        //Inrtroducing boundery
-//        if (isFirst) {
-//            isFirst = false;
-//        } else {
-//            writer.write(EOL);
-//        }
+
+    protected void writeParam(final Writer writer, final OutputStream underOS, final String boundary, final String key, final String value)
+            throws IOException {
+        //        //Inrtroducing boundery
+        //        if (isFirst) {
+        //            isFirst = false;
+        //        } else {
+        //            writer.write(EOL);
+        //        }
         multiWrite(writer, BOUNDERY_DELIMIT, boundary, EOL);
         //Headers
         //Headers - Disposition
@@ -137,17 +137,15 @@ public class MultipartProprietaryWriter implements ProprietaryWriter {
         multiWrite(writer, EOL, value, EOL);
         writer.flush();
     }
-    
-    protected void writePayloadPart(final Writer writer,
-                                        final OutputStream underOS,
-                                        final String boundary, 
-                                        final Part part) throws IOException {
-//        //Inrtroducing boundery
-//        if (isFirst) {
-//            isFirst = false;
-//        } else {
-//            writer.write(EOL);
-//        }
+
+    protected void writePayloadPart(final Writer writer, final OutputStream underOS, final String boundary, final Part part)
+            throws IOException {
+        //        //Inrtroducing boundery
+        //        if (isFirst) {
+        //            isFirst = false;
+        //        } else {
+        //            writer.write(EOL);
+        //        }
         multiWrite(writer, BOUNDERY_DELIMIT, boundary, EOL);
         //Headers
         multiWrite(writer, "Content-Disposition: file; name=\"", part.getName(), "\"; filename=\"", part.getName(), "\"", EOL);
@@ -172,19 +170,14 @@ public class MultipartProprietaryWriter implements ProprietaryWriter {
         underOS.flush();
         writer.write(EOL);
     }
-    
-    protected void writeActionReport(final Writer writer,
-                                        final OutputStream underOS,
-                                        final String boundary, 
-                                        final ActionReport ar) throws IOException {
+
+    protected void writeActionReport(final Writer writer, final OutputStream underOS, final String boundary, final ActionReport ar)
+            throws IOException {
         throw new UnsupportedOperationException();
     }
-    
-    public void writeTo(final Payload.Outbound payload,
-                        final ParameterMap parameters,
-                        final ActionReport ar,
-                        final OutputStream os,
-                        final ContentTypeWriter contentTypeWriter) throws IOException {
+
+    public void writeTo(final Payload.Outbound payload, final ParameterMap parameters, final ActionReport ar, final OutputStream os,
+            final ContentTypeWriter contentTypeWriter) throws IOException {
         final String boundary = getBoundary();
         //Content-Type
         String ctType = "form-data";
@@ -194,7 +187,7 @@ public class MultipartProprietaryWriter implements ProprietaryWriter {
         contentTypeWriter.writeContentType("multipart", ctType, boundary);
         // Write content
         final Writer writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-//        boolean isFirst = true;
+        //        boolean isFirst = true;
         //Parameters
         if (parameters != null) {
             for (Map.Entry<String, List<String>> entry : parameters.entrySet()) {
@@ -218,15 +211,15 @@ public class MultipartProprietaryWriter implements ProprietaryWriter {
         multiWrite(writer, BOUNDERY_DELIMIT, boundary, BOUNDERY_DELIMIT, EOL);
         writer.flush();
     }
-    
+
     private String getBoundary() {
         return BOUNDARY_BASE + boundary_int.incrementAndGet();
     }
-    
+
     protected static void multiWrite(Writer writer, String... args) throws IOException {
         for (String arg : args) {
             writer.write(arg);
         }
     }
-    
+
 }

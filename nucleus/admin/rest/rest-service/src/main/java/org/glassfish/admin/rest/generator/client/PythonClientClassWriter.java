@@ -38,28 +38,18 @@ class PythonClientClassWriter implements ClientClassWriter {
     private String className;
     private StringBuilder source;
     private File packageDir;
-    private static String TMPL_CTOR = "from restclientbase import *\n\nclass CLASS(RestClientBase):\n"+
-            "    def __init__(self, connection, parent, name = None):\n" +
-            "        self.name = name\n" +
-            "        RestClientBase.__init__(self, connection, parent, name)\n" +
-            "        self.parent = parent\n" +
-            "        self.connection = connection\n\n" +
-            "    def getRestUrl(self):\n" +
-            "        return self.getParent().getRestUrl() + self.getSegment() + (('/' + self.name) if self.name else '')\n";
-    private String TMPL_GET_SEGMENT = "    def getSegment(self):\n" + 
-            "        return '/SEGMENT'\n";
-    private static String TMPL_COMMAND_METHOD = "\n    def COMMAND(self PARAMS, optional={}):\n" + 
-            "MERGE" +
-            "        return self.execute('/PATH', 'METHOD', optional, MULTIPART)\n";
-    private static String TMPL_GETTER_AND_SETTER = "\n    def getMETHOD(self):\n" + 
-            "        return self.getValue('FIELD')\n\n" +
-            "    def setMETHOD(self, value):\n" + 
-            "        self.setValue('FIELD', value)\n";
-    private static String TMPL_GET_CHILD_RESOURCE = "\n    def getELEMENT(self, name):\n" +
-            "        from IMPORT import CHILD\n" +
-            "        child = CHILD(self.connection, self, name)\n" +
-            "        return child if (child.status == 200) else None\n";
-
+    private static String TMPL_CTOR = "from restclientbase import *\n\nclass CLASS(RestClientBase):\n"
+            + "    def __init__(self, connection, parent, name = None):\n" + "        self.name = name\n"
+            + "        RestClientBase.__init__(self, connection, parent, name)\n" + "        self.parent = parent\n"
+            + "        self.connection = connection\n\n" + "    def getRestUrl(self):\n"
+            + "        return self.getParent().getRestUrl() + self.getSegment() + (('/' + self.name) if self.name else '')\n";
+    private String TMPL_GET_SEGMENT = "    def getSegment(self):\n" + "        return '/SEGMENT'\n";
+    private static String TMPL_COMMAND_METHOD = "\n    def COMMAND(self PARAMS, optional={}):\n" + "MERGE"
+            + "        return self.execute('/PATH', 'METHOD', optional, MULTIPART)\n";
+    private static String TMPL_GETTER_AND_SETTER = "\n    def getMETHOD(self):\n" + "        return self.getValue('FIELD')\n\n"
+            + "    def setMETHOD(self, value):\n" + "        self.setValue('FIELD', value)\n";
+    private static String TMPL_GET_CHILD_RESOURCE = "\n    def getELEMENT(self, name):\n" + "        from IMPORT import CHILD\n"
+            + "        child = CHILD(self.connection, self, name)\n" + "        return child if (child.status == 200) else None\n";
 
     public PythonClientClassWriter(ConfigModel model, String className, Class parent, File baseDirectory) {
         this.className = className;
@@ -96,25 +86,19 @@ class PythonClientClassWriter implements ClientClassWriter {
                     continue;
                 }
                 String key = (!param.alias().isEmpty()) ? param.alias() : model.getName();
-                String paramName = Util.eleminateHypen(model.getName()); 
-                merge.append("        optional['")
-                        .append(key)
-                        .append("'] = _")
-                        .append(paramName)
-                        .append("\n");
+                String paramName = Util.eleminateHypen(model.getName());
+                merge.append("        optional['").append(key).append("'] = _").append(paramName).append("\n");
             }
         }
-        
-        source.append(TMPL_COMMAND_METHOD.replace("COMMAND", methodName)
-                .replace("PARAMS", parameters)
-                .replace("MERGE", merge.toString())
-                .replace("PATH", resourcePath)
-                .replace("METHOD", httpMethod)
+
+        source.append(TMPL_COMMAND_METHOD.replace("COMMAND", methodName).replace("PARAMS", parameters).replace("MERGE", merge.toString())
+                .replace("PATH", resourcePath).replace("METHOD", httpMethod)
                 .replace("MULTIPART", Util.upperCaseFirstLetter(needsMultiPart.toString())));
     }
 
     @Override
-    public String generateMethodBody(CommandModel cm, String httpMethod, String resourcePath, boolean includeOptional, boolean needsMultiPart) {
+    public String generateMethodBody(CommandModel cm, String httpMethod, String resourcePath, boolean includeOptional,
+            boolean needsMultiPart) {
         return null;
     }
 
@@ -127,8 +111,7 @@ class PythonClientClassWriter implements ClientClassWriter {
     public void createGetChildResource(ConfigModel model, String elementName, String childResourceClassName) {
         final boolean hasKey = Util.getKeyAttributeName(model) != null;
         String method = TMPL_GET_CHILD_RESOURCE.replace("CHILD", childResourceClassName)
-                .replace("IMPORT", childResourceClassName.toLowerCase(Locale.getDefault()))
-                .replace("ELEMENT", elementName);
+                .replace("IMPORT", childResourceClassName.toLowerCase(Locale.getDefault())).replace("ELEMENT", elementName);
         if (!hasKey) {
             method = method.replace(", name", "");
         }
@@ -137,10 +120,8 @@ class PythonClientClassWriter implements ClientClassWriter {
 
     @Override
     public void generateCollectionLeafResourceGetter(String className) {
-        source.append(TMPL_GET_CHILD_RESOURCE.replace("CHILD", className)
-                .replace("IMPORT", className.toLowerCase(Locale.getDefault()))
-                .replace("ELEMENT", className)
-                .replace(", name", ""));
+        source.append(TMPL_GET_CHILD_RESOURCE.replace("CHILD", className).replace("IMPORT", className.toLowerCase(Locale.getDefault()))
+                .replace("ELEMENT", className).replace(", name", ""));
     }
 
     @Override

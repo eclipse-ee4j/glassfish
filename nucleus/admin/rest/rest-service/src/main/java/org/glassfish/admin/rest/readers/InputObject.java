@@ -36,13 +36,12 @@ public abstract class InputObject extends ProviderUtil {
      */
     public abstract Map initializeMap() throws InputException;
 
-
     /**
      * Get the value object associated with a key.
      *
-     * @param key   A key string.
-     * @return      The object associated with the key.
-     * @throws   InputException if the key is not found.
+     * @param key A key string.
+     * @return The object associated with the key.
+     * @throws InputException if the key is not found.
      */
     public Object get(String key) throws InputException {
         Object o = getValue(key);
@@ -52,127 +51,107 @@ public abstract class InputObject extends ProviderUtil {
         return o;
     }
 
-
     /**
      * Get the boolean value associated with a key.
      *
-     * @param key   A key string.
-     * @return      The boolean value associated with the key.
-     * @throws   InputException
-     *  if the value is not a Boolean or the String "true" or "false".
+     * @param key A key string.
+     * @return The boolean value associated with the key.
+     * @throws InputException if the value is not a Boolean or the String "true" or "false".
      */
     public boolean getBoolean(String key) throws InputException {
         Object o = getValue(key);
-        if (o.equals(Boolean.FALSE) ||
-                (o instanceof String &&
-                ((String)o).equalsIgnoreCase("false"))) {
+        if (o.equals(Boolean.FALSE) || (o instanceof String && ((String) o).equalsIgnoreCase("false"))) {
             return false;
-        } else if (o.equals(Boolean.TRUE) ||
-                (o instanceof String &&
-                ((String)o).equalsIgnoreCase("true"))) {
+        } else if (o.equals(Boolean.TRUE) || (o instanceof String && ((String) o).equalsIgnoreCase("true"))) {
             return true;
         }
-        throw new InputException("InputObject[" + quote(key) +
-                "] is not a Boolean.");
+        throw new InputException("InputObject[" + quote(key) + "] is not a Boolean.");
     }
-
 
     /**
      * Get the double value associated with a key.
-     * @param key   A key string.
-     * @return      The numeric value.
-     * @throws InputException if the key is not found or
-     *  if the value is not a Number object and cannot be converted to a number.
+     * 
+     * @param key A key string.
+     * @return The numeric value.
+     * @throws InputException if the key is not found or if the value is not a Number object and cannot be converted to a
+     * number.
      */
     public double getDouble(String key) throws InputException {
         Object o = getValue(key);
         try {
-            return o instanceof Number ?
-                ((Number)o).doubleValue() :
-                Double.valueOf((String)o).doubleValue();
+            return o instanceof Number ? ((Number) o).doubleValue() : Double.valueOf((String) o).doubleValue();
         } catch (Exception e) {
-            throw new InputException("InputObject[" + quote(key) +
-                "] is not a number.");
+            throw new InputException("InputObject[" + quote(key) + "] is not a number.");
         }
     }
 
-
     /**
-     * Get the int value associated with a key. If the number value is too
-     * large for an int, it will be clipped.
+     * Get the int value associated with a key. If the number value is too large for an int, it will be clipped.
      *
-     * @param key   A key string.
-     * @return      The integer value.
-     * @throws   InputException if the key is not found or if the value cannot
-     *  be converted to an integer.
+     * @param key A key string.
+     * @return The integer value.
+     * @throws InputException if the key is not found or if the value cannot be converted to an integer.
      */
     public int getInt(String key) throws InputException {
         Object o = getValue(key);
-        return o instanceof Number ?
-                ((Number)o).intValue() : (int)getDouble(key);
+        return o instanceof Number ? ((Number) o).intValue() : (int) getDouble(key);
     }
 
-
     /**
-     * Get the long value associated with a key. If the number value is too
-     * long for a long, it will be clipped.
+     * Get the long value associated with a key. If the number value is too long for a long, it will be clipped.
      *
-     * @param key   A key string.
-     * @return      The long value.
-     * @throws   InputException if the key is not found or if the value cannot
-     *  be converted to a long.
+     * @param key A key string.
+     * @return The long value.
+     * @throws InputException if the key is not found or if the value cannot be converted to a long.
      */
     public long getLong(String key) throws InputException {
         Object o = getValue(key);
-        return o instanceof Number ?
-                ((Number)o).longValue() : (long)getDouble(key);
+        return o instanceof Number ? ((Number) o).longValue() : (long) getDouble(key);
     }
 
     /**
      * Get value associated with a key.
-     * @param key   A key string.
-     * @return      An object which is the value, or null if there is no value.
+     * 
+     * @param key A key string.
+     * @return An object which is the value, or null if there is no value.
      */
     private Object getValue(String key) {
         return key == null ? null : map.get(key);
     }
 
-
     /**
      * Get the string associated with a key.
      *
-     * @param key   A key string.
-     * @return      A string which is the value.
-     * @throws   InputException if the key is not found.
+     * @param key A key string.
+     * @return A string which is the value.
+     * @throws InputException if the key is not found.
      */
     public String getString(String key) throws InputException {
         return get(key).toString();
     }
 
-
     /**
      * Determine if the InputObject contains a specific key.
-     * @param key   A key string.
-     * @return      true if the key exists in the InputObject.
+     * 
+     * @param key A key string.
+     * @return true if the key exists in the InputObject.
      */
     public boolean has(String key) {
         return map.containsKey(key);
     }
 
-
     /**
-     * Determine if the value associated with the key is null or if there is
-     *  no value.
-     * @param key   A key string.
-     * @return      true if there is no value associated with the key or if
-     *  the value is null.
+     * Determine if the value associated with the key is null or if there is no value.
+     * 
+     * @param key A key string.
+     * @return true if there is no value associated with the key or if the value is null.
      */
     public boolean isNull(String key) {
         Object value = getValue(key);
-        if (value == null) return true;
+        if (value == null)
+            return true;
         return false;
     }
-
 
     /**
      * Get an enumeration of the keys of the InputObject.
@@ -183,7 +162,6 @@ public abstract class InputObject extends ProviderUtil {
         return map.keySet().iterator();
     }
 
-
     /**
      * Get the number of keys stored in the InputObject.
      *
@@ -192,7 +170,6 @@ public abstract class InputObject extends ProviderUtil {
     public int length() {
         return map.size();
     }
-
 
     /*static protected final String readAsString(InputStream in) throws IOException {
         Reader reader = new InputStreamReader(in);
@@ -205,10 +182,9 @@ public abstract class InputObject extends ProviderUtil {
         return sb.toString();
     }*/
 
-
     /**
-     * Try to convert a string into a number, boolean, or null. If the string
-     * can't be converted, return the string.
+     * Try to convert a string into a number, boolean, or null. If the string can't be converted, return the string.
+     * 
      * @param s A String.
      * @return A simple JSON value.
      */
@@ -237,10 +213,9 @@ public abstract class InputObject extends ProviderUtil {
         char b = s.charAt(0);
         if ((b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+') {
             if (b == '0') {
-                if (s.length() > 2 &&
-                        (s.charAt(1) == 'x' || s.charAt(1) == 'X')) {
+                if (s.length() > 2 && (s.charAt(1) == 'x' || s.charAt(1) == 'X')) {
                     try {
-                        return Integer.parseInt(s.substring(2),16);
+                        return Integer.parseInt(s.substring(2), 16);
                     } catch (Exception e) {
                         /* Ignore the error */
                     }
@@ -263,22 +238,20 @@ public abstract class InputObject extends ProviderUtil {
                         return myLong;
                     }
                 }
-            }  catch (Exception f) {
+            } catch (Exception f) {
                 /* Ignore the error */
             }
         }
         return s;
     }
 
-
     /**
-     * Put a key/value pair in this object, but only if the key and the
-     * value are both non-null, and only if there is not already a member
-     * with that name. If the value is null, then the key will be removed
-     * from this object if it is present. 
+     * Put a key/value pair in this object, but only if the key and the value are both non-null, and only if there is not
+     * already a member with that name. If the value is null, then the key will be removed from this object if it is
+     * present.
+     * 
      * @param key
-     * @param value. It should be of one  of these types: Boolean, Double,
-     * Integer, Long, String, or null.
+     * @param value. It should be of one of these types: Boolean, Double, Integer, Long, String, or null.
      * @return this.
      * @throws InputException if the key is a duplicate
      */
@@ -297,7 +270,6 @@ public abstract class InputObject extends ProviderUtil {
         return this;
     }
 
-
     public InputObject putMap(String key, Map value) {
         // This method is called in case of xml input
         //We can safely ignor key input value - we know the object we are modifying
@@ -306,32 +278,29 @@ public abstract class InputObject extends ProviderUtil {
         //modifies only the resource and not any of its child resources.
         //Duplicate entries are possible when we have same attribute on a resource
         //and its child/children
-        this.map.putAll(value); 
+        this.map.putAll(value);
         return this;
     }
 
-
     /**
      * Throw an exception if the object is an NaN or infinite number.
+     * 
      * @param o The object to verify.
      * @throws InputException If o is a non-finite number.
      */
     static void verify(Object o) throws InputException {
         if (o != null) {
             if (o instanceof Double) {
-                if (((Double)o).isInfinite() || ((Double)o).isNaN()) {
-                    throw new InputException(
-                        "Non-finite numbers not allowed");
+                if (((Double) o).isInfinite() || ((Double) o).isNaN()) {
+                    throw new InputException("Non-finite numbers not allowed");
                 }
             } else if (o instanceof Float) {
-                if (((Float)o).isInfinite() || ((Float)o).isNaN()) {
-                    throw new InputException(
-                        "Non-finite numbers not allowed");
+                if (((Float) o).isInfinite() || ((Float) o).isNaN()) {
+                    throw new InputException("Non-finite numbers not allowed");
                 }
             }
         }
     }
-
 
     protected Map map;
 }

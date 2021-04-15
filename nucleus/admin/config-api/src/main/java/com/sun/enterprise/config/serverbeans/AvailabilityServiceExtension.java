@@ -20,9 +20,8 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * Tag interface to extend the availability-service configuration
- * Any implementation of this interface will be stored under the domain.xml
- * availability-service element.
+ * Tag interface to extend the availability-service configuration Any implementation of this interface will be stored
+ * under the domain.xml availability-service element.
  *
  * @author Tom Mueller
  */

@@ -31,12 +31,12 @@ class Indenter {
     String getIndent() {
         return indent;
     }
-    
+
     void indent() {
         level++;
         computeIndent();
     }
-    
+
     void undent() {
         level--;
         computeIndent();

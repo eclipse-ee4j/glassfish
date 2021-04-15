@@ -53,8 +53,8 @@ import org.jvnet.hk2.config.types.Property;
 
 import jakarta.inject.Inject;
 
-@SuppressWarnings({"deprecation"})
-@Service(name="grizzlyconfigupgrade")
+@SuppressWarnings({ "deprecation" })
+@Service(name = "grizzlyconfigupgrade")
 public class GrizzlyConfigSchemaMigrator implements ConfigurationUpgrade, PostConstruct {
     private final static String SSL_CONFIGURATION_WANTAUTH = "org.glassfish.grizzly.ssl.auth";
     private final static String SSL_CONFIGURATION_SSLIMPL = "org.glassfish.grizzly.ssl.sslImplementation";
@@ -68,7 +68,7 @@ public class GrizzlyConfigSchemaMigrator implements ConfigurationUpgrade, PostCo
     private static final String ASADMIN_VIRTUAL_SERVER = "__asadmin";
 
     static final Logger logger = ConfigApiLoggerInfo.getLogger();
-    
+
     public void postConstruct() {
         for (Config config : configs.getConfig()) {
             currentConfig = config;
@@ -79,14 +79,11 @@ public class GrizzlyConfigSchemaMigrator implements ConfigurationUpgrade, PostCo
                 }
                 normalizeThreadPools();
                 if (currentConfig.getHttpService() != null) {
-                    promoteHttpServiceProperties(
-                        currentConfig.getHttpService());
-                    promoteVirtualServerProperties(
-                        currentConfig.getHttpService());
+                    promoteHttpServiceProperties(currentConfig.getHttpService());
+                    promoteVirtualServerProperties(currentConfig.getHttpService());
                 } else {
                     // this only happens during some unit tests
-                    logger.log(Level.WARNING, ConfigApiLoggerInfo.nullHttpService,
-                            new String[] { currentConfig.getName() });
+                    logger.log(Level.WARNING, ConfigApiLoggerInfo.nullHttpService, new String[] { currentConfig.getName() });
                 }
                 promoteSystemProperties();
                 addAsadminProtocol(currentConfig.getNetworkConfig());
@@ -215,15 +212,13 @@ public class GrizzlyConfigSchemaMigrator implements ConfigurationUpgrade, PostCo
             final List<ThreadPool> list = threadPools.getThreadPool();
             boolean httpListenerFound = false;
             for (ThreadPool pool : list) {
-                httpListenerFound |=
-                    HTTP_THREAD_POOL.equals(pool.getThreadPoolId()) || HTTP_THREAD_POOL.equals(pool.getName());
+                httpListenerFound |= HTTP_THREAD_POOL.equals(pool.getThreadPoolId()) || HTTP_THREAD_POOL.equals(pool.getName());
                 if (pool.getName() == null) {
                     ConfigSupport.apply(new SingleConfigCode<ThreadPool>() {
                         public Object run(ThreadPool param) {
                             param.setName(param.getThreadPoolId());
                             param.setThreadPoolId(null);
-                            if (param.getMinThreadPoolSize() == null
-                                || Integer.parseInt(param.getMinThreadPoolSize()) < 2) {
+                            if (param.getMinThreadPoolSize() == null || Integer.parseInt(param.getMinThreadPoolSize()) < 2) {
                                 param.setMinThreadPoolSize("2");
                             }
                             return null;

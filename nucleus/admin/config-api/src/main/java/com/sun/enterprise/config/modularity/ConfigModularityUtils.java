@@ -96,7 +96,7 @@ import java.util.logging.Logger;
 @Service
 @Singleton
 public final class ConfigModularityUtils {
-    
+
     private static final Logger LOG = getLogger();
 
     @Inject
@@ -134,16 +134,16 @@ public final class ConfigModularityUtils {
                 try {
                     defaults = (List<ConfigBeanDefaultValue>) m.invoke(null, runtimeType);
                 } catch (Exception e) {
-                    LogHelper.log(LOG, Level.INFO, cannotGetDefaultConfig, e,configBeanClass.getName());
+                    LogHelper.log(LOG, Level.INFO, cannotGetDefaultConfig, e, configBeanClass.getName());
                 }
             }
         } else {
             //TODO properly handle the exceptions
-            LocalStringManager localStrings =
-                    new LocalStringManagerImpl(configBeanClass);
+            LocalStringManager localStrings = new LocalStringManagerImpl(configBeanClass);
             ModuleXMLConfigurationFileParser parser = new ModuleXMLConfigurationFileParser(localStrings);
             try {
-                defaults = parser.parseServiceConfiguration(getConfigurationFileUrl(configBeanClass, c.baseConfigurationFileName(), runtimeType).openStream());
+                defaults = parser.parseServiceConfiguration(
+                        getConfigurationFileUrl(configBeanClass, c.baseConfigurationFileName(), runtimeType).openStream());
             } catch (XMLStreamException e) {
                 LOG.log(Level.SEVERE, cannotParseDefaultDefaultConfig, e);
             } catch (IOException e) {
@@ -160,14 +160,15 @@ public final class ConfigModularityUtils {
     /**
      * Find a getter method that returns a collection of the type we want to put set.
      *
-     * @param owner     The class we want to search to find a method that returns a Collection typed with toSetType
+     * @param owner The class we want to search to find a method that returns a Collection typed with toSetType
      * @param typeToSet The type we want to find a matching collection fo
      * @return The Method that
      */
     public Method findSuitableCollectionGetter(Class owner, Class typeToSet) {
         Method[] methods = owner.getMethods();
         Method tm = returnException(owner, typeToSet);
-        if (tm != null) return tm;
+        if (tm != null)
+            return tm;
         for (Method m : methods) {
             if (m.getName().startsWith("get")) {
                 Type t = m.getGenericReturnType();
@@ -195,13 +196,13 @@ public final class ConfigModularityUtils {
     }
 
     private Method returnException(Class owner, Class typeToSet) {
-        if (owner.isAssignableFrom(Applications.class) && (typeToSet.isAssignableFrom(Application.class)) || typeToSet.isAssignableFrom(Module.class)) {
+        if (owner.isAssignableFrom(Applications.class) && (typeToSet.isAssignableFrom(Application.class))
+                || typeToSet.isAssignableFrom(Module.class)) {
             try {
                 Method m = owner.getMethod("getModules");
                 return m;
             } catch (NoSuchMethodException e) {
-                LogHelper.log(LOG, Level.INFO, noMethodInReturnException, e, 
-                        owner.getName(), typeToSet.getName());
+                LogHelper.log(LOG, Level.INFO, noMethodInReturnException, e, owner.getName(), typeToSet.getName());
             }
         }
         return null;
@@ -247,10 +248,13 @@ public final class ConfigModularityUtils {
 
     public Class getOwningClassForLocation(String location) {
         StringTokenizer tokenizer = new StringTokenizer(location, "/", false);
-        if (!tokenizer.hasMoreElements()) return null;
-        if (!tokenizer.nextToken().equalsIgnoreCase("domain")) return null;
+        if (!tokenizer.hasMoreElements())
+            return null;
+        if (!tokenizer.nextToken().equalsIgnoreCase("domain"))
+            return null;
         String level = "domain";
-        if (location.equalsIgnoreCase("domain/configs")) return getClassFor("domain");
+        if (location.equalsIgnoreCase("domain/configs"))
+            return getClassFor("domain");
         //It is a named config so we shall just return the config class
         if ((tokenizer.countTokens() == 2) && location.startsWith("domain/configs")) {
             return Config.class;
@@ -260,7 +264,6 @@ public final class ConfigModularityUtils {
         }
         return getClassFor(level);
     }
-
 
     public ConfigBeanProxy getOwningObject(String location) {
         if (!location.startsWith("domain/configs")) {
@@ -333,7 +336,8 @@ public final class ConfigModularityUtils {
         }
     }
 
-    public ConfigBeanProxy getOwner(ConfigBeanProxy parent, String parentElement, String childElement) throws InvocationTargetException, IllegalAccessException {
+    public ConfigBeanProxy getOwner(ConfigBeanProxy parent, String parentElement, String childElement)
+            throws InvocationTargetException, IllegalAccessException {
 
         if (childElement.contains("CURRENT_INSTANCE_CONFIG_NAME")) {
             return serviceLocator.<Config>getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
@@ -355,13 +359,14 @@ public final class ConfigModularityUtils {
                     componentName = resolveExpression(componentName);
                     return getNamedConfigBeanFromCollection(col, componentName, childClass);
                 } catch (Exception e) {
-                    LogHelper.log(LOG, Level.INFO, invalidPath, e, childElement,componentName);
+                    LogHelper.log(LOG, Level.INFO, invalidPath, e, childElement, componentName);
                 }
             }
             return null;
         } else {
             Class clz = getClassFor(childElement);
-            if (parent == null) return null;
+            if (parent == null)
+                return null;
             Method m = getMatchingGetterMethod(parent.getClass(), clz);
             if (m != null) {
                 return (ConfigBeanProxy) m.invoke(parent);
@@ -401,7 +406,8 @@ public final class ConfigModularityUtils {
         return Collections.emptyList();
     }
 
-    public <T extends ConfigBeanProxy> T setConfigBean(T finalConfigBean, ConfigBeanDefaultValue configBeanDefaultValue, ConfigBeanProxy parent) {
+    public <T extends ConfigBeanProxy> T setConfigBean(T finalConfigBean, ConfigBeanDefaultValue configBeanDefaultValue,
+            ConfigBeanProxy parent) {
         Class owningClassForLocation = getOwningClassForLocation(configBeanDefaultValue.getLocation());
         Class configBeanClass = getClassForFullName(configBeanDefaultValue.getConfigBeanClassName());
 
@@ -418,7 +424,8 @@ public final class ConfigModularityUtils {
                     }
                 }
                 if (!configBeanDefaultValue.replaceCurrentIfExists() || !stackPositionHigher(finalConfigBean, configBeanInstance)) {
-                    if (configBeanInstance != null) return (T) configBeanInstance;
+                    if (configBeanInstance != null)
+                        return (T) configBeanInstance;
                 }
                 if (configBeanInstance != null) {
                     extensions.remove(configBeanInstance);
@@ -480,8 +487,10 @@ public final class ConfigModularityUtils {
     }
 
     public <T extends ConfigBeanProxy> boolean stackPositionHigher(T finalConfigBean, ConfigBeanProxy itemToRemove) {
-        if (itemToRemove == null || finalConfigBean == null) return true;
-        if (RankedConfigBeanProxy.class.isAssignableFrom(finalConfigBean.getClass()) && RankedConfigBeanProxy.class.isAssignableFrom(itemToRemove.getClass())) {
+        if (itemToRemove == null || finalConfigBean == null)
+            return true;
+        if (RankedConfigBeanProxy.class.isAssignableFrom(finalConfigBean.getClass())
+                && RankedConfigBeanProxy.class.isAssignableFrom(itemToRemove.getClass())) {
             int itemToRemoveRank = Integer.parseInt(((RankedConfigBeanProxy) itemToRemove).getRank());
             int finalConfigBeanRank = Integer.parseInt(((RankedConfigBeanProxy) finalConfigBean).getRank());
             return finalConfigBeanRank > itemToRemoveRank;
@@ -492,8 +501,7 @@ public final class ConfigModularityUtils {
     }
 
     public synchronized <T extends ConfigBeanProxy> void applyCustomTokens(final ConfigBeanDefaultValue configBeanDefaultValue,
-                                                                           T finalConfigBean, ConfigBeanProxy parent)
-            throws TransactionFailure, PropertyVetoException {
+            T finalConfigBean, ConfigBeanProxy parent) throws TransactionFailure, PropertyVetoException {
         //go up in the parents tree till meet someone ImplementingSystemProperty
         //then that is the freaking parent, get it and set the SystemProperty :D
         if (parent instanceof SystemPropertyBag) {
@@ -547,7 +555,7 @@ public final class ConfigModularityUtils {
             final DomDocument doc = new DomDocument<GlassFishConfigBean>(serviceLocator) {
                 @Override
                 public Dom make(final ServiceLocator serviceLocator, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom,
-                                ConfigModel configModel) {
+                        ConfigModel configModel) {
                     // by default, people get the translated view.
                     return new GlassFishConfigBean(serviceLocator, this, dom, configModel, xmlStreamReader);
                 }
@@ -564,13 +572,13 @@ public final class ConfigModularityUtils {
         return null;
     }
 
-    public <T extends ConfigBeanProxy> T getConfigBeanFromCollection(Collection<T> col, T configBeanObject,
-                                                                     Class typeOfObjects)
+    public <T extends ConfigBeanProxy> T getConfigBeanFromCollection(Collection<T> col, T configBeanObject, Class typeOfObjects)
             throws InvocationTargetException, IllegalAccessException {
         String nameToLookFor = getNameForConfigBean(configBeanObject, typeOfObjects);
         if (nameToLookFor != null) {
             T returnee = getNamedConfigBeanFromCollection(col, nameToLookFor, typeOfObjects);
-            if (returnee != null) return returnee;
+            if (returnee != null)
+                return returnee;
         } else {
             for (T configBean : col) {
                 try {
@@ -584,11 +592,10 @@ public final class ConfigModularityUtils {
         return null;
     }
 
-    public <T extends ConfigBeanProxy> T getNamedConfigBeanFromCollection(Collection<T> col,
-                                                                          String nameToLookFor,
-                                                                          Class typeOfObjects)
+    public <T extends ConfigBeanProxy> T getNamedConfigBeanFromCollection(Collection<T> col, String nameToLookFor, Class typeOfObjects)
             throws InvocationTargetException, IllegalAccessException {
-        if (nameToLookFor == null) return null;
+        if (nameToLookFor == null)
+            return null;
         for (Object item : col) {
             if (!((ConfigView) Proxy.getInvocationHandler(item)).getProxyType().isAssignableFrom(typeOfObjects)) {
                 continue;
@@ -641,7 +648,6 @@ public final class ConfigModularityUtils {
         return className.toString();
     }
 
-
     public Class getClassFor(String serviceName) {
         serviceName = getServiceTypeNameIfNamedComponent(serviceName);
         ConfigInjector injector = serviceLocator.getService(ConfigInjector.class, serviceName.toLowerCase(Locale.getDefault()));
@@ -690,7 +696,8 @@ public final class ConfigModularityUtils {
     }
 
     public String serializeConfigBean(ConfigBeanProxy configBean) {
-        if (configBean == null) return null;
+        if (configBean == null)
+            return null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         XMLOutputFactory xmlFactory = XMLOutputFactory.newInstance();
         XMLStreamWriter writer = null;
@@ -730,11 +737,12 @@ public final class ConfigModularityUtils {
     }
 
     /**
-     * Find a suitable getter method in the given class. the returned method represent a method that will return back a type of  methodReturnType.
+     * Find a suitable getter method in the given class. the returned method represent a method that will return back a type
+     * of methodReturnType.
      *
-     * @param classToQuery     The class we want to find the getter in
+     * @param classToQuery The class we want to find the getter in
      * @param methodReturnType the type we want to find the getter for
-     * @return A Method object for a getter method in the classToQuery  which returns the    methodReturnType
+     * @return A Method object for a getter method in the classToQuery which returns the methodReturnType
      */
     public Method getMatchingGetterMethod(Class classToQuery, Class methodReturnType) {
         Method[] methods = classToQuery.getMethods();
@@ -750,10 +758,10 @@ public final class ConfigModularityUtils {
     }
 
     /**
-     * Finds and return the setter method matching the class identified by   typeToSet
+     * Finds and return the setter method matching the class identified by typeToSet
      *
      * @param classToQuery The ConfigLoader we want to inspect for presence of a setter method accepting class of type fqcn.
-     * @param typeToSet    the type we want to find a setter for
+     * @param typeToSet the type we want to find a setter for
      * @return the matching Method object or null if not present.
      */
     public Method getMatchingSetterMethod(Class classToQuery, Class typeToSet) {
@@ -767,7 +775,6 @@ public final class ConfigModularityUtils {
         }
         return null;
     }
-
 
     public Class getDuckClass(Class configBeanType) {
         Class duck;
@@ -838,11 +845,13 @@ public final class ConfigModularityUtils {
         Class<?> defaultReturnValue = descriptor.getImplementationClass();
 
         String name = descriptor.getName();
-        if (name == null) return defaultReturnValue;
+        if (name == null)
+            return defaultReturnValue;
 
         Class<?> foundContract = null;
         for (Type contract : descriptor.getContractTypes()) {
-            if (!(contract instanceof Class)) continue;
+            if (!(contract instanceof Class))
+                continue;
 
             Class<?> cc = (Class<?>) contract;
             if (cc.getName().equals(name)) {
@@ -851,11 +860,13 @@ public final class ConfigModularityUtils {
             }
         }
 
-        if (foundContract == null) return defaultReturnValue;
+        if (foundContract == null)
+            return defaultReturnValue;
         return foundContract;
     }
 
-    public String replacePropertiesWithCurrentValue(String xmlConfiguration, ConfigBeanDefaultValue value) throws InvocationTargetException, IllegalAccessException {
+    public String replacePropertiesWithCurrentValue(String xmlConfiguration, ConfigBeanDefaultValue value)
+            throws InvocationTargetException, IllegalAccessException {
         for (ConfigCustomizationToken token : value.getCustomizationTokens()) {
             String toReplace = "${" + token.getName() + "}";
             ConfigBeanProxy current = getCurrentConfigBeanForDefaultValue(value);
@@ -867,21 +878,21 @@ public final class ConfigModularityUtils {
         return xmlConfiguration;
     }
 
-
     public String getPropertyValue(ConfigCustomizationToken token, ConfigBeanProxy finalConfigBean) {
         if (finalConfigBean != null) {
             ConfigBeanProxy parent = finalConfigBean.getParent();
             while (!(parent instanceof SystemPropertyBag)) {
                 parent = parent.getParent();
-                if (parent == null) return null;
+                if (parent == null)
+                    return null;
             }
             if (((SystemPropertyBag) parent).getSystemProperty(token.getName()) != null) {
                 return ((SystemPropertyBag) parent).getSystemProperty(token.getName()).getValue();
             }
             return null;
-        } else return token.getValue();
+        } else
+            return token.getValue();
     }
-
 
     public String getRuntimeTypePrefix(StartupContext startupContext) {
         Properties args = startupContext.getArguments();
@@ -892,16 +903,19 @@ public final class ConfigModularityUtils {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("server type is: " + serverType.name());
         }
-        if (serverType.isEmbedded()) return "embedded";
-        if (serverType.isSingleInstance() || serverType.isDas()) return "admin";
-        if (serverType.isInstance()) return "instance";
+        if (serverType.isEmbedded())
+            return "embedded";
+        if (serverType.isSingleInstance() || serverType.isDas())
+            return "admin";
+        if (serverType.isInstance())
+            return "instance";
         return "";
     }
 
-
     public List<Class> getAnnotatedConfigBeans(Class annotationType) {
         List<Class> prox = new ArrayList<Class>();
-        List<ActiveDescriptor<?>> descriptor = serviceLocator.getDescriptors(BuilderHelper.createContractFilter(ConfigInjector.class.getName()));
+        List<ActiveDescriptor<?>> descriptor = serviceLocator
+                .getDescriptors(BuilderHelper.createContractFilter(ConfigInjector.class.getName()));
         Class<?> clz = null;
         for (ActiveDescriptor desc : descriptor) {
             if (desc.getName() == null) {

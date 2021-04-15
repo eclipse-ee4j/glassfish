@@ -25,8 +25,8 @@ import org.glassfish.api.admin.CommandParameters;
 import org.jvnet.hk2.config.types.Property;
 
 /**
- * Parameters for the remote instance register instance command, which includes
- * params from _create-node and _register-instance
+ * Parameters for the remote instance register instance command, which includes params from _create-node and
+ * _register-instance
  * 
  * @author Jennifer Chou
  */
@@ -77,6 +77,5 @@ public class InstanceRegisterInstanceCommandParameters extends RegisterInstanceC
         public static final String PARAM_SSHPASSWORD = "sshpassword";
         public static final String PARAM_SSHKEYPASSPHRASE = "sshkeypassphrase";*/
     }
-
 
 }

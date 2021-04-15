@@ -31,21 +31,14 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import static org.glassfish.config.support.Constants.*;
 
 /**
- * It is incredibly complex and difficult to do "perfect-parsing" when the elements
- * aren't in the right order.  These 3 elements:
- * clusters
- * servers
- * configs
- * Need to be in that exact order.  If they aren't in that order we MUST do a reparse
- * with the streaming parser.  As of July 6,2010 the clusters ALWAYS appears after the
- * other two so we have to do a reparse 100% of the time anyways.
- * Now (July 2010, GF 3.1)a new wrinkle has been added.  Each instance wants to
- * have information about all other servers in its cluster.
- * This makes the parsing with the old method so difficult and complex that I came up
- * with a new plan:
- * ALWAYS parse twice.  The first time through should be VERY fast because we are skipping
- * almost everything.  I'm just picking out the minimal "look-ahead" info and saving it
- * for the final parse.
+ * It is incredibly complex and difficult to do "perfect-parsing" when the elements aren't in the right order. These 3
+ * elements: clusters servers configs Need to be in that exact order. If they aren't in that order we MUST do a reparse
+ * with the streaming parser. As of July 6,2010 the clusters ALWAYS appears after the other two so we have to do a
+ * reparse 100% of the time anyways. Now (July 2010, GF 3.1)a new wrinkle has been added. Each instance wants to have
+ * information about all other servers in its cluster. This makes the parsing with the old method so difficult and
+ * complex that I came up with a new plan: ALWAYS parse twice. The first time through should be VERY fast because we are
+ * skipping almost everything. I'm just picking out the minimal "look-ahead" info and saving it for the final parse.
+ * 
  * @author Byron Nevins
  */
 class DomainXmlPreParser {
@@ -66,47 +59,41 @@ class DomainXmlPreParser {
             throw new IllegalArgumentException();
 
         instanceName = instanceNameIn;
-        try (
-                InputStream in = domainXml.openStream();
-                InputStreamReader isr = new InputStreamReader(in, Charset.defaultCharset().toString())
-        ) {
-                reader = xif.createXMLStreamReader(domainXml.toExternalForm(), isr);
-                parse();
-                postProcess();
-                validate();
-        }
-        catch (DomainXmlPreParserException e) {
+        try (InputStream in = domainXml.openStream();
+                InputStreamReader isr = new InputStreamReader(in, Charset.defaultCharset().toString())) {
+            reader = xif.createXMLStreamReader(domainXml.toExternalForm(), isr);
+            parse();
+            postProcess();
+            validate();
+        } catch (DomainXmlPreParserException e) {
             throw e;
-        }
-        catch (Exception e2) {
+        } catch (Exception e2) {
             throw new DomainXmlPreParserException(e2);
-        }
-        finally {
+        } finally {
             cleanup();
         }
     }
 
     final String getClusterName() {
-        if(!valid)
+        if (!valid)
             return null;
 
         return cluster.name;
     }
 
     final List<String> getServerNames() {
-        if(!valid)
+        if (!valid)
             return null;
 
         return cluster.serverRefs;
     }
 
     final String getConfigName() {
-        if(!valid)
+        if (!valid)
             return null;
 
         return cluster.configRef;
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     ///////   Everything below here is private   //////////////////////////////
@@ -126,8 +113,7 @@ class DomainXmlPreParser {
             if (reader != null)
                 reader.close();
             reader = null;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             // ignore!
         }
     }
@@ -152,18 +138,13 @@ class DomainXmlPreParser {
     private void validate() throws DomainXmlPreParserException {
         // 1. confirm that the server was located
         if (serverConfigRef == null)
-            throw new DomainXmlPreParserException(
-                    Strings.get("dxpp.serverNotFound", instanceName));
+            throw new DomainXmlPreParserException(Strings.get("dxpp.serverNotFound", instanceName));
         // 2. config-ref of server matches config-ref of cluster
         if (!serverConfigRef.equals(cluster.configRef))
-            throw new DomainXmlPreParserException(
-                    Strings.get("dxpp.configrefnotmatch", instanceName, cluster.name));
+            throw new DomainXmlPreParserException(Strings.get("dxpp.configrefnotmatch", instanceName, cluster.name));
 
-        if(!configNames.contains(serverConfigRef))
-            throw new DomainXmlPreParserException(
-                    Strings.get("dxpp.confignotfound", instanceName, serverConfigRef));
-
-
+        if (!configNames.contains(serverConfigRef))
+            throw new DomainXmlPreParserException(Strings.get("dxpp.confignotfound", instanceName, serverConfigRef));
 
         valid = true;
     }
@@ -176,11 +157,9 @@ class DomainXmlPreParser {
 
         if (name.equals(SERVERS)) {
             handleServers();
-        }
-        else if (name.equals(CLUSTERS)) {
+        } else if (name.equals(CLUSTERS)) {
             handleClusters();
-        }
-        else if (name.equals(CONFIGS)) {
+        } else if (name.equals(CONFIGS)) {
             handleConfigs();
         }
     }
@@ -271,6 +250,7 @@ class DomainXmlPreParser {
         if (debug)
             System.out.println(s);
     }
+
     private XMLStreamReader reader;
     private List<ClusterData> clusters = new LinkedList<ClusterData>();
     private List<String> configNames = new LinkedList<String>();
@@ -279,7 +259,6 @@ class DomainXmlPreParser {
     private String serverConfigRef;
     private boolean valid = false;
     private final static boolean debug = Boolean.parseBoolean(Utility.getEnvOrProp("AS_DEBUG"));
-
 
     private static class ClusterData {
 

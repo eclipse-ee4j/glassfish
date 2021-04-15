@@ -27,6 +27,7 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
 
 /**
  * A place to keep platform services info...
+ * 
  * @author Byron Nevins
  */
 public class PlatformServicesInfo {
@@ -97,7 +98,7 @@ public class PlatformServicesInfo {
     public String toString() {
         return ObjectAnalyzer.toString(this);
     }
-    
+
     //////////////////////////////////////////////////////////////////////
     //////////////          private         //////////////////////////////
     //////////////////////////////////////////////////////////////////////
@@ -105,39 +106,35 @@ public class PlatformServicesInfo {
         libDir = SmartFile.sanitize(new File(installRootDir, "lib"));
 
         if (!libDir.isDirectory())
-            throw new RuntimeException(Strings.get("internal.error",
-                    "Not a directory: " + libDir));
+            throw new RuntimeException(Strings.get("internal.error", "Not a directory: " + libDir));
     }
 
     private void setInstallRootDir() {
         String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
 
         if (!StringUtils.ok(ir))
-            throw new RuntimeException(Strings.get("internal.error", "System Property not set: "
-                    + SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+            throw new RuntimeException(
+                    Strings.get("internal.error", "System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
 
         installRootDir = SmartFile.sanitize(new File(ir));
 
         if (!installRootDir.isDirectory())
-            throw new RuntimeException(Strings.get("internal.error",
-                    "Not a directory: " + installRootDir));
+            throw new RuntimeException(Strings.get("internal.error", "Not a directory: " + installRootDir));
     }
 
     private void setAsadmin() {
         String s = SystemPropertyConstants.getAsAdminScriptLocation();
 
         if (!StringUtils.ok(s))
-            throw new RuntimeException(
-                    Strings.get("internal.error",
-                    "Can't get Asadmin script location"));
+            throw new RuntimeException(Strings.get("internal.error", "Can't get Asadmin script location"));
 
         asadminScript = SmartFile.sanitize(new File(s));
 
         if (!asadminScript.isFile()) {
-            throw new RuntimeException(
-                    Strings.get("noAsadminScript", asadminScript));
+            throw new RuntimeException(Strings.get("noAsadminScript", asadminScript));
         }
     }
+
     // set at construction-time
     final ServerDirs serverDirs;
     final AppserverServiceType type;

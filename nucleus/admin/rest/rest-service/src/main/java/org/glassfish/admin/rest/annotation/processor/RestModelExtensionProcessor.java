@@ -81,7 +81,7 @@ public class RestModelExtensionProcessor extends AbstractProcessor {
                 try {
                     bw.close();
                 } catch (Exception e) {
-                    
+
                 }
             }
         }

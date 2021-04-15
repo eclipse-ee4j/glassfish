@@ -37,8 +37,7 @@ import java.io.IOException;
 import java.security.PrivilegedAction;
 
 /**
- * View that translate configured attributes containing properties like ${foo.bar}
- * into system properties values.
+ * View that translate configured attributes containing properties like ${foo.bar} into system properties values.
  *
  * @author Jerome Dochez
  */
@@ -48,26 +47,24 @@ public class TranslatedConfigView implements ConfigView {
 
     private static final String ALIAS_TOKEN = "ALIAS";
     private static int MAX_SUBSTITUTION_DEPTH = 100;
-    
-    
+
     public static Object getTranslatedValue(Object value) {
-        if (value!=null && value instanceof String) {
+        if (value != null && value instanceof String) {
             String stringValue = value.toString();
-            if (stringValue.indexOf('$')==-1) {
+            if (stringValue.indexOf('$') == -1) {
                 return value;
             }
             if (domainPasswordAliasStore() != null) {
                 if (getAlias(stringValue) != null) {
-                    try{
+                    try {
                         return getRealPasswordFromAlias(stringValue);
                     } catch (Exception e) {
-                        Logger.getAnonymousLogger().severe(
-                                Strings.get("TranslatedConfigView.aliaserror", stringValue, e.getLocalizedMessage()));
+                        Logger.getAnonymousLogger()
+                                .severe(Strings.get("TranslatedConfigView.aliaserror", stringValue, e.getLocalizedMessage()));
                         return stringValue;
                     }
                 }
             }
-           
 
             // Perform system property substitution in the value
             // The loop limit is imposed to prevent infinite looping to values
@@ -78,16 +75,13 @@ public class TranslatedConfigView implements ConfigView {
             while (m.find() && i < MAX_SUBSTITUTION_DEPTH) {
                 String newValue = System.getProperty(m.group(2).trim());
                 if (newValue != null) {
-                    stringValue = m.replaceFirst(
-                            Matcher.quoteReplacement(m.group(1) + newValue + m.group(3)));
+                    stringValue = m.replaceFirst(Matcher.quoteReplacement(m.group(1) + newValue + m.group(3)));
                     m.reset(stringValue);
                 }
-                i++;     
+                i++;
             }
             if (i >= MAX_SUBSTITUTION_DEPTH) {
-                Logger.getAnonymousLogger().severe(
-                        Strings.get("TranslatedConfigView.badprop", 
-                        i, origValue));
+                Logger.getAnonymousLogger().severe(Strings.get("TranslatedConfigView.badprop", i, origValue));
             }
             return stringValue;
         }
@@ -96,8 +90,7 @@ public class TranslatedConfigView implements ConfigView {
 
     final ConfigView masterView;
 
-    
-    TranslatedConfigView(ConfigView master ) {
+    TranslatedConfigView(ConfigView master) {
         this.masterView = master;
 
     }
@@ -107,10 +100,9 @@ public class TranslatedConfigView implements ConfigView {
         return getTranslatedValue(masterView.invoke(proxy, method, args));
     }
 
-
     @Override
     public ConfigView getMasterView() {
-        return masterView;  //To change body of implemented methods use File | Settings | File Templates.
+        return masterView; //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -125,64 +117,62 @@ public class TranslatedConfigView implements ConfigView {
 
     @Override
     public <T extends ConfigBeanProxy> T getProxy(Class<T> proxyType) {
-        return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[]{proxyType},
-                 this));
+        return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[] { proxyType }, this));
     }
+
     static ServiceLocator habitat;
+
     public static void setHabitat(ServiceLocator h) {
-         habitat = h;
+        habitat = h;
     }
-    
+
     private static DomainScopedPasswordAliasStore domainPasswordAliasStore = null;
+
     private static DomainScopedPasswordAliasStore domainPasswordAliasStore() {
-        domainPasswordAliasStore = AccessController.doPrivileged(
-                new PrivilegedAction<DomainScopedPasswordAliasStore>() {
-                    public DomainScopedPasswordAliasStore run() {
-                        return habitat.getService(DomainScopedPasswordAliasStore.class);
-                    }
-                }
-        );
+        domainPasswordAliasStore = AccessController.doPrivileged(new PrivilegedAction<DomainScopedPasswordAliasStore>() {
+            public DomainScopedPasswordAliasStore run() {
+                return habitat.getService(DomainScopedPasswordAliasStore.class);
+            }
+        });
         return domainPasswordAliasStore;
     }
-    
-   /**
-     * check if a given property name matches AS alias pattern ${ALIAS=aliasname}.
-     * if so, return the aliasname, otherwise return null.
+
+    /**
+     * check if a given property name matches AS alias pattern ${ALIAS=aliasname}. if so, return the aliasname, otherwise
+     * return null.
+     * 
      * @param propName The property name to resolve. ex. ${ALIAS=aliasname}.
      * @return The aliasname or null.
      */
-    static public String getAlias(String propName)
-    {
-       String aliasName=null;
-       String starter = "${" + ALIAS_TOKEN + "="; //no space is allowed in starter
-       String ender   = "}";
+    static public String getAlias(String propName) {
+        String aliasName = null;
+        String starter = "${" + ALIAS_TOKEN + "="; //no space is allowed in starter
+        String ender = "}";
 
-       propName = propName.trim();
-       if (propName.startsWith(starter) && propName.endsWith(ender) ) {
-           propName = propName.substring(starter.length() );
-           int lastIdx = propName.length() - 1;
-           if (lastIdx > 1) {
-               propName = propName.substring(0, lastIdx);
-               aliasName = propName.trim();
-           }
-       }
-       return aliasName;
+        propName = propName.trim();
+        if (propName.startsWith(starter) && propName.endsWith(ender)) {
+            propName = propName.substring(starter.length());
+            int lastIdx = propName.length() - 1;
+            if (lastIdx > 1) {
+                propName = propName.substring(0, lastIdx);
+                aliasName = propName.trim();
+            }
+        }
+        return aliasName;
     }
 
-    public static String getRealPasswordFromAlias(final String at) throws
-               KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException,
-               UnrecoverableKeyException {
+    public static String getRealPasswordFromAlias(final String at)
+            throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException, UnrecoverableKeyException {
 
-           final String          an = getAlias(at);
-           final boolean     exists = domainPasswordAliasStore.containsKey(an);
-           if (!exists) {
+        final String an = getAlias(at);
+        final boolean exists = domainPasswordAliasStore.containsKey(an);
+        if (!exists) {
 
-               final String msg = String.format("Alias  %s does not exist",an);
-               throw new IllegalArgumentException(msg);
-           }
-           final String real = new String(domainPasswordAliasStore.get(an));
-           return ( real );
-       }
+            final String msg = String.format("Alias  %s does not exist", an);
+            throw new IllegalArgumentException(msg);
+        }
+        final String real = new String(domainPasswordAliasStore.get(an));
+        return (real);
+    }
 
-    
 }

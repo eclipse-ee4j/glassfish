@@ -29,8 +29,7 @@ import org.jvnet.hk2.config.ConfigBean;
 public interface ConfigBeanListener {
 
     /**
-     * Notification that a new config beans has entered the configuration
-     * tree.
+     * Notification that a new config beans has entered the configuration tree.
      *
      * @param bean the new config bean
      */

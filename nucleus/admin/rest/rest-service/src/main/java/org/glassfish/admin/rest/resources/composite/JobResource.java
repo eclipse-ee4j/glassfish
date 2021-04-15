@@ -35,24 +35,14 @@ import org.glassfish.api.admin.ParameterMap;
  * <h2>Example Interactions</h2>
  * <h4>View a specific detached job</h4>
  *
- * <div class="codeblock">
- * $ curl --user admin:admin123 -v \
- *   -H Accept:application/vnd.oracle.glassfish+json \
- *   -H Content-Type:application/vnd.oracle.glassfish+json \
- *   -H X-Requested-By:MyClient \
- *   http://localhost:4848/management/jobs/id/1
+ * <div class="codeblock"> $ curl --user admin:admin123 -v \ -H Accept:application/vnd.oracle.glassfish+json \ -H
+ * Content-Type:application/vnd.oracle.glassfish+json \ -H X-Requested-By:MyClient \
+ * http://localhost:4848/management/jobs/id/1
  *
- * HTTP/1.1 200 OK
- * {
- *     "exitCode": "COMPLETED",
- *     "jobId": "1",
- *     "jobName": "load-sdp",
- *     "jobState": "COMPLETED",
- *     "executionDate": "Wed Jan 02 11:36:38 CST 2013",
- *     "message": "SDP loaded with name nucleusSDP.",
- *     "user": "admin"
- * }
+ * HTTP/1.1 200 OK { "exitCode": "COMPLETED", "jobId": "1", "jobName": "load-sdp", "jobState": "COMPLETED",
+ * "executionDate": "Wed Jan 02 11:36:38 CST 2013", "message": "SDP loaded with name nucleusSDP.", "user": "admin" }
  * </div>
+ * 
  * @author jdlee
  */
 public class JobResource extends CompositeResource {

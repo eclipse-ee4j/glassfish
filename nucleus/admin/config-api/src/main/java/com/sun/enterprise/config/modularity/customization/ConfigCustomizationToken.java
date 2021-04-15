@@ -17,13 +17,16 @@
 package com.sun.enterprise.config.modularity.customization;
 
 /**
- * Will carry a set of four strings which will be used during domain creation to find what initial values are required by a config bean to acquire them during the domain creation process.
+ * Will carry a set of four strings which will be used during domain creation to find what initial values are required
+ * by a config bean to acquire them during the domain creation process.
  *
  * @author Masoud Kalali
  */
 public class ConfigCustomizationToken {
 
-    public static enum CustomizationType {PORT, FILE, STRING}
+    public static enum CustomizationType {
+        PORT, FILE, STRING
+    }
 
     private String name;
     private String title;
@@ -33,8 +36,8 @@ public class ConfigCustomizationToken {
     private TokenTypeDetails tokenTypeDetails;
     private CustomizationType customizationType;
 
-    public ConfigCustomizationToken(String name, String title, String description, String value,
-                                    String validationExpression, TokenTypeDetails tokenTypeDetails, CustomizationType customizationType) {
+    public ConfigCustomizationToken(String name, String title, String description, String value, String validationExpression,
+            TokenTypeDetails tokenTypeDetails, CustomizationType customizationType) {
         this.name = name;
         this.title = title;
         this.description = description;
@@ -72,8 +75,7 @@ public class ConfigCustomizationToken {
         return value;
     }
 
-    public void setValue(String tokenValue){
-        this.value=tokenValue;
+    public void setValue(String tokenValue) {
+        this.value = tokenValue;
     }
 }
-

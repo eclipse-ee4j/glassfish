@@ -92,7 +92,7 @@ public class DomainBuilder {
      */
     // TODO : localization of index.html
     private void initialize() throws DomainException {
-        String templateJarPath = (String)_domainConfig.get(DomainConfig.K_TEMPLATE_NAME);
+        String templateJarPath = (String) _domainConfig.get(DomainConfig.K_TEMPLATE_NAME);
         if (templateJarPath == null || templateJarPath.isEmpty()) {
             String defaultTemplateName = Version.getDefaultDomainTemplate();
             if (defaultTemplateName == null || defaultTemplateName.isEmpty()) {
@@ -138,7 +138,7 @@ public class DomainBuilder {
             // Loads default self signed certificate.
             je = _templateJar.getJarEntry("config/" + DomainConstants.KEYSTORE_FILE);
             if (je != null) {
-                _keystoreBytes = new byte[(int)je.getSize()];
+                _keystoreBytes = new byte[(int) je.getSize()];
                 InputStream in = null;
                 int count = 0;
                 try {
@@ -162,12 +162,12 @@ public class DomainBuilder {
     };
 
     /**
-     * Validate's the template. 
+     * Validate's the template.
      *
      * @throws DomainException If any exception occurs in validation.
      */
     public void validateTemplate() throws DomainException {
-        try	 {
+        try {
             // Sanity check on the repository.
             RepositoryManager repoManager = new RepositoryManager();
             repoManager.checkRepository(_domainConfig, false);
@@ -185,22 +185,21 @@ public class DomainBuilder {
     }
 
     /**
-     * Performs all the domain configurations which includes security, configuration processing,
-     * substitution of parameters... etc.
+     * Performs all the domain configurations which includes security, configuration processing, substitution of
+     * parameters... etc.
      * 
      * @throws DomainException If any exception occurs in configuration.
      */
     public void run() throws RepositoryException, DomainException {
 
         // Create domain directories.
-        File domainDir = FileUtils.safeGetCanonicalFile(new File(_domainConfig.getRepositoryRoot(),
-                _domainConfig.getDomainName()));
+        File domainDir = FileUtils.safeGetCanonicalFile(new File(_domainConfig.getRepositoryRoot(), _domainConfig.getDomainName()));
         createDirectory(domainDir);
         try {
             // Extract other jar entries
             byte[] buffer = new byte[10000];
             for (Enumeration<JarEntry> entry = _templateJar.entries(); entry.hasMoreElements();) {
-                JarEntry jarEntry = (JarEntry)entry.nextElement();
+                JarEntry jarEntry = (JarEntry) entry.nextElement();
                 String entryName = jarEntry.getName();
                 if (entryName.startsWith(META_DIR_NAME)) {
                     // Skipping the extraction of jar meta data.
@@ -213,7 +212,7 @@ public class DomainBuilder {
                     File dir = new File(domainDir, jarEntry.getName());
                     if (!dir.exists()) {
                         if (!dir.mkdir()) {
-                            _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR, dir.getName()); 
+                            _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR, dir.getName());
                         }
                     }
                     continue;
@@ -222,8 +221,8 @@ public class DomainBuilder {
                 BufferedOutputStream outputStream = null;
                 try {
                     in = _templateJar.getInputStream(jarEntry);
-                    outputStream = new BufferedOutputStream(new FileOutputStream(new File(domainDir.getAbsolutePath(),
-                            jarEntry.getName())));
+                    outputStream = new BufferedOutputStream(
+                            new FileOutputStream(new File(domainDir.getAbsolutePath(), jarEntry.getName())));
                     int i = 0;
                     while ((i = in.read(buffer)) != -1) {
                         outputStream.write(buffer, 0, i);
@@ -232,29 +231,30 @@ public class DomainBuilder {
                     if (in != null) {
                         try {
                             in.close();
-                        } catch (Exception io)
-                        { /** ignore*/ }
+                        } catch (Exception io) {
+                            /** ignore */
+                        }
                     }
                     if (outputStream != null) {
                         try {
                             outputStream.close();
-                        } catch (Exception io)
-                        { /** ignore*/ }
+                        } catch (Exception io) {
+                            /** ignore */
+                        }
                     }
                 }
             }
 
             File configDir = new File(domainDir, DomainConstants.CONFIG_DIR);
-            String user =  (String) _domainConfig.get(DomainConfig.K_USER);
+            String user = (String) _domainConfig.get(DomainConfig.K_USER);
             String password = (String) _domainConfig.get(DomainConfig.K_PASSWORD);
             String[] adminUserGroups = ((String) _domainConfig.get(DomainConfig.K_INITIAL_ADMIN_USER_GROUPS)).split(",");
             String masterPassword = (String) _domainConfig.get(DomainConfig.K_MASTER_PASSWORD);
-            Boolean saveMasterPassword = (Boolean)_domainConfig.get(DomainConfig.K_SAVE_MASTER_PASSWORD);
+            Boolean saveMasterPassword = (Boolean) _domainConfig.get(DomainConfig.K_SAVE_MASTER_PASSWORD);
 
             // Process domain security.
             DomainSecurity domainSecurity = new DomainSecurity();
-            domainSecurity.processAdminKeyFile(new File(configDir, DomainConstants.ADMIN_KEY_FILE), user, password,
-                    adminUserGroups);
+            domainSecurity.processAdminKeyFile(new File(configDir, DomainConstants.ADMIN_KEY_FILE), user, password, adminUserGroups);
             try {
                 domainSecurity.createSSLCertificateDatabase(configDir, _domainConfig, masterPassword);
             } catch (Exception e) {
@@ -272,8 +272,8 @@ public class DomainBuilder {
                         fos.close();
                 }
             }
-            domainSecurity.changeMasterPasswordInMasterPasswordFile(new File(domainDir, DomainConstants.MASTERPASSWORD_FILE), masterPassword,
-                    saveMasterPassword);
+            domainSecurity.changeMasterPasswordInMasterPasswordFile(new File(domainDir, DomainConstants.MASTERPASSWORD_FILE),
+                    masterPassword, saveMasterPassword);
             domainSecurity.createPasswordAliasKeystore(new File(configDir, DomainConstants.DOMAIN_PASSWORD_FILE), masterPassword);
 
             // Add customized tokens in domain.xml.
@@ -293,7 +293,7 @@ public class DomainBuilder {
             try {
                 File binDir = new File(domainDir, DomainConstants.BIN_DIR);
                 if (binDir.exists() && binDir.isDirectory()) {
-                   domainSecurity.changeMode("-R u+x ", binDir);
+                    domainSecurity.changeMode("-R u+x ", binDir);
                 }
                 domainSecurity.changeMode("-R g-rwx,o-rwx ", configDir);
             } catch (Exception e) {
@@ -316,6 +316,7 @@ public class DomainBuilder {
 
     /**
      * Creates the given directory structure.
+     * 
      * @param dir The directory.
      * @throws RepositoryException If any error occurs in directory creation.
      */
@@ -323,7 +324,7 @@ public class DomainBuilder {
         if (!dir.exists()) {
             try {
                 if (!dir.mkdirs()) {
-                    throw new RepositoryException(_strings.get("directoryCreationError",	 dir));
+                    throw new RepositoryException(_strings.get("directoryCreationError", dir));
                 }
             } catch (Exception e) {
                 throw new RepositoryException(_strings.get("directoryCreationError", dir), e);

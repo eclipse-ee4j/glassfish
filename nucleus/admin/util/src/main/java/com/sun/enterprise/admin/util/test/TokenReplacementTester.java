@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
 
 /**
  *
- * @author  kedar
+ * @author kedar
  */
 public class TokenReplacementTester {
 
@@ -41,7 +41,7 @@ public class TokenReplacementTester {
     }
 
     private TokenValueSet getTokensFromFile(String fileName) {
-        final TokenValueSet tokens  = new TokenValueSet();
+        final TokenValueSet tokens = new TokenValueSet();
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(fileName));
@@ -51,13 +51,13 @@ public class TokenReplacementTester {
                 tokens.add(tv);
             }
             reader.close();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (Exception ex) {}
+                } catch (Exception ex) {
+                }
             }
         }
         return tokens;
@@ -68,13 +68,14 @@ public class TokenReplacementTester {
         final StringTokenizer parser = new StringTokenizer(line, delim);
         final String[] output = new String[2];
         int i = 0;
-        while(parser.hasMoreTokens()) {
+        while (parser.hasMoreTokens()) {
             output[i++] = parser.nextToken();
         }
         final String DELIM = "%%%";
         TokenValue tv = new TokenValue(output[0], output[1], DELIM);
-        return ( tv );
+        return (tv);
     }
+
     /**
      * @param args the command line arguments
      */

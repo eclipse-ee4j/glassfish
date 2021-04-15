@@ -20,16 +20,16 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Implementation for the user-defined constraint annotation @JavaClassName 
+ * Implementation for the user-defined constraint annotation @JavaClassName
+ * 
  * @author Nandini Ektare
  */
-public class JavaClassNameValidator
-implements ConstraintValidator<JavaClassName, String> {
+public class JavaClassNameValidator implements ConstraintValidator<JavaClassName, String> {
 
-    public void initialize(final JavaClassName fqcn) {}
+    public void initialize(final JavaClassName fqcn) {
+    }
 
-    public boolean isValid(final String fullyQualifiedClassName,                
-        final ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(final String fullyQualifiedClassName, final ConstraintValidatorContext constraintValidatorContext) {
 
         try {
             return isValidPackageName(fullyQualifiedClassName);
@@ -50,19 +50,19 @@ implements ConstraintValidator<JavaClassName, String> {
             if (!isValidClassName(fqcn.substring(0, index))) {
                 return false;
             }
-            fqcn = fqcn.substring(index+1);
+            fqcn = fqcn.substring(index + 1);
         }
         return isValidClassName(fqcn);
     }
 
     private boolean isValidClassName(String className) {
         boolean valid = true;
-        for(int i=0;i<className.length();i++) {
-            if(i == 0) {
-                if(!Character.isJavaIdentifierStart(className.charAt(i)))
+        for (int i = 0; i < className.length(); i++) {
+            if (i == 0) {
+                if (!Character.isJavaIdentifierStart(className.charAt(i)))
                     valid = false;
             }
-            if(!Character.isJavaIdentifierPart(className.charAt(i)))
+            if (!Character.isJavaIdentifierPart(className.charAt(i)))
                 valid = false;
         }
         return valid;

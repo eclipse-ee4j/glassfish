@@ -26,11 +26,14 @@ import org.glassfish.admin.rest.composite.RestModel;
  */
 public interface CommandResult extends RestModel {
     String getMessage();
+
     void setMessage(String message);
 
     Properties getProperties();
+
     void setProperties(Properties props);
 
     Map<String, Object> getExtraProperties();
+
     void setExtraProperties(Map<String, Object> props);
 }

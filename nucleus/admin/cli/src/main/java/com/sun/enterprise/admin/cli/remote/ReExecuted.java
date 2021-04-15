@@ -18,15 +18,16 @@ package com.sun.enterprise.admin.cli.remote;
 
 import org.glassfish.api.admin.CommandException;
 
-/** This is a trick for {@link RemoteRestCommand} where command lifecycle must be
- * restarted. One reason is potential change of cached {@code CommandModel}.
+/**
+ * This is a trick for {@link RemoteRestCommand} where command lifecycle must be restarted. One reason is potential
+ * change of cached {@code CommandModel}.
  *
  * @author mmares
  */
 public class ReExecuted extends CommandException {
-    
+
     private int executionResult;
-    
+
     public ReExecuted(int executionResult) {
         super("Command was successfully reexecuted. Outer lifecycle will be skiped.");
         this.executionResult = executionResult;
@@ -35,5 +36,5 @@ public class ReExecuted extends CommandException {
     public int getExecutionResult() {
         return executionResult;
     }
-    
+
 }

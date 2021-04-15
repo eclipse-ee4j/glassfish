@@ -39,23 +39,20 @@ import static org.glassfish.admin.rest.resources.TemplateExecCommand.localString
 
 /**
  *
- * @author ludovic champenois ludo@dev.java.net
- * Code moved from generated classes to here. Gen code inherits from this template class
- * that contains the logic for mapped commands RS Resources
+ * @author ludovic champenois ludo@dev.java.net Code moved from generated classes to here. Gen code inherits from this
+ * template class that contains the logic for mapped commands RS Resources
  *
  */
-@Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5"})
+@Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
 public class TemplateCommandDeleteResource extends TemplateExecCommand {
 
-    public TemplateCommandDeleteResource(String resourceName, String commandName, String commandMethod, String commandAction, String commandDisplayName,  boolean b) {
+    public TemplateCommandDeleteResource(String resourceName, String commandName, String commandMethod, String commandAction,
+            String commandDisplayName, boolean b) {
         super(resourceName, commandName, commandMethod, commandAction, commandDisplayName, b);
     }
 
     @DELETE
-    @Consumes({
-        MediaType.APPLICATION_JSON,
-        MediaType.APPLICATION_XML,
-        MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response processDeleteLegacyFormat(ParameterMap data) {
         if (data == null) {
             data = new ParameterMap();
@@ -69,7 +66,7 @@ public class TemplateCommandDeleteResource extends TemplateExecCommand {
     }
 
     @DELETE
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public CommandResult processDelete(ParameterMap data) {
         if (data == null) {
             data = new ParameterMap();
@@ -83,11 +80,8 @@ public class TemplateCommandDeleteResource extends TemplateExecCommand {
     }
 
     @DELETE
-    @Consumes({
-        MediaType.APPLICATION_JSON,
-        MediaType.APPLICATION_XML,
-        MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces(SseFeature.SERVER_SENT_EVENTS+";qs=0.5")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces(SseFeature.SERVER_SENT_EVENTS + ";qs=0.5")
     public Response processDeleteSse(ParameterMap data) {
         if (data == null) {
             data = new ParameterMap();
@@ -100,34 +94,31 @@ public class TemplateCommandDeleteResource extends TemplateExecCommand {
         return executeCommandAsSse(preprocessData(data));
     }
 
-//    //Handle POST request without any entity(input).
-//    //Do not care what the Content-Type is.
-//    @DELETE
-//    @Produces({
-//        "text/html",
-//        MediaType.APPLICATION_JSON+";qs=0.5",
-//        MediaType.APPLICATION_XML+";qs=0.5"})
-//    public ActionReportResult processDelete() {
-//        try {
-//            return processDelete(new ParameterMap());
-//        } catch (Exception e) {
-//            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//hack-1 : support delete method for html
-//Currently, browsers do not support delete method. For html media,
-//delete operations can be supported through POST. Redirect html
-//client POST request for delete operation to DELETE method.
+    //    //Handle POST request without any entity(input).
+    //    //Do not care what the Content-Type is.
+    //    @DELETE
+    //    @Produces({
+    //        "text/html",
+    //        MediaType.APPLICATION_JSON+";qs=0.5",
+    //        MediaType.APPLICATION_XML+";qs=0.5"})
+    //    public ActionReportResult processDelete() {
+    //        try {
+    //            return processDelete(new ParameterMap());
+    //        } catch (Exception e) {
+    //            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+    //        }
+    //    }
+    //hack-1 : support delete method for html
+    //Currently, browsers do not support delete method. For html media,
+    //delete operations can be supported through POST. Redirect html
+    //client POST request for delete operation to DELETE method.
 
-//In case of delete command reosurce, we will also create post method
-//which simply forwards the request to delete method. Only in case of
-//html client delete request is routed through post. For other clients
-//delete request is directly handled by delete method.
+    //In case of delete command reosurce, we will also create post method
+    //which simply forwards the request to delete method. Only in case of
+    //html client delete request is routed through post. For other clients
+    //delete request is directly handled by delete method.
     @POST
-    @Consumes({
-        MediaType.APPLICATION_JSON,
-        MediaType.APPLICATION_XML,
-        MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response hack(ParameterMap data) {
         if (data != null && data.containsKey("operation")) {
             List<String> l = data.get("operation");
@@ -145,7 +136,7 @@ public class TemplateCommandDeleteResource extends TemplateExecCommand {
     }
 
     @GET
-    @Produces(Constants.MEDIA_TYPE_JSON+";qs=0.5")
+    @Produces(Constants.MEDIA_TYPE_JSON + ";qs=0.5")
     public String get() throws JSONException {
         return options();
     }

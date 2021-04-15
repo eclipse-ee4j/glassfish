@@ -32,8 +32,6 @@ import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.Transaction;
 
-
-
 @Configured
 /**
  * Represents the admin security settings for the domain.
@@ -42,31 +40,19 @@ import org.jvnet.hk2.config.Transaction;
 public interface SecureAdmin extends ConfigBeanProxy {
 
     @Element
-    @Create(value="enable-secure-admin-principal", 
-            decorator=SecureAdminPrincipal.CrDecorator.class, 
-            i18n=@I18n("enable.secure.admin.principal.command"),
-            cluster=@org.glassfish.api.admin.ExecuteOn(
-                value = {RuntimeType.DAS,RuntimeType.INSTANCE}))
-    @Delete(value="disable-secure-admin-principal", 
-            resolver=SecureAdminPrincipal.Resolver.class, 
-            i18n=@I18n("disable.secure.admin.principal.command"),
-            cluster=@org.glassfish.api.admin.ExecuteOn(
-                value = {RuntimeType.DAS,RuntimeType.INSTANCE}))
-    @Listing(value="list-secure-admin-principals", i18n=@I18n("list.secure.admin.principals.command"))
+    @Create(value = "enable-secure-admin-principal", decorator = SecureAdminPrincipal.CrDecorator.class, i18n = @I18n("enable.secure.admin.principal.command"), cluster = @org.glassfish.api.admin.ExecuteOn(value = {
+            RuntimeType.DAS, RuntimeType.INSTANCE }))
+    @Delete(value = "disable-secure-admin-principal", resolver = SecureAdminPrincipal.Resolver.class, i18n = @I18n("disable.secure.admin.principal.command"), cluster = @org.glassfish.api.admin.ExecuteOn(value = {
+            RuntimeType.DAS, RuntimeType.INSTANCE }))
+    @Listing(value = "list-secure-admin-principals", i18n = @I18n("list.secure.admin.principals.command"))
     public List<SecureAdminPrincipal> getSecureAdminPrincipal();
-    
+
     @Element
-    @Create(value="enable-secure-admin-internal-user", 
-            decorator=SecureAdminInternalUser.CrDecorator.class, 
-            i18n=@I18n("enable.secure.admin.internal.user.command"),
-            cluster=@org.glassfish.api.admin.ExecuteOn(
-                value = {RuntimeType.DAS,RuntimeType.INSTANCE}))
-    @Delete(value="disable-secure-admin-internal-user", 
-            resolver=TypeAndNameResolver.class, 
-            i18n=@I18n("disable.secure.admin.internal.user.command"),
-            cluster=@org.glassfish.api.admin.ExecuteOn(
-                value = {RuntimeType.DAS,RuntimeType.INSTANCE}))
-    @Listing(value="list-secure-admin-internal-users", i18n=@I18n("list.secure.admin.internal.user.command"))
+    @Create(value = "enable-secure-admin-internal-user", decorator = SecureAdminInternalUser.CrDecorator.class, i18n = @I18n("enable.secure.admin.internal.user.command"), cluster = @org.glassfish.api.admin.ExecuteOn(value = {
+            RuntimeType.DAS, RuntimeType.INSTANCE }))
+    @Delete(value = "disable-secure-admin-internal-user", resolver = TypeAndNameResolver.class, i18n = @I18n("disable.secure.admin.internal.user.command"), cluster = @org.glassfish.api.admin.ExecuteOn(value = {
+            RuntimeType.DAS, RuntimeType.INSTANCE }))
+    @Listing(value = "list-secure-admin-internal-users", i18n = @I18n("list.secure.admin.internal.user.command"))
     public List<SecureAdminInternalUser> getSecureAdminInternalUser();
 
     /**
@@ -74,7 +60,7 @@ public interface SecureAdmin extends ConfigBeanProxy {
      *
      * @return {@link String } containing the type
      */
-    @Attribute (defaultValue="false",dataType=Boolean.class)
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getEnabled();
 
     /**
@@ -84,24 +70,25 @@ public interface SecureAdmin extends ConfigBeanProxy {
      */
     void setEnabled(String value);
 
-    @Attribute (defaultValue=Util.ADMIN_INDICATOR_DEFAULT_VALUE)
+    @Attribute(defaultValue = Util.ADMIN_INDICATOR_DEFAULT_VALUE)
     String getSpecialAdminIndicator();
 
     void setSpecialAdminIndicator(String value);
 
-    @Attribute(defaultValue=Duck.DEFAULT_ADMIN_ALIAS)
+    @Attribute(defaultValue = Duck.DEFAULT_ADMIN_ALIAS)
     String dasAlias();
 
     void setDasAlias(String alias);
 
-    @Attribute(defaultValue=Duck.DEFAULT_INSTANCE_ALIAS)
+    @Attribute(defaultValue = Duck.DEFAULT_INSTANCE_ALIAS)
     String instanceAlias();
 
     void setInstanceAlias(String alias);
 
     /**
-     * Returns the SecureAdminPrincipal corresponding to the Principal the
-     * instances use to authenticate themselves using SSL/TLS
+     * Returns the SecureAdminPrincipal corresponding to the Principal the instances use to authenticate themselves using
+     * SSL/TLS
+     * 
      * @return the SecureAdminPrincipal for the instances
      */
     @DuckTyped
@@ -126,18 +113,18 @@ public interface SecureAdmin extends ConfigBeanProxy {
             return secureAdmin.dasAlias();
         }
     }
-    
+
     public static class Util {
-        
+
         public static final String ADMIN_INDICATOR_HEADER_NAME = "X-GlassFish-admin";
-        public   static final String ADMIN_INDICATOR_DEFAULT_VALUE = "true";
+        public static final String ADMIN_INDICATOR_DEFAULT_VALUE = "true";
         public static final String ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME = "X-GlassFish-authToken";
-        
+
         private static volatile SecureAdminHelper _secureAdminHelper = null;
 
-        
         /**
          * Reports whether secure admin is enabled.
+         * 
          * @param secureAdmin the SecureAdmin, typically returned from domain.getSecureAdmin()
          * @return true if secure admin is enabled; false otherwise
          */
@@ -146,59 +133,50 @@ public interface SecureAdmin extends ConfigBeanProxy {
         }
 
         /**
-         * Returns the configured (which could be the default) value for the
-         * special admin indicator.
+         * Returns the configured (which could be the default) value for the special admin indicator.
+         * 
          * @param secureAdmin the SecureAdmin, typically returned from domain.getSecureAdmin()
          * @return the current value for the admin indicator
          */
         public static String configuredAdminIndicator(final SecureAdmin secureAdmin) {
             return (secureAdmin == null ? ADMIN_INDICATOR_DEFAULT_VALUE : secureAdmin.getSpecialAdminIndicator());
-            }
+        }
 
         public static String DASAlias(final SecureAdmin secureAdmin) {
-            return (secureAdmin == null) ? Duck.DEFAULT_ADMIN_ALIAS :
-                secureAdmin.getDasAlias();
+            return (secureAdmin == null) ? Duck.DEFAULT_ADMIN_ALIAS : secureAdmin.getDasAlias();
         }
 
         public static String instanceAlias(final SecureAdmin secureAdmin) {
-            return (secureAdmin == null) ? Duck.DEFAULT_INSTANCE_ALIAS :
-                secureAdmin.getInstanceAlias();
+            return (secureAdmin == null) ? Duck.DEFAULT_INSTANCE_ALIAS : secureAdmin.getInstanceAlias();
         }
-        
-        
-                
-        
+
         public static List<SecureAdminInternalUser> secureAdminInternalUsers(final SecureAdmin secureAdmin) {
             return (secureAdmin == null) ? Collections.EMPTY_LIST : secureAdmin.getSecureAdminInternalUser();
         }
-        
+
         public static SecureAdminInternalUser secureAdminInternalUser(final SecureAdmin secureAdmin) {
             final List<SecureAdminInternalUser> secureAdminUsers = secureAdminInternalUsers(secureAdmin);
             return (secureAdminUsers.isEmpty() ? null : secureAdminUsers.get(0));
         }
-        
+
         public static boolean isUsingUsernamePasswordAuth(final SecureAdmin secureAdmin) {
-            return ! secureAdminInternalUsers(secureAdmin).isEmpty();
+            return !secureAdminInternalUsers(secureAdmin).isEmpty();
         }
-        
-        public static List<SecureAdminPrincipal> secureAdminPrincipals(
-                final SecureAdmin secureAdmin,
-                final ServiceLocator habitat) {
+
+        public static List<SecureAdminPrincipal> secureAdminPrincipals(final SecureAdmin secureAdmin, final ServiceLocator habitat) {
             List<SecureAdminPrincipal> result = Collections.EMPTY_LIST;
             if (secureAdmin != null) {
                 result = secureAdmin.getSecureAdminPrincipal();
                 if (result.isEmpty()) {
-                    try{
+                    try {
                         final Transaction t = new Transaction();
                         final SecureAdmin secureAdmin_w = t.enroll(secureAdmin);
                         result = secureAdmin_w.getSecureAdminPrincipal();
-                        final SecureAdminPrincipal dasPrincipal = 
-                            secureAdmin_w.createChild(SecureAdminPrincipal.class);
+                        final SecureAdminPrincipal dasPrincipal = secureAdmin_w.createChild(SecureAdminPrincipal.class);
                         dasPrincipal.setDn(secureAdminHelper(habitat).getDN(secureAdmin.dasAlias(), true));
                         result.add(dasPrincipal);
 
-                        final SecureAdminPrincipal instancePrincipal =
-                                secureAdmin_w.createChild(SecureAdminPrincipal.class);
+                        final SecureAdminPrincipal instancePrincipal = secureAdmin_w.createChild(SecureAdminPrincipal.class);
                         instancePrincipal.setDn(secureAdminHelper(habitat).getDN(secureAdmin.instanceAlias(), true));
                         result.add(instancePrincipal);
                         t.commit();
@@ -209,7 +187,7 @@ public interface SecureAdmin extends ConfigBeanProxy {
             }
             return result;
         }
-        
+
         private static synchronized SecureAdminHelper secureAdminHelper(final ServiceLocator habitat) {
             if (_secureAdminHelper == null) {
                 _secureAdminHelper = habitat.getService(SecureAdminHelper.class);
@@ -218,5 +196,3 @@ public interface SecureAdmin extends ConfigBeanProxy {
         }
     }
 }
-
-

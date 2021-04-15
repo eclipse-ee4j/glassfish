@@ -32,28 +32,27 @@ import jakarta.inject.Inject;
 
 @Configured
 /**
- * Records information about a username/password-alias pair to be
- * used for authentication internally among GlassFish processes (DAS to instance, for
- * example).
+ * Records information about a username/password-alias pair to be used for authentication internally among GlassFish
+ * processes (DAS to instance, for example).
  * 
  * @author Tim Quinn
  */
 public interface SecureAdminInternalUser extends ConfigBeanProxy {
-    
+
     /**
      * Retrieves the username for this authorized internal admin user entry..
      *
      * @return {@link String } containing the username
      */
-    @Param(primary=true)
+    @Param(primary = true)
     void setUsername(String value);
-    
+
     /**
      * Sets the username for this authorized internal admin user entry.
      *
      * @param value username
      */
-    @Attribute (required=true, key=true)
+    @Attribute(required = true, key = true)
     String getUsername();
 
     /**
@@ -61,7 +60,7 @@ public interface SecureAdminInternalUser extends ConfigBeanProxy {
      *
      * @return {@link String } containing the password alias
      */
-    @Attribute (required=true)
+    @Attribute(required = true)
     String getPasswordAlias();
 
     /**
@@ -69,34 +68,34 @@ public interface SecureAdminInternalUser extends ConfigBeanProxy {
      *
      * @param value password alias
      */
-    @Param(optional=false)
+    @Param(optional = false)
     void setPasswordAlias(String value);
-    
+
     @Service
     @PerLookup
     public class CrDecorator implements CreationDecorator<SecureAdminInternalUser> {
 
-        @Param(optional=false, primary=true)
+        @Param(optional = false, primary = true)
         private String username;
-        
-        @Param(optional=false)
+
+        @Param(optional = false)
         private String passwordAlias;
-        
+
         @Inject
         private SecureAdminHelper helper;
-        
+
         @Override
-        public void decorate(AdminCommandContext context, SecureAdminInternalUser instance) throws TransactionFailure, PropertyVetoException {
-            
+        public void decorate(AdminCommandContext context, SecureAdminInternalUser instance)
+                throws TransactionFailure, PropertyVetoException {
+
             try {
-                helper.validateInternalUsernameAndPasswordAlias(
-                        username, passwordAlias);
+                helper.validateInternalUsernameAndPasswordAlias(username, passwordAlias);
             } catch (Exception ex) {
                 throw new TransactionFailure("create", ex);
             }
             instance.setUsername(username);
             instance.setPasswordAlias(passwordAlias);
         }
-        
+
     }
 }

@@ -27,11 +27,13 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, TYPE})
+@Target({ METHOD, FIELD, TYPE })
 @Documented
 @Constraint(validatedBy = LDAPRealmPropertyCheckValidator.class)
 public @interface LDAPRealmPropertyCheck {
     String message() default "base-dn, directory and jaas-context have to be specified for LDAPRealm";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

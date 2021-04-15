@@ -36,26 +36,26 @@ import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
 
 /**
- * Provides bridge between CommandInvocation and ReST Response for SSE. Create
- * it and call execute.
+ * Provides bridge between CommandInvocation and ReST Response for SSE. Create it and call execute.
  *
  * @author martinmares
  */
 public class SseCommandHelper implements Runnable, AdminCommandEventBroker.AdminCommandListener {
 
-    /** If implementation of this interface is registered then it's process()
-     * method is used to convert ActionReport before it is transfered to the
-     * client.
+    /**
+     * If implementation of this interface is registered then it's process() method is used to convert ActionReport before
+     * it is transfered to the client.
      */
     public static interface ActionReportProcessor {
 
-        /** Framework calls this method to process report before it is send
-         * to the client. Implementation also can send custom events using
-         * provided event channel.
+        /**
+         * Framework calls this method to process report before it is send to the client. Implementation also can send custom
+         * events using provided event channel.
          */
         public ActionReport process(ActionReport report, EventOutput ec);
 
     }
+
     private final static LocalStringManagerImpl strings = new LocalStringManagerImpl(CommandResource.class);
 
     private final CommandRunner.CommandInvocation commandInvocation;
@@ -63,8 +63,7 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
     private final EventOutput eventOuptut = new EventOutput();
     private AdminCommandEventBroker broker;
 
-    private SseCommandHelper(final CommandInvocation commandInvocation,
-                             final ActionReportProcessor processor) {
+    private SseCommandHelper(final CommandInvocation commandInvocation, final ActionReportProcessor processor) {
         this.commandInvocation = commandInvocation;
         this.processor = processor;
     }
@@ -74,8 +73,7 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
         try {
             commandInvocation.execute();
         } catch (Throwable thr) {
-            RestLogging.restLogger.log(Level.WARNING, RestLogging.UNEXPECTED_EXCEPTION,
-                    thr);
+            RestLogging.restLogger.log(Level.WARNING, RestLogging.UNEXPECTED_EXCEPTION, thr);
             ActionReport actionReport = new PropsFileActionReporter(); //new RestActionReporter();
             actionReport.setFailureCause(thr);
             actionReport.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -85,8 +83,7 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
             try {
                 eventOuptut.close();
             } catch (IOException ex) {
-                RestLogging.restLogger.log(Level.WARNING, RestLogging.IO_EXCEPTION, 
-                        ex.getMessage());
+                RestLogging.restLogger.log(Level.WARNING, RestLogging.IO_EXCEPTION, ex.getMessage());
             }
         }
     }
@@ -123,19 +120,13 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
             unregister();
             return;
         }
-        if ((event instanceof Number)
-                || (event instanceof CharSequence)
-                || (event instanceof Boolean)) {
+        if ((event instanceof Number) || (event instanceof CharSequence) || (event instanceof Boolean)) {
             event = String.valueOf(event);
         }
         event = process(name, event);
-        OutboundEvent outEvent = new OutboundEvent.Builder()
-                .name(name)
-                .mediaType(event instanceof String
-                ? MediaType.TEXT_PLAIN_TYPE
-                : MediaType.APPLICATION_JSON_TYPE)
-                .data(event.getClass(), event)
-                .build();
+        OutboundEvent outEvent = new OutboundEvent.Builder().name(name)
+                .mediaType(event instanceof String ? MediaType.TEXT_PLAIN_TYPE : MediaType.APPLICATION_JSON_TYPE)
+                .data(event.getClass(), event).build();
         try {
             eventOuptut.write(outEvent);
         } catch (Exception ex) {

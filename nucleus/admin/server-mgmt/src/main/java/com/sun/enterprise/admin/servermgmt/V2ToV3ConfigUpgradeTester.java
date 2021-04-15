@@ -37,10 +37,9 @@ import jakarta.inject.Inject;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommandSecurity;
 
-@Service(name="test-upgrade", metadata="mode=debug")
+@Service(name = "test-upgrade", metadata = "mode=debug")
 @PerLookup
-public class V2ToV3ConfigUpgradeTester  implements AdminCommand,
-        AdminCommandSecurity.AccessCheckProvider {
+public class V2ToV3ConfigUpgradeTester implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
     @Inject
     ServiceLocator habitat;
 

@@ -29,22 +29,20 @@ public interface ArchiveEntryWrapper {
     /**
      * Get's the parent archive wrapper applicable only for the nested archive.
      *
-     * @return Reference to the parent archive or <code>null</code>
-     *  if no parent archive found.
+     * @return Reference to the parent archive or <code>null</code> if no parent archive found.
      */
     ArchiveEntryWrapper getParentArchive();
 
     /**
-     * Get's all the substitutable entries from an archive. List also includes the 
-     * {@link Substitutable} entries from the nested archive.
+     * Get's all the substitutable entries from an archive. List also includes the {@link Substitutable} entries from the
+     * nested archive.
      *
-     * @return All the archive entries that has to undergo string substitution. 
+     * @return All the archive entries that has to undergo string substitution.
      */
     List<? extends ArchiveMember> getSubstitutables();
 
     /**
-     * An {@link ArchiveMember} call this method to notify the successful completion
-     * of string substitution.
+     * An {@link ArchiveMember} call this method to notify the successful completion of string substitution.
      */
     void notifyCompletion();
 }

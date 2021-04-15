@@ -31,13 +31,12 @@ import com.sun.enterprise.universal.glassfish.AdminCommandResponse;
  * @author bnevins
  */
 class ManifestManager implements ResponseManager {
-    ManifestManager(InputStream inStream, Logger logger)
-                                throws RemoteException, IOException  {
+    ManifestManager(InputStream inStream, Logger logger) throws RemoteException, IOException {
         this.logger = logger;
         response = new AdminCommandResponse(inStream);
     }
 
-    public Map<String,String> getMainAtts() {
+    public Map<String, String> getMainAtts() {
         return response.getMainAtts();
     }
 
@@ -54,18 +53,17 @@ class ManifestManager implements ResponseManager {
         throw new RemoteFailureException("Could not process");
     }
 
-
     private void processManPage() throws RemoteSuccessException {
         String manPage = response.getValue(AdminCommandResponse.MANPAGE);
 
-        if(!ok(manPage))
+        if (!ok(manPage))
             return;
 
         throw new RemoteSuccessException(manPage);
     }
 
     private void processGeneratedManPage() throws RemoteException {
-        if(!response.isGeneratedHelp())
+        if (!response.isGeneratedHelp())
             return;
         GeneratedManPageManager mgr = new GeneratedManPageManager(response);
         mgr.process();
@@ -74,7 +72,7 @@ class ManifestManager implements ResponseManager {
     private void processGeneric() throws RemoteSuccessException, RemoteFailureException {
         StringBuilder sb = new StringBuilder();
         String msg = response.getMainMessage();
-        if(ok(msg)) {
+        if (ok(msg)) {
             sb.append(msg);
         }
 
@@ -88,9 +86,10 @@ class ManifestManager implements ResponseManager {
 
         if (response.wasFailure()) {
             final String cause = response.getCause();
-            if(ok(cause)){
+            if (ok(cause)) {
                 if (logger.isLoggable(Level.FINER)) {
-                    if (sb.length() > 0) sb.append(EOL);
+                    if (sb.length() > 0)
+                        sb.append(EOL);
                     sb.append(cause);
                 }
                 throw new RemoteFailureException(sb.toString(), cause);
@@ -103,10 +102,9 @@ class ManifestManager implements ResponseManager {
 
     // this is just HORRIBLE -- but that's the way it is presented from the
     // server.  I imagine tons of bug reports on this coming up...
-    private void processOneLevel(String prefix, String key,
-            Map<String,String> atts, StringBuilder sb) {
+    private void processOneLevel(String prefix, String key, Map<String, String> atts, StringBuilder sb) {
 
-        if(atts == null)
+        if (atts == null)
             return;
 
         // we probably should not show props to the user
@@ -116,19 +114,20 @@ class ManifestManager implements ResponseManager {
 
     private void processChildren(String prefix, String parent, Map<String, String> atts, StringBuilder sb) {
 
-        Map<String,Map<String,String>> kids = response.getChildren(atts);
+        Map<String, Map<String, String>> kids = response.getChildren(atts);
 
-        if(kids == null || kids.isEmpty())
+        if (kids == null || kids.isEmpty())
             return;
 
         String childrenType = atts.get(AdminCommandResponse.CHILDREN_TYPE);
         int index = (parent == null) ? 0 : parent.length() + 1;
 
-        for(Map.Entry<String, Map<String,String>> entry : kids.entrySet()) {
+        for (Map.Entry<String, Map<String, String>> entry : kids.entrySet()) {
             String container = entry.getKey();
 
-            if (sb.length() > 0) sb.append(EOL);
-            if(ok(childrenType)) {
+            if (sb.length() > 0)
+                sb.append(EOL);
+            if (ok(childrenType)) {
                 sb.append(prefix).append(childrenType).append(" : ");
             }
             try {
@@ -140,15 +139,16 @@ class ManifestManager implements ResponseManager {
         }
     }
 
-   /* Issue 5918 Keep output sorted. Grab "children" from main attributes
+    /* Issue 5918 Keep output sorted. Grab "children" from main attributes
     * which has the original order of output returned from server-side
     */
-    private StringBuilder processMainChildrenAttribute(Map<String,String> atts, StringBuilder sb) {
+    private StringBuilder processMainChildrenAttribute(Map<String, String> atts, StringBuilder sb) {
         String allChildren = atts.get("children");
         if (ok(allChildren)) {
             String[] children = allChildren.split(";");
             for (String child : children) {
-                if (sb.length() > 0) sb.append(EOL);
+                if (sb.length() > 0)
+                    sb.append(EOL);
                 sb.append(decode(child));
             }
         }
@@ -174,4 +174,3 @@ class ManifestManager implements ResponseManager {
     private static final String EOL = StringUtils.NEWLINE;
     private static final String TAB = "    ";
 }
-

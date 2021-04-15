@@ -68,6 +68,7 @@ import org.jvnet.hk2.annotations.Optional;
 
 /**
  * Adapter for REST interface
+ * 
  * @author Rajeshwar Patil, Ludovic Champenois
  * @author sanjeeb.sahoo@oracle.com
  */
@@ -101,7 +102,8 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     @Inject
     private RestSessionManager sessionManager;
 
-    @Inject @Optional
+    @Inject
+    @Optional
     protected AdminAccessController adminAuthenticator;
 
     private volatile JerseyContainer adapter = null;
@@ -131,11 +133,10 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
         try {
             res.setCharacterEncoding(Constants.ENCODING);
             if (latch.await(20L, TimeUnit.SECONDS)) {
-                if(serverEnvironment.isInstance()) {
-                    if(!Method.GET.equals(req.getMethod()) && !getRestResourceProvider().enableModifAccessToInstances()) {
-                        reportError(req, res, HttpURLConnection.HTTP_FORBIDDEN,
-                                localStrings.getLocalString("rest.resource.only.GET.on.instance",
-                                "Only GET requests are allowed on an instance that is not DAS."));
+                if (serverEnvironment.isInstance()) {
+                    if (!Method.GET.equals(req.getMethod()) && !getRestResourceProvider().enableModifAccessToInstances()) {
+                        reportError(req, res, HttpURLConnection.HTTP_FORBIDDEN, localStrings.getLocalString(
+                                "rest.resource.only.GET.on.instance", "Only GET requests are allowed on an instance that is not DAS."));
                         return;
                     }
                 }
@@ -155,26 +156,21 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
                 adapter.service(req, res);
 
             } else { // !latch.await(...)
-                reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE,
-                        localStrings.getLocalString("rest.adapter.server.wait",
+                reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE, localStrings.getLocalString("rest.adapter.server.wait",
                         "Server cannot process this command at this time, please wait"));
             }
         } catch (InterruptedException e) {
-            reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE,
-                    localStrings.getLocalString("rest.adapter.server.wait",
+            reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE, localStrings.getLocalString("rest.adapter.server.wait",
                     "Server cannot process this command at this time, please wait")); //service unavailable
         } catch (IOException e) {
             reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE,
-                    localStrings.getLocalString("rest.adapter.server.ioexception",
-                    "REST: IO Exception " + e.getLocalizedMessage())); //service unavailable
+                    localStrings.getLocalString("rest.adapter.server.ioexception", "REST: IO Exception " + e.getLocalizedMessage())); //service unavailable
         } catch (RemoteAdminAccessException e) {
-            reportError(req, res, HttpURLConnection.HTTP_FORBIDDEN,
-                    localStrings.getLocalString("rest.adapter.auth.forbidden",
+            reportError(req, res, HttpURLConnection.HTTP_FORBIDDEN, localStrings.getLocalString("rest.adapter.auth.forbidden",
                     "Remote access not allowed. If you desire remote access, please turn on secure admin"));
         } catch (LoginException e) {
             int status = HttpURLConnection.HTTP_UNAUTHORIZED;
-            String msg = localStrings.getLocalString("rest.adapter.auth.userpassword",
-                                                     "Invalid user name or password");
+            String msg = localStrings.getLocalString("rest.adapter.auth.userpassword", "Invalid user name or password");
             res.setHeader(HEADER_AUTHENTICATE, "BASIC");
             reportError(req, res, status, msg);
         } catch (Exception e) {
@@ -195,8 +191,8 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
         acceptableTypes.add("json");
 
         // first we look at the command extension (ie list-applications.[json | html | mf]
-        if (requestURI.indexOf('.')!=-1) {
-            type = requestURI.substring(requestURI.indexOf('.')+1);
+        if (requestURI.indexOf('.') != -1) {
+            type = requestURI.substring(requestURI.indexOf('.') + 1);
         } else {
             String userAgent = req.getHeader(HEADER_USER_AGENT);
             if (userAgent != null) {
@@ -207,8 +203,8 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
                     }
                     StringTokenizer st = new StringTokenizer(accept, ",");
                     while (st.hasMoreElements()) {
-                        String scheme=st.nextToken();
-                        scheme = scheme.substring(scheme.indexOf('/')+1);
+                        String scheme = st.nextToken();
+                        scheme = scheme.substring(scheme.indexOf('/') + 1);
                         if (acceptableTypes.contains(scheme)) {
                             type = scheme;
                             break;
@@ -249,7 +245,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
         }
     }
 
-    protected Set<? extends Binder> getAdditionalBinders(){
+    protected Set<? extends Binder> getAdditionalBinders() {
         return Collections.singleton(new AbstractBinder() {
             @Override
             protected void configure() {
@@ -262,9 +258,8 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     }
 
     /**
-     * dynamically load the class that contains all references to Jersey APIs
-     * so that Jersey is not loaded when the RestAdapter is loaded at boot time
-     * gain a few 100 millis at GlassFish startup time
+     * dynamically load the class that contains all references to Jersey APIs so that Jersey is not loaded when the
+     * RestAdapter is loaded at boot time gain a few 100 millis at GlassFish startup time
      */
     protected JerseyContainer exposeContext() throws EndpointRegistrationException {
         Set<Class<?>> classes = getRestResourceProvider().getResourceClasses(habitat);

@@ -22,16 +22,12 @@ import java.io.*;
 import java.util.Map;
 
 /**
- * The original implementation of Services had serious design problems.  The Service interface
- * is ENORMOUSLY fat and non OO in the sense that outside callers had to set things
- * to make things work.  The interface is not generic -- it is very SMF specific
- * It is extremely difficult to implement the interface because it has SO MANY methods
- * that non-SMF don't need.
- * This "Adapter" makes it easier to implement the interface.  Eventually we should
- * have one adapter for all services but the SMF code is difficult and time-consuming
- * to change.
- * Meantime I'm adding new functionality (August 2010, bnevins) for instances.  I'm
- * moving implementations of the new interface methods to "ServiceAdapter" which ALL
+ * The original implementation of Services had serious design problems. The Service interface is ENORMOUSLY fat and non
+ * OO in the sense that outside callers had to set things to make things work. The interface is not generic -- it is
+ * very SMF specific It is extremely difficult to implement the interface because it has SO MANY methods that non-SMF
+ * don't need. This "Adapter" makes it easier to implement the interface. Eventually we should have one adapter for all
+ * services but the SMF code is difficult and time-consuming to change. Meantime I'm adding new functionality (August
+ * 2010, bnevins) for instances. I'm moving implementations of the new interface methods to "ServiceAdapter" which ALL
  * services extend.
  *
  * @author bnevins
@@ -112,6 +108,7 @@ public abstract class NonSMFServiceAdapter extends ServiceAdapter {
     void setTemplateFile(String name) {
         templateFile = new File(info.libDir, "install/templates/" + name);
     }
+
     private String flattenedServicePropertes;
     private File templateFile;
 }

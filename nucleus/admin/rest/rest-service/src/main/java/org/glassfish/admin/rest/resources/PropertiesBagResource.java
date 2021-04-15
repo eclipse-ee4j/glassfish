@@ -62,6 +62,7 @@ public class PropertiesBagResource extends AbstractResource {
             return "GENERIC-DELETE";
         }
     }
+
     @Path("{Name}/")
     public PropertyResource getProperty(@PathParam("Name") String id) {
         PropertyResource resource = serviceLocator.createAndInitialize(PropertyResource.class);
@@ -70,11 +71,11 @@ public class PropertiesBagResource extends AbstractResource {
     }
 
     @GET
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5"})
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
     public Object get() {
         List<Dom> entities = getEntity();
         if (entities == null) {
-            return new GetResultList(new ArrayList(), "", new String[][]{}, new OptionsResult(Util.getResourceName(uriInfo)));//empty dom list
+            return new GetResultList(new ArrayList(), "", new String[][] {}, new OptionsResult(Util.getResourceName(uriInfo)));//empty dom list
         }
 
         RestActionReporter ar = new RestActionReporter();
@@ -101,30 +102,31 @@ public class PropertiesBagResource extends AbstractResource {
         return new ActionReportResult("properties", ar, new OptionsResult(Util.getResourceName(uriInfo)));
     }
 
-    @POST  // create
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5"})
+    @POST // create
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
     public ActionReportResult createProperties(List<Map<String, String>> data) {
         return clearThenSaveProperties(data);
     }
 
-    @PUT  // create
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5"})
+    @PUT // create
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
     public ActionReportResult replaceProperties(List<Map<String, String>> data) {
         return clearThenSaveProperties(data);
     }
 
     @DELETE
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_OCTET_STREAM})
-    @Produces({"text/html", MediaType.APPLICATION_JSON+";qs=0.5", MediaType.APPLICATION_XML+";qs=0.5"})
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED,
+            MediaType.APPLICATION_OCTET_STREAM })
+    @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
     public Response delete() {
         try {
             Map<String, Property> existing = getExistingProperties();
             deleteMissingProperties(existing, null);
 
-            String successMessage = localStrings.getLocalString("rest.resource.delete.message",
-                        "\"{0}\" deleted successfully.", new Object[]{uriInfo.getAbsolutePath()});
+            String successMessage = localStrings.getLocalString("rest.resource.delete.message", "\"{0}\" deleted successfully.",
+                    new Object[] { uriInfo.getAbsolutePath() });
             return ResourceUtil.getResponse(200, successMessage, requestHeaders, uriInfo);
         } catch (Exception ex) {
             if (ex.getCause() instanceof ValidationException) {
@@ -134,12 +136,13 @@ public class PropertiesBagResource extends AbstractResource {
             }
         }
     }
+
     /*
      * prop names that have . in them need to be entered with \. for the set command
      * so this routine replaces . with \.
      */
-    private String getEscapedPropertyName(String propName){
-        return propName.replaceAll("\\.","\\\\.");
+    private String getEscapedPropertyName(String propName) {
+        return propName.replaceAll("\\.", "\\\\.");
     }
 
     protected ActionReportResult clearThenSaveProperties(List<Map<String, String>> properties) {
@@ -170,7 +173,7 @@ public class PropertiesBagResource extends AbstractResource {
 
                 //update the description only if not null/blank
                 if ((description != null) && (existingProp != null)) {
-                     if (!"".equals(description) && (!description.equals(existingProp.getDescription()))) {
+                    if (!"".equals(description) && (!description.equals(existingProp.getDescription()))) {
                         if (canSaveDesc) {
                             data.put(escapedName + ".description", description);
                         }
@@ -182,8 +185,8 @@ public class PropertiesBagResource extends AbstractResource {
                 Util.applyChanges(data, uriInfo, getSubject());
             }
 
-            String successMessage = localStrings.getLocalString("rest.resource.update.message",
-                    "\"{0}\" updated successfully.", new Object[]{uriInfo.getAbsolutePath()});
+            String successMessage = localStrings.getLocalString("rest.resource.update.message", "\"{0}\" updated successfully.",
+                    new Object[] { uriInfo.getAbsolutePath() });
 
             ar.setSuccess();
             ar.setMessage(successMessage);
@@ -223,7 +226,7 @@ public class PropertiesBagResource extends AbstractResource {
         for (final Property existingProp : existing.values()) {
             if (!propNames.contains(existingProp.getName())) {
                 String escapedName = getEscapedPropertyName(existingProp.getName());
-                data.put (escapedName, "");
+                data.put(escapedName, "");
             }
         }
         if (!data.isEmpty()) {

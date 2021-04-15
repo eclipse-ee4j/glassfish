@@ -22,7 +22,7 @@ import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * RestConfig configuration.  This defines a rest-config element.
+ * RestConfig configuration. This defines a rest-config element.
  *
  * @author Ludovic Champenois
  *
@@ -30,14 +30,14 @@ import org.jvnet.hk2.config.Configured;
 @Configured
 public interface RestConfig extends ConfigExtension {
 
-    public static String  DEBUG = "debug";
-    public static String  INDENTLEVEL ="indentLevel";
-    public static String  SHOWHIDDENCOMMANDS ="showHiddenCommands";
-    public static String  WADLGENERATION ="wadlGeneration";
-    public static String  LOGRESPONSES ="logOutput";
-    public static String  LOGINPUTS ="logInput";
-    public static String  SHOWDEPRECATEDITEMS = "showDeprecatedItems";
-    public static String  SESSIONTOKENTIMEOUT = "sessionTokenTimeout";
+    public static String DEBUG = "debug";
+    public static String INDENTLEVEL = "indentLevel";
+    public static String SHOWHIDDENCOMMANDS = "showHiddenCommands";
+    public static String WADLGENERATION = "wadlGeneration";
+    public static String LOGRESPONSES = "logOutput";
+    public static String LOGINPUTS = "logInput";
+    public static String SHOWDEPRECATEDITEMS = "showDeprecatedItems";
+    public static String SESSIONTOKENTIMEOUT = "sessionTokenTimeout";
 
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     public String getDebug();

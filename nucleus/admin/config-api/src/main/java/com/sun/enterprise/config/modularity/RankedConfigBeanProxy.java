@@ -26,6 +26,7 @@ public interface RankedConfigBeanProxy extends ConfigBeanProxy {
 
     @Attribute(defaultValue = "0")
     String getRank();
+
     void setRank();
 
 }

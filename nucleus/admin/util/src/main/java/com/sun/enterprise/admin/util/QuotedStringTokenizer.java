@@ -18,69 +18,57 @@ package com.sun.enterprise.admin.util;
 
 import java.util.NoSuchElementException;
 
-public class QuotedStringTokenizer
-{
+public class QuotedStringTokenizer {
     private final char[] ca;
     private String delimiters = "\t ";
     private final int numTokens;
     private int curToken = 0;
     private final CharIterator iterator;
 
-    public QuotedStringTokenizer(String s)
-    {
+    public QuotedStringTokenizer(String s) {
         this(s, null);
     }
 
-    public QuotedStringTokenizer(String s, String delim)
-    {
-        if (null == s)
-        {
+    public QuotedStringTokenizer(String s, String delim) {
+        if (null == s) {
             throw new IllegalArgumentException("null param");
         }
         ca = s.toCharArray();
-        if (delim != null && delim.length() > 0)
-        {
+        if (delim != null && delim.length() > 0) {
             delimiters = delim;
         }
         numTokens = _countTokens();
         iterator = new CharIterator(ca);
     }
-    
-    public int countTokens()
-    {
+
+    public int countTokens() {
         return numTokens;
     }
 
-    public boolean hasMoreTokens()
-    {
+    public boolean hasMoreTokens() {
         return curToken < numTokens;
     }
 
-    public String nextToken()
-    {
+    public String nextToken() {
         if (curToken == numTokens)
             throw new NoSuchElementException();
         final StringBuffer sb = new StringBuffer();
         boolean bQuote = false;
         boolean bEscaped = false;
         char c;
-        while ((c = iterator.next()) != CharIterator.EOF)
-        {
+        while ((c = iterator.next()) != CharIterator.EOF) {
             boolean isDelimiter = isDelimiter(c);
-            if (!isDelimiter && !bEscaped)
-            {
+            if (!isDelimiter && !bEscaped) {
                 sb.append(c);
                 if (c == '\"')
                     bQuote = !bQuote;
                 char next = iterator.peekNext();
                 if (next == CharIterator.EOF || (isDelimiter(next) && !bQuote))
                     break;
-            }
-            else if (bQuote || bEscaped)
-            {
+            } else if (bQuote || bEscaped) {
                 sb.append(c);
             }
-            if(c=='\\')
+            if (c == '\\')
                 bEscaped = !bEscaped;
             else
                 bEscaped = false;
@@ -89,32 +77,27 @@ public class QuotedStringTokenizer
         return sb.toString();
     }
 
-    boolean isDelimiter(char c)
-    {
+    boolean isDelimiter(char c) {
         return delimiters.indexOf(c) >= 0;
     }
 
-    private int _countTokens()
-    {
-        int     tokens = 0;
+    private int _countTokens() {
+        int tokens = 0;
         boolean bQuote = false;
         boolean bEscaped = false;
-        final   CharIterator it = new CharIterator(ca);
-        char    c;
+        final CharIterator it = new CharIterator(ca);
+        char c;
 
-        while ((c = it.next()) != CharIterator.EOF)
-        {
+        while ((c = it.next()) != CharIterator.EOF) {
             char next = it.peekNext();
-            if (!isDelimiter(c) && !bEscaped)
-            {
+            if (!isDelimiter(c) && !bEscaped) {
                 if (c == '\"')
                     bQuote = !bQuote;
                 if (next == CharIterator.EOF || (isDelimiter(next) && !bQuote))
                     tokens++;
-            }
-            else if (next == CharIterator.EOF && bQuote) //eg :- "\" "
+            } else if (next == CharIterator.EOF && bQuote) //eg :- "\" "
                 tokens++;
-            if(c=='\\')
+            if (c == '\\')
                 bEscaped = !bEscaped;
             else
                 bEscaped = false;
@@ -122,20 +105,17 @@ public class QuotedStringTokenizer
         return tokens;
     }
 
-    private static final class CharIterator
-    {
+    private static final class CharIterator {
         static final char EOF = '\uFFFF';
 
         private final char[] carr;
         private int index = 0;
 
-        private CharIterator(char[] ca)
-        {
+        private CharIterator(char[] ca) {
             carr = ca;
         }
 
-        char next()
-        {
+        char next() {
             if (index >= carr.length)
                 return EOF;
             char c = carr[index];
@@ -143,8 +123,7 @@ public class QuotedStringTokenizer
             return c;
         }
 
-        char peekNext()
-        {
+        char peekNext() {
             if (index >= carr.length)
                 return EOF;
             return carr[index];

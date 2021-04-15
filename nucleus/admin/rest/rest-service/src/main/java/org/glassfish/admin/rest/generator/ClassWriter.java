@@ -27,7 +27,8 @@ public interface ClassWriter {
 
     void createGetCommandResource(String commandResourceClassName, String resourcePath);
 
-    void createCommandResourceConstructor(String commandResourceClassName, String commandName, String httpMethod, boolean linkedToParent, CommandResourceMetaData.ParameterMetaData[] commandParams, String commandDisplayName, String commandAction);
+    void createCommandResourceConstructor(String commandResourceClassName, String commandName, String httpMethod, boolean linkedToParent,
+            CommandResourceMetaData.ParameterMetaData[] commandParams, String commandDisplayName, String commandAction);
 
     void createCustomResourceMapping(String resourceClassName, String mappingPath);
 

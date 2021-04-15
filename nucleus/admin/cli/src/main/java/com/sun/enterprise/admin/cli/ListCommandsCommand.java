@@ -32,7 +32,7 @@ import static com.sun.enterprise.admin.cli.CLIConstants.EOL;
 
 /**
  * A local list-commands command.
- *  
+ * 
  * @author bnevins
  * @author Bill Shannon
  */
@@ -52,26 +52,22 @@ public class ListCommandsCommand extends CLICommand {
     @Param(name = "remoteonly", optional = true)
     private boolean remoteOnly;
 
-    @Param(name = "command-pattern", primary = true, optional = true,
-	    multiple = true)
+    @Param(name = "command-pattern", primary = true, optional = true, multiple = true)
     private List<String> cmds;
 
     private static final String SPACES = "                                                            ";
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ListCommandsCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ListCommandsCommand.class);
 
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException {
+    protected void validate() throws CommandException, CommandValidationException {
         if (localOnly && remoteOnly) {
             throw new CommandException(strings.get("listCommands.notBoth"));
         }
     }
 
     @Override
-    public int executeCommand()
-            throws CommandException, CommandValidationException {
+    public int executeCommand() throws CommandException, CommandValidationException {
 
         // convert the patterns to regular expressions
         if (cmds != null)
@@ -84,8 +80,7 @@ public class ListCommandsCommand extends CLICommand {
          */
         if (!localOnly) {
             try {
-                remoteCommands = matchCommands(
-                    CLIUtil.getRemoteCommands(container, programOpts, env));
+                remoteCommands = matchCommands(CLIUtil.getRemoteCommands(container, programOpts, env));
             } catch (CommandException ce) {
                 /*
                  * Hide the real cause of the remote failure (almost certainly
@@ -101,7 +96,7 @@ public class ListCommandsCommand extends CLICommand {
             printLocalCommands();
         }
         if (!localOnly && !remoteOnly)
-            logger.info("");            // a blank line between them
+            logger.info(""); // a blank line between them
         if (!localOnly)
             printRemoteCommands();
         logger.info("");
@@ -121,8 +116,7 @@ public class ListCommandsCommand extends CLICommand {
             } else {
                 for (Pattern re : patterns)
                     if (re.matcher(cmd).find())
-                        if (!cmd.startsWith("_") ||
-                                re.pattern().startsWith("_"))
+                        if (!cmd.startsWith("_") || re.pattern().startsWith("_"))
                             matched.add(cmd);
             }
         }
@@ -131,9 +125,8 @@ public class ListCommandsCommand extends CLICommand {
     }
 
     /**
-     * Convert a shell style glob regular expression to a
-     * Java regular expression.
-     * Code from: http://stackoverflow.com/questions/1247772
+     * Convert a shell style glob regular expression to a Java regular expression. Code from:
+     * http://stackoverflow.com/questions/1247772
      */
     private String globToRegex(String line) {
         line = line.trim();
@@ -145,7 +138,7 @@ public class ListCommandsCommand extends CLICommand {
             strLen--;
         }
         if (line.endsWith("*")) {
-            line = line.substring(0, strLen-1);
+            line = line.substring(0, strLen - 1);
             //strLen--;
         }
         boolean escaping = false;
@@ -221,11 +214,9 @@ public class ListCommandsCommand extends CLICommand {
         return sb.toString();
     }
 
-
     void printLocalCommands() {
         if (localCommands.length == 0) {
-            logger.info(
-                            strings.get("listCommands.localCommandNoMatch"));
+            logger.info(strings.get("listCommands.localCommandNoMatch"));
             return;
         }
         logger.info(strings.get("listCommands.localCommandHeader"));
@@ -237,18 +228,17 @@ public class ListCommandsCommand extends CLICommand {
 
     void printRemoteCommands() {
         if (remoteCommands.length == 0) {
-            logger.info(
-                            strings.get("listCommands.remoteCommandNoMatch"));
+            logger.info(strings.get("listCommands.remoteCommandNoMatch"));
             return;
         }
 
         logger.info(strings.get("listCommands.remoteCommandHeader"));
-        
+
         // there are a LOT of remote commands -- make 2 columns
         int num = remoteCommands.length;
         int offset = (num / 2) + (num % 2);
         StringBuilder sb = new StringBuilder();
- 
+
         for (int i = 0; i < offset; i++) {
             sb.append(remoteCommands[i]);
             sb.append(justify(remoteCommands[i], 40));
@@ -260,7 +250,7 @@ public class ListCommandsCommand extends CLICommand {
         }
         logger.info(sb.toString());
     }
- 
+
     private String justify(String s, int width) {
         int numSpaces = width - s.length();
 
@@ -269,6 +259,6 @@ public class ListCommandsCommand extends CLICommand {
         else
             // the command-name is HUGE.  The formatting will be funky now but
             // truncating it is a bad idea.  Just add a one-space separator.
-            return " "; 
+            return " ";
     }
 }

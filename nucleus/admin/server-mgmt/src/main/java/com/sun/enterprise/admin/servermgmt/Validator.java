@@ -19,16 +19,13 @@ package com.sun.enterprise.admin.servermgmt;
 import com.sun.enterprise.util.i18n.StringManager;
 
 /**
- * Base class for all domain config validators. Validates the non-null ness
- * of a domain config entry and its type.
+ * Base class for all domain config validators. Validates the non-null ness of a domain config entry and its type.
  */
-public class Validator
-{
+public class Validator {
     /**
      * i18n strings manager object
      */
-    private static final StringManager strMgr = 
-        StringManager.getManager(Validator.class);
+    private static final StringManager strMgr = StringManager.getManager(Validator.class);
 
     /**
      * The accepted type of an entry.
@@ -42,12 +39,11 @@ public class Validator
 
     /**
      * Constructs new Validator object.
-     * @param name Name of an entry that is used in case of validation errors.
-     * If the name is null "" is used instead.
-     * @param type 
+     * 
+     * @param name Name of an entry that is used in case of validation errors. If the name is null "" is used instead.
+     * @param type
      */
-    public Validator(String name, Class type)
-    {
+    public Validator(String name, Class type) {
         this.name = (name != null) ? name : "";
         this.type = (type != null) ? type : java.lang.Object.class;
     }
@@ -55,30 +51,23 @@ public class Validator
     /**
      * Returns the name of the entry.
      */
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     /**
-     * Checks the validity of the given value for the entry. This method does
-     * basic checks such as null ness & type.
+     * Checks the validity of the given value for the entry. This method does basic checks such as null ness & type.
+     * 
      * @param obj
      * @Throws InvalidConfigException
      */
-    public void validate(Object obj) throws InvalidConfigException
-    {
-        if (obj == null)
-        {
-            throw new InvalidConfigException(
-                strMgr.getString("validator.invalid_value", getName(), null));
+    public void validate(Object obj) throws InvalidConfigException {
+        if (obj == null) {
+            throw new InvalidConfigException(strMgr.getString("validator.invalid_value", getName(), null));
         }
         Class c = obj.getClass();
-        if (!type.isAssignableFrom(c))
-        {
-            throw new InvalidConfigException(
-                strMgr.getString("validator.invalid_type", 
-                    getName(), type.getName(), c.getName()));
+        if (!type.isAssignableFrom(c)) {
+            throw new InvalidConfigException(strMgr.getString("validator.invalid_type", getName(), type.getName(), c.getName()));
         }
     }
 }

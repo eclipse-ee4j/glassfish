@@ -56,6 +56,6 @@ public interface Module extends Named, ConfigBeanProxy, PropertyBag {
             }
             return null;
         }
-    }    
+    }
 
 }

@@ -37,7 +37,7 @@ import com.sun.enterprise.util.HostAndPort;
  * @author Byron Nevins
  */
 public class GFLauncherInfo {
-    
+
     // BUG TODO get the def. domains dir from asenv 3/14/2008. Will this ever be done? 24/05/2020 
     private final static String DEFAULT_DOMAIN_PARENT_DIR = "domains";
     private final static String CONFIG_DIR = "config";
@@ -45,53 +45,52 @@ public class GFLauncherInfo {
 
     // Set by contructor
     private RuntimeType type;
-    
+
     /**
      * Incoming arguments from caller
      */
     private List<String> argsRaw = new ArrayList<>();
-    
+
     /**
      * Intermediate map form of arguments from caller
      */
     private Map<String, String> argsMap;
-    
+
     // Start set by arguments, final form of arguments from caller
-    
+
     private boolean debug; // --debug argument, e.g. ./asadmin start-domain --debug
     private boolean suspend; // --suspend
     private boolean verbose; // --verbose argument e.g. ./asadmin start-domain --verbose
     private boolean watchdog;
     private boolean upgrade;
-    
+
     private File domainParentDir;
     private File instanceRootDir;
     private File domainRootDir;
-    
+
     private String domainName;
     private String instanceName;
 
     // End set by arguments
-   
+
     private File configDir; // default [domainRootDir]/config
     private File configFile; // default [configDir]/domain.xml
-    
+
     File installDir; // default is [installDir]/modules/common-utils.jar/../..
-    
+
     private boolean valid;
-    
+
     private boolean dropInterruptedCommands; // "org.glassfish.job-manager.drop-interrupted-commands" system property
     private List<HostAndPort> adminAddresses; // admin host and port, e.g. localhost:4848
     private RespawnInfo respawnInfo;
-    
+
     // password tokens -- could be multiple -- launcher should *just* write them onto stdin of server
     final List<String> securityTokens = new ArrayList<>(); // note: it's package private
 
-    
     GFLauncherInfo(RuntimeType type) {
         this.type = type;
     }
-    
+
     /**
      * Add the string arguments in the order given.
      *
@@ -150,15 +149,15 @@ public class GFLauncherInfo {
     public void setDebug(boolean b) {
         debug = b;
     }
-    
+
     /**
-    *
-    * @return true if debug mode is on.
-    */
-   public boolean isDebug() {
-       return debug;
-   }
-    
+     *
+     * @return true if debug mode is on.
+     */
+    public boolean isDebug() {
+        return debug;
+    }
+
     /**
      * Starts the server in suspended debug mode
      * 
@@ -167,11 +166,11 @@ public class GFLauncherInfo {
     public void setSuspend(boolean suspend) {
         this.suspend = suspend;
     }
-    
+
     /**
-    *
-    * @return true if suspend debug mode is on.
-    */
+     *
+     * @return true if suspend debug mode is on.
+     */
     public boolean isSuspend() {
         return suspend;
     }
@@ -224,8 +223,6 @@ public class GFLauncherInfo {
     public boolean isWatchdog() {
         return watchdog;
     }
-
-    
 
     /**
      *
@@ -373,7 +370,7 @@ public class GFLauncherInfo {
         if (name == null || value == null) {
             throw new NullPointerException();
         }
-        
+
         securityTokens.add(name + "=" + value);
     }
 
@@ -397,7 +394,7 @@ public class GFLauncherInfo {
         setupFromArgs();
         finalSetup();
     }
-    
+
     private void setupFromArgs() {
         argsMap = argsToMap(argsRaw);
 
@@ -545,28 +542,28 @@ public class GFLauncherInfo {
 
         return files[0].getName();
     }
-    
+
     private File getFile(String key) {
         String value = getString(key);
 
         if (value == null) {
             return null;
         }
-        
+
         return new File(value);
     }
-    
+
     private boolean getBoolean(String key, boolean def) {
         ThreeStateBoolean booleanArgument = getBoolean(key);
-        
+
         if (booleanArgument.isTrue()) {
             return true;
         }
-        
+
         if (booleanArgument.isFalse()) {
             return false;
         }
-        
+
         return def;
     }
 
@@ -577,7 +574,7 @@ public class GFLauncherInfo {
         if (value != null) {
             return new ThreeStateBoolean(Boolean.valueOf(value));
         }
-        
+
         return new ThreeStateBoolean(null);
     }
 
@@ -592,12 +589,12 @@ public class GFLauncherInfo {
         if (argsMap.containsKey(key)) {
             return argsMap.get(key);
         }
-        
+
         key = "-" + key;
         if (argsMap.containsKey(key)) {
             return argsMap.get(key);
         }
-        
+
         key = "-" + key;
         if (argsMap.containsKey(key)) {
             return argsMap.get(key);
@@ -611,7 +608,7 @@ public class GFLauncherInfo {
     }
 
     final private static class ThreeStateBoolean {
-        
+
         final Boolean b;
 
         ThreeStateBoolean(Boolean b) {
@@ -629,7 +626,7 @@ public class GFLauncherInfo {
         boolean isFalse() {
             return !isNull() && !b.booleanValue();
         }
-        
+
     }
 
 }

@@ -29,15 +29,15 @@ import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.glassfish.admin.rest.resources.CommandResult;
 import org.glassfish.admin.rest.utils.JsonUtil;
 
-/** Provider for {@code AdminCommandState} event object used by 
- * {@code /management} interface. 
+/**
+ * Provider for {@code AdminCommandState} event object used by {@code /management} interface.
  *
  * @author martinmares
  */
 @Provider
-@Produces({MediaType.APPLICATION_JSON, "application/x-javascript"})
+@Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class AdminCommandStateCmdResultJsonProvider extends AdminCommandStateJsonProvider {
-    
+
     @Override
     protected void addActionReporter(ActionReporter ar, JSONObject json) throws JSONException {
         if (ar != null) {
@@ -55,5 +55,5 @@ public class AdminCommandStateCmdResultJsonProvider extends AdminCommandStateJso
             json.put("command-result", (JSONObject) JsonUtil.getJsonObject(cr));
         }
     }
-    
+
 }

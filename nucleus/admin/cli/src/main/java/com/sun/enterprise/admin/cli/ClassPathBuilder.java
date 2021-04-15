@@ -43,12 +43,11 @@ public class ClassPathBuilder implements Iterable<File> {
     }
 
     /**
-     * Allows one to write {@code add(f,"lib","a.jar")} instead of
-     * <tt>add(new File(new File(f,"lib"),"a.jar")</tt>
+     * Allows one to write {@code add(f,"lib","a.jar")} instead of <tt>add(new File(new File(f,"lib"),"a.jar")</tt>
      */
     public ClassPathBuilder add(File f, String... pathFragments) {
         for (String p : pathFragments)
-            f = new File(f,p);
+            f = new File(f, p);
         return add(f);
     }
 
@@ -57,7 +56,7 @@ public class ClassPathBuilder implements Iterable<File> {
      */
     public ClassPathBuilder addAll(File dir, FileFilter filter) {
         File[] files = dir.listFiles(filter);
-        if(files!=null)
+        if (files != null)
             addAll(files);
         return this;
     }
@@ -69,13 +68,13 @@ public class ClassPathBuilder implements Iterable<File> {
     }
 
     /**
-     * Formats the path in a single-argument format suitable
-     * after the "-cp" JVM option.
+     * Formats the path in a single-argument format suitable after the "-cp" JVM option.
      */
     public String toString() {
         StringBuilder buf = new StringBuilder();
         for (File f : elements) {
-            if(buf.length()>0)  buf.append(File.pathSeparatorChar);
+            if (buf.length() > 0)
+                buf.append(File.pathSeparatorChar);
             // this method is normally used to create an argument for another process,
             // so better resolve relative path to absolute path.
             buf.append(f.getAbsolutePath());

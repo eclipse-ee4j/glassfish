@@ -21,15 +21,16 @@ import java.io.*;
 import java.nio.charset.Charset;
 import org.jvnet.hk2.annotations.Service;
 
-/** DataProvider for String
+/**
+ * DataProvider for String
  *
  * @author mmares
  */
 @Service
 public class StringDataProvider implements DataProvider {
-    
+
     private Charset charset;
-    
+
     public StringDataProvider() {
         try {
             charset = Charset.forName("UTF-8");
@@ -55,5 +56,5 @@ public class StringDataProvider implements DataProvider {
         FileUtils.copy(stream, baos, 0);
         return new String(baos.toByteArray(), charset);
     }
-    
+
 }

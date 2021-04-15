@@ -29,24 +29,22 @@ import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-@ResourceNameConstraint(message="{resourcename.invalid.character}", payload=ResourcePool.class)
+@ResourceNameConstraint(message = "{resourcename.invalid.character}", payload = ResourcePool.class)
 public interface ResourcePool extends Resource, Payload {
     /**
      * Gets the value of the name property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_APP_REGEX, message="{resourcepool.invalid.name.key}", payload=ResourcePool.class)
+    @Pattern(regexp = NAME_APP_REGEX, message = "{resourcepool.invalid.name.key}", payload = ResourcePool.class)
     public String getName();
 
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) throws PropertyVetoException;
 
@@ -54,7 +52,7 @@ public interface ResourcePool extends Resource, Payload {
     String getIdentity();
 
     class Duck {
-        public static String getIdentity(ResourcePool resource){
+        public static String getIdentity(ResourcePool resource) {
             return resource.getName();
         }
     }
@@ -64,17 +62,15 @@ public interface ResourcePool extends Resource, Payload {
      *
      * Property to ping pool during creation.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute (defaultValue="false", dataType=Boolean.class)
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getPing();
 
     /**
      * Sets the value of the ping property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     void setPing(String value) throws PropertyVetoException;
 

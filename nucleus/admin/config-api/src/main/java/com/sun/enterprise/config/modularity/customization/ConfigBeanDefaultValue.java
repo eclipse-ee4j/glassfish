@@ -44,7 +44,6 @@ public class ConfigBeanDefaultValue {
         return location;
     }
 
-
     public String getXmlConfiguration() {
         return xmlConfiguration;
     }
@@ -66,22 +65,19 @@ public class ConfigBeanDefaultValue {
     }
 
     /**
-     * @param location               the location of the config bean which this configuration is intended to create
-     * @param configBeanClassName    what is the type of the config bean this configuration is intended for
-     * @param xmlConfiguration       the XML snippet that represent the mentioned configuration.
-     *                               The XML snippet should be a valid config bean configuration
-     * @param replaceCurrentIfExists should this config bean replace an already existing one or not.
-     *                               Note that, this parameter will be processed only if the configuration is intended
-     *                               for a named configuration element. The other condition for the replace to happen
-     *                               is that this configuration get the chance to be processed which means it should
-     *                               be part of an array of config beans intended for a service that has no configuration
-     *                               present in the domain.xml
+     * @param location the location of the config bean which this configuration is intended to create
+     * @param configBeanClassName what is the type of the config bean this configuration is intended for
+     * @param xmlConfiguration the XML snippet that represent the mentioned configuration. The XML snippet should be a valid
+     * config bean configuration
+     * @param replaceCurrentIfExists should this config bean replace an already existing one or not. Note that, this
+     * parameter will be processed only if the configuration is intended for a named configuration element. The other
+     * condition for the replace to happen is that this configuration get the chance to be processed which means it should
+     * be part of an array of config beans intended for a service that has no configuration present in the domain.xml
      * @param customizationTokens
-     * @param <U>                    Type of the config bean which is an extension of ConfigBeanProxy
+     * @param <U> Type of the config bean which is an extension of ConfigBeanProxy
      */
-    public <U extends ConfigBeanProxy> ConfigBeanDefaultValue(String location, String configBeanClassName,
-                                                              String xmlConfiguration, boolean replaceCurrentIfExists,
-                                                              List<ConfigCustomizationToken> customizationTokens) {
+    public <U extends ConfigBeanProxy> ConfigBeanDefaultValue(String location, String configBeanClassName, String xmlConfiguration,
+            boolean replaceCurrentIfExists, List<ConfigCustomizationToken> customizationTokens) {
         this.location = location;
         this.xmlConfiguration = xmlConfiguration;
         this.configBeanClassName = configBeanClassName;
@@ -89,27 +85,23 @@ public class ConfigBeanDefaultValue {
         this.customizationTokens = customizationTokens;
     }
 
-
     /**
-     * @param location                  the location of the config bean which this configuration is intended to create
-     * @param configBeanClassName       what is the type of the config bean this configuration is intended for
-     * @param xmlSnippetFileInputStream An InputStream for the actual configuration which might be a file or anything
-     *                                  other InputStream to read the configuration from.
-     * @param replaceCurrentIfExists    should this config bean replace an already existing one or not. Note that,
-     *                                  this parameter will be processed only if the configuration is intended for a
-     *                                  named configuration element. The other condition for the replace to happen is
-     *                                  that this configuration get the chance to be processed which means it should be
-     *                                  part of an array of config beans intended for a service that has no configuration
-     *                                  present in the domain.xml
+     * @param location the location of the config bean which this configuration is intended to create
+     * @param configBeanClassName what is the type of the config bean this configuration is intended for
+     * @param xmlSnippetFileInputStream An InputStream for the actual configuration which might be a file or anything other
+     * InputStream to read the configuration from.
+     * @param replaceCurrentIfExists should this config bean replace an already existing one or not. Note that, this
+     * parameter will be processed only if the configuration is intended for a named configuration element. The other
+     * condition for the replace to happen is that this configuration get the chance to be processed which means it should
+     * be part of an array of config beans intended for a service that has no configuration present in the domain.xml
      * @param customizationTokens
-     * @param <U>                       Type of the config bean which is an extension of ConfigBeanProxy
-     * @throws Exception If the stream is not readable or closing the stream throws exception constructor
-     *                   will fail with the exception.
+     * @param <U> Type of the config bean which is an extension of ConfigBeanProxy
+     * @throws Exception If the stream is not readable or closing the stream throws exception constructor will fail with the
+     * exception.
      */
     public <U extends ConfigBeanProxy> ConfigBeanDefaultValue(String location, String configBeanClassName,
-                                                              InputStream xmlSnippetFileInputStream,
-                                                              boolean replaceCurrentIfExists,
-                                                              List<ConfigCustomizationToken> customizationTokens) throws Exception {
+            InputStream xmlSnippetFileInputStream, boolean replaceCurrentIfExists, List<ConfigCustomizationToken> customizationTokens)
+            throws Exception {
         this.location = location;
         this.configBeanClassName = configBeanClassName;
         this.xmlConfiguration = streamToString(xmlSnippetFileInputStream, "utf-8");
@@ -149,7 +141,6 @@ public class ConfigBeanDefaultValue {
 
     }
 
-
     /**
      * @param ins the InputStream to read and turn it into String
      * @return String equivalent of the stream
@@ -162,10 +153,7 @@ public class ConfigBeanDefaultValue {
 
     @Override
     public String toString() {
-        return "ConfigBeanDefaultValue{" +
-                "location='" + location + '\'' +
-                ", configBeanClassName='" + configBeanClassName + '\'' +
-                ", replaceCurrentIfExists=" + replaceCurrentIfExists +
-                '}';
+        return "ConfigBeanDefaultValue{" + "location='" + location + '\'' + ", configBeanClassName='" + configBeanClassName + '\''
+                + ", replaceCurrentIfExists=" + replaceCurrentIfExists + '}';
     }
 }

@@ -17,29 +17,24 @@
 package com.sun.enterprise.admin.util;
 
 public class JMXConnectorConfig {
-    
-    private String host=null;
-    private String port=null;
-    private String user=null;
-    private char[] password=null;
-    private String protocol=null;    
-    
 
-    public JMXConnectorConfig() {}
-    
-    
-    
-    public JMXConnectorConfig(String host, String port, 
-        String user, char[] password, String protocol)
-    {
-        this.host=host;
-        this.port=port;
-        this.user=user;
-        this.password=password;
-        this.protocol=protocol;
+    private String host = null;
+    private String port = null;
+    private String user = null;
+    private char[] password = null;
+    private String protocol = null;
+
+    public JMXConnectorConfig() {
     }
 
-    
+    public JMXConnectorConfig(String host, String port, String user, char[] password, String protocol) {
+        this.host = host;
+        this.port = port;
+        this.user = user;
+        this.password = password;
+        this.protocol = protocol;
+    }
+
     public String getHost() {
         return host;
     }
@@ -47,7 +42,7 @@ public class JMXConnectorConfig {
     public String getPort() {
         return port;
     }
-    
+
     public String getUser() {
         return user;
     }

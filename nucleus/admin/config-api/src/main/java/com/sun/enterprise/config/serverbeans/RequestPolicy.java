@@ -26,68 +26,56 @@ import java.io.Serializable;
 import jakarta.validation.constraints.Pattern;
 
 /**
- * Used to define the authentication policy requirements associated with the
- * request processing performed by an authentication provider (i.e. when a
- * client provider's ClientAuthModule.initiateRequest() method is called or
- * when a server provider's ServerAuthModule.validateRequest() method is called)
+ * Used to define the authentication policy requirements associated with the request processing performed by an
+ * authentication provider (i.e. when a client provider's ClientAuthModule.initiateRequest() method is called or when a
+ * server provider's ServerAuthModule.validateRequest() method is called)
  */
 
 /* @XmlType(name = "") */
 
 @Configured
-public interface RequestPolicy extends ConfigBeanProxy  {
-    
+public interface RequestPolicy extends ConfigBeanProxy {
+
     /**
      * Gets the value of the authSource property.
      * 
-     * Defines a requirement for message layer sender authentication (e.g.
-     * username password) or content authentication (e.g. digital signature)
+     * Defines a requirement for message layer sender authentication (e.g. username password) or content authentication
+     * (e.g. digital signature)
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
-    @Pattern(regexp="(sender|content|username-password)")
+    @Pattern(regexp = "(sender|content|username-password)")
     public String getAuthSource();
 
     /**
      * Sets the value of the authSource property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setAuthSource(String value) throws PropertyVetoException;
 
     /**
-     * Specifies whether recipient authentication occurs before or after content 
-     * authentication. Allowed values are 'before-content' and 'after-content'.
+     * Specifies whether recipient authentication occurs before or after content authentication. Allowed values are
+     * 'before-content' and 'after-content'.
      *
-     * Defines a requirement for message layer authentication of the reciever of
-     * a message to its sender (e.g. by XML encryption).
-     * before-content
-     *      indicates that recipient authentication (e.g. encryption) is to
-     *      occur before any content authentication (e.g. encrypt then sign)
-     *      with respect to the target of the containing auth-policy.
-     * after-content
-	 *      indicates that recipient authentication (e.g. encryption) is to
-     *      occur after any content authentication (e.g. sign then encrypt) with
-     *      respect to the target of the containing auth-policy
+     * Defines a requirement for message layer authentication of the reciever of a message to its sender (e.g. by XML
+     * encryption). before-content indicates that recipient authentication (e.g. encryption) is to occur before any content
+     * authentication (e.g. encrypt then sign) with respect to the target of the containing auth-policy. after-content
+     * indicates that recipient authentication (e.g. encryption) is to occur after any content authentication (e.g. sign
+     * then encrypt) with respect to the target of the containing auth-policy
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
-    @Pattern(regexp="(before-content|after-content)")
+    @Pattern(regexp = "(before-content|after-content)")
     public String getAuthRecipient();
 
     /**
      * Sets the value of the authRecipient property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setAuthRecipient(String value) throws PropertyVetoException;
-
-
 
 }

@@ -26,15 +26,12 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 2/8/12
- * Time: 4:11 PM
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: naman Date: 2/8/12 Time: 4:11 PM To change this template use File | Settings | File
+ * Templates.
  */
 
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, TYPE})
+@Target({ METHOD, FIELD, TYPE })
 @Documented
 @Constraint(validatedBy = UniqueResourceNameValidator.class)
 public @interface UniqueResourceNameConstraint {

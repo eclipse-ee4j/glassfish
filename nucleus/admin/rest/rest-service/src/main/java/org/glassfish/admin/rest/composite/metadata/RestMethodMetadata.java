@@ -42,6 +42,7 @@ import org.glassfish.admin.rest.utils.Util;
 
 /**
  * This class encapsulates the metadata for the specified REST resource method.
+ * 
  * @author jdlee
  */
 public class RestMethodMetadata {
@@ -52,13 +53,13 @@ public class RestMethodMetadata {
      */
     private Type requestPayload;
     /**
-     * The type of the response entity.  If <code>isCollection</code> is true, this value reflects the type of the items
-     * in the collection.
+     * The type of the response entity. If <code>isCollection</code> is true, this value reflects the type of the items in
+     * the collection.
      */
     private Type returnPayload;
     /**
-     * Specifies whether or not the return payload is a collection (in which case <code>returnPayload</code> gives the
-     * type of the items in the collection) or not.
+     * Specifies whether or not the return payload is a collection (in which case <code>returnPayload</code> gives the type
+     * of the items in the collection) or not.
      */
     private boolean isCollection = false;
     private String path;
@@ -85,9 +86,9 @@ public class RestMethodMetadata {
     }
 
     private <T> T getAnnotation(Class<T> annoClass, Method method) {
-        T annotation = (T)method.getAnnotation((Class<Annotation>)annoClass);
+        T annotation = (T) method.getAnnotation((Class<Annotation>) annoClass);
         if (annotation == null) {
-            annotation = (T)method.getDeclaringClass().getAnnotation((Class<Annotation>)annoClass);
+            annotation = (T) method.getDeclaringClass().getAnnotation((Class<Annotation>) annoClass);
         }
 
         return annotation;
@@ -144,6 +145,7 @@ public class RestMethodMetadata {
 
     /**
      * Build and return a JSON object representing the metadata for the resource method
+     * 
      * @return
      * @throws JSONException
      */
@@ -195,10 +197,11 @@ public class RestMethodMetadata {
     }
 
     /**
-     * Get the return type of the method.  If the return type is a generic type, then extract the first generic type
-     * from the declaration via reflection.  This method does not take into account types with multiple generic types,
-     * but, given the style guide, this should not be an issue.  If the style guide is modified to allow non-RestModel and
+     * Get the return type of the method. If the return type is a generic type, then extract the first generic type from the
+     * declaration via reflection. This method does not take into account types with multiple generic types, but, given the
+     * style guide, this should not be an issue. If the style guide is modified to allow non-RestModel and
      * non-RestCollection returns (for example), this may need to be modified.
+     * 
      * @param method
      * @return
      */
@@ -210,7 +213,7 @@ public class RestMethodMetadata {
             if (RestCollection.class.isAssignableFrom((Class) pt.getRawType())) {
                 isCollection = true;
                 value = Util.getFirstGenericType(grt);
-            } else if (RestModel.class.isAssignableFrom((Class)pt.getRawType())) {
+            } else if (RestModel.class.isAssignableFrom((Class) pt.getRawType())) {
                 value = Util.getFirstGenericType(grt);
             }
         }
@@ -225,7 +228,7 @@ public class RestMethodMetadata {
             ParameterizedType pt = (ParameterizedType) paramType;
             Class<?> first = Util.getFirstGenericType(paramType);
             if (RestModel.class.isAssignableFrom(first) || RestCollection.class.isAssignableFrom(first)) {
-//            if ((first instanceof RestModel.class) || (first instanceof RestCollection.class)) {
+                //            if ((first instanceof RestModel.class) || (first instanceof RestCollection.class)) {
                 type = first;
             } else {
                 type = pt;
@@ -247,10 +250,11 @@ public class RestMethodMetadata {
     }
 
     /**
-     * Process the parameters for the method.  Any parameter marked <code>@PathParam</code> is ignored, since JAX-RS
-     * handles setting that value, meaning its presence need not be exposed to the client.  Any parameter marked with
-     * <code>@QueryParameter</code> is stored in the <code>queryParameter</code> list.  Anything left is considered the
-     * type of the request body. There should be only one of these.
+     * Process the parameters for the method. Any parameter marked <code>@PathParam</code> is ignored, since JAX-RS handles
+     * setting that value, meaning its presence need not be exposed to the client. Any parameter marked with
+     * <code>@QueryParameter</code> is stored in the <code>queryParameter</code> list. Anything left is considered the type
+     * of the request body. There should be only one of these.
+     * 
      * @param method
      */
     private void processParameters(Method method) {
@@ -263,15 +267,10 @@ public class RestMethodMetadata {
             boolean isPathParam = false;
             Type paramType = paramTypes[i];
             for (Annotation annotation : paramAnnos[i]) {
-                processed =
-                    (annotation instanceof Suspended) ||
-                    (annotation instanceof PathParam);
+                processed = (annotation instanceof Suspended) || (annotation instanceof PathParam);
 
                 if (annotation instanceof QueryParam) {
-                    queryParameters.add(new ParamMetadata(context,
-                            paramType,
-                            ((QueryParam)annotation).value(),
-                            paramAnnos[i]));
+                    queryParameters.add(new ParamMetadata(context, paramType, ((QueryParam) annotation).value(), paramAnnos[i]));
                     processed = true;
                 }
             }
@@ -282,8 +281,9 @@ public class RestMethodMetadata {
     }
 
     /**
-     * This method will analyze the getters of the given class to determine its properties.  Currently, for simplicity's
+     * This method will analyze the getters of the given class to determine its properties. Currently, for simplicity's
      * sake, only getters are checked.
+     * 
      * @param type
      * @return
      * @throws JSONException
@@ -293,12 +293,12 @@ public class RestMethodMetadata {
         Class<?> clazz;
         Map<String, ParamMetadata> map = new HashMap<String, ParamMetadata>();
         if (Util.isGenericType(type)) {
-            ParameterizedType pt = (ParameterizedType)type;
-            clazz = (Class<?>)pt.getRawType();
-//            if (RestModel.class.isAssignableFrom(clazz) || RestCollection.class.isAssignableFrom(clazz)) {
-//                Object model = CompositeUtil.instance().getModel(clazz);
-//                clazz = model.getClass();
-//            }
+            ParameterizedType pt = (ParameterizedType) type;
+            clazz = (Class<?>) pt.getRawType();
+            //            if (RestModel.class.isAssignableFrom(clazz) || RestCollection.class.isAssignableFrom(clazz)) {
+            //                Object model = CompositeUtil.instance().getModel(clazz);
+            //                clazz = model.getClass();
+            //            }
         } else {
             clazz = (Class<?>) type;
         }
@@ -323,21 +323,20 @@ public class RestMethodMetadata {
     protected String getTypeString(Type clazz) {
         StringBuilder sb = new StringBuilder();
         if (Util.isGenericType(clazz)) {
-            ParameterizedType pt = (ParameterizedType)clazz;
-            sb.append(((Class<?>)pt.getRawType()).getSimpleName());
-            Type [] typeArgs = pt.getActualTypeArguments();
+            ParameterizedType pt = (ParameterizedType) clazz;
+            sb.append(((Class<?>) pt.getRawType()).getSimpleName());
+            Type[] typeArgs = pt.getActualTypeArguments();
             if ((typeArgs != null) && (typeArgs.length >= 1)) {
                 String sep = "";
                 sb.append("<");
                 for (Type arg : typeArgs) {
-                    sb.append(sep)
-                            .append(((Class<?>)arg).getSimpleName());
-                    sep=",";
+                    sb.append(sep).append(((Class<?>) arg).getSimpleName());
+                    sep = ",";
                 }
                 sb.append(">");
             }
         } else {
-            sb.append(((Class<?>)clazz).getSimpleName());
+            sb.append(((Class<?>) clazz).getSimpleName());
         }
         return sb.toString();
     }

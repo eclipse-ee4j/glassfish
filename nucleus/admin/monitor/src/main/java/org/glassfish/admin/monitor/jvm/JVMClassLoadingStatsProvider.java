@@ -28,9 +28,9 @@ import org.glassfish.gmbal.ManagedObject;
 /* jvm.class-loading-system */
 // v2: com.sun.appserv:name=class-loading-system,type=class-loading-system,category=monitor,server=server
 // v3: 
-@AMXMetadata(type="class-loading-system-mon", group="monitoring")
+@AMXMetadata(type = "class-loading-system-mon", group = "monitoring")
 @ManagedObject
-@Description( "JVM Class Loading Statistics" )
+@Description("JVM Class Loading Statistics")
 public class JVMClassLoadingStatsProvider {
 
     private ClassLoadingMXBean clBean = ManagementFactory.getClassLoadingMXBean();
@@ -42,22 +42,22 @@ public class JVMClassLoadingStatsProvider {
     private CountStatisticImpl unloadedClassCount = new CountStatisticImpl("UnLoadedClassCount", CountStatisticImpl.UNIT_COUNT,
             "Total number of classes unloaded since the Java virtual machine has started execution");
 
-    @ManagedAttribute(id="loadedclass-count")
-    @Description( "number of classes currently loaded in the JVM" )
+    @ManagedAttribute(id = "loadedclass-count")
+    @Description("number of classes currently loaded in the JVM")
     public CountStatistic getLoadedClassCount() {
         loadedClassCount.setCount(clBean.getLoadedClassCount());
         return loadedClassCount;
     }
 
-    @ManagedAttribute(id="totalloadedclass-count")
-    @Description( "total number of classes loaded since the JVM started" )
+    @ManagedAttribute(id = "totalloadedclass-count")
+    @Description("total number of classes loaded since the JVM started")
     public CountStatistic getTotalLoadedClassCount() {
         totalLoadedClassCount.setCount(clBean.getTotalLoadedClassCount());
         return totalLoadedClassCount;
     }
 
-    @ManagedAttribute(id="unloadedclass-count")
-    @Description( "total number of classes unloaded since the JVM started" )
+    @ManagedAttribute(id = "unloadedclass-count")
+    @Description("total number of classes unloaded since the JVM started")
     public CountStatistic getUnloadedClassCount() {
         unloadedClassCount.setCount(clBean.getUnloadedClassCount());
         return unloadedClassCount;

@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import org.glassfish.admin.rest.RestLogging;
 
-
 /**
  * JSON provider for OptionsResult.
  *
@@ -68,7 +67,7 @@ public class OptionsResultJsonProvider extends BaseProvider<OptionsResult> {
                 MethodMetaData methodMetaData = proxy.getMethodMetaData(methodName);
                 JSONObject method = new JSONObject();
                 method.put(NAME, methodName);
-//                method.put(QUERY_PARAMETERS, getQueryParams(methodMetaData));
+                //                method.put(QUERY_PARAMETERS, getQueryParams(methodMetaData));
                 method.put(MESSAGE_PARAMETERS, getMessageParams(methodMetaData));
                 arr.put(method);
             } catch (JSONException ex) {
@@ -79,22 +78,22 @@ public class OptionsResultJsonProvider extends BaseProvider<OptionsResult> {
         return arr;
     }
 
-//    //get json representation for the method query parameters
-//    private JSONObject getQueryParams(MethodMetaData methodMetaData) throws JSONException {
-//        JSONObject obj = new JSONObject();
-//        if (methodMetaData.sizeQueryParamMetaData() > 0) {
-//            Set<String> queryParams = methodMetaData.queryParams();
-//            Iterator<String> iterator = queryParams.iterator();
-//            String queryParam;
-//            while (iterator.hasNext()) {
-//                queryParam = iterator.next();
-//                ParameterMetaData parameterMetaData = methodMetaData.getQueryParamMetaData(queryParam);
-//                obj.put(queryParam, getParameter(parameterMetaData));
-//            }
-//        }
-//
-//        return obj;
-//    }
+    //    //get json representation for the method query parameters
+    //    private JSONObject getQueryParams(MethodMetaData methodMetaData) throws JSONException {
+    //        JSONObject obj = new JSONObject();
+    //        if (methodMetaData.sizeQueryParamMetaData() > 0) {
+    //            Set<String> queryParams = methodMetaData.queryParams();
+    //            Iterator<String> iterator = queryParams.iterator();
+    //            String queryParam;
+    //            while (iterator.hasNext()) {
+    //                queryParam = iterator.next();
+    //                ParameterMetaData parameterMetaData = methodMetaData.getQueryParamMetaData(queryParam);
+    //                obj.put(queryParam, getParameter(parameterMetaData));
+    //            }
+    //        }
+    //
+    //        return obj;
+    //    }
 
     private JSONObject getParameter(ParameterMetaData parameterMetaData) throws JSONException {
         JSONObject result = new JSONObject();

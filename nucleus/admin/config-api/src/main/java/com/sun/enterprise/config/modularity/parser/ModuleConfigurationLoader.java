@@ -42,14 +42,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Containing shared functionalists between different derived classes like ConfigSnippetLoader and so on.
- * Shared functionalists includes finding, loading the configuration and creating a ConFigBean from it.
+ * Containing shared functionalists between different derived classes like ConfigSnippetLoader and so on. Shared
+ * functionalists includes finding, loading the configuration and creating a ConFigBean from it.
  *
  * @author Masoud Kalali
  */
 @Service
 public class ModuleConfigurationLoader<C extends ConfigBeanProxy, U extends ConfigBeanProxy> {
-    
+
     @Inject
     private ServiceLocator serviceLocator;
 
@@ -99,9 +99,8 @@ public class ModuleConfigurationLoader<C extends ConfigBeanProxy, U extends Conf
             try {
                 U configBeanInstance = configExtensionType.cast(extension);
                 if (configBeanInstance instanceof ConfigExtension) {
-                    ServiceLocatorUtilities.addOneDescriptor(serviceLocator,
-                            BuilderHelper.createConstantDescriptor(configBeanInstance, ServerEnvironment.DEFAULT_INSTANCE_NAME,
-                                    ConfigSupport.getImpl(configBeanInstance).getProxyType()));
+                    ServiceLocatorUtilities.addOneDescriptor(serviceLocator, BuilderHelper.createConstantDescriptor(configBeanInstance,
+                            ServerEnvironment.DEFAULT_INSTANCE_NAME, ConfigSupport.getImpl(configBeanInstance).getProxyType()));
                 }
                 return configBeanInstance;
             } catch (Exception e) {
@@ -111,7 +110,6 @@ public class ModuleConfigurationLoader<C extends ConfigBeanProxy, U extends Conf
         return null;
     }
 
-
     protected <U extends ConfigBeanProxy> void addConfigBeanFor(Class<U> extensionType) {
         if (!RankedConfigBeanProxy.class.isAssignableFrom(extensionType)) {
             if (getExtension(extensionType, extensionOwner) != null) {
@@ -119,10 +117,9 @@ public class ModuleConfigurationLoader<C extends ConfigBeanProxy, U extends Conf
             }
         }
         StartupContext context = serviceLocator.getService(StartupContext.class);
-        List<ConfigBeanDefaultValue> configBeanDefaultValueList =
-                configModularityUtils.getDefaultConfigurations(extensionType, configModularityUtils.getRuntimeTypePrefix(context));
+        List<ConfigBeanDefaultValue> configBeanDefaultValueList = configModularityUtils.getDefaultConfigurations(extensionType,
+                configModularityUtils.getRuntimeTypePrefix(context));
         configurationParser.parseAndSetConfigBean(configBeanDefaultValueList);
     }
-
 
 }

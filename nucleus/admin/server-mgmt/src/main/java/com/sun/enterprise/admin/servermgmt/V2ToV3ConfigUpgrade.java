@@ -46,8 +46,9 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
     Configs configs;
 
     /**
-     * Report the JavaConfig beans for each config. <p> Lets the caller command
-     * prepare access checks for security authorization.
+     * Report the JavaConfig beans for each config.
+     * <p>
+     * Lets the caller command prepare access checks for security authorization.
      *
      * @return
      */
@@ -64,9 +65,7 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
     @Override
     public void postConstruct() {
         // the 'prevent' defense
-        if (configs == null
-                || configs.getConfig() == null
-                || configs.getConfig().isEmpty()) {
+        if (configs == null || configs.getConfig() == null || configs.getConfig().isEmpty()) {
             return;
         }
 
@@ -84,8 +83,7 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
                 doRemovals();
                 ConfigSupport.apply(new JavaConfigChanger(), jc);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             getLogger().log(Level.SEVERE, JVM_OPTION_UPGRADE_FAILURE, e);
             throw new RuntimeException(e);
         }
@@ -106,8 +104,7 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
         doAdditionsFrom(ADD_LIST);
         if (isDas) {
             doAdditionsFrom(ADD_LIST_DAS);
-        }
-        else {
+        } else {
             doAdditionsFrom(ADD_LIST_NOT_DAS);
         }
     }
@@ -130,42 +127,25 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
     private boolean ok(String s) {
         return s != null && s.length() > 0;
     }
+
     private List<String> oldJvmOptions = null;
     private final List<String> newJvmOptions = new ArrayList<String>();
-    private static final String[] BASE_REMOVAL_LIST = new String[]{
-        "-Djavax.management.builder.initial",
-        "-Dsun.rmi.dgc.server.gcInterval",
-        "-Dsun.rmi.dgc.client.gcInterval",
-        "-Dcom.sun.enterprise.taglibs",
-        "-Dcom.sun.enterprise.taglisteners",
-        "-XX:LogFile",};
+    private static final String[] BASE_REMOVAL_LIST = new String[] { "-Djavax.management.builder.initial",
+            "-Dsun.rmi.dgc.server.gcInterval", "-Dsun.rmi.dgc.client.gcInterval", "-Dcom.sun.enterprise.taglibs",
+            "-Dcom.sun.enterprise.taglisteners", "-XX:LogFile", };
     // these are added to all configs
-    private static final String[] ADD_LIST = new String[]{
-        "-XX:+UnlockDiagnosticVMOptions",
-        "-XX:+LogVMOutput",
-        "-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log",
-        "-Djava.awt.headless=true",
-        "-DANTLR_USE_DIRECT_CLASS_LOADING=true",
-        "-Dosgi.shell.telnet.maxconn=1",
-        "-Dosgi.shell.telnet.ip=127.0.0.1",
-        "-Dgosh.args=--noshutdown -c noop=true",
-        "-Dfelix.fileinstall.dir=${com.sun.aas.installRoot}/modules/autostart/",
-        "-Dfelix.fileinstall.poll=5000",
-        "-Dfelix.fileinstall.debug=3",
-        "-Dfelix.fileinstall.bundles.new.start=true",
-        "-Dfelix.fileinstall.bundles.startTransient=true",
-        "-Dfelix.fileinstall.disableConfigSave=false",
-        "-Dfelix.fileinstall.log.level=2",
-        "-Djavax.management.builder.initial=com.sun.enterprise.v3.admin.AppServerMBeanServerBuilder",
-        "-Dorg.glassfish.web.rfc2109_cookie_names_enforced=false"};
+    private static final String[] ADD_LIST = new String[] { "-XX:+UnlockDiagnosticVMOptions", "-XX:+LogVMOutput",
+            "-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log", "-Djava.awt.headless=true", "-DANTLR_USE_DIRECT_CLASS_LOADING=true",
+            "-Dosgi.shell.telnet.maxconn=1", "-Dosgi.shell.telnet.ip=127.0.0.1", "-Dgosh.args=--noshutdown -c noop=true",
+            "-Dfelix.fileinstall.dir=${com.sun.aas.installRoot}/modules/autostart/", "-Dfelix.fileinstall.poll=5000",
+            "-Dfelix.fileinstall.debug=3", "-Dfelix.fileinstall.bundles.new.start=true", "-Dfelix.fileinstall.bundles.startTransient=true",
+            "-Dfelix.fileinstall.disableConfigSave=false", "-Dfelix.fileinstall.log.level=2",
+            "-Djavax.management.builder.initial=com.sun.enterprise.v3.admin.AppServerMBeanServerBuilder",
+            "-Dorg.glassfish.web.rfc2109_cookie_names_enforced=false" };
     // these are added to DAS only
-    private static final String[] ADD_LIST_DAS = new String[]{
-        "-Dosgi.shell.telnet.port=6666"
-    };
+    private static final String[] ADD_LIST_DAS = new String[] { "-Dosgi.shell.telnet.port=6666" };
     // these are added to instances
-    private static final String[] ADD_LIST_NOT_DAS = new String[]{
-        "-Dosgi.shell.telnet.port=${OSGI_SHELL_TELNET_PORT}"
-    };
+    private static final String[] ADD_LIST_NOT_DAS = new String[] { "-Dosgi.shell.telnet.port=${OSGI_SHELL_TELNET_PORT}" };
     private static final List<String> REMOVAL_LIST = new ArrayList<String>();
 
     static {

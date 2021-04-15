@@ -23,10 +23,8 @@ import org.jvnet.hk2.config.Element;
 
 import java.beans.PropertyVetoException;
 
-
 /**
- * Specifies the SSL configuration when the Application Server is making
- * outbound IIOP/SSL connections.   
+ * Specifies the SSL configuration when the Application Server is making outbound IIOP/SSL connections.
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -39,20 +37,16 @@ public interface SslClientConfig extends ConfigBeanProxy {
     /**
      * Gets the value of the ssl property.
      *
-     * @return possible object is
-     *         {@link Ssl }
+     * @return possible object is {@link Ssl }
      */
-    @Element(required=true)
+    @Element(required = true)
     Ssl getSsl();
 
     /**
      * Sets the value of the ssl property.
      *
-     * @param value allowed object is
-     *              {@link Ssl }
+     * @param value allowed object is {@link Ssl }
      */
     void setSsl(Ssl value) throws PropertyVetoException;
-
-
 
 }

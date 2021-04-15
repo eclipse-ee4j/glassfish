@@ -47,15 +47,11 @@ import jakarta.inject.Inject;
 
 @Service(name = "generate-domain-schema")
 @PerLookup
-@ExecuteOn(value={RuntimeType.DAS})
-@TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
-@RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, // TODO: Should probably be GET
-        path="generate-domain-schema", 
-        description="generate-domain-schema")
-})
-@AccessRequired(resource="domain", action="generate-schema")
+@ExecuteOn(value = { RuntimeType.DAS })
+@TargetType(value = { CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER })
+@RestEndpoints({ @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.POST, // TODO: Should probably be GET
+        path = "generate-domain-schema", description = "generate-domain-schema") })
+@AccessRequired(resource = "domain", action = "generate-schema")
 public class GenerateDomainSchema implements AdminCommand {
     @Inject
     private Domain domain;
@@ -63,7 +59,7 @@ public class GenerateDomainSchema implements AdminCommand {
     private ServiceLocator habitat;
     @Param(name = "format", defaultValue = "html", optional = true)
     private String format;
-    private static final Logger logger =  Logger.getLogger(GenerateDomainSchema.class.getPackage().getName());;
+    private static final Logger logger = Logger.getLogger(GenerateDomainSchema.class.getPackage().getName());;
     File docDir;
     private Map<String, ClassDef> classDefs = new HashMap<String, ClassDef>();
     @Param(name = "showSubclasses", defaultValue = "false", optional = true)
@@ -150,8 +146,6 @@ public class GenerateDomainSchema implements AdminCommand {
         int start = value.startsWith("()") ? 2 : 0;
         start = value.substring(start).startsWith("L") ? start + 1 : start;
         final int end = value.endsWith(";") ? value.length() - 1 : value.length();
-        return value
-            .substring(start, end)
-            .replace('/', '.');
+        return value.substring(start, end).replace('/', '.');
     }
 }

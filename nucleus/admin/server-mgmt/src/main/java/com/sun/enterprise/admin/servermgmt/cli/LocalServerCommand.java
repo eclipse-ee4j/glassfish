@@ -40,12 +40,11 @@ import com.sun.enterprise.util.io.ServerDirs;
 import java.util.logging.Level;
 
 /**
- * A class that's supposed to capture all the behavior common to operation
- * on a "local" server.
- * It's getting fairly complicated thus the "section headers" comments.
- * This class plays two roles, <UL><LI>a place for putting common code - which
- * are final methods.  A parent class that is communicating with its own unknown
- * sub-classes.  These are non-final methods
+ * A class that's supposed to capture all the behavior common to operation on a "local" server. It's getting fairly
+ * complicated thus the "section headers" comments. This class plays two roles,
+ * <UL>
+ * <LI>a place for putting common code - which are final methods. A parent class that is communicating with its own
+ * unknown sub-classes. These are non-final methods
  *
  * @author Byron Nevins
  */
@@ -54,9 +53,9 @@ public abstract class LocalServerCommand extends CLICommand {
     /// Section:  protected methods that are OK to override
     ////////////////////////////////////////////////////////////////
     /**
-     * Override this method and return false to turn-off the file validation.
-     * E.g. it demands that config/domain.xml be present.  In special cases like
-     * Synchronization -- this is how you turn off the testing.
+     * Override this method and return false to turn-off the file validation. E.g. it demands that config/domain.xml be
+     * present. In special cases like Synchronization -- this is how you turn off the testing.
+     * 
      * @return true - do the checks, false - don't do the checks
      */
     protected boolean checkForSpecialFiles() {
@@ -67,9 +66,8 @@ public abstract class LocalServerCommand extends CLICommand {
     /// Section:  protected methods that are notOK to override.
     ////////////////////////////////////////////////////////////////
     /**
-     * Returns the admin address of the local domain. Note that this method
-     * should be called only when you own the domain that is available on
-     * an accessible file system.
+     * Returns the admin address of the local domain. Note that this method should be called only when you own the domain
+     * that is available on an accessible file system.
      *
      * @return HostAndPort object with admin server address
      * @throws CommandException in case of parsing errors
@@ -80,15 +78,13 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     /**
-     * Returns the admin address of a particular server. Note that this method
-     * should be called only when you own the server that is available on
-     * an accessible file system.
+     * Returns the admin address of a particular server. Note that this method should be called only when you own the server
+     * that is available on an accessible file system.
      *
      * @return HostAndPort object with admin server address
      * @throws CommandException in case of parsing errors
      */
-    protected final HostAndPort getAdminAddress(String serverName)
-            throws CommandException {
+    protected final HostAndPort getAdminAddress(String serverName) throws CommandException {
 
         try {
             MiniXmlParser parser = new MiniXmlParser(getDomainXml(), serverName);
@@ -98,8 +94,7 @@ public abstract class LocalServerCommand extends CLICommand {
                 return addrSet.get(0);
             else
                 throw new CommandException(strings.get("NoAdminPort"));
-        }
-        catch (MiniXmlParserException ex) {
+        } catch (MiniXmlParserException ex) {
             throw new CommandException(strings.get("NoAdminPortEx", ex), ex);
         }
     }
@@ -121,26 +116,22 @@ public abstract class LocalServerCommand extends CLICommand {
         setLocalPassword();
     }
 
-
     protected final void setLocalPassword() {
         String pw = serverDirs == null ? null : serverDirs.getLocalPassword();
 
         if (ok(pw)) {
-            programOpts.setPassword(pw!= null ? pw.toCharArray() : null,
-                    ProgramOptions.PasswordLocation.LOCAL_PASSWORD);
+            programOpts.setPassword(pw != null ? pw.toCharArray() : null, ProgramOptions.PasswordLocation.LOCAL_PASSWORD);
             logger.finer("Using local password");
-        }
-        else
+        } else
             logger.finer("Not using local password");
     }
 
     protected final void unsetLocalPassword() {
-        programOpts.setPassword(null,
-                ProgramOptions.PasswordLocation.LOCAL_PASSWORD);
+        programOpts.setPassword(null, ProgramOptions.PasswordLocation.LOCAL_PASSWORD);
     }
 
     protected final void resetServerDirs() throws IOException {
-        if(serverDirs == null)
+        if (serverDirs == null)
             throw new RuntimeException(Strings.get("NoServerDirs"));
 
         serverDirs = serverDirs.refresh();
@@ -151,29 +142,26 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     protected final File getDomainXml() {
-        if(serverDirs == null)
+        if (serverDirs == null)
             throw new RuntimeException(Strings.get("NoServerDirs"));
 
         return serverDirs.getDomainXml();
     }
 
     /**
-     * Checks if the create-domain was created using --savemasterpassword flag
-     * which obtains security by obfuscation! Returns null in case of failure
-     * of any kind.
-     * @return String representing the password from the JCEKS store named
-     *          master-password in domain folder
+     * Checks if the create-domain was created using --savemasterpassword flag which obtains security by obfuscation!
+     * Returns null in case of failure of any kind.
+     * 
+     * @return String representing the password from the JCEKS store named master-password in domain folder
      */
     protected final String readFromMasterPasswordFile() {
         File mpf = getMasterPasswordFile();
         if (mpf == null)
-            return null;   // no master password  saved
+            return null; // no master password  saved
         try {
-            PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(),
-                    "master-password".toCharArray()); // fixed key
+            PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(), "master-password".toCharArray()); // fixed key
             return pw.getPasswordForAlias("master-password");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.FINER, "master password file reading error: {0}", e.getMessage());
             return null;
         }
@@ -186,36 +174,32 @@ public abstract class LocalServerCommand extends CLICommand {
         //cacerts.jks instead of keystore.jks. Since the truststore
         //is less-likely to be Non-JKS
 
-        return loadAndVerifyKeystore(getJKS(),mpv);
+        return loadAndVerifyKeystore(getJKS(), mpv);
     }
 
-    protected boolean loadAndVerifyKeystore(File jks,String mpv) {
+    protected boolean loadAndVerifyKeystore(File jks, String mpv) {
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(jks);
             KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
             ks.load(fis, mpv.toCharArray());
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (logger.isLoggable(Level.FINER))
                 logger.finer(e.getMessage());
             return false;
-        }
-        finally {
+        } finally {
             try {
                 if (fis != null)
                     fis.close();
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 // ignore, I know ...
             }
         }
     }
 
     /**
-     * Get the master password, either from a password file or
-     * by asking the user.
+     * Get the master password, either from a password file or by asking the user.
      */
     protected final String getMasterPassword() throws CommandException {
         // Sets the password into the launcher info.
@@ -224,20 +208,19 @@ public abstract class LocalServerCommand extends CLICommand {
         long t0 = now();
         String mpv = passwords.get(CLIConstants.MASTER_PASSWORD);
         if (mpv == null) { //not specified in the password file
-            mpv = "changeit";  //optimization for the default case -- see 9592
+            mpv = "changeit"; //optimization for the default case -- see 9592
             if (!verifyMasterPassword(mpv)) {
                 mpv = readFromMasterPasswordFile();
                 if (!verifyMasterPassword(mpv)) {
                     mpv = retry(RETRIES);
                 }
             }
-        }
-        else { // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
+        } else { // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
             if (!verifyMasterPassword(mpv))
                 mpv = retry(RETRIES);
         }
         long t1 = now();
-        logger.log(Level.FINER, "Time spent in master password extraction: {0} msec", (t1 - t0));       //TODO
+        logger.log(Level.FINER, "Time spent in master password extraction: {0} msec", (t1 - t0)); //TODO
         return mpv;
     }
 
@@ -254,10 +237,8 @@ public abstract class LocalServerCommand extends CLICommand {
         logger.log(Level.FINER, "Check if server is at location {0}", ourDir);
 
         try {
-            RemoteCLICommand cmd =
-                    new RemoteCLICommand("__locations", programOpts, env);
-            ActionReport report =
-                    cmd.executeAndReturnActionReport(new String[]{"__locations"});
+            RemoteCLICommand cmd = new RemoteCLICommand("__locations", programOpts, env);
+            ActionReport report = cmd.executeAndReturnActionReport(new String[] { "__locations" });
             String theirDirPath = report.findProperty(directoryKey);
             logger.log(Level.FINER, "Remote server has root directory {0}", theirDirPath);
 
@@ -266,35 +247,27 @@ public abstract class LocalServerCommand extends CLICommand {
                 return theirDir.equals(ourDir);
             }
             return false;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
 
     protected final int getServerPid() {
         try {
-            return Integer.parseInt(
-                    new RemoteCLICommand("__locations", programOpts, env)
-                    .executeAndReturnActionReport(new String[]{"__locations"})
-                    .findProperty("Pid"));
-        }
-        catch (Exception e) {
+            return Integer.parseInt(new RemoteCLICommand("__locations", programOpts, env)
+                    .executeAndReturnActionReport(new String[] { "__locations" }).findProperty("Pid"));
+        } catch (Exception e) {
             return -1;
         }
     }
 
     /**
-     * There is sometimes a need for subclasses to know if a
-     * <code> local domain </code> is running. An example of such a command is
-     * change-master-password command. The stop-domain command also needs to
-     * know if a domain is running <i> without </i> having to provide user
-     * name and password on command line (this is the case when I own a domain
-     * that has non-default admin user and password) and want to stop it
-     * without providing it.
+     * There is sometimes a need for subclasses to know if a <code> local domain </code> is running. An example of such a
+     * command is change-master-password command. The stop-domain command also needs to know if a domain is running <i>
+     * without </i> having to provide user name and password on command line (this is the case when I own a domain that has
+     * non-default admin user and password) and want to stop it without providing it.
      * <p>
-     * In such cases, we need to know if the domain is running and this method
-     * provides a way to do that.
+     * In such cases, we need to know if the domain is running and this method provides a way to do that.
      *
      * @return boolean indicating whether the server is running
      */
@@ -303,38 +276,31 @@ public abstract class LocalServerCommand extends CLICommand {
         try {
             server = new Socket(host, port);
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             logger.log(Level.FINER, "\nisRunning got exception: {0}", ex);
             return false;
-        }
-        finally {
+        } finally {
             if (server != null) {
                 try {
                     server.close();
-                }
-                catch (IOException ex) {
+                } catch (IOException ex) {
                 }
             }
         }
     }
 
     /**
-     * Is the server still running?
-     * This is only called when we're hanging around waiting for the server to die.
-     * Byron Nevins, Nov 7, 2010 - Check to see if the process itself is still running
-     * We use OS tools to figure this out.  See ProcessUtils for details.
-     * Failover to the JPS check if necessary
+     * Is the server still running? This is only called when we're hanging around waiting for the server to die. Byron
+     * Nevins, Nov 7, 2010 - Check to see if the process itself is still running We use OS tools to figure this out. See
+     * ProcessUtils for details. Failover to the JPS check if necessary
      *
-     * bnevins, May 2013
-     * http://serverfault.com/questions/181015/how-do-you-free-up-a-port-being-held-open-by-dead-process
-     * In WIndows the admin port may be held open for a while -- if there happens to
-     * be an attached running child process.  This is the key message from the url:
+     * bnevins, May 2013 http://serverfault.com/questions/181015/how-do-you-free-up-a-port-being-held-open-by-dead-process
+     * In WIndows the admin port may be held open for a while -- if there happens to be an attached running child process.
+     * This is the key message from the url:
      *
-     * If your program spawned any processes while it was running, try killing them.
-     * That should cause its process record to be freed and the TCP port to be
-     * cleaned up. Apparently windows does this when the record is released not
-     * when the process exits as I would have expected.
+     * If your program spawned any processes while it was running, try killing them. That should cause its process record to
+     * be freed and the TCP port to be cleaned up. Apparently windows does this when the record is released not when the
+     * process exits as I would have expected.
      */
     protected boolean isRunning() {
         int pp = getPrevPid();
@@ -351,17 +317,13 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     /**
-     * Byron Nevins Says: We have quite a historical assortment of ways to
-     * determine if a server has restarted. There are little teeny timing issues
-     * with all of them. I'm confident that this new technique will clear them
-     * all up. Here we are just monitoring the PID of the new server and
-     * comparing it to the pid of the old server. The oldServerPid is guaranteed
-     * to be either the PID of the "old" server or -1 if we couldn't get it --
-     * or it isn't running. If it is -1 then we make the assumption that once we
-     * DO get a valid pid that the server has started. If the old pid is valid
-     * we simply poll until we get a different pid. Notice that we will never
-     * get a valid pid back unless the server is officially up and running and
-     * "STARTED" Created April 2013
+     * Byron Nevins Says: We have quite a historical assortment of ways to determine if a server has restarted. There are
+     * little teeny timing issues with all of them. I'm confident that this new technique will clear them all up. Here we
+     * are just monitoring the PID of the new server and comparing it to the pid of the old server. The oldServerPid is
+     * guaranteed to be either the PID of the "old" server or -1 if we couldn't get it -- or it isn't running. If it is -1
+     * then we make the assumption that once we DO get a valid pid that the server has started. If the old pid is valid we
+     * simply poll until we get a different pid. Notice that we will never get a valid pid back unless the server is
+     * officially up and running and "STARTED" Created April 2013
      *
      * @param oldServerPid The pid of the server which is being restarted.
      * @throws CommandException if we time out.
@@ -371,19 +333,17 @@ public abstract class LocalServerCommand extends CLICommand {
 
         while (now() < end) {
             try {
-                if(isLocal())
+                if (isLocal())
                     resetLocalPassword();
 
                 int newServerPid = getServerPid();
 
                 if (newServerPid > 0 && newServerPid != oldServerPid) {
-                    logger.log(Level.FINER, "oldserver-pid, newserver-pid = {0} --- {1}",
-                            new Object[]{oldServerPid, newServerPid});
+                    logger.log(Level.FINER, "oldserver-pid, newserver-pid = {0} --- {1}", new Object[] { oldServerPid, newServerPid });
                     return;
                 }
                 Thread.sleep(CLIConstants.RESTART_CHECK_INTERVAL_MSEC);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // continue
             }
         }
@@ -401,19 +361,15 @@ public abstract class LocalServerCommand extends CLICommand {
 
             String pids = FileUtils.readSmallFile(prevPidFile).trim();
             return Integer.parseInt(pids);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return -1;
         }
     }
 
     /**
-     * Is the server still running?
-     * This is only called when we're hanging around waiting for the server to die.
-     * Byron Nevins, Nov 7, 2010 - Check to see if the process itself is still running
-     * We use jps to check
-     * If there are any problems fall back to the previous implementation of
-     * isRunning() which looks for the pidfile to get deleted
+     * Is the server still running? This is only called when we're hanging around waiting for the server to die. Byron
+     * Nevins, Nov 7, 2010 - Check to see if the process itself is still running We use jps to check If there are any
+     * problems fall back to the previous implementation of isRunning() which looks for the pidfile to get deleted
      */
     private boolean isRunningUsingJps() {
         int pp = getPrevPid();
@@ -425,16 +381,14 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     /**
-     * Is the server still running?
-     * This is only called when we're hanging around waiting for the server to die.
+     * Is the server still running? This is only called when we're hanging around waiting for the server to die.
      */
     private boolean isRunningByCheckingForPidFile() {
         File pf = getServerDirs().getPidFile();
 
         if (pf != null) {
             return pf.exists();
-        }
-        else
+        } else
             return isRunning(programOpts.getHost(), // remote case
                     programOpts.getPort());
     }
@@ -454,11 +408,10 @@ public abstract class LocalServerCommand extends CLICommand {
         logger.log(Level.FINER, "server uptime: {0}", up_ms);
         return up_ms;
     }
+
     /**
-     * See if the server is restartable
-     * As of March 2011 -- this only returns false if a passwordfile argument was given
-     * when the server started -- but it is no longer available - i.e. the user
-     * deleted it or made it unreadable.
+     * See if the server is restartable As of March 2011 -- this only returns false if a passwordfile argument was given
+     * when the server started -- but it is no longer available - i.e. the user deleted it or made it unreadable.
      */
     protected final boolean isRestartable() throws CommandException {
         // false negative is worse than false positive.
@@ -479,16 +432,13 @@ public abstract class LocalServerCommand extends CLICommand {
     /// Section:  private methods
     ////////////////////////////////////////////////////////////////
     /**
-     * The remote uptime command returns a string like:
-     * Uptime: 10 minutes, 53 seconds, Total milliseconds: 653859\n
-     * We find that last number and extract it.
-     * XXX - this is pretty gross, and fragile
+     * The remote uptime command returns a string like: Uptime: 10 minutes, 53 seconds, Total milliseconds: 653859\n We find
+     * that last number and extract it. XXX - this is pretty gross, and fragile
      */
     private long parseUptime(String up) {
         try {
             return Long.parseLong(up);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -539,8 +489,7 @@ public abstract class LocalServerCommand extends CLICommand {
     private File getUniquePath(File f) {
         try {
             f = f.getCanonicalFile();
-        }
-        catch (IOException ioex) {
+        } catch (IOException ioex) {
             f = SmartFile.sanitize(f);
         }
         return f;
@@ -556,10 +505,10 @@ public abstract class LocalServerCommand extends CLICommand {
         // timeout at runtime.
         return CLIConstants.WAIT_FOR_DAS_TIME_MS + now();
     }
+
     ////////////////////////////////////////////////////////////////
     /// Section:  private variables
     ////////////////////////////////////////////////////////////////
     private ServerDirs serverDirs;
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(LocalDomainCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(LocalDomainCommand.class);
 }

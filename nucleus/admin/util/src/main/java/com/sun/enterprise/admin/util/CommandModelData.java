@@ -34,8 +34,7 @@ import org.glassfish.api.admin.ExecuteOn;
 public class CommandModelData extends CommandModel {
 
     // use a LinkedHashMap so params appears in the order they are added
-    private final Map<String, CommandModel.ParamModel> params =
-                                new LinkedHashMap<String, ParamModel>();
+    private final Map<String, CommandModel.ParamModel> params = new LinkedHashMap<String, ParamModel>();
     private final String commandName;
     public boolean managedJob = false;
     public boolean dashOk = false;
@@ -82,7 +81,7 @@ public class CommandModelData extends CommandModel {
     public ExecuteOn getClusteringAttributes() {
         return null;
     }
-    
+
     @Override
     public boolean isManagedJob() {
         return this.managedJob;
@@ -93,7 +92,7 @@ public class CommandModelData extends CommandModel {
      */
     @Override
     public boolean unknownOptionsAreOperands() {
-	return dashOk;
+        return dashOk;
     }
 
     /**
@@ -110,30 +109,26 @@ public class CommandModelData extends CommandModel {
      */
     public static class ParamModelData extends ParamModel {
 
-        public String    name;
+        public String name;
         public ParamData param;
-        public Class     type;
+        public Class type;
         // from the server, for password fields
-        public String    prompt;
-        public String    promptAgain;
+        public String prompt;
+        public String promptAgain;
 
-        public ParamModelData(String name, Class type, boolean optional,
-                                String def) {
+        public ParamModelData(String name, Class type, boolean optional, String def) {
             this(name, type, optional, def, null);
         }
 
-        public ParamModelData(String name, Class type, boolean optional,
-                                String def, String shortName) {
-	    this(name, type, optional, def, shortName, false);
-	}
+        public ParamModelData(String name, Class type, boolean optional, String def, String shortName) {
+            this(name, type, optional, def, shortName, false);
+        }
 
-        public ParamModelData(String name, Class type, boolean optional,
-			    String def, String shortName, boolean obsolete) {
-	    this(name, type, optional, def, shortName, obsolete, "");
-	}
+        public ParamModelData(String name, Class type, boolean optional, String def, String shortName, boolean obsolete) {
+            this(name, type, optional, def, shortName, obsolete, "");
+        }
 
-        public ParamModelData(String name, Class type, boolean optional,
-		String def, String shortName, boolean obsolete, String alias) {
+        public ParamModelData(String name, Class type, boolean optional, String def, String shortName, boolean obsolete, String alias) {
             ParamData param = new ParamData();
             param._name = name;
             param._optional = optional;
@@ -142,8 +137,8 @@ public class CommandModelData extends CommandModel {
                 shortName = "";
             param._shortName = shortName;
             param._obsolete = obsolete;
-	    if (alias == null)
-		alias = "";
+            if (alias == null)
+                alias = "";
             param._alias = alias;
             ParamModelData.this.name = name;
             ParamModelData.this.type = type;
@@ -169,12 +164,11 @@ public class CommandModelData extends CommandModel {
         public String getLocalizedPromptAgain() {
             return getPromptAgain();
         }
-        
+
         @Override
         public Param getParam() {
             return param;
         }
-
 
         @Override
         public Class getType() {
@@ -185,15 +179,15 @@ public class CommandModelData extends CommandModel {
         public String getPrompt() {
             return prompt;
         }
-        
+
         public String getPromptAgain() {
             return promptAgain;
         }
 
         @Override
         public String toString() {
-            return "ParamModelData: name=" + name + ", type=" + type +
-                ", i18n=" + getLocalizedDescription() + ", param=" + param.toString();
+            return "ParamModelData: name=" + name + ", type=" + type + ", i18n=" + getLocalizedDescription() + ", param="
+                    + param.toString();
         }
     }
 
@@ -219,45 +213,70 @@ public class CommandModelData extends CommandModel {
         }
 
         @Override
-        public String name() { return _name; }
+        public String name() {
+            return _name;
+        }
+
         @Override
-        public String acceptableValues() { return _acceptableValues; }
+        public String acceptableValues() {
+            return _acceptableValues;
+        }
+
         @Override
-        public boolean optional() { return _optional; }
+        public boolean optional() {
+            return _optional;
+        }
+
         @Override
-        public String shortName() { return _shortName; }
+        public String shortName() {
+            return _shortName;
+        }
+
         @Override
-        public boolean primary() { return _primary; }
+        public boolean primary() {
+            return _primary;
+        }
+
         @Override
-        public String defaultValue() { return _defaultValue; }
+        public String defaultValue() {
+            return _defaultValue;
+        }
+
         @Override
-        public Class<? extends ParamDefaultCalculator> defaultCalculator() { 
+        public Class<? extends ParamDefaultCalculator> defaultCalculator() {
             return ParamDefaultCalculator.class;
         }
+
         @Override
-        public boolean password() { return _password; }
+        public boolean password() {
+            return _password;
+        }
+
         @Override
-        public char separator() { return _separator; }
+        public char separator() {
+            return _separator;
+        }
+
         @Override
-        public boolean multiple() { return _multiple; }
+        public boolean multiple() {
+            return _multiple;
+        }
+
         @Override
-        public boolean obsolete() { return _obsolete; }
+        public boolean obsolete() {
+            return _obsolete;
+        }
+
         @Override
-        public String alias() { return _alias; }
+        public String alias() {
+            return _alias;
+        }
 
         @Override
         public String toString() {
-            return "ParamData: name=" + _name +
-                ", acceptableValues=" + _acceptableValues +
-                ", optional=" + _optional +
-                ", shortName=" + _shortName +
-                ", primary=" + _primary +
-                ", defaultValue=" + _defaultValue +
-                ", password=" + _password +
-                ", separator=" + _separator +
-                ", multiple=" + _multiple +
-                ", obsolete=" + _obsolete +
-                ", alias=" + _alias;
+            return "ParamData: name=" + _name + ", acceptableValues=" + _acceptableValues + ", optional=" + _optional + ", shortName="
+                    + _shortName + ", primary=" + _primary + ", defaultValue=" + _defaultValue + ", password=" + _password + ", separator="
+                    + _separator + ", multiple=" + _multiple + ", obsolete=" + _obsolete + ", alias=" + _alias;
         }
     }
 }

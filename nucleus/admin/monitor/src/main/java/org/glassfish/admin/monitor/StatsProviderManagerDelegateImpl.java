@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import java.util.*;
 import javax.management.ObjectName;
 
-
 import org.glassfish.api.monitoring.ContainerMonitoring;
 import org.glassfish.flashlight.datatree.TreeNode;
 import org.glassfish.flashlight.datatree.factory.TreeNodeFactory;
@@ -98,8 +97,8 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
     public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(StatsProviderManagerDelegateImpl.class);
     boolean ddebug = false;
 
-    StatsProviderManagerDelegateImpl(ProbeClientMediator pcm, ProbeRegistry probeRegistry,
-            MonitoringRuntimeDataRegistry mrdr, Domain domain, String iName, MonitoringService monitoringService) {
+    StatsProviderManagerDelegateImpl(ProbeClientMediator pcm, ProbeRegistry probeRegistry, MonitoringRuntimeDataRegistry mrdr,
+            Domain domain, String iName, MonitoringService monitoringService) {
         this.pcm = pcm;
         this.mrdr = mrdr;
         this.domain = domain;
@@ -121,13 +120,11 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
         PARENT_PATH = PP + "/" + TYPE + "[" + NAME + "]";
     }
 
-    public void register(String configElement, PluginPoint pp,
-            String subTreePath, Object statsProvider) {
+    public void register(String configElement, PluginPoint pp, String subTreePath, Object statsProvider) {
         register(configElement, pp, subTreePath, statsProvider, null);
     }
 
-    public void register(String configElement, PluginPoint pp,
-            String subTreePath, Object statsProvider, String invokerId) {
+    public void register(String configElement, PluginPoint pp, String subTreePath, Object statsProvider, String invokerId) {
         StatsProviderInfo spInfo = new StatsProviderInfo(configElement, pp, subTreePath, statsProvider, invokerId);
         register(spInfo);
     }
@@ -135,16 +132,13 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
     public void register(StatsProviderInfo spInfo) {
         try {
             tryToRegister(spInfo);
-        }
-        catch (RuntimeException rte) {
-            logger.log(Level.WARNING, ListenerRegistrationFailed,
-                    new Object[]{spInfo.getStatsProvider().getClass().getName()});
+        } catch (RuntimeException rte) {
+            logger.log(Level.WARNING, ListenerRegistrationFailed, new Object[] { spInfo.getStatsProvider().getClass().getName() });
             if (logger.isLoggable(Level.FINE))
                 logger.log(Level.FINE, "Listener registration failed", rte);
             FutureStatsProviders.add(spInfo);
         }
     }
-
 
     /* throws RuntimeException maybe
      * note the default visibility so that MonitoringBootstrap can call it.
@@ -157,8 +151,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             logger.fine("registering a statsProvider");
         StatsProviderRegistryElement spre;
         // If configElement is null, create it
-        if (monitoringService != null
-                && monitoringService.getContainerMonitoring(configElement) == null
+        if (monitoringService != null && monitoringService.getContainerMonitoring(configElement) == null
                 && monitoringService.getMonitoringLevel(configElement) == null) {
             createConfigElement(configElement);
         }
@@ -178,8 +171,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
                 enableStatsProvider(spre);
             }
 
-        }
-        else {
+        } else {
             if (logger.isLoggable(Level.FINE))
                 logger.fine(" enabled is false ");
             // Register with null values so to know that we need to register them individually and config is on
@@ -196,18 +188,15 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
     private void createConfigElement(final String configElement) {
         try {
             ConfigSupport.apply(new SingleConfigCode<MonitoringService>() {
-                public Object run(MonitoringService param)
-                        throws PropertyVetoException, TransactionFailure {
+                public Object run(MonitoringService param) throws PropertyVetoException, TransactionFailure {
                     ContainerMonitoring newItem = param.createChild(ContainerMonitoring.class);
                     newItem.setName(configElement);
                     param.getContainerMonitoring().add(newItem);
                     return newItem;
                 }
             }, monitoringService);
-        }
-        catch (TransactionFailure tf) {
-            String msg = localStrings.getLocalString(cannotCreateConfigElement,
-                    "Unable to create container-monitoring for", configElement);
+        } catch (TransactionFailure tf) {
+            String msg = localStrings.getLocalString(cannotCreateConfigElement, "Unable to create container-monitoring for", configElement);
             logger.log(Level.SEVERE, msg, tf);
         }
     }
@@ -217,8 +206,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
         try {
             StatsProviderRegistryElement spre = statsProviderRegistry.getStatsProviderRegistryElement(statsProvider);
             if (spre == null) {
-                logger.log(Level.INFO, invalidStatsProvider,
-                        new Object[]{statsProvider.getClass().getName()});
+                logger.log(Level.INFO, invalidStatsProvider, new Object[] { statsProvider.getClass().getName() });
                 return;
             }
 
@@ -260,10 +248,8 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
 
             //Unregister from the MonitoringDataTreeRegistry and the map entries
             statsProviderRegistry.unregisterStatsProvider(statsProvider);
-        }
-        catch (Exception ex) {
-            String msg = MessageFormat.format(errorUnregisteringStatsProvider,
-                    statsProvider.getClass().getName());
+        } catch (Exception ex) {
+            String msg = MessageFormat.format(errorUnregisteringStatsProvider, statsProvider.getClass().getName());
             logger.log(Level.SEVERE, msg, ex);
         }
 
@@ -282,8 +268,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
     public void updateAllStatsProviders() {
         // Looks like the monitoring-enabled flag is just turned ON. Lets do the catchup
         for (String configElement : statsProviderRegistry.getConfigElementList()) {
-            Collection<StatsProviderRegistryElement> spreList =
-                    statsProviderRegistry.getStatsProviderRegistryElement(configElement);
+            Collection<StatsProviderRegistryElement> spreList = statsProviderRegistry.getStatsProviderRegistryElement(configElement);
             boolean isConfigEnabled = getEnabledValue(configElement);
             //Continue with the next configElement if this is not enabled
             if (!isConfigEnabled)
@@ -303,8 +288,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
     public void disableAllStatsProviders() {
         // Looks like the monitoring-enabled flag is just turned OFF. Disable all the statsProviders which were on
         for (String configElement : statsProviderRegistry.getConfigElementList()) {
-            Collection<StatsProviderRegistryElement> spreList =
-                    statsProviderRegistry.getStatsProviderRegistryElement(configElement);
+            Collection<StatsProviderRegistryElement> spreList = statsProviderRegistry.getStatsProviderRegistryElement(configElement);
             for (StatsProviderRegistryElement spre : spreList) {
                 if (spre.isEnabled) {
                     disableStatsProvider(spre);
@@ -334,13 +318,12 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
                 if (isEnableAllowed) {
                     enableStatsProvider(spre);
                 }
-            }
-            else {
+            } else {
                 //Disable if the stats were enabled, but current level is not allowed for these stats(HIGH->LOW) and
                 // stats were registered at HIGH
                 if (!isEnableAllowed) {
                     disableStatsProvider(spre);
-                }// else, Dont do anything LOW->HIGH (stats were registered at LOW)
+                } // else, Dont do anything LOW->HIGH (stats were registered at LOW)
             }
         }
     }
@@ -367,8 +350,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
 
     public void setHandlesForStatsProviders(Object statsProvider, Collection<ProbeClientMethodHandle> handles) {
         // save the handles also against statsProvider so you can unregister when statsProvider is unregistered
-        StatsProviderRegistryElement spre =
-                this.statsProviderRegistry.getStatsProviderRegistryElement(statsProvider);
+        StatsProviderRegistryElement spre = this.statsProviderRegistry.getStatsProviderRegistryElement(statsProvider);
         spre.setHandles(handles);
     }
 
@@ -393,8 +375,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             List<String> childNodeNames = createTreeForStatsProvider(parentNode, statsProvider);
             spre.setParentTreeNodePath(parentNode.getCompletePathName());
             spre.setChildNodeNames(childNodeNames);
-        }
-        else {
+        } else {
             updateTreeNodes(spre, true);
         }
 
@@ -406,8 +387,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             // register with flashlight and save the handles
             Collection<ProbeClientMethodHandle> handles = registerStatsProviderToFlashlight(statsProvider);
             spre.setHandles(handles);
-        }
-        else {
+        } else {
             //Enable the Flashlight handles for this statsProvider
             for (ProbeClientMethodHandle handle : spre.getHandles()) {
                 if (!handle.isEnabled())
@@ -501,8 +481,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             //Make sure the tree path is affected with the changes.
             if (enable) {
                 enableTreeNode(parentNode);
-            }
-            else {
+            } else {
                 disableTreeNode(parentNode);
             }
         }
@@ -550,8 +529,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             List<String> childNodeNames = spre.getChildTreeNodeNames();
             String statsProviderName = spre.getStatsProvider().getClass().getName();
             resetChildNodeStatistics(parentNodePath, childNodeNames, statsProviderName);
-        }
-        else {
+        } else {
             invokeStatsProviderResetMethod(spre.getResetMethod(), spre.getStatsProvider());
         }
 
@@ -569,10 +547,8 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
                         invokeStatisticResetMethod(childNode.getValue());
                     }
                 }
-            }
-            else {
-                logger.log(Level.WARNING, nodeNotFound,
-                        new Object[]{parentNodePath, statsProviderName});
+            } else {
+                logger.log(Level.WARNING, nodeNotFound, new Object[] { parentNodePath, statsProviderName });
             }
         }
     }
@@ -581,12 +557,10 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
         if (value instanceof Statistic) {
             if (Proxy.isProxyClass(value.getClass())) {
                 ((StatisticImpl) Proxy.getInvocationHandler(value)).reset();
-            }
-            else {
+            } else {
                 ((StatisticImpl) value).reset();
             }
-        }
-        else if (value instanceof StatsImpl) {
+        } else if (value instanceof StatsImpl) {
             ((StatsImpl) value).reset();
         }
     }
@@ -596,19 +570,15 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             Exception gotOne = null;
             try {
                 m.invoke(statsProvider);
-            }
-            catch (IllegalAccessException ex) {
+            } catch (IllegalAccessException ex) {
                 gotOne = ex;
-            }
-            catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException ex) {
                 gotOne = ex;
-            }
-            catch (InvocationTargetException ex) {
+            } catch (InvocationTargetException ex) {
                 gotOne = ex;
             }
             if (gotOne != null) {
-                String msg = MessageFormat.format(errorResettingStatsProvider,
-                        statsProvider.getClass().getName());
+                String msg = MessageFormat.format(errorResettingStatsProvider, statsProvider.getClass().getName());
                 logger.log(Level.SEVERE, msg, gotOne);
             }
 
@@ -651,12 +621,10 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
         //register the statsProvider with Flashlight
         Collection<ProbeClientMethodHandle> handles = null;
         //System.out.println("****** Registering the StatsProvider (" + statsProvider.getClass().getName() + ") with flashlight");
-        StatsProviderRegistryElement spre =
-                this.statsProviderRegistry.getStatsProviderRegistryElement(statsProvider);
+        StatsProviderRegistryElement spre = this.statsProviderRegistry.getStatsProviderRegistryElement(statsProvider);
         if (spre != null) {
             handles = pcm.registerListener(statsProvider, spre.getInvokerId());
-        }
-        else {
+        } else {
             handles = pcm.registerListener(statsProvider);
         }
         //System.out.println("********* handles = " + handles);
@@ -686,8 +654,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
         if (childNode == null) {
             childNode = TreeNodeFactory.createTreeNode(child, null, child);
             parent.addChild(childNode);
-        }
-        else {
+        } else {
             // the childNode is found, but ensure that its enabled
             enableTreeNode(childNode);
         }
@@ -743,20 +710,17 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
                         }
                         mbeanName = mbeanName.replaceAll(SystemPropertyConstants.SLASH, "/");
                         mom.createRoot(statsProvider, mbeanName);
-                    }
-                    else {
+                    } else {
                         mom.createRoot(statsProvider);
                     }
-                }
-                else {
+                } else {
                     String spName = statsProvider.getClass().getName();
-                    logger.log(Level.INFO, notaManagedObject, new Object[]{spName});
+                    logger.log(Level.INFO, notaManagedObject, new Object[] { spName });
                 }
             }
             //To register hierarchy in mom specify parent ManagedObject, and the ManagedObject itself
             //DynamicMBean mbean = (DynamicMBean)mom.register(parent, obj);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //createRoot failed - need to return a null mom so we know not to unregister an mbean that does not exist
             mom = null;
             logger.log(Level.SEVERE, gmbalRegistrationFailed, e);
@@ -771,8 +735,7 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             mom.unregister(spre.getStatsProvider());
             try {
                 mom.close();
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 logger.log(Level.SEVERE, gmbalUnRegistrationFailed, ioe);
             }
             spre.setManagedObjectManager(null);
@@ -812,9 +775,8 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
             if (level.equals(ContainerMonitoring.LEVEL_OFF)) {
                 enabled = false;
             }
-        }
-        else {
-            logger.log(Level.WARNING, monitorElementDoesnotExist, new Object[]{configElement});
+        } else {
+            logger.log(Level.WARNING, monitorElementDoesnotExist, new Object[] { configElement });
         }
         return enabled;
     }

@@ -42,19 +42,19 @@ public class AverageImpl extends AbstractTreeNode implements Average {
     public static final long DEFAULT_MIN_BOUND = DEFAULT_VALUE;
     /** DEFAULT_VALUE of any statistic is 0 */
     protected static final String NEWLINE = System.getProperty("line.separator");
-   
-    AtomicLong min = new AtomicLong (DEFAULT_MIN_BOUND);
+
+    AtomicLong min = new AtomicLong(DEFAULT_MIN_BOUND);
     AtomicLong max = new AtomicLong(0);
-    
+
     AtomicLong times = new AtomicLong(0);
     AtomicLong sum = new AtomicLong(0);
     private long startTime = 0;
     private AtomicLong lastSampleTime = new AtomicLong(0);
-    
+
     private String NAME = "average";
     private String DESCRIPTION = "Average RangeStatistic";
     private String UNIT = java.lang.Long.class.toString();
-    
+
     public AverageImpl() {
         super.name = NAME;
         super.enabled = true;
@@ -80,15 +80,15 @@ public class AverageImpl extends AbstractTreeNode implements Average {
         sum.addAndGet(value);
         times.incrementAndGet();
         // TBD: remove this code, once getSampleTime is refactored
-        lastSampleTime.set(getSampleTime ());
+        lastSampleTime.set(getSampleTime());
     }
 
     @Override
     public double getAverage() {
         double total = sum.doubleValue();
         double count = times.doubleValue();
-        double avg =  total / count;
-	return (Double.isNaN(avg) ? 0 : avg);
+        double avg = total / count;
+        return (Double.isNaN(avg) ? 0 : avg);
     }
 
     @Override
@@ -110,10 +110,8 @@ public class AverageImpl extends AbstractTreeNode implements Average {
 
     @Override
     public String toString() {
-        return "Statistic " + getClass().getName() + NEWLINE +
-                "Name: " + getName() + NEWLINE +
-                "Description: " + getDescription() + NEWLINE +
-                "Unit: " + getUnit() + NEWLINE +
+        return "Statistic " + getClass().getName() + NEWLINE + "Name: " + getName() + NEWLINE + "Description: " + getDescription() + NEWLINE
+                + "Unit: " + getUnit() + NEWLINE +
                 //           "LastSampleTime: " + getLastSampleTime() + NEWLINE +
                 "StartTime: " + getStartTime();
     }
@@ -157,20 +155,23 @@ public class AverageImpl extends AbstractTreeNode implements Average {
     public long getStartTime() {
         return this.startTime;
     }
+
     @Override
-    public long getTotal (){
+    public long getTotal() {
         return sum.get();
 
     }
+
     /*
      * TBD
      * This is an inefficient implementation. Should schedule a Timer task
      * that gets a timeout event every 30s or so and updates this value
      */
-    private long getSampleTime (){
+    private long getSampleTime() {
         return System.currentTimeMillis();
-   
+
     }
+
     @Override
     public long getLastSampleTime() {
         return this.lastSampleTime.longValue();

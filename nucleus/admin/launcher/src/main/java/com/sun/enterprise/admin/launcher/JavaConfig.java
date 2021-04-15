@@ -112,19 +112,19 @@ class JavaConfig {
         // Since our final command line is a List<String>, we can't have 2
         // options in one String -- the JVM will ignore the second option...
         // sample "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999"
-        
+
         String debugOptions = map.get("debug-options");
 
         if (!ok(debugOptions)) {
             return emptyList();
         }
-        
+
         String[] debugOptionsArray = debugOptions.split(" ");
 
         if (debugOptionsArray.length <= 0) {
             return emptyList();
         }
-        
+
         return asList(debugOptionsArray);
     }
 

@@ -20,41 +20,39 @@ import java.io.Reader;
 import java.io.Writer;
 
 /**
- * Defines the creation of {@link Reader} & {@link Writer} for a file
- * on which string substitution has to be performed.
+ * Defines the creation of {@link Reader} & {@link Writer} for a file on which string substitution has to be performed.
  */
 public interface Substitutable {
     /**
-     * Gets the processing entity name on which string substitution
-     * operation is carrying on.
+     * Gets the processing entity name on which string substitution operation is carrying on.
      *
-     * @return Name of the entity. 
+     * @return Name of the entity.
      */
     String getName();
 
     /**
      * Gets the character stream from the input.
-     * <p> Implementation note: It is a good idea for the input
-     * stream to be buffered.</p>
+     * <p>
+     * Implementation note: It is a good idea for the input stream to be buffered.
+     * </p>
      *
-     * @return  A Reader.
+     * @return A Reader.
      */
     Reader getReader();
 
     /**
-     * Gets the {@link Writer} object to write the character stream in to 
-     * the output.
-     * <p> Implementation note: It is a good idea for the output
-     * stream to be buffered.</p>
+     * Gets the {@link Writer} object to write the character stream in to the output.
+     * <p>
+     * Implementation note: It is a good idea for the output stream to be buffered.
+     * </p>
      *
-     * @return  A Writer.
+     * @return A Writer.
      */
     Writer getWriter();
 
     /**
-     * Called at the completion of the substitution process to perform
-     * post operation. For e.g closing of reader/writer, cleaning of the
-     * temporary data... etc.
+     * Called at the completion of the substitution process to perform post operation. For e.g closing of reader/writer,
+     * cleaning of the temporary data... etc.
      */
     void finish();
 }

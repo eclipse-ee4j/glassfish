@@ -50,13 +50,13 @@ public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
         ServiceLocatorUtilities.addOneConstant(habitat, this, null, DomDocument.class);
 
         final DomDocument doc = this;
-        
+
         habitat.<Transactions>getService(Transactions.class).addTransactionsListener(new TransactionListener() {
             public void transactionCommited(List<PropertyChangeEvent> changes) {
                 if (!isGlassFishDocumentChanged(changes)) {
                     return;
                 }
-                
+
                 for (ConfigurationPersistence pers : habitat.<ConfigurationPersistence>getAllServices(ConfigurationPersistence.class)) {
                     try {
                         if (doc.getRoot().getProxyType().equals(Domain.class)) {
@@ -65,18 +65,15 @@ public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
                         }
                         pers.save(doc);
                     } catch (IOException e) {
-                        logger.log(Level.SEVERE, 
-                        	ConfigApiLoggerInfo.glassFishDocumentIOException,e);
+                        logger.log(Level.SEVERE, ConfigApiLoggerInfo.glassFishDocumentIOException, e);
                     } catch (XMLStreamException e) {
-                        logger.log(Level.SEVERE, 
-                        	ConfigApiLoggerInfo.glassFishDocumentXmlException,e);
+                        logger.log(Level.SEVERE, ConfigApiLoggerInfo.glassFishDocumentXmlException, e);
                     }
                 }
             }
 
             // make sure domain.xml is changed
-            private boolean isGlassFishDocumentChanged(
-                    List<PropertyChangeEvent> changes) {
+            private boolean isGlassFishDocumentChanged(List<PropertyChangeEvent> changes) {
                 for (PropertyChangeEvent event : changes) {
                     ConfigBeanProxy source = (ConfigBeanProxy) event.getSource();
                     if (Dom.unwrap(source) instanceof GlassFishConfigBean) {
@@ -93,7 +90,8 @@ public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
     }
 
     @Override
-    public GlassFishConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom, ConfigModel configModel) {
+    public GlassFishConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom,
+            ConfigModel configModel) {
         // by default, people get the translated view.
         return new GlassFishConfigBean(habitat, this, dom, configModel, xmlStreamReader);
     }

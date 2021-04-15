@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import javax.security.auth.Subject;
 import javax.security.auth.login.*;
 import java.security.Principal;
-import java.security.acl.Group;
+import com.sun.enterprise.security.GroupPrincipal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -398,9 +398,9 @@ public class JAASRealm
                 roles.add(principal.getName());
             }
             // Same as Jboss - that's a pretty clean solution
-            if( (principal instanceof Group) &&
+            if( (principal instanceof GroupPrincipal) &&
                  "Roles".equals( principal.getName())) {
-                Group grp=(Group)principal;
+                GroupPrincipal grp=(GroupPrincipal)principal;
                 Enumeration en=grp.members();
                 while( en.hasMoreElements() ) {
                     Principal roleP=(Principal)en.nextElement();

@@ -19,9 +19,9 @@ package com.sun.enterprise.admin.cli;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 
 /**
- *  CLIProcessExecutor
- *  A simple process executor class that is used by CLI.
- *  @author  jane.young@sun.com
+ * CLIProcessExecutor A simple process executor class that is used by CLI.
+ * 
+ * @author jane.young@sun.com
  */
 public class CLIProcessExecutor {
 
@@ -31,12 +31,12 @@ public class CLIProcessExecutor {
 
     /**
      * This method invokes the runtime exec
+     * 
      * @param cmd the command to execute
      * @param wait if true, wait for process to end.
      * @exception Exception
      */
-    public void execute(String name, String[] cmd, boolean wait)
-                                throws Exception {
+    public void execute(String name, String[] cmd, boolean wait) throws Exception {
         process = Runtime.getRuntime().exec(cmd);
         ProcessStreamDrainer.redirect(name, process);
 
@@ -49,9 +49,8 @@ public class CLIProcessExecutor {
     }
 
     /**
-     * return the exit value of this process.
-     * if process is null, then there is no process running
-     * therefore the return value is 0.
+     * return the exit value of this process. if process is null, then there is no process running therefore the return
+     * value is 0.
      */
     public int exitValue() {
         if (process == null)

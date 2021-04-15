@@ -28,22 +28,20 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
 
 /**
- * Default {@link SubstitutableFactory} implementation to retrieve the
- * {@link Substitutable} entries from a {@link FileEntry} or an {@link Archive}.
+ * Default {@link SubstitutableFactory} implementation to retrieve the {@link Substitutable} entries from a
+ * {@link FileEntry} or an {@link Archive}.
  */
 public class SubstituableFactoryImpl implements SubstitutableFactory {
 
-    private static final Logger _logger = SLogger.getLogger();            
+    private static final Logger _logger = SLogger.getLogger();
 
     @Override
-    public List<? extends Substitutable> getFileEntrySubstituables(
-            FileEntry fileEntry) {
+    public List<? extends Substitutable> getFileEntrySubstituables(FileEntry fileEntry) {
         return new FileEntryFactory().getFileElements(fileEntry);
     }
 
     @Override
-    public List<? extends Substitutable> getArchiveEntrySubstitutable(
-            Archive archive) {
+    public List<? extends Substitutable> getArchiveEntrySubstitutable(Archive archive) {
         try {
             return new ArchiveEntryWrapperImpl(archive).getSubstitutables();
         } catch (IOException e) {

@@ -27,13 +27,14 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, TYPE})
+@Target({ METHOD, FIELD, TYPE })
 @Documented
 @Constraint(validatedBy = ResourceNameValidator.class)
 public @interface ResourceNameConstraint {
     String message();
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.admin.remote;
 
-
 /**
  * The Header class stores a name/value pair to represent headers.
  *
@@ -38,8 +37,8 @@ public final class Header {
     /**
      * Construct a Header object.
      *
-     * @param name      name of the header
-     * @param value     value of the header
+     * @param name name of the header
+     * @param value value of the header
      */
     public Header(String name, String value) {
         this.name = name;
@@ -49,7 +48,7 @@ public final class Header {
     /**
      * Returns the name of this header.
      *
-     * @return          name of the header
+     * @return name of the header
      */
     public String getName() {
         return name;
@@ -58,7 +57,7 @@ public final class Header {
     /**
      * Returns the value of this header.
      *
-     * @return          value of the header
+     * @return value of the header
      */
     public String getValue() {
         return value;

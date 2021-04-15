@@ -51,35 +51,31 @@ import org.glassfish.api.admin.AdminCommandSecurity;
  * List Resource Refs Command
  * 
  */
-@TargetType(value={CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE})
-@ExecuteOn(value={RuntimeType.DAS})
-@Service(name="list-resource-refs")
+@TargetType(value = { CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE,
+        CommandTarget.CLUSTERED_INSTANCE })
+@ExecuteOn(value = { RuntimeType.DAS })
+@Service(name = "list-resource-refs")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.resource.refs")
 @RestEndpoints({
-    @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-resource-refs", 
-        description="list-resource-refs")
-})
-public class ListResourceRefs implements AdminCommand, AdminCommandSecurity.Preauthorization,
-            AdminCommandSecurity.AccessCheckProvider {
-    
+        @RestEndpoint(configBean = Resources.class, opType = RestEndpoint.OpType.GET, path = "list-resource-refs", description = "list-resource-refs") })
+public class ListResourceRefs implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListResourceRefs.class);
 
-    @Param(optional=true, primary=true)
+    @Param(optional = true, primary = true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
-    
+
     @Inject
     private Domain domain;
 
     @AccessRequired.To("read")
     private RefContainer refContainer;
-    
+
     private List<ResourceRef> resourceRefs = null;
 
     @Override
@@ -99,36 +95,34 @@ public class ListResourceRefs implements AdminCommand, AdminCommandSecurity.Prea
         }
         return accessChecks;
     }
-    
+
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the parameter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the parameter names and the
+     * values the parameter values
      *
      * @param context information
      */
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        
+
         try {
             if (resourceRefs != null) {
                 processResourceRefs(report, resourceRefs);
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             }
         } catch (Exception e) {
-            report.setMessage(localStrings.getLocalString("list.resource.refs.failed",
-                    "list-resource-refs failed"));
+            report.setMessage(localStrings.getLocalString("list.resource.refs.failed", "list-resource-refs failed"));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
         }
-            
+
     }
 
     private void processResourceRefs(ActionReport report, List<ResourceRef> resourceRefs) {
         if (resourceRefs.isEmpty()) {
             final ActionReport.MessagePart part = report.getTopMessagePart().addChild();
-            part.setMessage(localStrings.getLocalString(
-                    "NothingToList", "Nothing to List."));
+            part.setMessage(localStrings.getLocalString("NothingToList", "Nothing to List."));
         } else {
             for (ResourceRef ref : resourceRefs) {
                 final ActionReport.MessagePart part = report.getTopMessagePart().addChild();

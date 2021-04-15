@@ -16,10 +16,8 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-public class InvalidConfigException extends RepositoryException
-{
-    public InvalidConfigException(String msg)
-    {
+public class InvalidConfigException extends RepositoryException {
+    public InvalidConfigException(String msg) {
         super(msg);
     }
 }

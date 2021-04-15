@@ -21,11 +21,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * The environment variables for CLI commands.  An instance of this class
- * is passed to each command to give it access to environment variables.
- * Command implementations should access environment information from
- * this class rather than using System.getenv.  In multimode, the export
- * command may change environment variables in the instance of this class
+ * The environment variables for CLI commands. An instance of this class is passed to each command to give it access to
+ * environment variables. Command implementations should access environment information from this class rather than
+ * using System.getenv. In multimode, the export command may change environment variables in the instance of this class
  * that is shared by all commands.
  *
  * @author Bill Shannon
@@ -43,37 +41,36 @@ public final class Environment {
     private File logfile = null;
 
     /**
-     * Set the prefix for environment variables referenced from the system 
-     * environment by Environment objects.
+     * Set the prefix for environment variables referenced from the system environment by Environment objects.
+     * 
      * @param p the new prefix
      */
     public static void setPrefix(String p) {
         PREFIX = p;
     }
-    
+
     /**
-     * Get the prefix for environment variables referenced from the system 
-     * environment by Environment objects.
+     * Get the prefix for environment variables referenced from the system environment by Environment objects.
      */
     public static String getPrefix() {
         return PREFIX;
     }
-    
+
     /**
-     * Set the short prefix for environment variables referenced from the system
-     * enviornment by Environment objects. This effects methods such as debug(), trace(), etc.
+     * Set the short prefix for environment variables referenced from the system enviornment by Environment objects. This
+     * effects methods such as debug(), trace(), etc.
      */
     public static void setShortPrefix(String p) {
         SHORT_PREFIX = p;
     }
-    
-    /** 
+
+    /**
      * Get the name of the environment variable used to set debugging on
      */
     public static String getDebugVar() {
         return SHORT_PREFIX + "DEBUG";
     }
-    
+
     /**
      * Initialize the enviroment with all relevant system environment entries.
      */
@@ -82,8 +79,7 @@ public final class Environment {
     }
 
     /**
-     * Constructor that ignores the system environment,
-     * mostly used to enable repeatable tests.
+     * Constructor that ignores the system environment, mostly used to enable repeatable tests.
      */
     public Environment(boolean ignoreEnvironment) {
         if (ignoreEnvironment)
@@ -96,19 +92,16 @@ public final class Environment {
         }
         String debugFlag = "Debug";
         String debugProp = getDebugVar();
-        debug = System.getProperty(debugFlag) != null ||
-                Boolean.parseBoolean(System.getenv(debugProp)) ||
-                Boolean.getBoolean(debugProp);
+        debug = System.getProperty(debugFlag) != null || Boolean.parseBoolean(System.getenv(debugProp)) || Boolean.getBoolean(debugProp);
 
         String traceProp = SHORT_PREFIX + "TRACE";
-        trace = System.getProperty(traceProp) != null ||
-                Boolean.parseBoolean(System.getenv(traceProp)) ||
-                Boolean.getBoolean(traceProp);
-               
+        trace = System.getProperty(traceProp) != null || Boolean.parseBoolean(System.getenv(traceProp)) || Boolean.getBoolean(traceProp);
+
         // System Prop trumps environmental variable
         String logProp = SHORT_PREFIX + "LOGFILE";
         String fname = System.getProperty(logProp);
-        if (fname == null) fname = System.getenv(logProp);
+        if (fname == null)
+            fname = System.getenv(logProp);
         if (fname != null) {
             File f = new File(fname);
 
@@ -116,13 +109,13 @@ public final class Environment {
                 if ((f.exists() || f.createNewFile()) && f.isFile() && f.canWrite()) {
                     logfile = f;
                 }
-            } catch (IOException e) { /* ignore */ }
+            } catch (IOException e) {
+                /* ignore */ }
         }
     }
 
     /**
-     * Return the value of the environment entry corresponding
-     * to the named option.
+     * Return the value of the environment entry corresponding to the named option.
      *
      * @param name the option name
      * @return the value of the corresponding environment entry
@@ -132,8 +125,7 @@ public final class Environment {
     }
 
     /**
-     * Return the value of the environment entry corresponding
-     * to the named option.
+     * Return the value of the environment entry corresponding to the named option.
      *
      * @param name the option name
      * @return the value of the corresponding environment entry
@@ -183,8 +175,7 @@ public final class Environment {
     }
 
     /**
-     * Set the environment entry corresponding to the named option
-     * to the specified value.
+     * Set the environment entry corresponding to the named option to the specified value.
      *
      * @param name the option name
      * @param value the value
@@ -202,25 +193,23 @@ public final class Environment {
     }
 
     /**
-     * Convert an option name (e.g., "host")
-     * to an environment variable name (e.g., AS_ADMIN_HOST).
+     * Convert an option name (e.g., "host") to an environment variable name (e.g., AS_ADMIN_HOST).
      *
      * @param name the option name
      * @return the environment variable name
      */
     private String optionToEnv(String name) {
-        return PREFIX +
-            name.replace('-', '_').toUpperCase(Locale.ENGLISH);
+        return PREFIX + name.replace('-', '_').toUpperCase(Locale.ENGLISH);
     }
-    
+
     public boolean debug() {
         return debug;
     }
-    
-    public boolean trace() { 
+
+    public boolean trace() {
         return trace;
     }
-    
+
     public File getDebugLogfile() {
         return logfile;
     }

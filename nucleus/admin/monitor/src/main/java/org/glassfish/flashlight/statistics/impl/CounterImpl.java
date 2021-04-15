@@ -66,26 +66,27 @@ public class CounterImpl extends AbstractTreeNode implements Counter {
         }
         this.count.set(count);
     }
+
     // TBD: remove reference to getSampleTime -> extremely inefficient implementation
     // Will have to be replaced by Timer implemenation
     public void increment() {
         long cnt = this.count.incrementAndGet();
         if (cnt > max) {
             max = cnt;
-        // Remove this after refactoring to Timer Impl. This is inefficient
+            // Remove this after refactoring to Timer Impl. This is inefficient
         }
-        this.lastSampleTime.set(getSampleTime ());
+        this.lastSampleTime.set(getSampleTime());
     }
 
     //automatically add the increment to cnt
-    public void  increment(long delta) {
+    public void increment(long delta) {
         long cnt = this.count.addAndGet(delta);
-        if(cnt > max) {
+        if (cnt > max) {
             max = cnt;
         }
         this.lastSampleTime.set(getSampleTime());
     }
-    
+
     public void decrement() {
         long cnt = this.count.decrementAndGet();
         if (cnt < min) {

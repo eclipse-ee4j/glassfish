@@ -25,24 +25,23 @@ import java.util.List;
 /**
  * Base interface for those configuration objects that has nested &lt;system-property> elements.
  * <p>
- * <b>Important: document legal properties using PropertiesDesc, one PropertyDesc
- * for each legal system-property</b>.
+ * <b>Important: document legal properties using PropertiesDesc, one PropertyDesc for each legal system-property</b>.
  */
 public interface SystemPropertyBag extends ConfigBeanProxy {
     /**
      * Gets the list of system-property.
      * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the object.
-     * This is why there is not a <CODE>set</CODE> method for the property property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the object. This is why there is not a <CODE>set</CODE> method for the property
+     * property.
      * <p/>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSystemProperty().add(newItem);
+     * getSystemProperty().add(newItem);
      * </pre>
-     * Objects of the following type(s) are allowed in the list
-     * {@link SystemProperty }
+     * 
+     * Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
     @Element("system-property")
     List<SystemProperty> getSystemProperty();
@@ -51,8 +50,8 @@ public interface SystemPropertyBag extends ConfigBeanProxy {
     SystemProperty getSystemProperty(String name);
 
     /**
-     * Returns a property value if the bean has system properties and one of its
-     * system-property names is equal to the one passed.
+     * Returns a property value if the bean has system properties and one of its system-property names is equal to the one
+     * passed.
      *
      * @param name the system property name requested
      * @return the property value or null if not found
@@ -61,9 +60,8 @@ public interface SystemPropertyBag extends ConfigBeanProxy {
     String getSystemPropertyValue(String name);
 
     /**
-     * Returns a property value if the bean has properties and one of its
-     * properties name is equal to the one passed. Otherwise return
-     * the default value.
+     * Returns a property value if the bean has properties and one of its properties name is equal to the one passed.
+     * Otherwise return the default value.
      *
      * @param name the property name requested
      */
@@ -84,7 +82,7 @@ public interface SystemPropertyBag extends ConfigBeanProxy {
         }
 
         public static String getSystemPropertyValue(final SystemPropertyBag me, final String name) {
-            return getSystemPropertyValue(me,name,null);
+            return getSystemPropertyValue(me, name, null);
         }
 
         public static String getSystemPropertyValue(final SystemPropertyBag me, final String name, final String defaultValue) {
@@ -96,7 +94,7 @@ public interface SystemPropertyBag extends ConfigBeanProxy {
         }
 
         public static boolean containsProperty(SystemPropertyBag me, String name) {
-            return me.getSystemProperty(name) != null;    
+            return me.getSystemProperty(name) != null;
         }
     }
 }

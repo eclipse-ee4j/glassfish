@@ -42,9 +42,8 @@ import jakarta.inject.Named;
 
 /**
  *
- * For v3 Prelude, following stats will be available
- * server.jvm.committedHeapSize java.lang.management.MemoryUsage
- * init, used, committed, max
+ * For v3 Prelude, following stats will be available server.jvm.committedHeapSize java.lang.management.MemoryUsage init,
+ * used, committed, max
  *
  */
 //public class JVMStatsImpl implements JVMStats, MonitorContract {
@@ -55,14 +54,12 @@ public class JVMStatsImpl implements MonitorContract {
     @Inject
     private MonitoringRuntimeDataRegistry mrdr;
 
-
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     @Optional
     MonitoringService monitoringService = null;
 
-    private final LocalStringManagerImpl localStrings =
-             new LocalStringManagerImpl(JVMStatsImpl.class);
+    private final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(JVMStatsImpl.class);
 
     private final String name = "jvm";
 
@@ -76,24 +73,21 @@ public class JVMStatsImpl implements MonitorContract {
             String level = monitoringService.getMonitoringLevel("jvm");
             if ((level != null) && (level.equals(ContainerMonitoring.LEVEL_OFF))) {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                report.setMessage(localStrings.getLocalString("level.off",
-                                "Monitoring level for jvm is off"));
+                report.setMessage(localStrings.getLocalString("level.off", "Monitoring level for jvm is off"));
                 return report;
             }
         }
 
         if (mrdr == null) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            report.setMessage(localStrings.getLocalString("mrdr.null",
-                            "MonitoringRuntimeDataRegistry is null"));
+            report.setMessage(localStrings.getLocalString("mrdr.null", "MonitoringRuntimeDataRegistry is null"));
             return report;
         }
 
         TreeNode serverNode = mrdr.get("server");
         if (serverNode == null) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            report.setMessage(localStrings.getLocalString("mrdr.null",
-                            "MonitoringRuntimeDataRegistry server node is null"));
+            report.setMessage(localStrings.getLocalString("mrdr.null", "MonitoringRuntimeDataRegistry server node is null"));
             return report;
         }
 
@@ -137,12 +131,12 @@ public class JVMStatsImpl implements MonitorContract {
 
         List<TreeNode> nodes = parent.getNodes(name);
 
-        if(!nodes.isEmpty()) {
+        if (!nodes.isEmpty()) {
             TreeNode node = nodes.get(0);
             Object val = node.getValue();
-            if(val != null) {
+            if (val != null) {
                 try {
-                    CountStatistic cs = (CountStatistic)val;
+                    CountStatistic cs = (CountStatistic) val;
                     return cs.getCount();
                 } catch (Exception e) {
                     //TODO: handle exception
@@ -155,31 +149,30 @@ public class JVMStatsImpl implements MonitorContract {
 
     // @author bnevins
     private ActionReport v2JVM(final ActionReport report, TreeNode serverNode) {
-        long uptime = getFirstTreeNodeAsLong(serverNode,    "server.jvm.runtime.uptime-count");
-        long min = getFirstTreeNodeAsLong(serverNode,       "server.jvm.memory.initnonheapsize-count");
-        min += getFirstTreeNodeAsLong(serverNode,           "server.jvm.memory.initheapsize-count");
-        long max = getFirstTreeNodeAsLong(serverNode,       "server.jvm.memory.maxheapsize-count");
-        max += getFirstTreeNodeAsLong(serverNode,           "server.jvm.memory.maxnonheapsize-count");
-        long count = getFirstTreeNodeAsLong(serverNode,     "server.jvm.memory.committedheapsize-count");
-        count += getFirstTreeNodeAsLong(serverNode,         "server.jvm.memory.committednonheapsize-count");
+        long uptime = getFirstTreeNodeAsLong(serverNode, "server.jvm.runtime.uptime-count");
+        long min = getFirstTreeNodeAsLong(serverNode, "server.jvm.memory.initnonheapsize-count");
+        min += getFirstTreeNodeAsLong(serverNode, "server.jvm.memory.initheapsize-count");
+        long max = getFirstTreeNodeAsLong(serverNode, "server.jvm.memory.maxheapsize-count");
+        max += getFirstTreeNodeAsLong(serverNode, "server.jvm.memory.maxnonheapsize-count");
+        long count = getFirstTreeNodeAsLong(serverNode, "server.jvm.memory.committedheapsize-count");
+        count += getFirstTreeNodeAsLong(serverNode, "server.jvm.memory.committednonheapsize-count");
 
         String displayFormat = "%1$-25s %2$-10s %3$-10s %4$-10s %5$-10s %6$-10s";
-        report.setMessage(
-            String.format(displayFormat, uptime, min, max, 0, 0, count));
+        report.setMessage(String.format(displayFormat, uptime, min, max, 0, 0, count));
 
         report.setActionExitCode(ExitCode.SUCCESS);
         return report;
     }
 
     public Statistic[] getStatistics() {
-    	return null;
+        return null;
     }
 
     public String[] getStatisticNames() {
-    	return null;
+        return null;
     }
 
     public Statistic getStatistic(String statisticName) {
-    	return null;
+        return null;
     }
 }

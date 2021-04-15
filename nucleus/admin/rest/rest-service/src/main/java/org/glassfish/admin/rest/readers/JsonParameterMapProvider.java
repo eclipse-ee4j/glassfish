@@ -46,10 +46,8 @@ public class JsonParameterMapProvider implements MessageBodyReader<ParameterMap>
     }
 
     @Override
-    public ParameterMap readFrom(Class<ParameterMap> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers,
-            InputStream in) throws IOException {
-
+    public ParameterMap readFrom(Class<ParameterMap> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+            MultivaluedMap<String, String> headers, InputStream in) throws IOException {
 
         JSONObject obj;
         try {
@@ -79,7 +77,6 @@ public class JsonParameterMapProvider implements MessageBodyReader<ParameterMap>
 
             return map;
         }
-
 
     }
 

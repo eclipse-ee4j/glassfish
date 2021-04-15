@@ -72,8 +72,7 @@ public abstract class RestClientBase {
     }
 
     public boolean save() {
-        Response response = client.target(getRestUrl())
-                .request(RESPONSE_TYPE)
+        Response response = client.target(getRestUrl()).request(RESPONSE_TYPE)
                 .post(buildMultivalueMapEntity(entityValues, MediaType.MULTIPART_FORM_DATA_TYPE), Response.class);
         boolean success = isSuccess(response);
 
@@ -88,9 +87,7 @@ public abstract class RestClientBase {
     }
 
     public boolean delete() {
-        Response response = client.target(getRestUrl())
-                .request(RESPONSE_TYPE)
-                .delete(Response.class);
+        Response response = client.target(getRestUrl()).request(RESPONSE_TYPE).delete(Response.class);
         boolean success = isSuccess(response);
 
         if (!success) {
@@ -102,7 +99,7 @@ public abstract class RestClientBase {
     }
 
     public RestResponse execute(Method method, String endpoint, boolean needsMultiPart) {
-        return execute (method, endpoint, new HashMap<String, Object>(), needsMultiPart);
+        return execute(method, endpoint, new HashMap<String, Object>(), needsMultiPart);
     }
 
     public RestResponse execute(Method method, String endPoint, Map<String, Object> payload) {
@@ -113,44 +110,41 @@ public abstract class RestClientBase {
         final WebTarget target = client.target(getRestUrl() + endPoint);
         Response clientResponse;
         switch (method) {
-            case POST: {
-//                 TODO - JERSEY2
-//                if (needsMultiPart) {
-//                    clientResponse = target
-//                            .request(RESPONSE_TYPE)
-//                            .post(buildFormDataMultipart(payload, MediaType.MULTIPART_FORM_DATA_TYPE), Response.class);
-//                } else
-                {
-                    clientResponse = target.request(RESPONSE_TYPE)
-                            .post(buildMultivalueMapEntity(payload, null), Response.class);
+        case POST: {
+            //                 TODO - JERSEY2
+            //                if (needsMultiPart) {
+            //                    clientResponse = target
+            //                            .request(RESPONSE_TYPE)
+            //                            .post(buildFormDataMultipart(payload, MediaType.MULTIPART_FORM_DATA_TYPE), Response.class);
+            //                } else
+            {
+                clientResponse = target.request(RESPONSE_TYPE).post(buildMultivalueMapEntity(payload, null), Response.class);
 
-                }
-                break;
             }
-            case PUT: {
-//                TODO - JERSEY2
-//                if (needsMultiPart) {
-//                    clientResponse = target
-//                            .request(RESPONSE_TYPE)
-//                            .put(buildFormDataMultipart(payload, MediaType.MULTIPART_FORM_DATA_TYPE), Response.class);
-//                } else
-                {
-                    clientResponse = target
-                            .request(RESPONSE_TYPE)
-                            .put(buildMultivalueMapEntity(payload, null), Response.class);
+            break;
+        }
+        case PUT: {
+            //                TODO - JERSEY2
+            //                if (needsMultiPart) {
+            //                    clientResponse = target
+            //                            .request(RESPONSE_TYPE)
+            //                            .put(buildFormDataMultipart(payload, MediaType.MULTIPART_FORM_DATA_TYPE), Response.class);
+            //                } else
+            {
+                clientResponse = target.request(RESPONSE_TYPE).put(buildMultivalueMapEntity(payload, null), Response.class);
 
-                }
-                break;
             }
-            case DELETE: {
-//                addQueryParams(payload, target);
-                clientResponse = targetWithQueryParams(target, buildMultivalueMap(payload)).request(RESPONSE_TYPE).delete(Response.class);
-                break;
-            }
-            default: {
-//                addQueryParams(payload, target);
-                clientResponse = targetWithQueryParams(target, buildMultivalueMap(payload)).request(RESPONSE_TYPE).get(Response.class);
-            }
+            break;
+        }
+        case DELETE: {
+            //                addQueryParams(payload, target);
+            clientResponse = targetWithQueryParams(target, buildMultivalueMap(payload)).request(RESPONSE_TYPE).delete(Response.class);
+            break;
+        }
+        default: {
+            //                addQueryParams(payload, target);
+            clientResponse = targetWithQueryParams(target, buildMultivalueMap(payload)).request(RESPONSE_TYPE).get(Response.class);
+        }
         }
 
         return new RestResponse(clientResponse);
@@ -268,53 +262,53 @@ public abstract class RestClientBase {
     /*
     protected void addQueryParams(Map<String, Object> payload, WebResource resource) {
         if ((payload != null) && !payload.isEmpty()) {
-//            resource.queryParams(buildMultivalueMap(payload));
+    //            resource.queryParams(buildMultivalueMap(payload));
         }
     }
     */
 
-//    TODO - JERSEY2
-//    protected Entity<FormDataMultiPart> buildFormDataMultipart(Map<String, Object> payload, MediaType type) {
-//        FormDataMultiPart formData = new FormDataMultiPart();
-//        Logger logger = Logger.getLogger(RestClientBase.class.getName());
-//        for (final Map.Entry<String, Object> entry : payload.entrySet()) {
-//            final Object value = entry.getValue();
-//            final String key = entry.getKey();
-//            if (value instanceof Collection) {
-//                for (Object obj : ((Collection) value)) {
-//                    try {
-//                        formData.field(key, obj, MediaType.TEXT_PLAIN_TYPE);
-//                    } catch (ClassCastException ex) {
-//                        if (logger.isLoggable(Level.FINEST)) {
-//                            logger.log(Level.FINEST, "Unable to add key (\"{0}\") w/ value (\"{1}\").",
-//                                new Object[]{key, obj});
-//                        }
-//
-//                        // Allow it to continue b/c this property most likely
-//                        // should have been excluded for this request
-//                    }
-//                }
-//            } else {
-//                //formData.putSingle(key, (value != null) ? value.toString() : value);
-//                try {
-//                    if (value instanceof File) {
-//                        formData.getBodyParts().add((new FileDataBodyPart(key, (File)value)));
-//                    } else {
-//                        formData.field(key, value, MediaType.TEXT_PLAIN_TYPE);
-//                    }
-//                } catch (ClassCastException ex) {
-//                    if (logger.isLoggable(Level.FINEST)) {
-//                        logger.log(Level.FINEST,
-//                                "Unable to add key (\"{0}\") w/ value (\"{1}\")." ,
-//                                new Object[]{key, value});
-//                    }
-//                    // Allow it to continue b/c this property most likely
-//                    // should have been excluded for this request
-//                }
-//            }
-//        }
-//        return Entity.entity(formData, type);
-//    }
+    //    TODO - JERSEY2
+    //    protected Entity<FormDataMultiPart> buildFormDataMultipart(Map<String, Object> payload, MediaType type) {
+    //        FormDataMultiPart formData = new FormDataMultiPart();
+    //        Logger logger = Logger.getLogger(RestClientBase.class.getName());
+    //        for (final Map.Entry<String, Object> entry : payload.entrySet()) {
+    //            final Object value = entry.getValue();
+    //            final String key = entry.getKey();
+    //            if (value instanceof Collection) {
+    //                for (Object obj : ((Collection) value)) {
+    //                    try {
+    //                        formData.field(key, obj, MediaType.TEXT_PLAIN_TYPE);
+    //                    } catch (ClassCastException ex) {
+    //                        if (logger.isLoggable(Level.FINEST)) {
+    //                            logger.log(Level.FINEST, "Unable to add key (\"{0}\") w/ value (\"{1}\").",
+    //                                new Object[]{key, obj});
+    //                        }
+    //
+    //                        // Allow it to continue b/c this property most likely
+    //                        // should have been excluded for this request
+    //                    }
+    //                }
+    //            } else {
+    //                //formData.putSingle(key, (value != null) ? value.toString() : value);
+    //                try {
+    //                    if (value instanceof File) {
+    //                        formData.getBodyParts().add((new FileDataBodyPart(key, (File)value)));
+    //                    } else {
+    //                        formData.field(key, value, MediaType.TEXT_PLAIN_TYPE);
+    //                    }
+    //                } catch (ClassCastException ex) {
+    //                    if (logger.isLoggable(Level.FINEST)) {
+    //                        logger.log(Level.FINEST,
+    //                                "Unable to add key (\"{0}\") w/ value (\"{1}\")." ,
+    //                                new Object[]{key, value});
+    //                    }
+    //                    // Allow it to continue b/c this property most likely
+    //                    // should have been excluded for this request
+    //                }
+    //            }
+    //        }
+    //        return Entity.entity(formData, type);
+    //    }
 
     private Entity<MultivaluedMap<String, Object>> buildMultivalueMapEntity(Map<String, Object> payload, MediaType type) {
         return Entity.entity(buildMultivalueMap(payload), type);
@@ -335,5 +329,7 @@ public abstract class RestClientBase {
         return formData;
     }
 
-    public static enum Method { GET, PUT, POST, DELETE };
+    public static enum Method {
+        GET, PUT, POST, DELETE
+    };
 }

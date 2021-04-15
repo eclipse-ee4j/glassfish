@@ -40,7 +40,7 @@ public class StringUtil {
         // TBD : should compare irrespective of the order of the values
         return (list1.equals(list2));
     }
-    
+
     public static boolean compareStrings(String str1, String str2) {
         if (str1 == null) {
             return str2 == null;
@@ -48,7 +48,7 @@ public class StringUtil {
             return str1.equals(str2);
         }
     }
-    
+
     public static boolean compareStringsIgnoreCase(String str1, String str2) {
         if (str1 == null) {
             return str2 == null;
@@ -65,8 +65,7 @@ public class StringUtil {
      */
     public static List<String> getActionReportMessageParts(ActionReport actionReport) {
         List<String> parts = new ArrayList<String>();
-        for (MessagePart part : actionReport.getTopMessagePart().
-                getChildren()) {
+        for (MessagePart part : actionReport.getTopMessagePart().getChildren()) {
             parts.add(part.getMessage());
         }
         return parts;

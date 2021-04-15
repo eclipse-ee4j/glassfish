@@ -34,10 +34,11 @@ import org.jvnet.hk2.config.Dom;
  * @author Martin Mares
  */
 public class ReferenceValidator implements ConstraintValidator<ReferenceConstraint, ConfigBeanProxy> {
-    
+
     static class RemoteKeyInfo {
         final Method method;
         final ReferenceConstraint.RemoteKey annotation;
+
         public RemoteKeyInfo(Method method, ReferenceConstraint.RemoteKey annotation) {
             this.method = method;
             this.annotation = annotation;
@@ -45,9 +46,9 @@ public class ReferenceValidator implements ConstraintValidator<ReferenceConstrai
     }
 
     static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ReferenceValidator.class);
-    
+
     private ReferenceConstraint rc;
-    
+
     @Override
     public void initialize(ReferenceConstraint rc) {
         this.rc = rc;
@@ -69,7 +70,7 @@ public class ReferenceValidator implements ConstraintValidator<ReferenceConstrai
             boolean disableGlobalMessage = true;
             for (RemoteKeyInfo remoteKeyInfo : remoteKeys) {
                 if (remoteKeyInfo.method.getParameterTypes().length > 0) {
-                    throw new UnexpectedTypeException(localStrings.getLocalString("referenceValidator.not.getter", 
+                    throw new UnexpectedTypeException(localStrings.getLocalString("referenceValidator.not.getter",
                             "The RemoteKey annotation must be on a getter method."));
                 }
                 try {
@@ -83,13 +84,12 @@ public class ReferenceValidator implements ConstraintValidator<ReferenceConstrai
                                 disableGlobalMessage = false;
                             } else {
                                 cvc.buildConstraintViolationWithTemplate(remoteKeyInfo.annotation.message())
-                                        .addNode(Dom.convertName(remoteKeyInfo.method.getName()))
-                                        .addConstraintViolation();
+                                        .addNode(Dom.convertName(remoteKeyInfo.method.getName())).addConstraintViolation();
                             }
                         }
                     } else {
-                        throw new UnexpectedTypeException(localStrings.getLocalString("referenceValidator.not.string", 
-                            "The RemoteKey annotation must identify a method that returns a String."));
+                        throw new UnexpectedTypeException(localStrings.getLocalString("referenceValidator.not.string",
+                                "The RemoteKey annotation must identify a method that returns a String."));
                     }
                 } catch (Exception ex) {
                     return false;
@@ -102,7 +102,7 @@ public class ReferenceValidator implements ConstraintValidator<ReferenceConstrai
         }
         return true;
     }
-    
+
     private Collection<RemoteKeyInfo> findRemoteKeys(Object o) {
         Collection<RemoteKeyInfo> result = new ArrayList<RemoteKeyInfo>();
         if (o == null) {
@@ -111,7 +111,7 @@ public class ReferenceValidator implements ConstraintValidator<ReferenceConstrai
         findRemoteKeys(o.getClass(), result);
         return result;
     }
-    
+
     private void findRemoteKeys(Class c, Collection<RemoteKeyInfo> result) {
         Method[] methods = c.getMethods();
         for (Method method : methods) {
@@ -129,5 +129,5 @@ public class ReferenceValidator implements ConstraintValidator<ReferenceConstrai
             findRemoteKeys(iface, result);
         }
     }
-    
+
 }

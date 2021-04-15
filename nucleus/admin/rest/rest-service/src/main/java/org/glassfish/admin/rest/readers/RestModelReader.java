@@ -51,20 +51,18 @@ import org.glassfish.admin.rest.composite.RestModel;
 @Consumes(Constants.MEDIA_TYPE_JSON)
 public class RestModelReader<T extends RestModel> implements MessageBodyReader<T> {
     @Override
-    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
-        MediaType mediaType) {
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         String submittedType = mediaType.toString();
         int index = submittedType.indexOf(";");
         if (index > -1) {
             submittedType = submittedType.substring(0, index);
         }
-        return submittedType.equals(Constants.MEDIA_TYPE_JSON) &&
-                RestModel.class.isAssignableFrom(type);
+        return submittedType.equals(Constants.MEDIA_TYPE_JSON) && RestModel.class.isAssignableFrom(type);
     }
 
     @Override
-    public T readFrom(Class<T> type, Type type1, Annotation[] antns, MediaType mt,
-        MultivaluedMap<String, String> mm, InputStream entityStream) throws WebApplicationException, IOException {
+    public T readFrom(Class<T> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, String> mm,
+            InputStream entityStream) throws WebApplicationException, IOException {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(entityStream));
             StringBuilder sb = new StringBuilder();
@@ -80,14 +78,12 @@ public class RestModelReader<T extends RestModel> implements MessageBodyReader<T
             Set<ConstraintViolation<T>> cv = CompositeUtil.instance().validateRestModel(locale, model);
             if (!cv.isEmpty()) {
                 final Response response = Response.status(Status.BAD_REQUEST)
-                        .entity(CompositeUtil.instance().getValidationFailureMessages(locale, cv, model))
-                        .build();
+                        .entity(CompositeUtil.instance().getValidationFailureMessages(locale, cv, model)).build();
                 throw new WebApplicationException(response);
             }
             return (T) model;
         } catch (JSONException ex) {
-            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(ex.getLocalizedMessage()).build());
+            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getLocalizedMessage()).build());
         }
     }
 }

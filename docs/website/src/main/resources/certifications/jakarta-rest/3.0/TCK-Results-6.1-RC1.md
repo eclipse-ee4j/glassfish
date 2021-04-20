@@ -8,7 +8,8 @@ following is a summary of the TCK results for releases of Jakarta RESTful Web Se
 # Jakarta EE RESTful Web Services 3.0, Eclipse GlassFish 6.1 RC1 Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  Jakarta EE RESTful Web Services 3.0 included in   [Eclipse GlassFish 6.1 RC1](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)
+  Jakarta EE RESTful Web Services 3.0 included in<br/>
+  [Eclipse GlassFish 6.1 RC1](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)
 
 - Specification Name, Version and download URL: <br/>
   [Jakarta RESTful Web Services 3.0](https://jakarta.ee/specifications/restful-ws/3.0/)
@@ -24,10 +25,11 @@ following is a summary of the TCK results for releases of Jakarta RESTful Web Se
   None
 
 - Java runtime used to run the implementation: <br/>
-
-	java version "11.0.7" 2020-04-14 LTS
-	Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
-	Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
+java version "11.0.7" 2020-04-14 LTS
+Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
+Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
 
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
   CentOS Linux 7 (Core)

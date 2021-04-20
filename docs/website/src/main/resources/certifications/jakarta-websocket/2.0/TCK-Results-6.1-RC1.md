@@ -22,10 +22,11 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
   None
 
 - Java runtime used to run the implementation: <br/>
-
-  java version "11.0.7" 2020-04-14 LTS
-  Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
-  Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
+java version "11.0.7" 2020-04-14 LTS
+Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
+Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
 
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
   Linux Centos 7

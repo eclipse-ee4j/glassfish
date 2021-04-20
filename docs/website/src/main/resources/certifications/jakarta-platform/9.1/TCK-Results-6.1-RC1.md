@@ -9,8 +9,8 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 9.
 # Jakarta EE Platform 9.1, Eclipse GlassFish 6.1, TCK Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 6.1](https://eclipse-ee4j.github.io/glassfish/download)
-  [glassfish-6.1.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0.zip)
+  [Eclipse GlassFish 6.1](/glassfish/download)<br/>
+  [glassfish-6.1-RC1.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)
 
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, 9.1](https://jakarta.ee/specifications/platform/9.1/)
@@ -28,12 +28,14 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 9.
   Jakarta Bean Validation 3.0 TCK <br/>
 
 - Java runtime used to run the implementation: <br/>
-  java version "11.0.7" 2020-04-14 LTS
-  Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
-  Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
+java version "11.0.7" 2020-04-14 LTS
+Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
+Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
 
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
-  Apache Derby, 
+  Apache Derby, <br/>
   Linux, CentOS 7
 
 
@@ -586,7 +588,7 @@ SHA-256: `71999815418799837dc6f3d0dc40c3dcc4144cd90c7cdfd06aa69270483d78bc`
 
 TCK Result Summary:
 ```
-+ /opt/jdk1.8.0_191/bin/java VerifySMAP /home/jenkins/agent/workspace/t-for-other-languages-tck_master/vi/glassfish6/glassfish/domains/domain1/generated/jsp/testclient/org/apache/jsp/Hello_jsp.class.smap
++ /opt/jdk-11.0.7/bin/java VerifySMAP /home/jenkins/agent/workspace/t-for-other-languages-tck_master/vi/glassfish6/glassfish/domains/domain1/generated/jsp/testclient/org/apache/jsp/Hello_jsp.class.smap
 ++ grep 'is a correctly formatted SMAP' smap.log
 ++ wc -l
 + output=1

@@ -2,132 +2,132 @@
 
 Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Specifications. For each specification we are required by the [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php) to publish a summary of the TCK results.
 
-## Jakarta Platform
+## Jakarta EE Platform TCK Results
 
-* [Jakarta Platform 9.1](./jakarta-platform/9.1/TCK-Results-6.1-RC1)
+* [Jakarta EE Platform TCK 9.1](./jakarta-platform/9.1/TCK-Results-6.1-RC1)
 
-## Jakarta Platform, Web Profile
+## Jakarta EE Platform, Web Profile TCK Results
 
-* [Jakarta Platform, Web Profile 9.1](./jakarta-web-profile/9.1/TCK-Results-6.1-RC1)
+* [Jakarta EE Platform, Web Profile TCK 9.1](./jakarta-web-profile/9.1/TCK-Results-6.1-RC1)
 
 ## Jakarta EE 9 Component Specifications
 
-### Jakarta Annotations
+### Jakarta EE Annotations
 
-* [Jakarta Annotations 2.0](jakarta-annotations/2.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Annotations TCK 2.0 Results](jakarta-annotations/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Authentication
+### Jakarta EE Authentication
 
-* [Jakarta Authentication 2.0](jakarta-authentication/2.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Authentication TCK 2.0 Results](jakarta-authentication/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Authorization
+### Jakarta EE Authorization
 
-* [Jakarta Authorization 2.0](jakarta-authorization/1.6/TCK-Results-6.1-RC1)
+* [Jakarta EE Authorization TCK 2.0 Results](jakarta-authorization/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Concurrency
+### Jakarta EE Concurrency
 
-* [Jakarta Concurrency 2.0](./jakarta-concurrency/2.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Concurrency TCK 2.0 Results](./jakarta-concurrency/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Connectors
+### Jakarta EE Connectors
 
-* [Jakarta Connectors 2.0](./jakarta-connectors/2.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Connectors TCK 2.0 Results](./jakarta-connectors/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Debugging Support for Other Languages
+### Jakarta EE Debugging Support for Other Languages
 
-* [Jakarta Debugging Support for Other Languages 2.0](./jakarta-debugging/2.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Debugging Support for Other Languages TCK 2.0](./jakarta-debugging/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Deployment
-
-Pruned in 9.0
-
-### Jakarta Enterprise Beans
-
-* [Jakarta Enterprise Beans 4.0](./jakarta-enterprise-beans/4.0/TCK-Results-6.1-RC1)
-
-### Jakarta Enterprise Web Services
-
-* [Jakarta Enterprise Web Services 2.0](./jakarta-enterprise-web-services/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta Expression Language
-
-* [Jakarta Expression Language 4.0](./jakarta-expression-language/4.0/TCK-Results-6.1-RC1)
-
-### Jakarta Interceptors
-
-* [Jakarta Interceptors 2.0](./jakarta-interceptors/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta JSON Binding
-
-* [Jakarta JSON Binding 2.0](certificatoins/jakarta-jsonb/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta JSON Processing
-
-* [Jakarta JSON Processing 2.0](./jakarta-jsonp/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta Managed Beans
-
-* [Jakarta Managed Beans 2.0](./jakarta-managed-beans/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta Management
+### Jakarta EE Deployment
 
 Pruned in 9.0
 
-### Jakarta Messaging
+### Jakarta EE Enterprise Beans
 
-* [Jakarta Messaging 3.0](./jakarta-messaging/3.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Enterprise Beans TCK 4.0 Results](./jakarta-enterprise-beans/4.0/TCK-Results-6.1-RC1)
 
-### Jakarta Persistence
+### Jakarta EE Enterprise Web Services
 
-* [Jakarta Persistence 3.0](./jakarta-persistence/3.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Enterprise Web Services TCK 2.0 Results](./jakarta-enterprise-web-services/2.0/TCK-Results-6.1-RC1)
 
-## Jakarta RESTful Web Services
+### Jakarta EE Expression Language
 
-* [Jakarta RESTful Web Services 3.0](./jakarta-rest/3.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Expression Language TCK 4.0 Results](./jakarta-expression-language/4.0/TCK-Results-6.1-RC1)
 
-### Jakarta Security
+### Jakarta EE Interceptors
 
-* [Jakarta Security 2.0](./jakarta-security/2.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Interceptors TCK 2.0 Results](./jakarta-interceptors/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Server Faces
+### Jakarta EE JSON Binding
 
-* [Jakarta Server Faces 3.0](./jakarta-faces/3.0/TCK-Results-6.1-RC1)
+* [Jakarta EE JSON Binding TCK 2.0 Results](./jakarta-jsonb/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Server Pages
+### Jakarta EE JSON Processing
 
-* [Jakarta Server Pages 3.0](./jakarta-pages/3.0/TCK-Results-6.1-RC1)
+* [Jakarta EE JSON Processing TCK 2.0 Results](./jakarta-jsonp/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Servlet
+### Jakarta EE Managed Beans
 
-* [Jakarta Servlet 5.0](./jakarta-servlet/5.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Managed Beans TCK 2.0 Results](./jakarta-managed-beans/2.0/TCK-Results-6.1-RC1)
 
-### Jakarta Standard Tag Library
-
-* [Jakarta Standard Tag Library 2.0](./jakarta-tags/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta Transactions
-
-* [Jakarta Transactions 2.0](./jakarta-transactions/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta WebSocket
-
-* [Jakarta WebSocket 2.0](./jakarta-websocket/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta Web Services Metadata
-
-* [Jakarta Web Services Metadata 2.0](./jakarta-ws-metadata/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta XML Binding
-
-* [Jakarta XML Binding 3.0](./jakarta-xml-binding/3.0/TCK-Results-6.1-RC1)
-
-### Jakarta XML SOAP with Attachments
-
-* [Jakarta XML SOAP with Attachments 2.0](./jakarta-xml-soap/2.0/TCK-Results-6.1-RC1)
-
-### Jakarta XML Registries
+### Jakarta EE Management
 
 Pruned in 9.0
 
-### Jakarta XML Web Services
+### Jakarta EE Messaging
 
-* [jakarta XML Web Services 3.0](./jakarta-xml-web-services/3.0/TCK-Results-6.1-RC1)
+* [Jakarta EE Messaging 3.0 TCK Results](./jakarta-messaging/3.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Persistence
+
+* [Jakarta EE Persistence 3.0 TCK Results](./jakarta-persistence/3.0/TCK-Results-6.1-RC1)
+
+## Jakarta EE RESTful Web Services
+
+* [Jakarta EE RESTful Web Services TCK 3.0 Results](./jakarta-rest/3.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Security
+
+* [Jakarta EE Security TCK 2.0 Results](./jakarta-security/2.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Server Faces
+
+* [Jakarta EE Server Faces TCK 3.0 Results](./jakarta-faces/3.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Server Pages
+
+* [Jakarta EE Server Pages TCK 3.0 Results](./jakarta-pages/3.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Servlet
+
+* [Jakarta EE Servlet TCK 5.0 Results](./jakarta-servlet/5.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Standard Tag Library
+
+* [Jakarta EE Standard Tag Library TCK 2.0 Results](./jakarta-tags/2.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Transactions
+
+* [Jakarta EE Transactions 2.0 TCK Results](./jakarta-transactions/2.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE WebSocket
+
+* [Jakarta EE WebSocket 2.0 TCK Results](./jakarta-websocket/2.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE Web Services Metadata
+
+* [Jakarta EE Web Services Metadata TCK 2.0 Results](./jakarta-ws-metadata/2.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE XML Binding
+
+* [Jakarta EE XML Binding TCK 3.0 Results](./jakarta-xml-binding/3.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE XML SOAP with Attachments
+
+* [Jakarta EE XML SOAP with Attachments TCK 2.0 Results](./jakarta-xml-soap/2.0/TCK-Results-6.1-RC1)
+
+### Jakarta EE XML Registries
+
+Pruned in 9.0
+
+### Jakarta EE XML Web Services
+
+* [Jakarta EE XML Web Services TCK 3.0 Results](./jakarta-xml-web-services/3.0/TCK-Results-6.1-RC1)

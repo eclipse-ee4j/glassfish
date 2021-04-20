@@ -8,8 +8,8 @@ following is a summary of the TCK results for Jakarta EE Messaging, 3.0 with Ecl
 # Jakarta EE Messaging 3.0, Eclipse GlassFish 6.1 RC1, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  Eclipse GlassFish 6.0, includes: Eclipse Open MQ 6.1, which provides Jakarta  EE Messaging API 3.0.0
-  [Eclipse GlassFish 6.1 RC1](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)
+  Eclipse GlassFish 6.0, includes: Eclipse Open MQ 6.1, which provides Jakarta  EE Messaging API 3.0.0<br/>
+  [Eclipse GlassFish 6.1 RC1](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)<br/>
   For reference, use imqbrokerd command from GlassFish distribution: glassfish6/mq (bin).
 
 - Specification Name, Version and download URL: <br/>
@@ -22,14 +22,15 @@ following is a summary of the TCK results for Jakarta EE Messaging, 3.0 with Ecl
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)
   
-
 - Any Additional Specification Certification Requirements: <br/>
   None
 
 - Java runtime used to run the implementation: <br/>
-  java version "11.0.7" 2020-04-14 LTS
-  Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
-  Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
+java version "11.0.7" 2020-04-14 LTS
+Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
+Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
 
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
   Linux Centos 7

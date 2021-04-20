@@ -5,10 +5,6 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
 
 # Jakarta EE Transactions, 2.0, Eclipse GlassFish 6.1 RC1, Certification Summary
 
-
-- Organization Name ("Organization") and, if applicable, URL <br/>
-  Eclipse Foundation
-  
 - Product Name, Version and download URL (if applicable) <br/>
   [Eclipse GlassFish 6.1 RC1](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)
   
@@ -26,10 +22,11 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
   N/A
 
 - Java runtime used to run the implementation <br/>
-
-  java version "11.0.7" 2020-04-14 LTS
-  Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
-  Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
+java version "11.0.7" 2020-04-14 LTS
+Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
+Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+```
 
 - Summary of the information for the certification environment, operating system, cloud, ... <br/>
   Linux CentOS 7

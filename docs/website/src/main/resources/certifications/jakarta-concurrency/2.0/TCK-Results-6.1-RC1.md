@@ -15,7 +15,7 @@ following is a summary of the TCK results for releases of Jakarta EE Concurrency
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE Concurrency TCK 2.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-concurrency-tck-2.0.1.zip), 
-  SHA-256: `ccdaad8187b0e68f42edd0f12935efc68f3ba8c81b99b275028a9088f5069c82`
+  SHA-256: `3fe251fb587019c4fd3e72490e582fd4040796374097fb74aa81952538721e1b`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

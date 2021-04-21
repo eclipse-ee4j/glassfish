@@ -16,7 +16,7 @@ following is a summary of the TCK results for Jakarta EE Server Faces 3.0 with E
   
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE Server Faces TCK, 3.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-faces-tck-3.0.1.zip), 
-  SHA-256: `5e3f9d010a1504beef6b8a5a73d01f4f8b40817e3ad06274cb4855aa85f1338b`
+  SHA-256: `d3b6c3e8d6d0e6ee13f0eacc9b2e6af89eab925a085bd46ba9395211b9dd9856`
   
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

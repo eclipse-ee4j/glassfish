@@ -15,7 +15,7 @@ following is a summary of the TCK results for releases of Jakarta EE Security 2.
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE Security TCK 2.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-security-tck-2.0.1.zip), 
-  SHA-256: `1a44bb001ee42b1db56343de6f447e567ff805f36cc7e86ca6d7012e89c0af4a`
+  SHA-256: `f51e8b83507cfb8673fe065c7d06eddac535011e1a8a2b9c065358e12a8d7479`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

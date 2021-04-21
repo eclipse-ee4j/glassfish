@@ -16,7 +16,7 @@ following is a summary of the TCK results for releases of Jakarta RESTful Web Se
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta RESTful Web Services TCK 3.0.2](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-restful-ws-tck-3.0.2.zip), 
-  SHA-256: `0996c42f02e69bc90f62906614e139e10809e390ede8c1ce12695d85bc41a7fa`
+  SHA-256: `fe70a29e3bac77f715daf917de42f30132541f762a842f6610fdd49321e33b19`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

@@ -15,7 +15,7 @@ following is a summary of the TCK results for Jakarta EE Persistence, 3.0 with E
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta Persistence TCK, 3.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-persistence-tck-3.0.1.zip), 
-  SHA-256: `580ed7b1999d78ac2443b287c343f37f4f350f14262635e407af0eaad8f587b0`
+  SHA-256: `0e77804ead3990a53cdc325d2b0ddc1b15a3993d7866e5aa3717cc55d95f8bbc`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

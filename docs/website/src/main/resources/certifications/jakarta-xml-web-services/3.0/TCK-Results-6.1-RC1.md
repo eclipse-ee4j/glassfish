@@ -15,7 +15,7 @@ following is a summary of the TCK results for releases of Jakarta EE XML Web Ser
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta XML Web Services TCK 3.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-xml-ws-tck-3.0.1.zip), 
-  SHA-256: `7b8aa3d76fe81cb43ba4f992a6a68b6730b3c5685b8b88c98cfc16dc092690e4`
+  SHA-256: `7033ac8db917f2d902515d45b4b368be786c4c5e17268dad1d8a2153c2278bb4`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

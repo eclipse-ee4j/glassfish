@@ -17,7 +17,7 @@ following is a summary of the TCK results for Jakarta EE Messaging, 3.0 with Ecl
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta Messaging TCK, 3.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-messaging-tck-3.0.1.zip), 
-  SHA-256: `e5306d489fc393306b172f7bd3f36bcf77722f3975eb9f66052523a907a7bc90`
+  SHA-256: `11faec550950774ef0e53940d8a5f26b0a74113109003ff0c64c0d2ec6504409`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

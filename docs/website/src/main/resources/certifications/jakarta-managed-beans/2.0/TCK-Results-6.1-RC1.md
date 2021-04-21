@@ -16,7 +16,7 @@ following is a summary of the TCK results for releases of Jakarta Managed Beans.
   
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE Platform TCK 9.1](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaeetck-9.1.0.zip), 
-  SHA-256: `2F634A52F0E994B31AAC7C2308854365417F042C956C2E6B05B088A12E9D8968`
+  SHA-256: `16904b7ccd7ae61287b763587e8bfbff50608ab09f3876bb41af65d043263ca7`
 
 - Public URL of TCK Results Summary: <br/>
   There is no stand-alone TCK for this specification. Follow Platform TCK results summary for details.<br/>

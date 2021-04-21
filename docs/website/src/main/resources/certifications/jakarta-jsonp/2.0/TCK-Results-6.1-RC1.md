@@ -16,7 +16,7 @@ following is a summary of the TCK results for Jakarta EE JSON Processing 2.0 wit
   
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE JSON Binding TCK 2.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jsonp-tck-2.0.1.zip), 
-  SHA-256: `d1d456e2dbed7913bbc510509c32b4a7bed478db6764521599c755ca5beceac5`
+  SHA-256: `dcb2d06398ab113468585e800b2499902d4acd69ede30f1728355fbd38f174d7`
   
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1.html)

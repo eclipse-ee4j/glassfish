@@ -15,7 +15,7 @@ following is a summary of the TCK results for releases of Jakarta EE Servlet 5.0
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE Servlet TCK, 5.0.2](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-servlet-tck-5.0.2.zip), 
-  SHA-256: `ffaffc4cded30a1b646fe931aee03a0bc579b5543174a30323a78f51e7982ca5`
+  SHA-256: `8b42db3d15bf13d3de3233063191d28108bcb8ecdfebdcf1b92f4453dac79550`
   
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

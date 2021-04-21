@@ -13,7 +13,7 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
 
 - TCK Version, digital SHA-256 fingerprint and download URL <br/>
   [jakarta-transactions-tck-2.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-transactions-tck-2.0.1.zip), 
-  SHA-256: `0531c12ea300213ae7e8bf8a79d91b8c6251d747648152f00bfb375bde8b5e76` 
+  SHA-256: `5655dd55f23cbc883a4fbc95edd543857b41b24cbd42a3a5fe2d3b1f91c6e27c` 
 
 - Public URL of TCK Results Summary <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

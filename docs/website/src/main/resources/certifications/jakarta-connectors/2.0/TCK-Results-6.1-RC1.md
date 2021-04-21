@@ -16,7 +16,7 @@ following is a summary of the TCK results for releases of Jakarta Connectors.
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta Connectors TCK 2.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-connectors-tck-2.0.1.zip), 
-  SHA-256:  `87fce98d1e2ff3ab230a2399f0410316b0bceccbe5d83d9e529ef2b1c67207c9`
+  SHA-256:  `c59b7e4464c47f4f8ce0ef835b591613d4dcc7afc661a0e147eee49b5233462d`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

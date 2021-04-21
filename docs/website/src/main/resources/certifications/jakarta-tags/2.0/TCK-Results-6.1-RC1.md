@@ -17,7 +17,7 @@ following is a summary of the TCK results for releases of Jakarta Standard Tag L
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta Standard Tag Library TCK 2.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-tags-tck-2.0.1.zip), 
-  SHA-256: `3963f095d6750ca533482edbe8ad7f12998407fd1df7c3168318f2eda3584e4b`
+  SHA-256: `264aae5464cdba63eac326eba300e00fe7b3e53017d1fbe98f8c09fc68f53b38`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

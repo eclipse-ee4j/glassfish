@@ -15,7 +15,7 @@ following is a summary of the TCK results for releases of Jakarta EE SOAP with A
    
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta SOAP with Attachments TCK 2.0.1](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-soap-tck-2.0.1.zip),  
-  SHA-256: `39c3ffecbd95e0c46918201c03bae066ee5a0a18ff7810ee520d2a5d69a73adb`
+  SHA-256: `62bdded1cfe4699d3b1ef234ef9239e32c7a51a2544585ba491691a5e0a6dd0e`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

@@ -15,7 +15,7 @@ following is a summary of the TCK results for releases of Jakarta EE Expression 
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Expression Language TCK 4.0.1] (https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-expression-language-tck-4.0.1.zip), 
-  SHA-256: `f9a732d57f025958d4ca39175de51b34ee7cfa86cc061d78f7b1d4ee4d9c59ed`
+  SHA-256: `2fca242fbe6da04f3369779003ded19a97a9ce99c0fbc2c64fa959b00b9d636f`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

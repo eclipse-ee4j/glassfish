@@ -13,7 +13,7 @@ As required by the [Eclipse Foundation Technology Compatibility Kit License](htt
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta WebSocket TCK, 2.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-websocket-tck-2.0.1.zip, 
-  SHA-256: `c1abd6a1bdd568b94d2f6c1d7447b44e678db81433f559b68b1f75ab51277c9e`
+  SHA-256: `08c9a6ecf509c6df255b67f6662a857a1c390407cd2fe998f9bf5d81c3e0da00`
 
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results-6.1-RC1)

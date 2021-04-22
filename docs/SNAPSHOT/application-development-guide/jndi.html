@@ -336,13 +336,13 @@ runs outside of a Java EE container, is to use the no-argument
 <code>InitialContext</code> constructor. However, if EJB client code explicitly
 instantiates an <code>InitialContext</code> that points to the <code>CosNaming</code> naming
 service, it is necessary to set the <code>java.naming.factory.initial</code>
-property to <code>com.sun.jndi.cosnaming.CNCtxFactory</code> in the client JVM
+property to <code>org.glassfish.jndi.cosnaming.CNCtxFactory</code> in the client JVM
 software when accessing EJB components. You can set this property using
 the <code>asadmin create-jvm-options</code> command, as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jvm-options -Djava.naming.factory.initial=com.sun.jndi.cosnaming.CNCtxFactory</code></pre>
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jvm-options -Djava.naming.factory.initial=org.glassfish.jndi.cosnaming.CNCtxFactory</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -358,7 +358,7 @@ the <code>asadmin create-jvm-options</code> command, as follows:</p>
       try {
             properties = new Properties();
             properties.put("java.naming.factory.initial",
-                  "com.sun.jndi.cosnaming.CNCtxFactory");
+                  "org.glassfish.jndi.cosnaming.CNCtxFactory");
             ...
           }
       ...</code></pre>

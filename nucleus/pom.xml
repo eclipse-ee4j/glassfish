@@ -91,11 +91,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>config-generator</artifactId>
-                    <version>2.5.0-b53</version>
-                </plugin>
-                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>antlr-maven-plugin</artifactId>
                     <version>2.1</version>

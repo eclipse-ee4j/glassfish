@@ -4,96 +4,46 @@ TCK Results
 
 As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
-following is a summary of the TCK results for releases of Jakarta EE Platform 9.1, certification summary.
+following is a summary of the TCK results for releases of Jakarta EE Platform, Web Profile and Eclipse GlassFish Web profile.
 
-# Jakarta EE Platform 9.1, Eclipse GlassFish 6.1 RC1, TCK Certification Summary
+# Jakarta EE Platform Web Profile 9.1, Eclipse GlassFish 6.0 Web Profile, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
   [Eclipse GlassFish Downloads](/glassfish/download)<br/>
-  [glassfish-6.1-RC1.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)
+  [web-6.0.zip](https://download.eclipse.org/ee4j/glassfish/web-6.0.zip)
 
 - Specification Name, Version and download URL: <br/>
-  [Jakarta EE Platform, 9.1](https://jakarta.ee/specifications/platform/9.1/)
+  [Jakarta EE Platform, Web Profile 9.1](https://jakarta.ee/specifications/webprofile/9.1/)
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta EE Platform TCK 9.1](http://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaeetck-9.1.0.zip), 
+  [Jakarta EE Platform TCK 9.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaeetck-9.1.0.zip), 
   SHA-256: `16904b7ccd7ae61287b763587e8bfbff50608ab09f3876bb41af65d043263ca7`
 
 - Public URL of TCK Results Summary: <br/>
-  [TCK results summary](./TCK-Results-6.1-RC1)
-  
+  [TCK results summary](TCK-Results-6.0)
+
 - Any Additional Specification Certification Requirements: <br/>
-  Jakarta Dependency Injection 2.0 TCK <br/>
-  Jakarta Contexts and Dependency Injection 3.0 TCK <br/>
-  Jakarta Bean Validation 3.0 TCK <br/>
+  None
 
 - Java runtime used to run the implementation: <br/>
 ```
-java version "11.0.7" 2020-04-14 LTS
-Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
-Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+java version "1.8.0_191"
+Java(TM) SE Runtime Environment (build 1.8.0_191-b26)
+Java HotSpot(TM) 64-Bit Server VM (build 25.191-b26, mixed mode)
 ```
 
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
   Apache Derby, <br/>
-  Linux, CentOS 7
+  Linux, CentOS 7.
 
 
 Test results:
 
 ```
-Stage Name: appclient
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 50 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 50
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: assembly
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 30 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 30
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: concurrency
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 205 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 205
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
 Stage Name: connector
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 477 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 477
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: ejb
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1793 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1793
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: ejb30/assembly
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 51 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 51
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: ejb30/bb
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1193 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1193
+   [runcts] OUT => [javatest.batch] Completed running 252 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 252
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -172,8 +122,8 @@ Stage Name: ejb30/lite/nointerface
 
 Stage Name: ejb30/lite/packaging
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 211 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 211
+   [runcts] OUT => [javatest.batch] Completed running 203 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 203
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -182,7 +132,7 @@ Stage Name: ejb30/lite/singleton
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 230 tests.
    [runcts] OUT => [javatest.batch] Number of Tests Passed      = 230
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 10
+   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
@@ -218,50 +168,10 @@ Stage Name: ejb30/lite/xmloverride
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
-Stage Name: ejb30/misc
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 100 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 100
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: ejb30/sec
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 99 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 99
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: ejb30/timer
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 178 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 178
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: ejb30/webservice
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 3 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 3
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: ejb30/zombie
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
 Stage Name: ejb32
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 825 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 825
+   [runcts] OUT => [javatest.batch] Completed running 537 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 537
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -274,31 +184,7 @@ Stage Name: el
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
-Stage Name: integration
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 18 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 18
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
 Stage Name: jacc
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 40 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 40
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jaspic
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 68 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 68
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: javaee
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 24 tests.
    [runcts] OUT => [javatest.batch] Number of Tests Passed      = 24
@@ -306,114 +192,42 @@ Stage Name: javaee
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
+Stage Name: jaspic
+   [runcts] OUT => [javatest.batch] ********************************************************************************
+   [runcts] OUT => [javatest.batch] Completed running 61 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 61
+   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
+   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
+   [runcts] OUT => [javatest.batch] ********************************************************************************
+
 Stage Name: javamail
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 112 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 112
+   [runcts] OUT => [javatest.batch] Completed running 56 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 56
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
 Stage Name: jaxrs
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 2803 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 2803
+   [runcts] OUT => [javatest.batch] Completed running 974 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 974
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
-Stage Name: jbatch
+Stage Name: jdbc
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 322 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 322
+   [runcts] OUT => [javatest.batch] Completed running 2462 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 2462
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
-Stage Name: jdbc_appclient
+Stage Name: jpa
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1231 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1231
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jdbc_ejb
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1231 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1231
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jdbc_jsp
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1231 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1231
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jdbc_servlet
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1231 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1231
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jms
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 3510 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 3510
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jpa_appmanaged
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1733 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1733
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jpa_appmanagedNoTx
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1873 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1873
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jpa_pmservlet
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1881 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1881
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jpa_puservlet
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1871 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1871
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jpa_stateful3
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1733 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1733
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: jpa_stateless3
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1883 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1883
+   [runcts] OUT => [javatest.batch] Completed running 1896 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1896
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -428,24 +242,24 @@ Stage Name: jsf
 
 Stage Name: jsonb
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1082 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1062
+   [runcts] OUT => [javatest.batch] Completed running 532 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 532
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
 Stage Name: jsonp
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 744 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 744
+   [runcts] OUT => [javatest.batch] Completed running 372 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 372
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
 Stage Name: jsp
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 730 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 730
+   [runcts] OUT => [javatest.batch] Completed running 720 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 720
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -460,16 +274,16 @@ Stage Name: jstl
 
 Stage Name: jta
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 195 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 195
+   [runcts] OUT => [javatest.batch] Completed running 154 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 154
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
 Stage Name: samples
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 12 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 12
+   [runcts] OUT => [javatest.batch] Completed running 5 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 5
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -484,32 +298,16 @@ Stage Name: securityapi
 
 Stage Name: servlet
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 1730 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1730
+   [runcts] OUT => [javatest.batch] Completed running 1643 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1640
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
 Stage Name: signaturetest/javaee
    [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 4 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 4
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: webservices12
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 242 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 242
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Stage Name: webservices13
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 53 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 53
+   [runcts] OUT => [javatest.batch] Completed running 2 tests.
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 2
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -522,13 +320,6 @@ Stage Name: websocket
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
 
-Stage Name: xa
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 66 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 66
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
 ```
 
 Additionally, Jakarta EE 9 Specification requires the following TCKs:
@@ -546,6 +337,7 @@ TCK result summary:
     [junit] Tests run: 50, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 sec
 ```
 
+
 Jakarta Contexts and Dependency Injection 3.0 TCK
 
 Download URL & SHA-256
@@ -555,12 +347,13 @@ SHA-256:  `f0a3bdd81ea552ddf2c2a6cd2576f0d5ca45026665cb4a5c42606a58bf1c133d`
 
 TCK Result Summary:
 ```
- [mvn.test] Tests run: 1794, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2,556.506 sec
+ [mvn.test] Tests run: 1794, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5,301.633 sec
  [mvn.test] 
  [mvn.test] Results :
  [mvn.test] 
  [mvn.test] Tests run: 1794, Failures: 0, Errors: 0, Skipped: 0
 ```
+
 
 Jakarta Bean Validation 3.0 TCK
 
@@ -571,12 +364,13 @@ SHA-256: `c975fd229df0c40947a9f0a69b779ec92bebb3d21e05fdc65fccc1d11ef5525b`
 
 TCK Result Summary:
 ```
- [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 603.628 sec - in TestSuite
+ [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1,426.594 sec - in TestSuite
  [mvn.test] 
  [mvn.test] Results :
  [mvn.test] 
  [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0
 ```
+
 
 Jakarta XML Binding 3.0.1 TCK
 
@@ -612,7 +406,7 @@ Test results: (from home/jenkins/agent/workspace/jaxb-tck_master/JAXB_REPORT/JAX
 | **Total**                                         | **24628** | **24628** |
 
 
-Jakarta Debugging Support for Other Languages 2.0 TCK
+Jakarta Debugging Support for Other Languages 1.0 TCK
 
 Download URL & SHA-256
 
@@ -634,5 +428,4 @@ TCK Result Summary:
 + echo '<testcase name="VerifySMAP" classname="VerifySMAP" time="0" status="Passed"><system-out></system-out></testcase>'
 + echo '</testsuite>'
 + echo ''
-
 ```

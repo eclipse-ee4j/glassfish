@@ -6,11 +6,11 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta EE Platform 9.1, certification summary.
 
-# Jakarta EE Platform 9.1, Eclipse GlassFish 6.1 RC1, TCK Certification Summary
+# Jakarta EE Platform 9.1, Eclipse GlassFish 6.0, TCK Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish Downloads](/glassfish/download)<br/>
-  [glassfish-6.1-RC1.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip)
+  [Eclipse Eclipse GlassFish Downloads](/glassfish/download)<br/>
+  [glassfish-6.0.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0.zip)
 
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, 9.1](https://jakarta.ee/specifications/platform/9.1/)
@@ -20,18 +20,20 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 9.
   SHA-256: `16904b7ccd7ae61287b763587e8bfbff50608ab09f3876bb41af65d043263ca7`
 
 - Public URL of TCK Results Summary: <br/>
-  [TCK results summary](./TCK-Results-6.1-RC1)
+  [TCK results summary](./TCK-Results-6.0)
   
 - Any Additional Specification Certification Requirements: <br/>
   Jakarta Dependency Injection 2.0 TCK <br/>
   Jakarta Contexts and Dependency Injection 3.0 TCK <br/>
   Jakarta Bean Validation 3.0 TCK <br/>
+  Jakarta XML Binding 3.0 TCK <br/>
 
 - Java runtime used to run the implementation: <br/>
 ```
-java version "11.0.7" 2020-04-14 LTS
-Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)
-Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)
+java version "1.8.0_191"
+Java(TM) SE Runtime Environment (build 1.8.0_191-b26)
+Java HotSpot(TM) 64-Bit Server VM (build 25.191-b26, mixed mode)
+
 ```
 
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>
@@ -555,7 +557,7 @@ SHA-256:  `f0a3bdd81ea552ddf2c2a6cd2576f0d5ca45026665cb4a5c42606a58bf1c133d`
 
 TCK Result Summary:
 ```
- [mvn.test] Tests run: 1794, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2,556.506 sec
+ [mvn.test] Tests run: 1794, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6,354.02 sec
  [mvn.test] 
  [mvn.test] Results :
  [mvn.test] 
@@ -571,7 +573,7 @@ SHA-256: `c975fd229df0c40947a9f0a69b779ec92bebb3d21e05fdc65fccc1d11ef5525b`
 
 TCK Result Summary:
 ```
- [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 603.628 sec - in TestSuite
+ [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1,426.594 sec - in TestSuite
  [mvn.test] 
  [mvn.test] Results :
  [mvn.test] 

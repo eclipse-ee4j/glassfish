@@ -4,16 +4,16 @@ TCK Results
 
 As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
-following is a summary of the TCK results for releases of Jakarta EE Platform, Web Profile and Eclipse GlassFish Web Procile.
+following is a summary of the TCK results for releases of Jakarta EE Platform, Web Profile and Eclipse GlassFish Web profile.
 
-# Jakarta EE Platform Web Profile 9.1, Eclipse GlassFish 6.1 Web Profile, Certification Summary
+# Jakarta EE Platform Web Profile 9.1, Eclipse GlassFish Web Profile 6.1 RC1, Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish 6.1, Web Profile](/glassfish/download)<br/>
+  [Eclipse GlassFish Downloads](/glassfish/download)<br/>
   [web-6.1.0-RC1.zip](https://download.eclipse.org/ee4j/glassfish/web-6.1.0-RC1.zip)
 
 - Specification Name, Version and download URL: <br/>
-  [Jakarta EE Platform, Web Profile 9.0](https://jakarta.ee/specifications/webprofile/9.1/)
+  [Jakarta EE Platform, Web Profile 9.1](https://jakarta.ee/specifications/webprofile/9.1/)
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE Platform TCK 9.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaeetck-9.1.0.zip), 
@@ -131,19 +131,10 @@ Stage Name: ejb30/lite/packaging
 Stage Name: ejb30/lite/singleton
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 230 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 220
-   [runcts] OUT => [javatest.batch] Number of Tests Failed      = 10
-   [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-
-   [runcts] OUT => [javatest.batch] ********************************************************************************
-   [runcts] OUT => [javatest.batch] Completed running 10 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 10
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 230
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
-
-Includes: singleton_concurrency 125; singleton_dependson 20; singleton_lifecycle 85 (230 total tests)
 
 Stage Name: ejb30/lite/stateful
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -308,7 +299,7 @@ Stage Name: securityapi
 Stage Name: servlet
    [runcts] OUT => [javatest.batch] ********************************************************************************
    [runcts] OUT => [javatest.batch] Completed running 1643 tests.
-   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1643
+   [runcts] OUT => [javatest.batch] Number of Tests Passed      = 1640
    [runcts] OUT => [javatest.batch] Number of Tests Failed      = 0
    [runcts] OUT => [javatest.batch] Number of Tests with Errors = 0
    [runcts] OUT => [javatest.batch] ********************************************************************************
@@ -356,7 +347,7 @@ SHA-256:  `f0a3bdd81ea552ddf2c2a6cd2576f0d5ca45026665cb4a5c42606a58bf1c133d`
 
 TCK Result Summary:
 ```
- [mvn.test] Tests run: 1794, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2,556.506 sec
+[mvn.test] Tests run: 1794, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6,354.02 sec
  [mvn.test] 
  [mvn.test] Results :
  [mvn.test] 
@@ -373,12 +364,46 @@ SHA-256: `c975fd229df0c40947a9f0a69b779ec92bebb3d21e05fdc65fccc1d11ef5525b`
 
 TCK Result Summary:
 ```
- [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 603.628 sec - in TestSuite
+ [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 597.125 sec - in TestSuite
  [mvn.test] 
  [mvn.test] Results :
  [mvn.test] 
  [mvn.test] Tests run: 1045, Failures: 0, Errors: 0, Skipped: 0
 ```
+
+
+Jakarta XML Binding 3.0.1 TCK
+
+- TCK Version, digital SHA-256 fingerprint and download URL: <br/>
+  [Jakarta XML Binding 3.0.1, TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-xml-binding-tck-3.0.1.zip), <br/>
+  SHA-256: `a9356a2eb989e8cb7f663ed5fd244d8e2d222e2c4108c40c65001bec90f40baf`
+
+TCK Result Summary:
+Test results: (from home/jenkins/agent/workspace/jaxb-tck_master/JAXB_REPORT/JAXB-TCK/html/report.html)
+
+| Keyword                                           | Passed    | Total     |
+| ------------------------------------------------- | --------- | --------- |
+| bindinfo document positive                        | 75        | 75        |
+| bindinfo empty_output positive schema             | 2         | 2         |
+| bindinfo negative schema                          | 11        | 11        |
+| bindinfo positive schema                          | 48        | 48        |
+| cttest positive runtime                           | 1         | 1         |
+| document positive                                 | 5070      | 5070      |
+| document positive runtime                         | 195       | 195       |
+| document positive validation_checker              | 5613      | 5613      |
+| empty_output java_to_schema jaxb positive runtime | 2         | 2         |
+| empty_output jaxb positive rtgen runtime          | 2         | 2         |
+| empty_output positive schema                      | 25        | 25        |
+| java_to_schema jaxb negative runtime              | 22        | 22        |
+| java_to_schema jaxb positive runtime              | 309       | 309       |
+| jaxb positive rtgen runtime                       | 308       | 308       |
+| jaxb positive runtime                             | 1         | 1         |
+| jaxb rtgen runtime                                | 22        | 22        |
+| negative schema                                   | 2678      | 2678      |
+| positive runtime                                  | 16        | 16        |
+| positive schema                                   | 10224     | 10224     |
+| runtime                                           | 4         | 4         |
+| **Total**                                         | **24628** | **24628** |
 
 
 Jakarta Debugging Support for Other Languages 1.0 TCK

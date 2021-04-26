@@ -33,7 +33,6 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 9.
 java version "1.8.0_191"
 Java(TM) SE Runtime Environment (build 1.8.0_191-b26)
 Java HotSpot(TM) 64-Bit Server VM (build 25.191-b26, mixed mode)
-
 ```
 
 - Summary of the information for the certification environment, operating system, cloud, ...: <br/>

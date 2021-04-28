@@ -17,6 +17,7 @@
 package org.glassfish.appclient.client.acc.agent;
 
 import static java.io.File.pathSeparator;
+import static java.security.AccessController.doPrivileged;
 import static java.util.Collections.emptyList;
 
 import java.io.File;
@@ -27,7 +28,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -50,14 +50,16 @@ public class ACCAgentClassLoader extends URLClassLoader {
     public ACCAgentClassLoader(ClassLoader parent) {
         /*
          * This constructor is used by the VM to create a system class loader (as specified by -Djava.system.class.loader on the
-         * java command created from the appclient script). <p> Actually create two new loaders. One will handle the GlassFish
+         * java command created from the appclient script). 
+         * 
+         * Actually create two new loaders. One will handle the GlassFish
          * system JARs and the second will temporarily handle the application resources - typically for a splash screen.
          */
-        super(userClassPath(), prepareLoader(GFSystemClassPath(), parent.getParent()));
+        super(userClassPath(), prepareLoader(GFSystemClassPath(), new ClassLoaderWrapper(parent.getParent())));
     }
 
-    private static URLClassLoader prepareLoader(final URL[] urls, final ClassLoader parent) {
-        return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
+    private static URLClassLoader prepareLoader(URL[] urls, ClassLoader parent) {
+        return doPrivileged(new PrivilegedAction<URLClassLoader>() {
             @Override
             public URLClassLoader run() {
                 return new URLClassLoader(urls, parent);
@@ -71,7 +73,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
     }
 
     public ACCAgentClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
+        super(urls, new ClassLoaderWrapper(parent));
     }
 
     public ACCAgentClassLoader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {

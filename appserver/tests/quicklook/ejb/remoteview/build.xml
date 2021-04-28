@@ -38,13 +38,12 @@
         <antcall target="deploy-${deploy.platform}-impl"/>
     </target>
     
-    <target  name="runtest"> 
+    <target name="runtest"> 
         <antcall target="runtest-impl">
-        <param name="contextroot" value="${testng.test.name}"/>
-        <param name="testng.test.name" value="${testng.test.name}"/>
-        <param name="testng.testclient" value="RemoteViewTestNG"/>
-     </antcall>
-        
+            <param name="contextroot" value="${testng.test.name}"/>
+            <param name="testng.test.name" value="${testng.test.name}"/>
+            <param name="testng.testclient" value="RemoteViewTestNG"/>
+        </antcall>
     </target>
     
     <target name="undeploy">
@@ -52,5 +51,3 @@
     </target>
     
 </project>
-
-

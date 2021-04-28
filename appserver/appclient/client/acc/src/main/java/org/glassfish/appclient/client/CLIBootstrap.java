@@ -16,6 +16,8 @@
 
 package org.glassfish.appclient.client;
 
+import static java.lang.System.arraycopy;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -73,13 +75,6 @@ public class CLIBootstrap {
 
     final static String ENV_VAR_PROP_PREFIX = "acc.";
 
-    /** options to the ACC that take a value */
-    private final static String ACC_VALUED_OPTIONS_PATTERN = "-mainclass|-name|-xml|-configxml|-user|-password|-passwordfile|-targetserver";
-
-    /** options to the ACC that take no value */
-    private final static String ACC_UNVALUED_OPTIONS_PATTERN = "-textauth|-noappinvoke|-usage|-help";
-
-    private final static String JVM_VALUED_OPTIONS_PATTERN = "-classpath|-cp";
 
     private final static String INSTALL_ROOT_PROPERTY_EXPR = "-Dcom.sun.aas.installRoot=";
     private final static String SECURITY_POLICY_PROPERTY_EXPR = "-Djava.security.policy=";
@@ -88,29 +83,58 @@ public class CLIBootstrap {
 
     private final static String[] ENV_VARS = { "_AS_INSTALL", "APPCPATH", "VMARGS" };
 
-    private JavaInfo java;
-    private GlassFishInfo gfInfo;
-    private UserVMArgs userVMArgs;
-
+    private JavaInfo java = new JavaInfo();
+    private GlassFishInfo gfInfo = new GlassFishInfo();
+    private UserVMArgs userVMArgs = new UserVMArgs(System.getProperty(ENV_VAR_PROP_PREFIX + "VMARGS"));
+    
     /**
-     * set up during init with various subtypes of command line elements
+     * Set up with various sub-types of command line elements
      */
-    private CommandLineElement accValuedOptions, accUnvaluedOptions, jvmPropertySettings, jvmValuedOptions, otherJVMOptions, arguments;
-
-    /** arguments passed to the ACC Java agent */
-    private final AgentArgs agentArgs = new AgentArgs();
-
-    /** records how the user specifies the main class: -jar xxx.jar, -client xxx.jar, or a.b.MainClass */
+    private CommandLineElement 
+        /** options to the ACC that take a value */
+        accValuedOptions = new ACCValuedOption("-mainclass|-name|-xml|-configxml|-user|-password|-passwordfile|-targetserver"), 
+        
+        /** options to the ACC that take no value */
+        accUnvaluedOptions = new ACCUnvaluedOption("-textauth|-noappinvoke|-usage|-help"), 
+        
+        jvmValuedOptions = new JVMValuedOption("-classpath|-cp", userVMArgs.evJVMValuedOptions), 
+        jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings), 
+        otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions), 
+        arguments = new CommandLineElement(".*", Pattern.DOTALL);
+    
+    /** Records how the user specifies the main class: -jar xxx.jar, -client xxx.jar, or a.b.MainClass */
     private final JVMMainOption jvmMainSetting = new JVMMainOption();
-
+    
     /** command line elements from most specific to least specific matching pattern */
-    private CommandLineElement[] elementsInScanOrder;
+    private CommandLineElement[] elementsInScanOrder = new CommandLineElement[] { 
+            accValuedOptions,   // collects options into "agentArgs"
+            accUnvaluedOptions, // collects options into "agentArgs"
+            jvmValuedOptions,
+            jvmPropertySettings,
+            jvmMainSetting, 
+            otherJVMOptions, 
+            arguments };
 
     /**
-     * command line elements in the order they should appear on the generated command line
+     * Command line elements in the order they should appear on the generated command line
+     * Add the elements in this order so they appear in the generated java command in the correct positions.
      */
-    private CommandLineElement[] elementsInOutputOrder;
+    private CommandLineElement[] elementsInOutputOrder = new CommandLineElement[] { 
+            jvmValuedOptions, 
+            jvmPropertySettings, 
+            otherJVMOptions,
+            jvmMainSetting, 
+            arguments };
+ 
 
+    /** Arguments passed to the ACC Java agent, collected by "accValuedOptions" and "accUnvaluedOptions"  */
+    private final AgentArgs agentArgs = new AgentArgs();
+   
+
+    
+    // #### Main() Methods
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -150,27 +174,18 @@ public class CLIBootstrap {
         }
     }
 
-    /**
-     * Replaces commas in an argument value (which can confuse the ACC agent argument parsing because shells strip out
-     * double-quotes) with a special sequence.
-     *
-     * @param string string to encode
-     * @return encoded string
-     */
-    public static String encodeArg(String string) {
-        return string.replace(",", COMMA_IN_ARG_PLACEHOLDER);
+    private static void envToProps() {
+        for (String envVar : ENV_VARS) {
+            String value = System.getenv(envVar);
+            if (value != null) {
+                System.setProperty(ENV_VAR_PROP_PREFIX + envVar, value);
+                if (isDebug) {
+                    System.err.println(ENV_VAR_PROP_PREFIX + envVar + " set to " + value);
+                }
+            }
+        }
     }
-
-    /**
-     * Replaces occurrences of comma encoding with commas.
-     *
-     * @param string possibly encoded string
-     * @return decoded string
-     */
-    public static String decodeArg(String string) {
-        return string.replace(COMMA_IN_ARG_PLACEHOLDER, ",");
-    }
-
+    
     private static String[] convertInputArgsVariable(String inputArgs) {
         /*
          * The pattern matches a quoted string (double quotes around a string containing no double quote) or a non-quoted string
@@ -190,67 +205,109 @@ public class CLIBootstrap {
         return argList.toArray(new String[argList.size()]);
     }
 
-    private static void envToProps() {
-        for (String envVar : ENV_VARS) {
-            String value = System.getenv(envVar);
-            if (value != null) {
-                System.setProperty(ENV_VAR_PROP_PREFIX + envVar, value);
-                if (isDebug) {
-                    System.err.println(ENV_VAR_PROP_PREFIX + envVar + " set to " + value);
+    
+    
+    
+    // #### Instance methods
+    CLIBootstrap() throws UserError {
+    }
+    
+    
+    
+    JavaInfo initJava() {
+        return new JavaInfo();
+    }
+    
+    /**
+     * Processes the user-provided command-line elements and creates the resulting output string.
+     *
+     * @param args
+     * @throws UserError
+     */
+    private String run(String[] args) throws UserError {
+        java = new JavaInfo();
+        gfInfo = new GlassFishInfo();
+
+        String[] augmentedArgs = new String[args.length + 2];
+        augmentedArgs[0] = "-configxml";
+        augmentedArgs[1] = gfInfo.configxml().getAbsolutePath();
+        arraycopy(args, 0, augmentedArgs, 2, args.length);
+
+        /*
+         * Process each command-line argument by the first CommandLineElement which matches the argument.
+         */
+        for (int i = 0; i < augmentedArgs.length;) {
+            boolean isMatched = false;
+            for (CommandLineElement cle : elementsInScanOrder) {
+                if (isMatched = cle.matches(augmentedArgs[i])) {
+                    i = cle.processValue(augmentedArgs, i);
+                    break;
                 }
             }
+            if (!isMatched) {
+                throw new UserError("arg " + i + " = " + augmentedArgs[i] + " not recognized");
+            }
         }
+
+        StringBuilder command = new StringBuilder(quote(java.javaExe));
+
+        addProperties(command);
+
+        /*
+         * The user does not specify the -javaagent option we need, so we provide it here. (It is added to the appropriate
+         * command-line element object so, when formatted, that command-line element includes the -javaagent option.)
+         */
+        addAgentOption();
+
+        /*
+         * If the user did not specify a client or usage or help then add the -usage option.
+         */
+        if (!jvmMainSetting.isSet() && !isHelp() && !isUsage()) {
+            accUnvaluedOptions.processValue(new String[] { "-usage" }, 0);
+        }
+
+        boolean needSep = true;
+        for (CommandLineElement e : elementsInOutputOrder) {
+            needSep = processCommandElement(command, e, needSep);
+        }
+
+        return command.toString();
     }
-
-    CLIBootstrap() throws UserError {
-        init();
-    }
-
-    private void init() throws UserError {
-        java = initJava();
-        gfInfo = new GlassFishInfo();
-        userVMArgs = new UserVMArgs(System.getProperty(ENV_VAR_PROP_PREFIX + "VMARGS"));
-
-        // Assign the various command line element matchers. 
-        // See the descriptions of each subtype for what each is used for.
-
-        accValuedOptions = new ACCValuedOption(ACC_VALUED_OPTIONS_PATTERN);
-        accUnvaluedOptions = new ACCUnvaluedOption(ACC_UNVALUED_OPTIONS_PATTERN);
-        jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings);
-        jvmValuedOptions = new JVMValuedOption(JVM_VALUED_OPTIONS_PATTERN, userVMArgs.evJVMValuedOptions);
-        otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions);
-        arguments = new CommandLineElement(".*", Pattern.DOTALL);
-
-        initCommandLineElements();
-    }
-
+    
     /**
-     * Populates the command line elements collection to contain the elements from most specific matching pattern to least
-     * specific.
+     * Adds JVM properties for various ACC settings.
+     * 
+     * @param command
      */
-    private void initCommandLineElements() {
-        // Add the elements in this order so the regex patterns will match the correct elements. In this arrangement, the
-        // patterns are from most specific to most general.
-        elementsInScanOrder = new CommandLineElement[] { 
-            accValuedOptions, 
-            accUnvaluedOptions, 
-            jvmValuedOptions, 
-            jvmPropertySettings,
-            jvmMainSetting, 
-            otherJVMOptions, 
-            arguments };
-
-        // Add the elements in this order so they appear in the generated java command in the correct positions.
-        // In JDK 9 and later ext and endorsed directory removed.
-        elementsInOutputOrder = new CommandLineElement[] { 
-            jvmValuedOptions, 
-            jvmPropertySettings, 
-            otherJVMOptions,
-            accUnvaluedOptions,
-            accValuedOptions, 
-            jvmMainSetting, 
-            arguments };
+    private void addProperties(final StringBuilder command) {
+        command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
+        command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
+        command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
+        command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
+        command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
+        command.append(' ').append(SYSTEM_CLASS_LOADER_PROPERTY_EXPR);
+        command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
     }
+    
+    /**
+     * Adds the -javaagent option to the command line.
+     * 
+     */
+    private void addAgentOption() throws UserError {
+        otherJVMOptions.processValue(new String[] { "-javaagent:" + quote(gfInfo.agentJarPath()) + agentOptionsFromFile() }, 0);
+    }
+    
+    private boolean processCommandElement(StringBuilder command, CommandLineElement commandLineElement, boolean needSep) {
+        if (needSep) {
+            command.append(' ');
+        }
+        
+        return commandLineElement.format(command);
+    }
+    
+    
+    
+    // #### Static utility methods
 
     /**
      * Places double quote marks around a string if the string is not already so enclosed.
@@ -277,6 +334,28 @@ public class CLIBootstrap {
     private static String quoteSuppressTokenSubst(String string) {
         return (OS.isWindows() ? quote(string) : quote(string.replace("$", "\\$")));
     }
+    
+    /**
+     * Replaces commas in an argument value (which can confuse the ACC agent argument parsing because shells strip out
+     * double-quotes) with a special sequence.
+     *
+     * @param string string to encode
+     * @return encoded string
+     */
+    public static String encodeArg(String string) {
+        return string.replace(",", COMMA_IN_ARG_PLACEHOLDER);
+    }
+    
+    /**
+     * Replaces occurrences of comma encoding with commas.
+     *
+     * @param string possibly encoded string
+     * @return decoded string
+     */
+    public static String decodeArg(String string) {
+        return string.replace(COMMA_IN_ARG_PLACEHOLDER, ",");
+    }
+    
 
     /**
      * Manages the arguments which will be passed to the ACC Java agent.
@@ -315,6 +394,11 @@ public class CLIBootstrap {
             return args.toString();
         }
     }
+    
+    
+    
+    // #### Base classes uses for the concrete elements
+    
 
     /**
      * A command-line element. Various subtypes have some different behavior for some of the methods.
@@ -461,68 +545,6 @@ public class CLIBootstrap {
     }
 
     /**
-     * A JVM command-line option. Only JVM options which appear before the main class setting are propagated to the output
-     * command line as JVM options. If they appear after the main class setting then they are treated as arguments to the
-     * client.
-     * <p>
-     * This type of command line element can include values specified using the VMARGS environment variable.
-     *
-     */
-    private class JVMOption extends Option {
-
-        JVMOption(String patternString, CommandLineElement vmargsJVMOptionElement) {
-            super(patternString);
-            if (vmargsJVMOptionElement != null) {
-                values.addAll(vmargsJVMOptionElement.values);
-            }
-        }
-
-        @Override
-        boolean matches(String element) {
-            /*
-             * Although the element might match the pattern (-.*) we do not treat this as JVM option if we have already processed
-             * the main class determinant.
-             */
-            return (!jvmMainSetting.isSet()) && super.matches(element);
-        }
-    }
-
-    /**
-     * ACC options match anywhere on the command line unless and until we see "-jar xxx" in which case we impose the
-     * Java-style restriction that anything which follows the specification of the main class is an argument to be passed to
-     * the application.
-     * <p>
-     * We do not impose the same restriction if the user specified -client xxx.jar in order to preserve backward
-     * compatibility with earlier releases, in which ACC options and client arguments could be intermixed anywhere on the
-     * command line.
-     */
-    private class ACCUnvaluedOption extends Option {
-        ACCUnvaluedOption(final String patternString) {
-            super(patternString);
-        }
-
-        @Override
-        boolean matches(final String element) {
-            return (!jvmMainSetting.isJarSetting()) && super.matches(element);
-        }
-
-        @Override
-        int processValue(String[] args, int slot) throws UserError {
-            final int result = super.processValue(args, slot);
-            agentArgs.addACCArg(values.get(values.size() - 1));
-            return result;
-        }
-
-        @Override
-        boolean format(final StringBuilder commandLine) {
-            /*
-             * We do not send ACC arguments to the Java command line. They are placed into the agent argument string instead.
-             */
-            return false;
-        }
-    }
-
-    /**
      * An option that takes a value as the next command line element.
      */
     private class ValuedOption extends Option {
@@ -560,22 +582,13 @@ public class CLIBootstrap {
             return !optValues.isEmpty();
         }
     }
-
-    private class JVMValuedOption extends ValuedOption {
-
-        JVMValuedOption(final String patternString, final CommandLineElement vmargsJVMValuedOption) {
-            super(patternString);
-            if (vmargsJVMValuedOption != null) {
-                values.addAll(vmargsJVMValuedOption.values);
-            }
-        }
-
-        @Override
-        boolean matches(final String element) {
-            return (!jvmMainSetting.isJarSetting()) && super.matches(element);
-        }
-    }
-
+    
+    
+    
+    // #### Concrete elements
+    
+    
+    
     /**
      * ACC options can appear until "-jar xxx" on the command line.
      */
@@ -604,6 +617,83 @@ public class CLIBootstrap {
              * We do not send ACC arguments to the Java command line. They are placed into the agent argument string instead.
              */
             return false;
+        }
+    }
+    
+    /**
+     * ACC options match anywhere on the command line unless and until we see "-jar xxx" in which case we impose the
+     * Java-style restriction that anything which follows the specification of the main class is an argument to be passed to
+     * the application.
+     * <p>
+     * We do not impose the same restriction if the user specified -client xxx.jar in order to preserve backward
+     * compatibility with earlier releases, in which ACC options and client arguments could be intermixed anywhere on the
+     * command line.
+     */
+    private class ACCUnvaluedOption extends Option {
+        ACCUnvaluedOption(final String patternString) {
+            super(patternString);
+        }
+
+        @Override
+        boolean matches(final String element) {
+            return (!jvmMainSetting.isJarSetting()) && super.matches(element);
+        }
+
+        @Override
+        int processValue(String[] args, int slot) throws UserError {
+            final int result = super.processValue(args, slot);
+            agentArgs.addACCArg(values.get(values.size() - 1));
+            return result;
+        }
+
+        @Override
+        boolean format(final StringBuilder commandLine) {
+            /*
+             * We do not send ACC arguments to the Java command line. They are placed into the agent argument string instead.
+             */
+            return false;
+        }
+    }
+    
+    private class JVMValuedOption extends ValuedOption {
+
+        JVMValuedOption(final String patternString, final CommandLineElement vmargsJVMValuedOption) {
+            super(patternString);
+            if (vmargsJVMValuedOption != null) {
+                values.addAll(vmargsJVMValuedOption.values);
+            }
+        }
+
+        @Override
+        boolean matches(final String element) {
+            return (!jvmMainSetting.isJarSetting()) && super.matches(element);
+        }
+    }
+    
+    /**
+     * A JVM command-line option. Only JVM options which appear before the main class setting are propagated to the output
+     * command line as JVM options. If they appear after the main class setting then they are treated as arguments to the
+     * client.
+     * <p>
+     * This type of command line element can include values specified using the VMARGS environment variable.
+     *
+     */
+    private class JVMOption extends Option {
+
+        JVMOption(String patternString, CommandLineElement vmargsJVMOptionElement) {
+            super(patternString);
+            if (vmargsJVMOptionElement != null) {
+                values.addAll(vmargsJVMOptionElement.values);
+            }
+        }
+
+        @Override
+        boolean matches(String element) {
+            /*
+             * Although the element might match the pattern (-.*) we do not treat this as JVM option if we have already processed
+             * the main class determinant.
+             */
+            return (!jvmMainSetting.isSet()) && super.matches(element);
         }
     }
 
@@ -730,96 +820,12 @@ public class CLIBootstrap {
         }
     }
 
-    /**
-     * Adds JVM properties for various ACC settings.
-     * 
-     * @param command
-     */
-    private void addProperties(final StringBuilder command) {
-        command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
-        command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
-        command.append(' ').append(SYSTEM_CLASS_LOADER_PROPERTY_EXPR);
-        command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
-    }
-
-    /**
-     * Processes the user-provided command-line elements and creates the resulting output string.
-     *
-     * @param args
-     * @throws UserError
-     */
-    private String run(String[] args) throws UserError {
-        java = initJava();
-        gfInfo = new GlassFishInfo();
-
-        final String[] augmentedArgs = new String[args.length + 2];
-        augmentedArgs[0] = "-configxml";
-        augmentedArgs[1] = gfInfo.configxml().getAbsolutePath();
-        System.arraycopy(args, 0, augmentedArgs, 2, args.length);
-
-        /*
-         * Process each command-line argument by the first CommandLineElement which matches the argument.
-         */
-        for (int i = 0; i < augmentedArgs.length;) {
-            boolean isMatched = false;
-            for (CommandLineElement cle : elementsInScanOrder) {
-                if (isMatched = cle.matches(augmentedArgs[i])) {
-                    i = cle.processValue(augmentedArgs, i);
-                    break;
-                }
-            }
-            if (!isMatched) {
-                throw new UserError("arg " + i + " = " + augmentedArgs[i] + " not recognized");
-            }
-        }
-
-        final StringBuilder command = new StringBuilder(quote(java.javaExe));
-
-        addProperties(command);
-
-        /*
-         * The user does not specify the -javaagent option we need, so we provide it here. (It is added to the appropriate
-         * command-line element object so, when formatted, that command-line element includes the -javaagent option.)
-         */
-        addAgentOption();
-
-        /*
-         * If the user did not specify a client or usage or help then add the -usage option.
-         */
-        if (!jvmMainSetting.isSet() && !isHelp() && !isUsage()) {
-            accUnvaluedOptions.processValue(new String[] { "-usage" }, 0);
-        }
-
-        boolean needSep = true;
-        for (CommandLineElement e : elementsInOutputOrder) {
-            needSep = processCommandElement(command, e, needSep);
-        }
-
-        return command.toString();
-    }
-
-    private boolean processCommandElement(StringBuilder command, CommandLineElement commandLineElement, boolean needSep) {
-        if (needSep) {
-            command.append(' ');
-        }
-        
-        return commandLineElement.format(command);
-    }
-
     private boolean isHelp() {
         return accUnvaluedOptions.values.contains("-help");
     }
 
     private boolean isUsage() {
         return accUnvaluedOptions.values.contains("-usage");
-    }
-
-    /**
-     * Adds the -javaagent option to the command line.
-     * 
-     */
-    private void addAgentOption() throws UserError {
-        otherJVMOptions.processValue(new String[] { "-javaagent:" + quote(gfInfo.agentJarPath()) + agentOptionsFromFile() }, 0);
     }
 
     private String agentOptionsFromFile() {
@@ -880,11 +886,12 @@ public class CLIBootstrap {
              * Try using glassfish-acc.xml. If that does not exist then the user might have done an in-place upgrade from an earlier
              * version that used sun-acc.xml.
              */
-            final File configXMLFile = new File(new File(home, ACC_CONFIG_PREFIX), "glassfish-acc.xml");
+            File configXMLFile = new File(new File(home, ACC_CONFIG_PREFIX), "glassfish-acc.xml");
             if (configXMLFile.canRead()) {
                 return configXMLFile;
             }
-            final File sunACCXMLFile = new File(new File(home, ACC_CONFIG_PREFIX), "sun-acc.xml");
+            
+            File sunACCXMLFile = new File(new File(home, ACC_CONFIG_PREFIX), "sun-acc.xml");
             if (sunACCXMLFile.canRead()) {
                 return sunACCXMLFile;
             }
@@ -914,10 +921,7 @@ public class CLIBootstrap {
             return new File(libAppclient, "appclientlogin.conf");
         }
     }
-
-    JavaInfo initJava() {
-        return new JavaInfo();
-    }
+    
 
     /**
      * Collects information about the current Java implementation.
@@ -998,15 +1002,15 @@ public class CLIBootstrap {
         private CommandLineElement evOtherJVMOptions;
 
         private final List<CommandLineElement> evElements = new ArrayList<CommandLineElement>();
-
-        UserVMArgs(final String vmargs) throws UserError {
+        
+        UserVMArgs(String vmargs) throws UserError {
 
             if (isDebug) {
                 System.err.println("VMARGS = " + (vmargs == null ? "null" : vmargs));
             }
 
             evJVMPropertySettings = new JVMOption("-D.*", null);
-            evJVMValuedOptions = new JVMValuedOption(JVM_VALUED_OPTIONS_PATTERN, null);
+            evJVMValuedOptions = new JVMValuedOption("-classpath|-cp", null);
             evOtherJVMOptions = new JVMOption("-.*", null);
 
             initEVCommandLineElements();

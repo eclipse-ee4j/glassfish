@@ -4,10 +4,37 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 # Jakarta EE 9 Certifications
 
+## Jakarta EE Platform, 9.1, Eclipse GlassFish 6.1 RC1
+
+* [Jakarta EE Platform 9.1](certifications/jakarta-platform/9.1/TCK-Results-6.1-RC1)
+* Includes results for
+  * Jakarta Debugging support for Other Languages 2.0
+  * Jakarta Dependency Injection 2.0
+  * Jakarta Contexts and Dependency Injection 3.0
+  * Jakarta Bean Validation 3.0 
+  * Jakarta XML Binding 3.0
+
+## Jakarta EE Platform Web Profile, 9.1, Eclipse GlassFish Web Procile 6.1 RC1
+
+* [Jakarta EE, Web Profile 9.1](certifications/jakarta-web-profile/9.1/TCK-Results-6.1-RC1)
+* Includes results for
+  * Jakarta Debugging support for Other Languages 2.0
+  * Jakarta Dependency Injection 2.0
+  * Jakarta Contexts and Dependency Injection 3.0
+  * Jakarta Bean Validation 3.0
+  * Jakarta XML Binding 3.0
+  
+## Jakarta EE 9.1, Eclipse GlassFish 6.1 Component Specification Certifications
+ 
+See [Jakarta EE 9.1, Eclipse GlassFish 6.1 RC1 Certification Details](certifications/EE-9.1-GlassFish-6.1-RC1)
+
+----
+
 ## Jakarta EE Platform, 9
 
 * [Jakarta EE Platform 9.0](certifications/jakarta-full-profile/9.0/TCK-Results)
 * Includes results for
+  * Jakarta Debugging support for Other Languages 2.0
   * Jakarta Dependency Injection 2.0
   * Jakarta Contexts and Dependency Injection 3.0
   * Jakarta Bean Validation 3.0  
@@ -16,6 +43,7 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 * [Jakarta EE, Web Profile 9.0](certifications/jakarta-web-profile/9.0/TCK-Results)
 * Includes results for
+  * Jakarta Debugging support for Other Languages 2.0
   * Jakarta Dependency Injection 2.0
   * Jakarta Contexts and Dependency Injection 3.0
   * Jakarta Bean Validation 3.0

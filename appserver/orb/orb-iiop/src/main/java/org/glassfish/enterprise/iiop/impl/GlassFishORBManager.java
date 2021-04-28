@@ -557,6 +557,9 @@ public final class GlassFishORBManager {
             }
 
             // Can't run with GlassFishORBManager.class.getClassLoader() as the context ClassLoader
+            
+            // For ORB compatibility with JDK11+ JDKs see https://github.com/eclipse-ee4j/orb-gmbal/issues/22
+            System.setProperty("org.glassfish.gmbal.no.multipleUpperBoundsException", "true");
             orb = ORBFactory.create() ;
             ORBFactory.initialize( orb, args, orbInitProperties, useOSGI);
 

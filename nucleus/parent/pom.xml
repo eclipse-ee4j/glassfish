@@ -123,6 +123,7 @@
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <hk2.version>3.0.2</hk2.version>
         <hk2.plugin.version>3.0.2</hk2.plugin.version>
+		<hk2.config-generator.version>2.5.0-b53</hk2.config-generator.version>
         <pfl.version>4.1.2</pfl.version>
 
         <gmbal.version>4.0.3</gmbal.version>   
@@ -614,6 +615,13 @@
         </resources>
         <pluginManagement>
             <plugins>
+
+				<plugin>
+					<groupId>org.glassfish.hk2</groupId>
+					<artifactId>config-generator</artifactId>
+					<version>${hk2.config-generator.version}</version>
+				</plugin>
+
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>hk2-inhabitant-generator</artifactId>

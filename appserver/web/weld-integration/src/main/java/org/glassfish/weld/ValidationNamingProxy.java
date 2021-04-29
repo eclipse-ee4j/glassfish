@@ -16,11 +16,10 @@
 
 package org.glassfish.weld;
 
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
+import java.util.Set;
+
+import javax.naming.NamingException;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
@@ -29,16 +28,18 @@ import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import javax.naming.NamingException;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorContext;
 import jakarta.validation.ValidatorFactory;
-import java.util.Set;
 
 /**
  * Proxy for jakarta.validation based lookups (java:comp/Validator, java:comp/ValidatorFactory) when CDI enabled
@@ -89,7 +90,7 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
         BeanManager beanManager = obtainBeanManager();
 
         if (beanManager == null) {
-          return null; // There is no bean manager available, return and let BeanValidatorNamingProxy handle lookup..
+            return null; // There is no bean manager available, return and let BeanValidatorNamingProxy handle lookup..
         }
 
         if (VALIDATOR_FACTORY_CONTEXT.equals(name)) {
@@ -109,7 +110,8 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
                 ne.initCause(t);
                 throw ne;
             }
-        } else if (VALIDATOR_CONTEXT.equals(name)) {
+        }
+        if (VALIDATOR_CONTEXT.equals(name)) {
 
             try {
 
@@ -143,27 +145,26 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
         // Use invocation context to find applicable BeanDeploymentArchive.
         ComponentInvocation inv = invocationManager.getCurrentInvocation();
 
-        if( inv != null ) {
+        if (inv != null) {
 
             JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(inv.getComponentId());
 
-            if( componentEnv != null ) {
+            if (componentEnv != null) {
 
                 BundleDescriptor bundle = null;
 
-                if( componentEnv instanceof EjbDescriptor) {
-                    bundle = (BundleDescriptor)
-                            ((EjbDescriptor) componentEnv).getEjbBundleDescriptor().
-                                    getModuleDescriptor().getDescriptor();
+                if (componentEnv instanceof EjbDescriptor) {
+                    bundle = (BundleDescriptor) ((EjbDescriptor) componentEnv).getEjbBundleDescriptor().getModuleDescriptor()
+                            .getDescriptor();
 
-                } else if( componentEnv instanceof WebBundleDescriptor) {
+                } else if (componentEnv instanceof WebBundleDescriptor) {
                     bundle = (BundleDescriptor) componentEnv;
 
                 }
 
-                if( bundle != null ) {
+                if (bundle != null) {
                     BeanDeploymentArchive bda = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
-                    if( bda != null ) {
+                    if (bda != null) {
                         WeldBootstrap bootstrap = weldDeployer.getBootstrapForApp(bundle.getApplication());
 
                         beanManager = bootstrap.getManager(bda);

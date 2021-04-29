@@ -50,20 +50,20 @@ public class WeldContextListenerTest {
         StandardContext servletContext = new StandardContext();
         servletContext.getServletContext();
 
-        ServletContextEvent servletContextEvent = mockSupport.createMock( ServletContextEvent.class );
-        BeanManager beanManager = mockSupport.createMock( BeanManager.class );
+        ServletContextEvent servletContextEvent = mockSupport.createMock(ServletContextEvent.class);
+        BeanManager beanManager = mockSupport.createMock(BeanManager.class);
         JspApplicationContextImpl jspApplicationContext = new JspApplicationContextImpl(servletContext);
 
         expect(beanManager.getELResolver()).andReturn(elResolver);
-        expect( beanManager.wrapExpressionFactory(isA(ExpressionFactory.class))).andReturn(expressionFactory);
+        expect(beanManager.wrapExpressionFactory(isA(ExpressionFactory.class))).andReturn(expressionFactory);
 
         mockSupport.replayAll();
 
         WeldContextListener weldContextListener = getWeldContextListener(beanManager, jspApplicationContext);
-        weldContextListener.contextInitialized( servletContextEvent );
+        weldContextListener.contextInitialized(servletContextEvent);
 
-        assertSame( expressionFactory, jspApplicationContext.getExpressionFactory() );
-        validateJspApplicationContext( jspApplicationContext, elResolver );
+        assertSame(expressionFactory, jspApplicationContext.getExpressionFactory());
+        validateJspApplicationContext(jspApplicationContext, elResolver);
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
@@ -74,7 +74,7 @@ public class WeldContextListenerTest {
     public void testcontextDestroyed() throws Exception {
         EasyMockSupport mockSupport = new EasyMockSupport();
 
-        BeanManager beanManager = mockSupport.createMock( BeanManager.class );
+        BeanManager beanManager = mockSupport.createMock(BeanManager.class);
         mockSupport.replayAll();
 
         WeldContextListener weldContextListener = getWeldContextListener(beanManager, null);
@@ -82,36 +82,35 @@ public class WeldContextListenerTest {
         Class<?> clazz = LocalWeldContextListener.class.getSuperclass();
         Field beanManagerField = clazz.getDeclaredField("beanManager");
         beanManagerField.setAccessible(true);
-        assertNotNull( beanManagerField.get(weldContextListener) );
+        assertNotNull(beanManagerField.get(weldContextListener));
 
-        weldContextListener.contextDestroyed( null );
-        assertNull( beanManagerField.get(weldContextListener) );
+        weldContextListener.contextDestroyed(null);
+        assertNull(beanManagerField.get(weldContextListener));
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
     }
 
-    private void validateJspApplicationContext( JspApplicationContextImpl jspApplicationContext,
-                                                ELResolver elResolver ) throws Exception {
+    private void validateJspApplicationContext(JspApplicationContextImpl jspApplicationContext, ELResolver elResolver) throws Exception {
         Method getELResolversMethod = JspApplicationContextImpl.class.getDeclaredMethod("getELResolvers");
-        getELResolversMethod.setAccessible( true );
-        Iterator iterator = (Iterator) getELResolversMethod.invoke( jspApplicationContext );
+        getELResolversMethod.setAccessible(true);
+        Iterator iterator = (Iterator) getELResolversMethod.invoke(jspApplicationContext);
         Object elResover = iterator.next();
-        assertSame( elResover, elResolver );
+        assertSame(elResover, elResolver);
         assertFalse(iterator.hasNext());
 
         Field listenersField = JspApplicationContextImpl.class.getDeclaredField("listeners");
         listenersField.setAccessible(true);
 
-        ArrayList listeners = ( ArrayList ) listenersField.get(jspApplicationContext);
-        assertEquals( 1, listeners.size() );
-        assertTrue( listeners.get(0) instanceof WeldELContextListener );
+        ArrayList listeners = (ArrayList) listenersField.get(jspApplicationContext);
+        assertEquals(1, listeners.size());
+        assertTrue(listeners.get(0) instanceof WeldELContextListener);
     }
 
-    private WeldContextListener getWeldContextListener(BeanManager beanManager,
-                                                       JspApplicationContext jspApplicationContext) throws Exception {
-        LocalWeldContextListener localWeldContextListener = new LocalWeldContextListener(jspApplicationContext );
+    private WeldContextListener getWeldContextListener(BeanManager beanManager, JspApplicationContext jspApplicationContext)
+            throws Exception {
+        LocalWeldContextListener localWeldContextListener = new LocalWeldContextListener(jspApplicationContext);
         Class<?> clazz = LocalWeldContextListener.class.getSuperclass();
         Field beanManagerField = clazz.getDeclaredField("beanManager");
         beanManagerField.setAccessible(true);
@@ -121,7 +120,8 @@ public class WeldContextListenerTest {
 
     private class LocalWeldContextListener extends WeldContextListener {
         private JspApplicationContext jspApplicationContext;
-        public LocalWeldContextListener( JspApplicationContext jspApplicationContext  ) {
+
+        public LocalWeldContextListener(JspApplicationContext jspApplicationContext) {
             super();
             this.jspApplicationContext = jspApplicationContext;
         }

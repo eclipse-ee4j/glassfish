@@ -16,15 +16,16 @@
 
 package org.glassfish.weld.ejb;
 
-
-import org.jboss.weld.ejb.api.SessionObjectReference;
-
 import org.glassfish.ejb.api.EjbContainerServices;
+import org.jboss.weld.ejb.api.SessionObjectReference;
 
 /**
  */
-public class  SessionObjectReferenceImpl implements SessionObjectReference
-{
+public class SessionObjectReferenceImpl implements SessionObjectReference {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 731211515531676936L;
     private EjbContainerServices ejbContainerServices;
     private Object ejbRef;
 
@@ -33,19 +34,21 @@ public class  SessionObjectReferenceImpl implements SessionObjectReference
         ejbRef = ref;
     }
 
+    @Override
     public <S> S getBusinessObject(java.lang.Class<S> sClass) {
 
-
         return ejbContainerServices.getBusinessObject(ejbRef, sClass);
-        
+
     }
 
+    @Override
     public void remove() {
 
         ejbContainerServices.remove(ejbRef);
 
     }
 
+    @Override
     public boolean isRemoved() {
         return ejbContainerServices.isRemoved(ejbRef);
     }

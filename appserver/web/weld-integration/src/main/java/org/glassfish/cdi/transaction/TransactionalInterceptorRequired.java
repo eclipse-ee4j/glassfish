@@ -16,22 +16,20 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.util.logging.Logger;
 
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Status;
 import jakarta.transaction.TransactionalException;
-import java.util.logging.Logger;
 
 /**
- * Transactional annotation Interceptor class for Required transaction type,
- * ie jakarta.transaction.Transactional.TxType.REQUIRED
- * If called outside a transaction context, a new JTA transaction will begin,
- * the managed bean method execution will then continue inside this transaction context,
- * and the transaction will be committed.
- * If called inside a transaction context, the managed bean method execution will then continue
- * inside this transaction context.
+ * Transactional annotation Interceptor class for Required transaction type, ie
+ * jakarta.transaction.Transactional.TxType.REQUIRED If called outside a transaction context, a new JTA transaction will
+ * begin, the managed bean method execution will then continue inside this transaction context, and the transaction will
+ * be committed. If called inside a transaction context, the managed bean method execution will then continue inside
+ * this transaction context.
  *
  * @author Paul Parkinson
  */
@@ -40,12 +38,18 @@ import java.util.logging.Logger;
 @jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.REQUIRED)
 public class TransactionalInterceptorRequired extends TransactionalInterceptorBase {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 7783065031210674657L;
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_REQUIRED);
-        if (isLifeCycleMethod(ctx)) return proceed(ctx);
+        if (isLifeCycleMethod(ctx)) {
+            return proceed(ctx);
+        }
         setTransactionalTransactionOperationsManger(false);
         try {
             boolean isTransactionStarted = false;
@@ -54,12 +58,9 @@ public class TransactionalInterceptorRequired extends TransactionalInterceptorBa
                 try {
                     getTransactionManager().begin();
                 } catch (Exception exception) {
-                    String messageString =
-                            "Managed bean with Transactional annotation and TxType of REQUIRED " +
-                                    "encountered exception during begin " +
-                                    exception;
-                    _logger.log(java.util.logging.Level.INFO,
-                        CDI_JTA_MBREQUIREDBT, exception);
+                    String messageString = "Managed bean with Transactional annotation and TxType of REQUIRED "
+                            + "encountered exception during begin " + exception;
+                    _logger.log(java.util.logging.Level.INFO, CDI_JTA_MBREQUIREDBT, exception);
                     throw new TransactionalException(messageString, exception);
                 }
                 isTransactionStarted = true;
@@ -71,18 +72,15 @@ public class TransactionalInterceptorRequired extends TransactionalInterceptorBa
                 if (isTransactionStarted) {
                     try {
                         // Exception handling for proceed method call above can set TM/TRX as setRollbackOnly
-                        if(getTransactionManager().getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+                        if (getTransactionManager().getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK) {
                             getTransactionManager().rollback();
                         } else {
                             getTransactionManager().commit();
                         }
                     } catch (Exception exception) {
-                        String messageString =
-                                "Managed bean with Transactional annotation and TxType of REQUIRED " +
-                                        "encountered exception during commit " +
-                                        exception;
-                        _logger.log(java.util.logging.Level.INFO,
-                                CDI_JTA_MBREQUIREDCT, exception);
+                        String messageString = "Managed bean with Transactional annotation and TxType of REQUIRED "
+                                + "encountered exception during commit " + exception;
+                        _logger.log(java.util.logging.Level.INFO, CDI_JTA_MBREQUIREDCT, exception);
                         throw new TransactionalException(messageString, exception);
                     }
                 }

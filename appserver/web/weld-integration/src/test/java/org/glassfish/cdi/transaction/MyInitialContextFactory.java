@@ -33,7 +33,7 @@ public class MyInitialContextFactory implements InitialContextFactory {
         return initialContext;
     }
 
-    public static void setInitialContext( InitialContext initialContext1 ) {
+    public static void setInitialContext(InitialContext initialContext1) {
         initialContext = initialContext1;
     }
 }

@@ -16,20 +16,19 @@
 
 package org.glassfish.cdi.transaction;
 
-import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import jakarta.transaction.Status;
-import jakarta.transaction.Synchronization;
-import jakarta.transaction.TransactionSynchronizationRegistry;
 import java.util.Set;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.TransactionSynchronizationRegistry;
+
 /**
- * A wrapper for contextual instances of {@link jakarta.transaction.TransactionScoped} beans.
- * We need this wrapper so that the contextual instance can be destroyed when the transaction completes.
+ * A wrapper for contextual instances of {@link jakarta.transaction.TransactionScoped} beans. We need this wrapper so
+ * that the contextual instance can be destroyed when the transaction completes.
  *
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
  */
@@ -39,7 +38,8 @@ public class TransactionScopedBean<T> implements Synchronization {
     private CreationalContext<T> creationalContext;
     private TransactionScopedContextImpl transactionScopedContext;
 
-    public TransactionScopedBean(Contextual<T> contextual, CreationalContext<T> creationalContext, TransactionScopedContextImpl transactionScopedContext) {
+    public TransactionScopedBean(Contextual<T> contextual, CreationalContext<T> creationalContext,
+            TransactionScopedContextImpl transactionScopedContext) {
         this.contextual = contextual;
         this.creationalContext = creationalContext;
         this.transactionScopedContext = transactionScopedContext;
@@ -66,7 +66,8 @@ public class TransactionScopedBean<T> implements Synchronization {
             if (transactionSynchronizationRegistry != null) {
                 if (transactionScopedContext != null) {
                     //Get list of TransactionScopedBeans for this Transaction
-                    Set<TransactionScopedBean> transactionScopedBeanSet = transactionScopedContext.beansPerTransaction.get(transactionSynchronizationRegistry);
+                    Set<TransactionScopedBean> transactionScopedBeanSet = transactionScopedContext.beansPerTransaction
+                            .get(transactionSynchronizationRegistry);
                     if (transactionScopedBeanSet != null) {
                         //Remove the current TransactionScopedBean from list as we are destroying it now
                         if (transactionScopedBeanSet.contains(this)) {
@@ -82,7 +83,8 @@ public class TransactionScopedBean<T> implements Synchronization {
                 }
             }
         } catch (NamingException ne) {
-            TransactionScopedCDIUtil.log("Can't get instance of TransactionSynchronizationRegistry to process TransactionScoped Destroyed CDI Event!");
+            TransactionScopedCDIUtil
+                    .log("Can't get instance of TransactionSynchronizationRegistry to process TransactionScoped Destroyed CDI Event!");
             ne.printStackTrace();
         } finally {
             contextual.destroy(contextualInstance, creationalContext);
@@ -93,8 +95,8 @@ public class TransactionScopedBean<T> implements Synchronization {
         TransactionSynchronizationRegistry transactionSynchronizationRegistry;
         try {
             InitialContext initialContext = new InitialContext();
-            transactionSynchronizationRegistry =
-                    (TransactionSynchronizationRegistry) initialContext.lookup(TransactionScopedContextImpl.TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME);
+            transactionSynchronizationRegistry = (TransactionSynchronizationRegistry) initialContext
+                    .lookup(TransactionScopedContextImpl.TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME);
         } catch (NamingException ne) {
             throw ne;
         }

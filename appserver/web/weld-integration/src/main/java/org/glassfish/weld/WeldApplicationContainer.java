@@ -24,30 +24,35 @@ public class WeldApplicationContainer implements ApplicationContainer {
     public WeldApplicationContainer() {
     }
 
+    @Override
     public Object getDescriptor() {
         return null;
     }
-   
+
+    @Override
     public boolean start(ApplicationContext startupContxt) {
 
         return true;
     }
 
+    @Override
     public boolean stop(ApplicationContext stopContext) {
 
         return true;
     }
 
+    @Override
     public boolean suspend() {
         return false;
     }
 
+    @Override
     public boolean resume() {
         return false;
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return null;
     }
 }
-

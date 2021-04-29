@@ -25,96 +25,61 @@ import static org.easymock.EasyMock.*;
 
 import static jakarta.transaction.Status.*;
 
-
 import org.easymock.EasyMockSupport;
 
 public class TransactionServicesImplTest {
-  @Test
-  public void testisTransactionActive() throws Exception {
-    EasyMockSupport mockSupport = new EasyMockSupport();
-    ServiceLocator serviceLocator = mockSupport.createMock( ServiceLocator.class );
-    JavaEETransactionManager transactionManager = mockSupport.createMock( JavaEETransactionManager.class );
+    @Test
+    public void testisTransactionActive() throws Exception {
+        EasyMockSupport mockSupport = new EasyMockSupport();
+        ServiceLocator serviceLocator = mockSupport.createMock(ServiceLocator.class);
+        JavaEETransactionManager transactionManager = mockSupport.createMock(JavaEETransactionManager.class);
 
-    doTestIsTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_ACTIVE );
+        doTestIsTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_ACTIVE);
 
-    doTestIsTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_MARKED_ROLLBACK );
+        doTestIsTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_MARKED_ROLLBACK);
 
-    doTestIsTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_PREPARED );
+        doTestIsTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_PREPARED);
 
-    doTestIsTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_UNKNOWN );
+        doTestIsTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_UNKNOWN);
 
-    doTestIsTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_PREPARING );
+        doTestIsTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_PREPARING);
 
-    doTestIsTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_COMMITTING );
+        doTestIsTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_COMMITTING);
 
-    doTestIsTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_ROLLING_BACK );
+        doTestIsTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_ROLLING_BACK);
 
-    doTestIsNotTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_COMMITTED );
+        doTestIsNotTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_COMMITTED);
 
-    doTestIsNotTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_ROLLEDBACK );
+        doTestIsNotTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_ROLLEDBACK);
 
-    doTestIsNotTransactionActive( mockSupport,
-                                          serviceLocator,
-                                          transactionManager,
-                                          STATUS_NO_TRANSACTION );
-  }
+        doTestIsNotTransactionActive(mockSupport, serviceLocator, transactionManager, STATUS_NO_TRANSACTION);
+    }
 
-  private void doTestIsTransactionActive( EasyMockSupport mockSupport,
-                                          ServiceLocator serviceLocator,
-                                          JavaEETransactionManager transactionManager,
-                                          int expectedStatus ) throws Exception {
+    private void doTestIsTransactionActive(EasyMockSupport mockSupport, ServiceLocator serviceLocator,
+            JavaEETransactionManager transactionManager, int expectedStatus) throws Exception {
 
-    expect( serviceLocator.getService(JavaEETransactionManager.class) ).andReturn( transactionManager );
-    expect( transactionManager.getStatus() ).andReturn( expectedStatus );
-    mockSupport.replayAll();
+        expect(serviceLocator.getService(JavaEETransactionManager.class)).andReturn(transactionManager);
+        expect(transactionManager.getStatus()).andReturn(expectedStatus);
+        mockSupport.replayAll();
 
-    TransactionServicesImpl transactionServices = new TransactionServicesImpl( serviceLocator );
-    assertTrue( transactionServices.isTransactionActive() );
+        TransactionServicesImpl transactionServices = new TransactionServicesImpl(serviceLocator);
+        assertTrue(transactionServices.isTransactionActive());
 
-    mockSupport.verifyAll();
-    mockSupport.resetAll();
-  }
+        mockSupport.verifyAll();
+        mockSupport.resetAll();
+    }
 
-  private void doTestIsNotTransactionActive( EasyMockSupport mockSupport,
-                                          ServiceLocator serviceLocator,
-                                          JavaEETransactionManager transactionManager,
-                                          int expectedStatus ) throws Exception {
+    private void doTestIsNotTransactionActive(EasyMockSupport mockSupport, ServiceLocator serviceLocator,
+            JavaEETransactionManager transactionManager, int expectedStatus) throws Exception {
 
-    expect( serviceLocator.getService(JavaEETransactionManager.class) ).andReturn( transactionManager );
-    expect( transactionManager.getStatus() ).andReturn( expectedStatus );
-    mockSupport.replayAll();
+        expect(serviceLocator.getService(JavaEETransactionManager.class)).andReturn(transactionManager);
+        expect(transactionManager.getStatus()).andReturn(expectedStatus);
+        mockSupport.replayAll();
 
-    TransactionServicesImpl transactionServices = new TransactionServicesImpl( serviceLocator );
-    assertFalse( transactionServices.isTransactionActive() );
+        TransactionServicesImpl transactionServices = new TransactionServicesImpl(serviceLocator);
+        assertFalse(transactionServices.isTransactionActive());
 
-    mockSupport.verifyAll();
-    mockSupport.resetAll();
-  }
+        mockSupport.verifyAll();
+        mockSupport.resetAll();
+    }
 }

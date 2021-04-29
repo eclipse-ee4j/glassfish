@@ -21,21 +21,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.resources.spi.ResourceLoadingException;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This is implementation of ResourceLoader interface. One instance of this class
- * is created for each bean deployment archive. This class ensures that resource
- * is loaded using class loader for that bean deployment archive.
- * 
+ * This is implementation of ResourceLoader interface. One instance of this class is created for each bean deployment
+ * archive. This class ensures that resource is loaded using class loader for that bean deployment archive.
+ *
  * This was needed to fix issue : http://java.net/jira/browse/GLASSFISH-17396
  *
  * @author kshitiz
  */
 @Service
-public class ResourceLoaderImpl implements ResourceLoader{
+public class ResourceLoaderImpl implements ResourceLoader {
 
     private ClassLoader classLoader;
 
@@ -49,14 +49,9 @@ public class ResourceLoaderImpl implements ResourceLoader{
         try {
             if (cl != null) {
                 return cl.loadClass(name);
-            } else {
-                return Class.forName(name);
             }
-        } catch (ClassNotFoundException e) {
-            throw new ResourceLoadingException("Error loading class " + name, e);
-        } catch (NoClassDefFoundError e) {
-            throw new ResourceLoadingException("Error loading class " + name, e);
-        } catch (TypeNotPresentException e) {
+            return Class.forName(name);
+        } catch (ClassNotFoundException | NoClassDefFoundError | TypeNotPresentException e) {
             throw new ResourceLoadingException("Error loading class " + name, e);
         }
     }
@@ -66,9 +61,8 @@ public class ResourceLoaderImpl implements ResourceLoader{
         ClassLoader cl = getClassLoader();
         if (cl != null) {
             return cl.getResource(name);
-        } else {
-            return ResourceLoaderImpl.class.getResource(name);
         }
+        return ResourceLoaderImpl.class.getResource(name);
     }
 
     @Override
@@ -77,9 +71,8 @@ public class ResourceLoaderImpl implements ResourceLoader{
         try {
             if (cl != null) {
                 return getCollection(cl.getResources(name));
-            } else {
-                return getCollection((getClass().getClassLoader().getResources(name)));
             }
+            return getCollection(getClass().getClassLoader().getResources(name));
         } catch (IOException e) {
             throw new ResourceLoadingException("Error loading resource " + name, e);
         }
@@ -89,16 +82,16 @@ public class ResourceLoaderImpl implements ResourceLoader{
     public void cleanup() {
     }
 
-    private ClassLoader getClassLoader(){
-        if(classLoader != null){
+    private ClassLoader getClassLoader() {
+        if (classLoader != null) {
             return classLoader;
         }
         return Thread.currentThread().getContextClassLoader();
     }
 
     private Collection<URL> getCollection(Enumeration<URL> resources) {
-        ArrayList<URL> urls = new ArrayList<URL>();
-        while(resources.hasMoreElements()){
+        ArrayList<URL> urls = new ArrayList<>();
+        while (resources.hasMoreElements()) {
             urls.add(resources.nextElement());
         }
         return urls;

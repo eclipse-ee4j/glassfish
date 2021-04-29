@@ -16,22 +16,20 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.util.logging.Logger;
 
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionalException;
-import java.util.logging.Logger;
 
 /**
- * Transactional annotation Interceptor class for NotSupported transaction type,
- * ie jakarta.transaction.Transactional.TxType.NOT_SUPPORTED
- * If called outside a transaction context, managed bean method execution will then
- * continue outside a transaction context.
- * If called inside a transaction context, the current transaction context will be suspended,
- * the managed bean method execution will then continue outside a transaction context,
- * and the previously suspended transaction will be resumed.
+ * Transactional annotation Interceptor class for NotSupported transaction type, ie
+ * jakarta.transaction.Transactional.TxType.NOT_SUPPORTED If called outside a transaction context, managed bean method
+ * execution will then continue outside a transaction context. If called inside a transaction context, the current
+ * transaction context will be suspended, the managed bean method execution will then continue outside a transaction
+ * context, and the previously suspended transaction will be resumed.
  *
  * @author Paul Parkinson
  */
@@ -40,12 +38,18 @@ import java.util.logging.Logger;
 @jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.NOT_SUPPORTED)
 public class TransactionalInterceptorNotSupported extends TransactionalInterceptorBase {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2905721637911698354L;
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
         _logger.log(java.util.logging.Level.INFO, CDI_JTA_NOTSUPPORTED);
-        if (isLifeCycleMethod(ctx)) return proceed(ctx);
+        if (isLifeCycleMethod(ctx)) {
+            return proceed(ctx);
+        }
         setTransactionalTransactionOperationsManger(true);
         try {
             Transaction transaction = null;
@@ -54,12 +58,9 @@ public class TransactionalInterceptorNotSupported extends TransactionalIntercept
                 try {
                     transaction = getTransactionManager().suspend();
                 } catch (Exception exception) {
-                    String messageString =
-                            "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED " +
-                                    "called inside a transaction context.  Suspending transaction failed due to " +
-                                    exception;
-                    _logger.log(java.util.logging.Level.INFO, 
-                        CDI_JTA_MBNOTSUPPORTEDTX, exception);
+                    String messageString = "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED "
+                            + "called inside a transaction context.  Suspending transaction failed due to " + exception;
+                    _logger.log(java.util.logging.Level.INFO, CDI_JTA_MBNOTSUPPORTEDTX, exception);
                     throw new TransactionalException(messageString, exception);
                 }
             }
@@ -71,10 +72,8 @@ public class TransactionalInterceptorNotSupported extends TransactionalIntercept
                     try {
                         getTransactionManager().resume(transaction);
                     } catch (Exception exception) {
-                        String messageString =
-                                "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED " +
-                                        "encountered exception during resume " +
-                                        exception;
+                        String messageString = "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED "
+                                + "encountered exception during resume " + exception;
                         throw new TransactionalException(messageString, exception);
                     }
                 }

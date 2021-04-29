@@ -22,13 +22,14 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "org.glassfish.weld.WeldContainer")
 public class WeldContainer implements org.glassfish.api.container.Container {
 
+    @Override
     public Class<? extends Deployer> getDeployer() {
         return WeldDeployer.class;
     }
 
+    @Override
     public String getName() {
         return "Weld";
     }
 
 }
-

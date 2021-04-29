@@ -20,21 +20,20 @@ import org.jboss.weld.ejb.spi.BusinessInterfaceDescriptor;
 
 /**
  */
-public class BusinessInterfaceDescriptorImpl<T> implements BusinessInterfaceDescriptor<T>
-{
-    
+public class BusinessInterfaceDescriptorImpl<T> implements BusinessInterfaceDescriptor<T> {
+
     private Class<T> clientViewType;
 
-
     public BusinessInterfaceDescriptorImpl(Class<T> clientViewType) {
-	    this.clientViewType = clientViewType;
+        this.clientViewType = clientViewType;
     }
 
     /**
-    * Gets the business interface class
-    */
+     * Gets the business interface class
+     */
+    @Override
     public Class<T> getInterface() {
-	    return clientViewType;
+        return clientViewType;
     }
 
 }

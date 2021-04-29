@@ -28,11 +28,17 @@ import jakarta.transaction.TransactionScoped;
 
 public class TransactionScopedCDIEventHelperImpl implements TransactionScopedCDIEventHelper {
 
-    @Inject @Initialized(TransactionScoped.class) Event<TransactionScopedCDIEventPayload> trxScopeInitializedEvent;
-    @Inject @Destroyed(TransactionScoped.class) Event<TransactionScopedCDIEventPayload> trxScopeDestroyedEvent;
+    @Inject
+    @Initialized(TransactionScoped.class)
+    Event<TransactionScopedCDIEventPayload> trxScopeInitializedEvent;
+    @Inject
+    @Destroyed(TransactionScoped.class)
+    Event<TransactionScopedCDIEventPayload> trxScopeDestroyedEvent;
 
     @Override
-    public void fireInitializedEvent(TransactionScopedCDIEventPayload payload) { trxScopeInitializedEvent.fire(payload); }
+    public void fireInitializedEvent(TransactionScopedCDIEventPayload payload) {
+        trxScopeInitializedEvent.fire(payload);
+    }
 
     @Override
     public void fireDestroyedEvent(TransactionScopedCDIEventPayload payload) {

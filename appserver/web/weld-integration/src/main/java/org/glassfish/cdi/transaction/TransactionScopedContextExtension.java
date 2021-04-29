@@ -18,7 +18,6 @@ package org.glassfish.cdi.transaction;
 
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
-import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 
@@ -28,7 +27,7 @@ import jakarta.enterprise.inject.spi.Extension;
 public class TransactionScopedContextExtension implements Extension {
     public void afterBeanDiscovery(@Observes AfterBeanDiscovery event, BeanManager manager) {
         event.addContext(new TransactionScopedContextImpl());
-        event.addBean(TransactionScopedCDIUtil.createHelperBean(manager,TransactionScopedCDIEventHelperImpl.class));
+        event.addBean(TransactionScopedCDIUtil.createHelperBean(manager, TransactionScopedCDIEventHelperImpl.class));
     }
 
 }

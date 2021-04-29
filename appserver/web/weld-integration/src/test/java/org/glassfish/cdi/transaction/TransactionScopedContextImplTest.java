@@ -49,19 +49,19 @@ public class TransactionScopedContextImplTest {
     @Before
     public void beforeTest() throws Exception {
         mockSupport = new EasyMockSupport();
-        initialContext = mockSupport.createMock( InitialContext.class );
+        initialContext = mockSupport.createMock(InitialContext.class);
         MyInitialContextFactory.setInitialContext(initialContext);
 
-        initialContextFactoryProperty = System.getProperty( Context.INITIAL_CONTEXT_FACTORY );
-        urlPkgPrefixes = System.getProperty(Context.URL_PKG_PREFIXES );
+        initialContextFactoryProperty = System.getProperty(Context.INITIAL_CONTEXT_FACTORY);
+        urlPkgPrefixes = System.getProperty(Context.URL_PKG_PREFIXES);
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, MyInitialContextFactory.class.getName());
-        System.setProperty(Context.URL_PKG_PREFIXES, MyInitialContext.class.getPackage().getName() );
+        System.setProperty(Context.URL_PKG_PREFIXES, MyInitialContext.class.getPackage().getName());
     }
 
     @After
     public void afterTest() throws Exception {
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, initialContextFactoryProperty == null ? "" : initialContextFactoryProperty);
-        System.setProperty(Context.URL_PKG_PREFIXES, urlPkgPrefixes == null ? "" :  urlPkgPrefixes );
+        System.setProperty(Context.URL_PKG_PREFIXES, urlPkgPrefixes == null ? "" : urlPkgPrefixes);
     }
 
     @Test
@@ -72,13 +72,14 @@ public class TransactionScopedContextImplTest {
 
     @Test
     public void testisActive() throws Exception {
-        TransactionSynchronizationRegistry transactionSynchronizationRegistry = mockSupport.createMock(TransactionSynchronizationRegistry.class);
+        TransactionSynchronizationRegistry transactionSynchronizationRegistry = mockSupport
+                .createMock(TransactionSynchronizationRegistry.class);
 
-        expect( initialContext.lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME)).andThrow( new NamingException() );
+        expect(initialContext.lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME)).andThrow(new NamingException());
         mockSupport.replayAll();
 
         TransactionScopedContextImpl transactionScopedContext = new TransactionScopedContextImpl();
-        assertFalse( transactionScopedContext.isActive() );
+        assertFalse(transactionScopedContext.isActive());
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
@@ -86,12 +87,12 @@ public class TransactionScopedContextImplTest {
         setupMocksForInactiveTransaction(transactionSynchronizationRegistry);
         mockSupport.replayAll();
 
-        assertFalse( transactionScopedContext.isActive() );
+        assertFalse(transactionScopedContext.isActive());
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -99,7 +100,7 @@ public class TransactionScopedContextImplTest {
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_ACTIVE );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_ACTIVE);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -107,7 +108,7 @@ public class TransactionScopedContextImplTest {
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_MARKED_ROLLBACK );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_MARKED_ROLLBACK);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -115,7 +116,7 @@ public class TransactionScopedContextImplTest {
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_PREPARED );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_PREPARED);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -123,7 +124,7 @@ public class TransactionScopedContextImplTest {
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_UNKNOWN );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_UNKNOWN);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -131,7 +132,7 @@ public class TransactionScopedContextImplTest {
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_PREPARING );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_PREPARING);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -139,7 +140,7 @@ public class TransactionScopedContextImplTest {
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_COMMITTING );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_COMMITTING);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -147,7 +148,7 @@ public class TransactionScopedContextImplTest {
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_ROLLING_BACK );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_ROLLING_BACK);
         mockSupport.replayAll();
 
         assertTrue(transactionScopedContext.isActive());
@@ -159,11 +160,14 @@ public class TransactionScopedContextImplTest {
 
     @Test
     public void testget() throws Exception {
-        TransactionSynchronizationRegistry transactionSynchronizationRegistry = mockSupport.createMock(TransactionSynchronizationRegistry.class);
+        TransactionSynchronizationRegistry transactionSynchronizationRegistry = mockSupport
+                .createMock(TransactionSynchronizationRegistry.class);
         Contextual<LocalBean> contextual = mockSupport.createMock(Contextual.class);
         CreationalContext<LocalBean> creationalContext = mockSupport.createMock(CreationalContext.class);
-        ContextualPassivationCapable<LocalPassivationCapableBean> passivationCapableContextual = mockSupport.createMock(ContextualPassivationCapable.class);
-        CreationalContext<LocalPassivationCapableBean> passivationCapableCreationalContext = mockSupport.createMock(CreationalContext.class);
+        ContextualPassivationCapable<LocalPassivationCapableBean> passivationCapableContextual = mockSupport
+                .createMock(ContextualPassivationCapable.class);
+        CreationalContext<LocalPassivationCapableBean> passivationCapableCreationalContext = mockSupport
+                .createMock(CreationalContext.class);
 
         // test transaction not active
         setupMocksForInactiveTransaction(transactionSynchronizationRegistry);
@@ -174,7 +178,8 @@ public class TransactionScopedContextImplTest {
         try {
             transactionScopedContext.get(contextual, creationalContext);
             fail("Should have gotten a ContextNotActiveException.");
-        } catch (ContextNotActiveException ignore) {}
+        } catch (ContextNotActiveException ignore) {
+        }
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
@@ -182,39 +187,25 @@ public class TransactionScopedContextImplTest {
         // test active transaction.  Create new contextual instance
         LocalBean localBean = new LocalBean();
         setupMocksForActiveTransaction(transactionSynchronizationRegistry);
-        setupMocksForGetContextualInstance(transactionSynchronizationRegistry,
-                                           contextual,
-                                           null,
-                                           null);
-        setupMocksForCreateContextualInstance(transactionSynchronizationRegistry,
-                                              contextual,
-                                              creationalContext,
-                                              contextual,
-                                              localBean );
+        setupMocksForGetContextualInstance(transactionSynchronizationRegistry, contextual, null, null);
+        setupMocksForCreateContextualInstance(transactionSynchronizationRegistry, contextual, creationalContext, contextual, localBean);
         mockSupport.replayAll();
 
         LocalBean retrievedLocalBean = transactionScopedContext.get(contextual, creationalContext);
-        assertSame( localBean, retrievedLocalBean );
+        assertSame(localBean, retrievedLocalBean);
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
         // test active transaction.  Get existing contextual instance
-        TransactionScopedBean<LocalBean> transactionScopedBean =
-            TransactionScopedBeanTest.getTransactionScopedBean( mockSupport,
-                                                                localBean,
-                                                                contextual,
-                                                                creationalContext,
-                    transactionScopedContext);
+        TransactionScopedBean<LocalBean> transactionScopedBean = TransactionScopedBeanTest.getTransactionScopedBean(mockSupport, localBean,
+                contextual, creationalContext, transactionScopedContext);
         setupMocksForActiveTransaction(transactionSynchronizationRegistry);
-        setupMocksForGetContextualInstance(transactionSynchronizationRegistry,
-                                           contextual,
-                                           transactionScopedBean,
-                                           localBean );
+        setupMocksForGetContextualInstance(transactionSynchronizationRegistry, contextual, transactionScopedBean, localBean);
         mockSupport.replayAll();
 
         retrievedLocalBean = transactionScopedContext.get(contextual, creationalContext);
-        assertSame( localBean, retrievedLocalBean );
+        assertSame(localBean, retrievedLocalBean);
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
@@ -222,22 +213,17 @@ public class TransactionScopedContextImplTest {
         // test active transaction with PassivationCapable
         String beanId = "PCCId";
         LocalPassivationCapableBean localPassivationCapableBean = new LocalPassivationCapableBean();
-        TransactionScopedBean<LocalPassivationCapableBean> transactionScopedPassivationCapableBean =
-            TransactionScopedBeanTest.getTransactionScopedBean( mockSupport,
-                                                                localPassivationCapableBean,
-                                                                passivationCapableContextual,
-                                                                passivationCapableCreationalContext,
-                    transactionScopedContext);
+        TransactionScopedBean<LocalPassivationCapableBean> transactionScopedPassivationCapableBean = TransactionScopedBeanTest
+                .getTransactionScopedBean(mockSupport, localPassivationCapableBean, passivationCapableContextual,
+                        passivationCapableCreationalContext, transactionScopedContext);
         setupMocksForActiveTransaction(transactionSynchronizationRegistry);
-        expect( passivationCapableContextual.getId() ).andReturn(beanId);
-        setupMocksForGetContextualInstance(transactionSynchronizationRegistry,
-                                           beanId,
-                                           transactionScopedPassivationCapableBean,
-                                           localPassivationCapableBean );
+        expect(passivationCapableContextual.getId()).andReturn(beanId);
+        setupMocksForGetContextualInstance(transactionSynchronizationRegistry, beanId, transactionScopedPassivationCapableBean,
+                localPassivationCapableBean);
         mockSupport.replayAll();
 
-        LocalPassivationCapableBean retrievedLocalPassivationCapableBean =
-            transactionScopedContext.get(passivationCapableContextual, passivationCapableCreationalContext);
+        LocalPassivationCapableBean retrievedLocalPassivationCapableBean = transactionScopedContext.get(passivationCapableContextual,
+                passivationCapableCreationalContext);
         assertSame(localPassivationCapableBean, retrievedLocalPassivationCapableBean);
 
         mockSupport.verifyAll();
@@ -252,61 +238,57 @@ public class TransactionScopedContextImplTest {
         try {
             transactionScopedContext.get(contextual);
             fail("Should have gotten a ContextNotActiveException.");
-        } catch (ContextNotActiveException ignore) {}
+        } catch (ContextNotActiveException ignore) {
+        }
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
         // test the get(Contextual<T> contextual) method...transaction active
         setupMocksForActiveTransaction(transactionSynchronizationRegistry);
-        setupMocksForGetContextualInstance(transactionSynchronizationRegistry,
-                                           contextual,
-                                           transactionScopedBean,
-                                           localBean);
+        setupMocksForGetContextualInstance(transactionSynchronizationRegistry, contextual, transactionScopedBean, localBean);
         mockSupport.replayAll();
 
         retrievedLocalBean = transactionScopedContext.get(contextual);
-        assertSame( localBean, retrievedLocalBean );
+        assertSame(localBean, retrievedLocalBean);
 
         mockSupport.verifyAll();
         mockSupport.resetAll();
     }
 
-    private void setupMocksForActiveTransaction(TransactionSynchronizationRegistry transactionSynchronizationRegistry,
-                                                int status) throws Exception {
-        expect( initialContext.lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME)).andReturn( transactionSynchronizationRegistry );
-        expect( transactionSynchronizationRegistry.getTransactionStatus() ).andReturn( status );
+    private void setupMocksForActiveTransaction(TransactionSynchronizationRegistry transactionSynchronizationRegistry, int status)
+            throws Exception {
+        expect(initialContext.lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME)).andReturn(transactionSynchronizationRegistry);
+        expect(transactionSynchronizationRegistry.getTransactionStatus()).andReturn(status);
     }
 
     private void setupMocksForActiveTransaction(TransactionSynchronizationRegistry transactionSynchronizationRegistry) throws Exception {
-        setupMocksForActiveTransaction( transactionSynchronizationRegistry, Status.STATUS_ACTIVE );
+        setupMocksForActiveTransaction(transactionSynchronizationRegistry, Status.STATUS_ACTIVE);
     }
 
     private void setupMocksForInactiveTransaction(TransactionSynchronizationRegistry transactionSynchronizationRegistry) throws Exception {
-        expect( initialContext.lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME)).andReturn( transactionSynchronizationRegistry );
-        expect( transactionSynchronizationRegistry.getTransactionStatus() ).andReturn( Status.STATUS_NO_TRANSACTION );
+        expect(initialContext.lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME)).andReturn(transactionSynchronizationRegistry);
+        expect(transactionSynchronizationRegistry.getTransactionStatus()).andReturn(Status.STATUS_NO_TRANSACTION);
     }
 
     private <T> void setupMocksForGetContextualInstance(TransactionSynchronizationRegistry transactionSynchronizationRegistry,
-                                                        Object beanId,
-                                                        TransactionScopedBean<T> transactionScopedBean,
-                                                        T contextualInstance ) throws Exception {
-        expect( transactionSynchronizationRegistry.getResource(beanId) ).andReturn( transactionScopedBean );
+            Object beanId, TransactionScopedBean<T> transactionScopedBean, T contextualInstance) throws Exception {
+        expect(transactionSynchronizationRegistry.getResource(beanId)).andReturn(transactionScopedBean);
     }
 
     private <T> void setupMocksForCreateContextualInstance(TransactionSynchronizationRegistry transactionSynchronizationRegistry,
-                                                           Contextual<T> contextual,
-                                                           CreationalContext<T> creationalContext,
-                                                           Object beanId,
-                                                           T beanInstance ) throws Exception {
-        expect( contextual.create( creationalContext ) ).andReturn( beanInstance );
-        transactionSynchronizationRegistry.putResource( same(beanId), isA( TransactionScopedBean.class) );
-        transactionSynchronizationRegistry.registerInterposedSynchronization( isA( TransactionScopedBean.class) );
+            Contextual<T> contextual, CreationalContext<T> creationalContext, Object beanId, T beanInstance) throws Exception {
+        expect(contextual.create(creationalContext)).andReturn(beanInstance);
+        transactionSynchronizationRegistry.putResource(same(beanId), isA(TransactionScopedBean.class));
+        transactionSynchronizationRegistry.registerInterposedSynchronization(isA(TransactionScopedBean.class));
     }
 
-    private interface ContextualPassivationCapable<T> extends Contextual<T>, PassivationCapable {}
+    private interface ContextualPassivationCapable<T> extends Contextual<T>, PassivationCapable {
+    }
 
-    private class LocalBean {}
-    private class LocalPassivationCapableBean {}
+    private class LocalBean {
+    }
+
+    private class LocalPassivationCapableBean {
+    }
 }
-

@@ -27,14 +27,13 @@ import java.lang.annotation.Target;
 import jakarta.inject.Scope;
 
 /**
- * This scope is given from HK2 beans that are representing CDI services
- * that are NOT in Dependent or Singleton scopes
- * 
+ * This scope is given from HK2 beans that are representing CDI services that are NOT in Dependent or Singleton scopes
+ *
  * @author jwells
  *
  */
 @Scope
 @Retention(RUNTIME)
-@Target( { TYPE, METHOD, FIELD })
+@Target({ TYPE, METHOD, FIELD })
 public @interface CDIScope {
 }

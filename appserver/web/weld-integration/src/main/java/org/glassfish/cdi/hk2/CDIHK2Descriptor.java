@@ -23,6 +23,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.glassfish.hk2.api.DescriptorType;
+import org.glassfish.hk2.api.DescriptorVisibility;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceHandle;
+import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.Any;
@@ -31,15 +37,9 @@ import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Singleton;
 
-import org.glassfish.hk2.api.DescriptorType;
-import org.glassfish.hk2.api.DescriptorVisibility;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceHandle;
-import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
-
 /**
  * This is an HK2 Descriptor that is backed by a CDI bean
- * 
+ *
  * @author jwells
  *
  */
@@ -48,61 +48,56 @@ public class CDIHK2Descriptor<T> extends AbstractActiveDescriptor<T> {
     private transient BeanManager manager = null;
     private transient Bean<T> bean = null;
     private transient Type requiredType = null;
-    
+
     public CDIHK2Descriptor() {
-        super();
     }
-    
+
     private static Set<Annotation> fixQualifiers(Bean<?> bean) {
         Set<Annotation> fromBean = bean.getQualifiers();
-        Set<Annotation> retVal = new HashSet<Annotation>();
-        
+        Set<Annotation> retVal = new HashSet<>();
+
         for (Annotation beanQ : fromBean) {
-            if (Any.class.equals(beanQ.annotationType())) continue;
-            
-            if (Default.class.equals(beanQ.annotationType())) continue;
-            
+            if (Any.class.equals(beanQ.annotationType())) {
+                continue;
+            }
+
+            if (Default.class.equals(beanQ.annotationType())) {
+                continue;
+            }
+
             retVal.add(beanQ);
         }
-        
+
         return retVal;
     }
-    
+
     private static Class<? extends Annotation> fixScope(Bean<?> bean) {
         if (bean.getScope() == null || Dependent.class.equals(bean.getScope())) {
             return PerLookup.class;
         }
-        
+
         if (Singleton.class.equals(bean.getScope())) {
             return Singleton.class;
         }
-        
+
         return CDIScope.class;
     }
-    
+
     // @SuppressWarnings("unchecked")
     public CDIHK2Descriptor(BeanManager manager, Bean<T> bean, Type requiredType) {
-        super(bean.getTypes(),
-                fixScope(bean),
-                bean.getName(),
-                fixQualifiers(bean),
-                DescriptorType.CLASS,
-                DescriptorVisibility.NORMAL,
-                0,
-                null,
-                null,
-                null,
-                new HashMap<String, List<String>>());
-                
+        super(bean.getTypes(), fixScope(bean), bean.getName(), fixQualifiers(bean), DescriptorType.CLASS, DescriptorVisibility.NORMAL, 0,
+                null, null, null, new HashMap<String, List<String>>());
+
         this.manager = manager;
         this.bean = bean;
         this.requiredType = requiredType;
     }
-    
+
     @Override
     public String getImplementation() {
         return bean.getBeanClass().getName();
     }
+
     @Override
     public Type getImplementationType() {
         return bean.getBeanClass().getGenericSuperclass();
@@ -117,7 +112,7 @@ public class CDIHK2Descriptor<T> extends AbstractActiveDescriptor<T> {
     @Override
     public T create(ServiceHandle<?> root) {
         CreationalContext<T> cc = manager.createCreationalContext(bean);
-        
+
         return (T) manager.getReference(bean, requiredType, cc);
     }
 

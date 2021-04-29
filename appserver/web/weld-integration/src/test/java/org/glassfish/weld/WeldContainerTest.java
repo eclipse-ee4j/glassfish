@@ -27,12 +27,12 @@ public class WeldContainerTest {
     @Test
     public void testgetDeployer() throws Exception {
         WeldContainer weldContainer = new WeldContainer();
-        assertEquals( WeldDeployer.class, weldContainer.getDeployer() );
+        assertEquals(WeldDeployer.class, weldContainer.getDeployer());
     }
 
     @Test
     public void testgetName() throws Exception {
         WeldContainer weldContainer = new WeldContainer();
-        assertEquals( "Weld", weldContainer.getName() );
+        assertEquals("Weld", weldContainer.getName());
     }
 }

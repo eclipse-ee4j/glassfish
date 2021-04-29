@@ -20,19 +20,20 @@ import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationFactory;
 
 public class WeldApplicationFactory extends ApplicationFactory {
-    
+
     private ApplicationFactory delegate;
-   
+
     private Application application;
 
     // required for CDI
     public WeldApplicationFactory() {
 
     }
+
     public WeldApplicationFactory(ApplicationFactory delegate) {
         this.delegate = delegate;
     }
-   
+
     @Override
     public void setApplication(Application application) {
         this.application = application;

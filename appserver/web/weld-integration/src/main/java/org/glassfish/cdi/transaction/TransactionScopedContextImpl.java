@@ -16,21 +16,23 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.lang.annotation.Annotation;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.enterprise.context.spi.Context;
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.PassivationCapable;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import jakarta.transaction.Status;
 import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.TransactionSynchronizationRegistry;
-import java.lang.annotation.Annotation;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Context implementation for obtaining contextual instances of {@link TransactionScoped} beans.
@@ -40,9 +42,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * Any attempt to call a method on a {@link TransactionScoped} bean when a transaction is not active will result in a
  * {@Link jakarta.enterprise.context.ContextNotActiveException}.
  *
- * A CDI Event: @Initialized(TransactionScoped.class) is fired with {@link TransactionScopedCDIEventPayload}, when the context is initialized for
- * the first time and @Destroyed(TransactionScoped.class) is fired with {@link TransactionScopedCDIEventPayload}, when the context is destroyed at
- * the end. Currently this payload is empty i.e. it doesn't contain any information.
+ * A CDI Event: @Initialized(TransactionScoped.class) is fired with {@link TransactionScopedCDIEventPayload}, when the
+ * context is initialized for the first time and @Destroyed(TransactionScoped.class) is fired with
+ * {@link TransactionScopedCDIEventPayload}, when the context is destroyed at the end. Currently this payload is empty
+ * i.e. it doesn't contain any information.
  *
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
  * @author <a href="mailto:arjav.desai@oracle.com">Arjav Desai</a>
@@ -50,9 +53,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TransactionScopedContextImpl implements Context {
     public static final String TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME = "java:comp/TransactionSynchronizationRegistry";
 
-    ConcurrentHashMap<TransactionSynchronizationRegistry,Set<TransactionScopedBean>> beansPerTransaction;
+    ConcurrentHashMap<TransactionSynchronizationRegistry, Set<TransactionScopedBean>> beansPerTransaction;
 
-    public TransactionScopedContextImpl(){
+    public TransactionScopedContextImpl() {
         beansPerTransaction = new ConcurrentHashMap<>();
     }
 
@@ -89,8 +92,7 @@ public class TransactionScopedContextImpl implements Context {
      * Determines if this context object is active.
      *
      * @return true if there is a current global transaction and its status is
-     *              {@Link jakarta.transaction.Status.STATUS_ACTIVE}
-     *         false otherwise
+     * {@Link jakarta.transaction.Status.STATUS_ACTIVE} false otherwise
      */
     public boolean isActive() {
         try {
@@ -106,29 +108,26 @@ public class TransactionScopedContextImpl implements Context {
         if (contextual instanceof PassivationCapable) {
             PassivationCapable passivationCapable = (PassivationCapable) contextual;
             return passivationCapable.getId();
-        } else {
-            return contextual;
         }
+        return contextual;
     }
 
-    private <T> T createContextualInstance(Contextual<T> contextual,
-                                           Object contextualId,
-                                           CreationalContext<T> creationalContext,
-                                           TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
-        TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<T>(contextual, creationalContext,this);
+    private <T> T createContextualInstance(Contextual<T> contextual, Object contextualId, CreationalContext<T> creationalContext,
+            TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
+        TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<>(contextual, creationalContext, this);
         transactionSynchronizationRegistry.putResource(contextualId, transactionScopedBean);
         transactionSynchronizationRegistry.registerInterposedSynchronization(transactionScopedBean);
         //Adding TransactionScopedBean as Set, per transactionSynchronizationRegistry, which is unique per transaction
         //Setting synchronizedSet so that even is there are multiple transaction for an app its safe
         Set<TransactionScopedBean> transactionScopedBeanSet = beansPerTransaction.get(transactionSynchronizationRegistry);
-        if (transactionScopedBeanSet != null){
+        if (transactionScopedBeanSet != null) {
             transactionScopedBeanSet = Collections.synchronizedSet(transactionScopedBeanSet);
         } else {
             transactionScopedBeanSet = Collections.synchronizedSet(new HashSet());
             //Fire this event only for the first initialization of context and not for every TransactionScopedBean in a Transaction
             TransactionScopedCDIUtil.fireEvent(TransactionScopedCDIUtil.INITIALIZED_EVENT);
             //Adding transactionScopedBeanSet in Map for the first time for this transactionSynchronizationRegistry key
-            beansPerTransaction.put(transactionSynchronizationRegistry,transactionScopedBeanSet);
+            beansPerTransaction.put(transactionSynchronizationRegistry, transactionScopedBeanSet);
         }
         transactionScopedBeanSet.add(transactionScopedBean);
         //Not updating entry in main Map with new TransactionScopedBeans as it should happen by reference
@@ -148,20 +147,16 @@ public class TransactionScopedContextImpl implements Context {
         TransactionSynchronizationRegistry transactionSynchronizationRegistry;
         try {
             InitialContext initialContext = new InitialContext();
-            transactionSynchronizationRegistry =
-                    (TransactionSynchronizationRegistry) initialContext.lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME);
+            transactionSynchronizationRegistry = (TransactionSynchronizationRegistry) initialContext
+                    .lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME);
         } catch (NamingException ne) {
             throw new ContextNotActiveException("Could not get TransactionSynchronizationRegistry", ne);
         }
 
         int status = transactionSynchronizationRegistry.getTransactionStatus();
-        if (status == Status.STATUS_ACTIVE ||
-                status == Status.STATUS_MARKED_ROLLBACK ||
-                status == Status.STATUS_PREPARED ||
-                status == Status.STATUS_UNKNOWN ||
-                status == Status.STATUS_PREPARING ||
-                status == Status.STATUS_COMMITTING ||
-                status == Status.STATUS_ROLLING_BACK) {
+        if (status == Status.STATUS_ACTIVE || status == Status.STATUS_MARKED_ROLLBACK || status == Status.STATUS_PREPARED
+                || status == Status.STATUS_UNKNOWN || status == Status.STATUS_PREPARING || status == Status.STATUS_COMMITTING
+                || status == Status.STATUS_ROLLING_BACK) {
             return transactionSynchronizationRegistry;
         }
 

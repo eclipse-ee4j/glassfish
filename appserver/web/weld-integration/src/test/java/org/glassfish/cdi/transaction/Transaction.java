@@ -20,9 +20,7 @@ import jakarta.transaction.*;
 import javax.transaction.xa.XAResource;
 
 /**
- * User: paulparkinson
- * Date: 12/18/12
- * Time: 11:50 AM
+ * User: paulparkinson Date: 12/18/12 Time: 11:50 AM
  */
 public class Transaction implements jakarta.transaction.Transaction {
     private static int counter;
@@ -35,34 +33,35 @@ public class Transaction implements jakarta.transaction.Transaction {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof Transaction &&  ((Transaction)o).txid == this.txid;
+        return o instanceof Transaction && ((Transaction) o).txid == this.txid;
     }
 
-    public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException, IllegalStateException, SystemException {
-        
+    public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException,
+            IllegalStateException, SystemException {
+
     }
 
     public boolean delistResource(XAResource xaRes, int flag) throws IllegalStateException, SystemException {
-        return false;  
+        return false;
     }
 
     public boolean enlistResource(XAResource xaRes) throws RollbackException, IllegalStateException, SystemException {
-        return false;  
+        return false;
     }
 
     public int getStatus() throws SystemException {
-        return 0;  
+        return 0;
     }
 
     public void registerSynchronization(Synchronization sync) throws RollbackException, IllegalStateException, SystemException {
-        
+
     }
 
     public void rollback() throws IllegalStateException, SystemException {
-        
+
     }
 
     public void setRollbackOnly() throws IllegalStateException, SystemException {
-        
+
     }
 }

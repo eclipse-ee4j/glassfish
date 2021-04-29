@@ -35,7 +35,7 @@ public class WeldActivatorTest {
         assertNull(instanceField.get(aclSingletonProvider));
 
         WeldActivator weldActivator = new WeldActivator();
-        weldActivator.start( null );
+        weldActivator.start(null);
 
         assertTrue(instanceField.get(aclSingletonProvider) instanceof ACLSingletonProvider);
 

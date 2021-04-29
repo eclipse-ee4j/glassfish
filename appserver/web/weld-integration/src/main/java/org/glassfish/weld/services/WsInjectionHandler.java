@@ -23,7 +23,7 @@ import jakarta.enterprise.inject.spi.AnnotatedField;
  * @author lukas
  */
 interface WsInjectionHandler {
-    final WsInjectionHandler NOOP = new WsInjectionHandler() {
+    WsInjectionHandler NOOP = new WsInjectionHandler() {
         @Override
         public boolean handles(AnnotatedField annotatedField) {
             return false;
@@ -43,6 +43,8 @@ interface WsInjectionHandler {
     };
 
     boolean handles(AnnotatedField annotatedField);
-    void validateWebServiceRef( AnnotatedField annotatedField );
-    String getJndiName( AnnotatedField annotatedField );
+
+    void validateWebServiceRef(AnnotatedField annotatedField);
+
+    String getJndiName(AnnotatedField annotatedField);
 }

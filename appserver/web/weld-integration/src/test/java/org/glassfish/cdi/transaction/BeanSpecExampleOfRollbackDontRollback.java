@@ -20,11 +20,12 @@ import jakarta.transaction.Transactional;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 
-@Transactional(rollbackOn={SQLException.class}, dontRollbackOn={SQLWarning.class})
+@Transactional(rollbackOn = { SQLException.class }, dontRollbackOn = { SQLWarning.class })
 public class BeanSpecExampleOfRollbackDontRollback {
     public String throwSQLException() throws SQLException {
-      throw new SQLException("test SQLException");
+        throw new SQLException("test SQLException");
     }
+
     public String throwSQLWarning() throws SQLWarning {
         throw new SQLWarning("test SQLWarning");
     }

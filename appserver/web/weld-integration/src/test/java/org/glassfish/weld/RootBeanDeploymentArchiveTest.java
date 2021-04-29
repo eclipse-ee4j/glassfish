@@ -105,9 +105,7 @@ public class RootBeanDeploymentArchiveTest {
         readableArchive.close();
         mockSupport.replayAll();
 
-        RootBeanDeploymentArchive rootBeanDeploymentArchive = new RootBeanDeploymentArchive(readableArchive,
-                                                                                            ejbs,
-                                                                                            deploymentContext);
+        RootBeanDeploymentArchive rootBeanDeploymentArchive = new RootBeanDeploymentArchive(readableArchive, ejbs, deploymentContext);
 
         assertEquals("root_" + archiveName, rootBeanDeploymentArchive.getId());
         assertEquals(WeldUtils.BDAType.UNKNOWN, rootBeanDeploymentArchive.getBDAType());
@@ -133,9 +131,8 @@ public class RootBeanDeploymentArchiveTest {
         mockSupport.resetAll();
     }
 
-    private void setupMocksForWebInfLibBda(ReadableArchive libJarArchive,
-                                           String libJarArchiveName,
-                                           ArrayList<String> archiveClassNames) throws Exception {
+    private void setupMocksForWebInfLibBda(ReadableArchive libJarArchive, String libJarArchiveName, ArrayList<String> archiveClassNames)
+            throws Exception {
         expect(libJarArchive.getName()).andReturn(libJarArchiveName).anyTimes();
         expect(libJarArchive.exists(WeldUtils.WEB_INF_BEANS_XML)).andReturn(false).anyTimes();
         expect(libJarArchive.exists(WeldUtils.WEB_INF_CLASSES_META_INF_BEANS_XML)).andReturn(false).anyTimes();

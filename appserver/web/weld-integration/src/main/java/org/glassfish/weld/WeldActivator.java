@@ -16,7 +16,8 @@
 
 package org.glassfish.weld;
 
-import org.glassfish.weld.util.Util;
+import static org.glassfish.weld.util.Util.initializeWeldSingletonProvider;
+
 import org.jboss.weld.bootstrap.api.SingletonProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -28,11 +29,13 @@ import org.osgi.framework.BundleContext;
  * for full-javaee profile, it uses {@link org.glassfish.weld.ACLSingletonProvider}. It tests profile by testing
  * existence of {@link org.glassfish.javaee.full.deployment.EarClassLoader}.
  *
+ * <p>
  * Since Weld 1.1, an implementation of the {@link org.jboss.weld.serialization.spi.ProxyServices} SPI is used to
  * provide a classloader to load javassist defined proxies. This classloader ensures that they can load not only
  * application defined classes but also classes exported by any OSGi bundle as long as the operation is happening in the
  * context of a Java EE app.
  *
+ * <p>
  * The bundle activator resets the SingletonProvicer in stop().
  *
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -40,7 +43,7 @@ import org.osgi.framework.BundleContext;
 public class WeldActivator implements BundleActivator {
     @Override
     public void start(BundleContext context) throws Exception {
-        Util.initializeWeldSingletonProvider();
+        initializeWeldSingletonProvider();
     }
 
     @Override

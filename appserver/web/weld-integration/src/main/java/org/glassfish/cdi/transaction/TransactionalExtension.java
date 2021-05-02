@@ -17,7 +17,6 @@
 package org.glassfish.cdi.transaction;
 
 import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
@@ -27,25 +26,21 @@ import jakarta.enterprise.inject.spi.Extension;
  */
 public class TransactionalExtension implements Extension {
 
-    public void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent, final BeanManager beanManager) {
-        // Register the interceptors so no beans.xml is needed
-        AnnotatedType annotatedType = beanManager.createAnnotatedType(TransactionalInterceptorMandatory.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(annotatedType);
-
-        annotatedType = beanManager.createAnnotatedType(TransactionalInterceptorNever.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(annotatedType);
-
-        annotatedType = beanManager.createAnnotatedType(TransactionalInterceptorNotSupported.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(annotatedType);
-
-        annotatedType = beanManager.createAnnotatedType(TransactionalInterceptorRequired.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(annotatedType);
-
-        annotatedType = beanManager.createAnnotatedType(TransactionalInterceptorRequiresNew.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(annotatedType);
-
-        annotatedType = beanManager.createAnnotatedType(TransactionalInterceptorSupports.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(annotatedType);
+    public void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent, BeanManager beanManager) {
+        addAnnotatedTypes(beforeBeanDiscoveryEvent, beanManager,
+            TransactionalInterceptorMandatory.class,
+            TransactionalInterceptorNever.class,
+            TransactionalInterceptorNotSupported.class,
+            TransactionalInterceptorRequired.class,
+            TransactionalInterceptorRequiresNew.class,
+            TransactionalInterceptorSupports.class);
+        
+    }
+    
+    public static void addAnnotatedTypes(BeforeBeanDiscovery beforeBean, BeanManager beanManager, Class<?>... types) {
+        for (Class<?> type : types) {
+            beforeBean.addAnnotatedType(beanManager.createAnnotatedType(type), "GlassFish-TX-" + type.getName());
+        }
     }
 
 }

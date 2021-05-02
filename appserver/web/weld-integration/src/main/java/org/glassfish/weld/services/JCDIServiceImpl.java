@@ -16,6 +16,11 @@
 
 package org.glassfish.weld.services;
 
+import static java.util.logging.Level.FINE;
+import static org.glassfish.cdi.CDILoggerInfo.GET_BDA_FOR_BEAN_CLASS_SEARCH;
+import static org.glassfish.cdi.CDILoggerInfo.SUB_BDA_CONTAINS_BEAN_CLASS_NAME;
+import static org.glassfish.cdi.CDILoggerInfo.TOP_LEVEL_BDA_CONTAINS_BEAN_CLASS_NAME;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -24,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
@@ -32,7 +36,6 @@ import javax.naming.NamingException;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.cdi.CDILoggerInfo;
 import org.glassfish.hk2.api.Rank;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
@@ -83,7 +86,7 @@ public class JCDIServiceImpl implements JCDIService {
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.cdi.LogMessages";
 
-    private static final HashSet<String> validScopes = new HashSet<>();
+    private static final Set<String> validScopes = new HashSet<>();
     static {
         validScopes.add(Scope.class.getName());
         validScopes.add(NormalScope.class.getName());
@@ -114,19 +117,17 @@ public class JCDIServiceImpl implements JCDIService {
 
     @Override
     public boolean isCurrentModuleJCDIEnabled() {
-
         BundleDescriptor bundle = null;
 
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
 
-        if (inv == null) {
+        if (componentInvocation == null) {
             return false;
         }
 
-        JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(inv.getComponentId());
+        JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(componentInvocation.getComponentId());
 
         if (componentEnv != null) {
-
             if (componentEnv instanceof BundleDescriptor) {
                 bundle = (BundleDescriptor) componentEnv;
             } else if (componentEnv instanceof EjbDescriptor) {
@@ -190,20 +191,21 @@ public class JCDIServiceImpl implements JCDIService {
         BundleDescriptor topLevelBundleDesc = (BundleDescriptor) ejb.getEjbBundleDescriptor().getModuleDescriptor().getDescriptor();
 
         // First get BeanDeploymentArchive for this ejb
-        BeanDeploymentArchive bda = getBDAForBeanClass(topLevelBundleDesc, ejb.getEjbClassName());
+        BeanDeploymentArchive beanDeploymentArchive = getBDAForBeanClass(topLevelBundleDesc, ejb.getEjbClassName());
 
         WeldBootstrap bootstrap = weldDeployer.getBootstrapForApp(ejb.getEjbBundleDescriptor().getApplication());
-        WeldManager weldManager = bootstrap.getManager(bda);
+        WeldManager weldManager = bootstrap.getManager(beanDeploymentArchive);
 
         org.jboss.weld.ejb.spi.EjbDescriptor ejbDesc = weldManager.getEjbDescriptor(ejb.getName());
 
         // get or create the ejb's creational context
-        if (null != ejbInfo) {
+        if (ejbInfo != null) {
             jcdiCtx = (JCDIInjectionContextImpl) ejbInfo.get(JCDIService.JCDIInjectionContext.class);
         }
         if (null != jcdiCtx) {
             creationalContext = jcdiCtx.getCreationalContext();
         }
+        
         if (creationalContext == null) {
             // The creational context may have been created by interceptors because they are created first
             // (see createInterceptorInstance below.)
@@ -258,14 +260,14 @@ public class JCDIServiceImpl implements JCDIService {
     }
 
     private BeanDeploymentArchive getBDAForBeanClass(BundleDescriptor bundleDesc, String beanClassName) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, CDILoggerInfo.GET_BDA_FOR_BEAN_CLASS_SEARCH, new Object[] { bundleDesc.getModuleName(), beanClassName });
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, GET_BDA_FOR_BEAN_CLASS_SEARCH, new Object[] { bundleDesc.getModuleName(), beanClassName });
         }
 
         BeanDeploymentArchive topLevelBDA = weldDeployer.getBeanDeploymentArchiveForBundle(bundleDesc);
         if (topLevelBDA.getBeanClasses().contains(beanClassName)) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, CDILoggerInfo.TOP_LEVEL_BDA_CONTAINS_BEAN_CLASS_NAME,
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, TOP_LEVEL_BDA_CONTAINS_BEAN_CLASS_NAME,
                         new Object[] { topLevelBDA.getId(), beanClassName });
             }
             return topLevelBDA;
@@ -274,8 +276,8 @@ public class JCDIServiceImpl implements JCDIService {
         //for all sub-BDAs
         for (BeanDeploymentArchive bda : topLevelBDA.getBeanDeploymentArchives()) {
             if (bda.getBeanClasses().contains(beanClassName)) {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, CDILoggerInfo.SUB_BDA_CONTAINS_BEAN_CLASS_NAME, new Object[] { bda.getId(), beanClassName });
+                if (logger.isLoggable(FINE)) {
+                    logger.log(FINE, SUB_BDA_CONTAINS_BEAN_CLASS_NAME, new Object[] { bda.getId(), beanClassName });
                 }
                 return bda;
             }

@@ -16,20 +16,19 @@
 
 package org.glassfish.weld;
 
-import java.util.Collection;
+import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
+import static org.glassfish.weld.WeldDeployer.WELD_DEPLOYMENT;
+import static org.glassfish.weld.WeldDeployer.WELD_EXTENSION;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.web.WebComponentDecorator;
 import com.sun.enterprise.web.WebModule;
 
 import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.InjectionTarget;
 
 /**
  * This is a decorator which calls Weld implemetation to do necessary injection of a web component. It is called by
@@ -40,25 +39,25 @@ import jakarta.enterprise.inject.spi.InjectionTarget;
  */
 @Service
 public class WebComponentInjectionManager<T> implements WebComponentDecorator<T> {
+    
     @Override
     @SuppressWarnings("unchecked")
-    public void decorate(T webComponent, WebModule wm) {
-        if (wm.getWebBundleDescriptor().hasExtensionProperty(WeldDeployer.WELD_EXTENSION)) {
-            DeploymentContext deploymentContext = wm.getWebModuleConfig().getDeploymentContext();
-            WeldBootstrap weldBootstrap = deploymentContext.getTransientAppMetaData(WeldDeployer.WELD_BOOTSTRAP,
-                    org.jboss.weld.bootstrap.WeldBootstrap.class);
+    public void decorate(T webComponent, WebModule webModule) {
+        if (webModule.getWebBundleDescriptor().hasExtensionProperty(WELD_EXTENSION)) {
+            DeploymentContext deploymentContext = webModule.getWebModuleConfig().getDeploymentContext();
 
-            DeploymentImpl deploymentImpl = deploymentContext.getTransientAppMetaData(WeldDeployer.WELD_DEPLOYMENT, DeploymentImpl.class);
-            Collection<BeanDeploymentArchive> deployments = deploymentImpl.getBeanDeploymentArchives();
-            BeanDeploymentArchive beanDeploymentArchive = deployments.iterator().next();
-            BeanManager beanManager = weldBootstrap.getManager(beanDeploymentArchive);
+            BeanManager beanManager = 
+                deploymentContext.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
+                                 .getManager(deploymentContext.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class)
+                                                              .getBeanDeploymentArchives()
+                                                              .iterator().next());
+            
             // PENDING : Not available in this Web Beans Release
             CreationalContext<T> ccontext = beanManager.createCreationalContext(null);
-            @SuppressWarnings("rawtypes")
-            Class<T> clazz = (Class<T>) webComponent.getClass();
-            AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(clazz);
-            InjectionTarget<T> injectionTarget = beanManager.createInjectionTarget(annotatedType);
-            injectionTarget.inject(webComponent, ccontext);
+            
+            beanManager.createInjectionTarget(
+                beanManager.createAnnotatedType(
+                    (Class<T>) webComponent.getClass())).inject(webComponent, ccontext);
         }
     }
 }

@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.resources.spi.ResourceLoadingException;
@@ -90,7 +91,7 @@ public class ResourceLoaderImpl implements ResourceLoader {
     }
 
     private Collection<URL> getCollection(Enumeration<URL> resources) {
-        ArrayList<URL> urls = new ArrayList<>();
+        List<URL> urls = new ArrayList<>();
         while (resources.hasMoreElements()) {
             urls.add(resources.nextElement());
         }

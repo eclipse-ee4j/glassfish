@@ -31,6 +31,7 @@ public class TransactionScopedCDIEventHelperImpl implements TransactionScopedCDI
     @Inject
     @Initialized(TransactionScoped.class)
     Event<TransactionScopedCDIEventPayload> trxScopeInitializedEvent;
+    
     @Inject
     @Destroyed(TransactionScoped.class)
     Event<TransactionScopedCDIEventPayload> trxScopeDestroyedEvent;

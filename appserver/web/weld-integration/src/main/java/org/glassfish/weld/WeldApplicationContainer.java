@@ -31,13 +31,11 @@ public class WeldApplicationContainer implements ApplicationContainer {
 
     @Override
     public boolean start(ApplicationContext startupContxt) {
-
         return true;
     }
 
     @Override
     public boolean stop(ApplicationContext stopContext) {
-
         return true;
     }
 

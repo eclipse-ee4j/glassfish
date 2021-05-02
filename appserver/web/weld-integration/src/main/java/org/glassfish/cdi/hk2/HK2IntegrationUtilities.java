@@ -18,11 +18,9 @@ package org.glassfish.cdi.hk2;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -55,9 +53,7 @@ public class HK2IntegrationUtilities {
      */
     public static ServiceLocator getApplicationServiceLocator() {
         try {
-            Context ic = new InitialContext();
-
-            return (ServiceLocator) ic.lookup(APP_SL_NAME);
+            return (ServiceLocator) new InitialContext().lookup(APP_SL_NAME);
         } catch (NamingException ne) {
             return null;
         }
@@ -66,49 +62,48 @@ public class HK2IntegrationUtilities {
     private static Set<Annotation> getHK2Qualifiers(InjectionPoint injectionPoint) {
         Set<Annotation> setQualifiers = injectionPoint.getQualifiers();
 
-        Set<Annotation> retVal = new HashSet<>();
+        Set<Annotation> hk2Qualifiers = new HashSet<>();
 
-        for (Annotation anno : setQualifiers) {
-            if (anno.annotationType().equals(Default.class)) {
+        for (Annotation annotation : setQualifiers) {
+            if (annotation.annotationType().equals(Default.class)) {
                 continue;
             }
 
-            if (anno.annotationType().equals(Named.class)) {
-                Named named = (Named) anno;
+            if (annotation.annotationType().equals(Named.class)) {
+                Named named = (Named) annotation;
                 if ("".equals(named.value())) {
                     Annotated annotated = injectionPoint.getAnnotated();
                     if (annotated instanceof AnnotatedField) {
                         AnnotatedField<?> annotatedField = (AnnotatedField<?>) annotated;
 
-                        Field field = annotatedField.getJavaMember();
-                        anno = new NamedImpl(field.getName());
+                        annotation = new NamedImpl(annotatedField.getJavaMember().getName());
                     }
 
                 }
 
             }
 
-            retVal.add(anno);
+            hk2Qualifiers.add(annotation);
         }
 
-        return retVal;
+        return hk2Qualifiers;
     }
 
     public static Injectee convertInjectionPointToInjectee(InjectionPoint injectionPoint) {
-        InjecteeImpl retVal = new InjecteeImpl(injectionPoint.getType());
+        InjecteeImpl injectee = new InjecteeImpl(injectionPoint.getType());
 
-        retVal.setRequiredQualifiers(getHK2Qualifiers(injectionPoint));
-        retVal.setParent((AnnotatedElement) injectionPoint.getMember()); // Also sets InjecteeClass
+        injectee.setRequiredQualifiers(getHK2Qualifiers(injectionPoint));
+        injectee.setParent((AnnotatedElement) injectionPoint.getMember()); // Also sets InjecteeClass
 
         Annotated annotated = injectionPoint.getAnnotated();
         if (annotated instanceof AnnotatedField) {
-            retVal.setPosition(-1);
+            injectee.setPosition(-1);
         } else {
             AnnotatedParameter<?> annotatedParameter = (AnnotatedParameter<?>) annotated;
-            retVal.setPosition(annotatedParameter.getPosition());
+            injectee.setPosition(annotatedParameter.getPosition());
         }
 
-        return retVal;
+        return injectee;
     }
 
 }

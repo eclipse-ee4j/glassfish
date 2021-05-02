@@ -17,6 +17,7 @@
 package org.glassfish.weld;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jboss.weld.Container;
@@ -35,6 +36,7 @@ public class GlassFishWeldProvider implements CDIProvider {
 
         @Override
         protected BeanManagerImpl unsatisfiedBeanManager(String callerClassName) {
+            
             /*
              * In certain scenarios we use flat deployment model (weld-se, weld-servlet). In that case
              * we return the only BeanManager we have.
@@ -48,15 +50,15 @@ public class GlassFishWeldProvider implements CDIProvider {
             // that can successfully load the class.  This should give us the correct BDA which then can be used
             // to get the correct bean manager
             Map<BeanDeploymentArchive, BeanManagerImpl> beanDeploymentArchives = Container.instance().beanDeploymentArchives();
-            Set<java.util.Map.Entry<BeanDeploymentArchive, BeanManagerImpl>> entries = beanDeploymentArchives.entrySet();
-            for (Map.Entry<BeanDeploymentArchive, BeanManagerImpl> entry : entries) {
+            Set<Entry<BeanDeploymentArchive, BeanManagerImpl>> entries = beanDeploymentArchives.entrySet();
+            for (Entry<BeanDeploymentArchive, BeanManagerImpl> entry : entries) {
                 BeanDeploymentArchive beanDeploymentArchive = entry.getKey();
                 if (beanDeploymentArchive instanceof RootBeanDeploymentArchive) {
                     RootBeanDeploymentArchive rootBeanDeploymentArchive = (RootBeanDeploymentArchive) beanDeploymentArchive;
                     ClassLoader moduleClassLoaderForBDA = rootBeanDeploymentArchive.getModuleClassLoaderForBDA();
                     try {
                         Class.forName(callerClassName, false, moduleClassLoaderForBDA);
-                        // successful so this is the bda we want.
+                        // Successful so this is the BeanDeploymentArchive we want.
                         return entry.getValue();
                     } catch (Exception ignore) {
                     }

@@ -19,6 +19,10 @@ package org.glassfish.weld;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.cdi.CDILoggerInfo.ADD_BEAN_CLASS;
+import static org.glassfish.cdi.CDILoggerInfo.ADD_BEAN_CLASS_ERROR;
+import static org.glassfish.cdi.CDILoggerInfo.SETTING_CONTEXT_CLASS_LOADER;
+import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
 import static org.glassfish.weld.connector.WeldUtils.BEANS_XML_FILENAME;
 import static org.glassfish.weld.connector.WeldUtils.CLASS_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_RAR_SUFFIX;
@@ -30,6 +34,7 @@ import static org.glassfish.weld.connector.WeldUtils.WEB_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES_META_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_LIB;
+import static org.glassfish.weld.connector.WeldUtils.getCDIAnnotatedClassNames;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
 
 import java.io.File;
@@ -77,15 +82,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     private ReadableArchive archive;
     private String id;
-    private List<String> moduleClassNames = null; // Names of classes in the module
-    private List<String> beanClassNames = null; // Names of bean classes in the module
-    private List<Class<?>> moduleClasses = null; // Classes in the module
-    private List<Class<?>> beanClasses = null; // Classes identified as Beans through Weld SPI
-    private List<URL> beansXmlURLs = null;
+    private List<String> moduleClassNames; // Names of classes in the module
+    private List<String> beanClassNames; // Names of bean classes in the module
+    private List<Class<?>> moduleClasses; // Classes in the module
+    private List<Class<?>> beanClasses; // Classes identified as Beans through Weld SPI
+    private List<URL> beansXmlURLs;
     private final Collection<EjbDescriptor<?>> ejbDescImpls;
     private List<BeanDeploymentArchive> beanDeploymentArchives;
 
-    private SimpleServiceRegistry simpleServiceRegistry = null;
+    private SimpleServiceRegistry simpleServiceRegistry;
 
     private BDAType bdaType = BDAType.UNKNOWN;
 
@@ -93,25 +98,23 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     private final Map<AnnotatedType<?>, InjectionTarget<?>> itMap = new HashMap<>();
 
-    //workaround: WELD-781
-    private ClassLoader moduleClassLoaderForBDA = null;
+    // Workaround: WELD-781
+    private ClassLoader moduleClassLoaderForBDA;
 
     private String friendlyId = "";
 
-    private Collection<String> cdiAnnotatedClassNames = null;
+    private Collection<String> cdiAnnotatedClassNames;
 
-    private boolean deploymentComplete = false;
+    private boolean deploymentComplete;
 
     /**
      * Produce a <code>BeanDeploymentArchive</code> form information contained in the provided <code>ReadableArchive</code>.
      */
-    public BeanDeploymentArchiveImpl(ReadableArchive archive, Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs,
-            DeploymentContext ctx) {
+    public BeanDeploymentArchiveImpl(ReadableArchive archive, Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs, DeploymentContext ctx) {
         this(archive, ejbs, ctx, null);
     }
 
-    public BeanDeploymentArchiveImpl(ReadableArchive archive, Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs,
-            DeploymentContext ctx, String bdaID) {
+    public BeanDeploymentArchiveImpl(ReadableArchive archive, Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs, DeploymentContext ctx, String bdaID) {
         this.beanClasses = new ArrayList<>();
         this.beanClassNames = new ArrayList<>();
         this.moduleClasses = new ArrayList<>();
@@ -152,17 +155,16 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         }
     }
 
-    //These are for empty BDAs that do not model Bean classes in the current
-    //deployment unit -- for example: BDAs for portable Extensions.
-    public BeanDeploymentArchiveImpl(String id, List<Class<?>> wClasses, List<URL> beansXmlUrls,
-            Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs, DeploymentContext ctx) {
+    // These are for empty BDAs that do not model Bean classes in the current
+    // deployment unit -- for example: BDAs for portable Extensions.
+    public BeanDeploymentArchiveImpl(String id, List<Class<?>> wClasses, List<URL> beansXmlUrls, Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs, DeploymentContext ctx) {
         this.id = id;
         this.moduleClasses = wClasses;
         this.beanClasses = new ArrayList<>(wClasses);
 
         this.moduleClassNames = new ArrayList<>();
         this.beanClassNames = new ArrayList<>();
-        for (Class c : wClasses) {
+        for (Class<?> c : wClasses) {
             moduleClassNames.add(c.getName());
             beanClassNames.add(c.getName());
         }
@@ -185,15 +187,16 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     @Override
     public Collection<String> getBeanClasses() {
-        //This method is called during BeanDeployment.deployBeans, so this would
-        //be the right time to place the module classloader for the BDA as the TCL
+        // This method is called during BeanDeployment.deployBeans, so this would
+        // be the right time to place the module classloader for the BDA as the TCL
         if (logger.isLoggable(FINER)) {
-            logger.log(FINER, CDILoggerInfo.SETTING_CONTEXT_CLASS_LOADER, new Object[] { this.id, this.moduleClassLoaderForBDA });
+            logger.log(FINER, SETTING_CONTEXT_CLASS_LOADER, new Object[] { this.id, this.moduleClassLoaderForBDA });
         }
+        
         if (!isDeploymentComplete()) {
-            //The TCL is unset at the end of deployment of CDI beans in WeldDeployer.event
-            //XXX: This is a workaround for issue https://issues.jboss.org/browse/WELD-781.
-            //Remove this as soon as the SPI comes in.
+            // The TCL is unset at the end of deployment of CDI beans in WeldDeployer.event
+            // XXX: This is a workaround for issue https://issues.jboss.org/browse/WELD-781.
+            // Remove this as soon as the SPI comes in.
             Thread.currentThread().setContextClassLoader(this.moduleClassLoaderForBDA);
         }
         return beanClassNames;
@@ -213,14 +216,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     public void addBeanClass(String beanClassName) {
         boolean added = false;
-        for (String c : moduleClassNames) {
-            if (c.equals(beanClassName)) {
+        for (String moduleClassName : moduleClassNames) {
+            if (moduleClassName.equals(beanClassName)) {
                 if (logger.isLoggable(FINE)) {
-                    logger.log(FINE, CDILoggerInfo.ADD_BEAN_CLASS, new Object[] { c, beanClassNames });
+                    logger.log(FINE, ADD_BEAN_CLASS, new Object[] { moduleClassName, beanClassNames });
                 }
-                beanClassNames.add(c);
+                
+                beanClassNames.add(moduleClassName);
                 try {
-                    beanClasses.add(getClassLoader().loadClass(c));
+                    beanClasses.add(getClassLoader().loadClass(moduleClassName));
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -229,25 +233,21 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         }
         if (!added) {
             if (logger.isLoggable(FINE)) {
-                logger.log(FINE, CDILoggerInfo.ADD_BEAN_CLASS_ERROR, new Object[] { beanClassName });
+                logger.log(FINE, ADD_BEAN_CLASS_ERROR, new Object[] { beanClassName });
             }
         }
     }
 
     @Override
     public BeansXml getBeansXml() {
-        BeansXml result = null;
-
-        WeldBootstrap wb = context.getTransientAppMetaData(WeldDeployer.WELD_BOOTSTRAP, WeldBootstrap.class);
+        WeldBootstrap weldBootstrap = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
         if (beansXmlURLs.size() == 1) {
-            result = wb.parse(beansXmlURLs.get(0));
-        } else {
-            // This method attempts to performs a merge, but loses some
-            // information (e.g., version, bean-discovery-mode)
-            result = wb.parse(beansXmlURLs);
+            return weldBootstrap.parse(beansXmlURLs.get(0));
         }
-
-        return result;
+        
+        // This method attempts to performs a merge, but loses some
+        // information (e.g., version, bean-discovery-mode)
+        return weldBootstrap.parse(beansXmlURLs);
     }
 
     /**
@@ -257,16 +257,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
      */
     @Override
     public Collection<EjbDescriptor<?>> getEjbs() {
-
         return ejbDescImpls;
     }
 
-    public EjbDescriptor getEjbDescriptor(String ejbName) {
-        EjbDescriptor match = null;
+    public EjbDescriptor<?> getEjbDescriptor(String ejbName) {
+        EjbDescriptor<?> match = null;
 
-        for (EjbDescriptor next : ejbDescImpls) {
-            if (next.getEjbName().equals(ejbName)) {
-                match = next;
+        for (EjbDescriptor<?> ejbDescriptor : ejbDescImpls) {
+            if (ejbDescriptor.getEjbName().equals(ejbName)) {
+                match = ejbDescriptor;
                 break;
             }
         }
@@ -279,6 +278,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         if (simpleServiceRegistry == null) {
             simpleServiceRegistry = new SimpleServiceRegistry();
         }
+        
         return simpleServiceRegistry;
     }
 
@@ -291,9 +291,9 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         return this.friendlyId;
     }
 
-    //A graphical representation of the BDA hierarchy to aid in debugging
-    //and to provide a better representation of how Weld treats the deployed
-    //archive.
+    // A graphical representation of the BDA hierarchy to aid in debugging
+    // and to provide a better representation of how Weld treats the deployed
+    // archive.
     @Override
     public String toString() {
         String beanClassesString = getBeanClasses().size() > 0 ? getBeanClasses().toString() : "";
@@ -320,7 +320,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     }
 
     private String formatAccessibleBDAs(BeanDeploymentArchive bda) {
-        StringBuffer sb = new StringBuffer("[");
+        StringBuilder sb = new StringBuilder("[");
         for (BeanDeploymentArchive accessibleBDA : bda.getBeanDeploymentArchives()) {
             if (accessibleBDA instanceof BeanDeploymentArchiveImpl) {
                 sb.append(((BeanDeploymentArchiveImpl) accessibleBDA).getFriendlyId() + ",");
@@ -678,14 +678,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
      */
     private boolean isCDIAnnotatedClass(String className) {
         if (cdiAnnotatedClassNames == null) {
-            cdiAnnotatedClassNames = WeldUtils.getCDIAnnotatedClassNames(context);
+            cdiAnnotatedClassNames = getCDIAnnotatedClassNames(context);
         }
+        
         return cdiAnnotatedClassNames.contains(className);
     }
 
     protected BeansXml parseBeansXML(ReadableArchive archive, String beansXMLPath) throws IOException {
-        WeldBootstrap wb = context.getTransientAppMetaData(WeldDeployer.WELD_BOOTSTRAP, WeldBootstrap.class);
-        return wb.parse(getBeansXMLFileURL(archive, beansXMLPath));
+        WeldBootstrap weldBootstrap = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
+        return weldBootstrap.parse(getBeansXMLFileURL(archive, beansXMLPath));
     }
 
     private void addBeansXMLURL(ReadableArchive archive, String beansXMLPath) throws IOException {

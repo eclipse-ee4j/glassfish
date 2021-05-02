@@ -38,7 +38,7 @@ import jakarta.transaction.UserTransaction;
 
 public class TransactionServicesImpl implements TransactionServices {
 
-    private JavaEETransactionManager transactionManager = null;
+    private JavaEETransactionManager transactionManager;
 
     public TransactionServicesImpl(ServiceLocator services) {
         transactionManager = services.getService(JavaEETransactionManager.class);
@@ -51,9 +51,13 @@ public class TransactionServicesImpl implements TransactionServices {
     public boolean isTransactionActive() {
         try {
             int curStatus = transactionManager.getStatus();
-            if (curStatus == STATUS_ACTIVE || curStatus == STATUS_MARKED_ROLLBACK || curStatus == STATUS_PREPARED
-                    || curStatus == STATUS_UNKNOWN || curStatus == STATUS_PREPARING || curStatus == STATUS_COMMITTING
-                    || curStatus == STATUS_ROLLING_BACK) {
+            if (curStatus == STATUS_ACTIVE ||
+                    curStatus == STATUS_MARKED_ROLLBACK ||
+                    curStatus == STATUS_PREPARED ||
+                    curStatus == STATUS_UNKNOWN ||
+                    curStatus == STATUS_PREPARING ||
+                    curStatus == STATUS_COMMITTING ||
+                    curStatus == STATUS_ROLLING_BACK) {
                 return true;
             }
             return false;
@@ -74,9 +78,7 @@ public class TransactionServicesImpl implements TransactionServices {
     @Override
     public UserTransaction getUserTransaction() {
         try {
-            InitialContext c = new InitialContext();
-            UserTransaction ut = (UserTransaction) c.lookup("java:comp/UserTransaction");
-            return ut;
+            return (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         } catch (NamingException e) {
             return null;
         }

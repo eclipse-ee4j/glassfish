@@ -18,8 +18,11 @@ package org.glassfish.weld;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Locale;
+
+import javax.naming.NamingException;
 
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -38,16 +41,13 @@ public class InjectionPointHelper {
     private final ComponentEnvManager compEnvManager;
     private final GlassfishNamingManager namingManager;
 
-    public InjectionPointHelper(ServiceLocator h) {
-        services = h;
-
+    public InjectionPointHelper(ServiceLocator serviceLocator) {
+        services = serviceLocator;
         compEnvManager = services.getService(ComponentEnvManager.class);
         namingManager = services.getService(GlassfishNamingManager.class);
-
     }
 
-    public Object resolveInjectionPoint(java.lang.reflect.Member member, Application app) throws javax.naming.NamingException {
-
+    public Object resolveInjectionPoint(Member member, Application app) throws NamingException {
         if (member == null) {
             throw new IllegalArgumentException("Member cannot be null.");
         }
@@ -57,7 +57,6 @@ public class InjectionPointHelper {
         }
 
         Object result = null;
-
         Field field = null;
         Method method = null;
         Annotation[] annotations;
@@ -80,14 +79,13 @@ public class InjectionPointHelper {
 
         String envAnnotationName = null;
         try {
-            Method m = envAnnotation.annotationType().getDeclaredMethod("name");
-            envAnnotationName = (String) m.invoke(envAnnotation);
+            envAnnotationName = (String) envAnnotation.annotationType().getDeclaredMethod("name").invoke(envAnnotation);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid annotation : must have name() attribute " + envAnnotation.toString(), e);
         }
 
         String envDependencyName = envAnnotationName;
-        Class declaringClass = member.getDeclaringClass();
+        Class<?> declaringClass = member.getDeclaringClass();
 
         if (envAnnotationName == null || envAnnotationName.equals("")) {
             if (field != null) {
@@ -98,8 +96,7 @@ public class InjectionPointHelper {
         }
 
         if (envAnnotationName != null && envAnnotationName.startsWith("java:global/")) {
-            javax.naming.Context ic = namingManager.getInitialContext();
-            result = ic.lookup(envAnnotationName);
+            result = namingManager.getInitialContext().lookup(envAnnotationName);
         } else {
             BundleDescriptor matchingBundle = null;
 

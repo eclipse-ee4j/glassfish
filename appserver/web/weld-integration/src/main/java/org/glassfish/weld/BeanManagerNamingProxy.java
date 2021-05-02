@@ -22,7 +22,6 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
-import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
 
@@ -37,11 +36,10 @@ import jakarta.inject.Inject;
 /**
  * Proxy for java:comp/BeanManager lookups
  *
- *
  * @author Ken Saks
  */
 @Service
-@NamespacePrefixes(value = BeanManagerNamingProxy.BEAN_MANAGER_CONTEXT)
+@NamespacePrefixes(BeanManagerNamingProxy.BEAN_MANAGER_CONTEXT)
 public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
 
     @Inject
@@ -64,15 +62,16 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
             try {
 
                 // Use invocation context to find applicable BeanDeploymentArchive.
-                ComponentInvocation inv = invocationManager.getCurrentInvocation();
+                ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
 
-                if (inv != null) {
+                if (componentInvocation != null) {
 
-                    JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(inv.getComponentId());
+                    JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(componentInvocation.getComponentId());
 
                     if (componentEnv == null) {
                         throw new IllegalStateException("No invocation context found");
                     }
+                    
                     BundleDescriptor bundle = null;
 
                     if (componentEnv instanceof EjbDescriptor) {
@@ -81,15 +80,12 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
 
                     } else if (componentEnv instanceof WebBundleDescriptor) {
                         bundle = (BundleDescriptor) componentEnv;
-
                     }
 
                     if (bundle != null) {
-                        BeanDeploymentArchive bda = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
-                        if (bda != null) {
-                            WeldBootstrap bootstrap = weldDeployer.getBootstrapForApp(bundle.getApplication());
-                            //System.out.println("BeanManagerNamingProxy:: getting BeanManagerImpl for" + bda);
-                            beanManager = bootstrap.getManager(bda);
+                        BeanDeploymentArchive beanDeploymentArchive = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
+                        if (beanDeploymentArchive != null) {
+                            beanManager = weldDeployer.getBootstrapForApp(bundle.getApplication()).getManager(beanDeploymentArchive);
                         }
                     }
 

@@ -33,16 +33,17 @@ import jakarta.enterprise.context.spi.CreationalContext;
 public class HK2ContextBridge implements Context {
     private final org.glassfish.hk2.api.Context<?> hk2Context;
 
-    /* package */ HK2ContextBridge(org.glassfish.hk2.api.Context<?> hk2Context) {
+    HK2ContextBridge(org.glassfish.hk2.api.Context<?> hk2Context) {
         this.hk2Context = hk2Context;
     }
 
     @Override
-    public <T> T get(Contextual<T> arg0) {
-        if (!(arg0 instanceof HK2CDIBean)) {
+    public <T> T get(Contextual<T> contextual) {
+        if (!(contextual instanceof HK2CDIBean)) {
             return null;
         }
-        HK2CDIBean<T> hk2CdiBean = (HK2CDIBean<T>) arg0;
+        
+        HK2CDIBean<T> hk2CdiBean = (HK2CDIBean<T>) contextual;
 
         ActiveDescriptor<T> descriptor = hk2CdiBean.getHK2Descriptor();
 
@@ -54,8 +55,8 @@ public class HK2ContextBridge implements Context {
     }
 
     @Override
-    public <T> T get(Contextual<T> arg0, CreationalContext<T> arg1) {
-        return arg0.create(arg1);
+    public <T> T get(Contextual<T> contextual, CreationalContext<T> creationalContext) {
+        return contextual.create(creationalContext);
     }
 
     @Override

@@ -16,7 +16,9 @@
 
 package org.glassfish.weld.services;
 
-import java.security.AccessController;
+import static java.lang.System.getSecurityManager;
+import static java.security.AccessController.doPrivileged;
+
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 
@@ -44,19 +46,18 @@ import org.jboss.weld.serialization.spi.ProxyServices;
  */
 public class ProxyServicesImpl implements ProxyServices {
 
-    ClassLoaderHierarchy clh;
+    ClassLoaderHierarchy classLoaderHierarchy;
 
     public ProxyServicesImpl(ServiceLocator services) {
-        clh = services.getService(ClassLoaderHierarchy.class);
+        classLoaderHierarchy = services.getService(ClassLoaderHierarchy.class);
     }
 
     @Override
     public ClassLoader getClassLoader(final Class<?> proxiedBeanType) {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm == null) {
+        if (getSecurityManager() == null) {
             return getClassLoaderforBean(proxiedBeanType);
         }
-        return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+        return doPrivileged(new PrivilegedAction<ClassLoader>() {
             @Override
             public ClassLoader run() {
                 return getClassLoaderforBean(proxiedBeanType);
@@ -72,21 +73,23 @@ public class ProxyServicesImpl implements ProxyServices {
      * @return
      */
     private ClassLoader getClassLoaderforBean(Class<?> proxiedBeanType) {
-        //Get the ClassLoader that loaded the Bean. For Beans in an application,
-        //this would be the application/module classloader. For other API
-        //Bean classes, such as UserTransaction, this would be a non-application
-        //classloader
-        ClassLoader prxCL = proxiedBeanType.getClassLoader();
+        // Get the ClassLoader that loaded the Bean. For Beans in an application,
+        // this would be the application/module classloader. For other API
+        // Bean classes, such as UserTransaction, this would be a non-application
+        // classloader
+        ClassLoader proxyClassLoader = proxiedBeanType.getClassLoader();
+        
         //Check if this is an application classloader
-        boolean isAppCL = isApplicationClassLoader(prxCL);
+        boolean isAppCL = isApplicationClassLoader(proxyClassLoader);
         if (!isAppCL) {
-            prxCL = _getClassLoader();
+            proxyClassLoader = _getClassLoader();
             //fall back to the old behaviour of using TCL to get the application
             //or module classloader. We return this classloader for non-application
             //Beans, as Weld Proxies requires other Weld support classes (such as
             //JBoss Reflection API) that is exported through the weld-osgi-bundle.
         }
-        return prxCL;
+        
+        return proxyClassLoader;
     }
 
     /**
@@ -96,7 +99,7 @@ public class ProxyServicesImpl implements ProxyServices {
     private boolean isApplicationClassLoader(ClassLoader prxCL) {
         boolean isAppCL = false;
         while (prxCL != null) {
-            if (prxCL.equals(clh.getCommonClassLoader())) {
+            if (prxCL.equals(classLoaderHierarchy.getCommonClassLoader())) {
                 isAppCL = true;
                 break;
             }
@@ -106,23 +109,20 @@ public class ProxyServicesImpl implements ProxyServices {
     }
 
     private ClassLoader _getClassLoader() {
-        ClassLoader tcl = Thread.currentThread().getContextClassLoader();
-        return tcl;
+        return Thread.currentThread().getContextClassLoader();
     }
 
     @Override
     public Class<?> loadBeanClass(final String className) {
         try {
-            SecurityManager sm = System.getSecurityManager();
-            if (sm == null) {
-                ClassLoader cl = _getClassLoader();
-                return Class.forName(className, true, cl);
+            if (getSecurityManager() == null) {
+                return Class.forName(className, true, _getClassLoader());
             }
-            return (Class<?>) AccessController.doPrivileged(new PrivilegedExceptionAction<>() {
+            
+            return (Class<?>) doPrivileged(new PrivilegedExceptionAction<>() {
                 @Override
                 public Object run() throws Exception {
-                    ClassLoader cl = _getClassLoader();
-                    return Class.forName(className, true, cl);
+                    return Class.forName(className, true, _getClassLoader());
                 }
             });
         } catch (Exception ex) {

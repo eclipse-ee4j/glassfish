@@ -20,7 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -55,8 +54,7 @@ public class CDISecondChanceResolver implements JustInTimeInjectionResolver {
      */
     private BeanManager getCurrentBeanManager() {
         try {
-            Context jndiContext = new InitialContext();
-            return (BeanManager) jndiContext.lookup("java:comp/BeanManager");
+            return (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
         } catch (NamingException ne) {
             return null;
         }

@@ -16,11 +16,12 @@
 
 package org.glassfish.weld;
 
+import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.Deployer;
 import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "org.glassfish.weld.WeldContainer")
-public class WeldContainer implements org.glassfish.api.container.Container {
+public class WeldContainer implements Container {
 
     @Override
     public Class<? extends Deployer> getDeployer() {

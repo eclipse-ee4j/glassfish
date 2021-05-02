@@ -45,16 +45,19 @@ public final class WsInjectionHandlerImpl implements WsInjectionHandler {
             }
 
             if (!annotatedField.getJavaMember().getType().isInterface()) {
-                throw new DefinitionException("The type of the injection point " + annotatedField.getJavaMember().getName() + " is "
-                        + annotatedField.getJavaMember().getType().getName()
-                        + ".  This type is invalid for a field annotated with @WebSreviceRef");
+                throw new DefinitionException(
+                    "The type of the injection point " + annotatedField.getJavaMember().getName() + " is " + 
+                    annotatedField.getJavaMember().getType().getName() + 
+                    ".  This type is invalid for a field annotated with @WebSreviceRef");
             }
-            Class serviceClass = webServiceRef.value();
+            
+            Class<?> serviceClass = webServiceRef.value();
             if (serviceClass != null) {
                 if (!Service.class.isAssignableFrom(serviceClass)) {
-                    throw new DefinitionException("The type of the injection point " + annotatedField.getJavaMember().getName()
-                            + " is an interface: " + annotatedField.getJavaMember().getType().getName() + ".  The @WebSreviceRef value of "
-                            + serviceClass + " is not assignable from " + Service.class.getName());
+                    throw new DefinitionException(
+                        "The type of the injection point " + annotatedField.getJavaMember().getName() + 
+                        " is an interface: " + annotatedField.getJavaMember().getType().getName() + 
+                        ".  The @WebSreviceRef value of " + serviceClass + " is not assignable from " + Service.class.getName());
                 }
             }
         }

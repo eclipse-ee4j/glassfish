@@ -16,6 +16,8 @@
 
 package org.glassfish.weld.util;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.glassfish.weld.ACLSingletonProvider;
 import org.jboss.weld.bootstrap.api.SingletonProvider;
 import org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider;
@@ -24,8 +26,8 @@ public class Util {
 
     public static <T> T newInstance(String className) {
         try {
-            return Util.<T>classForName(className).newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return Util.<T>classForName(className).getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             throw new IllegalArgumentException("Cannot instantiate instance of " + className + " with no-argument constructor", e);
         }
     }
@@ -54,6 +56,7 @@ public class Util {
             earSupport = true;
         } catch (ClassNotFoundException ignore) {
         }
+        
         SingletonProvider.initialize(earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider());
     }
 

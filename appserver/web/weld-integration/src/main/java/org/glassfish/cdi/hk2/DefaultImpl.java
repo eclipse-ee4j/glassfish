@@ -23,11 +23,7 @@ import jakarta.enterprise.util.AnnotationLiteral;
  * @author jwells
  *
  */
-@SuppressWarnings("serial")
 public class DefaultImpl extends AnnotationLiteral<Default> implements Default {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 7112042385251962492L;
 }

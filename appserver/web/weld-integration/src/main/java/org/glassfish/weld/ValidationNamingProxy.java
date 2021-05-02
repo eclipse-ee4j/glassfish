@@ -47,6 +47,9 @@ import jakarta.validation.ValidatorFactory;
 @Service
 @Named("ValidationNamingProxy")
 public class ValidationNamingProxy implements NamedNamingObjectProxy {
+    
+    static final String VALIDATOR_CONTEXT = "java:comp/Validator";
+    static final String VALIDATOR_FACTORY_CONTEXT = "java:comp/ValidatorFactory";
 
     @Inject
     ServiceLocator serviceLocator;
@@ -59,9 +62,7 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
 
     @Inject
     private WeldDeployer weldDeployer;
-
-    static final String VALIDATOR_CONTEXT = "java:comp/Validator";
-    static final String VALIDATOR_FACTORY_CONTEXT = "java:comp/ValidatorFactory";
+    
 
     /**
      * get and create an instance of a bean from the beanManager
@@ -70,8 +71,7 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
      * @param clazz
      * @return
      */
-    private static final Object getAndCreateBean(BeanManager beanManager, Class clazz) {
-
+    private static final Object getAndCreateBean(BeanManager beanManager, Class<?> clazz) {
         Set<Bean<?>> beans = beanManager.getBeans(clazz);
 
         if (!beans.isEmpty()) {
@@ -96,15 +96,14 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
         if (VALIDATOR_FACTORY_CONTEXT.equals(name)) {
 
             try {
-
                 ValidatorFactory validatorFactory = (ValidatorFactory) getAndCreateBean(beanManager, ValidatorFactory.class);
 
                 if (validatorFactory != null) {
                     return validatorFactory;
-                } else {
-                    throw new NamingException("Error retrieving " + name);
                 }
-
+                
+                throw new NamingException("Error retrieving " + name);
+                
             } catch (Throwable t) {
                 NamingException ne = new NamingException("Error retrieving " + name);
                 ne.initCause(t);
@@ -112,16 +111,14 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
             }
         }
         if (VALIDATOR_CONTEXT.equals(name)) {
-
             try {
-
                 Validator validator = (Validator) getAndCreateBean(beanManager, Validator.class);
 
                 if (validator != null) {
                     return validator;
-                } else {
-                    throw new NamingException("Error retrieving " + name);
                 }
+                
+                throw new NamingException("Error retrieving " + name);
 
             } catch (Throwable t) {
                 NamingException ne = new NamingException("Error retrieving " + name);
@@ -139,15 +136,14 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
      * @throws NamingException
      */
     private synchronized BeanManager obtainBeanManager() throws NamingException {
-
         BeanManager beanManager = null;
 
         // Use invocation context to find applicable BeanDeploymentArchive.
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
 
-        if (inv != null) {
+        if (componentInvocation != null) {
 
-            JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(inv.getComponentId());
+            JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(componentInvocation.getComponentId());
 
             if (componentEnv != null) {
 
@@ -163,11 +159,9 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
                 }
 
                 if (bundle != null) {
-                    BeanDeploymentArchive bda = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
-                    if (bda != null) {
-                        WeldBootstrap bootstrap = weldDeployer.getBootstrapForApp(bundle.getApplication());
-
-                        beanManager = bootstrap.getManager(bda);
+                    BeanDeploymentArchive beanDeploymentArchive = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
+                    if (beanDeploymentArchive != null) {
+                        beanManager = weldDeployer.getBootstrapForApp(bundle.getApplication()).getManager(beanDeploymentArchive);
                     }
                 }
 

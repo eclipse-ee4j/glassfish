@@ -16,13 +16,19 @@
 
 package org.glassfish.cdi.transaction;
 
+import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static jakarta.transaction.Transactional.TxType.REQUIRES_NEW;
+import static java.util.logging.Level.INFO;
+
 import java.util.logging.Logger;
 
+import jakarta.annotation.Priority;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
-import jakarta.transaction.Status;
 import jakarta.transaction.Transaction;
+import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
 
 /**
@@ -35,67 +41,72 @@ import jakarta.transaction.TransactionalException;
  *
  * @author Paul Parkinson
  */
-@jakarta.annotation.Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
+@Priority(PLATFORM_BEFORE + 200)
 @Interceptor
-@jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.REQUIRES_NEW)
+@Transactional(REQUIRES_NEW)
 public class TransactionalInterceptorRequiresNew extends TransactionalInterceptorBase {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3843074402046047130L;
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
-        _logger.log(java.util.logging.Level.INFO, CDI_JTA_REQNEW);
+        _logger.log(INFO, CDI_JTA_REQNEW);
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
+        
         setTransactionalTransactionOperationsManger(false);
+        
         try {
             Transaction suspendedTransaction = null;
             if (getTransactionManager().getTransaction() != null) {
-                _logger.log(java.util.logging.Level.INFO, CDI_JTA_MBREQNEW);
+                _logger.log(INFO, CDI_JTA_MBREQNEW);
                 suspendedTransaction = getTransactionManager().suspend();
                 //todo catch, wrap in new transactional exception and throw
             }
             try {
                 getTransactionManager().begin();
             } catch (Exception exception) {
-                String messageString = "Managed bean with Transactional annotation and TxType of REQUIRES_NEW "
-                        + "encountered exception during begin " + exception;
-                _logger.log(java.util.logging.Level.INFO, CDI_JTA_MBREQNEWBT, exception);
-                throw new TransactionalException(messageString, exception);
+                _logger.log(INFO, CDI_JTA_MBREQNEWBT, exception);
+                throw new TransactionalException(
+                    "Managed bean with Transactional annotation and TxType of REQUIRES_NEW " + 
+                    "encountered exception during begin " + exception, 
+                    exception);
             }
+            
             Object proceed = null;
             try {
                 proceed = proceed(ctx);
             } finally {
                 try {
                     // Exception handling for proceed method call above can set TM/TRX as setRollbackOnly
-                    if (getTransactionManager().getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+                    if (getTransactionManager().getTransaction().getStatus() == STATUS_MARKED_ROLLBACK) {
                         getTransactionManager().rollback();
                     } else {
                         getTransactionManager().commit();
                     }
                 } catch (Exception exception) {
-                    String messageString = "Managed bean with Transactional annotation and TxType of REQUIRES_NEW "
-                            + "encountered exception during commit " + exception;
-                    _logger.log(java.util.logging.Level.INFO, CDI_JTA_MBREQNEWCT, exception);
-                    throw new TransactionalException(messageString, exception);
+                    _logger.log(INFO, CDI_JTA_MBREQNEWCT, exception);
+                    throw new TransactionalException(
+                        "Managed bean with Transactional annotation and TxType of REQUIRES_NEW " + 
+                        "encountered exception during commit " + exception, 
+                        exception);
                 }
+                
                 if (suspendedTransaction != null) {
                     try {
                         getTransactionManager().resume(suspendedTransaction);
                     } catch (Exception exception) {
-                        String messageString = "Managed bean with Transactional annotation and TxType of REQUIRED "
-                                + "encountered exception during resume " + exception;
-                        _logger.log(java.util.logging.Level.INFO, CDI_JTA_MBREQNEWRT, exception);
-                        throw new TransactionalException(messageString, exception);
+                        _logger.log(INFO, CDI_JTA_MBREQNEWRT, exception);
+                        throw new TransactionalException(
+                            "Managed bean with Transactional annotation and TxType of REQUIRED " + 
+                            "encountered exception during resume " + exception, 
+                            exception);
                     }
                 }
             }
+            
             return proceed;
 
         } finally {

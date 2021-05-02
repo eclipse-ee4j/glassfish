@@ -16,6 +16,10 @@
 
 package org.glassfish.weld;
 
+import static java.lang.System.getSecurityManager;
+import static java.lang.Thread.currentThread;
+import static java.security.AccessController.doPrivileged;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Hashtable;
@@ -29,16 +33,21 @@ import org.jboss.weld.bootstrap.api.Singleton;
 import org.jboss.weld.bootstrap.api.SingletonProvider;
 
 /**
- * Singleton provider that uses Application ClassLoader to differentiate between applications. It is different from
- * {@link org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider}. We can't use TCCLSingletonProvider because
- * thread's context class loader can be different for different modules of a single application (ear). To support
- * Application Scoped beans, Weld needs to be bootstrapped per application as opposed to per module. We rely on the fact
- * that all these module class loaders have a common parent which is per application. We use that parent
- * ApplicationClassLoader to identify the singleton scope.
+ * Singleton provider that uses Application ClassLoader to differentiate between applications.
+ * 
+ * <p>
+ * It is different from {@link org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider}.
+ * 
+ * <p>
+ * We can't use TCCLSingletonProvider because thread's context class loader can be different for different modules of a
+ * single application (ear). To support Application Scoped beans, Weld needs to be bootstrapped per application as
+ * opposed to per module. We rely on the fact that all these module class loaders have a common parent which is per
+ * application. We use that parent ApplicationClassLoader to identify the singleton scope.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class ACLSingletonProvider extends SingletonProvider {
+    
     /*
      * See https://glassfish.dev.java.net/issues/show_bug.cgi?id=10192
      * for more details about this class.
@@ -58,15 +67,14 @@ public class ACLSingletonProvider extends SingletonProvider {
 
         // use Hashtable for concurrent access
         private final Map<ClassLoader, T> store = new Hashtable<>();
-        private ClassLoader ccl = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
+        private ClassLoader commonClassLoader = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
 
         // Can't assume bootstrap loader as null. That's more of a convention.
         // I think either android or IBM JVM does not use null for bootstap loader
         private static ClassLoader bootstrapCL;
 
         static {
-            SecurityManager sm = System.getSecurityManager();
-            bootstrapCL = sm != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            bootstrapCL = getSecurityManager() != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
                 @Override
                 public ClassLoader run() {
                     return Object.class.getClassLoader();
@@ -76,71 +84,77 @@ public class ACLSingletonProvider extends SingletonProvider {
 
         @Override
         public T get(String id) {
-            ClassLoader acl = getClassLoader();
-            T instance = store.get(acl);
+            ClassLoader appClassLoader = getClassLoader();
+            T instance = store.get(appClassLoader);
             if (instance == null) {
-                throw new IllegalStateException("Singleton not set for " + acl);
+                throw new IllegalStateException("Singleton not set for " + appClassLoader);
             }
+            
             return instance;
         }
 
         /**
-         * This is the most significant method of this class. This is what distingushes it from TCCLSIngleton. It tries to
-         * obtain a class loader that's common to all modules of an application (ear). Since it runs in the context of Java EE,
-         * it can assume that Thread's context class loader is always set as application class loader. In GlassFish, the class
-         * loader can vary for each module of an Ear. Thread's context class loader is set depending on which module is handling
-         * the request. But, fortunately all those embedded module class loaders have a common parent in their delegation chain.
-         * That parent is of type EarLibClassLoader. So, this code walks up the delegation chain until it hits either a
-         * EarLibClassLoader type of parent or bootstrapClassLoader. If former is the case, it returns that instance of
+         * This is the most significant method of this class. This is what distingushes it from TCCLSIngleton.
+         * 
+         * <p>
+         * It tries to obtain a class loader that's common to all modules of an application (ear). Since it runs in the context
+         * of Java EE, it can assume that Thread's context class loader is always set as application class loader. In GlassFish,
+         * the class loader can vary for each module of an Ear. Thread's context class loader is set depending on which module
+         * is handling the request. 
+         * 
+         * <p>
+         * But, fortunately all those embedded module class loaders have a common parent in their
+         * delegation chain. That parent is of type EarLibClassLoader. So, this code walks up the delegation chain until it hits
+         * either a EarLibClassLoader type of parent or bootstrapClassLoader. If former is the case, it returns that instance of
          * EarLibClassLoader. If latter is the case, it assumes that this is a standalone module and hence it returns the
          * thread's context class loader.
          *
          * @return a class loader that's common to all modules of a Java EE app
          */
         private ClassLoader getClassLoader() {
-            SecurityManager sm = System.getSecurityManager();
-            final ClassLoader tccl = sm != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            ClassLoader contextClassLoader = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<ClassLoader>() {
                 @Override
                 public ClassLoader run() {
-                    return Thread.currentThread().getContextClassLoader();
+                    return currentThread().getContextClassLoader();
                 }
-            }) : Thread.currentThread().getContextClassLoader();
-            if (tccl == null) {
+            }) : currentThread().getContextClassLoader();
+            
+            if (contextClassLoader == null) {
                 throw new RuntimeException("Thread's context class loader is null");
             }
 
-            ClassLoader cl = tccl;
-            ClassLoader appClassLoader = tccl;
+            ClassLoader classLoader = contextClassLoader;
+            ClassLoader appClassLoader = contextClassLoader;
 
-            // most of the time, class loader of application (whether it is a
-            // standalone module or an ear) has common class loader in their
-            // delegation chain. So, we can break the loop early for them.
-            // There are exceptions like hybrid app to this rule.
-            // So, we have to walk upto bootstrapCL in worst case.
-            while (cl != ccl && cl != bootstrapCL) {
-                if (cl instanceof EarLibClassLoader) {
-                    //                    System.out.println("ACLSingletonProvider.getClassLoader():\n" +
-                    //                            "Application Class Loader = [ " + cl + "],\n" +
-                    //                            "Thread Context Class Loader = [" + tccl + "]");
-                    return cl;
+            // Most of the time, the class loader of an application (whether it is a
+            // standalone module or an ear) has a common class loader in their delegation chain. 
+            //
+            // So, we can break the loop early for them.
+            //
+            // There are exceptions like hybrid application to this rule.
+            // So, we have to walk up to bootstrapCL in worst case.
+            while (classLoader != commonClassLoader && classLoader != bootstrapCL) {
+                if (classLoader instanceof EarLibClassLoader) {
+                    return classLoader;
                 }
-                if (cl instanceof WebappClassLoader) {
-                    // we do this because it's possible for an app to change the thread's context class loader
-                    appClassLoader = cl;
+                
+                if (classLoader instanceof WebappClassLoader) {
+                    // We do this because it's possible for an app to change the thread's context class loader
+                    appClassLoader = classLoader;
                 }
-                cl = getParent(cl);
+                classLoader = getParent(classLoader);
             }
+            
             return appClassLoader;
         }
 
-        private ClassLoader getParent(final ClassLoader cl) {
-            SecurityManager sm = System.getSecurityManager();
-            return sm != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+        private ClassLoader getParent(ClassLoader classLoader) {
+            return getSecurityManager() != null ? doPrivileged(new PrivilegedAction<ClassLoader>() {
                 @Override
                 public ClassLoader run() {
-                    return cl.getParent();
+                    return classLoader.getParent();
                 }
-            }) : cl.getParent();
+            }) : classLoader.getParent();
         }
 
         @Override

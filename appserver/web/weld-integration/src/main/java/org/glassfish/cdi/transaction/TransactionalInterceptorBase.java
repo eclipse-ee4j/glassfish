@@ -16,6 +16,10 @@
 
 package org.glassfish.cdi.transaction;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.io.Serializable;
 import java.util.logging.Logger;
 
@@ -39,6 +43,7 @@ import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Transactional;
 
 /**
  * Base class for all interceptors providing common logic for exception handling, etc.
@@ -47,9 +52,6 @@ import jakarta.transaction.TransactionManager;
  */
 public class TransactionalInterceptorBase implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 706603825748958619L;
 
     @LogMessagesResourceBundle
@@ -139,6 +141,7 @@ public class TransactionalInterceptorBase implements Serializable {
         if (testTransactionManager != null) {
             return testTransactionManager;
         }
+        
         if (transactionManager == null) {
             try {
                 synchronized (TransactionalInterceptorBase.class) {
@@ -147,10 +150,11 @@ public class TransactionalInterceptorBase implements Serializable {
                     }
                 }
             } catch (NamingException e) {
-                _logger.log(java.util.logging.Level.SEVERE, CDI_JTA_NAME_EXCEPTION, e);
+                _logger.log(SEVERE, CDI_JTA_NAME_EXCEPTION, e);
                 throw new RuntimeException("Unable to obtain TransactionManager for Transactional Interceptor", e);
             }
         }
+        
         return transactionManager;
     }
 
@@ -163,61 +167,68 @@ public class TransactionalInterceptorBase implements Serializable {
     }
 
     public Object proceed(InvocationContext ctx) throws Exception {
-        jakarta.transaction.Transactional transactionalAnnotation = ctx.getMethod().getAnnotation(jakarta.transaction.Transactional.class);
-        Class[] rollbackOn = null;
-        Class[] dontRollbackOn = null;
+        Transactional transactionalAnnotation = ctx.getMethod().getAnnotation(Transactional.class);
+        Class<?>[] rollbackOn = null;
+        Class<?>[] dontRollbackOn = null;
+        
         if (transactionalAnnotation != null) { //if at method level
             rollbackOn = transactionalAnnotation.rollbackOn();
             dontRollbackOn = transactionalAnnotation.dontRollbackOn();
         } else { //if not, at class level
             Class<?> targetClass = ctx.getTarget().getClass();
-            transactionalAnnotation = targetClass.getAnnotation(jakarta.transaction.Transactional.class);
+            transactionalAnnotation = targetClass.getAnnotation(Transactional.class);
             if (transactionalAnnotation != null) {
                 rollbackOn = transactionalAnnotation.rollbackOn();
                 dontRollbackOn = transactionalAnnotation.dontRollbackOn();
             }
         }
+        
         Object object;
         try {
             object = ctx.proceed();
         } catch (RuntimeException runtimeException) {
-            _logger.log(java.util.logging.Level.INFO, "Error during transaction processing", runtimeException);
-            Class dontRollbackOnClass = getClassInArrayClosestToClassOrNull(dontRollbackOn, runtimeException.getClass());
+            _logger.log(INFO, "Error during transaction processing", runtimeException);
+            Class<?> dontRollbackOnClass = getClassInArrayClosestToClassOrNull(dontRollbackOn, runtimeException.getClass());
             if (dontRollbackOnClass == null) { //proceed as default...
                 markRollbackIfActiveTransaction();
                 throw runtimeException;
             }
-            //spec states "if both elements are specified, dontRollbackOn takes precedence."
+            
+            // Spec states "if both elements are specified, dontRollbackOn takes precedence."
             if (dontRollbackOnClass.equals(runtimeException.getClass())
                     || dontRollbackOnClass.isAssignableFrom(runtimeException.getClass())) {
                 throw runtimeException;
             }
-            Class rollbackOnClass = getClassInArrayClosestToClassOrNull(rollbackOn, runtimeException.getClass());
+            
+            Class<?> rollbackOnClass = getClassInArrayClosestToClassOrNull(rollbackOn, runtimeException.getClass());
             if (rollbackOnClass != null) {
-                //both rollback and dontrollback are isAssignableFrom exception.
-                //check if one isAssignableFrom the other, dontRollbackOn takes precedence if not
+                
+                // Both rollback and dontrollback are isAssignableFrom exception.
+                // Check if one isAssignableFrom the other, dontRollbackOn takes precedence if not
                 if (rollbackOnClass.isAssignableFrom(dontRollbackOnClass)) {
                     throw runtimeException;
                 }
                 if (dontRollbackOnClass.isAssignableFrom(rollbackOnClass)) {
                 }
             }
-            //This means dontRollbackOnClass is "not null" and rollbackOnClass is "null"
-            //Default for un-checked exception is to mark transaction for rollback
+            
+            // This means dontRollbackOnClass is "not null" and rollbackOnClass is "null"
+            // Default for un-checked exception is to mark transaction for rollback
             markRollbackIfActiveTransaction();
             throw runtimeException;
         } catch (Exception checkedException) {
-            _logger.log(java.util.logging.Level.INFO, "Error during transaction processing", checkedException);
-            Class rollbackOnClass = getClassInArrayClosestToClassOrNull(rollbackOn, checkedException.getClass());
+            _logger.log(INFO, "Error during transaction processing", checkedException);
+            Class<?> rollbackOnClass = getClassInArrayClosestToClassOrNull(rollbackOn, checkedException.getClass());
             if (rollbackOnClass == null) { //proceed as default...
                 throw checkedException;
             }
 
-            //spec states "if both elements are specified, dontRollbackOn takes precedence."
-            Class dontRollbackOnClass = getClassInArrayClosestToClassOrNull(dontRollbackOn, checkedException.getClass());
+            // Spec states "if both elements are specified, dontRollbackOn takes precedence."
+            Class<?> dontRollbackOnClass = getClassInArrayClosestToClassOrNull(dontRollbackOn, checkedException.getClass());
             if (dontRollbackOnClass != null) {
-                //both rollback and dontrollback are isAssignableFrom exception.
-                //check if one isAssignableFrom the other, dontRollbackOn takes precedence if not
+                
+                // Both rollback and dontrollback are isAssignableFrom exception.
+                // Check if one isAssignableFrom the other, dontRollbackOn takes precedence if not
                 if (rollbackOnClass.isAssignableFrom(dontRollbackOnClass)) {
                     throw checkedException;
                 }
@@ -230,8 +241,9 @@ public class TransactionalInterceptorBase implements Serializable {
             if (rollbackOnClass.equals(checkedException.getClass()) || rollbackOnClass.isAssignableFrom(checkedException.getClass())) {
                 markRollbackIfActiveTransaction();
             }
-            //This means dontRollbackOnClass is null but rollbackOnClass is "not null"
-            //Default for checked exception is to "not" mark transaction for rollback
+            
+            // This means dontRollbackOnClass is null but rollbackOnClass is "not null"
+            // Default for checked exception is to "not" mark transaction for rollback
             throw checkedException;
         }
         return object;
@@ -245,12 +257,13 @@ public class TransactionalInterceptorBase implements Serializable {
      * @param exception actual exception thrown for comparison
      * @return exception in the array that is closest/lowest in hierarchy to the exception or null if non exists
      */
-    private Class getClassInArrayClosestToClassOrNull(Class[] exceptionArray, Class exception) {
+    private Class<?> getClassInArrayClosestToClassOrNull(Class<?>[] exceptionArray, Class<?> exception) {
         if (exceptionArray == null || exception == null) {
             return null;
         }
-        Class closestMatch = null;
-        for (Class exceptionArrayElement : exceptionArray) {
+        
+        Class<?> closestMatch = null;
+        for (Class<?> exceptionArrayElement : exceptionArray) {
             if (exceptionArrayElement.equals(exception)) {
                 return exceptionArrayElement;
             }
@@ -260,13 +273,14 @@ public class TransactionalInterceptorBase implements Serializable {
                 }
             }
         }
+        
         return closestMatch;
     }
 
     private void markRollbackIfActiveTransaction() throws SystemException {
         Transaction transaction = getTransactionManager().getTransaction();
         if (transaction != null) {
-            _logger.log(java.util.logging.Level.INFO, CDI_JTA_SETROLLBACK, transaction);
+            _logger.log(INFO, CDI_JTA_SETROLLBACK, transaction);
             getTransactionManager().setRollbackOnly();
         }
     }
@@ -275,11 +289,13 @@ public class TransactionalInterceptorBase implements Serializable {
         if (testTransactionManager != null) {
             return; //test
         }
+        
         ComponentInvocation currentInvocation = getCurrentInvocation();
         if (currentInvocation == null) {
-            _logger.log(java.util.logging.Level.WARNING, CDI_JTA_NOCOMPONENT);
+            _logger.log(WARNING, CDI_JTA_NOCOMPONENT);
             return;
         }
+        
         preexistingTransactionOperationsManager = (TransactionOperationsManager) currentInvocation.getTransactionOperationsManager();
         currentInvocation.setTransactionOperationsManager(
                 userTransactionMethodsAllowed ? transactionalTransactionOperationsManagerTransactionMethodsAllowed
@@ -290,13 +306,16 @@ public class TransactionalInterceptorBase implements Serializable {
         if (testTransactionManager != null) {
             return; //test
         }
+        
         ComponentInvocation currentInvocation = getCurrentInvocation();
         if (currentInvocation == null) {
-            //there should always be a currentInvocation and so this would seem a bug
+            
+            // There should always be a currentInvocation and so this would seem a bug
             // but not a fatal one as app should not be relying on this, so log warning only
-            System.out.println("TransactionalInterceptorBase.markThreadAsTransactional currentInvocation==null");
+            _logger.log(WARNING, "TransactionalInterceptorBase.markThreadAsTransactional currentInvocation==null");
             return;
         }
+        
         currentInvocation.setTransactionOperationsManager(preexistingTransactionOperationsManager);
     }
 
@@ -322,8 +341,7 @@ public class TransactionalInterceptorBase implements Serializable {
         }
     }
 
-    private static final class TransactionalTransactionOperationsManagerTransactionMethodsNotAllowed
-            implements TransactionOperationsManager {
+    private static final class TransactionalTransactionOperationsManagerTransactionMethodsNotAllowed implements TransactionOperationsManager {
 
         @Override
         public boolean userTransactionMethodsAllowed() {

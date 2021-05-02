@@ -51,8 +51,7 @@ public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T
     }
 
     @Override
-    public T aroundConstruct(final ConstructionHandle<T> handle, AnnotatedConstructor<T> constructor, Object[] parameters,
-            Map<String, Object> data) {
+    public T aroundConstruct(final ConstructionHandle<T> handle, AnnotatedConstructor<T> constructor, Object[] parameters, Map<String, Object> data) {
         this.handle = handle;
         this.parameters = parameters;
         T ejb;

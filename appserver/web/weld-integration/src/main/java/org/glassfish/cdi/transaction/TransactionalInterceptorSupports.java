@@ -16,11 +16,17 @@
 
 package org.glassfish.cdi.transaction;
 
+import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
+import static jakarta.transaction.Transactional.TxType.SUPPORTS;
+import static java.util.logging.Level.INFO;
+
 import java.util.logging.Logger;
 
+import jakarta.annotation.Priority;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.Transactional;
 
 /**
  * Transactional annotation Interceptor class for Supports transaction type, ie
@@ -30,23 +36,21 @@ import jakarta.interceptor.InvocationContext;
  *
  * @author Paul Parkinson
  */
-@jakarta.annotation.Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
+@Priority(PLATFORM_BEFORE + 200)
 @Interceptor
-@jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.SUPPORTS)
+@Transactional(SUPPORTS)
 public class TransactionalInterceptorSupports extends TransactionalInterceptorBase {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -1752774873298754596L;
     private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
-        _logger.log(java.util.logging.Level.INFO, CDI_JTA_SUPPORTS);
+        _logger.log(INFO, CDI_JTA_SUPPORTS);
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
+        
         setTransactionalTransactionOperationsManger(false);
         try {
             return proceed(ctx);

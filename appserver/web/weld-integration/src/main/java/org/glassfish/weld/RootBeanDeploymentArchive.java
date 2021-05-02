@@ -16,9 +16,10 @@
 
 package org.glassfish.weld;
 
+import static java.util.Collections.emptyList;
+
 import java.net.URL;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -34,6 +35,7 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  * contains no bean classes. All bdas of the module are visible to the root bda. And the root bda is visible to all bdas
  * of the module.
  *
+ * <p>
  * (Alternatively creating one root BDA per deployment has the disadvantage that you need to be careful about
  * accessibility rules. If you allow every BDA to see the root BDA - return it from BDA.getBeanDeploymentArchives() -
  * and allow the root BDA to see all other BDAs - return all other BDAs from root BDA.getDeployemtArchive(). Due to
@@ -44,28 +46,25 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
  */
 public class RootBeanDeploymentArchive extends BeanDeploymentArchiveImpl {
+    
     private BeanDeploymentArchiveImpl moduleBda;
 
     public RootBeanDeploymentArchive(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext) {
         this(archive, ejbs, deploymentContext, null);
     }
 
-    public RootBeanDeploymentArchive(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext,
-            String moduleBdaID) {
-        super("root_" + archive.getName(), Collections.<Class<?>>emptyList(), Collections.<URL>emptyList(),
-                Collections.<EjbDescriptor>emptyList(), deploymentContext);
+    public RootBeanDeploymentArchive(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext, String moduleBdaID) {
+        super("root_" + archive.getName(), emptyList(), emptyList(), emptyList(), deploymentContext);
         createModuleBda(archive, ejbs, deploymentContext, moduleBdaID);
     }
 
-    private void createModuleBda(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext,
-            String bdaId) {
+    private void createModuleBda(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext, String bdaId) {
         moduleBda = new BeanDeploymentArchiveImpl(archive, ejbs, deploymentContext, bdaId);
 
-        // set the bda visibility for the root
-        Collection<BeanDeploymentArchive> bdas = moduleBda.getBeanDeploymentArchives();
-        for (BeanDeploymentArchive oneBda : bdas) {
-            oneBda.getBeanDeploymentArchives().add(this);
-            getBeanDeploymentArchives().add(oneBda);
+        // Set the beanDeploymentArchive visibility for the root
+        for (BeanDeploymentArchive beanDeploymentArchive : moduleBda.getBeanDeploymentArchives()) {
+            beanDeploymentArchive.getBeanDeploymentArchives().add(this);
+            getBeanDeploymentArchives().add(beanDeploymentArchive);
         }
 
         moduleBda.getBeanDeploymentArchives().add(this);
@@ -74,22 +73,22 @@ public class RootBeanDeploymentArchive extends BeanDeploymentArchiveImpl {
 
     @Override
     public Collection<String> getBeanClasses() {
-        return Collections.emptyList();
+        return emptyList();
     }
 
     @Override
     public Collection<Class<?>> getBeanClassObjects() {
-        return Collections.emptyList();
+        return emptyList();
     }
 
     @Override
     public Collection<String> getModuleBeanClasses() {
-        return Collections.emptyList();
+        return emptyList();
     }
 
     @Override
     public Collection<Class<?>> getModuleBeanClassObjects() {
-        return Collections.emptyList();
+        return emptyList();
     }
 
     @Override

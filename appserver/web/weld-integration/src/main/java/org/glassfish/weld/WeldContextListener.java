@@ -46,14 +46,13 @@ public class WeldContextListener implements ServletContextListener {
      */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
-        if (null != beanManager) {
+        if (beanManager != null) {
             JspApplicationContext jspAppContext = getJspApplicationContext(servletContextEvent);
             jspAppContext.addELResolver(beanManager.getELResolver());
 
             try {
-                Class weldClass = Class.forName("org.jboss.weld.module.web.el.WeldELContextListener");
-                WeldELContextListener welcl = (WeldELContextListener) weldClass.newInstance();
+                Class<?> weldClass = Class.forName("org.jboss.weld.module.web.el.WeldELContextListener");
+                WeldELContextListener welcl = (WeldELContextListener) weldClass.getDeclaredConstructor().newInstance();
                 jspAppContext.addELContextListener(welcl);
             } catch (Exception e) {
                 logger.log(Level.WARNING, CDILoggerInfo.CDI_COULD_NOT_CREATE_WELDELCONTEXTlISTENER, new Object[] { e });
@@ -66,7 +65,7 @@ public class WeldContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        if (null != beanManager) {
+        if (beanManager != null) {
             beanManager = null;
         }
     }

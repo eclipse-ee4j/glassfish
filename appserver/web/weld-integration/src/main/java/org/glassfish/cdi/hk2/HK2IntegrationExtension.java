@@ -16,6 +16,8 @@
 
 package org.glassfish.cdi.hk2;
 
+import static org.glassfish.cdi.hk2.HK2IntegrationUtilities.convertInjectionPointToInjectee;
+
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,7 +67,7 @@ public class HK2IntegrationExtension implements Extension {
         Set<InjectionPoint> injectionPoints = injectionTarget.getInjectionPoints();
 
         for (InjectionPoint injectionPoint : injectionPoints) {
-            Injectee injectee = HK2IntegrationUtilities.convertInjectionPointToInjectee(injectionPoint);
+            Injectee injectee = convertInjectionPointToInjectee(injectionPoint);
 
             ActiveDescriptor<?> descriptor = locator.getInjecteeDescriptor(injectee);
             if (descriptor == null || descriptor.getServiceId() == null) {
@@ -80,10 +82,10 @@ public class HK2IntegrationExtension implements Extension {
     /**
      * Called by CDI after going through all of the injection points. For each service known to hk2, adds a CDI bean.
      *
-     * @param abd This is used just to mark the type of the event
+     * @param afterBeanDiscovery This is used just to mark the type of the event
      */
     @SuppressWarnings({ "unused", "unchecked", "rawtypes" })
-    private void afterDiscoveryObserver(@Observes AfterBeanDiscovery abd) {
+    private void afterDiscoveryObserver(@Observes AfterBeanDiscovery afterBeanDiscovery) {
         if (locator == null) {
             return;
         }
@@ -91,7 +93,7 @@ public class HK2IntegrationExtension implements Extension {
         HashSet<Class<? extends Annotation>> customScopes = new HashSet<>();
 
         for (ActiveDescriptor<?> descriptor : foundWithHK2.values()) {
-            abd.addBean(new HK2CDIBean(locator, descriptor));
+            afterBeanDiscovery.addBean(new HK2CDIBean(locator, descriptor));
 
             customScopes.add(descriptor.getScopeAnnotation());
         }
@@ -106,7 +108,7 @@ public class HK2IntegrationExtension implements Extension {
                 continue;
             }
 
-            abd.addContext(new HK2ContextBridge(hk2Context));
+            afterBeanDiscovery.addContext(new HK2ContextBridge(hk2Context));
         }
 
         foundWithHK2.clear(); // No need to keep these references around
@@ -124,8 +126,7 @@ public class HK2IntegrationExtension implements Extension {
             return;
         }
 
-        DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
-        DynamicConfiguration config = dcs.createDynamicConfiguration();
+        DynamicConfiguration config = locator.getService(DynamicConfigurationService.class).createDynamicConfiguration();
 
         config.addActiveDescriptor(CDISecondChanceResolver.class);
         config.addActiveDescriptor(CDIContextBridge.class);

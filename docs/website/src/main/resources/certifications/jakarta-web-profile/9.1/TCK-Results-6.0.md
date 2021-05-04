@@ -415,7 +415,7 @@ SHA-256: `71999815418799837dc6f3d0dc40c3dcc4144cd90c7cdfd06aa69270483d78bc`
 
 TCK Result Summary:
 ```
-+ /opt/jdk-11.0.7/bin/java VerifySMAP /home/jenkins/agent/workspace/t-for-other-languages-tck_master/vi/glassfish6/glassfish/domains/domain1/generated/jsp/testclient/org/apache/jsp/Hello_jsp.class.smap
++ /opt/jdk1.8.0_191/bin/java VerifySMAP /home/jenkins/agent/workspace/t-for-other-languages-tck_master/vi/glassfish6/glassfish/domains/domain1/generated/jsp/testclient/org/apache/jsp/Hello_jsp.class.smap
 ++ grep 'is a correctly formatted SMAP' smap.log
 ++ wc -l
 + output=1

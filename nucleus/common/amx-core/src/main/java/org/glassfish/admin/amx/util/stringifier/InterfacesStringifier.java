@@ -28,10 +28,12 @@ public class InterfacesStringifier implements Stringifier {
         this(StringifierRegistryImpl.DEFAULT, interfaces);
     }
 
+
     public InterfacesStringifier(StringifierRegistry registry, Class[] interfaces) {
         mRegistry = registry;
         mInterfaces = interfaces;
     }
+
 
     private <T> String stringifyAs(Object o, Class<T> theClass) {
         String result = null;
@@ -44,13 +46,12 @@ public class InterfacesStringifier implements Stringifier {
         return (result);
     }
 
+
     @Override
     public String stringify(Object o) {
         StringBuilder result = new StringBuilder();
 
-        for (int i = 0; i < mInterfaces.length; ++i) {
-            final Class<?> intf = mInterfaces[i];
-
+        for (final Class<?> intf : mInterfaces) {
             final String s = stringifyAs(o, intf);
             if (s != null) {
                 result.append(intf.getName()).append(": ").append(s).append("\n");

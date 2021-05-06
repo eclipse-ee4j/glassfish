@@ -46,19 +46,19 @@ public class GenericCommandModel extends CommandModel {
     /**
      * GenericCommandModel constructor.
      *
-     * @param targetType    the ConfigBeanProxy class that may have
-     *                 additional @Param annotations for the command,
-     * @param useAnnotations    if true, use the annotations on the targetType
-     *                 class to define the parameters
-     * @param cluster        the @ExecuteOn annotation, if any
-     * @param i18n        the @I18n annotation, if any
-     * @param localStrings    where to find strings for the command
-     * @param document        the DomDocument for the command
-     * @param commandName    the name of the command
+     * @param targetType        the ConfigBeanProxy class that may have
+     *                                 additional @Param annotations for the command,
+     * @param useAnnotations        if true, use the annotations on the targetType
+     *                                 class to define the parameters
+     * @param cluster                the @ExecuteOn annotation, if any
+     * @param i18n                the @I18n annotation, if any
+     * @param localStrings        where to find strings for the command
+     * @param document                the DomDocument for the command
+     * @param commandName        the name of the command
      * @param supportsProgress  {@code true} only if command working
      *                          with ProgressStatus
-     * @param extraTypes    any extra types that might also define
-     *                 parameters for the command
+     * @param extraTypes        any extra types that might also define
+     *                                 parameters for the command
      */
     public GenericCommandModel(Class<?> targetType,
                                boolean useAnnotations,
@@ -77,7 +77,7 @@ public class GenericCommandModel extends CommandModel {
         this.managedJob = managedJob;
 
         if (useAnnotations && targetType!=null &&
-        ConfigBeanProxy.class.isAssignableFrom(targetType)) {
+                ConfigBeanProxy.class.isAssignableFrom(targetType)) {
             ConfigModel cm = document.buildModel(targetType);
             for (Method m : targetType.getMethods()) {
                 ConfigModel.Property prop = cm.toProperty(m);

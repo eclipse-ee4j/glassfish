@@ -26,16 +26,16 @@ import org.glassfish.external.arc.Taxonomy;
 
 /**
     <b>INTERNAL USE ONLY--not part of the API</b>
-    @since AS 9.0
+        @since AS 9.0
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public final class LogQueryResultImpl
-    implements LogQueryResult
+implements LogQueryResult
 {
     private String[]         mFieldNames;
     private LogQueryEntry[]  mEntries;
 
-        public
+    public
     LogQueryResultImpl(
         final String[]          fieldNames,
         final LogQueryEntry[]   entries )
@@ -49,7 +49,7 @@ public final class LogQueryResultImpl
         The first Object[] is a String[] of the field names.
         Subsequent Object[] are the data values.
      */
-        public
+    public
     LogQueryResultImpl( final List<Serializable[]> records )
     {
         mFieldNames   = (String[])records.get( 0 );
@@ -61,14 +61,14 @@ public final class LogQueryResultImpl
         }
     }
 
-        public String[]
-    getFieldNames()
+    public String[]
+        getFieldNames()
     {
         return mFieldNames;
     }
 
-        public LogQueryEntry[]
-    getEntries()
+    public LogQueryEntry[]
+        getEntries()
     {
         return mEntries;
     }
@@ -79,7 +79,7 @@ public final class LogQueryResultImpl
         Output a tab-delimited String with a header line. Each
         subsequent line represents another log record.
      */
-        public String
+    public String
     toString()
     {
         final StringBuilder builder = new StringBuilder();
@@ -105,13 +105,13 @@ public final class LogQueryResultImpl
         return builder.toString();
     }
 
-         public int
-     hashCode()
-     {
-         return ObjectUtil.hashCode( getFieldNames(), getEntries() );
-     }
+    public int
+    hashCode()
+    {
+        return ObjectUtil.hashCode( getFieldNames(), getEntries() );
+    }
 
-        public boolean
+    public boolean
     equals( final Object rhs )
     {
         boolean equal   = rhs instanceof LogQueryResult;
@@ -121,7 +121,7 @@ public final class LogQueryResultImpl
             final LogQueryResult    r   = (LogQueryResult)rhs;
 
             equal   = ArrayUtil.arraysEqual( getFieldNames(), r.getFieldNames() ) &&
-                      ArrayUtil.arraysEqual( getEntries(), r.getEntries() );
+                ArrayUtil.arraysEqual( getEntries(), r.getEntries() );
 
         }
 

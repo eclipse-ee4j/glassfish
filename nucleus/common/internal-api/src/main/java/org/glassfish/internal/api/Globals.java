@@ -51,7 +51,7 @@ public class Globals {
     }
 
     public static ServiceLocator getDefaultBaseServiceLocator() {
-        return getDefaultHabitat();
+            return getDefaultHabitat();
     }
 
     public static ServiceLocator getDefaultHabitat() {
@@ -67,7 +67,7 @@ public class Globals {
     }
 
     public static ServiceLocator getStaticBaseServiceLocator() {
-        return getStaticHabitat();
+            return getStaticHabitat();
     }
 
     public static ServiceLocator getStaticHabitat() {

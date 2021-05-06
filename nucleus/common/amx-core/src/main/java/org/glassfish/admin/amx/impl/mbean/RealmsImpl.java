@@ -59,9 +59,9 @@ import org.glassfish.admin.amx.util.AMXLoggerInfo;
     Note that realms don't load until {@link #loadRealms} is called.
  */
 public final class RealmsImpl extends AMXImplBase
-    // implements Realms
+// implements Realms
 {
-        public
+    public
     RealmsImpl( final ObjectName containerObjectName )
     {
         super( containerObjectName, Realms.class);
@@ -97,7 +97,7 @@ public final class RealmsImpl extends AMXImplBase
         return names;
     }
 
-        private synchronized void
+    private synchronized void
     loadRealms()
     {
         if ( realmsLoaded )
@@ -114,7 +114,7 @@ public final class RealmsImpl extends AMXImplBase
         _loadRealms();
     }
 
-        private void
+    private void
     _loadRealms()
     {
         if ( realmsLoaded ) throw new IllegalStateException();
@@ -138,7 +138,7 @@ public final class RealmsImpl extends AMXImplBase
             catch( final Exception e )
             {
                 AMXLoggerInfo.getLogger().log( Level.WARNING, AMXLoggerInfo.cantInstantiateRealm,
-                        new Object[] {StringUtil.quote(authRealm), e.getLocalizedMessage()} );
+                    new Object[] {StringUtil.quote(authRealm), e.getLocalizedMessage()} );
             }
         }
 
@@ -154,7 +154,7 @@ public final class RealmsImpl extends AMXImplBase
             catch (final Exception e)
             {
                 AMXLoggerInfo.getLogger().log( Level.WARNING, AMXLoggerInfo.cantInstantiateRealm,
-                        new Object[] {StringUtil.quote(goodRealm), e.getLocalizedMessage()} );
+                    new Object[] {StringUtil.quote(goodRealm), e.getLocalizedMessage()} );
                 Realm.setDefaultRealm(goodRealms.iterator().next());
             }
         }
@@ -163,8 +163,8 @@ public final class RealmsImpl extends AMXImplBase
     }
 
 
-        private String[]
-    _getRealmNames()
+    private String[]
+        _getRealmNames()
     {
         final List<String> items = ListUtil.newList( getRealmsManager().getRealmNames() );
         return CollectionUtil.toArray(items, String.class);
@@ -172,7 +172,7 @@ public final class RealmsImpl extends AMXImplBase
 
 
     public String[]
-    getRealmNames()
+        getRealmNames()
     {
         try
         {
@@ -182,14 +182,14 @@ public final class RealmsImpl extends AMXImplBase
         catch( final Exception e )
         {
             AMXLoggerInfo.getLogger().log( Level.WARNING, AMXLoggerInfo.cantGetRealmNames,
-                    e.getLocalizedMessage() );
+                e.getLocalizedMessage() );
             return new String[] {};
         }
     }
 
 
     public String[]
-    getPredefinedAuthRealmClassNames()
+        getPredefinedAuthRealmClassNames()
     {
         final List<String> items = getRealmsManager().getPredefinedAuthRealmClassNames();
         return CollectionUtil.toArray(items, String.class);
@@ -207,7 +207,7 @@ public final class RealmsImpl extends AMXImplBase
         getRealmsManager().setDefaultRealmName(realmName);
     }
 
-        private Realm
+    private Realm
     getRealm(final String realmName)
     {
         loadRealms();
@@ -281,7 +281,7 @@ public final class RealmsImpl extends AMXImplBase
         return getRealm(realmName).supportsUserManagement();
     }
 
-        private void
+    private void
     checkSupportsUserManagement(final String realmName)
     {
         if ( ! supportsUserManagement(realmName) )
@@ -346,7 +346,7 @@ public final class RealmsImpl extends AMXImplBase
         }
         catch( final Exception e )
         {
-        throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -355,7 +355,7 @@ public final class RealmsImpl extends AMXImplBase
     private static final String FILE_REALM_CLASSNAME = "com.sun.enterprise.security.auth.realm.file.FileRealm";
 
 
-     public String getAnonymousUser() {
+    public String getAnonymousUser() {
         final Domain domain = InjectedValues.getInstance().getHabitat().getService(Domain.class);
         final List<Config> configs = domain.getConfigs().getConfig();
 

@@ -252,7 +252,7 @@ public class ObjectAnalyzer {
     ////////////////////////////////////////////////////////////////////////////
     private static void setAccessible(Field[] fields) {
         if (setAccessibleMethod == null)
-            return;    // Must be pre JDK 1.2.x
+            return;        // Must be pre JDK 1.2.x
 
         try {
             Boolean b = Boolean.valueOf(true);
@@ -330,7 +330,7 @@ class ObjectAnalyzerException extends Exception {
 class FieldInfo {
     Field field;
     String value;
-    //Class    clazz;
+    //Class        clazz;
     String className;
     String modifiers;
 

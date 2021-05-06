@@ -36,8 +36,8 @@ public final class ExceptionUtil
     Get the chain of exceptions via getCause(). The first element is the
     Exception passed.
 
-    @param start    the Exception to traverse
-    @return        a Throwable[] or an Exception[] as appropriate
+    @param start        the Exception to traverse
+    @return                a Throwable[] or an Exception[] as appropriate
      */
     public static Throwable[] getCauses(final Throwable start)
     {
@@ -73,8 +73,8 @@ public final class ExceptionUtil
     /**
     Get the original troublemaker.
 
-    @param e    the Exception to dig into
-    @return        the original Throwable that started the problem
+    @param e        the Exception to dig into
+    @return                the original Throwable that started the problem
      */
     public static Throwable getRootCause(final Throwable e)
     {
@@ -86,8 +86,8 @@ public final class ExceptionUtil
     /**
     Get the stack trace as a String.
 
-    @param t    the Throwabe whose stack trace should be gotten
-    @return        a String containing the stack trace
+    @param t        the Throwabe whose stack trace should be gotten
+    @return                a String containing the stack trace
      */
     public static String getStackTrace(Throwable t)
     {

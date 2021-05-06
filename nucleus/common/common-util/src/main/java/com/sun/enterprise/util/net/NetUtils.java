@@ -672,10 +672,10 @@ public class NetUtils {
     }
 
     /**
-     *    This method accepts a hostname and port #.  It uses this information
-     *    to attempt to connect to the port, send a test query, analyze the
-     *    result to determine if the port is secure or unsecure (currently only
-     *    http / https is supported).
+     *        This method accepts a hostname and port #.  It uses this information
+     *        to attempt to connect to the port, send a test query, analyze the
+     *        result to determine if the port is secure or unsecure (currently only
+     *        http / https is supported).
      *  @param hostname - String name of the host where the connections has to be made
      *  @param port - int name of the port where the connections has to be made
      *  @return admin password
@@ -837,8 +837,8 @@ public class NetUtils {
         System.out.printf("isRunning says: %b for %s, %d, %d%n", b, h, p, duration);
     }
     /**
-     *    This is the test query used to ping the server in an attempt to
-     *    determine if it is secure or not.
+     *        This is the test query used to ping the server in an attempt to
+     *        determine if it is secure or not.
      */
     private static byte[] TEST_QUERY = new byte[]{
         //  This static declaration contained a SSL query to be used while

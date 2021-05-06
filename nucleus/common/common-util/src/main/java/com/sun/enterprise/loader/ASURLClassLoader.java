@@ -772,9 +772,9 @@ public class ASURLClassLoader
             clazz = defineClass(name, bytes, 0, bytes.length, classData.pd);
             return clazz;
         } catch (UnsupportedClassVersionError ucve) {
-         throw new UnsupportedClassVersionError(
-             sm.getString("ejbClassLoader.unsupportedVersion", name,
-                          System.getProperty("java.version")));
+             throw new UnsupportedClassVersionError(
+                 sm.getString("ejbClassLoader.unsupportedVersion", name,
+                              System.getProperty("java.version")));
         }
     }
 
@@ -1167,11 +1167,11 @@ public class ASURLClassLoader
             if (obj instanceof URLEntry) {
                 URLEntry e = (URLEntry) obj;
                 try {
-                      //try comparing URIs
-                      if (source.toURI().equals(e.source.toURI())) {
-                          tf = true;
-                      }
-                  } catch (URISyntaxException e1) {
+                              //try comparing URIs
+                              if (source.toURI().equals(e.source.toURI())) {
+                                  tf = true;
+                              }
+                          } catch (URISyntaxException e1) {
                     // We should never get here, because we call init() in the constructor and
                     // init() would have thrown an exception if the URL could not be converted to a valid URI.
                     assert(false);
@@ -1187,8 +1187,8 @@ public class ASURLClassLoader
          */
         public int hashCode() {
             try {
-                  return source.toURI().hashCode();
-              } catch (URISyntaxException e) {
+                          return source.toURI().hashCode();
+                      } catch (URISyntaxException e) {
                 // We should never get here, because we call init() in the constructor and
                 // init() would have thrown an exception if the URL could not be converted to a valid URI.
                 assert(false);
@@ -1525,9 +1525,9 @@ public class ASURLClassLoader
                 clazz = defineClass(name, bytes, 0, bytes.length, classData.pd);
                 return clazz;
             } catch (UnsupportedClassVersionError ucve) {
-             throw new UnsupportedClassVersionError(
-                 sm.getString("ejbClassLoader.unsupportedVersion", name,
-                              System.getProperty("java.version")));
+                 throw new UnsupportedClassVersionError(
+                     sm.getString("ejbClassLoader.unsupportedVersion", name,
+                                  System.getProperty("java.version")));
             }
         }
 

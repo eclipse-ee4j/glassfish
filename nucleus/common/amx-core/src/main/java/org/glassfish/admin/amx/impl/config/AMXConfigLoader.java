@@ -526,7 +526,7 @@ public final class AMXConfigLoader
     }
 
     public Domain getDomain() {
-        return InjectedValues.getInstance().getHabitat().getService(Domain.class);
+            return InjectedValues.getInstance().getHabitat().getService(Domain.class);
     }
 
     private static final AtomicLong sCounter = new AtomicLong(1);

@@ -183,8 +183,8 @@ public abstract class PayloadFilesManager {
         public Perm(final File targetDir, final ActionReport report,
                 final Logger logger, final ActionReportHandler reportHandler) {
             super(targetDir != null ? targetDir :
-            new File(System.getProperty("user.dir")),
-            report, logger, reportHandler);
+                    new File(System.getProperty("user.dir")),
+                    report, logger, reportHandler);
         }
 
         /**

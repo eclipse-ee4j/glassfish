@@ -26,9 +26,9 @@ import javax.management.MBeanOperationInfo;
 
 
 /**
-    @deprecated Convenience getters for Descriptor values and other metadata from the MBeanInfo.
-    These operations do not make a trip to the server.
-    See {@link AMXProxy#extra}.
+ * @deprecated Convenience getters for Descriptor values and other metadata from the MBeanInfo.
+ *             These operations do not make a trip to the server.
+ *             See {@link AMXProxy#extra}.
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
 @Deprecated
@@ -37,17 +37,17 @@ public interface MetaGetters
     public MBeanInfo mbeanInfo();
 
     /**
-        From Descriptor: get the Java classname of the interface for this MBean.
-        If it has not been specified, a default generic interface is returned  eg 'AMX'.
-        There is no guarantee that the interface exists on the client.
-    */
+     * From Descriptor: get the Java classname of the interface for this MBean.
+     * If it has not been specified, a default generic interface is returned eg 'AMX'.
+     * There is no guarantee that the interface exists on the client.
+     */
     public String interfaceName();
 
     /**
-        From Descriptor: get the generic interface for this MBean
-        eg AMXProxy or AMXConfigProxy or (possibly) something else.
-        The generic interface is always part of amx-core.
-    */
+     * From Descriptor: get the generic interface for this MBean
+     * eg AMXProxy or AMXConfigProxy or (possibly) something else.
+     * The generic interface is always part of amx-core.
+     */
     public Class<? extends AMXProxy> genericInterface();
 
     /** From Descriptor:  true if the MBeanInfo is invariant ("immutable") */
@@ -77,11 +77,4 @@ public interface MetaGetters
     /** Get MBeanOperationInfo for specified operation. */
     public MBeanOperationInfo operationInfo(final String operationName);
 }
-
-
-
-
-
-
-
 

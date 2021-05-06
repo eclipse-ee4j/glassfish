@@ -214,8 +214,8 @@ public class OS
             return false;
 
         // case insensitive compare...
-        osname    = osname.toLowerCase(Locale.getDefault());
-        name    = name.toLowerCase(Locale.getDefault());
+        osname        = osname.toLowerCase(Locale.getDefault());
+        name        = name.toLowerCase(Locale.getDefault());
 
         if(osname.indexOf(name) >= 0)
             return true;

@@ -29,23 +29,22 @@ import javax.management.Attribute;
 
 
 
-public final class AttributeStringifier implements Stringifier
-{
-    public final static AttributeStringifier    DEFAULT    = new AttributeStringifier();
+public final class AttributeStringifier implements Stringifier {
 
-        public
-    AttributeStringifier()
-    {
+    public final static AttributeStringifier DEFAULT = new AttributeStringifier();
+
+    public AttributeStringifier() {
     }
-        public String
-    stringify( Object o )
-    {
-        final Attribute    attr    = (Attribute)o;
 
-        final String    prefix    = attr.getName() + "=";
 
-        final String    stringValue    = SmartStringifier.toString( attr.getValue() );
+    @Override
+    public String stringify(Object o) {
+        final Attribute attr = (Attribute) o;
 
-        return( prefix + stringValue );
+        final String prefix = attr.getName() + "=";
+
+        final String stringValue = SmartStringifier.toString(attr.getValue());
+
+        return (prefix + stringValue);
     }
 }

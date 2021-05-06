@@ -106,8 +106,8 @@ public final class ArrayUtil
     /**
     Create a new array from the original.
 
-    @param items        the original array
-    @param startIndex    index of the first item
+    @param items                the original array
+    @param startIndex        index of the first item
     @param numItems
     @return an array of the same type, containing numItems items
      */
@@ -127,8 +127,8 @@ public final class ArrayUtil
     /**
     Create a new array consisting of originals and new.
 
-    @param items1        1st array
-    @param items2        2nd array
+    @param items1                1st array
+    @param items2                2nd array
     @return an array of the same type as items1, its elements first
      */
     public static <T> T[] newArray(
@@ -155,8 +155,8 @@ public final class ArrayUtil
     /**
     Create a new array consisting of an original array, and a single new item.
 
-    @param items        an array
-    @param item        an item to append
+    @param items                an array
+    @param item                an item to append
     @return an array of the same type as items1, its elements first
      */
     public static <T> T[] newArray(

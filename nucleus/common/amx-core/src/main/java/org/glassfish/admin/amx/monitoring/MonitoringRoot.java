@@ -24,7 +24,7 @@ import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 
 /**
-    Top-level interface for accessing all MonitoringRoot information.
+        Top-level interface for accessing all MonitoringRoot information.
     <p>
     Call {@link AMXProxy#childrenMap} to get the ServerMon children.
  */

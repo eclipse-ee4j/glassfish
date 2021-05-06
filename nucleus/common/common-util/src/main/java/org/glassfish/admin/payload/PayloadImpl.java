@@ -166,7 +166,7 @@ public class PayloadImpl implements Payload {
             enhancedProps.setProperty("data-request-type", "file-replace");
             enhancedProps.setProperty("data-request-name", dataRequestName);
             enhancedProps.setProperty("data-request-is-recursive", Boolean.toString(isRecursive));
-        enhancedProps.setProperty("last-modified", Long.toString(file.lastModified()));
+            enhancedProps.setProperty("last-modified", Long.toString(file.lastModified()));
 
             /*
              * Add a dummy part for the replacement of the directory - if
@@ -425,10 +425,10 @@ public class PayloadImpl implements Payload {
             }
             if (TextPayloadImpl.Inbound.supportsContentType(payloadContentType)) {
                 return TextPayloadImpl.Inbound.newInstance(payloadContentType, is);
-        } else if (ZipPayloadImpl.Inbound.supportsContentType(payloadContentType)) {
+            } else if (ZipPayloadImpl.Inbound.supportsContentType(payloadContentType)) {
                 return ZipPayloadImpl.Inbound.newInstance(payloadContentType, is);
             } else {
-        return null;
+                return null;
             }
         }
 

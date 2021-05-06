@@ -82,28 +82,28 @@ public final class Utility {
      * Return the hostname of the local machine.
      */
     public static String getLocalHost()  {
-    String hostname = null;
-    try {
-        InetAddress ia = InetAddress.getLocalHost();
-        hostname = ia.getHostName();
-    } catch(UnknownHostException e) {
-        return "localhost";
-    }
-    return hostname;
+        String hostname = null;
+        try {
+            InetAddress ia = InetAddress.getLocalHost();
+            hostname = ia.getHostName();
+        } catch(UnknownHostException e) {
+            return "localhost";
+        }
+        return hostname;
     }
 
     /**
      * Return the hostname of the local machine.
      */
     public static String getLocalAddress()  {
-    String address = null;
-    try {
-        InetAddress ia = InetAddress.getLocalHost();
-        address = ia.getHostAddress();
-    } catch(UnknownHostException e) {
-        return "127.0.0.1";
-    }
-    return address;
+        String address = null;
+        try {
+            InetAddress ia = InetAddress.getLocalHost();
+            address = ia.getHostAddress();
+        } catch(UnknownHostException e) {
+            return "127.0.0.1";
+        }
+        return address;
     }
 
     /**
@@ -113,13 +113,13 @@ public final class Utility {
      * name could not be found.
      */
     public static java.rmi.Remote lookupObject(String publishedName,
-                           java.lang.Class anInterface)
-        throws javax.naming.NamingException {
+                                               java.lang.Class anInterface)
+            throws javax.naming.NamingException {
 
-    Context ic = new InitialContext();
-    java.lang.Object objRef = ic.lookup(publishedName);
-    return (java.rmi.Remote)
-        PortableRemoteObject.narrow(objRef, anInterface);
+        Context ic = new InitialContext();
+        java.lang.Object objRef = ic.lookup(publishedName);
+        return (java.rmi.Remote)
+            PortableRemoteObject.narrow(objRef, anInterface);
     }
 
 
@@ -144,30 +144,30 @@ public final class Utility {
     }
 
     /** Unmarshal a byte array to an integer.
-    Assume the bytes are in BIGENDIAN order.
-    i.e. array[offset] is the most-significant-byte
-    and  array[offset+3] is the least-significant-byte.
-    @param array The array of bytes.
-    @param offset The offset from which to start unmarshalling.
+        Assume the bytes are in BIGENDIAN order.
+        i.e. array[offset] is the most-significant-byte
+        and  array[offset+3] is the least-significant-byte.
+        @param array The array of bytes.
+        @param offset The offset from which to start unmarshalling.
     */
     public static int bytesToInt(byte[] array, int offset)
     {
-    int b1, b2, b3, b4;
+        int b1, b2, b3, b4;
 
         b1 = (array[offset++] << 24) & 0xFF000000;
         b2 = (array[offset++] << 16) & 0x00FF0000;
         b3 = (array[offset++] << 8)  & 0x0000FF00;
         b4 = (array[offset++] << 0)  & 0x000000FF;
 
-    return (b1 | b2 | b3 | b4);
+        return (b1 | b2 | b3 | b4);
     }
 
     /** Marshal an integer to a byte array.
-    The bytes are in BIGENDIAN order.
-    i.e. array[offset] is the most-significant-byte
-    and  array[offset+3] is the least-significant-byte.
-    @param array The array of bytes.
-    @param offset The offset from which to start marshalling.
+        The bytes are in BIGENDIAN order.
+        i.e. array[offset] is the most-significant-byte
+        and  array[offset+3] is the least-significant-byte.
+        @param array The array of bytes.
+        @param offset The offset from which to start marshalling.
     */
     public static void intToBytes(int value, byte[] array, int offset)
     {
@@ -178,28 +178,28 @@ public final class Utility {
     }
 
     /** Unmarshal a byte array to an long.
-    Assume the bytes are in BIGENDIAN order.
-    i.e. array[offset] is the most-significant-byte
-    and  array[offset+7] is the least-significant-byte.
-    @param array The array of bytes.
-    @param offset The offset from which to start unmarshalling.
+        Assume the bytes are in BIGENDIAN order.
+        i.e. array[offset] is the most-significant-byte
+        and  array[offset+7] is the least-significant-byte.
+        @param array The array of bytes.
+        @param offset The offset from which to start unmarshalling.
     */
     public static long bytesToLong(byte[] array, int offset)
     {
-    long l1, l2;
+        long l1, l2;
 
-    l1 = (long)bytesToInt(array, offset) << 32;
-    l2 = (long)bytesToInt(array, offset+4) & 0xFFFFFFFFL;
+        l1 = (long)bytesToInt(array, offset) << 32;
+        l2 = (long)bytesToInt(array, offset+4) & 0xFFFFFFFFL;
 
-    return (l1 | l2);
+        return (l1 | l2);
     }
 
     /** Marshal an long to a byte array.
-    The bytes are in BIGENDIAN order.
-    i.e. array[offset] is the most-significant-byte
-    and  array[offset+7] is the least-significant-byte.
-    @param array The array of bytes.
-    @param offset The offset from which to start marshalling.
+        The bytes are in BIGENDIAN order.
+        i.e. array[offset] is the most-significant-byte
+        and  array[offset+7] is the least-significant-byte.
+        @param array The array of bytes.
+        @param offset The offset from which to start marshalling.
     */
     public static void longToBytes(long value, byte[] array, int offset)
     {
@@ -217,41 +217,41 @@ public final class Utility {
      * Verify and invoke main if present in the specified class.
      */
     public static void invokeApplicationMain(Class mainClass, String[] args)
-    throws InvocationTargetException, IllegalAccessException,
-        ClassNotFoundException
+        throws InvocationTargetException, IllegalAccessException,
+                ClassNotFoundException
     {
-        String err = localStrings.getLocalString ("utility.no.main", "",
+            String err = localStrings.getLocalString ("utility.no.main", "",
                      new Object[] {mainClass});
 
-        // determine the main method using reflection
-        // verify that it is public static void and takes
-        // String[] as the only argument
-        Method mainMethod = null;
-        try {
-            mainMethod = mainClass.getMethod("main",
-            new Class[] { String[].class } );
-        } catch(NoSuchMethodException msme) {
-        _logger.log(Level.SEVERE, CULoggerInfo.exceptionInUtility, msme);
-        throw new ClassNotFoundException(err);
-        }
-
-        // check modifiers: public static
-            // check return type and exceptions
-        int modifiers = mainMethod.getModifiers ();
-        if (!Modifier.isPublic (modifiers) ||
-        !Modifier.isStatic (modifiers) ||
-                !mainMethod.getReturnType().equals (Void.TYPE))  {
-            err = localStrings.getLocalString(
-            "utility.main.invalid",
-            "The main method signature is invalid");
-            _logger.log(Level.SEVERE, CULoggerInfo.mainNotValid);
+            // determine the main method using reflection
+            // verify that it is public static void and takes
+            // String[] as the only argument
+            Method mainMethod = null;
+            try {
+                mainMethod = mainClass.getMethod("main",
+                    new Class[] { String[].class } );
+            } catch(NoSuchMethodException msme) {
+                _logger.log(Level.SEVERE, CULoggerInfo.exceptionInUtility, msme);
                 throw new ClassNotFoundException(err);
             }
 
-        // build args to the main and call it
-        Object params [] = new Object [1];
-        params[0] = args;
-        mainMethod.invoke(null, params);
+            // check modifiers: public static
+            // check return type and exceptions
+            int modifiers = mainMethod.getModifiers ();
+            if (!Modifier.isPublic (modifiers) ||
+                !Modifier.isStatic (modifiers) ||
+                !mainMethod.getReturnType().equals (Void.TYPE))  {
+                    err = localStrings.getLocalString(
+                        "utility.main.invalid",
+                        "The main method signature is invalid");
+                    _logger.log(Level.SEVERE, CULoggerInfo.mainNotValid);
+                        throw new ClassNotFoundException(err);
+            }
+
+            // build args to the main and call it
+            Object params [] = new Object [1];
+            params[0] = args;
+            mainMethod.invoke(null, params);
 
     }
 
@@ -364,30 +364,30 @@ public final class Utility {
 
     public static short intToShort(int value)
     {
-    if (value > 32767)
+        if (value > 32767)
             return (short)(value - 65536) ;
-    return (short)value ;
+        return (short)value ;
     }
 
     public static int shortToInt(short value)
     {
-        if (value < 0)
+            if (value < 0)
             return value + 65536 ;
-    return value ;
+        return value ;
     }
 
     /**
      * Get the current thread's context class loader which is set to
-     *    the CommonClassLoader by ApplicationServer
+     *        the CommonClassLoader by ApplicationServer
      * @return the thread's context classloader if it exists;
-     *    else the system class loader.
+     *        else the system class loader.
      */
     public static ClassLoader getClassLoader() {
-    if (Thread.currentThread().getContextClassLoader() != null) {
-        return Thread.currentThread().getContextClassLoader();
-    } else {
-        return ClassLoader.getSystemClassLoader();
-    }
+        if (Thread.currentThread().getContextClassLoader() != null) {
+            return Thread.currentThread().getContextClassLoader();
+        } else {
+            return ClassLoader.getSystemClassLoader();
+        }
     }
 
     /**
@@ -397,7 +397,7 @@ public final class Utility {
      * @exception if the class is not found.
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
-    return getClassLoader().loadClass(className);
+        return getClassLoader().loadClass(className);
     }
 
     /**

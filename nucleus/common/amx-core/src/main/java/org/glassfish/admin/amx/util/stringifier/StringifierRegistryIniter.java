@@ -17,20 +17,18 @@
 package org.glassfish.admin.amx.util.stringifier;
 
 /**
-    Interface for adding a Stringifier.
+ * Interface for adding a Stringifier.
  */
-public interface StringifierRegistryIniter
-{
-    /**
-        Add a mapping from the class to its Stringifier
-     */
-    public void                    add( Class theClass, Stringifier theStringifier );
+public interface StringifierRegistryIniter {
 
     /**
-        Get the registry in use by this Stringifier
+     * Add a mapping from the class to its Stringifier
      */
-    public StringifierRegistry    getRegistry();
+    void add(Class theClass, Stringifier theStringifier);
+
+
+    /**
+     * Get the registry in use by this Stringifier
+     */
+    StringifierRegistry getRegistry();
 }
-
-
-

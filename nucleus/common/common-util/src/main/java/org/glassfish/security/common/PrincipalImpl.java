@@ -35,7 +35,7 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
      * @param user The string form of the principal name.
      */
     public PrincipalImpl(String user) {
-    this.name = user;
+        this.name = user;
     }
 
     /**
@@ -52,10 +52,10 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
         if (another instanceof Group) {
             return false;
         } else if (another instanceof PrincipalImpl) {
-        Principal p = (Principal) another;
-        return getName().equals(p.getName());
-    } else
-        return false;
+            Principal p = (Principal) another;
+            return getName().equals(p.getName());
+        } else
+            return false;
     }
 
     /**
@@ -64,7 +64,7 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
      */
     @Override
     public String toString() {
-    return getName();
+        return getName();
     }
 
     /**
@@ -73,7 +73,7 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
      */
     @Override
     public int hashCode() {
-    return name.hashCode();
+        return name.hashCode();
     }
 
     /**
@@ -81,7 +81,7 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
      * @return the name of the principal.
      */
     public String getName() {
-    return name;
+        return name;
     }
 
 }

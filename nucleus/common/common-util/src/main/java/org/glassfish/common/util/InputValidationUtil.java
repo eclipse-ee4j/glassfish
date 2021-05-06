@@ -34,8 +34,8 @@ public class InputValidationUtil {
     /**
      Validate the String for Header Injection Attack.
 
-     @param input    String to be validate
-     @return        boolean
+     @param input        String to be validate
+     @return                boolean
      */
     public static boolean validateStringforCRLF (String input) {
         if (input != null && (input.contains(CRLF_ENCODED_STRING_LOWER)
@@ -52,8 +52,8 @@ public class InputValidationUtil {
     /**
      * Remove unwanted white spaces in the URL.
      *
-     * @param input    String to be stripped with whitespaces
-     * @return        String
+     * @param input        String to be stripped with whitespaces
+     * @return                String
      */
     public static String removeLinearWhiteSpaces(String input) {
         if (input != null) {

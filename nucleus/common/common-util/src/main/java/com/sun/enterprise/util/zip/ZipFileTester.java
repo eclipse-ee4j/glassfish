@@ -29,7 +29,7 @@ package com.sun.enterprise.util.zip;
  */
 public class ZipFileTester {
 
-    /** Creates new ZipFileTester */
+        /** Creates new ZipFileTester */
     public ZipFileTester() {
     }
 
@@ -37,18 +37,18 @@ public class ZipFileTester {
     * @param args the command line arguments
     */
     public static void main (String args[])
-    {
-        try
         {
-            ZipFile zip = new ZipFile("C:\\temp\\petstore.ear", "C:\\temp\\petstore");
-            java.util.List l = zip.explode();
-            System.out.println("**** Filelist ****\n" + l);
-        }
-        catch(Exception e)
-        {
-            System.out.println("error: " + e);
-            e.printStackTrace();
-        }
+                try
+                {
+                        ZipFile zip = new ZipFile("C:\\temp\\petstore.ear", "C:\\temp\\petstore");
+                        java.util.List l = zip.explode();
+                        System.out.println("**** Filelist ****\n" + l);
+                }
+                catch(Exception e)
+                {
+                        System.out.println("error: " + e);
+                        e.printStackTrace();
+                }
     }
 
 }

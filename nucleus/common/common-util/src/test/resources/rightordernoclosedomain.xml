@@ -147,46 +147,46 @@
      <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy"/>
     </jacc-provider>
     <audit-module name="default" classname="com.sun.enterprise.security.ee.Audit">
-    <property name="auditOn" value="false"/>
+        <property name="auditOn" value="false"/>
     </audit-module>
    <message-security-config auth-layer="SOAP">
-    <!-- turned off by default -->
+        <!-- turned off by default -->
          <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="XWS_ClientProvider" provider-type="client">
-             <request-policy auth-source="content"/>
-             <response-policy auth-source="content"/>
-             <property name="encryption.key.alias" value="s1as"/>
-             <property name="signature.key.alias" value="s1as"/>
-             <property name="dynamic.username.password" value="false"/>
-             <property name="debug" value="false"/>
+                 <request-policy auth-source="content"/>
+                 <response-policy auth-source="content"/>
+                 <property name="encryption.key.alias" value="s1as"/>
+                 <property name="signature.key.alias" value="s1as"/>
+                 <property name="dynamic.username.password" value="false"/>
+                 <property name="debug" value="false"/>
          </provider-config>
          <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="ClientProvider" provider-type="client">
-             <request-policy auth-source="content"/>
-             <response-policy auth-source="content"/>
-             <property name="encryption.key.alias" value="s1as"/>
-             <property name="signature.key.alias" value="s1as"/>
-             <property name="dynamic.username.password" value="false"/>
-             <property name="debug" value="false"/>
-             <property name="security.config" value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml"/>
+                 <request-policy auth-source="content"/>
+                 <response-policy auth-source="content"/>
+                 <property name="encryption.key.alias" value="s1as"/>
+                 <property name="signature.key.alias" value="s1as"/>
+                 <property name="dynamic.username.password" value="false"/>
+                 <property name="debug" value="false"/>
+                 <property name="security.config" value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml"/>
          </provider-config>
          <provider-config class-name="com.sun.xml.wss.provider.ServerSecurityAuthModule" provider-id="XWS_ServerProvider" provider-type="server">
-             <request-policy auth-source="content"/>
-             <response-policy auth-source="content"/>
-             <property name="encryption.key.alias" value="s1as"/>
-             <property name="signature.key.alias" value="s1as"/>
-             <property name="debug" value="false"/>
+                 <request-policy auth-source="content"/>
+                 <response-policy auth-source="content"/>
+                 <property name="encryption.key.alias" value="s1as"/>
+                 <property name="signature.key.alias" value="s1as"/>
+                 <property name="debug" value="false"/>
          </provider-config>
          <provider-config class-name="com.sun.xml.wss.provider.ServerSecurityAuthModule" provider-id="ServerProvider" provider-type="server">
-             <request-policy auth-source="content"/>
-             <response-policy auth-source="content"/>
-             <property name="encryption.key.alias" value="s1as"/>
-             <property name="signature.key.alias" value="s1as"/>
-             <property name="debug" value="false"/>
-             <property name="security.config" value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml"/>
+                 <request-policy auth-source="content"/>
+                 <response-policy auth-source="content"/>
+                 <property name="encryption.key.alias" value="s1as"/>
+                 <property name="signature.key.alias" value="s1as"/>
+                 <property name="debug" value="false"/>
+                 <property name="security.config" value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml"/>
          </provider-config>
        </message-security-config>
    </security-service>
     <monitoring-service>
-    <module-monitoring-levels thread-pool="OFF" orb="OFF" ejb-container="OFF" web-container="OFF" transaction-service="OFF" http-service="OFF" jdbc-connection-pool="OFF" connector-connection-pool="OFF" connector-service="OFF" jms-service="OFF" jvm="OFF"/>
+        <module-monitoring-levels thread-pool="OFF" orb="OFF" ejb-container="OFF" web-container="OFF" transaction-service="OFF" http-service="OFF" jdbc-connection-pool="OFF" connector-connection-pool="OFF" connector-service="OFF" jms-service="OFF" jvm="OFF"/>
     </monitoring-service>
     <diagnostic-service compute-checksum="true" verify-config="true" capture-install-log="true" capture-system-info="true" capture-hadb-info="true" capture-app-dd="true" min-log-level="INFO" max-log-entries="500"/>
    <system-property name="beforeJavaConfig" value="true"/>

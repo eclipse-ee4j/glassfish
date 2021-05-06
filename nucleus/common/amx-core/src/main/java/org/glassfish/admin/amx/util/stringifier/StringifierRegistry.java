@@ -16,32 +16,25 @@
 
 package org.glassfish.admin.amx.util.stringifier;
 
-
-
 /**
-    A registry for mapping classes to Stringifiers
+ * A registry for mapping classes to Stringifiers
  */
-public interface StringifierRegistry
-{
-    /**
-        Add a mapping from a Class to a Stringifier
-
-        @param theClass    the Class to which the Stringifier should be associated
-        @param stringifier    the Stringifier for the class
-     */
-        public void
-    add( Class<?> theClass, Stringifier stringifier );
-
+public interface StringifierRegistry {
 
     /**
-        Lookup a Stringifier from a Class.
-
-        @param theClass    the Class
-        @return the Stringifier, or null if not found
+     * Add a mapping from a Class to a Stringifier
+     *
+     * @param theClass the Class to which the Stringifier should be associated
+     * @param stringifier the Stringifier for the class
      */
-        public Stringifier
-    lookup( Class<?> theClass );
+    void add(Class<?> theClass, Stringifier stringifier);
+
+
+    /**
+     * Lookup a Stringifier from a Class.
+     *
+     * @param theClass the Class
+     * @return the Stringifier, or null if not found
+     */
+    Stringifier lookup(Class<?> theClass);
 }
-
-
-

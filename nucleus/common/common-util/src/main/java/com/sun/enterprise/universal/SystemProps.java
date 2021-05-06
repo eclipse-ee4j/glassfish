@@ -40,7 +40,7 @@ public class SystemProps
         //Map sortedMap = new TreeMap(p);
         //Set sortedSet = sortedMap.entrySet();
         Set<Map.Entry<Object, Object>>  set  = p.entrySet();
-        List<Map.Entry>    list = new ArrayList<Map.Entry>(set);
+        List<Map.Entry>        list = new ArrayList<Map.Entry>(set);
 
         Collections.sort(list, new Comparator<Map.Entry>()
         {
@@ -57,9 +57,9 @@ public class SystemProps
 
     public static String toStringStatic()
     {
-        int             longestKey    = 0;
-        List<Map.Entry>    list        = get();
-        StringBuffer    sb        = new StringBuffer();
+        int             longestKey        = 0;
+        List<Map.Entry>        list                = get();
+        StringBuffer        sb                = new StringBuffer();
 
         /* Go through the list twice.
          * The first time through gets the maximum length entry

@@ -187,21 +187,21 @@ public final class MBeanInfoSupport {
         }
 
         /*
-        java.util.Iterator    iter    = null;
+        java.util.Iterator        iter        = null;
         trace( "-------------------- getterSetters -------------------" );
-        iter    = getterSetters.values().iterator();
+        iter        = getterSetters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getNameProp() + ", " );
         }
         trace( "-------------------- getters -------------------" );
-        iter    = getters.values().iterator();
+        iter        = getters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getNameProp() + ", " );
         }
         trace( "-------------------- setters -------------------" );
-        iter    = setters.values().iterator();
+        iter        = setters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getNameProp() + ", " );

@@ -17,28 +17,28 @@
 package com.sun.enterprise.util;
 
 /**
-     @author  Kedar
-    @version 1.0
+         @author  Kedar
+        @version 1.0
 */
 
 public class ExecException extends Exception
 {
 
     /**
-        Creates new <code>ExecException</code> without detail message.
+                Creates new <code>ExecException</code> without detail message.
     */
 
-    public ExecException()
-    {
+        public ExecException()
+        {
     }
 
-    /**
-        Constructs an <code>ExecException</code> with the specified detail message.
-        @param msg the detail message.
+        /**
+                Constructs an <code>ExecException</code> with the specified detail message.
+                @param msg the detail message.
     */
 
     public ExecException(String msg)
-    {
+        {
         super(msg);
     }
 }

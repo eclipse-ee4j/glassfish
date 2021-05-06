@@ -45,9 +45,9 @@ public interface LocalStringManager {
      * @return The localized value for the resource
      */
     public String getLocalString(
-    Class callerClass,
-    String key,
-    String defaultValue
+        Class callerClass,
+        String key,
+        String defaultValue
     );
 
     /**
@@ -59,10 +59,10 @@ public interface LocalStringManager {
      * @return A formatted localized string
      */
     public String getLocalString(
-    Class callerClass,
-    String key,
-    String defaultFormat,
-    Object arguments[]
+        Class callerClass,
+        String key,
+        String defaultFormat,
+        Object arguments[]
     );
 
     public String getLocalString(String key, String defaultValue);

@@ -30,13 +30,13 @@ import org.glassfish.external.arc.Taxonomy;
 //import static org.glassfish.admin.amx.logging.LogRecordFields;
 
 /**
-    <b>INTERNAL USE ONLY--not part of the API</b>
-
-    @since AS 9.0
+ * <b>INTERNAL USE ONLY--not part of the API</b>
+ *
+ * @since AS 9.0
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public final class LogQueryEntryImpl
-    implements LogQueryEntry
+implements LogQueryEntry
 {
     private transient Map<String,String>    mNameValuePairsMap;
 
@@ -49,7 +49,7 @@ public final class LogQueryEntryImpl
     final String    mModule;
     final String    mNameValuePairs;
 
-       public
+    public
     LogQueryEntryImpl(
         final long      recordNumber,
         final Date      date,
@@ -61,7 +61,7 @@ public final class LogQueryEntryImpl
         final String    message)
     {
         if ( date == null || level == null || message == null ||
-             nameValuePairs == null )
+            nameValuePairs == null )
         {
             throw new IllegalArgumentException();
         }
@@ -76,7 +76,7 @@ public final class LogQueryEntryImpl
         mNameValuePairs = nameValuePairs;
     }
 
-        public
+    public
     LogQueryEntryImpl( final Object[] values )
     {
         if ( values.length != NUM_FIELDS )
@@ -94,8 +94,8 @@ public final class LogQueryEntryImpl
         mNameValuePairs = (String)values[ NAME_VALUE_PAIRS_INDEX ];
     }
 
-        public Object[]
-    getFields()
+    public Object[]
+        getFields()
     {
         final Object[]  fields  = new Object[ NUM_FIELDS ];
 
@@ -132,52 +132,52 @@ public final class LogQueryEntryImpl
         return new CompositeDataSupport( getCompositeType(), asMap() );
     }
 
-    */
+     */
 
 
-        public long
+    public long
     getRecordNumber()
     {
         return mRecordNumber;
     }
 
-        public Date
+    public Date
     getDate()
     {
         return mDate;
     }
 
-        public String
+    public String
     getModule()
     {
         return mModule;
     }
 
-        public String
+    public String
     getLevel()
     {
         return mLevel;
     }
 
-        public String
+    public String
     getProductName()
     {
         return mProductName;
     }
 
-        public String
+    public String
     getMessage()
     {
         return mMessage;
     }
 
-        public String
+    public String
     getMessageID()
     {
         return mMessageID;
     }
 
-        public String
+    public String
     getNameValuePairs()
     {
         return mNameValuePairs;
@@ -188,7 +188,7 @@ public final class LogQueryEntryImpl
     /** delimiter between name and value */
     private static final String PAIR_DELIM = "=";
 
-        private Map<String,String>
+    private Map<String,String>
     parseNameValuePairs()
     {
         final String src    = getNameValuePairs();
@@ -212,7 +212,7 @@ public final class LogQueryEntryImpl
         return m;
     }
 
-        public Map<String,String>
+    public Map<String,String>
     getNameValuePairsMap()
     {
         if ( mNameValuePairsMap == null )
@@ -223,45 +223,45 @@ public final class LogQueryEntryImpl
         return mNameValuePairsMap;
     }
 
-        public String
+    public String
     getThreadID()
     {
         return getNameValuePairsMap().get( THREAD_ID_KEY );
     }
 
-        public String
+    public String
     getObjectName()
     {
         return getNameValuePairsMap().get( OBJECTNAME_KEY );
     }
 
-        public String
+    public String
     toString()
     {
         final String D = "|";
 
         //  [#|DATE|LEVEL|PRODUCT_NAME|MODULE|NAME_VALUE_PAIRS|MESSAGE|#]
         return "[#" +
-            getRecordNumber() + D +
-            getDate() + D +
-            getLevel() + D +
-            getProductName() + D +
-            getModule() + D +
-            getNameValuePairs() + D +
-            getMessage() + D +
-            getMessageID() + D +
-            "]";
+        getRecordNumber() + D +
+        getDate() + D +
+        getLevel() + D +
+        getProductName() + D +
+        getModule() + D +
+        getNameValuePairs() + D +
+        getMessage() + D +
+        getMessageID() + D +
+        "]";
     }
 
-         public int
-     hashCode()
-     {
-         return ObjectUtil.hashCode( mDate, mLevel,
-             mProductName, mMessage, mMessageID, mModule, mNameValuePairs) ^
-             ObjectUtil.hashCode( mRecordNumber );
-     }
+    public int
+    hashCode()
+    {
+        return ObjectUtil.hashCode( mDate, mLevel,
+            mProductName, mMessage, mMessageID, mModule, mNameValuePairs) ^
+            ObjectUtil.hashCode( mRecordNumber );
+    }
 
-        public boolean
+    public boolean
     equals( final Object rhs )
     {
         boolean  equal   = false;
@@ -272,9 +272,9 @@ public final class LogQueryEntryImpl
         }
         else if ( rhs instanceof LogQueryEntry )
         {
-           final LogQueryEntry e   = (LogQueryEntry)rhs;
+            final LogQueryEntry e   = (LogQueryEntry)rhs;
 
-           equal    = ArrayUtil.arraysEqual( getFields(), e.getFields() );
+            equal    = ArrayUtil.arraysEqual( getFields(), e.getFields() );
         }
 
         return equal;

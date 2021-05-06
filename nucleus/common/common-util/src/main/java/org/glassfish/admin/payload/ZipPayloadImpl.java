@@ -233,13 +233,13 @@ class ZipPayloadImpl extends PayloadImpl {
             return new Inbound(is);
         }
 
-    /**
-     * Does this Inbound Payload implementation support the given content type?
-     * @return true if the content type is supported
-     */
-    public static boolean supportsContentType(final String contentType) {
-        return PAYLOAD_IMPL_CONTENT_TYPE.equalsIgnoreCase(contentType);
-    }
+        /**
+         * Does this Inbound Payload implementation support the given content type?
+         * @return true if the content type is supported
+         */
+        public static boolean supportsContentType(final String contentType) {
+            return PAYLOAD_IMPL_CONTENT_TYPE.equalsIgnoreCase(contentType);
+        }
 
         @Override
         public Iterator<Payload.Part> parts() {

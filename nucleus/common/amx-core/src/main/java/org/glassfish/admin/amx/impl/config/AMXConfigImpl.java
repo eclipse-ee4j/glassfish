@@ -1509,10 +1509,10 @@ public class AMXConfigImpl extends AMXImplBase
         // if ( getListenerCount() == 0 ) return;
 
         final long sequenceNumber = sSequenceNumber.getAndIncrement();
-        final AttributeChangeNotification    notif =
+                final AttributeChangeNotification        notif =
             new AttributeChangeNotification( getObjectName(), sequenceNumber, whenChanged, message, attributeName, attributeType, oldValue, newValue);
 
-        sendNotification( notif );
+                sendNotification( notif );
 
         //cdebug( "AMXConfigImpl.issueAttributeChangeForXmlAttrName(): sent: " + notif );
     }

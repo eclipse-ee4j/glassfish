@@ -165,7 +165,7 @@ public class TimerSchedule implements Serializable {
     }
 
     public String getMinute() {
-    return minute_;
+        return minute_;
     }
 
     public TimerSchedule hour(String h) {
@@ -185,7 +185,7 @@ public class TimerSchedule implements Serializable {
     }
 
     public String getDayOfMonth() {
-    return dayOfMonth_;
+        return dayOfMonth_;
     }
 
     public TimerSchedule month(String m) {
@@ -205,7 +205,7 @@ public class TimerSchedule implements Serializable {
     }
 
     public String getDayOfWeek() {
-    return dayOfWeek_;
+        return dayOfWeek_;
     }
 
     public TimerSchedule year(String y) {

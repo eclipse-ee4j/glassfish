@@ -24,29 +24,28 @@ import javax.management.MBeanServerConnection;
 
 
 /**
-    @deprecated Extra information available about each {@link AMXProxy}.  Most
-    of these fields are for advanced use and/or direct use of JMX.
+ * @deprecated Extra information available about each {@link AMXProxy}. Most
+ *             of these fields are for advanced use and/or direct use of JMX.
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
 @Deprecated
-public interface Extra extends StdAttributesAccess, MetaGetters, AMXProxy
-{
-    /**
-        Get the MBeanServerConnection.
-     */
-    public MBeanServerConnection        mbeanServerConnection();
+public interface Extra extends StdAttributesAccess, MetaGetters, AMXProxy {
 
     /**
-        @return the {@link ProxyFactory} that created this proxy.
+     * Get the MBeanServerConnection.
      */
-    public ProxyFactory        proxyFactory();
+    public MBeanServerConnection mbeanServerConnection();
+
+
+    /**
+     * @return the {@link ProxyFactory} that created this proxy.
+     */
+    public ProxyFactory proxyFactory();
+
 
     /** return a compilable Java interface representing this MBean */
     public String java();
 }
-
-
-
 
 
 

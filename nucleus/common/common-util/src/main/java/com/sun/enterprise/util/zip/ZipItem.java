@@ -24,34 +24,34 @@ import java.io.File;
  */
 public class ZipItem
 {
-    /**
+        /**
      * Construct a ZipItem
      *
-     * @param file The actual file
-     * @param name The zip entry name - i.e. the relative path in the zip file
-     * @throws ZipFileException
-     */
-    public ZipItem(File file, String name) throws ZipFileException
-    {
-        //if(!file.exists())
-        //    throw new ZipFileException("File doesn't exist: " + file);
-        if(name == null || name.length() <= 0)
-            throw new ZipFileException("null or empty name for ZipItem");
+         * @param file The actual file
+         * @param name The zip entry name - i.e. the relative path in the zip file
+         * @throws ZipFileException
+         */
+        public ZipItem(File file, String name) throws ZipFileException
+        {
+                //if(!file.exists())
+                //        throw new ZipFileException("File doesn't exist: " + file);
+                if(name == null || name.length() <= 0)
+                        throw new ZipFileException("null or empty name for ZipItem");
 
-        this.file = file;
-        this.name = name;
-    }
+                this.file = file;
+                this.name = name;
+        }
 
-    /**
+        /**
      * Returns a String represenation of the real filename and the zip entry
      * name.
      *
-     * @return String with the path and the zip entry name
-     */
-    public String toString()
-    {
-        return "File: " + file.getPath() + ", name: " + name;
-    }
+         * @return String with the path and the zip entry name
+         */
+        public String toString()
+        {
+                return "File: " + file.getPath() + ", name: " + name;
+        }
 
     /**
      * Returns the zip entry name
@@ -73,8 +73,8 @@ public class ZipItem
         return this.file;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
 
-    File    file;
-    String    name;
+        File        file;
+        String        name;
 }

@@ -22,11 +22,11 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-    An individual result representing a log entry found
-    by {@link LogQuery#queryServerLog}.
+        An individual result representing a log entry found
+        by {@link LogQuery#queryServerLog}.
 
-    @since AS 9.0
-    @see LogQueryResult
+        @since AS 9.0
+        @see LogQueryResult
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public interface LogQueryEntry

@@ -21,42 +21,42 @@
  * $Revision: 1.3 $
  */
 
-package    com.sun.enterprise.admin.monitor.callflow;
+package        com.sun.enterprise.admin.monitor.callflow;
 
 public enum ComponentType {
 
     SERVLET {
-    public String toString() { return "SERVLET"; }
+        public String toString() { return "SERVLET"; }
     },
 
     SERVLET_FILTER {
-    public String toString() { return "SERVLET_FILTER"; }
+        public String toString() { return "SERVLET_FILTER"; }
     },
 
     SLSB {
-    public String toString() { return "STATELESS_SESSION_BEAN"; }
+        public String toString() { return "STATELESS_SESSION_BEAN"; }
     },
 
     SFSB {
-    public String toString() { return "STATEFUL_SESSION_BEAN"; }
+        public String toString() { return "STATEFUL_SESSION_BEAN"; }
     },
 
-    BMP    {
-    public String toString() { return "BEAN_MANAGED_PERSISTENCE"; }
+    BMP        {
+        public String toString() { return "BEAN_MANAGED_PERSISTENCE"; }
     },
 
-    CMP    {
-    public String toString() {
-        return "CONTAINER_MANAGED_PERSISTENCE";
-    }
+    CMP        {
+        public String toString() {
+            return "CONTAINER_MANAGED_PERSISTENCE";
+        }
     },
 
-    MDB    {
-    public String toString() { return "MESSAGE_DRIVEN_BEAN"; }
+    MDB        {
+        public String toString() { return "MESSAGE_DRIVEN_BEAN"; }
     },
 
-    JPA    {
-    public String toString () { return "JAVA_PERSISTENCE";}
+    JPA        {
+        public String toString () { return "JAVA_PERSISTENCE";}
     };
 
     public abstract String toString();

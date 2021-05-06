@@ -79,8 +79,8 @@ public final class Util {
     /**
     Build an ObjectName.  Calls newObjectName( domain + ":" + props )
 
-    @param domain    the JMX domain
-    @param props    properties of the ObjectName
+    @param domain        the JMX domain
+    @param props        properties of the ObjectName
      */
     public static ObjectName newObjectName(String domain, String props) {
         return (newObjectName(domain + ":" + props));
@@ -89,8 +89,8 @@ public final class Util {
     /**
     Build an ObjectName pattern.
 
-    @param domain    the JMX domain
-    @param props    properties of the ObjectName
+    @param domain        the JMX domain
+    @param props        properties of the ObjectName
      */
     public static ObjectName newObjectNamePattern(
             final String domain,

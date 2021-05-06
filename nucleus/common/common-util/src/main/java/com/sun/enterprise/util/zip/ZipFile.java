@@ -89,7 +89,7 @@ public class ZipFile {
                 /*
                  if(isManifest(filename))
                  {
-                 continue;    // don't bother with manifest file...
+                 continue;        // don't bother with manifest file...
                  }
                  */
 
@@ -112,7 +112,7 @@ public class ZipFile {
                     _utillogger.log(Level.FINE, "Cannot create directory {0}", newDir);
                 }
 
-                if (fullpath.delete()) {    // wipe-out pre-existing files
+                if (fullpath.delete()) {        // wipe-out pre-existing files
                                     /*
                      * Report that a file is being overwritten.
                      */
@@ -206,7 +206,7 @@ public class ZipFile {
     /**
      * *********************************************************************
      * /******************************** Private ******************************
-    /**********************************************************************
+        /**********************************************************************
      */
     /* Apparently this method is never called. Don't know the history
      * about this method so commenting it out as opposed to removing it

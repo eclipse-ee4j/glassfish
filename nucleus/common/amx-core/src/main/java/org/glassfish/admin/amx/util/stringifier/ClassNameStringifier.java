@@ -18,13 +18,12 @@ package org.glassfish.admin.amx.util.stringifier;
 
 import org.glassfish.admin.amx.util.ClassUtil;
 
-public class ClassNameStringifier implements Stringifier
-{
-        public String
-    stringify( Object o )
-    {
-        final String    className    = (String)o;
+public class ClassNameStringifier implements Stringifier {
 
-        return( ClassUtil.getFriendlyClassname( className ) );
+    @Override
+    public String stringify(Object o) {
+        final String className = (String) o;
+
+        return (ClassUtil.getFriendlyClassname(className));
     }
 }

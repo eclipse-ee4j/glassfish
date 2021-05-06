@@ -98,11 +98,11 @@ public final class AMXConfigStartupService
     }
 
     public ObjectName getDomainConfig() {
-        return ConfigBeanRegistry.getInstance().getObjectNameForProxy(getDomain());
+            return ConfigBeanRegistry.getInstance().getObjectNameForProxy(getDomain());
     }
 
     public Domain getDomain() {
-        return InjectedValues.getInstance().getHabitat().getService(Domain.class);
+            return InjectedValues.getInstance().getHabitat().getService(Domain.class);
     }
 
     public AMXProxy getDomainConfigProxy() {
@@ -125,7 +125,7 @@ public final class AMXConfigStartupService
     public synchronized void unloadAMXMBeans() {
         final AMXProxy domainConfigProxy = getDomainConfigProxy();
         if (domainConfigProxy != null) {
-            ImplUtil.unregisterAMXMBeans(domainConfigProxy);
+                ImplUtil.unregisterAMXMBeans(domainConfigProxy);
         }
         if (mLoader != null) {
             mLoader.stop();

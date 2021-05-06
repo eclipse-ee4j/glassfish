@@ -136,13 +136,15 @@ public interface AMXConfigProxy extends AMXProxy, AttributeResolver
     public ObjectName removeChild(
             @Param(name = "childType") String childType);
 
+
     /**
-        Direct access to the MBeanServer, calls conn.setAttributes(objectName, attrs).
-        Unlike {@link StdAttributesAccess#setAttributes}, this method throws a generic Exception if there is a transaction failure.
-    */
+     * Direct access to the MBeanServer, calls conn.setAttributes(objectName, attrs).
+     * Unlike {@link StdAttributesAccess#setAttributes}, this method throws a generic Exception if
+     * there is a transaction failure.
+     */
     @ManagedOperation
-    public AttributeList    setAttributesTransactionally( @Param(name = "attrs") AttributeList attrs )
-                                throws Exception;
+    public AttributeList setAttributesTransactionally(
+        @Param(name = "attrs") AttributeList attrs) throws Exception;
 
 }
 

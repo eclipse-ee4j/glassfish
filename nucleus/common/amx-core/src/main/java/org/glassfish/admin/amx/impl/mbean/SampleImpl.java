@@ -73,7 +73,7 @@ public final class SampleImpl extends AMXImplBase {
         }
 
         mAttributes.put(name, value);
-        //mExtendedMBeanInfo    = null;
+        //mExtendedMBeanInfo        = null;
     }
 
     public void removeAttribute(final String name) {

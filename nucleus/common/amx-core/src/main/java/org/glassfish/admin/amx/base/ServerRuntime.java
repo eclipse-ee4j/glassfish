@@ -20,9 +20,8 @@ import org.glassfish.admin.amx.core.AMXProxy;
 
 
 /**
-    Parent MBean for all add-on runtime MBeans (excluding monitoring and JSR 77) that are associated
-    with a particular server.  There is one of these MBeans for each server.
+ * Parent MBean for all add-on runtime MBeans (excluding monitoring and JSR 77) that are associated
+ * with a particular server. There is one of these MBeans for each server.
  */
-public interface ServerRuntime extends AMXProxy
-{
+public interface ServerRuntime extends AMXProxy {
 }

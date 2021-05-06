@@ -20,7 +20,7 @@ package org.glassfish.admin.amx.util;
 Useful for printing elapsed timings out. Example:
 
 <code>
-final PrintMillis    timer    = new PrintMillis();
+final PrintMillis        timer        = new PrintMillis();
 ...
 timer.println( "start" );
 ...

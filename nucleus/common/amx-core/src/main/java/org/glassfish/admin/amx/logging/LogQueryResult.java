@@ -20,12 +20,12 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-    Interface which can be applied over the CompositeData returned
-    from {@link LogQuery#queryServerLog}.
+        Interface which can be applied over the CompositeData returned
+        from {@link LogQuery#queryServerLog}.
 
-    @since AS 9.0
-    @see LogQueryEntry
-    @see LogQuery
+        @since AS 9.0
+        @see LogQueryEntry
+        @see LogQuery
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public interface LogQueryResult

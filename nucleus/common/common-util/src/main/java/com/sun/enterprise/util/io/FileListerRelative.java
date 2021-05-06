@@ -31,13 +31,13 @@ import java.util.*;
  */
 public class FileListerRelative extends FileLister
 {
-    public FileListerRelative(File f)
-    {
-        super(f);
-    }
+        public FileListerRelative(File f)
+        {
+                super(f);
+        }
 
-    protected boolean relativePath()
-    {
-        return true;
-    }
+        protected boolean relativePath()
+        {
+                return true;
+        }
 }

@@ -21,7 +21,7 @@
  * $Revision: 1.1 $
  */
 
-package    com.sun.enterprise.admin.monitor.callflow;
+package        com.sun.enterprise.admin.monitor.callflow;
 
 public enum EntityManagerMethod {
 

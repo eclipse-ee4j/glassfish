@@ -44,7 +44,7 @@ public class Utils {
     final static String habitatName = "default";
     final static String inhabitantPath = "META-INF/inhabitants";
 
-    private static Map<String, ServiceLocator> habitats = new HashMap<String, ServiceLocator>();
+    private static Map<String, ServiceLocator> habitats = new HashMap<>();
     public static final Utils instance = new Utils();
 
     public synchronized ServiceLocator getHabitat(ConfigApiTest test) {
@@ -72,16 +72,15 @@ public class Utils {
         if (url != null) {
             try {
                 DomDocument testDocument = test.getDocument(sl);
-                DomDocument document = configParser.parse(url,
-                        testDocument);
+                DomDocument document = configParser.parse(url, testDocument);
                 ServiceLocatorUtilities.addOneConstant(sl, document);
                 test.decorate(sl);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             Logger.getAnonymousLogger().fine(
-                    "time to parse domain.xml : "
-                            + String.valueOf(System.currentTimeMillis() - now));
+                "time to parse domain.xml : "
+                    + String.valueOf(System.currentTimeMillis() - now));
         }
 
         return sl;
@@ -103,7 +102,7 @@ public class Utils {
     }
 
     public void shutdownServiceLocator(
-            final ConfigApiTest test) {
+        final ConfigApiTest test) {
         String fileName = test.getFileName();
 
         if (habitats.containsKey(fileName))  {

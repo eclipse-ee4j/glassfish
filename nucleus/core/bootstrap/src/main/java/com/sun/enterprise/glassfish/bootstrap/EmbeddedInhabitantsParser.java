@@ -62,7 +62,7 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
         boolean skip = false;
 
         if ("com.sun.enterprise.v3.admin.adapter.AdminConsoleAdapter".equals(
-                descriptorImpl.getImplementation())) {
+            descriptorImpl.getImplementation())) {
             skip = true;
         }
 
@@ -70,21 +70,21 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
         if (enableCLI == null || !enableCLI.equalsIgnoreCase("true")) {
 
             if ("com.sun.enterprise.v3.admin.PublicAdminAdapter".equals(
+                descriptorImpl.getImplementation())
+                || "com.sun.enterprise.server.logging.LogManagerService".equals(
                     descriptorImpl.getImplementation())
-                    || "com.sun.enterprise.server.logging.LogManagerService".equals(
-                            descriptorImpl.getImplementation())
-                    || "com.sun.enterprise.v3.admin.PrivateAdminAdapter".equals(
-                            descriptorImpl.getImplementation())) {
+                || "com.sun.enterprise.v3.admin.PrivateAdminAdapter".equals(
+                    descriptorImpl.getImplementation())) {
                 skip = true;
             }
         }
 
         if ("com.sun.enterprise.v3.server.GFDomainXml".equals(
-                descriptorImpl.getImplementation())) {
+            descriptorImpl.getImplementation())) {
             descriptorImpl.setImplementation("org.glassfish.kernel.embedded.EmbeddedDomainXml");
             descriptorImpl.setScope(PerLookup.class.getCanonicalName());
         } else if ("com.sun.enterprise.v3.server.DomainXmlPersistence".equals(
-                descriptorImpl.getImplementation())) {
+            descriptorImpl.getImplementation())) {
             descriptorImpl.setImplementation("org.glassfish.kernel.embedded.EmbeddedDomainPersistence");
             descriptorImpl.setScope(PerLookup.class.getCanonicalName());
         } else if ("org.glassfish.web.deployment.archivist.WebArchivist".equals(descriptorImpl.getImplementation())) {

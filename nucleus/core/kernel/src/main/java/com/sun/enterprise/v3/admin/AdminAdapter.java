@@ -659,7 +659,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      */
     @Override
     public boolean isRegistered() {
-    return isRegistered;
+        return isRegistered;
     }
 
     /**
@@ -668,7 +668,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      */
     @Override
     public void setRegistered(boolean isRegistered) {
-    this.isRegistered = isRegistered;
+        this.isRegistered = isRegistered;
     }
 
     /**

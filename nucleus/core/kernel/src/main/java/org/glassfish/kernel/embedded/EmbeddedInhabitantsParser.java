@@ -42,6 +42,7 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
     public EmbeddedInhabitantsParser() {
     }
 
+
     public String getName() {
         return "Embedded";
     }
@@ -72,7 +73,7 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
         boolean skip = false;
 
         if (AdminConsoleAdapter.class.getCanonicalName().equals(
-                descriptorImpl.getImplementation())) {
+            descriptorImpl.getImplementation())) {
             skip = true;
         }
 
@@ -80,25 +81,25 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
         if (enableCLI == null || !enableCLI.equalsIgnoreCase("true")) {
 
             if (PublicAdminAdapter.class.getCanonicalName().equals(
+                descriptorImpl.getImplementation())
+                || LogManagerService.class.getCanonicalName().equals(
                     descriptorImpl.getImplementation())
-                    || LogManagerService.class.getCanonicalName().equals(
-                            descriptorImpl.getImplementation())
-                    || PrivateAdminAdapter.class.getCanonicalName().equals(
-                            descriptorImpl.getImplementation())) {
+                || PrivateAdminAdapter.class.getCanonicalName().equals(
+                    descriptorImpl.getImplementation())) {
                 skip = true;
             }
         }
 
         if (GFDomainXml.class.getCanonicalName().equals(
-                descriptorImpl.getImplementation())) {
+            descriptorImpl.getImplementation())) {
             descriptorImpl.setImplementation(EmbeddedDomainXml.class
-                    .getCanonicalName());
+                .getCanonicalName());
         }
 
         if (DomainXmlPersistence.class.getCanonicalName().equals(
-                descriptorImpl.getImplementation())) {
+            descriptorImpl.getImplementation())) {
             descriptorImpl.setImplementation(EmbeddedDomainPersistence.class
-                    .getCanonicalName());
+                .getCanonicalName());
         }
 
         if (!skip) {

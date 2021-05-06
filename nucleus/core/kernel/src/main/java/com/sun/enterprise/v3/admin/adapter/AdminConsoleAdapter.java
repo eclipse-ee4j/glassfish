@@ -259,20 +259,20 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             if (!isRestStarted) {
                 forceRestModuleLoad(req);
             }
-        synchronized(this) {
-        if (isInstalling()) {
-            sendStatusPage(req, res);
-        } else {
+            synchronized(this) {
+                if (isInstalling()) {
+                    sendStatusPage(req, res);
+                } else {
                     if (isApplicationLoaded()) {
-            // Double check here that it is not yet loaded (not
-            // likely, but possible)
-            handleLoadedState();
-            }else {
+                        // Double check here that it is not yet loaded (not
+                        // likely, but possible)
+                        handleLoadedState();
+                    }else {
                         loadConsole();
-            sendStatusPage(req, res);
+                        sendStatusPage(req, res);
+                    }
+                }
             }
-        }
-        }
 
         }
 

@@ -808,7 +808,7 @@ public class CommandRunnerImpl implements CommandRunner {
      *
      * @param command the command
      * @param model the CommandModel describing the command
-     * @param report    the (assumed to be) XMLContentActionReporter
+     * @param report        the (assumed to be) XMLContentActionReporter
      */
     private void getMetadata(AdminCommand command, CommandModel model,
             ActionReport report) {
@@ -886,7 +886,7 @@ public class CommandRunnerImpl implements CommandRunner {
      * STRING.  (All of which should be defined constants on some class.)
      *
      * @param p the Java type
-     * @return    the string representation of the asadmin type
+     * @return        the string representation of the asadmin type
      */
     private static String typeOf(CommandModel.ParamModel p) {
         Class t = p.getType();

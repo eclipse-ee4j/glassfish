@@ -72,7 +72,7 @@ public class ContainerStarter {
 
             HK2Module[] modules = sniffer.setup(null, logger);
             logger.logp(Level.FINE, "ContainerStarter", "startContainer", "Sniffer {0} set up following modules: {1}",
-                    new Object[]{sniffer, modules != null ? Arrays.toString(modules): ""});
+                new Object[]{sniffer, modules != null ? Arrays.toString(modules): ""});
         } catch(FileNotFoundException fnf) {
             logger.log(Level.SEVERE, fnf.getMessage());
             return null;

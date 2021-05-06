@@ -137,18 +137,18 @@ public final class AdminEndpointDecider {
         }
     }
     private void setGuiContextRoot(Property prop) {
-    if (prop == null) {
-        guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
-        return;
-    }
-    if (ServerTags.ADMIN_CONSOLE_CONTEXT_ROOT.equals(prop.getName())) {
-        if (prop.getValue() != null && prop.getValue().startsWith("/")) {
-        guiContextRoot = prop.getValue();
-                log.log(Level.INFO, KernelLoggerInfo.contextRoot, guiContextRoot);
-        } else {
-        log.log(Level.INFO, KernelLoggerInfo.invalidContextRoot, ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT);
-        guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
+        if (prop == null) {
+            guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
+            return;
         }
-    }
+        if (ServerTags.ADMIN_CONSOLE_CONTEXT_ROOT.equals(prop.getName())) {
+            if (prop.getValue() != null && prop.getValue().startsWith("/")) {
+                guiContextRoot = prop.getValue();
+                log.log(Level.INFO, KernelLoggerInfo.contextRoot, guiContextRoot);
+            } else {
+                log.log(Level.INFO, KernelLoggerInfo.invalidContextRoot, ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT);
+                guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
+            }
+        }
     }
 }

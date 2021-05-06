@@ -141,12 +141,12 @@ public class ModuleToLoggerNameMapper {
             String[] loggerNames = (String[]) dim[1];
             if (loggerNames!=null) {
                 if (moduleName == null) {  //we return all AS module loggers in this case
-            result.addAll(Arrays.asList(loggerNames) );
+                    result.addAll(Arrays.asList(loggerNames) );
                 } else if (moduleName.equals(modName)) {
                     result.addAll( Arrays.asList(loggerNames) );
                     break;
                 }
-        }
+            }
         }
         String[] lNames = new String[ result.size()];
         return (String[])result.toArray(lNames);

@@ -67,7 +67,7 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
     /**
      * Writes the specified message to a server log file.
      *
-     * @param msg     a <code>String</code> specifying the
+     * @param message a <code>String</code> specifying the
      *            message to be written to the log file
      */
     public void log(String message) {
@@ -79,11 +79,10 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
      * for a given <code>Throwable</code> exception
      * to the server log file.
      *
-     * @param message         a <code>String</code> that
-     *                describes the error or exception
-     *
-     * @param throwable     the <code>Throwable</code> error
-     *                or exception
+     * @param message a <code>String</code> that
+     *            describes the error or exception
+     * @param throwable the <code>Throwable</code> error
+     *            or exception
      */
     public void log(String message, Throwable throwable) {
         logger.log(Level.INFO, message, throwable);

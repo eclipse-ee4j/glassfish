@@ -73,9 +73,9 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
         try {
             sysLogger = new Syslog("localhost");  //for now only write to this host
         } catch ( java.net.UnknownHostException e) {
-                LogFacade.LOGGING_LOGGER.log(Level.SEVERE, LogFacade.ERROR_INIT_SYSLOG, e);
-                return;
-            }
+                        LogFacade.LOGGING_LOGGER.log(Level.SEVERE, LogFacade.ERROR_INIT_SYSLOG, e);
+                        return;
+                    }
 
         // start the Queue consummer thread.
         pump = new Thread() {

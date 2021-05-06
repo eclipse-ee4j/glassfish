@@ -48,7 +48,7 @@
    <config name="server-config">
      <http-service>
         <access-log rotation-interval-in-minutes="15" rotation-suffix="yyyy-MM-dd" />
-    <virtual-server id="server" network-listeners="http-listener, https-listener" />
+        <virtual-server id="server" network-listeners="http-listener, https-listener" />
       </http-service>
       <iiop-service>
         <orb use-thread-pool-ids="thread-pool-1" />
@@ -82,11 +82,11 @@
       </log-service>
       <security-service activate-default-principal-to-role-mapping="true" jacc="simple">
         <auth-realm classname="com.sun.enterprise.security.auth.realm.file.FileRealm" name="admin-realm">
-      <property value="${com.sun.aas.instanceRoot}/config/admin-keyfile" name="file" />
+          <property value="${com.sun.aas.instanceRoot}/config/admin-keyfile" name="file" />
           <property value="fileRealm" name="jaas-context" />
         </auth-realm>
         <auth-realm classname="com.sun.enterprise.security.auth.realm.file.FileRealm" name="file">
-      <property value="${com.sun.aas.instanceRoot}/config/keyfile" name="file" />
+          <property value="${com.sun.aas.instanceRoot}/config/keyfile" name="file" />
           <property value="fileRealm" name="jaas-context" />
         </auth-realm>
         <auth-realm classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm" name="certificate" />
@@ -131,7 +131,7 @@
             <property value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml" name="security.config" />
           </provider-config>
         </message-security-config>
-    <property value="SHA-256" name="default-digest-algorithm" />
+        <property value="SHA-256" name="default-digest-algorithm" />
       </security-service>
       <monitoring-service>
         <module-monitoring-levels />
@@ -139,7 +139,7 @@
       <transaction-service tx-log-dir="${com.sun.aas.instanceRoot}/logs" >
       </transaction-service>
       <java-config>
-    <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
+        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
         <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks</jvm-options>
         <jvm-options>-Dorg.glassfish.jms.InitializeOnDemand=true</jvm-options>
       </java-config>

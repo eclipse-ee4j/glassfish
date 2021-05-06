@@ -85,13 +85,13 @@ public class XMLContentActionReporter extends ActionReporter {
      * @return Element for the specified ActionReporter (and any sub-reports)
      */
     private Element writeActionReport(Document owningDocument,
-        ActionReporter report) {
+            ActionReporter report) {
         Element result = owningDocument.createElement("action-report");
         result.setAttribute("description", report.actionDescription);
         result.setAttribute("exit-code", report.getActionExitCode().name());
         if (exception != null) {
             result.setAttribute("failure-cause",
-        exception.getLocalizedMessage());
+                exception.getLocalizedMessage());
         }
 
         writePart(result, report.getTopMessagePart(), null);
@@ -107,7 +107,7 @@ public class XMLContentActionReporter extends ActionReporter {
     }
 
     private void writePart(Element actionReport, MessagePart part,
-        String childType) {
+            String childType) {
         Document d = actionReport.getOwnerDocument();
         Element messagePart = d.createElement("message-part");
         actionReport.appendChild(messagePart);
@@ -133,14 +133,14 @@ public class XMLContentActionReporter extends ActionReporter {
      * are attributes of the element.  Recurse for any subparts.
      */
     private void writeSubPart(Element actionReport, MessagePart part,
-        String childType) {
+            String childType) {
         Document d = actionReport.getOwnerDocument();
         Element messagePart = d.createElement(childType);
         actionReport.appendChild(messagePart);
 
         for (Map.Entry prop : part.getProps().entrySet()) {
             messagePart.setAttribute(prop.getKey().toString(),
-        prop.getValue().toString());
+                prop.getValue().toString());
         }
         for (MessagePart subPart : part.getChildren())
             writeSubPart(messagePart, subPart, subPart.getChildrenType());
@@ -154,7 +154,7 @@ public class XMLContentActionReporter extends ActionReporter {
      * @throws TransformerException if anything goes wrong
      */
     private void writeXML(Document doc, OutputStream os)
-        throws TransformerException {
+            throws TransformerException {
         Source source = new DOMSource(doc);
 
         Result result = new StreamResult(os);

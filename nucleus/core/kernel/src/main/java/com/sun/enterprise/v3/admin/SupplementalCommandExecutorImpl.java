@@ -121,13 +121,13 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
     }
 
     private static String getOne(String key, Map<String, List<String>> metadata) {
-        if (key == null || metadata == null) return null;
-        List<String> found = metadata.get(key);
-        if (found == null) return null;
+            if (key == null || metadata == null) return null;
+            List<String> found = metadata.get(key);
+            if (found == null) return null;
 
-        if (found.isEmpty()) return null;
+            if (found.isEmpty()) return null;
 
-        return found.get(0);
+            return found.get(0);
     }
 
     /**
@@ -156,8 +156,8 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
 
     private InjectionResolver<Param> getInjector(AdminCommand command, ParameterMap parameters, MultiMap<String, File> map, AdminCommandContext context) {
         CommandModel model = command instanceof CommandModelProvider ?
-        ((CommandModelProvider)command).getModel() :
-        new CommandModelImpl(command.getClass());
+            ((CommandModelProvider)command).getModel() :
+            new CommandModelImpl(command.getClass());
         MapInjectionResolver injector = new MapInjectionResolver(model, parameters, map);
         injector.setContext(context);
         return injector;
@@ -208,28 +208,28 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
 
         @Override
         public void execute(AdminCommandContext ctxt) {
-                Thread thread = Thread.currentThread();
-                ClassLoader origCL = thread.getContextClassLoader();
-                ClassLoader ccl = sc.getCommonClassLoader();
-                if (progressStatus != null) {
-                    ctxt = new AdminCommandContextForInstance(ctxt, progressStatus);
-                }
-                if (origCL != ccl) {
-                    try {
-                        thread.setContextClassLoader(ccl);
-                        if (command instanceof AdminCommandSecurity.Preauthorization) {
-                            ((AdminCommandSecurity.Preauthorization) command).preAuthorization(ctxt);
-                        }
-                        command.execute(ctxt);
-                    } finally {
-                        thread.setContextClassLoader(origCL);
-                    }
-                } else {
+            Thread thread = Thread.currentThread();
+            ClassLoader origCL = thread.getContextClassLoader();
+            ClassLoader ccl = sc.getCommonClassLoader();
+            if (progressStatus != null) {
+                ctxt = new AdminCommandContextForInstance(ctxt, progressStatus);
+            }
+            if (origCL != ccl) {
+                try {
+                    thread.setContextClassLoader(ccl);
                     if (command instanceof AdminCommandSecurity.Preauthorization) {
                         ((AdminCommandSecurity.Preauthorization) command).preAuthorization(ctxt);
                     }
                     command.execute(ctxt);
+                } finally {
+                    thread.setContextClassLoader(origCL);
                 }
+            } else {
+                if (command instanceof AdminCommandSecurity.Preauthorization) {
+                    ((AdminCommandSecurity.Preauthorization) command).preAuthorization(ctxt);
+                }
+                command.execute(ctxt);
+            }
         }
 
         @Override

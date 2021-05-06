@@ -53,7 +53,7 @@ public abstract class WorkContextAccessController
   }
 
   public static WorkContextMap getPriviledgedWorkContextMap(WorkContextMap map) {
-    return getAccessController().getPriviledgedWrapper(map);
+        return getAccessController().getPriviledgedWrapper(map);
   }
 
   /**

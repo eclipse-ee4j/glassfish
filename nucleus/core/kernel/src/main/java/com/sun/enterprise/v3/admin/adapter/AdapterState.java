@@ -52,15 +52,16 @@ enum AdapterState {
     private final String i18nKey;
 
     private AdapterState(String i18nKey, String desc) {
-    this.i18nKey = i18nKey;
+        this.i18nKey = i18nKey;
         this.desc = desc;
     }
 
+
     /**
-     *    This is the key that should be used to retrieve the localized message from a properties file.
+     * This is the key that should be used to retrieve the localized message from a properties file.
      */
     public String getI18NKey() {
-    return i18nKey;
+        return i18nKey;
     }
 
     @Override

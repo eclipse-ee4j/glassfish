@@ -231,14 +231,14 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
     // First purge the local map of all NORMAL properties since these
     // should come back in the response.
     synchronized(map){
-      for (Iterator<WorkContextEntry> i = map.values().iterator(); i.hasNext(); ) {
-        WorkContextEntry wce = (WorkContextEntry)i.next();
-        int propMode = wce.getPropagationMode();
-        // If PropagationMode is "not" ONEWAY and LOCAL, remove the entry
-        if (((propMode & PropagationMode.ONEWAY) == 0) && ((propMode  & PropagationMode.LOCAL) == 0)) {
-          propKeySet.add(wce.getName());
-          i.remove();
-          version++;
+          for (Iterator<WorkContextEntry> i = map.values().iterator(); i.hasNext(); ) {
+            WorkContextEntry wce = (WorkContextEntry)i.next();
+            int propMode = wce.getPropagationMode();
+            // If PropagationMode is "not" ONEWAY and LOCAL, remove the entry
+            if (((propMode & PropagationMode.ONEWAY) == 0) && ((propMode  & PropagationMode.LOCAL) == 0)) {
+              propKeySet.add(wce.getName());
+              i.remove();
+              version++;
         }
       }
     }

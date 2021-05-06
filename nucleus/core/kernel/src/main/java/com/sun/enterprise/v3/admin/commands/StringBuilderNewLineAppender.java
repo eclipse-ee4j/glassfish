@@ -17,8 +17,6 @@
 package com.sun.enterprise.v3.admin.commands;
 import java.io.*;
 
-/**
- */
 class StringBuilderNewLineAppender {
 
     private  StringBuilder sb;
@@ -32,6 +30,7 @@ class StringBuilderNewLineAppender {
         sb.append(SEP);
         return ( this );
     }
+    @Override
     public String toString() {
         return ( sb.toString() );
     }
@@ -43,13 +42,15 @@ class StringBuilderNewLineAppender {
         try
         {
             readloop:
-            for(String s = in.readLine(); s != null; s = in.readLine()){
-                for(String filter : filterOut){
-                    if(s.startsWith(filter))
-                        continue readloop; // continue to outer loop
+                for(String s = in.readLine(); s != null; s = in.readLine()){
+                    for(String filter : filterOut){
+                        if(s.startsWith(filter))
+                         {
+                            continue readloop; // continue to outer loop
+                        }
+                    }
+                    append(s);
                 }
-                append(s);
-            }
         }
         catch(Exception e)
         {

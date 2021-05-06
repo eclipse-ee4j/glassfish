@@ -152,7 +152,7 @@ public class GetHabitatInfo implements AdminCommand {
                 sb.append("\n");
                 boolean isStarted = Boolean.parseBoolean(started);
                 if (isStarted) {
-                    ServiceHandle<?> handle = serviceLocator.getServiceHandle(descriptor);
+                        ServiceHandle<?> handle = serviceLocator.getServiceHandle(descriptor);
 
                     sb.append((handle.isActive() ? " started" : " not started"));
                 }

@@ -784,7 +784,7 @@ public class DynamicInterceptor implements MBeanServer
     }
 
     public final ClassLoaderRepository getClassLoaderRepository() {
-        return getDelegateMBeanServer().getClassLoaderRepository();
+            return getDelegateMBeanServer().getClassLoaderRepository();
     }
 
     public final String[] getDomains() {

@@ -103,12 +103,12 @@ public class DeleteProfiler implements AdminCommand, AdminCommandSecurity.Preaut
                    if (param.getProfiler() != null) {
                        param.setProfiler(null);
                        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-            return param;
+                        return param;
                    }
                    // not found
                    report.setMessage(localStrings.getLocalString("delete.profiler.notfound", "delete failed, profiler not found"));
                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return null;
+                    return null;
                }
            }, javaConfig);
        } catch(TransactionFailure e) {

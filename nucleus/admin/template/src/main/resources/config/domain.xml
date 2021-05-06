@@ -126,7 +126,7 @@
                 <property name="loginErrorPage" value="/loginError.jsf"></property>
             </provider-config>
         </message-security-config>
-    <property value="SHA-256" name="default-digest-algorithm" />
+        <property value="SHA-256" name="default-digest-algorithm" />
       </security-service>
       <java-config classpath-suffix="" system-classpath="" debug-options="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%%%JAVA_DEBUGGER_PORT%%%">
         <jvm-options>-Djdk.tls.rejectClientInitiatedRenegotiation=true</jvm-options>
@@ -139,7 +139,7 @@
         <jvm-options>-Xmx512m</jvm-options>
         <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
         <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks</jvm-options>
-    <jvm-options>-DANTLR_USE_DIRECT_CLASS_LOADING=true</jvm-options>
+        <jvm-options>-DANTLR_USE_DIRECT_CLASS_LOADING=true</jvm-options>
         <!-- Configure post startup bundle list here. This is a comma separated list of bundle sybolic names. -->
         <!-- Configuration of various third-party OSGi bundles like
              Felix Remote Shell, FileInstall, etc. -->

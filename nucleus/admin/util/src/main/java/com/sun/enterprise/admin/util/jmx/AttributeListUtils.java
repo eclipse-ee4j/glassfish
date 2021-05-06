@@ -19,11 +19,11 @@
  * 0. Please (try to) preserve these settings.
  * 1. Tabs are preferred over spaces.
  * 2. In vi/vim -
- *        :set tabstop=4 :set shiftwidth=4 :set softtabstop=4
+ *                :set tabstop=4 :set shiftwidth=4 :set softtabstop=4
  * 3. In S1 Studio -
- *        1. Tools->Options->Editor Settings->Java Editor->Tab Size = 4
- *        2. Tools->Options->Indentation Engines->Java Indentation Engine->Expand Tabs to Spaces = False.
- *        3. Tools->Options->Indentation Engines->Java Indentation Engine->Number of Spaces per Tab = 4.
+ *                1. Tools->Options->Editor Settings->Java Editor->Tab Size = 4
+ *                2. Tools->Options->Indentation Engines->Java Indentation Engine->Expand Tabs to Spaces = False.
+ *                3. Tools->Options->Indentation Engines->Java Indentation Engine->Number of Spaces per Tab = 4.
  */
 package com.sun.enterprise.admin.util.jmx;
 

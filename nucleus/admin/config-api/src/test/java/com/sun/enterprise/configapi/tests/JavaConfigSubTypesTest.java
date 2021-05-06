@@ -76,7 +76,7 @@ public class JavaConfigSubTypesTest extends ConfigPersistence {
 
     @Override
     public ServiceLocator getHabitat() {
-        return getBaseServiceLocator();
+            return getBaseServiceLocator();
     }
 
     @Test

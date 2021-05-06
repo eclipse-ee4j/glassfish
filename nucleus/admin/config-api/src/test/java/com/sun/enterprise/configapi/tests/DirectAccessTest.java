@@ -56,7 +56,7 @@ public class DirectAccessTest extends ConfigPersistence {
 
     @Override
     public ServiceLocator getHabitat() {
-        return getBaseServiceLocator();
+            return getBaseServiceLocator();
     }
 
     public void doTest() throws TransactionFailure {

@@ -57,7 +57,7 @@ public class TransactionCallBackTest extends ConfigPersistence {
 
     @Override
     public ServiceLocator getHabitat() {
-        return getBaseServiceLocator();
+            return getBaseServiceLocator();
     }
 
     public void doTest() throws TransactionFailure {

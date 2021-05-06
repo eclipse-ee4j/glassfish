@@ -47,7 +47,7 @@ public abstract class ConfigPersistence extends ConfigApiTest {
 
     @After
     public void tearDown() {
-        Utils.instance.shutdownServiceLocator(this);
+            Utils.instance.shutdownServiceLocator(this);
     }
 
     @Test

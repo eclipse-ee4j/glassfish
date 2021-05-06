@@ -176,34 +176,34 @@ target_value:
 
 ----------------------------------------------
 NAME :
-    create-jdbc-resource - creates a JDBC resource with the specified JNDI
-    name
+        create-jdbc-resource - creates a JDBC resource with the specified JNDI
+        name
 
 SYNOPSIS :
-    create-jdbc-resource --connectionpoolid=connectionpoolid [--enabled=true] [--description=description] [--property=property] [--target=server] jndi_name
+        create-jdbc-resource --connectionpoolid=connectionpoolid [--enabled=true] [--description=description] [--property=property] [--target=server] jndi_name
 
 OPTIONS :
-    --GeneratedHelp
-    true
+        --GeneratedHelp
+        true
 
-    --connectionpoolid
-    The name of the JDBC connection pool. If two or more JDBC resource ele-
-    ments point to the same connection pool element, they use the same poo-
-    l connection at runtime.
+        --connectionpoolid
+        The name of the JDBC connection pool. If two or more JDBC resource ele-
+        ments point to the same connection pool element, they use the same poo-
+        l connection at runtime.
 
-    --enabled
-    Determines whether the JDBC resource is enabled at runtime. The defaul-
-    t value is true.
+        --enabled
+        Determines whether the JDBC resource is enabled at runtime. The defaul-
+        t value is true.
 
-    --description
-    Text providing descriptive details about the JDBC resource.
+        --description
+        Text providing descriptive details about the JDBC resource.
 
-    --property
+        --property
 
-    --target
+        --target
 
 OPERANDS :
-    jndi_name - The JNDI name of this JDBC resource.
+        jndi_name - The JNDI name of this JDBC resource.
 
 Command create-jdbc-resource executed successfully.
  */
